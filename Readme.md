@@ -3,8 +3,7 @@
 ## Installation
 
 ```bash
-cd ~
-git clone https://github.com/sapegin/dotfiles.git && cd dotfiles && ./sync.py
+cd ~ && git clone https://github.com/sapegin/dotfiles.git && cd dotfiles && ./sync.py
 ```
 
 It’will clone latest version of dotfiles to `~/dotfiles` and make symlinks in your home directory.
@@ -18,3 +17,7 @@ cd ~/dotfiles && git pull && ./sync.py
 ## Resources
 
 [Mathias’s dotfiles](https://github.com/mathiasbynens/dotfiles)
+
+---
+
+Feel free to fork :-)
