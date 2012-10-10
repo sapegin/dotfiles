@@ -9,7 +9,7 @@ Source: https://gist.github.com/490016
 import os
 import glob
 
-EXCLUDE = ['sync.py']
+EXCLUDE = ['sync.py', 'Readme.md']
 NO_DOT_PREFIX = ['bin']
 
 def force_remove(path):
