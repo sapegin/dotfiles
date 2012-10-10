@@ -1,0 +1,55 @@
+[color]
+	ui = auto
+[color "diff"]
+	meta = blue bold
+	frag = black bold
+	old = red bold
+	new = magenta bold
+[core]
+	editor = nano
+	# http://stackoverflow.com/questions/136178/git-diff-handling-long-lines
+	# If doesn't work, try: pager = less -+$LESS -FRX
+	pager = less -r
+	autocrlf = false
+	excludesfile = ~/.gitignore
+	attributesfile = ~/.gitattributes
+[alias]
+	a = add
+	ua = reset HEAD
+	b = branch
+	c = commit
+	ca = commit -a
+	cam = commit -am
+	co = checkout
+	d = diff --color-words
+	s = status -sb
+	l = log --graph --pretty=format:'%C(magenta)%h%C(blue)%d%Creset %s %C(blue bold)- %an, %ar%Creset'
+	ll = log --stat --abbrev-commit
+	ignore = !([ ! -e .gitignore ] && touch .gitignore) | echo $2 >> .gitignore
+	this = !git init && git add . && git commit -m \"initial commit\"
+	amend = !git log -n 1 --pretty=tformat:%s%n%n%b | git commit -F - --amend
+[push]
+	default = current
+
+# URL shorthands
+[url "git@github.com:"]
+	insteadOf = "gh:"
+	pushInsteadOf = "github:"
+	pushInsteadOf = "git://github.com/"
+[url "git://github.com/"]
+	insteadOf = "github:"
+[url "git@gist.github.com:"]
+	insteadOf = "gst:"
+	pushInsteadOf = "gist:"
+	pushInsteadOf = "git://gist.github.com/"
+[url "git://gist.github.com/"]
+	insteadOf = "gist:"
+
+# Include local settings
+# Example:
+# [user]
+#	name = Artem Sapegin
+#	email = artem@sapegin.ru
+[include]
+	path = ~/.gitlocal
+
