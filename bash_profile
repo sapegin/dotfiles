@@ -30,8 +30,10 @@ done
 export LC_ALL=en_US.UTF-8
 export LANG="en_US"
 
-# Add `~/bin` to the `$PATH`
+# Add ~/bin to the $PATH
 export PATH="$HOME/bin:/usr/local/bin:$PATH"
+# Add brew coreutils to $PATH
+command -v brew >/dev/null 2>&1 && export PATH="$(brew --prefix coreutils)/libexec/gnubin:$PATH"
 
 # If possible, add tab completion for many commands
 [ -f /etc/bash_completion ] && source /etc/bash_completion
