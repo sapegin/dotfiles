@@ -16,12 +16,10 @@ cd ~/dotfiles && git pull && ./sync.py
 
 ## Resources
 
-[Mathias’s dotfiles](https://github.com/mathiasbynens/dotfiles)
-[Jan Moesen’s dotfiles](https://github.com/janmoesen/tilde)
-[Yet another cool story about bash prompt](http://habrahabr.ru/company/mailru/blog/145008/) (in Russian)
+* [Mathias’s dotfiles](https://github.com/mathiasbynens/dotfiles)
+* [Jan Moesen’s dotfiles](https://github.com/janmoesen/tilde)
+* [Yet another cool story about bash prompt](http://habrahabr.ru/company/mailru/blog/145008/) (in Russian)
 
 ---
-
-Feel free to fork :-)
 
 :shipit:
