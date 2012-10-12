@@ -76,3 +76,5 @@ ginit() { grunt init:$@ ;}
 
 # Load external aliases
 source ~/dotfiles/includes/root.sh
+source ~/dotfiles/includes/functions.sh
+ 
