@@ -74,6 +74,11 @@ alias npm-release='npm version minor -m "%s"'
 alias gw="grunt watch --debug"
 ginit() { grunt init:$@ ;}
 
+# Magic Project Opener
+function proj { cd "$("$HOME/dotfiles/bin/opener.py" "$HOME/Dropbox/Projects" $1 -w project $2)"; }
+function repo { cd "$("$HOME/dotfiles/bin/opener.py" "$HOME/Dropbox/Projects" $1 -w repo $2)"; }
+function wptheme { cd "$("$HOME/dotfiles/bin/opener.py" "$HOME/Dropbox/Projects" $1 -w wptheme $2)"; }
+
 # Load external aliases
 source ~/dotfiles/includes/root.sh
 source ~/dotfiles/includes/functions.sh
