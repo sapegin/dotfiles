@@ -4,7 +4,7 @@ alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
 alias ~="cd ~"
-alias -- -="cd -"
+alias -- -="cd -"  # The alias is `-`, not `--`
 
 # Shortcuts
 alias dr="cd ~/Dropbox"
@@ -66,13 +66,19 @@ done
 # Convert line endings to UNIX
 alias dos2unix="perl -pi -e 's/\r\n?/\n/g' "
 
+# Password generator
+password() { openssl rand -base64 ${1:-8} | c; }
+
+# Git root
+alias gr='[ ! -z `git rev-parse --show-cdup` ] && cd `git rev-parse --show-cdup || pwd`'
+
 # NPM
 alias npm-patch='npm version patch -m "%s"'
 alias npm-release='npm version minor -m "%s"'
 
 # Grunt
-alias gw="grunt watch --debug"
-ginit() { grunt init:$@ ;}
+alias gw="grunt deploy --debug && grunt watch --debug"
+ginit() { grunt init:$@; }
 
 # Magic Project Opener
 function proj { cd "$("$HOME/dotfiles/bin/opener.py" "$HOME/Dropbox/Projects" $1 -w project $2)"; }
@@ -80,6 +86,5 @@ function repo { cd "$("$HOME/dotfiles/bin/opener.py" "$HOME/Dropbox/Projects" $1
 function wptheme { cd "$("$HOME/dotfiles/bin/opener.py" "$HOME/Dropbox/Projects" $1 -w wptheme $2)"; }
 
 # Load external aliases
-source ~/dotfiles/includes/root.sh
 source ~/dotfiles/includes/functions.sh
  

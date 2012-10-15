@@ -35,12 +35,18 @@ export PATH="$HOME/bin:/usr/local/bin:$PATH"
 # Add brew coreutils to $PATH
 command -v brew >/dev/null 2>&1 && export PATH="$(brew --prefix coreutils)/libexec/gnubin:$PATH"
 
+# Load ~/.extra, ~/.bash_prompt and ~/.bash_aliases
+# ~/.extra can be used for settings you don’t want to commit
+for file in ~/.{extra,bash_prompt,bash_aliases}; do
+	[ -r "$file" ] && source "$file"
+done
+unset file
+
 # If possible, add tab completion for many commands
 [ -f /etc/bash_completion ] && source /etc/bash_completion
 
-# Aliases and prompt
-[ -f ~/.bash_aliases ] && source ~/.bash_aliases
-[ -f ~/.bash_prompt ] && source ~/.bash_prompt
+# Bash completion (installed via Homebrew; source after `brew` is added to PATH)
+command -v brew >/dev/null 2>&1 && [ -r "$(brew --prefix)/etc/bash_completion" ] && source "$(brew --prefix)/etc/bash_completion"
 
 # Add tab completion for SSH hostnames based on ~/.ssh/config, ignoring wildcards
 [ -e "$HOME/.ssh/config" ] && complete -o "default" -o "nospace" -W "$(grep "^Host" ~/.ssh/config | grep -v "[?*]" | cut -d " " -f2)" scp sftp ssh
