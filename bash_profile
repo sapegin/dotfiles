@@ -30,14 +30,17 @@ done
 export LC_ALL=en_US.UTF-8
 export LANG="en_US"
 
-# Add ~/bin to the $PATH
-export PATH="$HOME/bin:/usr/local/bin:$PATH"
-# Add brew coreutils to $PATH
-command -v brew >/dev/null 2>&1 && export PATH="$(brew --prefix coreutils)/libexec/gnubin:$PATH"
+# Extend $PATH
+[ -d ~/bin ] && PATH="~/bin:$PATH"
+PATH="/usr/local/bin:$PATH"
+command -v brew >/dev/null 2>&1 && PATH="$(brew --prefix coreutils)/libexec/gnubin:$PATH"
+export PATH
 
-# Load ~/.extra, ~/.bash_prompt and ~/.bash_aliases
-# ~/.extra can be used for settings you don’t want to commit
-for file in ~/.{extra,bash_prompt,bash_aliases}; do
+# Load extra (private) settings
+[ -r "~/.extra" ] && source "~/.extra"
+
+# Load prompt and aliases
+for file in ~/dotfiles/includes/{bash_prompt,bash_aliases,bash_functions}; do
 	[ -r "$file" ] && source "$file"
 done
 unset file
@@ -49,10 +52,10 @@ unset file
 command -v brew >/dev/null 2>&1 && [ -r "$(brew --prefix)/etc/bash_completion" ] && source "$(brew --prefix)/etc/bash_completion"
 
 # Add tab completion for SSH hostnames based on ~/.ssh/config, ignoring wildcards
-[ -e "$HOME/.ssh/config" ] && complete -o "default" -o "nospace" -W "$(grep "^Host" ~/.ssh/config | grep -v "[?*]" | cut -d " " -f2)" scp sftp ssh
+[ -e "~/.ssh/config" ] && complete -o "default" -o "nospace" -W "$(grep "^Host" ~/.ssh/config | grep -v "[?*]" | cut -d " " -f2)" scp sftp ssh
 
 # Nano is default editor
-export EDITOR='nano';
+export EDITOR='nano'		
 
 # Tell ls to be colourful
 export CLICOLOR=1

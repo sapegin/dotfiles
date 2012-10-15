@@ -486,6 +486,7 @@ defaults write com.google.Chrome.canary ExtensionInstallSources -array "https://
 ###############################################################################
 
 # Link Sublime Text 2 command line
+[ ! -d ~/bin ] && mkdir ~/bin
 ln -s "/Applications/Sublime Text 2.app/Contents/SharedSupport/bin/subl" ~/bin/subl
 
 ###############################################################################
