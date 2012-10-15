@@ -2,6 +2,10 @@
 
 # ~/.osx — http://mths.be/osx
 
+COMPUTERNAME='Mac'
+LOCALHOSTNAME='mac'
+
+
 # Ask for the administrator password upfront
 sudo -v
 
@@ -13,10 +17,10 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 ###############################################################################
 
 # Set computer name (as done via System Preferences → Sharing)
-#sudo scutil --set ComputerName "MathBook Pro"
-#sudo scutil --set HostName "MathBook Pro"
-#sudo scutil --set LocalHostName "MathBook-Pro"
-#sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string "MathBook-Pro"
+#sudo scutil --set ComputerName $COMPUTERNAME
+#sudo scutil --set HostName $COMPUTERNAME
+#sudo scutil --set LocalHostName $LOCALHOSTNAME
+#sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string $LOCALHOSTNAME
 
 # Menu bar: disable transparency
 defaults write NSGlobalDomain AppleEnableMenuBarTransparency -bool false
@@ -89,6 +93,12 @@ defaults write com.apple.CrashReporter DialogType -string "none"
 
 # Check for software updates daily, not just once per week
 defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
+
+# Appearance: Graphite
+defaults write -g AppleAquaColorVariant -int 6
+
+# Highlight color: Blue
+defaults write -g AppleHighlightColor -string '0.709800 0.835300 1.000000'
 
 ###############################################################################
 # Trackpad, mouse, keyboard, Bluetooth accessories, and input                 #
@@ -206,7 +216,7 @@ defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 defaults write com.apple.finder ShowStatusBar -bool false
 
 # Finder: show path bar 
-defaults write com.apple.finder ShowPathBar -boolean true
+defaults write com.apple.finder ShowPathbar -boolean true
 
 # Finder: allow text selection in Quick Look
 defaults write com.apple.finder QLEnableTextSelection -bool true
@@ -312,7 +322,7 @@ defaults write com.apple.Dock autohide-delay -float 0
 defaults write com.apple.dock autohide-time-modifier -float 0
 
 # Enable the 2D Dock
-#defaults write com.apple.dock no-glass -bool true
+defaults write com.apple.dock no-glass -bool true
 
 # Automatically hide and show the Dock
 defaults write com.apple.dock autohide -bool true
@@ -357,6 +367,14 @@ defaults write -g CheckSpellingWhileTyping -boolean true
 
 # Enable continuous spell checking everywhere (don't know what it means)
 defaults write -g WebContinuousSpellCheckingEnabled -boolean true
+
+# Spotlight menu keyboard shortcut: none
+/usr/libexec/PlistBuddy "$HOME/Library/Preferences/com.apple.symbolichotkeys.plist" -c 'Delete AppleSymbolicHotKeys:64' > /dev/null 2>&1
+/usr/libexec/PlistBuddy "$HOME/Library/Preferences/com.apple.symbolichotkeys.plist" -c 'Add AppleSymbolicHotKeys:64:enabled bool false'
+
+# Spotlight window keyboard shortcut: none
+/usr/libexec/PlistBuddy "$HOME/Library/Preferences/com.apple.symbolichotkeys.plist" -c 'Delete AppleSymbolicHotKeys:65' > /dev/null 2>&1
+/usr/libexec/PlistBuddy "$HOME/Library/Preferences/com.apple.symbolichotkeys.plist" -c 'Add AppleSymbolicHotKeys:65:enabled bool false'
 
 ###############################################################################
 # Safari & WebKit                                                             #
@@ -460,6 +478,9 @@ hash tmutil &> /dev/null && sudo tmutil disablelocal
 # Enable Dashboard dev mode (allows keeping widgets on the desktop)
 #defaults write com.apple.dashboard devmode -bool true
 
+# Disable Dashboard
+defaults write com.apple.dashboard mcx-disabled -bool true
+
 # Enable the debug menu in iCal (pre-10.8)
 #defaults write com.apple.iCal IncludeDebugMenu -bool true
 
@@ -488,6 +509,53 @@ defaults write com.google.Chrome.canary ExtensionInstallSources -array "https://
 # Link Sublime Text 2 command line
 [ ! -d ~/bin ] && mkdir ~/bin
 ln -s "/Applications/Sublime Text 2.app/Contents/SharedSupport/bin/subl" ~/bin/subl
+
+###############################################################################
+# Power                                                                       #
+###############################################################################
+
+# Battery
+
+# Computer sleep: 10 min
+sudo pmset -b sleep 10
+
+# Display sleep: 5 min
+sudo pmset -b displaysleep 5
+
+# Put the hard disk(s) to sleep when possible: 10 min
+sudo pmset -b disksleep 10
+
+# Slightly dim the display when using this power source
+sudo pmset -b lessbright 1
+
+# Automatically reduce brightness before display goes to sleep
+sudo pmset -b halfdim 1
+
+# Restart automatically if the computer freezes
+sudo pmset -b panicrestart 15
+
+# Power Adapter
+
+# Computer sleep: 30 min
+sudo pmset -c sleep 30
+
+# Display sleep: 10 min
+sudo mset -c displaysleep 10
+
+# Put the hard disk(s) to sleep when possible: 10 min
+sudo pmset -c disksleep 10
+
+# Wake for network access
+sudo pmset -c womp 0
+
+# Automatically reduce brightness before display goes to sleep
+sudo pmset -c halfdim 1
+
+# Start up automatically after a power failure
+sudo pmset -c autorestart 1
+
+# Restart automatically if the computer freezes
+sudo pmset -c panicrestart 15
 
 ###############################################################################
 # Kill affected applications                                                  #
