@@ -1,3 +1,4 @@
+#!/bin/bash
 # Installs/updates Sublime packages
 #
 # 1. Installs Package Control (all plugins listed in `Package Control.sublime-settings` will be installed after Sublime restarts).

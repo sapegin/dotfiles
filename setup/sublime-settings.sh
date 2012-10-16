@@ -1,3 +1,4 @@
+#!/bin/bash
 # Enables Sublime settings syncronization
 
 if [ `uname` == 'Darwin' ]; then
