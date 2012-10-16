@@ -1,0 +1,17 @@
+{
+	"auto_upgrade_last_run": 1350388642,
+	"installed_packages":
+	[
+		"AdvancedNewFile",
+		"emmet-sublime",
+		"Inc-Dec-Value",
+		"Package Control",
+		"Stylus",
+		"SublimeLinter",
+		"Theme - Soda"
+	],
+	"repositories":
+	[
+		"https://github.com/sergeche/emmet-sublime"
+	]
+}

@@ -9,7 +9,7 @@ Source: https://gist.github.com/490016
 import os
 import glob
 
-EXCLUDE = ['tools', 'color', 'setup',' sync.py', 'Readme.md']
+EXCLUDE = ['tools', 'color', 'setup', 'sublime', ' sync.py', 'Readme.md', '.gitignore']
 NO_DOT_PREFIX = ['bin']
 
 def force_remove(path):

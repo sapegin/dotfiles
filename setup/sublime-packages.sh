@@ -1,21 +1,26 @@
-# Installs/updates Sublime packages from GitHub
+# Installs/updates Sublime packages
+#
+# 1. Installs Package Control (all plugins listed in `Package Control.sublime-settings` will be installed after Sublime restarts).
+# 2. Installs some packages from GitHub.
 
 if [ `uname` == 'Darwin' ]; then
-	cd ~/Library/Application\ Support/Sublime\ Text\ 2/Packages
+	cd ~/Library/Application\ Support/Sublime\ Text\ 2/Installed\ Packages
 else
-	cd ~/AppData/Roaming/Sublime\ Text\ 2/Packages
+	cd ~/AppData/Roaming/Sublime\ Text\ 2/Installed\ Packages
 fi
 
-# Emmet (ex. Zen Coding)
-if [ -d ./emmet-sublime ]; then
-	echo "Updating Emmet..."
-	cd emmet-sublime
-	git pull
-	cd ..
-else
-	echo "Installing Emmet..."
-	git clone git://github.com/sergeche/emmet-sublime.git
-fi
+#
+# Package Control
+#
+
+[ ! -f Package\ Control.sublime-package ] && curl -o Package\ Control.sublime-package http://sublime.wbond.net/Package%20Control.sublime-package
+
+
+#
+# GitHub
+#
+
+cd ../Packages
 
 # Hayaku Bundle
 if [ -d ./hayaku ]; then

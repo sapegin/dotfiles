@@ -1,0 +1,29 @@
+{
+	"auto_complete_delay": 1000,
+	"auto_match_enabled": false,
+	"color_scheme": "Packages/User/Tomorrow.tmTheme",
+	"default_line_ending": "unix",
+	"detect_indentation": false,
+	"create_window_at_startup": false,
+	"open_files_in_new_window": false,
+	"drag_text": false,
+	"fallback_encoding": "Cyrillic (Windows 1251)",
+	"font_face": "Consolas",
+	"font_size": 14,
+	"highlight_line": true,
+	"ignored_packages": [
+		"Vintage"
+	],
+	"rulers": [
+		120
+	],
+	"save_on_focus_lost": true,
+	"tab_completion": true,
+	"detect_slow_plugins": false,
+	"theme": "Soda Light.sublime-theme",
+
+	// Hayaku
+	"hayaku_CSS_whitespace_after_colon": "",
+	"hayaku_CSS_colors_case": "lowercase",
+	"hayaku_CSS_numbers_leading_zero": false
+}

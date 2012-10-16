@@ -55,7 +55,7 @@ command -v brew >/dev/null 2>&1 && [ -r "$(brew --prefix)/etc/bash_completion" ]
 [ -e "~/.ssh/config" ] && complete -o "default" -o "nospace" -W "$(grep "^Host" ~/.ssh/config | grep -v "[?*]" | cut -d " " -f2)" scp sftp ssh
 
 # Nano is default editor
-export EDITOR='nano'		
+export EDITOR='nano'
 
 # Tell ls to be colourful
 export CLICOLOR=1
