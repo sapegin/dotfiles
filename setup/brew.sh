@@ -24,6 +24,7 @@ brew install homebrew/dupes/grep
 # Install everything else
 brew install git
 brew install git-extras
+brew install unrar
 #brew install node
 
 # Remove outdated versions from the cellar
