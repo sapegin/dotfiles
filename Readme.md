@@ -16,7 +16,7 @@ cd ~/dotfiles && git pull && ./sync.py
 
 ## Screenshot
 
-!(http://cl.ly/image/3q3B1S0O2m0f/Screen%20Shot%202012-10-19%20at%2015.28.31.png)
+![Terminal.app](http://cl.ly/image/3q3B1S0O2m0f/Screen%20Shot%202012-10-19%20at%2015.28.31.png)
 
 ## Features
 
@@ -28,6 +28,7 @@ cd ~/dotfiles && git pull && ./sync.py
 * Consolas font install script (`setup/consolas.sh`)
 * Bash4 install script (`setup/bash.sh`)
 * Homebrew bootstrap (`setup/brew.sh`)
+* [Mac OS apps I use](https://github.com/sapegin/dotfiles/wiki/Mac-OS-Apps)
 
 ## Further customization
 
