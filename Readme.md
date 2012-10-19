@@ -25,6 +25,7 @@ cd ~/dotfiles && git pull && ./sync.py
 * Dotfiles syncronization (`sync.py`).
 * Sensible OS X defaults (`setup/osx.sh`).
 * Sublime Text 2 settings syncronization and packages autoinstall (`setup/sublime-settings.sh` and `setup/sublime-packages.sh`).
+* Consolas font install script (`setup/consolas.sh`)
 * Bash4 install script (`setup/bash.sh`)
 * Homebrew bootstrap (`setup/brew.sh`)
 
