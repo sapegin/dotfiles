@@ -61,7 +61,7 @@ alias hide="defaults write com.apple.Finder AppleShowAllFiles -bool false && kil
 # (useful when executing time-consuming commands)
 #alias badge="tput bel"
 
-# HTTP requests
+# HTTP requests by @janmoesen
 for method in GET HEAD POST PUT DELETE TRACE OPTIONS; do
 	alias "$method"="lwp-request -m '$method'"
 done

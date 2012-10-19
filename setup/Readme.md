@@ -1,8 +1,14 @@
 ## Prerequisites
 
 * [Command Line Tools for Xcode](https://developer.apple.com/downloads)
-* [homebrew](http://mxcl.github.com/homebrew/)
 * [node.js](http://nodejs.org/)
+
+
+### [Git-friendly](https://github.com/jamiew/git-friendly)
+
+```bash
+sudo bash < <( curl https://raw.github.com/jamiew/git-friendly/master/install.sh)
+```
 
 
 ### How to remove US English keyboard layout on Mac OS X

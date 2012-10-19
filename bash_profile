@@ -36,9 +36,6 @@ PATH="/usr/local/bin:$PATH"
 command -v brew >/dev/null 2>&1 && PATH="$(brew --prefix coreutils)/libexec/gnubin:$PATH"
 export PATH
 
-# Load extra (private) settings
-[ -r "~/.extra" ] && source "~/.extra"
-
 # Load prompt and aliases
 for file in ~/dotfiles/includes/{bash_prompt,bash_aliases,bash_functions}; do
 	[ -r "$file" ] && source "$file"
@@ -90,3 +87,6 @@ less_options=(
 export LESS="${less_options[*]}";
 unset less_options;
 export PAGER='less';
+
+# Load extra (private) settings
+[ -r "~/.bashlocal" ] && source "~/.bashlocal"

@@ -1,6 +1,9 @@
 #!/bin/bash
 # Based on https://github.com/mathiasbynens/dotfiles/blob/master/.brew
 
+# Setup Homebrew
+command -v brew >/dev/null 2>&1 || ruby -e "$(curl -fsSkL raw.github.com/mxcl/homebrew/go)"
+
 # Make sure we’re using the latest Homebrew
 brew update
 
