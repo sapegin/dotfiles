@@ -28,6 +28,7 @@ cd ~/dotfiles && git pull && ./sync.py
 * Consolas font install script (`setup/consolas.sh`)
 * Bash4 install script (`setup/bash.sh`)
 * Homebrew bootstrap (`setup/brew.sh`)
+* My magic project opener (`bin/opener.py`)
 * [Mac OS apps I use](https://github.com/sapegin/dotfiles/wiki/Mac-OS-Apps)
 
 ## Further customization
