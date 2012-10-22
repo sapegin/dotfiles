@@ -38,7 +38,7 @@ def main():
 		source = os.path.relpath(filename, os.path.dirname(dotfile))
 
 		# Check that we aren't overwriting anything
-		if os.path.exists(dotfile):
+		if os.path.lexists(dotfile):
 			if is_link_to(dotfile, source):
 				continue
 
