@@ -37,38 +37,38 @@ function prompt_command {
 	local PS1_GIT=
 	local GIT_BRANCH=
 	local GIT_DIRTY=
-	local PWDNAME=$PWD
+	local PWDNAME="$PWD"
 
 	# Beautify working directory name
-	if [ $HOME == $PWD ]; then
+	if [ "$HOME" == "$PWD" ]; then
 		PWDNAME="~"
-	elif [ $HOME == ${PWD:0:${#HOME}} ]; then
+	elif [ "$HOME" == "${PWD:0:${#HOME}}" ]; then
 		PWDNAME="~${PWD:${#HOME}}"
 	fi
 
 	# Parse git status and get git variables
-	if [[ ! -z $PS1_GIT_BIN ]]; then
+	if [[ ! -z "$PS1_GIT_BIN" ]]; then
 		# check we are in git repo
-		local CUR_DIR=$PWD
-		while [[ ! -d "${CUR_DIR}/.git" ]] && [[ ! "${CUR_DIR}" == "/" ]] && [[ ! "${CUR_DIR}" == "~" ]] && [[ ! "${CUR_DIR}" == "" ]]; do CUR_DIR=${CUR_DIR%/*}; done
+		local CUR_DIR="$PWD"
+		while [[ ! -d "${CUR_DIR}/.git" ]] && [[ ! "${CUR_DIR}" == "/" ]] && [[ ! "${CUR_DIR}" == "~" ]] && [[ ! "${CUR_DIR}" == "" ]]; do CUR_DIR="${CUR_DIR%/*}"; done
 		if [[ -d "${CUR_DIR}/.git" ]]; then
 			# 'git repo for dotfiles' fix: show git status only in home dir and other git repos
 			if [[ "${CUR_DIR}" != "${HOME}" ]] || [[ "${PWD}" == "${HOME}" ]]; then
 				# get git branch
-				GIT_BRANCH=$($PS1_GIT_BIN symbolic-ref HEAD 2>/dev/null)
-				if [[ ! -z $GIT_BRANCH ]]; then
-					GIT_BRANCH=${GIT_BRANCH#refs/heads/}
+				GIT_BRANCH="$($PS1_GIT_BIN symbolic-ref HEAD 2>/dev/null)"
+				if [[ ! -z "$GIT_BRANCH" ]]; then
+					GIT_BRANCH="${GIT_BRANCH#refs/heads/}"
 
 					# get git status
-					local GIT_STATUS=$($PS1_GIT_BIN status --porcelain 2>/dev/null)
-					[[ -n $GIT_STATUS ]] && GIT_DIRTY=1
+					local GIT_STATUS="$($PS1_GIT_BIN status --porcelain 2>/dev/null)"
+					[[ -n "$GIT_STATUS" ]] && GIT_DIRTY=1
 				fi
 			fi
 		fi
 	fi
 
 	# Build B&W prompt for git
-	[[ ! -z $GIT_BRANCH ]] && PS1_GIT=" #${GIT_BRANCH}"
+	[[ ! -z "$GIT_BRANCH" ]] && PS1_GIT=" #${GIT_BRANCH}"
 
 	# Calculate prompt length
 	local PS1_length=$((${#USER}+${#HOSTNAME}+${#PWDNAME}+${#PS1_GIT}+3))
@@ -81,15 +81,15 @@ function prompt_command {
 	else
 		# else calculate fillsize
 		local fillsize=$(($COLUMNS-$PS1_length))
-		FILL=$color_gray
+		FILL="$color_gray"
 		while [[ $fillsize -gt 0 ]]; do FILL="${FILL}─"; fillsize=$(($fillsize-1)); done
 		FILL="${FILL}${color_off}"
 	fi
 
 	if $color_is_on; then
 		# Git status for prompt
-		if [ ! -z $GIT_BRANCH ]; then
-			if [ -z $GIT_DIRTY ]; then
+		if [ ! -z "$GIT_BRANCH" ]; then
+			if [ -z "$GIT_DIRTY" ]; then
 				PS1_GIT=" #${color_green}${GIT_BRANCH}${color_off}"
 			else
 				PS1_GIT=" #${color_red}${GIT_BRANCH}${color_off}"
@@ -109,7 +109,7 @@ function prompt_command {
 	#	echo -en "\033[6n" > /dev/tty && read -sdR CURPOS
 	#	stty $OLDSTTY
 	echo -en "\033[6n" && read -sdR CURPOS
-	[[ ${CURPOS##*;} -gt 1 ]] && echo "${color_error}●${color_error_off}"
+	[[ "${CURPOS##*;}" -gt 1 ]] && echo "${color_error}●${color_error_off}"
 
 	# Set title
 	echo -ne "\033]0;${USER}@${HOSTNAME}:${PWDNAME}"; echo -ne "\007"
