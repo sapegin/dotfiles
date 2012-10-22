@@ -38,7 +38,7 @@ export PATH
 
 # Load prompt and aliases
 for file in ~/dotfiles/includes/{bash_prompt,bash_aliases,bash_functions}; do
-	[ -r "$file" ] && source "$file"
+	[ -r "$file.bash" ] && source "$file.bash"
 done
 unset file
 

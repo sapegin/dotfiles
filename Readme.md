@@ -31,6 +31,10 @@ cd ~/dotfiles && git pull && ./sync.py
 * My magic project opener (`bin/opener.py`)
 * [Mac OS apps I use](https://github.com/sapegin/dotfiles/wiki/Mac-OS-Apps)
 
+## Notes
+
+You can use any file extensions in `tilde/` to invoke proper syntax highlighting in code editor.
+
 ## Further customization
 
 * Add any Bash profile customizations to `~/.bashlocal`.

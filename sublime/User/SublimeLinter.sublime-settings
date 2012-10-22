@@ -2,5 +2,9 @@
 	"sublimelinter_delay": 1,
 	"sublimelinter_mark_style": "none",
 	"sublimelinter_gutter_marks": true,
-	"sublimelinter_notes": true
+	"sublimelinter_notes": true,
+	"pep8_ignore": [  // https://github.com/jcrocholl/pep8/blob/master/pep8.py
+		"E501",  // Line too long
+		"W191"  // Indentation contains tabs
+	]	
 }
