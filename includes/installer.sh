@@ -11,7 +11,7 @@ INSTALLER_DIR=`mktemp -d`
 #
 # @param $1 URL
 # @param $2 File name
-function download_installer {`
+function download_installer {
 	echo "Downloading $1/$2..."
 	cd "$INSTALLER_DIR"
 	curl -LO "$1/$2"
