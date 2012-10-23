@@ -1,14 +1,11 @@
 ## Prerequisites
 
 * [Command Line Tools for Xcode](https://developer.apple.com/downloads)
-* [node.js](http://nodejs.org/)
 
 
-### [Git-friendly](https://github.com/jamiew/git-friendly)
+## Bootstrap
 
-```bash
-sudo bash < <( curl https://raw.github.com/jamiew/git-friendly/master/install.sh)
-```
+Run `./bootstrap.sh` (or separate scripts in this folder) and make you some coffee. Then open Chrome (now it’s your default browser) and install [all needed apps](https://github.com/sapegin/dotfiles/wiki/Mac-OS-Apps).
 
 
 ### How to remove US English keyboard layout on Mac OS X

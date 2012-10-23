@@ -23,9 +23,12 @@ brew install homebrew/dupes/grep
 #brew tap josegonzalez/homebrew-php
 #brew install php54
 
-# Install everything else
+# Install Git
 brew install git
 brew install git-extras
+sudo bash < <( curl https://raw.github.com/jamiew/git-friendly/master/install.sh)
+
+# Install everything else
 brew install unrar
 brew install node
 
