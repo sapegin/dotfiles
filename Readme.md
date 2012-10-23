@@ -3,6 +3,11 @@
 ## Installation
 
 ```bash
+curl dot.sapegin.me | bash
+```
+or
+
+```bash
 cd ~ && git clone https://github.com/sapegin/dotfiles.git && cd dotfiles && ./sync.py
 ```
 
