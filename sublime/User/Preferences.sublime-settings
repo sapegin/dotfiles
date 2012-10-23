@@ -20,6 +20,7 @@
 	"save_on_focus_lost": true,
 	"tab_completion": true,
 	"detect_slow_plugins": false,
+	"scroll_past_end": true,
 	"theme": "Soda Light.sublime-theme",
 
 	// Hayaku

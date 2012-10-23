@@ -11,7 +11,7 @@ INSTALLER_DIR=`mktemp -d`
 #
 # @param $1 URL
 # @param $2 File name
-function download_installer {
+function download_installer {`
 	echo "Downloading $1/$2..."
 	cd "$INSTALLER_DIR"
 	curl -LO "$1/$2"
@@ -24,9 +24,7 @@ function download_installer {
 # @param Application name
 function install_app {
 	echo "Installing $2.app..."
-	cp -a "$1/$2.app" "$HOME/Applications/"
-	#find "$1" -type d -name "*.app" -exec sh -c 'cp -a "$0" $HOME/Applications/' {} ';'
-	#find "$1" -type d -name "*.app" -exec sh -c 'cp -a "$0" $HOME/Applications/' {} ';'
+	cp -a "$1/$2.app" "/Applications/"
 }
 
 # Installs an application via a DMG file

@@ -1,12 +1,17 @@
 #!/bin/bash
+
 # Enables Sublime settings syncronization
 
+
 if [ `uname` == 'Darwin' ]; then
-	cd ~/Library/Application\ Support/Sublime\ Text\ 2/Packages
+	DIR=~/Library/Application\ Support/Sublime\ Text\ 2
 else
-	cd ~/AppData/Roaming/Sublime\ Text\ 2/Packages
+	DIR=~/AppData/Roaming/Sublime\ Text\ 2
 fi
 
-[ ! -d ../Packages.bak ] && mkdir ../Packages.bak
-mv User ../Packages.bak/User
-ln -s ~/dotfiles/sublime/User User
+[ ! -d "$DIR" ] && mkdir -p "$DIR/Packages"
+if [ -d "$DIR/Packages/User" ]; then
+	mkdir "$DIR/Packages.bak"
+	mv "$DIR/Packages/User" "$DIR/Packages.bak/User"
+fi
+ln -s ~/dotfiles/sublime/User "$DIR/Packages/User"

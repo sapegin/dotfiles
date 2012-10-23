@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Sane OSX defaults
 # ~/.osx — http://mths.be/osx
 
 COMPUTERNAME='Mac'
@@ -562,8 +563,7 @@ sudo pmset -c panicrestart 15
 ###############################################################################
 
 for app in "Address Book" "Calendar" "Contacts" "Dashboard" "Dock" "Finder" \
-	"Mail" "Safari" "SizeUp" "SystemUIServer" "Terminal" "Transmission" \
-	"Twitter" "iCal" "iTunes"; do
+	"Mail" "Safari" "SystemUIServer" "Terminal" "iCal" "iTunes"; do
 	killall "$app" > /dev/null 2>&1
 done
 echo "Done. Note that some of these changes require a logout/restart to take effect."

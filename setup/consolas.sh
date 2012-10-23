@@ -1,6 +1,10 @@
 #!/bin/bash
+
+# Installs Consolas font
+#
 # Press "Intall font" button when font dialog opens
 # Based on http://blog.ikato.com/post/15675823000/how-to-install-consolas-font-on-mac-os-x
+
 
 brew install cabextract
 TMPDIR=`mktemp -d` && {

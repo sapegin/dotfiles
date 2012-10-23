@@ -1,5 +1,8 @@
 #!/bin/bash
+
+# Installs imgo CLI image optimizer
 # https://github.com/imgo/imgo
+
 
 brew install exiftool imagemagick optipng libjpeg gifsicle
 

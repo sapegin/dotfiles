@@ -1,5 +1,7 @@
 #!/bin/bash
-# Based on https://github.com/mathiasbynens/dotfiles/blob/master/.brew
+
+# Installs Homebrew with some formulaes
+
 
 # Setup Homebrew
 command -v brew >/dev/null 2>&1 || ruby -e "$(curl -fsSkL raw.github.com/mxcl/homebrew/go)"
@@ -15,9 +17,6 @@ brew install coreutils
 # Install GNU `find`, `locate`, `updatedb`, and `xargs`, g-prefixed
 brew install findutils
 
-# Install wget with IRI support
-#brew install wget --enable-iri
-
 # Install more recent versions of some OS X tools
 brew tap homebrew/dupes
 brew install homebrew/dupes/grep
@@ -28,7 +27,7 @@ brew install homebrew/dupes/grep
 brew install git
 brew install git-extras
 brew install unrar
-#brew install node
+brew install node
 
 # Remove outdated versions from the cellar
 brew cleanup

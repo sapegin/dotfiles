@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Installs Chrome and makes it default browser
+
+
 source "$HOME/dotfiles/includes/installer.sh"
 
 
