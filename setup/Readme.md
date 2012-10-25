@@ -7,7 +7,7 @@
 
 Run `./bootstrap.sh` (or separate scripts in this folder) and make you some coffee. Then open Chrome (now it’s your default browser) and install [all needed apps](https://github.com/sapegin/dotfiles/wiki/Mac-OS-Apps).
 
-**Note**. Your Mac can turn into a pumpkin.
+**Warning**. Your Mac can turn into a pumpkin.
 
 
 ## Scripts
