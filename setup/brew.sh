@@ -12,23 +12,27 @@ brew update
 # Upgrade any already-installed formulae
 brew upgrade
 
-# Install GNU core utilities (those that come with OS X are outdated)
+# GNU core utilities (those that come with OS X are outdated)
 brew install coreutils
-# Install GNU `find`, `locate`, `updatedb`, and `xargs`, g-prefixed
+# GNU `find`, `locate`, `updatedb`, and `xargs`, g-prefixed
 brew install findutils
 
-# Install more recent versions of some OS X tools
+# More recent versions of some OS X tools
 brew tap homebrew/dupes
 brew install homebrew/dupes/grep
-#brew tap josegonzalez/homebrew-php
-#brew install php54
 
-# Install Git
+# Git
 brew install git
 brew install git-extras
 sudo bash < <( curl https://raw.github.com/jamiew/git-friendly/master/install.sh)
 
-# Install everything else
+# MySQL
+brew install mysql
+unset TMPDIR
+mysql_install_db --verbose --user=`whoami` --basedir="$(brew --prefix mysql)" --datadir=/usr/local/var/mysql --tmpdir=/tmp
+/usr/local/opt/mysql/bin/mysqladmin -u root password 'root'
+
+# Everything else
 brew install unrar
 brew install node
 
