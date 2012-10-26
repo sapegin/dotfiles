@@ -2,8 +2,7 @@
 
 # New Mac bootstrap
 
-. brew.sh
-. npm.sh
+. stuff.sh
 . bash.sh
 . consolas.sh
 . imgo.sh

@@ -12,25 +12,21 @@ Run `./bootstrap.sh` (or separate scripts in this folder) and make you some coff
 
 ## Scripts
 
-### brew
+### stuff
 
-Installs Homebrew with some formulaes (Git, MySQL, Node.js, etc.).
-
-### npm
-
-Installs some NPM modules (JSHint, Grunt, etc.). Depends on `brew`.
+Installs Homebrew, Git, [git-extras](https://github.com/visionmedia/git-extras), [git-friendly](https://github.com/jamiew/git-friendly), Node.js, JSHint, Grunt, configures Apache, PHP, MySQL, etc.
 
 ### bash
 
-Installs Bash 4 and registers it as a default shell. Depends on `brew`.
+Installs Bash 4 and registers it as a default shell. Needs Homebrew.
 
 ### consolas
 
-Installs Consolas font. Depends on `brew`.
+Installs Consolas font. Needs Homebrew.
 
 ### imgo
 
-Installs [imgo](https://github.com/imgo/imgo) CLI image optimizer. Depends on `brew`.
+Installs [imgo](https://github.com/imgo/imgo) CLI image optimizer. Needs Homebrew.
 
 ### osx
 

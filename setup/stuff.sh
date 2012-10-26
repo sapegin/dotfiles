@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Installs Homebrew with some formulaes
+# Installs Homebrew, Git, git-extras, git-friendly, Node.js, configures Apache, PHP, MySQL, etc.
 
 
-# Setup Homebrew
+# Install Homebrew
 command -v brew >/dev/null 2>&1 || ruby -e "$(curl -fsSkL raw.github.com/mxcl/homebrew/go)"
 
 # Make sure we’re using the latest Homebrew
@@ -32,9 +32,28 @@ unset TMPDIR
 mysql_install_db --verbose --user=`whoami` --basedir="$(brew --prefix mysql)" --datadir=/usr/local/var/mysql --tmpdir=/tmp
 /usr/local/opt/mysql/bin/mysqladmin -u root password 'root'
 
+# Apache: enable PHP, .htaccess files, virtual hosts and set it to run as current user
+cd /etc/apache2
+sudo cp httpd.conf httpd.conf.bak
+sudo cp extra/httpd-vhosts.conf extra/httpd-vhosts.conf.bak
+sudo sed -i '' "s^#\(LoadModule php5_module\)^\1^" httpd.conf
+sudo sed -i '' "s^#\(Include /private/etc/apache2/extra/httpd-vhosts.conf\)^\1^" httpd.conf
+sudo sed -i '' "s^<IfDefine WEBSHARING_ON>^<IfDefine !0>^" httpd.conf
+sudo sed -i '' "s^User _www^User `whoami`^" httpd.conf
+sudo sed -i '' "s^Group _www^Group staff^" httpd.conf
+echo -e "NameVirtualHost *:80\n\n<Directory />\n    AllowOverride All\n    Allow from all\n</Directory>\n" | sudo tee extra/httpd-vhosts.conf
+cd -
+
 # Everything else
 brew install unrar
 brew install node
 
 # Remove outdated versions from the cellar
 brew cleanup
+
+# Node.js
+brew install node
+
+npm install -g grunt
+npm install -g jshint
+npm install -g bower
