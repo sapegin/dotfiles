@@ -5,7 +5,9 @@
 
 if ! command -v git >/dev/null 2>&1; then
 	if [ `uname` == 'Darwin' ]; then
+		# Install Homebrew
 		ruby -e "$(curl -fsSkL raw.github.com/mxcl/homebrew/go)"
+		# Install Git
 		brew install git
 	else 
 		echo "Error: Git is required."
@@ -13,11 +15,13 @@ if ! command -v git >/dev/null 2>&1; then
 	fi
 fi
 
+# Clone dotfiles and make sylinks
 echo "Installing dotfiles..."
 cd ~ && git clone https://github.com/sapegin/dotfiles.git && cd dotfiles && ./sync.py
 source ~/.bashrc
 
 if [ `uname` == 'Darwin' ]; then
+	# Copy path to clipboard
 	echo -n "~/dotfiles/setup/bootstrap.sh" | pbcopy
 	echo
 	echo "Path to bootstrap script is copied to clipboard."
