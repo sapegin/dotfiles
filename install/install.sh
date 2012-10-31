@@ -15,16 +15,17 @@ if ! command -v git >/dev/null 2>&1; then
 	fi
 fi
 
-# Clone dotfiles and make sylinks
+# Clone dotfiles and make symlinks
 echo "Installing dotfiles..."
 cd ~ && git clone https://github.com/sapegin/dotfiles.git && cd dotfiles && ./sync.py
 source ~/.bashrc
+echo "Dotfiles installed successfully."
 
 if [ `uname` == 'Darwin' ]; then
 	# Copy path to clipboard
 	echo -n "~/dotfiles/setup/bootstrap.sh" | pbcopy
 	echo
-	echo "Path to bootstrap script is copied to clipboard."
+	echo "Path to bootstrap script copied to clipboard."
 fi
 
 
