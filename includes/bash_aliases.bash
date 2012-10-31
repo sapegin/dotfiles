@@ -36,6 +36,9 @@ alias rm="rm -i"
 # Get OS X Software Updates, and update installed Ruby gems, Homebrew, npm, and their installed packages
 alias update="sudo softwareupdate -i -a; brew update; brew upgrade; brew cleanup; npm update npm -g; npm update -g"
 
+# Update dotfiles
+alias dotfiles="cd "$HOME/dotfiles" && git pull && ./sync.py && cd - > /dev/null 2>&1"
+
 # Clean up LaunchServices to remove duplicates in the “Open With” menu
 #alias lscleanup="/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user && killall Finder"
 

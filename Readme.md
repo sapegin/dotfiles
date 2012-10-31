@@ -8,15 +8,15 @@ curl dot.sapegin.me | bash
 or
 
 ```bash
-cd ~ && git clone https://github.com/sapegin/dotfiles.git && cd dotfiles && ./sync.py
+curl https://raw.github.com/sapegin/dotfiles/master/install/install.sh | bash
 ```
 
-It’will clone latest version of dotfiles to `~/dotfiles` and make symlinks in your home directory.
+It’ll installs Git (on OS X only), clones latest version of dotfiles to `~/dotfiles` and makes symlinks in your home directory.
 
 ## Updating
 
 ```bash
-cd ~/dotfiles && git pull && ./sync.py
+dotfiles
 ```
 
 ## Screenshot
