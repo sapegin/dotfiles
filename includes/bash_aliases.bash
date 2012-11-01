@@ -74,8 +74,11 @@ alias dos2unix="perl -pi -e 's/\r\n?/\n/g'"
 # Password generator
 password() { openssl rand -base64 ${1:-8} | c; }
 
+# Show $PATH in a readable way
+alias path='echo $PATH | sed "s/:/\n/g"'
+
 # Git root
-alias gr="[ ! -z `git rev-parse --show-cdup` ] && cd `git rev-parse --show-cdup || pwd`"
+alias gr='git rev-parse 2>/dev/null && cd "./$(git rev-parse --show-cdup)"'
 
 # NPM
 alias npm-patch='npm version patch -m "%s"'
