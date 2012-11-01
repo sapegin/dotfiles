@@ -21,7 +21,7 @@ dotfiles
 
 ## Screenshot
 
-![Terminal.app](http://cl.ly/image/3q3B1S0O2m0f/Screen%20Shot%202012-10-19%20at%2015.28.31.png)
+![Terminal.app](http://cl.ly/image/0o1y0F1r412V/Screen%20Shot%202012-11-01%20at%2015.23.54.png)
 
 ## Features
 
