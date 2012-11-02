@@ -34,7 +34,7 @@ dotfiles
 * Bash4 install script (`setup/bash.sh`)
 * Homebrew bootstrap (`setup/brew.sh`)
 * My magic project opener (`bin/opener.py`)
-* [Mac OS apps I use](https://github.com/sapegin/dotfiles/wiki/Mac-OS-Apps)
+* [Mac OS X apps I use](https://github.com/sapegin/dotfiles/wiki/OS-X-Apps)
 
 ## Notes
 
