@@ -1,5 +1,6 @@
-# Compiled Python files
+# Python stuff
 *.pyc
+VENV
 
 # Folder view configuration files
 .DS_Store
@@ -15,3 +16,6 @@ Thumbs.db
 
 # Installed NPM modules
 node_modules
+
+# IDEs stuff
+.idea
