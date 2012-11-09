@@ -47,7 +47,7 @@ function extract() {
 			*.tbz2)     tar xjf           $1 ;;
 			*.tgz)      tar xzf           $1 ;;
 			*.bz2)      bunzip2           $1 ;;
-			*.rar)      unrar x           $1 ;;
+			*.rar)      unrar x           $1 $2 ;;
 			*.gz)       gunzip            $1 ;;
 			*.zip)      unzip -d$dir_name $1 ;;
 			*.Z)        uncompress        $1 ;;
