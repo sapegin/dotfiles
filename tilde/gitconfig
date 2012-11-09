@@ -11,6 +11,7 @@
 	# If doesn't work, try: pager = less -+$LESS -FRX
 	pager = less -r
 	autocrlf = false
+	safecrlf = false
 	excludesfile = ~/.gitignore
 	attributesfile = ~/.gitattributes
 [alias]
@@ -53,3 +54,6 @@
 [include]
 	path = ~/.gitlocal
 
+[user]
+	name = Artem Sapegin
+	email = artem@sapegin.ru
