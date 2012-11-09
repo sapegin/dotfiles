@@ -41,6 +41,9 @@ set skip-completed-text on
 "\e[B": history-search-forward
 "\e[A": history-search-backward
 
+# Try to stay at the same position when moving through the history
+set history-preserve-point on
+
 
 #
 # Line editing
