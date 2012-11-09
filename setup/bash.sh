@@ -4,5 +4,5 @@
 
 
 brew install bash
-grep '/usr/local/bin/bash' /etc/shells >/dev/null 2>&1 && sudo bash -c "echo /usr/local/bin/bash >> /etc/shells"
+grep -Fxq '/usr/local/bin/bash' /etc/shells || sudo bash -c "echo /usr/local/bin/bash >> /etc/shells"
 chsh -s /usr/local/bin/bash $USER
