@@ -2,6 +2,8 @@
 
 # Installs Homebrew, Git, git-extras, git-friendly, Node.js, configures Apache, PHP, MySQL, etc.
 
+# Ask for the administrator password upfront
+sudo -v
 
 # Install Homebrew
 command -v brew >/dev/null 2>&1 || ruby -e "$(curl -fsSkL raw.github.com/mxcl/homebrew/go)"
@@ -53,7 +55,9 @@ brew cleanup
 
 # Node.js
 brew install node
-
 npm install -g grunt
 npm install -g jshint
 npm install -g bower
+
+# Python
+sudo pip install fabric
