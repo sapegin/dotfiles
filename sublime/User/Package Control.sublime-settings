@@ -3,15 +3,11 @@
 	"installed_packages":
 	[
 		"AdvancedNewFile",
-		"emmet-sublime",
+		"Emmet",
 		"Inc-Dec-Value",
 		"Package Control",
 		"Stylus",
 		"SublimeLinter",
 		"Theme - Soda"
-	],
-	"repositories":
-	[
-		"https://github.com/sergeche/emmet-sublime"
 	]
 }

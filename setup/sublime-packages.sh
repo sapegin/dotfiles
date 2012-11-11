@@ -11,7 +11,7 @@ if [ `uname` == 'Darwin' ]; then
 else
 	DIR=~/AppData/Roaming/Sublime\ Text\ 2/Packages
 fi
-[ ! -d "$DIR" ] && mkdir -p "$DIR"
+mkdir -p "$DIR"
 cd "$DIR"
 
 
