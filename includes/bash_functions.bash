@@ -82,7 +82,8 @@ function nyan() {
 }
 
 # Creates an SSH key and uploads it to the given host
-configure_ssh_host() {
+# Based on https://gist.github.com/1761938
+add-ssh-host() {
 	username=$1
 	hostname=$2
 	identifier=$3
@@ -103,12 +104,12 @@ configure_ssh_host() {
 
 		tput bold; ssh -o PasswordAuthentication=no $identifier true && { tput setaf 2; echo "SSH key added."; } || { tput setaf 1; echo "Failure"; }; tput sgr0
 
-		ssh_load_autocomplete
+		_ssh_load_autocomplete
 	fi
 }
 
 # Adds ~/.ssh/config to the ssh autocomplete
-ssh_load_autocomplete() {
+_ssh_load_autocomplete() {
 	complete -W "$(awk '/^\s*Host\s*/ { sub(/^\s*Host /, ""); print; }' ~/.ssh/config)" ssh
 }
-ssh_load_autocomplete
+_ssh_load_autocomplete
