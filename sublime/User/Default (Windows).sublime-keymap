@@ -1,4 +1,6 @@
 [
 	{ "keys": ["ctrl+d"], "command": "duplicate_line" },
-	{ "keys": ["ctrl+y"], "command": "run_macro_file", "args": {"file": "Packages/Default/Delete Line.sublime-macro"} }
+	{ "keys": ["ctrl+y"], "command": "run_macro_file", "args": {"file": "Packages/Default/Delete Line.sublime-macro"} },
+	{ "keys": ["ctrl+alt+g"], "command": "run_build", "args": {"build_system": "Packages/User/GruntWatch.sublime-build"} },
+	{ "keys": ["ctrl+`"], "command": "show_panel", "args": {"panel": "output.exec"} }
 ]
