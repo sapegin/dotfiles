@@ -113,3 +113,19 @@ _ssh_load_autocomplete() {
 	complete -W "$(awk '/^\s*Host\s*/ { sub(/^\s*Host /, ""); print; }' ~/.ssh/config)" ssh
 }
 _ssh_load_autocomplete
+
+# Upload current directory to special directory on my hosting
+function yay() {
+	server="locum"
+	dir=`basename "$(pwd)"`
+	remote="~/projects/yay/$dir"
+	url="http://yay.sapegin.me/$dir/"
+
+	tar cp --exclude '.git' . | gzip | ssh $server "mkdir -p "$remote"; gzip -cd | tar x -C "$remote""
+
+	echo "Current directory uploaded to $url."
+	if command -v pbcopy >/dev/null 2>&1; then
+		echo -n "$url" | pbcopy
+		echo "URL copied to clipboard."
+	fi
+}
