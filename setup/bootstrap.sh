@@ -6,6 +6,7 @@
 sudo -v
 
 . stuff.sh
+. quicklook.sh
 . bash.sh
 . consolas.sh
 . imgo.sh
