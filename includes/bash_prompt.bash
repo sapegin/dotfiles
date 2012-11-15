@@ -102,7 +102,7 @@ function prompt_command {
 
 	# Terminal title
 	TITLE=`basename ${PWDNAME}`
-	[ $SHLVL -gt 1 ] && TITLE="${TITLE} — ${HOSTNAME}"
+	[ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ] && TITLE="${TITLE} — ${HOSTNAME}"
 	echo -ne "\033]0;${TITLE}"; echo -ne "\007"
 }
 
