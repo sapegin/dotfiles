@@ -75,7 +75,7 @@ alias dos2unix="perl -pi -e 's/\r\n?/\n/g'"
 password() { openssl rand -base64 ${1:-8} | c; }
 
 # Show $PATH in a readable way
-alias path='echo $PATH | sed "s/:/\n/g"'
+alias path='echo -e ${PATH//:/\\n}'
 
 # Git root
 alias gr='git rev-parse 2>/dev/null && cd "./$(git rev-parse --show-cdup)"'

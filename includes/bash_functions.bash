@@ -3,6 +3,11 @@ function md() {
 	mkdir -p "$@" && cd "$@"
 }
 
+# Find shorthand
+function f() {
+    find . -name "$1"
+}
+
 # Get gzipped file size
 function gz() {
 	echo "Original size (bytes): "
