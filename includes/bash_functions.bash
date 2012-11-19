@@ -134,3 +134,19 @@ function yay() {
 		echo "URL copied to clipboard."
 	fi
 }
+
+# Setup syncronization of current Git repo with GitHub repo of the same name
+function git-github() {
+	user="sapegin"
+	repo=`basename "$(pwd)"`
+	git remote add origin "git@github.com:$user/$repo.git"
+	git push -u origin master
+}
+
+# Setup syncronization of current Git repo with Bitbucket repo of the same name
+function git-bitbucket() {
+	user="sapegin"
+	repo=`basename "$(pwd)"`
+	git remote add origin "https://$user@bitbucket.org/$user/$repo.git"
+	git push -u origin master
+}
