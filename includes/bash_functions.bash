@@ -126,7 +126,7 @@ function yay() {
 	remote="~/projects/yay/$dir"
 	url="http://yay.sapegin.me/$dir/"
 
-	tar cp --exclude '.git' . | gzip | ssh $server "mkdir -p "$remote"; gzip -cd | tar x -C "$remote""
+	tar cp --exclude '.git' --exclude 'node_modules' . | gzip | ssh $server "mkdir -p "$remote"; gzip -cd | tar x -C "$remote""
 
 	echo "Current directory uploaded to $url."
 	if command -v pbcopy >/dev/null 2>&1; then
