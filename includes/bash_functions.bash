@@ -150,3 +150,18 @@ function git-bitbucket() {
 	git remote add origin "https://$user@bitbucket.org/$user/$repo.git"
 	git push -u origin master
 }
+
+# Install/update all NPM tasks used in grunt.js in current folder
+function npm-grunt() {
+	if [ ! -f "grunt.js" ]; then
+		echo "grunt.js not found."
+		return
+	fi
+	npm update grunt -g
+	tasks=(`grep -oP "(?<=loadNpmTasks\(['\"])[^'\"]+" grunt.js`)
+	for task in "${tasks[@]}"
+	do
+		npm update $task -g
+		npm link $task
+	done
+}
