@@ -149,7 +149,7 @@ function git-github() {
 function git-bitbucket() {
 	user="sapegin"
 	repo=${1-`basename "$(pwd)"`}
-	git remote add origin "https://$user@bitbucket.org/$user/$repo.git"
+	git remote add origin "git@bitbucket.org:$user/$repo.git"
 	git push -u origin master
 }
 
@@ -163,7 +163,7 @@ function npm-grunt() {
 	tasks=(`grep -oP "(?<=loadNpmTasks\(['\"])[^'\"]+" grunt.js`)
 	for task in "${tasks[@]}"
 	do
-		npm update $task -g
+		npm install $task -g
 		npm link $task
 	done
 }
