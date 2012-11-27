@@ -165,3 +165,12 @@ function npm-grunt() {
 		npm link $task
 	done
 }
+
+# Find files with Windows line endings (and convert then to Unix in force mode)
+# USAGE: crlf [--force]
+function crlf() {
+	[ "$1" == "--force" ] && force=1 || force=0
+	for file in $(find . -type f -not -path "*/.git/*" -not -path "*/node_modules/*" | xargs file | grep ASCII | cut -d: -f1); do
+		grep -q $'\x0D' "$file" && echo "$file" && [ $force ] && dos2unix "$file"
+	done
+}
