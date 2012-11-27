@@ -3,7 +3,9 @@
 	"installed_packages":
 	[
 		"AdvancedNewFile",
+		"CoffeeScript",
 		"Emmet",
+		"Hayaku - tools for writing CSS faster",
 		"Inc-Dec-Value",
 		"Package Control",
 		"Stylus",

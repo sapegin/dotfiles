@@ -27,13 +27,13 @@ cd "$DIR"
 #
 
 # Hayaku Bundle
-if [ -d ./hayaku ]; then
-	echo "Updating Hayaku Bundle..."
-	cd "$DIR/hayaku"
-	git pull
-	git submodule update
-	cd ..
-else
-	echo "Installing Hayaku Bundle..."
-	git clone -b sublime-master git://github.com/hayaku/hayaku.git --recursive
-fi
+# if [ -d ./hayaku ]; then
+# 	echo "Updating Hayaku Bundle..."
+# 	cd "$DIR/hayaku"
+# 	git pull
+# 	git submodule update
+# 	cd ..
+# else
+# 	echo "Installing Hayaku Bundle..."
+# 	git clone -b sublime-master git://github.com/hayaku/hayaku.git --recursive
+# fi
