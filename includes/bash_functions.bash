@@ -136,17 +136,19 @@ function yay() {
 }
 
 # Setup syncronization of current Git repo with GitHub repo of the same name
+# USAGE: git-github [repo]
 function git-github() {
 	user="sapegin"
-	repo=`basename "$(pwd)"`
+	repo=${1-`basename "$(pwd)"`}
 	git remote add origin "git@github.com:$user/$repo.git"
 	git push -u origin master
 }
 
 # Setup syncronization of current Git repo with Bitbucket repo of the same name
+# USAGE: git-bitbucket [repo]
 function git-bitbucket() {
 	user="sapegin"
-	repo=`basename "$(pwd)"`
+	repo=${1-`basename "$(pwd)"`}
 	git remote add origin "https://$user@bitbucket.org/$user/$repo.git"
 	git push -u origin master
 }
