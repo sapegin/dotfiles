@@ -47,13 +47,10 @@
 	insteadOf = "gist:"
 
 # Include local settings
+# Requires Git 1.7.10
 # Example:
 # [user]
 #	name = Artem Sapegin
 #	email = artem@sapegin.ru
 [include]
 	path = ~/.gitlocal
-
-[user]
-	name = Artem Sapegin
-	email = artem@sapegin.ru
