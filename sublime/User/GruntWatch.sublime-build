@@ -1,5 +1,0 @@
-{
-	"cmd": ["$packages/User/grunt-watch.sh"],
-	"file_regex": "^>> Stylus: .*?: (.*?):([0-9]*)",
-	"shell": true
-}

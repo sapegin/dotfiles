@@ -1,8 +1,11 @@
 {
 	"disable_tab_abbreviations": true,
 
-	// Whitespaces
-	"hayaku_CSS_whitespace_block_end_before": "\n",
+	"hayaku_CSS_syntax_autoguess": [
+		"    selector {              ",
+		"        property:value;     ",
+		"    }                       "
+	],
 
 	// Syntax quirks
 	"hayaku_CSS_syntax_no_curly_braces": false,  // Don't print braces for code blocks
