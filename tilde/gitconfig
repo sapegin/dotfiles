@@ -1,10 +1,10 @@
 [color]
 	ui = auto
 [color "diff"]
-	meta = blue bold
-	frag = black bold
+	meta = blue
+	frag = white
 	old = red bold
-	new = magenta bold
+	new = green bold
 [core]
 	editor = nano
 	# http://stackoverflow.com/questions/136178/git-diff-handling-long-lines
