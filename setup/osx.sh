@@ -449,11 +449,11 @@ defaults write com.apple.iTunes NSUserKeyEquivalents -dict-add "Target Search Fi
 defaults write com.apple.terminal StringEncodings -array 4
 
 # Use a modified version of the Pro theme by default in Terminal.app
-open "$HOME/dotfiles/color/Solarized Dark.terminal"
-sleep 1 # Wait a bit to make sure the theme is loaded
-defaults write com.apple.terminal "Default Window Settings" -string "Solarized Dark"
-defaults write com.apple.terminal "Startup Window Settings" -string "Solarized Dark"
-
+open "$HOME/dotfiles/color/Squirrelsong.terminal"
+sleep 1  # Wait a bit to make sure the theme is loaded
+defaults write com.apple.terminal "Default Window Settings" -string "Squirrelsong"
+defaults write com.apple.terminal "Startup Window Settings" -string "Squirrelsong"
+\
 # Enable “focus follows mouse” for Terminal.app and all X11 apps
 # i.e. hover over a window and start typing in it without clicking first
 #defaults write com.apple.terminal FocusFollowsMouse -bool true
