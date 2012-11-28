@@ -21,7 +21,7 @@ dotfiles
 
 ## Screenshot
 
-![Terminal.app](http://cl.ly/image/0o1y0F1r412V/Screen%20Shot%202012-11-01%20at%2015.23.54.png)
+![Terminal.app](https://raw.github.com/sapegin/dotfiles/master/color/squirrelsong_terminal.png)
 
 ## Features
 
