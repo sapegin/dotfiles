@@ -48,9 +48,7 @@
 
 # Include local settings
 # Requires Git 1.7.10
-# Example:
-# [user]
-#	name = Artem Sapegin
-#	email = artem@sapegin.ru
+# git config -f ~/.gitlocal user.email "artem@sapegin.ru"
+# git config -f ~/.gitlocal user.name "Artem Sapegin"
 [include]
-	path = ~/.gitlocal
+	path = .gitlocal
