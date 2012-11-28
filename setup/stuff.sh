@@ -48,16 +48,16 @@ cd -
 
 # Everything else
 brew install unrar
-brew install node
-
-# Remove outdated versions from the cellar
-brew cleanup
 
 # Node.js
 brew install node
+brew install casperjs
 npm install -g grunt
 npm install -g jshint
 npm install -g bower
 
 # Python
 sudo pip install fabric
+
+# Remove outdated versions from the cellar
+brew cleanup
