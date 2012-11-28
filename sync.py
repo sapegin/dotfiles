@@ -2,7 +2,7 @@
 
 """
 Dotfiles syncronization.
-Makes symlinks for all files: ./tilde/bashrc.bash => ~/.bashrc.
+Makes symlinks for all files: ~/dotfiles/tilde/bashrc.bash => ~/.bashrc.
 Based on https://gist.github.com/490016
 """
 
@@ -10,7 +10,7 @@ import os
 import glob
 import shutil
 
-SOURCE_DIR = 'tilde'
+SOURCE_DIR = './dotfiles/tilde'
 EXCLUDE = []
 NO_DOT_PREFIX = []
 
@@ -29,13 +29,13 @@ def is_link_to(link, dest):
 
 
 def main():
-	os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), SOURCE_DIR))
+	os.chdir(SOURCE_DIR)
 	for filename in [file for file in glob.glob('*') if file not in EXCLUDE]:
 		dotfile = filename
 		if filename not in NO_DOT_PREFIX:
 			dotfile = '.' + dotfile
 		dotfile = os.path.join(os.path.expanduser('~'), os.path.splitext(dotfile)[0])
-		source = os.path.relpath(filename, os.path.dirname(dotfile))
+		source = os.path.join(SOURCE_DIR, filename)
 
 		# Check that we aren't overwriting anything
 		if os.path.lexists(dotfile):
