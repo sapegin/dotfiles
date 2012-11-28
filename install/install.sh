@@ -17,7 +17,7 @@ fi
 
 # Clone dotfiles and make symlinks
 echo "Installing dotfiles..."
-cd ~ && git clone https://github.com/sapegin/dotfiles.git && cd dotfiles && ./sync.py
+cd ~ && git clone git@github.com:sapegin/dotfiles.git && cd dotfiles && ./sync.py
 source ~/.bashrc
 echo "Dotfiles installed successfully."
 
