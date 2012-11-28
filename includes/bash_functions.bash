@@ -109,15 +109,9 @@ add-ssh-host() {
 
 		tput bold; ssh -o PasswordAuthentication=no $identifier true && { tput setaf 2; echo "SSH key added."; } || { tput setaf 1; echo "Failure"; }; tput sgr0
 
-		_ssh_load_autocomplete
+		_ssh_reload_autocomplete
 	fi
 }
-
-# Adds ~/.ssh/config to the ssh autocomplete
-_ssh_load_autocomplete() {
-	complete -W "$(awk '/^\s*Host\s*/ { sub(/^\s*Host /, ""); print; }' ~/.ssh/config)" ssh
-}
-_ssh_load_autocomplete
 
 # Upload current directory to special directory on my hosting
 function yay() {
