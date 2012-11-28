@@ -10,7 +10,7 @@ import os
 import glob
 import shutil
 
-SOURCE_DIR = './dotfiles/tilde'
+SOURCE_DIR = '~/dotfiles/tilde'
 EXCLUDE = []
 NO_DOT_PREFIX = []
 
@@ -29,13 +29,13 @@ def is_link_to(link, dest):
 
 
 def main():
-	os.chdir(SOURCE_DIR)
+	os.chdir(os.path.expanduser(SOURCE_DIR))
 	for filename in [file for file in glob.glob('*') if file not in EXCLUDE]:
 		dotfile = filename
 		if filename not in NO_DOT_PREFIX:
 			dotfile = '.' + dotfile
 		dotfile = os.path.join(os.path.expanduser('~'), os.path.splitext(dotfile)[0])
-		source = os.path.join(SOURCE_DIR, filename)
+		source = os.path.join(SOURCE_DIR, filename).replace('~', '.')
 
 		# Check that we aren't overwriting anything
 		if os.path.lexists(dotfile):
