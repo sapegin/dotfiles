@@ -147,6 +147,28 @@ function git-bitbucket() {
 	git push -u origin master
 }
 
+# Add remote upsteam
+# USAGE: git-fork <original-author>
+function git-fork() {
+	user=$1
+	if [[ "$user" == "" ]]
+	then
+		echo "Usage: git-fork <original-author>"
+	else
+		repo=`basename "$(pwd)"`
+		git remote add upstream "https://github.com/$user/$repo.git"
+	fi
+}
+
+# Sync branch with upstream
+# USAGE: git-upstream [branch]
+function git-upstream() {
+	branch=${1-master}
+	git fetch upstream
+	git co origin $branch
+	git merge upstream/$branch
+}
+
 # Install/update all NPM tasks used in grunt.js in current folder
 function npm-grunt() {
 	if [ ! -f "grunt.js" ]; then
