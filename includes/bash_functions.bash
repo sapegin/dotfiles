@@ -156,7 +156,7 @@ function git-fork() {
 		echo "Usage: git-fork <original-author>"
 	else
 		repo=`basename "$(pwd)"`
-		git remote add upstream "https://github.com/$user/$repo.git"
+		git remote add upstream "git@github.com:$user/$repo.git"
 	fi
 }
 
