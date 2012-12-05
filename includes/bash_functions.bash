@@ -147,7 +147,7 @@ function git-bitbucket() {
 	git push -u origin master
 }
 
-# Add remote upsteam
+# Add remote upstream
 # USAGE: git-fork <original-author>
 function git-fork() {
 	user=$1
