@@ -57,15 +57,9 @@ set convert-meta off
 # Delete for wonky terminals
 "\e[3~": delete-char
 
-# Use Ctrl+← and Ctrl+→ (or Alt/Meta, or Esc) to move between words
-"\e[1;5D": backward-word
-"\e[1;3D": backward-word
-"\e[5D": backward-word
-"\e\e[D": backward-word
-"\e[1;5C": forward-word
-"\e[1;3C": forward-word
-"\e[5C": forward-word
-"\e\e[C": forward-word
+# Home/End
+"\e[1~": beginning-of-line
+"\e[4~": end-of-line
 
 
 #
