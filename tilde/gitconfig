@@ -20,6 +20,7 @@
 	b = branch
 	c = commit
 	ca = commit -a
+	cm = commit -m
 	cam = commit -am
 	co = checkout
 	d = diff --color-words
@@ -27,8 +28,9 @@
 	l = log --graph --pretty=format:'%C(magenta)%h%C(blue)%d%Creset %s %C(blue bold)- %an, %ar%Creset'
 	ll = log --stat --abbrev-commit
 	ignore = !([ ! -e .gitignore ] && touch .gitignore) | echo $2 >> .gitignore
-	this = !git init && git add . && git commit -m \"initial commit\"
-	amend = !git log -n 1 --pretty=tformat:%s%n%n%b | git commit -F - --amend
+	this = !git init && git add . && git commit -m \"Initial commit.\"
+	append = !git log -n 1 --pretty=tformat:%s%n%n%b | git commit -F - --amend
+	undo = reset --mixed HEAD^
 [push]
 	default = current
 
