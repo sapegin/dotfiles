@@ -32,6 +32,7 @@ export LANG="en_US"
 
 # Extend $PATH
 [ -d ~/bin ] && PATH="~/bin:$PATH"
+[ -d /usr/local/share/npm/bin ] && PATH="/usr/local/share/npm/bin:$PATH"
 PATH="/usr/local/bin:$PATH"
 command -v brew >/dev/null 2>&1 && PATH="$(brew --prefix coreutils)/libexec/gnubin:$PATH"
 export PATH
