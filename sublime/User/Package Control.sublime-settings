@@ -1,9 +1,10 @@
 {
-	"auto_upgrade_last_run": 1350388642,
+	"auto_upgrade_last_run": null,
 	"installed_packages":
 	[
 		"AdvancedNewFile",
 		"CoffeeScript",
+		"EditorConfig",
 		"Emmet",
 		"Hayaku - tools for writing CSS faster",
 		"Inc-Dec-Value",

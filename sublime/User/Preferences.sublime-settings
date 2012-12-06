@@ -12,7 +12,8 @@
 	"font_size": 14,
 	"hayaku_CSS_colors_case": "lowercase",
 	"hayaku_CSS_numbers_leading_zero": false,
-	"hayaku_CSS_syntax_autoguess": [
+	"hayaku_CSS_syntax_autoguess":
+	[
 		"    selector {              ",
 		"        property:value;     ",
 		"        }                   "
