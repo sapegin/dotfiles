@@ -165,7 +165,7 @@ function git-fork() {
 function git-upstream() {
 	branch=${1-master}
 	git fetch upstream
-	git co origin $branch
+	git checkout $branch
 	git merge upstream/$branch
 }
 
