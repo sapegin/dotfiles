@@ -284,21 +284,21 @@
 		<key>F728</key>
 		<string>[3~</string>
 		<key>F729</key>
-		<string>scrollToBeginningOfDocument:</string>
+		<string>[1~</string>
 		<key>F72B</key>
-		<string>scrollToEndOfDocument:</string>
+		<string>[4~</string>
 		<key>F72C</key>
-		<string>scrollPageUp:</string>
+		<string>[5~</string>
 		<key>F72D</key>
-		<string>scrollPageDown:</string>
+		<string>[6~</string>
 		<key>^F702</key>
-		<string>[5D</string>
+		<string>[1~</string>
 		<key>^F703</key>
-		<string>[5C</string>
+		<string>[4~</string>
 		<key>~F702</key>
-		<string>b</string>
+		<string>[1~</string>
 		<key>~F703</key>
-		<string>f</string>
+		<string>[4~</string>
 		<key>~F704</key>
 		<string>[17~</string>
 		<key>~F705</key>
