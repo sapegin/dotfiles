@@ -1,47 +1,52 @@
 # Git Awesomeness
 
-## Git Aliases
+## Aliases
 
 ### Shorthands
 
-```
-a = add
-ua = reset HEAD
-b = branch
-c = commit
-ca = commit -a
-cm = commit -m
-cam = commit -am
-co = checkout
-d = diff --color-words
-s = status -sb
-```
+* **git a** → git add
 
-### l
+* **git ua** → git reset HEAD
+
+* **git b** → git branch
+
+* **git c** → git commit
+
+* **git ca** → git commit -a
+
+* **git cm** → git commit -m
+
+* **git cam** → git commit -am
+
+* **git co** → git checkout
+
+* **git d** → git diff --color-words
+
+* **git s** → git status -sb
+
+### git l
 
 Simple one-line-per-commit log.
 
-### ll
+### git ll
 
 Log with list of changed files for each commit.
 
-###	ignore <file mask>
+###	git ignore <file mask>
 
 Add new item to `.gitignore`.
 
-### this
+### git this
 
 Initialize Git repo in current folder and commit all files.
 
-### append
+### git append
 
 Add all staged files to previous commit.
 
-### undo
+### git undo
 
 Undo last commit withould loosing any changes.
-
-## Bash Aliases
 
 ### gr
 
