@@ -88,6 +88,10 @@ Get gzipped file size.
 
 Test if HTTP compression (RFC 2616 + SDCH) is enabled for a given URL. Send a fake UA string for sites that sniff it instead of using the Accept-Encoding header.
 
+### ssh-key
+
+Copy public SSH key to clipboard. Generate it if necessary.
+
 ### add-ssh-host <username> <hostname> <identifier>
 	
 Create an SSH key and uploads it to the given host.

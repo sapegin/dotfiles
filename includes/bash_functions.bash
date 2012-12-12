@@ -80,6 +80,17 @@ function nyan() {
 	echo
 }
 
+# Copy public SSH key to clipboard. Generate it if necessary
+ssh-key() {
+	file="$HOME/.ssh/id_rsa.pub"
+	if [ ! -f "$file" ]; then
+		ssh-keygen -t rsa
+	fi
+	
+	cat "$file" | c
+	echo "Your public key copied to clipboard."
+}
+
 # Create an SSH key and uploads it to the given host
 # Based on https://gist.github.com/1761938
 add-ssh-host() {
