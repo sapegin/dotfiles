@@ -1,3 +1,8 @@
+# Print cyan underlined header 
+function header() {
+	echo -e "$UNDERLINE$CYAN$1$NOCOLOR"
+}
+
 # Create a new directory and enter it
 function md() {
 	mkdir -p "$@" && cd "$@"
@@ -5,7 +10,7 @@ function md() {
 
 # Find shorthand
 function f() {
-    find . -name "$1"
+	find . -name "$1"
 }
 
 # Get gzipped file size
@@ -61,22 +66,13 @@ function extract() {
 # https://github.com/steckel/Git-Nyan-Graph/blob/master/nyan.sh
 # If you want big animated version: `telnet miku.acm.uiuc.edu`
 function nyan() {
-	e='\033'
-	RESET="$e[0m"
-	BOLD="$e[1m"
-	CYAN="$e[0;96m"
-	RED="$e[0;91m"
-	YELLOW="$e[0;93m"
-	GREEN="$e[0;92m"
 	echo
 	echo -en $RED'-_-_-_-_-_-_-_'
-	echo -e $RESET$BOLD',------,'$RESET
+	echo -e $NOCOLOR$BOLD',------,'$NOCOLOR
 	echo -en $YELLOW'_-_-_-_-_-_-_-'
-	echo -e $RESET$BOLD'|   /\_/\\'$RESET
 	echo -en $GREEN'-_-_-_-_-_-_-'
-	echo -e $RESET$BOLD'~|__( ^ .^)'$RESET
+	echo -e $NOCOLOR$BOLD'~|__( ^ .^)'$NOCOLOR
 	echo -en $CYAN'-_-_-_-_-_-_-'
-	echo -e $RESET$BOLD'""  ""'$RESET
 	echo
 }
 
@@ -98,8 +94,7 @@ add-ssh-host() {
 	hostname=$2
 	identifier=$3
 
-	if [[ "$identifier" == "" ]] || [[ "$username" == "" ]] || [[ "$hostname" == "" ]]
-	then
+	if [[ "$identifier" == "" ]] || [[ "$username" == "" ]] || [[ "$hostname" == "" ]]; then
 		echo "Usage: configure_ssh_host <username> <hostname> <identifier>"
 	else
 		if [ ! -f "$HOME/.ssh/$identifier.id_rsa" ]; then
@@ -156,8 +151,7 @@ function git-bitbucket() {
 # USAGE: git-fork <original-author>
 function git-fork() {
 	user=$1
-	if [[ "$user" == "" ]]
-	then
+	if [[ "$user" == "" ]]; then
 		echo "Usage: git-fork <original-author>"
 	else
 		repo=`basename "$(pwd)"`
