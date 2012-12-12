@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Installs Homebrew, Git, git-extras, git-friendly, Node.js, configures Apache, PHP, MySQL, etc.
+# Installs Homebrew, Git, git-extras, git-friendly, hub, Node.js, configures Apache, PHP, MySQL, etc.
 
 # Ask for the administrator password upfront
 sudo -v
@@ -18,6 +18,7 @@ brew upgrade
 brew install coreutils
 # GNU `find`, `locate`, `updatedb`, and `xargs`, g-prefixed
 brew install findutils
+brew install tree
 
 # More recent versions of some OS X tools
 brew tap homebrew/dupes
@@ -26,6 +27,7 @@ brew install homebrew/dupes/grep
 # Git
 brew install git
 brew install git-extras
+brew install hub
 sudo bash < <( curl https://raw.github.com/jamiew/git-friendly/master/install.sh)
 
 # MySQL
@@ -52,7 +54,7 @@ brew install unrar
 # Node.js
 brew install node
 brew install casperjs
-npm install -g grunt
+npm install -g grunt-cli
 npm install -g jshint
 npm install -g bower
 

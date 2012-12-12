@@ -36,11 +36,11 @@ alias rm="rm -i"
 # Gzip-enabled `curl`
 #alias gurl="curl --compressed"
 
-# Get OS X Software Updates, and update installed Ruby gems, Homebrew, npm, and their installed packages
-alias update="sudo softwareupdate -i -a; brew update; brew upgrade; brew cleanup; npm update npm -g; npm update -g"
+# Software/libraries update
+alias update="source "$HOME/dotfiles/setup/update.sh""
 
 # Update dotfiles
-alias dotfiles="cd "$HOME/dotfiles" && git pull && ./sync.py && cd - > /dev/null 2>&1 && nyan"
+alias dotfiles="cd "$HOME/dotfiles" && git pull && ./sync.py && . "$HOME/.bashrc" && cd - > /dev/null 2>&1 && nyan"
 
 # Clean up LaunchServices to remove duplicates in the “Open With” menu
 #alias lscleanup="/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user && killall Finder"
