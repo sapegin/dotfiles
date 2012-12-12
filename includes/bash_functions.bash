@@ -224,3 +224,37 @@ mysql-dump() {
 		echo "Done: $local_filepath"
 	fi
 }
+
+# Save page screenshot to file
+# USAGE: rasterize <URL> <filename>
+# Based on https://github.com/oxyc/dotfiles/blob/master/.bash/commands
+function rasterize() {
+	local url="$1"
+	local filename="$2"
+	if [[ $url == "" ]] || [[ $filename == "" ]]; then
+		echo "Usage: rasterize <URL> <filename>"
+	else
+		header "Rasterizing $url..."
+
+		[[ $url != http* ]] && url="http://$url"
+		[[ $filename != *png ]] && filename="$filename.png"
+		phantomjs <(echo "
+			var page = new WebPage();
+			page.viewportSize = { width: 1280, height_: 1024 };
+			page.open('$url', function (status) {
+				if (status !== 'success') {
+					console.log('Unable to load the address.');
+					phantom.exit();
+				}
+				else {
+					window.setTimeout(function() {
+						page.render('$filename');
+						phantom.exit();
+					}, 1000);
+				}
+			});
+		")
+
+		echo "Screenshot saved to: $filename"
+	fi
+}

@@ -104,6 +104,10 @@ Upload current directory to special directory on my hosting.
 
 Backup remote MySQL database to `~/Backups/hostname/dbname_YYYY-MM-DD.sql.gz`.
 
+### rasterize <URL> <filename>
+
+Save page screenshot to file.
+
 
 ## NPM
 
