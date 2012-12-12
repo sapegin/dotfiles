@@ -28,15 +28,9 @@ function escape() {
 	echo # newline
 }
 
-# Decode \x{ABCD}-style Unicode escape sequences
-function unidecode() {
-	perl -e "binmode(STDOUT, ':utf8'); print \"$@\""
-	echo # newline
-}
-
-# Get a character’s Unicode code point
+# Get a character’s Unicode code point: £ → \x00A3
 function codepoint() {
-	perl -e "use utf8; print sprintf('U+%04X', ord(\"$@\"))"
+	perl -e "use utf8; print sprintf('\x%04X', ord(\"$@\"))"
 	echo # newline
 }
 
@@ -86,7 +80,7 @@ function nyan() {
 	echo
 }
 
-# Creates an SSH key and uploads it to the given host
+# Create an SSH key and uploads it to the given host
 # Based on https://gist.github.com/1761938
 add-ssh-host() {
 	username=$1
@@ -167,21 +161,6 @@ function git-upstream() {
 	git fetch upstream
 	git checkout $branch
 	git merge upstream/$branch
-}
-
-# Install/update all NPM tasks used in grunt.js in current folder
-function npm-grunt() {
-	if [ ! -f "grunt.js" ]; then
-		echo "grunt.js not found."
-		return
-	fi
-	npm update grunt -g
-	tasks=(`grep -oP "(?<=loadNpmTasks\(['\"])[^'\"]+" grunt.js`)
-	for task in "${tasks[@]}"
-	do
-		npm install $task -g
-		npm link $task
-	done
 }
 
 # Find files with Windows line endings (and convert then to Unix in force mode)

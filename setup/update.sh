@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Get OS X Software Updates, update Homebrew, NPM, Ruby packages, dotfiles and some other software
+# Get OS X software updates, update Homebrew, NPM, Ruby packages, dotfiles and some other software
 
 function header() {
 	echo -e "$(tput sgr 0 1)$(tput setaf 6)$1$(tput sgr0)"
@@ -16,7 +16,7 @@ cd "$HOME/dotfiles"
 git pull
 ./sync.py
 source "$HOME/.bashrc"
-cd - > /dev/null 2>&1
+cd -
 echo
 
 # OS X
