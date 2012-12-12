@@ -100,6 +100,10 @@ Create an SSH key and uploads it to the given host.
 
 Upload current directory to special directory on my hosting.
 
+### mysql-dump <ssh_hostname> <mysql_database> [mysql_username] [mysql_host]
+
+Backup remote MySQL database to `~/Backups/hostname/dbname_YYYY-MM-DD.sql.gz`.
+
 
 ## NPM
 

@@ -70,9 +70,11 @@ function nyan() {
 	echo -en $RED'-_-_-_-_-_-_-_'
 	echo -e $NOCOLOR$BOLD',------,'$NOCOLOR
 	echo -en $YELLOW'_-_-_-_-_-_-_-'
+	echo -e $NOCOLOR$BOLD'|   /\_/\\'$NOCOLOR
 	echo -en $GREEN'-_-_-_-_-_-_-'
 	echo -e $NOCOLOR$BOLD'~|__( ^ .^)'$NOCOLOR
 	echo -en $CYAN'-_-_-_-_-_-_-'
+	echo -e $NOCOLOR$BOLD'""  ""'$NOCOLOR
 	echo
 }
 
@@ -175,4 +177,50 @@ function crlf() {
 	for file in $(find . -type f -not -path "*/.git/*" -not -path "*/node_modules/*" | xargs file | grep ASCII | cut -d: -f1); do
 		grep -q $'\x0D' "$file" && echo "$file" && [ $force ] && dos2unix "$file"
 	done
+}
+
+# Backup remote MySQL database to ~/Backups/hostname/dbname_YYYY-MM-DD.sql.gz
+# USAGE: mysql-dump <ssh_hostname> <mysql_database> [mysql_username] [mysql_host]
+mysql-dump() {
+	local ssh_hostname=$1
+	local mysql_database=$2
+	local mysql_username=$3
+	local mysql_host=$4
+	local location="$HOME/Backups"
+	local suffix=$(date +'%Y-%m-%d')
+
+	if [[ $ssh_hostname == "" ]] || [[ $mysql_database == "" ]]; then
+		echo "Usage: mysql-dump <ssh_hostname> <mysql_database> [mysql_username] [mysql_host]"
+	else
+		header "Backing up $mysql_database@$ssh_hostname..."
+
+		if [[ $mysql_username != "" ]]; then
+			mysql_username="-u $mysql_username -p "
+		fi
+
+		if [[ $mysql_host != "" ]];	then
+			mysql_host=" -h $mysql_host"
+		fi
+
+		# Ensure backup directory
+		local backup_dir="$location/$ssh_hostname"
+   		mkdir -p $backup_dir
+
+		# Give the user a warning if the file already exists
+		local basename=$mysql_database"_"$suffix
+		local local_filepath="$backup_dir/$basename.sql.gz"
+		if [ -f "$local_filepath" ]; then
+		    echo -e $RED"WARNING: Backup file '$local_filepath' already exists.$NOCOLOR\nOwerwrite? (Y/N)"
+		    read proceed
+
+		    if [[ $proceed != "y" ]]; then
+		    	return
+		    fi
+		fi
+
+		ssh -C $ssh_hostname "mysqldump --opt --compress $mysql_username$mysql_database$mysql_host | gzip -c" > "$local_filepath"
+
+		echo
+		echo "Done: $local_filepath"
+	fi
 }
