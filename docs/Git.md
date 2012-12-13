@@ -48,6 +48,10 @@ Add all staged files to previous commit.
 
 Undo last commit withould loosing any changes.
 
+### git conflicts
+
+List of files with unresolved conflicts.
+
 ### gr
 
 Jump to root folder of Git repo.
