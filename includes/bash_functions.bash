@@ -27,6 +27,16 @@ function httpcompression() {
 	encoding="$(curl -LIs -H 'User-Agent: Mozilla/5 Gecko' -H 'Accept-Encoding: gzip,deflate,compress,sdch' "$1" | grep '^Content-Encoding:')" && echo "$1 is encoded using ${encoding#* }" || echo "$1 is not using any encoding"
 }
 
+# Show HTTP headers for given URL
+# Usage: headers <URL>
+# https://github.com/rtomayko/dotfiles/blob/rtomayko/bin/headers
+function headers() {
+	curl -sv -H "User-Agent: Mozilla/5 Gecko" "$@" 2>&1 >/dev/null |
+		grep -v "^\*" |
+		grep -v "^}" |
+		cut -c3-
+}
+
 # Escape UTF-8 characters into their 3-byte format
 function escape() {
 	printf "\\\x%s" $(printf "$@" | xxd -p -c1 -u)
@@ -240,7 +250,7 @@ function rasterize() {
 		[[ $filename != *png ]] && filename="$filename.png"
 		phantomjs <(echo "
 			var page = new WebPage();
-			page.viewportSize = { width: 1280, height_: 1024 };
+			page.viewportSize = { width: 1280 };
 			page.open('$url', function (status) {
 				if (status !== 'success') {
 					console.log('Unable to load the address.');

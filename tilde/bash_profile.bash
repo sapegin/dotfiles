@@ -30,11 +30,20 @@ done
 export LC_ALL=en_US.UTF-8
 export LANG="en_US"
 
+
+# Prepend $PATH without duplicates
+function _prepend_path() {
+	if ! $( echo "$PATH" | tr ":" "\n" | grep -qx "$1" ) ; then
+		PATH="$1:$PATH"
+	fi
+}
+
 # Extend $PATH
-[ -d ~/bin ] && PATH="~/bin:$PATH"
-[ -d /usr/local/share/npm/bin ] && PATH="/usr/local/share/npm/bin:$PATH"
-PATH="/usr/local/bin:$PATH"
-command -v brew >/dev/null 2>&1 && PATH="$(brew --prefix coreutils)/libexec/gnubin:$PATH"
+[ -d /usr/local/bin ] && _prepend_path "/usr/local/bin"
+[ -d /usr/local/share/npm/bin ] && _prepend_path "/usr/local/share/npm/bin"
+command -v brew >/dev/null 2>&1 && _prepend_path "$(brew --prefix coreutils)/libexec/gnubin"
+[ -d ~/dotfiles/bin ] && _prepend_path "~/dotfiles/bin"
+[ -d ~/bin ] && _prepend_path "~/bin"
 export PATH
 
 # Colors
@@ -64,7 +73,7 @@ unset file
 command -v brew >/dev/null 2>&1 && [ -r "$(brew --prefix)/etc/bash_completion" ] && source "$(brew --prefix)/etc/bash_completion"
 
 # Add tab completion for SSH hostnames based on ~/.ssh/config, ignoring wildcards
-_ssh_reload_autocomplete() {
+function _ssh_reload_autocomplete() {
 	[ -e "~/.ssh/config" ] && complete -o "default" -o "nospace" -W "$(grep "^Host" ~/.ssh/config | grep -v "[?*]" | cut -d " " -f2)" scp sftp ssh
 }
 _ssh_reload_autocomplete
@@ -102,9 +111,9 @@ less_options=(
 	# Do not complain when we are on a dumb terminal.
 	--dumb
 );
-export LESS="${less_options[*]}";
-unset less_options;
-export PAGER='less';
+export LESS="${less_options[*]}"
+unset less_options
+export PAGER='less'
 
 # Load extra (private) settings
-[ -r "~/.bashlocal" ] && source "~/.bashlocal"
+[ -f "~/.bashlocal" ] && source "~/.bashlocal"

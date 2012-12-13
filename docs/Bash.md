@@ -33,6 +33,10 @@
 
 * *marked* → open -a marked
 
+* *e* → subl
+
+* *+x* → chmod +x
+
 * *md <dir>* → Make directory and `cd` to it.
 
 * *f <what>* → Recursively find file in current directory.
@@ -79,6 +83,10 @@ Get a character’s Unicode code point: `£` → `\x00A3`.
 ### GET / HEAD / POST / PUT / DELETE / TRACE / OPTIONS <URL>
 	
 Make HTTP request using respective method.
+
+### headers <URL>
+
+Print HTTP headers of a given URL.
 
 ### gz <filepath>
 

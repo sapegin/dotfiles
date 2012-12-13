@@ -14,7 +14,9 @@ alias pjf="cd ~/Dropbox/Projects/_Forks"
 alias pjm="cd ~/Dropbox/Projects/!"
 alias o="open"
 alias oo="open ."
+alias e="subl"
 alias marked="open -a marked"
+alias +x="chmod +x"
 
 # Detect which `ls` flavor is in use
 if ls --color > /dev/null 2>&1; then  # GNU `ls`
