@@ -15,7 +15,7 @@ alias pjm="cd ~/Dropbox/Projects/!"
 alias o="open"
 alias oo="open ."
 alias e="subl"
-alias marked="open -a marked"
+alias gh="github"
 alias +x="chmod +x"
 
 # Detect which `ls` flavor is in use
@@ -81,9 +81,6 @@ password() { openssl rand -base64 ${1:-8} | c; }
 
 # Show $PATH in a readable way
 alias path='echo -e ${PATH//:/\\n}'
-
-# Git root
-alias gr='git rev-parse 2>/dev/null && cd "./$(git rev-parse --show-cdup)"'
 
 # NPM
 alias npm-patch='npm version patch -m "%s"'

@@ -32,27 +32,15 @@ Simple one-line-per-commit log.
 
 Log with list of changed files for each commit.
 
-###	git ignore <file mask>
-
-Add new item to `.gitignore`.
-
-### git this
-
-Initialize Git repo in current folder and commit all files.
-
-### git append
+### git-append
 
 Add all staged files to previous commit.
 
-### git undo
-
-Undo last commit withould loosing any changes.
-
-### git conflicts
+### git-conflicts
 
 List of files with unresolved conflicts.
 
-### gr
+### git-root (or gr)
 
 Jump to root folder of Git repo.
 
@@ -70,7 +58,7 @@ Add remote upstream.
 
 ### git-upstream [branch]
 
-Sync branch with upstream.
+Sync branch (`master` by default) with upstream.
 
 
 ## [git-friendly](https://github.com/jamiew/git-friendly)

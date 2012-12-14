@@ -27,11 +27,6 @@
 	s = status -sb
 	l = log --graph --pretty=format:'%C(magenta)%h%C(blue)%d%Creset %s %C(blue bold)- %an, %ar%Creset'
 	ll = log --stat --abbrev-commit
-	ignore = !([ ! -e .gitignore ] && touch .gitignore) | echo $2 >> .gitignore
-	this = !git init && git add . && git commit -m \"Initial commit.\"
-	append = !git log -n 1 --pretty=tformat:%s%n%n%b | git commit -F - --amend
-	undo = reset --mixed HEAD^
-	conflicts = !git ls-files -u | awk '{print $4}' | sort -u
 [push]
 	default = current
 

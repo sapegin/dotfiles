@@ -141,45 +141,6 @@ function yay() {
 	fi
 }
 
-# Setup syncronization of current Git repo with GitHub repo of the same name
-# USAGE: git-github [repo]
-function git-github() {
-	user="sapegin"
-	repo=${1-`basename "$(pwd)"`}
-	git remote add origin "git@github.com:$user/$repo.git"
-	git push -u origin master
-}
-
-# Setup syncronization of current Git repo with Bitbucket repo of the same name
-# USAGE: git-bitbucket [repo]
-function git-bitbucket() {
-	user="sapegin"
-	repo=${1-`basename "$(pwd)"`}
-	git remote add origin "git@bitbucket.org:$user/$repo.git"
-	git push -u origin master
-}
-
-# Add remote upstream
-# USAGE: git-fork <original-author>
-function git-fork() {
-	user=$1
-	if [[ "$user" == "" ]]; then
-		echo "Usage: git-fork <original-author>"
-	else
-		repo=`basename "$(pwd)"`
-		git remote add upstream "git@github.com:$user/$repo.git"
-	fi
-}
-
-# Sync branch with upstream
-# USAGE: git-upstream [branch]
-function git-upstream() {
-	branch=${1-master}
-	git fetch upstream
-	git checkout $branch
-	git merge upstream/$branch
-}
-
 # Find files with Windows line endings (and convert then to Unix in force mode)
 # USAGE: crlf [--force]
 function crlf() {

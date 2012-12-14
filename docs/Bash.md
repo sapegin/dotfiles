@@ -31,9 +31,9 @@
 
 * *oo* → open .
 
-* *marked* → open -a marked
-
 * *e* → subl
+
+* *gh* → github
 
 * *+x* → chmod +x
 
