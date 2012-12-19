@@ -49,6 +49,15 @@ function codepoint() {
 	echo # newline
 }
 
+# Remove screenshots from desktop
+function cleandesktop() {
+	header "Cleaning desktop..."
+	for file in ~/Desktop/Screen\ Shot*.png; do
+		unlink "$file"
+	done
+	echo
+}
+
 # Extract archives of various types
 function extract() {
 	if [ -f $1 ] ; then

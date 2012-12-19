@@ -54,6 +54,10 @@ Extract archives of various types.
 
 Empty the Trash on all mounted volumes and the main HDD. Also, clear Apple’s System Logs to improve shell startup speed.
 
+### cleandesktop
+
+Remove screenshots from desktop.
+
 ### show / hide
 
 Show/hide hidden files in Finder.
