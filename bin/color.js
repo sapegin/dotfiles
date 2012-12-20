@@ -16,7 +16,7 @@ var format = 'hsl';
 var args = process.argv.splice(2);
 if (!args.length) helpme();
 
-if (args[0] == '--rgb') {
+if (args[0] === '--rgb') {
 	format = 'rgb';
 	args = args.splice(1);
 }
@@ -27,7 +27,7 @@ if (!rgb) helpme();
 
 var alpha = args[1];
 
-if (format == 'hsl') {
+if (format === 'hsl') {
 	console.log(toHslString(rgb2hsl(rgb), alpha));
 }
 else {
