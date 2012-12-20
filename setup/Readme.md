@@ -5,9 +5,9 @@
 
 ## :skull: Bootstrap :skull:
 
-Run `./bootstrap.sh` (or separate scripts in this folder) and make you some coffee. Then open Chrome (now it’s your default browser) and install [all needed apps](https://github.com/sapegin/dotfiles/wiki/Mac-OS-Apps).
+Run `./bootstrap.sh` (or separate scripts in this folder) and make you some coffee. Then open Chrome (now it’s your default browser) and install [all needed apps](https://github.com/sapegin/dotfiles/wiki/OS-X-Apps).
 
-**Warning**. Your Mac can turns into a pumpkin.
+**Warning**. Your Mac can turn into a pumpkin.
 
 
 ## Scripts
@@ -43,6 +43,14 @@ Installs/updates Sublime packages from Package Control (listed in `../sublime/Us
 ### apps
 
 Installs Chrome and makes it default browser.
+
+### quicklook
+
+Installs quick look plugins: qlImageSize.
+
+### update
+
+Get OS X software updates, update Homebrew, NPM, Ruby packages, dotfiles and some other software.
 
 
 ## Tips & Tricks
