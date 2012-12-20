@@ -95,4 +95,7 @@ gi() { grunt init:$@; }
 function proj { cd "$("$HOME/dotfiles/bin/opener.py" "$HOME/Dropbox/Projects" $1 -w project $2)"; }
 function repo { cd "$("$HOME/dotfiles/bin/opener.py" "$HOME/Dropbox/Projects" $1 -w repo $2)"; }
 function wptheme { cd "$("$HOME/dotfiles/bin/opener.py" "$HOME/Dropbox/Projects" $1 -w wptheme $2)"; }
- 
+
+# Dotfiles help
+alias dot-bash="qlmanage -p "$HOME/dotfiles/docs/Bash.md""
+alias dot-git="qlmanage -p "$HOME/dotfiles/docs/Git.md""

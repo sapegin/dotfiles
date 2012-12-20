@@ -170,3 +170,7 @@ Get OS X software updates, update Homebrew, NPM, Ruby packages, dotfiles and som
 ### nyan
 
 Print nyan cat :-)
+
+### dot-bash / dot-git
+
+Display Bash aliases (this file) or Git aliases cheat sheets in Quick Look.
