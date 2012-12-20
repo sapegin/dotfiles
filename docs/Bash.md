@@ -182,6 +182,6 @@ Get OS X software updates, update Homebrew, NPM, Ruby packages, dotfiles and som
 
 Print nyan cat :-)
 
-### dot-bash / dot-git
+### dot-bash / dot-git / dot-hub / dot-extras
 
-Display Bash aliases (this file) or Git aliases cheat sheets in Quick Look.
+Open help in a browser: Bash aliases (this file), Git aliases, hub, git-extras.

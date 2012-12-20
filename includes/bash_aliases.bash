@@ -101,5 +101,7 @@ alias hex2hsl="color.js $1 $2"
 alias hex2rgb="color.js --rgb $1 $2"
 
 # Dotfiles help
-alias dot-bash="qlmanage -p "$HOME/dotfiles/docs/Bash.md""
-alias dot-git="qlmanage -p "$HOME/dotfiles/docs/Git.md""
+alias dot-bash="open https://github.com/sapegin/dotfiles/blob/master/docs/Bash.md#readme"
+alias dot-git="open https://github.com/sapegin/dotfiles/blob/master/docs/Git.md#readme"
+alias dot-hub="open https://github.com/defunkt/hub/blob/master/README.md#readme"
+alias dot-extras="open https://github.com/visionmedia/git-extras/blob/master/Readme.md#readme"
