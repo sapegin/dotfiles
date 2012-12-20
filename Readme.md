@@ -33,6 +33,7 @@ dotfiles
 * Consolas font install script (`setup/consolas.sh`)
 * Bash4 install script (`setup/bash.sh`)
 * OS X, Homebrew, NPM, etc. update script (`setup/update.sh`)
+* Color conversion script: convert #HEX to RGB/RGBA and HSL/HSLA
 * My magic project opener (`bin/opener.py`)
 * [Bash](https://github.com/sapegin/dotfiles/blob/master/docs/Bash.md) & [Git](https://github.com/sapegin/dotfiles/blob/master/docs/Git.md) aliases and scripts
 * [Mac OS X apps I use](https://github.com/sapegin/dotfiles/wiki/OS-X-Apps)

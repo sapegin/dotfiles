@@ -63,7 +63,7 @@ Remove screenshots from desktop.
 Show/hide hidden files in Finder.
 
 
-## Text
+## Files
 
 ### dos2unix <filepath>
 
@@ -73,6 +73,9 @@ Convert file to Unix line endings.
 
 Find files with Windows line endings (and convert them to Unix when `--force` key given).
 
+
+## Text, HTML, CSS
+
 ### escape <characters>
 
 Escape UTF-8 characters into their 3-byte format: `£` → `\xC2\xA3`.
@@ -80,6 +83,14 @@ Escape UTF-8 characters into their 3-byte format: `£` → `\xC2\xA3`.
 ### codepoint <character>
 
 Get a character’s Unicode code point: `£` → `\x00A3`.
+
+### hex2hsl <[#]dead00> [alpha]
+
+Convert #hex color to HSL/HSLA. `#dead00` → `hsl(47,99%,44%)`.
+
+### hex2hsl <[#]dead00> [alpha]
+
+Convert #hex color to RGB/RGBA. `#dead00` → `rgb(222,173,0)`.
 
 
 ## Network

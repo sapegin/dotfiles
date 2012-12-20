@@ -96,6 +96,10 @@ function proj { cd "$("$HOME/dotfiles/bin/opener.py" "$HOME/Dropbox/Projects" $1
 function repo { cd "$("$HOME/dotfiles/bin/opener.py" "$HOME/Dropbox/Projects" $1 -w repo $2)"; }
 function wptheme { cd "$("$HOME/dotfiles/bin/opener.py" "$HOME/Dropbox/Projects" $1 -w wptheme $2)"; }
 
+# Color conversion
+alias hex2hsl="color.js $1 $2"
+alias hex2rgb="color.js --rgb $1 $2"
+
 # Dotfiles help
 alias dot-bash="qlmanage -p "$HOME/dotfiles/docs/Bash.md""
 alias dot-git="qlmanage -p "$HOME/dotfiles/docs/Git.md""
