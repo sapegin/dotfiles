@@ -1,0 +1,66 @@
+#!/bin/bash
+
+# Archive project: commit/push last changes to remote repo, remove unnecessary files, zip and move to archive folder
+
+archive_dir="$HOME/Dropbox/Projects/_Archive"
+
+
+# Common stuff
+RED="$(tput setaf 1)"
+CYAN="$(tput setaf 6)"
+UNDERLINE="$(tput sgr 0 1)"
+NOCOLOR="$(tput sgr0)"
+function header() { echo -e "$UNDERLINE$CYAN$1$NOCOLOR\n"; }
+function error() { echo -e "$UNDERLINE$RED$1$NOCOLOR"; }
+
+
+project=`basename "$(pwd)"`
+
+header "Archiving $project..."
+
+# Has remote origin?
+if [ ! $(git remote show) ]; then
+	error "Remote origin not found."
+	echo "Run either git-github or git-bitbucket."
+	echo
+	exit 1
+fi
+
+# Dirty repo?
+if [ "$(git status --porcelain 2>/dev/null)" ]; then
+	if [ "$1" == "--force" ]; then
+		echo "Commiting all changes..."
+		git add .
+		git commit -am "Last commit."
+		echo
+	else
+		error "Repo is dirty."
+		echo "Run archive-project --force to continue."
+		echo
+		git status
+		exit 1
+	fi
+fi
+
+# Push to remove repo
+echo "Pushing changes to remote repo..."
+git push
+echo
+
+# Clean
+echo "Cleaning..."
+
+# Remove node_modules
+find . -name node_modules -print0 | xargs -0 rm -rf
+
+echo
+
+# Zip
+zip="$archive_dir/$(date +'%Y-%m')_$project.zip"
+echo "Hardcore archiving action: $zip..."
+mkdir -p "$archive_dir"
+zip -rq $zip .
+echo
+
+echo "Project archived to $zip. You can delete this folder."
+echo
