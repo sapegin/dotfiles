@@ -101,7 +101,8 @@ alias hex2hsl="color.js $1 $2"
 alias hex2rgb="color.js --rgb $1 $2"
 
 # Dotfiles help
-alias dot-bash="open https://github.com/sapegin/dotfiles/blob/master/docs/Bash.md#readme"
-alias dot-git="open https://github.com/sapegin/dotfiles/blob/master/docs/Git.md#readme"
-alias dot-hub="open https://github.com/defunkt/hub/blob/master/README.md#readme"
+alias dot-bash="killall Marked; open -a marked --args $HOME/dotfiles/docs/Bash.md"
+alias dot-git="killall Marked; open -a marked --args $HOME/dotfiles/docs/Git.md"
+alias dot-hub="killall Marked; find /usr/local/Cellar/hub/ -name README.md -exec open -a marked --args {} \;"
+#alias dot-extras="killall Marked; find /usr/local/Cellar/git-extras/ -name README.md -exec open -a marked --args {} \;"
 alias dot-extras="open https://github.com/visionmedia/git-extras/blob/master/Readme.md#readme"
