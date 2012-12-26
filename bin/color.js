@@ -47,13 +47,13 @@ function hex2rgb(rgbString) {
 	// Parse `dead00` and `f00`
 	var channels = [];
 	if (rgbString.length === 3) {
-		channels = rgbString.match(/([0-9a-f])/g);
+		channels = rgbString.match(/([0-9a-f])/ig);
 		channels = channels.map(function(hex) {
 			return hex + hex;
 		});
 	}
 	else {
-		channels = rgbString.match(/([0-9a-f]){2}/g);
+		channels = rgbString.match(/([0-9a-f]){2}/ig);
 	}
 	if (channels.length !== 3) {
 		return null;
