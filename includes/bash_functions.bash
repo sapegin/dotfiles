@@ -10,7 +10,7 @@ function md() {
 
 # Find shorthand
 function f() {
-	find . -name "$1"
+	find . -name "$1" 2>/dev/null
 }
 
 # Get gzipped file size
