@@ -1,0 +1,41 @@
+#!/bin/sh
+
+#
+# Takes N pictures of you via your iSight camera, animates them, uploads them to CloudApp, and puts the url in your clipboard.
+# 
+# USAGE: showme [shots]
+#
+# Author: Artem Sapegin, sapegin.me
+# Inspired by https://gist.github.com/832125
+#
+# Requirements:
+# brew istall imagemagick imagesnap
+# gem install gifme cloudapp_api json
+# https://github.com/holman/dotfiles/blob/master/bin/cloudapp
+# http://www.getcloudapp.com/
+#
+
+
+# 3 shots by default
+shots=${1-3}
+dir=`basename "$(pwd)"`
+
+TMPDIR=`mktemp -d` && {
+	cd $TMPDIR
+
+	for ((shot=1; shot<=$shots; shot++)); do
+		echo "Prepare for shot $shot..."
+		echo "3..."
+		sleep 1
+		echo "2..."
+		sleep 1
+		echo "1..."
+		sleep 1
+		echo "GO!"
+		imagesnap -q "shot$shot.jpg"
+	done
+
+	gifme -w 200 -o hereisapictureofme.gif *.jpg
+
+	rm -rf $TMPDIR
+}
