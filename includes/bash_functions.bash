@@ -40,13 +40,13 @@ function headers() {
 # Escape UTF-8 characters into their 3-byte format
 function escape() {
 	printf "\\\x%s" $(printf "$@" | xxd -p -c1 -u)
-	echo # newline
+	echo
 }
 
 # Get a character’s Unicode code point: £ → \x00A3
 function codepoint() {
 	perl -e "use utf8; print sprintf('\x%04X', ord(\"$@\"))"
-	echo # newline
+	echo
 }
 
 # Remove screenshots from desktop
@@ -238,3 +238,8 @@ function rasterize() {
 		echo "Screenshot saved to: $filename"
 	fi
 }
+
+# Add special aliases that will copy result to clipboard (escape → escape+)
+for cmd in password hex2hsl hex2rgb escape codepoint; do
+	eval "function $cmd+() { $cmd \$@ | c; }"
+done

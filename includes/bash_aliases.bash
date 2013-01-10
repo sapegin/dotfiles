@@ -77,7 +77,7 @@ done
 alias dos2unix="perl -pi -e 's/\r\n?/\n/g'"
 
 # Password generator
-password() { openssl rand -base64 ${1:-8} | c; }
+password() { openssl rand -base64 ${1:-8}; }
 
 # Show $PATH in a readable way
 alias path='echo -e ${PATH//:/\\n}'
@@ -88,8 +88,8 @@ alias npm-release='npm version minor -m "%s"'
 
 # Grunt
 alias gw="grunt deploy --debug && grunt watch --debug"
-alias gs="grunt deploy --debug && grunt serve --debug"
-gi() { grunt init:$@; }
+alias gs="grunt deploy --debug && grunt watch server --debug"
+gi() { grunt-init $@; }
 
 # Magic Project Opener
 function proj { cd "$("$HOME/dotfiles/bin/opener.py" "$HOME/Dropbox/Projects" $1 -w project $2)"; }

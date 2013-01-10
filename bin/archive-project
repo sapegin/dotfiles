@@ -50,6 +50,9 @@ echo
 # Clean
 echo "Cleaning..."
 
+# Optimize repo
+git gc
+
 # Remove node_modules
 find . -name node_modules -print0 | xargs -0 rm -rf
 

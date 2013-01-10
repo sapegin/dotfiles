@@ -42,8 +42,8 @@ function _prepend_path() {
 [ -d /usr/local/bin ] && _prepend_path "/usr/local/bin"
 [ -d /usr/local/share/npm/bin ] && _prepend_path "/usr/local/share/npm/bin"
 command -v brew >/dev/null 2>&1 && _prepend_path "$(brew --prefix coreutils)/libexec/gnubin"
-[ -d ~/dotfiles/bin ] && _prepend_path "~/dotfiles/bin"
-[ -d ~/bin ] && _prepend_path "~/bin"
+[ -d ~/dotfiles/bin ] && _prepend_path "$HOME/dotfiles/bin"
+[ -d ~/bin ] && _prepend_path "$HOME/bin"
 export PATH
 
 # Colors
