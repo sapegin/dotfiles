@@ -18,7 +18,6 @@
 
 # 3 shots by default
 shots=${1-3}
-dir=`basename "$(pwd)"`
 
 TMPDIR=`mktemp -d` && {
 	cd $TMPDIR
