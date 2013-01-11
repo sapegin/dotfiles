@@ -13,12 +13,13 @@ function f() {
 	find . -name "$1" 2>/dev/null
 }
 
-# Get gzipped file size
+# Compare original and gzipped file size
 function gz() {
-	echo "Original size (bytes): "
-	cat "$1" | wc -c
-	echo "Gzipped size (bytes): "
-	gzip -c "$1" | wc -c
+	local origsize=$(wc -c < "$1")
+	local gzipsize=$(gzip -c "$1" | wc -c)
+	local ratio=$(echo "$gzipsize * 100/ $origsize" | bc -l)
+	printf "Original: %d bytes\n" "$origsize"
+	printf "Gzipped: %d bytes (%2.2f%%)\n" "$gzipsize" "$ratio"
 }
 
 # Test if HTTP compression (RFC 2616 + SDCH) is enabled for a given URL.
