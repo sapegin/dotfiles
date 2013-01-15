@@ -1,0 +1,16 @@
+#!/usr/bin/python
+
+# Human readable password generator.
+# Based on https://github.com/Version2beta/passphrase
+
+NAMES_DICT = "/usr/share/dict/propernames"
+DICT = "/usr/share/dict/words"
+
+import random
+
+name = random.sample(list(open(NAMES_DICT)), 1)
+words = random.sample(list(open(DICT)), 2)
+phrase = name[0].rstrip().lower()
+for word in words:
+	phrase = phrase + word.rstrip().lower()
+print phrase
