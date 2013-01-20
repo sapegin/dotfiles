@@ -1,0 +1,69 @@
+#!/bin/bash
+
+# Convert ebooks to Kindle’s Mobi format
+#
+# Usage: anytomobi <file or folder> [destination folder]
+#
+# Author: Artem Sapegin, sapegin.me
+#
+# Require:
+# - KindleGen - http://www.amazon.com/gp/feature.html?ie=UTF8&docId=1000765211
+# - Calibre - http://calibre-ebook.com/download
+#
+# Manuals:
+# - http://manual.calibre-ebook.com/cli/ebook-convert.html
+# - http://manual.calibre-ebook.com/cli/ebook-meta.html
+
+
+function convert_file() {
+	local infile="$1"
+	local intype=${infile##*.}
+	local intype=$(echo $intype | tr '[:upper:]' '[:lower:]')
+	local infilename=$(basename "$1")
+	local outfilename="${infilename%.*}.mobi"
+
+	if [[ "$intype" == "mobi" || "$intype" == "pdf" ]]; then
+		# Just copy MOBI and PDF files to destination directory
+		if [[ "$outdir" != "." ]]; then
+			cp "$infile" "$outdir/"
+		fi
+		return
+	elif [[ "$intype" == "epub" ]]; then
+		kindlegen "$infile" -o "$outfilename"
+		# kindlegen can’t save file to other directory, so we should move it
+		if [[ "$outdir" != "." ]]; then
+			mv "${infile%.*}.mobi" "$outdir/"
+		fi
+	else
+		ebook-convert "$infile" "$outdir/$outfilename" --output-profile=kindle_pw --mobi-file-type=new \
+			--mobi-ignore-margins --mobi-keep-original-images \
+			--no-inline-toc --no-inline-fb2-toc --remove-paragraph-spacing \
+			--change-justification=left --keep-ligatures --smarten-punctuation --pretty-print
+	fi
+
+	echo
+	echo "Filename            : $outfilename"
+	ebook-meta "$outdir/$outfilename"
+}
+
+function convert_dir() {
+	local dir=$1
+
+	for file in "$dir"/*.{mobi,pdf,epub,fb2}; do
+		if [[ -e "$file" ]]; then
+			convert_file "$file"
+		fi
+	done
+}
+
+outdir=${2-.}
+mkdir -p "$outdir"
+
+if [[ -f "$1" ]]; then
+	convert_file "$1"
+elif [[ -d "$1" ]]; then
+	convert_dir "$1"
+else
+	echo "Usage: anytomobi <file or folder> [destination folder]"
+	exit 1
+fi
