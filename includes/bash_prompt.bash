@@ -15,6 +15,10 @@ function prompt_command() {
 	local GIT_DIRTY=
 	local PWDNAME="$PWD"
 
+	# Local or SSH session?
+	local remote=
+	[ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ] && remote=1
+
 	# Beautify working directory name
 	if [ "$HOME" == "$PWD" ]; then
 		PWDNAME="~"
@@ -44,7 +48,9 @@ function prompt_command() {
 	[[ ! -z "$GIT_BRANCH" ]] && PS1_GIT=" #$GIT_BRANCH"
 
 	# Calculate prompt length
-	local PS1_length=$((${#USER}+${#HOSTNAME}+${#PWDNAME}+${#PS1_GIT}+3))
+	local host_length=0
+	[ -n "$remote" ] && host_length=$((${#HOSTNAME}+1))
+	local PS1_length=$((${#USER}+${#PWDNAME}+${#PS1_GIT}+$host_length+2))
 	local FILL=
 
 	# If length is greater, than terminal width
@@ -67,7 +73,9 @@ function prompt_command() {
 	fi
 
 	# Set new color prompt
-	PS1="$USER_COLOR$USER$NOCOLOR@$YELLOW$HOSTNAME$NOCOLOR:$WHITE$PWDNAME$NOCOLOR$PS1_GIT $FILL\n→ "
+	local host_prompt=
+	[ -n "$remote" ] && host_prompt="@$YELLOW$HOSTNAME$NOCOLOR" 
+	PS1="$USER_COLOR$USER$NOCOLOR$host_prompt:$WHITE$PWDNAME$NOCOLOR$PS1_GIT $FILL\n→ "
 
 	# Terminal title
 	local TITLE=$(basename $PWDNAME)
