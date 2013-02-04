@@ -6,7 +6,7 @@
 	"default_line_ending": "unix",
 	"detect_indentation": false,
 	"detect_slow_plugins": false,
-	"drag_text": false,
+	"drag_text": true,
 	"fallback_encoding": "Cyrillic (Windows 1251)",
 	"font_face": "Consolas",
 	"font_size": 14,

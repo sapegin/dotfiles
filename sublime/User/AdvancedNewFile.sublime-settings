@@ -1,4 +1,3 @@
 {
-	// A default initial value to fill the create new file input path with.
-	"default_initial": ":"
+	"default_root": "current"
 }
