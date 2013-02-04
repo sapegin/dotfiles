@@ -116,4 +116,4 @@ unset less_options
 export PAGER='less'
 
 # Load extra (private) settings
-[ -f "~/.bashlocal" ] && source "~/.bashlocal"
+[ -f ~/.bashlocal ] && source ~/.bashlocal
