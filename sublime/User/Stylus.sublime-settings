@@ -2,9 +2,9 @@
 	"disable_tab_abbreviations": true,
 
 	"hayaku_CSS_syntax_autoguess": [
-		"    selector {              ",
-		"        property:value;     ",
-		"    }                       "
+		"selector {",
+		"\tproperty:value;",
+		"}"
 	],
 
 	// Syntax quirks

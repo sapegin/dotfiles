@@ -9,14 +9,16 @@
 	"drag_text": true,
 	"fallback_encoding": "Cyrillic (Windows 1251)",
 	"font_face": "Consolas",
-	"font_size": 14,
+	"font_size": 15,
+	"line_padding_top": 1,
+	"line_padding_bottom": 1,
 	"hayaku_CSS_colors_case": "lowercase",
 	"hayaku_CSS_numbers_leading_zero": false,
 	"hayaku_CSS_syntax_autoguess":
 	[
-		"    selector {              ",
-		"        property:value;     ",
-		"        }                   "
+		"selector {",
+		"\tproperty:value;",
+		"\t}"
 	],
 	"highlight_line": true,
 	"ignored_packages":
