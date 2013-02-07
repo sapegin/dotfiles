@@ -36,6 +36,11 @@ unset TMPDIR
 mysql_install_db --verbose --user=`whoami` --basedir="$(brew --prefix mysql)" --datadir=/usr/local/var/mysql --tmpdir=/tmp
 /usr/local/opt/mysql/bin/mysqladmin -u root password 'root'
 
+# PHP
+cd /etc
+sudo cp php.ini.default php.ini 
+sudo sed -i '' "s^/var/mysql/mysql.sock^/tmp/mysql.sock^" php.ini
+
 # Apache: enable PHP, .htaccess files, virtual hosts and set it to run as current user
 cd /etc/apache2
 sudo cp httpd.conf httpd.conf.bak
