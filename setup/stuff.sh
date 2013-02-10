@@ -64,6 +64,7 @@ npm install -g jshint
 npm install -g bower
 
 # Python
+brew install python
 sudo pip install fabric
 
 # Remove outdated versions from the cellar
