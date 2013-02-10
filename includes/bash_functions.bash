@@ -242,6 +242,27 @@ function rasterize() {
 	fi
 }
 
+# Add note to Notes.app (OS X 10.8)
+# Usage: note "foo" or echo "foo" | note
+function note() {
+	local text
+	if [ -t 0 ]; then  # Argument
+		text="$1"
+	else  # Pipe
+		text=$(cat)
+	fi
+	body=$(echo "$text" | sed -E 's|$|<br>|g')
+	osascript >/dev/null <<EOF
+tell application "Notes"
+	tell account "iCloud"
+		tell folder "Notes"
+			make new note with properties {name:"$text", body:"$body"}
+		end tell
+	end tell
+end tell
+EOF
+}
+
 # Add special aliases that will copy result to clipboard (escape → escape+)
 for cmd in password hex2hsl hex2rgb escape codepoint; do
 	eval "function $cmd+() { $cmd \$@ | c; }"
