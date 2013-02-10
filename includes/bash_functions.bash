@@ -111,14 +111,15 @@ ssh-key() {
 
 # Create an SSH key and uploads it to the given host
 # Based on https://gist.github.com/1761938
-add-ssh-host() {
+ssh-add-host() {
 	username=$1
 	hostname=$2
 	identifier=$3
 
 	if [[ "$identifier" == "" ]] || [[ "$username" == "" ]] || [[ "$hostname" == "" ]]; then
-		echo "Usage: configure_ssh_host <username> <hostname> <identifier>"
+		echo "Usage: ssh-add-host <username> <hostname> <identifier>"
 	else
+		header "Generating key..."
 		if [ ! -f "$HOME/.ssh/$identifier.id_rsa" ]; then
 			ssh-keygen -f ~/.ssh/$identifier.id_rsa -C "$USER $(date +'%Y/%m%/%d %H:%M:%S')"
 		fi
@@ -127,6 +128,7 @@ add-ssh-host() {
 			echo -e "Host $identifier\n\tHostName $hostname\n\tUser $username\n\tIdentityFile ~/.ssh/$identifier.id_rsa" >> ~/.ssh/config
 		fi
 
+		header "Uploading key..."
 		ssh $identifier 'mkdir -p .ssh && cat >> ~/.ssh/authorized_keys' < ~/.ssh/$identifier.id_rsa.pub
 
 		tput bold; ssh -o PasswordAuthentication=no $identifier true && { tput setaf 2; echo "SSH key added."; } || { tput setaf 1; echo "Failure"; }; tput sgr0
