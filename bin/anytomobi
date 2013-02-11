@@ -7,7 +7,7 @@
 # Author: Artem Sapegin, sapegin.me
 #
 # Require:
-# - Calibre - http://calibre-ebook.com/download
+# - Calibre - http://calibre-ebook.com/download (install command line tools from Calibre’s settings)
 #
 # Manuals:
 # - http://manual.calibre-ebook.com/cli/ebook-convert.html
