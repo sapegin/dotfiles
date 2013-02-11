@@ -55,6 +55,7 @@ cd -
 
 # Everything else
 brew install unrar
+brew install ack
 
 # Node.js
 brew install node
