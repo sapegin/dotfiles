@@ -7,8 +7,7 @@
 # Author: Artem Sapegin, sapegin.me
 #
 # Require:
-# - KindleGen - http://www.amazon.com/gp/feature.html?ie=UTF8&docId=1000765211
-# - Calibre - http://calibre-ebook.com/download
+# - Calibre - http://calibre-ebook.com/download (install command line tools from Calibre’s settings)
 #
 # Manuals:
 # - http://manual.calibre-ebook.com/cli/ebook-convert.html
@@ -22,23 +21,17 @@ function convert_file() {
 	local infilename=$(basename "$1")
 	local outfilename="${infilename%.*}.mobi"
 
-	if [[ "$intype" == "mobi" || "$intype" == "pdf" ]]; then
-		# Just copy MOBI and PDF files to destination directory
+	if [[ "$intype" == "pdf" ]]; then
+		# Just copy PDF files to destination directory
 		if [[ "$outdir" != "." ]]; then
 			cp "$infile" "$outdir/"
 		fi
 		return
-	elif [[ "$intype" == "epub" ]]; then
-		kindlegen "$infile" -o "$outfilename"
-		# kindlegen can’t save file to other directory, so we should move it
-		if [[ "$outdir" != "." ]]; then
-			mv "${infile%.*}.mobi" "$outdir/"
-		fi
 	else
-		ebook-convert "$infile" "$outdir/$outfilename" --output-profile=kindle_pw --mobi-file-type=new \
-			--mobi-ignore-margins --mobi-keep-original-images \
-			--no-inline-toc --no-inline-fb2-toc --remove-paragraph-spacing \
-			--change-justification=left --keep-ligatures --smarten-punctuation --pretty-print
+		# Convert any other format (MOBI too) to old MOBI format to force left text alignment
+		ebook-convert "$infile" "$outdir/$outfilename" --output-profile=kindle_pw --mobi-file-type=old \
+			--mobi-ignore-margins --mobi-keep-original-images --no-inline-toc --remove-paragraph-spacing \
+			--change-justification=left --keep-ligatures --smarten-punctuation --pretty-print --filter-css=color
 	fi
 
 	echo
@@ -64,6 +57,6 @@ if [[ -f "$1" ]]; then
 elif [[ -d "$1" ]]; then
 	convert_dir "$1"
 else
-	echo "Usage: anytomobi <file or folder> [destination folder]"
+	echo "Usage: `basename $0` <file or folder> [destination folder]"
 	exit 1
 fi

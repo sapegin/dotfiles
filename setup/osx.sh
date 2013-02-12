@@ -317,16 +317,17 @@ defaults write com.apple.dock expose-group-by-app -bool false
 # Don’t show Dashboard as a Space
 defaults write com.apple.dock dashboard-in-overlay -bool true
 
-# Remove the auto-hiding Dock delay
-defaults write com.apple.Dock autohide-delay -float 0
-# Remove the animation when hiding/showing the Dock
-defaults write com.apple.dock autohide-time-modifier -float 0
-
 # Enable the 2D Dock
 defaults write com.apple.dock no-glass -bool true
 
 # Automatically hide and show the Dock
 defaults write com.apple.dock autohide -bool true
+
+# Remove the Delay when Showing and Hiding the Dock
+defaults write com.apple.dock autohide-delay -float 0 
+
+# Remove the animation when hiding/showing the Dock
+defaults write com.apple.dock autohide-time-modifier -float 0
 
 # Make Dock icons of hidden applications translucent
 #defaults write com.apple.dock showhidden -bool true
@@ -336,6 +337,9 @@ defaults write com.apple.dock no-bouncing -bool true
 
 # Disable Space switching on Command-Tab
 defaults write com.apple.dock workspaces-auto-swoosh -bool false
+
+# Show only active applications
+defaults write com.apple.dock static-only -bool TRUE
 
 # Reset Launchpad
 find ~/Library/Application\ Support/Dock -name "*.db" -maxdepth 1 -delete
@@ -376,6 +380,9 @@ defaults write -g WebContinuousSpellCheckingEnabled -boolean true
 # Spotlight window keyboard shortcut: none
 /usr/libexec/PlistBuddy "$HOME/Library/Preferences/com.apple.symbolichotkeys.plist" -c 'Delete AppleSymbolicHotKeys:65' > /dev/null 2>&1
 /usr/libexec/PlistBuddy "$HOME/Library/Preferences/com.apple.symbolichotkeys.plist" -c 'Add AppleSymbolicHotKeys:65:enabled bool false'
+
+# Remove Spotlight from menu bar
+sudo chmod 600 /System/Library/CoreServices/Search.bundle/Contents/MacOS/Search
 
 ###############################################################################
 # Safari & WebKit                                                             #

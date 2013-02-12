@@ -55,15 +55,18 @@ cd -
 
 # Everything else
 brew install unrar
+brew install ack
 
 # Node.js
 brew install node
 brew install casperjs
 npm install -g grunt-cli
+npm install -g grunt-init
 npm install -g jshint
 npm install -g bower
 
 # Python
+brew install python
 sudo pip install fabric
 
 # Remove outdated versions from the cellar

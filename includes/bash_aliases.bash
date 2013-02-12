@@ -17,6 +17,7 @@ alias oo="open ."
 alias e="subl"
 alias gh="github"
 alias +x="chmod +x"
+alias g="ack -ri"
 
 # Detect which `ls` flavor is in use
 if ls --color > /dev/null 2>&1; then  # GNU `ls`
