@@ -27,6 +27,7 @@
 	s = status -sb
 	l = log --graph --pretty=format:'%C(magenta)%h%C(blue)%d%Creset %s %C(blue bold)- %an, %ar%Creset'
 	ll = log --stat --abbrev-commit
+	conflicts = diff --name-only --diff-filter=U
 [push]
 	default = current
 
