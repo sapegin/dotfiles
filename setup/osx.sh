@@ -384,6 +384,9 @@ defaults write -g WebContinuousSpellCheckingEnabled -boolean true
 # Remove Spotlight from menu bar
 sudo chmod 600 /System/Library/CoreServices/Search.bundle/Contents/MacOS/Search
 
+# Disable Notification Center
+launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist
+
 ###############################################################################
 # Safari & WebKit                                                             #
 ###############################################################################
@@ -570,7 +573,7 @@ sudo pmset -c panicrestart 15
 ###############################################################################
 
 for app in "Address Book" "Calendar" "Contacts" "Dashboard" "Dock" "Finder" \
-	"Mail" "Safari" "SystemUIServer" "Terminal" "iCal" "iTunes"; do
+	"Mail" "Safari" "SystemUIServer" "Terminal" "iCal" "iTunes" "NotificationCenter"; do
 	killall "$app" > /dev/null 2>&1
 done
 echo "Done. Note that some of these changes require a logout/restart to take effect."
