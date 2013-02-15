@@ -53,6 +53,9 @@ sudo sed -i '' "s^Group _www^Group staff^" httpd.conf
 echo -e "NameVirtualHost *:80\n\n<Directory />\n    AllowOverride All\n    Allow from all\n</Directory>\n" | sudo tee extra/httpd-vhosts.conf
 cd -
 
+# Extend global $PATH
+echo -e "setenv PATH $HOME/dotfiles/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" | sudo tee /etc/launchd.conf
+
 # Everything else
 brew install unrar
 brew install ack
