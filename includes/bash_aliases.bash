@@ -43,7 +43,7 @@ alias rm="rm -i"
 alias update="source "$HOME/dotfiles/setup/update.sh""
 
 # Update dotfiles
-alias dotfiles="cd "$HOME/dotfiles" && git pull && ./sync.py && . "$HOME/.bashrc" && cd - > /dev/null 2>&1 && nyan"
+alias dotfiles="pushd "$HOME/dotfiles" > /dev/null 2>&1; git pull && ./sync.py && . "$HOME/.bashrc"; popd > /dev/null 2>&1; nyan"
 
 # Clean up LaunchServices to remove duplicates in the “Open With” menu
 #alias lscleanup="/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user && killall Finder"
