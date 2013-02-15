@@ -56,6 +56,8 @@ cd -
 # Everything else
 brew install unrar
 brew install ack
+brew install msmtp --with-macosx-keyring
+brew install mutt --sidebar-patch
 
 # Node.js
 brew install node
