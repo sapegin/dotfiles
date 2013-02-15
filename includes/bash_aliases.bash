@@ -65,9 +65,8 @@ alias hide="defaults write com.apple.Finder AppleShowAllFiles -bool false && kil
 # URL-encode strings
 #alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1]);"'
 
-# Ring the terminal bell, and put a badge on Terminal.app’s Dock icon
-# (useful when executing time-consuming commands)
-#alias badge="tput bel"
+# Ring the terminal bell, and put a badge on Terminal.app’s Dock icon (useful when executing time-consuming commands)
+alias badge="tput bel"
 
 # HTTP requests by @janmoesen
 for method in GET HEAD POST PUT DELETE TRACE OPTIONS; do
@@ -88,8 +87,8 @@ alias npm-patch='npm version patch -m "%s"'
 alias npm-release='npm version minor -m "%s"'
 
 # Grunt
-alias gw="grunt deploy --debug && grunt watch --debug"
-alias gs="grunt deploy --debug && grunt watch server --debug"
+alias gw="grunt watch --debug"
+alias gs="grunt watch server --debug"
 gi() { grunt-init $@; }
 
 # Magic Project Opener
