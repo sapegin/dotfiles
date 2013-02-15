@@ -13,6 +13,7 @@
 # - http://manual.calibre-ebook.com/cli/ebook-convert.html
 # - http://manual.calibre-ebook.com/cli/ebook-meta.html
 
+command -v ebook-convert >/dev/null 2>&1 || { echo >&2 "ebook-convert not installed: see comments for instructions."; exit 1; }
 
 function convert_file() {
 	local infile="$1"
