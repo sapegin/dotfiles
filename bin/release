@@ -1,0 +1,98 @@
+#!/bin/bash
+
+# Release next version of product
+# Usage: release <VERSION|major|minor|patch>
+#
+# Require:
+# - semver - https://github.com/sekati/semver
+# - jq - brew install jq
+
+# Common stuff
+RED="$(tput setaf 1)"
+CYAN="$(tput setaf 6)"
+UNDERLINE="$(tput sgr 0 1)"
+NOCOLOR="$(tput sgr0)"
+function header() { echo -e "$UNDERLINE$CYAN$1$NOCOLOR\n"; }
+function error() { echo -e "$UNDERLINE$RED$1$NOCOLOR"; }
+
+
+if [ "$1" == "" ]; then
+	echo "Usage: `basename $0` <VERSION|major|minor|patch>"
+	exit 1
+fi
+
+# Dirty repo?
+if [ "$(git status --porcelain 2>/dev/null)" ]; then
+	error "Repo is dirty."
+	echo "Pleae commit changes before continue."
+	echo
+	git status
+	exit 1
+fi
+
+# Read existing versions
+jq_ver=$(find . -maxdepth 1 -name "*.jquery.json" | xargs cat | jq -r ".version")
+cmpnt_ver=$(find . -maxdepth 1 -name "component.json" | xargs cat | jq -r ".version")
+pkg_ver=$(find . -maxdepth 1 -name "package.json" | xargs cat | jq -r ".version")
+
+# Non npm package 
+[ "$pkg_ver" == "0.0.0" ] && pkg=
+
+# Verify current versions 
+current_ver=$jq_ver||$cmpnt_ver||$pck_ver
+[ "$current_ver" == "" ] && current_ver="0.0.1"
+
+# Validate current versions and determine new version
+if [ "$1" == "major" ] || [ "$1" == "minor" ] || [ "$1" == "patch" ]; then
+	dont_match="Versions in *.jquery.json, component.json and package.json don’t match."
+	if [ "$jq_ver" != "" ] && [ "$current_ver" != "$jq_ver" ]; then error dont_match; fi
+	if [ "$cmpnt_ver" != "" ] && [ "$current_ver" != "$cmpnt_ver" ]; then error dont_match; fi
+	if [ "$pck_ver" != "" ] && [ "$current_ver" != "$pck_ver" ]; then error dont_match; fi
+else
+	new_ver="$1"
+fi
+if [ "$new_ver" == "" ]; then
+	[ "$1" == "patch" ] && new_ver=$(semver -p $current_ver)
+	[ "$1" == "minor" ] && new_ver=$(semver -n $current_ver)
+	[ "$1" == "major" ] && new_ver=$(semver -m $current_ver)
+fi
+
+header "Releasing v$new_ver..."
+
+# Update component.json
+if [ "$cmpnt_ver" != "" ]; then
+	sed -i '' "s^$current_ver^$new_ver^" component.json
+fi
+
+# Update package.json
+if [ "$pck_ver" != "" ]; then
+	sed -i '' "s^$current_ver^$pck_ver^" package.json
+fi
+
+# Update *.jquery.json
+if [ "$jq_ver" != "" ]; then
+	find . -maxdepth 1 -name "*.jquery.json" | xargs sed -i '' "s^$current_ver^$jq_ver^"
+fi
+
+# Build files
+[ -f Gruntfile.js ] && grunt build
+if [ -f src/Gruntfile.js ]; then
+	pushd src
+	grunt build
+	popd
+fi
+
+# Commit changed files
+git commit -am "v$new_ver"
+git push origin
+
+# Create tag
+git tag "v$new_ver"
+git push origin --tags
+
+# Publish npm package
+if [ "$pck_ver" != "" ]; then
+	npm publish
+fi
+
+echo "Done."
