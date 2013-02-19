@@ -8,6 +8,9 @@ bitbucket_user="sapegin"
 alias git-root='git rev-parse 2>/dev/null && cd "./$(git rev-parse --show-cdup)"'
 alias gr="git-root"
 
+# Deploy using Fabric
+alias pff="push && fab"
+
 # Setup syncronization of current Git repo with GitHub repo of the same name
 # USAGE: git-github [repo]
 function git-github() {

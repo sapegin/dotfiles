@@ -17,6 +17,7 @@ alias oo="open ."
 alias e="subl"
 alias gh="github"
 alias +x="chmod +x"
+alias x+="chmod +x"
 alias g="ack -ri"
 
 # Detect which `ls` flavor is in use
@@ -88,7 +89,7 @@ alias npm-release='npm version minor -m "%s"'
 
 # Grunt
 alias gw="grunt watch --debug"
-alias gs="grunt watch server --debug"
+alias gs="grunt watch connect --debug"
 gi() { grunt-init $@; }
 
 # Magic Project Opener
