@@ -1,0 +1,72 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+#
+# Markdown to Aegea blog engine converter
+# Author: Artem Sapegin (sapegin.me)
+#
+
+import sys
+import os
+import re
+import cgi
+
+
+def main():
+	filename = sys.argv[1]
+	if not filename:
+		sys.exit('Usage: %s <filename>' % os.path.basename(__file__))
+
+	try:
+		file = open(filename, 'r')
+	except IOError:
+		return []
+
+	print(process(file.read()))
+
+
+def process(text):
+	# Preserve code blocks
+	blocks = {}
+
+	def store_code_blocks(m):
+		key = r'<%s>' % (len(blocks))
+		value = [m.group(1), m.group(2)]
+		blocks[key] = value
+		return key
+
+	text = re.sub(r'```(\w+)\n([\w\W]+?)\n```', store_code_blocks, text)
+
+	# Process lines
+	lines = text.split('\n')
+	new_lines = []
+	for line in lines:
+		new_lines.append(process_line(line))
+	text = '\n'.join(new_lines)
+
+	# Restore and convert code blocks
+	for key, value in blocks.items():
+		code = value[1]
+		code = cgi.escape(code)
+		value = r'<pre><code class="language-%s">%s</code></pre>' % (value[0], code)
+		text = text.replace(key, value)
+
+	return text
+
+
+def process_line(line):
+	line = re.sub(r'#(#+) ', r'\1 ', line)  # Increase headings level
+
+	line = re.sub(r'\*\*([^*]+)\*\*', r'__\1__', line)  # Escape bold
+	line = re.sub(r'\*([^*]+)\*', r'//\1//', line)  # Italic
+	line = re.sub(r'__[^_]__', r'**\1**', line)  # Restore bold
+
+	line = re.sub(r'\[([^\]]+)\]\(([^\)]+)\)', r'[[\2 \1]]', line)  # Link
+
+	line = re.sub(r'`([^`]+)`', r'\1', line)  # Remove inline code blocks
+
+	return line
+
+
+if __name__ == '__main__':
+	main()
