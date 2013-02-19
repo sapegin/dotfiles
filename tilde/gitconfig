@@ -10,10 +10,9 @@
 	# http://stackoverflow.com/questions/136178/git-diff-handling-long-lines
 	# If doesn't work, try: pager = less -+$LESS -FRX
 	pager = less -r
-	autocrlf = input
+	autocrlf = false
 	safecrlf = false
 	excludesfile = ~/.gitignore
-	attributesfile = ~/.gitattributes
 [alias]
 	a = add
 	ua = reset HEAD
