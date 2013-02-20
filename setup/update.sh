@@ -12,11 +12,11 @@ echo
 
 # Dotfiles
 header "Updating dotfiles..."
-cd "$HOME/dotfiles"
+pushd "$HOME/dotfiles"
 git pull
 ./sync.py
 source "$HOME/.bashrc"
-cd -
+popd
 echo
 
 # OS X
