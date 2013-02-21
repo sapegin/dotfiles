@@ -1,10 +1,12 @@
 #
-# The most awesome Bash prompt
+# Clean and minimalistic Bash prompt
 # Author: Artem Sapegin, sapegin.me
 # 
-# Inspired by: https://github.com/dreadatour/dotfiles/blob/master/.bash_profile & https://github.com/sindresorhus/pure
+# Inspired by: https://github.com/sindresorhus/pure & https://github.com/dreadatour/dotfiles/blob/master/.bash_profile
 #
-# Add to ~/.bashlocal user name you don’t want to see in the prompt: `local_username="admin"`
+# Notes:
+# - $local_username - username you don’t want to see in the prompt - can be defined in ~/.bashlocal : `local_username="admin"`
+# - Colors ($RED, $GREEN) - defined in ../tilde/bash_profile.bash
 #
 
 
@@ -14,7 +16,7 @@ case $(id -u) in
 	*) user_color="$GREEN" ;;
 esac
 
-# Prompt symbol
+# Symbols
 prompt_symbol="❯"
 prompt_clean_symbol="☀ "
 prompt_dirty_symbol="☂ "
@@ -57,7 +59,7 @@ function prompt_command() {
 
 	# Format prompt
 	first_line="$user_prompt$host_prompt$login_delimiter$WHITE\w$NOCOLOR$git_prompt"
-	# Text (commands) inside \[...\] does not impact line length which fixes stange bug when looking through the history
+	# Text (commands) inside \[...\] does not impact line length calculation which fixes stange bug when looking through the history
 	# $? is a status of last command, should be processed every time prompt prints
 	second_line="\`if [ \$? = 0 ]; then echo \[\$CYAN\]; else echo \[\$RED\]; fi\`\$prompt_symbol\[\$NOCOLOR\] "
 	PS1="\n$first_line\n$second_line"
