@@ -89,7 +89,7 @@ alias npm-release='npm version minor -m "%s"'
 
 # Grunt
 alias gw="grunt watch --debug"
-alias gs="grunt watch connect --debug"
+alias gs="grunt connect watch --debug"
 gi() { grunt-init $@; }
 
 # Magic Project Opener
