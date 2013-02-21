@@ -1,6 +1,12 @@
+#
+# The most awesome Bash prompt
+# Author: Artem Sapegin, sapegin.me
+# 
 # Inspired by: https://github.com/dreadatour/dotfiles/blob/master/.bash_profile & https://github.com/sindresorhus/pure
-
+#
 # Add to ~/.bashlocal user name you don’t want to see in the prompt: `local_username="admin"`
+#
+
 
 # User color
 case $(id -u) in
@@ -10,19 +16,13 @@ esac
 
 # Prompt symbol
 prompt_symbol="❯"
+prompt_clean_symbol="☀ "
+prompt_dirty_symbol="☂ "
 
 function prompt_command() {
 	# Local or SSH session?
 	local remote=
 	[ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ] && remote=1
-
-	# Working directory name
-	local dir_name="$PWD"
-	if [ "$HOME" == "$PWD" ]; then
-		dir_name="~"
-	elif [ "$HOME" == "${PWD:0:${#HOME}}" ]; then
-		dir_name="~${PWD:${#HOME}}"
-	fi
 
 	# Git branch name and work tree status (only when we are inside Git working tree)
 	local git_prompt=
@@ -32,11 +32,15 @@ function prompt_command() {
 		branch="${branch##refs/heads/}"
 
 		# Working tree status (red when dirty)
-		local branch_color="$GREEN"
-		git diff --no-ext-diff --quiet --exit-code --ignore-submodules || branch_color="$RED"
+		local dirty=
+		git diff --no-ext-diff --quiet --exit-code --ignore-submodules || dirty=1
 
 		# Format Git info
-		git_prompt=" #$branch_color$branch$NOCOLOR"
+		if [ -n "$dirty" ]; then
+			git_prompt=" $RED$prompt_dirty_symbol$branch$NOCOLOR"
+		else
+			git_prompt=" $GREEN$prompt_clean_symbol$branch$NOCOLOR"
+		fi
 	fi
 
 	# Only show username if not default
@@ -52,11 +56,17 @@ function prompt_command() {
 	[ -n "$user_prompt" ] || [ -n "$host_prompt" ] && login_delimiter=":"
 
 	# Format prompt
+	first_line="$user_prompt$host_prompt$login_delimiter$WHITE\w$NOCOLOR$git_prompt"
 	# Text (commands) inside \[...\] does not impact line length which fixes stange bug when looking through the history
-	PS1="\n$user_prompt$host_prompt$login_delimiter$WHITE$dir_name$NOCOLOR$git_prompt\n\[$CYAN\]$prompt_symbol\[$NOCOLOR\] "
+	# $? is a status of last command, should be processed every time prompt prints
+	second_line="\`if [ \$? = 0 ]; then echo \[\$CYAN\]; else echo \[\$RED\]; fi\`\$prompt_symbol\[\$NOCOLOR\] "
+	PS1="\n$first_line\n$second_line"
+
+	# Multiline command
+	PS2="\[$CYAN\]$prompt_symbol\[$NOCOLOR\] "
 
 	# Terminal title
-	local title="$(basename $dir_name)"
+	local title="$(basename $PWD)"
 	[ -n "$remote" ] && title="$title \xE2\x80\x94 $HOSTNAME"
 	echo -ne "\033]0;$title"; echo -ne "\007"
 }
