@@ -52,9 +52,8 @@ function prompt_command() {
 	[ -n "$user_prompt" ] || [ -n "$host_prompt" ] && login_delimiter=":"
 
 	# Format prompt
-	# \033[G moves the cursor to the first column: http://jonisalonen.com/2012/your-bash-prompt-needs-this/
 	# Text (commands) inside \[...\] does not impact line length which fixes stange bug when looking through the history
-	PS1="\033[G\n$user_prompt$host_prompt$login_delimiter$WHITE$dir_name$NOCOLOR$git_prompt\n\[$CYAN\]$prompt_symbol\[$NOCOLOR\] "
+	PS1="\n$user_prompt$host_prompt$login_delimiter$WHITE$dir_name$NOCOLOR$git_prompt\n\[$CYAN\]$prompt_symbol\[$NOCOLOR\] "
 
 	# Terminal title
 	local title="$(basename $dir_name)"
