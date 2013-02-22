@@ -38,7 +38,7 @@ function prompt_command() {
 		# Modified files
 		git diff --no-ext-diff --quiet --exit-code --ignore-submodules 2>/dev/null || dirty=1
 		# Untracked files
-		[ -z "$dirty" ] && git ls-files --others --error-unmatch . >/dev/null 2>&1 && dirty=1
+		[ -z "$dirty" ] && test -n "$(git status --porcelain)" && dirty=1
 
 		# Format Git info
 		if [ -n "$dirty" ]; then
