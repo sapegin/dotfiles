@@ -35,7 +35,10 @@ function prompt_command() {
 
 		# Working tree status (red when dirty)
 		local dirty=
-		git diff --no-ext-diff --quiet --exit-code --ignore-submodules || dirty=1
+		# Modified files
+		git diff --no-ext-diff --quiet --exit-code --ignore-submodules 2>/dev/null || dirty=1
+		# Untracked files
+		[ -z "$dirty" ] && git ls-files --others --error-unmatch . >/dev/null 2>&1 && dirty=1
 
 		# Format Git info
 		if [ -n "$dirty" ]; then
