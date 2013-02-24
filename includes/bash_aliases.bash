@@ -83,6 +83,9 @@ password() { openssl rand -base64 ${1:-8}; }
 # Show $PATH in a readable way
 alias path='echo -e ${PATH//:/\\n}'
 
+# Say what’s in the clipboard
+alias sayit="pbpaste | say"
+
 # NPM
 alias npm-patch='npm version patch -m "%s"'
 alias npm-release='npm version minor -m "%s"'
