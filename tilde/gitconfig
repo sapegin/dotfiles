@@ -44,6 +44,17 @@
 [url "git://gist.github.com/"]
 	insteadOf = "gist:"
 
+# DiffMerge
+[merge]
+	tool = diffmerge
+[mergetool "diffmerge"]
+	cmd = diffmerge --merge --result=$MERGED $LOCAL $BASE $REMOTE
+	trustExitCode = true
+[diff]
+	tool = diffmerge
+[difftool "diffmerge"]
+	cmd = diffmerge $LOCAL $REMOTE
+
 # Include local settings
 # Requires Git 1.7.10
 # git config -f ~/.gitlocal user.email "artem@sapegin.ru"
