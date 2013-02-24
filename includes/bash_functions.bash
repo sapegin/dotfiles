@@ -276,6 +276,20 @@ end tell
 EOF
 }
 
+# Start an HTTP server from a directory, optionally specifying the port (default: 8000)
+# Usage: server [port]
+function server() {
+	local port="${1:-8000}"
+	open "http://localhost:${port}/"
+	# Set the default Content-Type to `text/plain` instead of `application/octet-stream`
+	# And serve everything as UTF-8 (although not technically correct, this doesn’t break anything for binary files)
+	python -c $'import SimpleHTTPServer;\nmap = SimpleHTTPServer.SimpleHTTPRequestHandler.extensions_map;\nmap[""] = "text/plain";\nfor key, value in map.items():\n\tmap[key] = value + ";charset=UTF-8";\nSimpleHTTPServer.test();' "$port"
+}
+
+function sayit() {
+	pbpaste | say
+}
+
 # Add special aliases that will copy result to clipboard (escape → escape+)
 for cmd in password hex2hsl hex2rgb escape codepoint; do
 	eval "function $cmd+() { $cmd \$@ | c; }"
