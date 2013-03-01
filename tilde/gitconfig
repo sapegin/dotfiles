@@ -30,6 +30,11 @@
 [push]
 	default = current
 
+# Any GitHub repo with my username should be checked out r/w by default
+# http://rentzsch.tumblr.com/post/564806957/public-but-hackable-git-submodules
+[url "git@github.com:sapegin/"]
+	insteadOf = "git://github.com/sapegin/"
+
 # URL shorthands
 [url "git@github.com:"]
 	insteadOf = "gh:"
