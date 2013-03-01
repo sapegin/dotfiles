@@ -45,7 +45,7 @@ function git-upstream() {
 	local branch=${1-master}
 	git fetch upstream
 	git checkout $branch
-	git merge upstream/$branch
+	git rebase upstream/$branch
 }
 
 # Add all staged files to previous commit
