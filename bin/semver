@@ -12,7 +12,7 @@ spacer() {
 }
 
 usage() {
-	bin=$(basename $0)
+	bin="$(basename $0)"
 	echo "$NAME v$VERSION - $DESC"
 	echo "usage: 	$bin { -m | -n | -p } { version }"
 	echo " 	$bin [ -m ] major version increment."
