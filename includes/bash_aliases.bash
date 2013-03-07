@@ -74,7 +74,11 @@ for method in GET HEAD POST PUT DELETE TRACE OPTIONS; do
 	alias "$method"="lwp-request -m '$method'"
 done
 
+# Download file and save it with filename of remote file
+alias get="curl -O"
+
 # Convert line endings to UNIX
+# tr -d '\015'
 alias dos2unix="perl -pi -e 's/\r\n?/\n/g'"
 
 # Password generator
