@@ -70,6 +70,7 @@ brew install node
 brew install casperjs
 npm install -g grunt-cli
 npm install -g grunt-init
+npm install -g yo
 npm install -g jshint
 npm install -g bower
 
