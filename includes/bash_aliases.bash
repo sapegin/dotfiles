@@ -102,6 +102,9 @@ gi() { grunt-init $@; }
 alias venv='test -d ENV && source ./ENV/bin/activate || echo "No Virtualenv in the current folder."'
 alias venv-init='test -d ENV && echo "Virtualenv already exists." || virtualenv --no-site-packages ENV; venv'
 
+# Restart Linux service
+rstr() { sudo service $@ restart }
+
 # Magic Project Opener
 function proj { cd "$("$HOME/dotfiles/bin/opener.py" "$HOME/Dropbox/Projects" $1 -w project $2)"; }
 function repo { cd "$("$HOME/dotfiles/bin/opener.py" "$HOME/Dropbox/Projects" $1 -w repo $2)"; }

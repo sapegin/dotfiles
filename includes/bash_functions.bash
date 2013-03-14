@@ -111,8 +111,7 @@ ssh-key() {
 		ssh-keygen -t rsa
 	fi
 	
-	cat "$file" | c
-	echo "Your public key copied to clipboard."
+	cat "$file"
 }
 
 # Create an SSH key and uploads it to the given host
@@ -297,6 +296,6 @@ function sayit() {
 }
 
 # Add special aliases that will copy result to clipboard (escape → escape+)
-for cmd in password hex2hsl hex2rgb escape codepoint; do
+for cmd in password hex2hsl hex2rgb escape codepoint ssh-key; do
 	eval "function $cmd+() { $cmd \$@ | c; }"
 done
