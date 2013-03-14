@@ -102,8 +102,12 @@ gi() { grunt-init $@; }
 alias venv='test -d ENV && source ./ENV/bin/activate || echo "No Virtualenv in the current folder."'
 alias venv-init='test -d ENV && echo "Virtualenv already exists." || virtualenv --no-site-packages ENV; venv'
 
+# Django
+alias dm="python manage.py"
+alias dms="python manage.py runserver"
+
 # Restart Linux service
-rstr() { sudo service $@ restart }
+rstrt() { sudo service $@ restart; }
 
 # Magic Project Opener
 function proj { cd "$("$HOME/dotfiles/bin/opener.py" "$HOME/Dropbox/Projects" $1 -w project $2)"; }
