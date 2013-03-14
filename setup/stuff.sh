@@ -56,9 +56,12 @@ cd -
 # Extend global $PATH
 echo -e "setenv PATH $HOME/dotfiles/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" | sudo tee /etc/launchd.conf
 
+# Ag, the better ack, which is the better grep
+brew install the_silver_searcher
+brew install https://raw.github.com/nybblr/homebrew-dev/master/sack.rb
+
 # Everything else
 brew install unrar
-brew install ack
 brew install msmtp --with-macosx-keyring
 brew install mutt --sidebar-patch
 

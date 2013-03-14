@@ -13,6 +13,12 @@ function f() {
 	find . -name "$1" 2>/dev/null
 }
 
+# Quick grep: ag (+sack), ack or grep
+if command -v sag >/dev/null 2>&1; then alias g="sack -ag"
+elif command -v ag >/dev/null 2>&1; then alias g="ag -i"
+elif command -v ack >/dev/null 2>&1; then alias g="ack -ri"
+else alias g="grep -ri"; fi
+
 # Compare original and gzipped file size
 function gz() {
 	local origsize=$(wc -c < "$1")
