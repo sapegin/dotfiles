@@ -81,7 +81,7 @@ alias get="curl -O"
 alias dos2unix="perl -pi -e 's/\r\n?/\n/g'"
 
 # Password generator
-password() { openssl rand -base64 ${1:-8}; }
+password() { cat /dev/urandom | tr -dc A-Za-z0-9_ | head -c ${1:-10}; }
 
 # Show $PATH in a readable way
 alias path='echo -e ${PATH//:/\\n}'
