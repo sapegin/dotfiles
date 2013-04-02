@@ -5,6 +5,8 @@
 # Require:
 # - jq - brew install jq
 
+command -v jq >/dev/null 2>&1 || { echo >&2 "jq not installed: see comments for instructions."; exit 1; }
+
 # Common stuff
 RED="$(tput setaf 1)"
 CYAN="$(tput setaf 6)"
