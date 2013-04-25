@@ -144,9 +144,9 @@ ssh-add-host() {
 
 # Upload current directory to special directory on my hosting
 function yay() {
-	server="locum"
+	server="seal"
 	dir=`basename "$(pwd)"`
-	remote="~/projects/yay/$dir"
+	remote="~/sites/yay.sapegin.me/htdocs/$dir"
 	url="http://yay.sapegin.me/$dir/"
 
 	tar cp --exclude '.git' --exclude 'node_modules' . | gzip | ssh $server "mkdir -p "$remote"; gzip -cd | tar x -C "$remote""
