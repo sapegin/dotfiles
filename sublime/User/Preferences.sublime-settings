@@ -4,7 +4,7 @@
 	"color_scheme": "Packages/User/Tomorrow.tmTheme",
 	"create_window_at_startup": false,
 	"default_line_ending": "unix",
-	"detect_indentation": false,
+	"detect_indentation": true,
 	"detect_slow_plugins": false,
 	"drag_text": true,
 	"fallback_encoding": "Cyrillic (Windows 1251)",
