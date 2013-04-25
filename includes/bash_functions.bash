@@ -8,6 +8,11 @@ function md() {
 	mkdir -p "$@" && cd "$@"
 }
 
+# cd into whatever is the forefront Finder window.
+cdf() {
+	cd "`osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)'`"
+}
+
 # Find shorthand
 function f() {
 	find . -name "$1" 2>/dev/null
