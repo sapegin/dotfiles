@@ -463,11 +463,28 @@ open "$HOME/dotfiles/color/Squirrelsong.terminal"
 sleep 1  # Wait a bit to make sure the theme is loaded
 defaults write com.apple.terminal "Default Window Settings" -string "Squirrelsong"
 defaults write com.apple.terminal "Startup Window Settings" -string "Squirrelsong"
-\
+
 # Enable “focus follows mouse” for Terminal.app and all X11 apps
 # i.e. hover over a window and start typing in it without clicking first
 #defaults write com.apple.terminal FocusFollowsMouse -bool true
 #defaults write org.x.X11 wm_ffm -bool true
+
+###############################################################################
+# Mail                                                                        #
+###############################################################################
+
+# Disable send and reply animations in Mail.app
+#defaults write com.apple.mail DisableReplyAnimations -bool true
+#defaults write com.apple.mail DisableSendAnimations -bool true
+
+# Copy email addresses as `foo@example.com` instead of `Foo Bar <foo@example.com>` in Mail.app
+defaults write com.apple.mail AddressesIncludeNameOnPasteboard -bool false
+
+# Add the keyboard shortcut ⌘ + Enter to send an email in Mail.app
+defaults write com.apple.mail NSUserKeyEquivalents -dict-add "Send" "@\\U21a9"
+
+# Make every attachment you send act like an attachment instead of a pretty unusable decoration
+defaults write com.apple.mail DisableInlineAttachmentViewing -bool true
 
 ###############################################################################
 # Time Machine                                                                #
