@@ -73,6 +73,7 @@ npm install -g grunt-init
 npm install -g yo
 npm install -g jshint
 npm install -g bower
+npm install -g docpad
 
 # Python
 brew install python
