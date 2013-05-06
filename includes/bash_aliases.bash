@@ -10,6 +10,7 @@ alias -- -="cd -"  # The alias is `-`, not `--`
 alias dr="cd ~/Dropbox"
 alias pj="cd ~/Dropbox/Projects"
 alias pjr="cd ~/Dropbox/Projects/_Repos"
+alias prj="pjr"
 alias pjf="cd ~/Dropbox/Projects/_Forks"
 alias pjm="cd ~/Dropbox/Projects/!"
 alias o="open"
