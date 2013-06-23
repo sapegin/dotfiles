@@ -1,6 +1,7 @@
 {
 	"auto_complete_delay": 1000,
 	"auto_match_enabled": false,
+	"caret_style": "phase",
 	"color_scheme": "Packages/User/Tomorrow.tmTheme",
 	"create_window_at_startup": false,
 	"default_line_ending": "unix",
