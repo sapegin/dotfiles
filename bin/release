@@ -32,7 +32,7 @@ fi
 
 # Read existing versions
 jq_ver=$(find . -maxdepth 1 -name "*.jquery.json" | xargs cat | jq -r ".version")
-cmpnt_ver=$(find . -maxdepth 1 -name "component.json" | xargs cat | jq -r ".version")
+cmpnt_ver=$(find . -maxdepth 1 -name "bower.json" | xargs cat | jq -r ".version")
 pkg_ver=$(find . -maxdepth 1 -name "package.json" | xargs cat | jq -r ".version")
 
 # Non npm package 
@@ -47,7 +47,7 @@ current_ver=
 
 # Validate current versions and determine new version
 if [ "$1" == "major" ] || [ "$1" == "minor" ] || [ "$1" == "patch" ]; then
-	dont_match="Versions in *.jquery.json, component.json and package.json don’t match."
+	dont_match="Versions in *.jquery.json, bower.json and package.json don’t match."
 	if [ -n "$jq_ver" ] && [ "$current_ver" != "$jq_ver" ]; then error $dont_match; fi
 	if [ -n "$cmpnt_ver" ] && [ "$current_ver" != "$cmpnt_ver" ]; then error $dont_match; fi
 	if [ -n "$pkg_ver" ] && [ "$current_ver" != "$pkg_ver" ]; then error $dont_match; fi
@@ -62,9 +62,9 @@ fi
 
 header "Releasing v$new_ver..."
 
-# Update component.json
+# Update bower.json
 if [ -n "$cmpnt_ver" ]; then
-	sed -i '' "s^$current_ver^$new_ver^" component.json
+	sed -i '' "s^$current_ver^$new_ver^" bower.json
 fi
 
 # Update package.json
@@ -78,7 +78,7 @@ if [ -n "$jq_ver" ]; then
 fi
 
 # Build files
-[ -f Gruntfile.js ] && grunt build
+[ -f Gruntfile.js ] || [ -f Gruntfile.coffee ] && grunt build
 if [ -f src/Gruntfile.js ]; then
 	pushd src
 	grunt build
