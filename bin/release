@@ -95,7 +95,7 @@ if [ -n "$jq_ver" ]; then
 fi
 
 # Build files
-[ -f Gruntfile.js ] && grunt build
+[ -f Gruntfile.js ] || [ -f Gruntfile.coffee ] && grunt build
 if [ -f src/Gruntfile.js ]; then
 	pushd src
 	grunt build
