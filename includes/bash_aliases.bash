@@ -40,6 +40,8 @@ alias rm="rm -i"
 # Gzip-enabled `curl`
 #alias gurl="curl --compressed"
 
+alias myip="ifconfig | grep 'inet ' | grep -v 127.0.0.1 | awk '{print \$2}'"
+
 # Software/libraries update
 alias update="source "$HOME/dotfiles/setup/update.sh""
 

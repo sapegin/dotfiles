@@ -290,6 +290,8 @@ EOF
 # Usage: server [port]
 function server() {
 	local port="${1:-8000}"
+	echo "Access from network: http://$(myip):$port"
+	echo
 	open "http://localhost:${port}/"
 	# Set the default Content-Type to `text/plain` instead of `application/octet-stream`
 	# And serve everything as UTF-8 (although not technically correct, this doesn’t break anything for binary files)
@@ -301,6 +303,6 @@ function sayit() {
 }
 
 # Add special aliases that will copy result to clipboard (escape → escape+)
-for cmd in password hex2hsl hex2rgb escape codepoint ssh-key; do
+for cmd in password hex2hsl hex2rgb escape codepoint ssh-key myip; do
 	eval "function $cmd+() { $cmd \$@ | c; }"
 done
