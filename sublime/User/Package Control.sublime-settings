@@ -4,6 +4,7 @@
 	[
 		"AdvancedNewFile",
 		"CoffeeScript",
+		"DashDoc",
 		"DocBlockr",
 		"eco",
 		"EditorConfig",
