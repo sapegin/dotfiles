@@ -99,7 +99,9 @@ alias npm-release='npm version minor -m "%s"'
 # Grunt
 alias gw="grunt watch --debug"
 alias gs="grunt connect watch --debug"
-gi() { grunt-init $@; }
+
+# Tâmia
+tm() { yo tamia:$@; }
 
 # Virtualenv
 alias venv='test -d ENV && source ./ENV/bin/activate || echo "No Virtualenv in the current folder."'
