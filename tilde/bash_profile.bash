@@ -80,6 +80,22 @@ function _ssh_reload_autocomplete() {
 }
 _ssh_reload_autocomplete
 
+# Grunt completion
+command -v grunt >/dev/null 2>&1 && eval "$(grunt --completion=bash)"
+
+# Tamia generator completion
+function _tamia_autocomplete() {
+	# List of subgenerators
+	local available=$(for file in /usr/local/share/npm/lib/node_modules/generator-tamia/*/index.js; do echo $file | cut -d / -f 9; done)
+	# The word fragment
+	local word=${COMP_WORDS[COMP_CWORD]}
+	# Don’t attempt to filter w/`grep` if `$word` is empty
+	local filtered=$(if [ -z "$word" ]; then echo "$available"; else echo "$available" | grep $word; fi)
+ 
+	COMPREPLY=($filtered)
+}
+command -v yo >/dev/null 2>&1 && complete -F _tamia_autocomplete tm
+
 # Nano is default editor
 export EDITOR='nano'
 
