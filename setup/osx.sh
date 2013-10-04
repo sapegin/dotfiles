@@ -310,9 +310,8 @@ defaults write com.apple.dock launchanim -bool false
 # Speed up Mission Control animations
 defaults write com.apple.dock expose-animation-duration -float 0.1
 
-# Don’t group windows by application in Mission Control
-# (i.e. use the old Exposé behavior instead)
-defaults write com.apple.dock expose-group-by-app -bool false
+# Group windows by application in Mission Control
+defaults write com.apple.dock expose-group-by-app -bool true
 
 # Don’t show Dashboard as a Space
 defaults write com.apple.dock dashboard-in-overlay -bool true
@@ -335,11 +334,11 @@ defaults write com.apple.dock autohide-time-modifier -float 0
 # Disable icon bouncing (looks like it don't work)
 defaults write com.apple.dock no-bouncing -bool true
 
-# Disable Space switching on Command-Tab
-defaults write com.apple.dock workspaces-auto-swoosh -bool false
+# Enable Space switching on Command-Tab
+defaults write com.apple.dock workspaces-auto-swoosh -bool true
 
 # Show only active applications
-defaults write com.apple.dock static-only -bool TRUE
+defaults write com.apple.dock static-only -bool true
 
 # Reset Launchpad
 find ~/Library/Application\ Support/Dock -name "*.db" -maxdepth 1 -delete
