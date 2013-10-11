@@ -13,6 +13,9 @@ import shutil
 SOURCE_DIR = '~/dotfiles/tilde'
 EXCLUDE = []
 NO_DOT_PREFIX = []
+PRESERVE_EXTENSION = [
+	'slate.js'
+]
 
 
 def force_remove(path):
@@ -34,7 +37,9 @@ def main():
 		dotfile = filename
 		if filename not in NO_DOT_PREFIX:
 			dotfile = '.' + dotfile
-		dotfile = os.path.join(os.path.expanduser('~'), os.path.splitext(dotfile)[0])
+		if filename not in PRESERVE_EXTENSION:
+			dotfile = os.path.splitext(dotfile)[0]
+		dotfile = os.path.join(os.path.expanduser('~'), dotfile)
 		source = os.path.join(SOURCE_DIR, filename).replace('~', '.')
 
 		# Check that we aren't overwriting anything
