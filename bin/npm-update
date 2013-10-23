@@ -30,3 +30,5 @@ update() {
 
 update dependencies save
 update devDependencies save-dev
+
+git diff -U0 package.json
