@@ -70,9 +70,9 @@ brew install node
 brew install casperjs
 npm config set loglevel warn
 npm install -g grunt-cli
-npm install -g grunt-init
 npm install -g yo
 npm install -g jshint
+npm install -g jscs
 npm install -g bower
 npm install -g docpad
 
