@@ -68,6 +68,7 @@ brew install mutt --sidebar-patch
 # Node.js
 brew install node
 brew install casperjs
+npm config set loglevel warn
 npm install -g grunt-cli
 npm install -g grunt-init
 npm install -g yo
