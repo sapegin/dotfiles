@@ -38,7 +38,8 @@ function _prepend_path() {
 	fi
 }
 
-# Extend $PATH
+# Construct $PATH
+PATH='/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin'
 [ -d /usr/local/bin ] && _prepend_path "/usr/local/bin"
 [ -d /usr/local/share/npm/bin ] && _prepend_path "/usr/local/share/npm/bin"
 [ -d /usr/local/opt/ruby/bin ] && _prepend_path "/usr/local/opt/ruby/bin"
