@@ -14,8 +14,11 @@ Thumbs.db
 .Spotlight-V100
 .Trashes
 
-# Installed NPM modules
+# Installed npm modules
 node_modules
+
+# Installed Bower packages
+bower_components
 
 # IDEs stuff
 .idea
