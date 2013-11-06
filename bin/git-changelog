@@ -22,7 +22,7 @@ while [ "$1" != "" ]; do
 done
 
 DATE=`date +'%Y-%m-%d'`
-HEAD="\n### $DATE v$TAG\n\n"
+HEAD="### $DATE v$TAG\n\n"
 
 if $LIST; then
 	version=$(git describe --tags --abbrev=0 $(git rev-list --tags --max-count=1))
