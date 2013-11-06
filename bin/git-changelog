@@ -45,7 +45,7 @@ fi
 tmp="/tmp/changelog"
 printf "$HEAD" > $tmp
 git-changelog --list >> $tmp
-printf '\n' >> $tmp
+printf '\n\n' >> $tmp
 if [ -f $CHANGELOG ]; then cat $CHANGELOG >> $tmp; fi
 mv $tmp $CHANGELOG
 
