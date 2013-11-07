@@ -386,6 +386,9 @@ sudo chmod 600 /System/Library/CoreServices/Search.bundle/Contents/MacOS/Search
 # Disable Notification Center
 launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist
 
+# Disable startup sound
+sudo nvram SystemAudioVolume="%80"
+
 ###############################################################################
 # Safari & WebKit                                                             #
 ###############################################################################
