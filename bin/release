@@ -15,7 +15,7 @@ CYAN="$(tput setaf 6)"
 UNDERLINE="$(tput sgr 0 1)"
 NOCOLOR="$(tput sgr0)"
 function header() { echo -e "$UNDERLINE$CYAN$1$NOCOLOR\n"; }
-function error() { echo -e "$UNDERLINE$RED$1$NOCOLOR"; }
+function error() { echo -e "$UNDERLINE$RED$1$NOCOLOR\n"; }
 
 function usage() {
 	echo "Usage:"
@@ -79,6 +79,28 @@ fi
 
 header "Releasing v$new_ver..."
 
+# Build and run tests
+status=0
+if [ -f Gruntfile.* ] || [ -f src/Gruntfile.* ]; then
+	if [ -f Gruntfile.* ]; then
+		grunt build
+		status=$?
+	elif [ -f src/Gruntfile.* ]; then
+		pushd src
+		grunt build
+		status=$?
+		popd
+	fi
+elif [ -f package.json ]; then
+	npm test
+	status=$?
+fi
+
+# Exit if build/tests failed
+if [ $status -ne 0 ]; then
+	exit 1
+fi
+
 # Update bower.json
 if [ -n "$cmpnt_ver" ]; then
 	sed -i '' "s^$current_ver^$new_ver^" bower.json
@@ -92,14 +114,6 @@ fi
 # Update *.jquery.json
 if [ -n "$jq_ver" ]; then
 	find . -maxdepth 1 -name "*.jquery.json" | xargs sed -i '' "s^$current_ver^$new_ver^"
-fi
-
-# Build files
-[ -f Gruntfile.js ] || [ -f Gruntfile.coffee ] && grunt build
-if [ -f src/Gruntfile.js ]; then
-	pushd src
-	grunt build
-	popd
 fi
 
 # Commit changed files
