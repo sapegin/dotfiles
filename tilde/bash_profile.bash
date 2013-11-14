@@ -97,8 +97,12 @@ function _tamia_autocomplete() {
 }
 command -v yo >/dev/null 2>&1 && complete -F _tamia_autocomplete tm
 
-# Nano is default editor
-export EDITOR='nano'
+# Default editor: Sublime Text or Nano
+if command -v subl >/dev/null 2>&1; then
+	export EDITOR='subl'
+else
+	export EDITOR='nano'
+fi
 
 # Tell ls to be colourful
 export CLICOLOR=1
