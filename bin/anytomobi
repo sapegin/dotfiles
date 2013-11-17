@@ -1,17 +1,22 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# Convert ebooks to Kindle’s Mobi format
 #
-# Usage: anytomobi <file or folder> [destination folder]
+# Converts ebooks to Kindle’s Mobi format
 #
-# Author: Artem Sapegin, sapegin.me
+# Usage:
+#   anytomobi <file or folder> [destination folder]
 #
-# Require:
+# Requires:
 # - Calibre - http://calibre-ebook.com/download (install command line tools from Calibre’s settings)
 #
 # Manuals:
 # - http://manual.calibre-ebook.com/cli/ebook-convert.html
 # - http://manual.calibre-ebook.com/cli/ebook-meta.html
+# 
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+#
 
 command -v ebook-convert >/dev/null 2>&1 || { echo >&2 "ebook-convert not installed: see comments for instructions."; exit 1; }
 

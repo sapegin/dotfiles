@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Abuse of the passive voice
 # http://matt.might.net/articles/shell-scripts-for-passive-voice-weasel-words-duplicates/

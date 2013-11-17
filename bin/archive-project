@@ -1,6 +1,12 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# Archive project: commit/push last changes to remote repo, remove unnecessary files, zip and move to archive folder
+#
+# Archives project: commits/pushes last changes to remote repo, remove unnecessary files, zip and moves to archive folder
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+#
 
 archive_dir="$HOME/Dropbox/Projects/_Archive"
 

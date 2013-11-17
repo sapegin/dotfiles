@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Print random domain from list of domains prohibited in Russia.
 # http://bolknote.ru/2013/01/10/~3831#05

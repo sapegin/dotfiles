@@ -3,7 +3,10 @@
 
 #
 # Magic project opener
-# © 2012 Artem Sapegin (sapegin.me)
+# 
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
 #
 
 

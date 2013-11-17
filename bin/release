@@ -1,13 +1,19 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# Release next version of the product
+# Releases the next version of the product
+# 
 # Usage:
 #   release <major|minor|patch>
 #   release <VERSION> --force
 #
-# Require:
+# Requires:
 # - semver - https://github.com/sekati/semver
 # - jq - brew install jq
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+#
 
 # Common stuff
 RED="$(tput setaf 1)"

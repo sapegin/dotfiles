@@ -1,6 +1,10 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# Convert font to set of SVG files
+#
+# Converts font to set of SVG files
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
 
 command -v fontforge >/dev/null 2>&1 || { echo >&2 "fontforge not installed."; exit 1; }
 

@@ -1,9 +1,15 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# Upgrade npm package (dev)dependencies to the latest versions and update package.json
 #
-# Require:
+# Upgrades npm package’s (dev)dependencies to the latest versions and updates package.json
+#
+# Requires:
 # - jq - brew install jq
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+#
 
 command -v jq >/dev/null 2>&1 || { echo >&2 "jq not installed: see comments for instructions."; exit 1; }
 

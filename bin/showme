@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 #
 # Takes N pictures of you via your iSight camera, animates them, uploads them to CloudApp, and puts the url in your clipboard.
@@ -7,12 +7,14 @@
 #
 # Author: Artem Sapegin, sapegin.me
 # Inspired by https://gist.github.com/832125
+# License: MIT
+# https://github.com/sapegin/dotfiles
 #
 # Requirements:
-# brew istall imagemagick imagesnap
-# gem install gifme cloudapp_api json
-# https://github.com/holman/dotfiles/blob/master/bin/cloudapp
-# http://www.getcloudapp.com/
+#   brew istall imagemagick imagesnap
+#   gem install gifme cloudapp_api json
+#   https://github.com/holman/dotfiles/blob/master/bin/cloudapp
+#   http://www.getcloudapp.com/
 #
 
 
