@@ -37,4 +37,7 @@ update() {
 update dependencies save
 update devDependencies save-dev
 
+echo
+echo
+echo
 git diff -U0 --word-diff --color package.json | grep '^ '
