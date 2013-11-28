@@ -92,9 +92,6 @@ alias path='echo -e ${PATH//:/\\n}'
 # Say what’s in the clipboard
 alias sayit="pbpaste | say"
 
-# NPM
-alias npm-patch='npm version patch -m "%s"'
-alias npm-release='npm version minor -m "%s"'
 
 # Grunt
 alias gw="grunt watch --debug"
@@ -122,10 +119,3 @@ function wptheme { cd "$("$HOME/dotfiles/bin/opener.py" "$HOME/Dropbox/Projects"
 # Color conversion
 alias hex2hsl="color.js $1 $2"
 alias hex2rgb="color.js --rgb $1 $2"
-
-# Dotfiles help
-alias dot-bash="killall Marked; open -a marked --args $HOME/dotfiles/docs/Bash.md"
-alias dot-git="killall Marked; open -a marked --args $HOME/dotfiles/docs/Git.md"
-alias dot-hub="killall Marked; find /usr/local/Cellar/hub/ -name README.md -exec open -a marked --args {} \;"
-#alias dot-extras="killall Marked; find /usr/local/Cellar/git-extras/ -name README.md -exec open -a marked --args {} \;"
-alias dot-extras="open https://github.com/visionmedia/git-extras/blob/master/Readme.md#readme"
