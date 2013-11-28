@@ -34,5 +34,18 @@
 	"save_on_focus_lost": true,
 	"scroll_past_end": true,
 	"tab_completion": true,
-	"theme": "Soda Light.sublime-theme"
+	"theme": "Soda Light.sublime-theme",
+	"file_exclude_patterns": [
+	    ".*_*",
+	    "*.pyc",
+	    "*.pyo",
+	    ".DS_Store",
+	    "*.psd",
+	    "*.db",
+	    "*.sublime-workspace"
+	],
+	"folder_exclude_patterns":
+	[
+	   "node_modules"
+	]
 }
