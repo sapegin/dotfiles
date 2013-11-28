@@ -92,6 +92,8 @@ alias path='echo -e ${PATH//:/\\n}'
 # Say what’s in the clipboard
 alias sayit="pbpaste | say"
 
+# github.com/harthur/replace
+alias replace="replace --exclude='node_modules,bower_components'"
 
 # Grunt
 alias gw="grunt watch --debug"
