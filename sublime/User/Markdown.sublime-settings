@@ -1,9 +1,15 @@
 {
+	"auto_match_enabled": false,
+	"draw_centered": false,
+	"extensions":
+	[
+		"mdown",
+		"txt",
+		"md"
+	],
 	"font_face": "Consolas",
 	"font_size": 16,
 	"translate_tabs_to_spaces": false,
 	"word_wrap": true,
-	"wrap_width": -1,
-	"draw_centered": false,
-	"auto_match_enabled": false
+	"wrap_width": -1
 }
