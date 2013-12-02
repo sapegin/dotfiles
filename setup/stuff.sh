@@ -74,6 +74,7 @@ npm install -g jshint
 npm install -g jscs
 npm install -g bower
 npm install -g docpad
+npm install -g replace
 
 # Python
 brew install python
