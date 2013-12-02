@@ -39,7 +39,7 @@ mysql_install_db --verbose --user=`whoami` --basedir="$(brew --prefix mysql)" --
 # PHP
 cd /etc
 sudo cp php.ini.default php.ini 
-sudo sed -i '' "s^/var/mysql/mysql.sock^/tmp/mysql.sock^" php.ini
+sudo sed -i '' "s^mysql.default_socket =^mysql.default_socket = /tmp/mysql.sock^" php.ini
 
 # Apache: enable PHP, .htaccess files, virtual hosts and set it to run as current user
 cd /etc/apache2
@@ -47,7 +47,6 @@ sudo cp httpd.conf httpd.conf.bak
 sudo cp extra/httpd-vhosts.conf extra/httpd-vhosts.conf.bak
 sudo sed -i '' "s^#\(LoadModule php5_module\)^\1^" httpd.conf
 sudo sed -i '' "s^#\(Include /private/etc/apache2/extra/httpd-vhosts.conf\)^\1^" httpd.conf
-sudo sed -i '' "s^<IfDefine WEBSHARING_ON>^<IfDefine !0>^" httpd.conf
 sudo sed -i '' "s^User _www^User `whoami`^" httpd.conf
 sudo sed -i '' "s^Group _www^Group staff^" httpd.conf
 echo -e "NameVirtualHost *:80\n\n<Directory />\n    AllowOverride All\n    Allow from all\n</Directory>\n" | sudo tee extra/httpd-vhosts.conf
