@@ -46,12 +46,6 @@ sudo -v
 sudo gem update
 echo
 
-# Python
-header "Updating Python packages..."
-sudo -v
-sudo pip install --upgrade fabric
-echo
-
 # git-friendly
 header "Updating git-friendly..."
 sudo -v

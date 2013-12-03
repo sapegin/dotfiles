@@ -78,7 +78,6 @@ npm install -g replace
 
 # Python
 brew install python
-sudo pip install fabric
 
 # Remove outdated versions from the cellar
 brew cleanup
