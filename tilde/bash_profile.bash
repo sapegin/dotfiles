@@ -137,5 +137,8 @@ export LESS="${less_options[*]}"
 unset less_options
 export PAGER='less'
 
+# Homebrew install badge: beer sucks, coffee rules
+export HOMEBREW_INSTALL_BADGE='☕'
+
 # Load extra (private) settings
 [ -f ~/.bashlocal ] && source ~/.bashlocal
