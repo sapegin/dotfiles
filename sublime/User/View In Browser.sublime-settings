@@ -1,0 +1,13 @@
+{
+	"supportedBrowsers": {
+		"canary": [
+			{
+		        "osname": "posix",
+		        "platform": "darwin",
+		        "command": "open -a '/Applications/Google Chrome Canary.app'"
+		    }
+		]
+	},
+
+	"selectedBrowser": "canary"
+}
