@@ -1,0 +1,6 @@
+.git
+.idea
+.unrealsync
+node_modules
+bower_components
+build
