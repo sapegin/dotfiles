@@ -4,40 +4,19 @@
 # Upgrades npm package’s (dev)dependencies to the latest versions and updates package.json
 #
 # Requires:
-# - jq - brew install jq
+# - npm-check-updates - npm install -g npm-check-updates
 #
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
 # https://github.com/sapegin/dotfiles
 #
 
-command -v jq >/dev/null 2>&1 || { echo >&2 "jq not installed: see comments for instructions."; exit 1; }
+command -v npm-check-updates >/dev/null 2>&1 || { echo >&2 "npm-check-updates not installed: see comments for instructions."; exit 1; }
 
-# Common stuff
-RED="$(tput setaf 1)"
-CYAN="$(tput setaf 6)"
-UNDERLINE="$(tput sgr 0 1)"
-NOCOLOR="$(tput sgr0)"
-function header() { echo -e "$UNDERLINE$CYAN$1$NOCOLOR\n"; }
-function error() { echo -e "$UNDERLINE$RED$1$NOCOLOR"; }
-
-if [ ! -f package.json ]; then
-	error "package.json not found"
-	exit 1
-fi
-
-update() {
-	header "Upgrading $1..."
-	for package in $(cat package.json | jq -r ".$1 | keys | .[]" 2>/dev/null); do
-		npm install --$2 $package
-	done
-}
-
-
-update dependencies save
-update devDependencies save-dev
+npm-check-updates -u -s
+npm update
 
 echo
 echo
 echo
-git diff -U0 --word-diff --color package.json | grep '^ '
+git diff -U0 --word-diff --color package.json | grep '^ ' | tr -d '"~' | sed 's/\[-//g' | sed 's/,-\]/ → /g' | sed 's/{+//g' | sed 's/,+}//g'
