@@ -20,25 +20,23 @@ function f() {
 
 # Quick grep: ag, ack or grep
 # Usage: g match
-# Usage: gt txt+md match
+# Usage: g txt+md match  # Only for ag
 if command -v ag >/dev/null 2>&1; then
-	ag_options=(
-		"--ignore-case"
-		"--color-line-number='0;36'"
-		"--color-match='0;35;4'"
-		"--color-path='1;37'"
-	)
-	alias g="ag ${ag_options[*]}";
-	function gt() {
-		local exts=$(echo $1 | tr '+' '|')
-		g -G "\.($exts)$" "$2"
+	function _g() {
+		ag --ignore-case --color-line-number='0;36' --color-match='0;35;4' --color-path='1;37' "$@"
+	}
+	function g() {
+		if [ $# == 2 ]; then
+			local exts=$(echo $1 | tr '+' '|')
+			_g -G "\.($exts)$" "$2"
+		else
+			_g "$1"
+		fi
 	}
 elif command -v ack >/dev/null 2>&1; then
 	alias g="ack -ri";
-	alias gt="echo 'gt unavailable for ack.";
 else
 	alias g="grep -ri";
-	alias gt="echo 'gt unavailable for grep.";
 fi
 
 # Compare original and gzipped file size
