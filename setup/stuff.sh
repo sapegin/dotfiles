@@ -57,7 +57,6 @@ echo -e "setenv PATH $HOME/dotfiles/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/
 
 # Ag, the better ack, which is the better grep
 brew install the_silver_searcher
-brew install https://raw.github.com/nybblr/homebrew-dev/master/sack.rb
 
 # Everything else
 brew install unrar

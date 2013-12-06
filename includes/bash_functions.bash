@@ -18,11 +18,28 @@ function f() {
 	find . -name "$1" 2>/dev/null
 }
 
-# Quick grep: ag (+sack), ack or grep
-if command -v sag >/dev/null 2>&1; then alias g="sack -ag"
-elif command -v ag >/dev/null 2>&1; then alias g="ag -i"
-elif command -v ack >/dev/null 2>&1; then alias g="ack -ri"
-else alias g="grep -ri"; fi
+# Quick grep: ag, ack or grep
+# Usage: g match
+# Usage: gt txt+md match
+if command -v ag >/dev/null 2>&1; then
+	ag_options=(
+		"--ignore-case"
+		"--color-line-number='0;36'"
+		"--color-match='0;35;4'"
+		"--color-path='1;37'"
+	)
+	alias g="ag ${ag_options[*]}";
+	function gt() {
+		local exts=$(echo $1 | tr '+' '|')
+		g -G "\.($exts)$" "$2"
+	}
+elif command -v ack >/dev/null 2>&1; then
+	alias g="ack -ri";
+	alias gt="echo 'gt unavailable for ack.";
+else
+	alias g="grep -ri";
+	alias gt="echo 'gt unavailable for grep.";
+fi
 
 # Compare original and gzipped file size
 function gz() {
