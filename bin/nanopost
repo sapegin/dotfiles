@@ -3,7 +3,7 @@
 # Copies Markdown file from iA Writer’s iCloud folder to my blog’s folder, add YAML front matter and opens it in default editor.
 #
 # Usage:
-#   nanopost <filename> <en|ru>
+#   nanopost <filename> <slug> <en|ru>
 #
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
