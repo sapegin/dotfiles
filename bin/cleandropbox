@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+# Prints/removes conflicted copies inside Dropbox folder.
+# 
+# Usage:
+#   cleandropbox [--remove]
+#
+# Based on https://coderwall.com/p/tzjorw
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+#
+
+MASK="*(*'s conflicted copy [0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]*"
+
+if [ "$1" == "--remove" ]; then
+	find ~/Dropbox/ -path "$MASK" -exec rm -f {} \;
+else
+	find ~/Dropbox/ -path "$MASK" -print
+fi
