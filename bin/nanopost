@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+# Copies Markdown file from iA Writer’s iCloud folder to my blog’s folder, add YAML front matter and opens it in default editor.
+#
+# Usage:
+#   nanopost <filename> <en|ru>
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+#
+
+NAME=$1
+SLUG=$2
+LANG=$3
+BLOG_DIR=~/Dropbox/Projects/_Repos/blog.sapegin.me/src/documents_$LANG/all
+SOURCE="$NAME.md"
+DEST="$BLOG_DIR/$SLUG.html.md"
+DATE=$(date +"%b %e, %Y")
+
+
+# Common stuff
+RED="$(tput setaf 1)"
+UNDERLINE="$(tput sgr 0 1)"
+NOCOLOR="$(tput sgr0)"
+function error() { echo -e "\n$UNDERLINE$RED$1$NOCOLOR\n"; exit 1; }
+
+function usage() {
+	echo "Usage:"
+	echo "  `basename $0` <filename> <slug> <en|ru>"
+	echo
+	exit 1
+}
+
+# Check CLI params
+if [ -z "$NAME" ] || [ -z "$SLUG" ] || [ -z "$LANG" ]; then
+	usage
+fi
+if [ "$LANG" != "en" ] && [ "$LANG" != "ru" ]; then
+	usage
+fi
+
+# Check dest file
+if [ -f "$DEST" ]; then
+	error "Destination file $DEST already exists."
+fi
+
+# Open iA Writer’s iCloud folder
+pushd ~/Library/Mobile\ Documents/*~jp~informationarchitects~Writer/Documents
+
+# Check source file
+if [ ! -f "$SOURCE" ]; then
+	error "Source file $(pwd)/$SOURCE not found."
+fi
+
+# Read post title
+TITLE=$(grep -m 1 '#' "$SOURCE" | sed -e 's^# ^^')
+
+# Copy template and source file to destination folder
+sed -e "s^{title}^$TITLE^" -e "s^{date}^$DATE^" ~/dotfiles/bin/nanopost.tmpl > "$DEST"
+cat "$SOURCE" | perl -0pe 's/#.*\n//' >> "$DEST"
+
+# Open file in editor
+$EDITOR "$DEST"
