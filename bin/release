@@ -33,7 +33,7 @@ function usage() {
 command -v semver >/dev/null 2>&1 || { error "semver not installed: see comments for instructions."; exit 1; }
 command -v jq >/dev/null 2>&1 || { error "jq not installed: see comments for instructions."; exit 1; }
 
-if [ "$1" == "" ]; then
+if [ -z "$1" ]; then
 	usage
 	exit 1
 fi
