@@ -1,0 +1,11 @@
+<snippet>
+	<content><![CDATA[
+for (var ${2:item}Idx = 0; ${2:item}Idx < ${1:items}.length; ${2:item}Idx++) {
+	var ${2:item} = ${1:items}[${2:item}Idx];
+	$0
+}
+]]></content>
+	<tabTrigger>for</tabTrigger>
+	<scope>source.js</scope>
+	<description>for (var i = 0; i &lt; items.length; i++) {}</description>
+</snippet>
