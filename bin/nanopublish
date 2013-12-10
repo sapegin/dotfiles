@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+
+# Publishes post to my blog: removes unpublished attribute, updates date, commits and deploys.
+#
+# Usage:
+#   nanopublish <slug> <en|ru>
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+#
+
+SLUG=$1
+LANG=$2
+BLOG_DIR=~/Dropbox/Projects/_Repos/blog.sapegin.me/src/documents_$LANG/all
+DEST="$BLOG_DIR/$SLUG.html.md"
+TEMP="${DEST}_nanopublish"
+DATE=$(date +"%b %e, %Y")
+
+
+# Common stuff
+RED="$(tput setaf 1)"
+UNDERLINE="$(tput sgr 0 1)"
+NOCOLOR="$(tput sgr0)"
+function error() { echo -e "\n$UNDERLINE$RED$1$NOCOLOR\n"; exit 1; }
+
+function usage() {
+	echo "Usage:"
+	echo "  `basename $0` <slug> <en|ru>"
+	echo
+	exit 1
+}
+
+# Check CLI params
+if [ -z "$SLUG" ] || [ -z "$LANG" ]; then
+	usage
+fi
+if [ "$LANG" != "en" ] && [ "$LANG" != "ru" ]; then
+	usage
+fi
+
+# Check post file
+if [ ! -f "$DEST" ]; then
+	error "Post file $DEST not found."
+fi
+
+# Remove unpublished and update date
+cp "$DEST" "$TEMP"
+cat "$TEMP" | perl -0pe 's/unpublished: true\n//' | perl -0pe "s/date: .*\n/date: $DATE\n/" > "$DEST"
+rm "$TEMP"
+
+# Commit
+git commit -m "Publish post." "$DEST"
+
+# Deploy
+git push
+shipit
