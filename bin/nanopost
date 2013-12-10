@@ -46,7 +46,7 @@ if [ -f "$DEST" ]; then
 fi
 
 # Open iA Writer’s iCloud folder
-pushd ~/Library/Mobile\ Documents/*~jp~informationarchitects~Writer/Documents
+cd ~/Library/Mobile\ Documents/*~jp~informationarchitects~Writer/Documents
 
 # Check source file
 if [ ! -f "$SOURCE" ]; then

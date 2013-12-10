@@ -12,8 +12,8 @@
 
 SLUG=$1
 LANG=$2
-BLOG_DIR=~/Dropbox/Projects/_Repos/blog.sapegin.me/src/documents_$LANG/all
-DEST="$BLOG_DIR/$SLUG.html.md"
+BLOG_DIR=~/Dropbox/Projects/_Repos/blog.sapegin.me
+DEST="src/documents_$LANG/all/$SLUG.html.md"
 TEMP="${DEST}_nanopublish"
 DATE=$(date +"%b %e, %Y")
 
@@ -43,6 +43,8 @@ fi
 if [ ! -f "$DEST" ]; then
 	error "Post file $DEST not found."
 fi
+
+cd "$BLOG_DIR"
 
 # Remove unpublished and update date
 cp "$DEST" "$TEMP"
