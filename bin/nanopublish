@@ -39,12 +39,12 @@ if [ "$LANG" != "en" ] && [ "$LANG" != "ru" ]; then
 	usage
 fi
 
+cd "$BLOG_DIR"
+
 # Check post file
 if [ ! -f "$DEST" ]; then
 	error "Post file $DEST not found."
 fi
-
-cd "$BLOG_DIR"
 
 # Remove unpublished and update date
 cp "$DEST" "$TEMP"
