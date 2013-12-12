@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Publishes post to my blog: removes unpublished attribute, updates date, commits and deploys.
+# Opens my blog’s post in default editor.
 #
 # Usage:
-#   nano-publish <slug> <en|ru>
+#   nano-edit <slug> <en|ru>
 #
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
@@ -13,9 +13,7 @@
 SLUG=$1
 LANG=$2
 BLOG_DIR=~/Dropbox/Projects/_Repos/blog.sapegin.me
-DEST="src/documents_$LANG/all/$SLUG.html.md"
-TEMP="${DEST}_nanopublish"
-DATE=$(date +"%b %e, %Y")
+DEST="$BLOG_DIR/src/documents_$LANG/all/$SLUG.html.md"
 
 
 # Common stuff
@@ -39,21 +37,5 @@ if [ "$LANG" != "en" ] && [ "$LANG" != "ru" ]; then
 	usage
 fi
 
-cd "$BLOG_DIR"
-
-# Check post file
-if [ ! -f "$DEST" ]; then
-	error "Post file $DEST not found."
-fi
-
-# Remove unpublished and update date
-cp "$DEST" "$TEMP"
-cat "$TEMP" | perl -0pe 's/unpublished: true\n//' | perl -0pe "s/date: .*\n/date: $DATE\n/" > "$DEST"
-rm "$TEMP"
-
-# Commit
-git commit -m "Publish post." "$DEST"
-
-# Deploy
-git push
-shipit
+# Open file in editor
+$EDITOR "$DEST"
