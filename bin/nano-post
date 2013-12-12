@@ -57,7 +57,7 @@ fi
 TITLE=$(grep -m 1 '#' "$SOURCE" | sed -e 's^# ^^')
 
 # Copy template and source file to destination folder
-sed -e "s^{title}^$TITLE^" -e "s^{date}^$DATE^" ~/dotfiles/bin/nanopost.tmpl > "$DEST"
+sed -e "s^{title}^$TITLE^" -e "s^{date}^$DATE^" "~/dotfiles/bin/nano-post.tmpl" > "$DEST"
 cat "$SOURCE" | perl -0pe 's/#.*\n//' >> "$DEST"
 
 # Open file in editor
