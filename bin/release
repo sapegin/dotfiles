@@ -117,7 +117,7 @@ elif [ -f package.json ]; then
 	status=$?
 fi
 
-# Exit if build/tests failed
+# Revert changes and exit if build/tests failed
 if [ $status -ne 0 ]; then
 	git reset --hard
 	exit 1
