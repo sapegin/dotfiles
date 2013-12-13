@@ -85,6 +85,21 @@ fi
 
 header "Releasing v$new_ver..."
 
+# Update bower.json
+if [ -n "$cmpnt_ver" ]; then
+	sed -i '' "s^$current_ver^$new_ver^" bower.json
+fi
+
+# Update package.json
+if [ -n "$pkg_ver" ]; then
+	sed -i '' "s^$current_ver^$new_ver^" package.json
+fi
+
+# Update *.jquery.json
+if [ -n "$jq_ver" ]; then
+	find . -maxdepth 1 -name "*.jquery.json" | xargs sed -i '' "s^$current_ver^$new_ver^"
+fi
+
 # Build and run tests
 status=0
 if [ -f Gruntfile.* ] || [ -f src/Gruntfile.* ]; then
@@ -104,22 +119,8 @@ fi
 
 # Exit if build/tests failed
 if [ $status -ne 0 ]; then
+	git reset --hard
 	exit 1
-fi
-
-# Update bower.json
-if [ -n "$cmpnt_ver" ]; then
-	sed -i '' "s^$current_ver^$new_ver^" bower.json
-fi
-
-# Update package.json
-if [ -n "$pkg_ver" ]; then
-	sed -i '' "s^$current_ver^$new_ver^" package.json
-fi
-
-# Update *.jquery.json
-if [ -n "$jq_ver" ]; then
-	find . -maxdepth 1 -name "*.jquery.json" | xargs sed -i '' "s^$current_ver^$new_ver^"
 fi
 
 # Commit changed files
