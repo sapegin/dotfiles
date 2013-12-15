@@ -1,10 +1,14 @@
-# Squirrelsong Color Scheme for Terminal.app
+# Squirrelsong Terminal Color Scheme
 
 ![Terminal.app](https://raw.github.com/sapegin/dotfiles/master/color/squirrelsong_terminal.png)
 
 Inspired by [Earthsong](https://github.com/daylerees/colour-schemes/blob/master/README.md#earthsong) Sublime Text scheme by [Dayle Rees](https://github.com/daylerees).
 
 ## Colors
+
+### Terminal.app
+
+Install `Squirrelsong.terminal`.
 
 ### iTerm
 
@@ -21,4 +25,3 @@ Inspired by [Earthsong](https://github.com/daylerees/colour-schemes/blob/master/
 * Bold: 255/255/255
 * Selection: 16/13/8
 * Selected Text: 191/175/147
-* 
