@@ -63,15 +63,20 @@ current_ver=
 [ -z "$current_ver" ] && current_ver="0.0.0"
 
 # Validate current versions and determine new version
+dontmatch() {
+	error "Current versions don’t match."
+	if [ -n "$jq_ver" ] && [ "$jq_ver" != "0.0.0" ]; then echo "*.jquery.json: $CYAN$jq_ver$NOCOLOR"; fi
+	if [ -n "$cmpnt_ver" ] && [ "$cmpnt_ver" != "0.0.0" ]; then echo "bower.json: $CYAN$cmpnt_ver$NOCOLOR"; fi
+	if [ -n "$pkg_ver" ] && [ "$pkg_ver" != "0.0.0" ]; then echo "package.json: $CYAN$pkg_ver$NOCOLOR"; fi
+	exit 1
+}
 if [ "$1" == "major" ] || [ "$1" == "minor" ] || [ "$1" == "patch" ]; then
-	dont_match="Versions in *.jquery.json, bower.json and package.json don’t match."
-	if [ -n "$jq_ver" ] && [ "$current_ver" != "$jq_ver" ]; then error $dont_match; fi
-	if [ -n "$cmpnt_ver" ] && [ "$current_ver" != "$cmpnt_ver" ]; then error $dont_match; fi
-	if [ -n "$pkg_ver" ] && [ "$current_ver" != "$pkg_ver" ]; then error $dont_match; fi
+	if [ -n "$jq_ver" ] && [ "$jq_ver" != "0.0.0" ] && [ "$current_ver" != "$jq_ver" ]; then dontmatch; fi
+	if [ -n "$cmpnt_ver" ] && [ "$cmpnt_ver" != "0.0.0" ] && [ "$current_ver" != "$cmpnt_ver" ]; then dontmatch; fi
+	if [ -n "$pkg_ver" ] && [ "$pkg_ver" != "0.0.0" ] && [ "$current_ver" != "$pkg_ver" ]; then dontmatch; fi
 else
 	if [ "$1" != "--force" ]; then
 		error "Custom versions possible only with --force key."
-		echo
 		usage
 		exit 1
 	fi
