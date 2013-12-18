@@ -3,7 +3,7 @@
 	"installed_packages":
 	[
 		"AdvancedNewFile",
-		"CoffeeScript",
+		"Better CoffeeScript",
 		"DashDoc",
 		"DocBlockr",
 		"eco",

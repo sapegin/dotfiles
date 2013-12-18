@@ -2,11 +2,10 @@
 
 # Enables Sublime settings syncronization
 
-
 if [ `uname` == 'Darwin' ]; then
-	DIR=~/Library/Application\ Support/Sublime\ Text\ 2
+	DIR=~/Library/Application\ Support/Sublime\ Text\ 3
 else
-	DIR=~/AppData/Roaming/Sublime\ Text\ 2
+	DIR=~/AppData/Roaming/Sublime\ Text\ 3
 fi
 
 [ ! -d "$DIR" ] && mkdir -p "$DIR/Packages"
