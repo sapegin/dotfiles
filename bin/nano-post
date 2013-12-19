@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-# Copies Markdown file from iA Writer’s iCloud folder to my blog’s folder, add YAML front matter and opens it in default editor.
+# Copies Markdown file from Writer Pro’s iCloud folder (should be in Editing mode) to my blog’s folder,
+# add YAML front matter and opens it in default editor.
 #
 # Usage:
 #   nano-post <filename> <slug> <en|ru>
@@ -45,8 +46,8 @@ if [ -f "$DEST" ]; then
 	error "Destination file $DEST already exists."
 fi
 
-# Open iA Writer’s iCloud folder
-cd ~/Library/Mobile\ Documents/*~jp~informationarchitects~Writer/Documents
+# Open Writer Pro’s iCloud folder
+cd ~/Library/Mobile\ Documents/27N4MQEA55~pro~writer/Documents/Edit
 
 # Check source file
 if [ ! -f "$SOURCE" ]; then
