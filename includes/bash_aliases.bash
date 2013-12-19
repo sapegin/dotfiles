@@ -79,6 +79,9 @@ done
 # Download file and save it with filename of remote file
 alias get="curl -O"
 
+# Download web page with all assets
+alias getpage="wget --no-clobber --page-requisites --html-extension --convert-links --no-host-directories"
+
 # Convert line endings to UNIX
 # tr -d '\015'
 alias dos2unix="perl -pi -e 's/\r\n?/\n/g'"
