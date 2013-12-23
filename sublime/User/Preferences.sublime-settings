@@ -38,8 +38,8 @@
 	"highlight_line": true,
 	"ignored_packages":
 	[
-		"Vintage",
-		"Markdown"
+		"Markdown",
+		"Vintage"
 	],
 	"line_padding_bottom": 1,
 	"line_padding_top": 1,
