@@ -19,4 +19,4 @@ npm update
 echo
 echo
 echo
-git diff -U0 --word-diff --color package.json | grep '^ ' | tr -d '"~' | sed 's/\[-//g' | sed 's/,-\]/ → /g' | sed 's/{+//g' | sed 's/,+}//g'
+git diff -U0 --word-diff --color package.json | grep '^ ' | tr -d '"~' | sed 's/\[-//g' | sed 's/-\]/ → /g' | sed 's/{+//g' | sed 's/+}//g'
