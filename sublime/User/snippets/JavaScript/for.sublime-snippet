@@ -7,5 +7,5 @@ for (var ${2:item}Idx = 0; ${2:item}Idx < ${1:items}.length; ${2:item}Idx++) {
 ]]></content>
 	<tabTrigger>for</tabTrigger>
 	<scope>source.js</scope>
-	<description>for (var i = 0; i &lt; items.length; i++) {}</description>
+	<description>for (var itemIdx = 0; itemIdx &lt; items.length; itemIdx++) {}</description>
 </snippet>
