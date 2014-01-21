@@ -317,7 +317,7 @@ function sayit() {
 	pbpaste | say
 }
 
-# Opens theme folder in project.
+# Opens project’s theme folder.
 # Supports Wordpress and Koken.
 function theme() {
 	local project=`basename "$(pwd)"`
