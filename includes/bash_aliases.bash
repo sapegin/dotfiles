@@ -99,9 +99,8 @@ alias sayit="pbpaste | say"
 alias replace="replace --exclude='node_modules,bower_components'"
 
 # Grunt
-alias grunt='grunt --stack'
-alias gw="grunt watch --debug"
-alias gs="grunt connect watch --debug"
+alias gw="grunt watch --stack --debug"
+alias gs="grunt connect watch --stack --debug"
 
 # Tâmia
 tm() { yo tamia:$@; }
