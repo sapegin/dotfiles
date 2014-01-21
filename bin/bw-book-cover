@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+
+# Downloads book cover for birdwatcher.ru.
+#
+# Usage:
+#   bw-book-cover <slug> [--force] # + image URL in clipboard
+#   
+# Requires:
+# - imagemagick - brew install imagemagick
+# - jpegtran - brew install jpegtran
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+#
+
+command -v mogrify >/dev/null 2>&1 || { error "imagemagick not installed: see comments for instructions."; exit 1; }
+command -v jpegtran >/dev/null 2>&1 || { error "jpegtran not installed: see comments for instructions."; exit 1; }
+
+URL="$(pbpaste)"
+SLUG=$1
+BW_DIR=~/Dropbox/Projects/\!/Birdwatcher/birdwatcher
+DEST="$BW_DIR/htdocs/images/books/$SLUG.jpg"
+
+# Common stuff
+RED="$(tput setaf 1)"
+UNDERLINE="$(tput sgr 0 1)"
+NOCOLOR="$(tput sgr0)"
+function error() { echo -e "\n$UNDERLINE$RED$1$NOCOLOR\n"; exit 1; }
+
+function usage() {
+	echo "Usage:"
+	echo "  `basename $0` <slug> [--force] # + image URL in clipboard"
+	echo
+	exit 1
+}
+
+# Check input params
+if [ -z "$URL" ] || [ -z "$SLUG" ]; then
+	usage
+fi
+
+# Check dest file
+if [ "$2" == "--force" ]; then
+	rm -f "$DEST"
+fi
+if [ -f "$DEST" ]; then
+	error "Destination file $DEST already exists."
+fi
+
+# Download image
+curl "$URL" > "$DEST"
+
+# Scale
+mogrify -format jpg -quality 75 -thumbnail 120x999 "$DEST"
+
+# Optimize
+mv "$DEST" "$DEST.tmp"
+jpegtran -copy none -optimize -progressive "$DEST.tmp" > "$DEST"
+rm -f "$DEST.tmp"
