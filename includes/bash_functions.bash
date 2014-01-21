@@ -317,6 +317,21 @@ function sayit() {
 	pbpaste | say
 }
 
+# Opens theme folder in project.
+# Supports Wordpress and Koken.
+function theme() {
+	local project=`basename "$(pwd)"`
+	local DIRS=( "wp-content/themes/$project" 'wp-content/themes/*' "storage/themes/$project" 'storage/themes/*' "htdocs/storage/themes/$project" 'htdocs/storage/themes/*' )
+	for dir in "${DIRS[@]}"
+	do
+		if [ -d $dir ]; then
+			cd $dir
+			return
+		fi
+	done
+	error "Theme not found."
+}
+
 # Add special aliases that will copy result to clipboard (escape → escape+)
 for cmd in password hex2hsl hex2rgb escape codepoint ssh-key myip; do
 	eval "function $cmd+() { $cmd \$@ | c; }"
