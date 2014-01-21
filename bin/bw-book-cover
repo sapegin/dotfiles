@@ -52,7 +52,7 @@ fi
 curl "$URL" > "$DEST"
 
 # Scale
-mogrify -format jpg -quality 75 -thumbnail 120x999 "$DEST"
+mogrify -format jpg -quality 85 -thumbnail 120x999 "$DEST"
 
 # Optimize
 mv "$DEST" "$DEST.tmp"
