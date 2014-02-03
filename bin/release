@@ -75,7 +75,7 @@ if [ "$1" == "major" ] || [ "$1" == "minor" ] || [ "$1" == "patch" ]; then
 	if [ -n "$cmpnt_ver" ] && [ "$cmpnt_ver" != "0.0.0" ] && [ "$current_ver" != "$cmpnt_ver" ]; then dontmatch; fi
 	if [ -n "$pkg_ver" ] && [ "$pkg_ver" != "0.0.0" ] && [ "$current_ver" != "$pkg_ver" ]; then dontmatch; fi
 else
-	if [ "$1" != "--force" ]; then
+	if [ "$2" != "--force" ]; then
 		error "Custom versions possible only with --force key."
 		usage
 		exit 1
