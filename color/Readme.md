@@ -10,7 +10,11 @@ Inspired by [Earthsong](https://github.com/daylerees/colour-schemes/blob/master/
 
 Install `Squirrelsong.terminal`.
 
-### iTerm
+### iTerm2
+
+Install `Squirrelsong.itermcolors`.
+
+### Other software
 
 * Black: 98/65/28
 * Red: 191/60/36
