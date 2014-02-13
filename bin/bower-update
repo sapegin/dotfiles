@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+#
+# Upgrades Bower package’s dependencies to the latest versions and updates bower.json
+#
+# Requires:
+# - jq - brew install jq
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+#
+
+command -v jq >/dev/null 2>&1 || { echo >&2 "jq not installed: see comments for instructions."; exit 1; }
+
+# Common stuff
+RED="$(tput setaf 1)"
+CYAN="$(tput setaf 6)"
+UNDERLINE="$(tput sgr 0 1)"
+NOCOLOR="$(tput sgr0)"
+function header() { echo -e "$UNDERLINE$CYAN$1$NOCOLOR\n"; }
+function error() { echo -e "$UNDERLINE$RED$1$NOCOLOR"; }
+
+if [ ! -f bower.json ]; then
+	error "bower.json not found"
+	exit 1
+fi
+
+header "Upgrading dependencies..."
+for package in $(cat bower.json | jq -r ".dependencies | keys | .[]" 2>/dev/null); do
+	bower install --save $package
+done
+
+echo
+echo
+echo
+git diff -U0 --word-diff --color bower.json | grep '^ ' | tr -d '"~' | sed 's/\[-//g' | sed 's/-\]/ → /g' | sed 's/{+//g' | sed 's/+}//g'
