@@ -52,6 +52,7 @@ cat "$TEMP" | perl -0pe 's/unpublished: true\n//' | perl -0pe "s/date: .*\n/date
 rm "$TEMP"
 
 # Commit
+git add "$DEST"
 git commit -m "Publish post." "$DEST"
 
 # Deploy
