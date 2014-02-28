@@ -3,10 +3,15 @@
 #
 # Removes some parameters from Replichrome’s Lightroom presets: grain, saturation, vibrance, etc.
 #
+# Requires:
+# - replace - npm install replace -g
+# 
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
 # https://github.com/sapegin/dotfiles
 #
+
+command -v replace >/dev/null 2>&1 || { echo >&2 "replace not installed: see comments for instructions."; exit 1; }
 
 
 DIR="$HOME/Pictures/Ligthroom/Lightroom Settings/Develop Presets"
