@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+#
+# Removes some parameters from Replichrome’s Lightroom presets: grain, saturation, vibrance, etc.
+#
+# Requires:
+# - replace - npm install replace -g
+# 
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+#
+
+command -v replace >/dev/null 2>&1 || { echo >&2 "replace not installed: see comments for instructions."; exit 1; }
+
+
+DIR="$HOME/Pictures/Ligthroom/Lightroom Settings/Develop Presets"
+
+
+function clean_dir() {
+	local dir=$1
+	local temp="$HOME/Desktop/$(basename "$dir")"
+	cp -r "$dir" "$temp"
+	for file in "$dir"/*.lrtemplate; do
+		clean_file "$file"
+	done
+}
+
+function clean_file() {
+	local file=$1
+	echo "$file"
+	command replace --silent '\t*(s\.value\.settings\.)?\b(GrainAmount|Whites2012|Blacks2012|Highlights2012|Shadows2012|Clarity2012|Saturation|Vibrance) = \-?\d+,?' '' "$file"
+}
+
+
+clean_dir "$DIR/Replichrome - Black + White"
+clean_dir "$DIR/Replichrome - Fuji Color"
+clean_dir "$DIR/Replichrome - Kodak Color"

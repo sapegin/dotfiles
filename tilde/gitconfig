@@ -72,3 +72,6 @@
 # git config -f ~/.gitlocal user.name "Artem Sapegin"
 [include]
 	path = .gitlocal
+[filter "media"]
+	clean = git-media-clean %f
+	smudge = git-media-smudge %f
