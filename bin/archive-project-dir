@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+#
+# Archives project folder: remove unnecessary files, zip and moves to archive folder
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+#
+
+archive_dir="$HOME/Dropbox/Projects/_Archive"
+
+
+# Common stuff
+RED="$(tput setaf 1)"
+CYAN="$(tput setaf 6)"
+UNDERLINE="$(tput sgr 0 1)"
+NOCOLOR="$(tput sgr0)"
+function header() { echo -e "$UNDERLINE$CYAN$1$NOCOLOR\n"; }
+
+client=$(basename $(dirname "$(pwd)"))
+project=$(basename "$(pwd)")
+project_name="$client/$project"
+
+header "Archiving $project_name..."
+
+# Clean
+echo "Cleaning..."
+
+# Remove node_modules
+echo
+echo "Removing installed npm packages..."
+find . -name node_modules -print0 | xargs -0 rm -rf
+
+# Remove bower_components
+echo
+echo "Removing installed Bower components..."
+find . -name bower_components -print0 | xargs -0 rm -rf
+
+echo
+
+# Zip
+date=$(date +'%Y-%m')
+zip="${archive_dir}/${date}_${client}_${project}.zip"
+echo "Hardcore archiving action..."
+mkdir -p "$archive_dir"
+zip -rq $zip .
+echo
+
+echo "Project archived to $zip."
+echo "You can delete parent ($project_name) folder now."
+echo
+ls -lh "$zip"
+echo
