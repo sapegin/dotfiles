@@ -9,7 +9,7 @@ function md() {
 }
 
 # cd into whatever is the forefront Finder window.
-cdf() {
+function cdf() {
 	cd "`osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)'`"
 }
 
@@ -19,9 +19,9 @@ function f() {
 }
 
 # Quick grep: ag, ack or grep
-# Usage: g match
-# Usage: g txt+md match  # Only for ag
-# Usage: g -s match; g php -s match  # Case sensitive; only for ag
+# USAGE: g match
+# USAGE: g txt+md match  # Only for ag
+# USAGE: g -s match; g php -s match  # Case sensitive; only for ag
 if command -v ag >/dev/null 2>&1; then
 	function _g() {
 		ag --ignore-case --color-line-number='0;36' --color-match='0;35;4' --color-path='1;37' "$@"
@@ -56,7 +56,7 @@ function httpcompression() {
 }
 
 # Show HTTP headers for given URL
-# Usage: headers <URL>
+# USAGE: headers <URL>
 # https://github.com/rtomayko/dotfiles/blob/rtomayko/bin/headers
 function headers() {
 	curl -sv -H "User-Agent: Mozilla/5 Gecko" "$@" 2>&1 >/dev/null |
@@ -126,8 +126,8 @@ function nyan() {
 }
 
 # Copy public SSH key to clipboard. Generate it if necessary
-ssh-key() {
-	file="$HOME/.ssh/id_rsa.pub"
+function ssh-key() {
+	local file="$HOME/.ssh/id_rsa.pub"
 	if [ ! -f "$file" ]; then
 		ssh-keygen -t rsa
 	fi
@@ -137,10 +137,10 @@ ssh-key() {
 
 # Create an SSH key and uploads it to the given host
 # Based on https://gist.github.com/1761938
-ssh-add-host() {
-	username=$1
-	hostname=$2
-	identifier=$3
+function ssh-add-host() {
+	local username=$1
+	local hostname=$2
+	local identifier=$3
 
 	if [[ "$identifier" == "" ]] || [[ "$username" == "" ]] || [[ "$hostname" == "" ]]; then
 		echo "Usage: ssh-add-host <username> <hostname> <identifier>"
@@ -165,10 +165,10 @@ ssh-add-host() {
 
 # Upload current directory to special directory on my hosting
 function yay() {
-	server="seal"
-	dir=`basename "$(pwd)"`
-	remote="~/sites/yay.sapegin.me/htdocs/$dir"
-	url="http://yay.sapegin.me/$dir/"
+	local server="seal"
+	local dir=`basename "$(pwd)"`
+	local remote="~/sites/yay.sapegin.me/htdocs/$dir"
+	local url="http://yay.sapegin.me/$dir/"
 
 	tar cp --exclude '.git' --exclude 'node_modules' . | gzip | ssh $server "mkdir -p "$remote"; gzip -cd | tar x -C "$remote""
 
@@ -203,7 +203,7 @@ function _crlf_file() {
 
 # Backup remote MySQL database to ~/Backups/hostname/dbname_YYYY-MM-DD.sql.gz
 # USAGE: mysql-dump <ssh_hostname> <mysql_database> [mysql_username] [mysql_host]
-mysql-dump() {
+function mysql-dump() {
 	local ssh_hostname=$1
 	local mysql_database=$2
 	local mysql_username=$3
@@ -282,7 +282,7 @@ function rasterize() {
 }
 
 # Add note to Notes.app (OS X 10.8)
-# Usage: note "foo" or echo "foo" | note
+# USAGE: note "foo" or echo "foo" | note
 function note() {
 	local text
 	if [ -t 0 ]; then  # Argument
@@ -303,7 +303,7 @@ EOF
 }
 
 # Start an HTTP server from a directory, optionally specifying the port (default: 8000)
-# Usage: server [port]
+# USAGE: server [port]
 function server() {
 	local port="${1:-8000}"
 	echo "Access from network: http://$(myip):$port"
