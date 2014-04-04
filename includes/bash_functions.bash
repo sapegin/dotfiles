@@ -21,16 +21,17 @@ function f() {
 # Quick grep: ag, ack or grep
 # Usage: g match
 # Usage: g txt+md match  # Only for ag
+# Usage: g -s match; g php -s match  # Case sensitive; only for ag
 if command -v ag >/dev/null 2>&1; then
 	function _g() {
 		ag --ignore-case --color-line-number='0;36' --color-match='0;35;4' --color-path='1;37' "$@"
 	}
 	function g() {
-		if [ $# == 2 ]; then
-			local exts=$(echo $1 | tr '+' '|')
-			_g -G "\.($exts)$" "$2"
+		if (( "$#" >= 2 )) && [[ ${1:0:1} != "-" ]]; then  # More than 2 arguments and the second is not a flag
+			local exts=$(echo $1 | tr '+' '|'); shift
+			_g -G "\.($exts)$" "$@"
 		else
-			_g "$1"
+			_g "$@"
 		fi
 	}
 elif command -v ack >/dev/null 2>&1; then
