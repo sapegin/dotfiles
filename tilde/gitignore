@@ -16,6 +16,7 @@ Thumbs.db
 
 # Installed npm modules
 node_modules
+npm-debug.log
 
 # Installed Bower packages
 bower_components
