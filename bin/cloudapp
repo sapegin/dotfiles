@@ -10,6 +10,8 @@
 #   email
 #   password  
 # 
+# API: https://github.com/cloudapp/api/blob/master/upload-file.md
+#
 # Inspired by https://github.com/holman/dotfiles/blob/master/bin/cloudapp
 #
 # Author: Artem Sapegin, sapegin.me
@@ -21,10 +23,12 @@ CONFIG = '~/.cloudapp'
 AUTH_URL = 'http://my.cl.ly'
 API_URL = 'http://my.cl.ly/items/new'
 
+
 import requests
 from collections import OrderedDict
 import os
 import sys
+
 
 def error(message):
 	print(message)
@@ -44,7 +48,6 @@ def read_config():
 	lines = file.readlines(open(config_path))
 	lines = (line.strip() for line in lines)
 	return lines
-
 
 def upload(filepath):
 	# Check file
