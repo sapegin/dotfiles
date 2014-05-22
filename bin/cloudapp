@@ -1,62 +1,92 @@
-#!/usr/bin/env ruby
+#!/usr/bin/env python
+
+# Uploads files to CloudApp.
 #
-# cloudapp
-# Zach Holman / @holman
-#
-# Uploads a file from the command line to CloudApp, drops it into your 
-# clipboard (on a Mac, at least).
-#
-# Example:
-#
-#   cloudapp drunk-blake.png
-#
-# This requires Aaron Russell's cloudapp_api gem:
-#
-#   gem install cloudapp_api
-#
+# Usage:
+#   cloudapp <filepath>
+# 
 # Requires you set your CloudApp credentials in ~/.cloudapp as a simple file of:
 #
 #   email
-#   password
+#   password  
+# 
+# Inspired by https://github.com/holman/dotfiles/blob/master/bin/cloudapp
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+#
 
-require 'rubygems'
+CONFIG = '~/.cloudapp'
+AUTH_URL = 'http://my.cl.ly'
+API_URL = 'http://my.cl.ly/items/new'
 
-['json', 'cloudapp_api'].each do |gem|
-  begin
-    require gem
-  rescue LoadError
-    puts "You need to install #{gem}: gem install #{gem}"
-    exit!(1)
-  end
-end
+import requests
+from collections import OrderedDict
+import os
+import sys
 
-config_file = "#{ENV['HOME']}/.cloudapp"
-unless File.exist?(config_file)
-  puts "You need to type your email and password (one per line) into "+
-       "`~/.cloudapp`"
-  exit!(1)
-end
+def error(message):
+	print(message)
+	exit(1)
 
-email,password = File.read(config_file).split("\n")
+def main():
+	# Check CLI param
+	if len(sys.argv) is not 2:
+		error('Usage: %s <filepath>' % os.path.basename(sys.argv[0]))
+	url = upload(sys.argv[1])
+	print('File uploaded to %s' % url)
 
-if ARGV[0].nil?
-   puts "You need to specify a file to upload."
-   exit!(1)
-end
+def read_config():
+	config_path = os.path.expanduser(CONFIG)
+	if not os.path.exists(config_path):
+		error('You need to type your email and password (one per line) into %s.' % CONFIG)
+	lines = file.readlines(open(config_path))
+	lines = (line.strip() for line in lines)
+	return lines
 
-urls = []
-ARGV.each do |x|
-  CloudApp.authenticate(email,password)
-  puts "Attempting to upload #{x}"
-  url = CloudApp::Item.create(:upload, {:file => x}).url
 
-  # Say it for good measure.
-  puts "Uploaded #{x} to #{url}"
+def upload(filepath):
+	# Check file
+	if not os.path.exists(filepath):
+		error('File %s not found.' % filepath)	
+	
+	# Read config
+	USER, PASS = read_config()
 
-  # Get the embed link.
-  url = "#{url}/#{ARGV[0].split('/').last}"
-  urls << url
-end
+	# Append auth data
+	s = requests.Session()
+	s.auth = requests.auth.HTTPDigestAuth(USER, PASS)
+	s.headers.update({'Accept': 'application/json'})
 
-# Copy it to your (Mac's) clipboard.
-`echo '#{urls.join(',')}' | tr -d "\n" | pbcopy`
+	# Request to upload
+	upload_request = s.get(API_URL)
+	if upload_request.status_code is not 200:
+		error('Can not upload file. Status: %s.' % upload_request.status_code)
+
+	# Check file size
+	if os.path.getsize(filepath) > upload_request.json()['max_upload_size']
+		error('Maximum upload size exceeded.')
+
+	# Convert response
+	params = []
+	for key, value in upload_request.json()['params'].items():
+		params.append((key.encode('utf8'), value.encode('utf8')))
+	data = OrderedDict(sorted(params))
+
+	# Add file
+	filename = (os.path.basename(filepath)).encode('utf8')
+	data['key'] = data['key'].replace(r'${filename}', filename)
+	files = {'file': (filename, open(filepath, 'rb').read())}
+
+	# Upload file to S3
+	stuff = requests.post(upload_request.json()['url'], data=data, files=files, allow_redirects=False)
+
+	# Follow redirect
+	result = s.get(stuff.headers['Location'])
+
+	return result.json()['url']
+
+
+if __name__ == '__main__':
+	main()
