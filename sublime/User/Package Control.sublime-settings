@@ -4,24 +4,19 @@
 	[
 		"AdvancedNewFile",
 		"Better CoffeeScript",
-		"Color Highlighter",
-		"DashDoc",
 		"DocBlockr",
 		"eco",
 		"EditorConfig",
 		"Emmet",
 		"GitGutter",
-		"Handlebars",
 		"Hayaku - tools for writing CSS faster",
 		"Inc-Dec-Value",
-		"JavaScriptNext - ES6 Syntax",
 		"Koken",
 		"MarkdownEditing",
 		"Package Control",
 		"Stylus",
 		"SublimeLinter",
 		"SublimeLinter-coffeelint",
-		"Theme - Soda",
-		"View In Browser"
+		"Theme - Soda"
 	]
 }
