@@ -14,7 +14,7 @@
 
 MASK="*(*'s conflicted copy [0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]*"
 
-if [ "$1" == "--remove" ]; then
+if [ "$1" == "--remove" ] || [ "$1" == "--force" ]; then
 	find ~/Dropbox/ -path "$MASK" -exec rm -f {} \;
 else
 	find ~/Dropbox/ -path "$MASK" -print
