@@ -130,10 +130,11 @@ fi
 
 # Commit changed files
 git commit -am "v$new_ver"
-git push origin
 
 # Create tag
 git tag "v$new_ver"
+
+# Push everything
 git push origin --tags
 
 # Publish npm package
