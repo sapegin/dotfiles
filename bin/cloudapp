@@ -68,7 +68,7 @@ def upload(filepath):
 		error('Can not upload file. Status: %s.' % upload_request.status_code)
 
 	# Check file size
-	if os.path.getsize(filepath) > upload_request.json()['max_upload_size']
+	if os.path.getsize(filepath) > upload_request.json()['max_upload_size']:
 		error('Maximum upload size exceeded.')
 
 	# Convert response
