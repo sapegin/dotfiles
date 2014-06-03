@@ -1,0 +1,202 @@
+#!/usr/bin/env bash
+
+#
+# Backups MySQL databases and project’s folders to CloudApp.
+#
+# Configuration:
+# - Put projects’ folders list to ~/.backup, every path on a separate line.
+# - Put a list of folders to ignore to projectdir/.backupignore, every pattern on a separate line.
+# 
+# Usage:
+#   backup
+# 
+# Log can be found at ~/backup.log.
+# 
+# Requires:
+# - mysqldump
+# - cloudapp - https://github.com/sapegin/dotfiles/blob/master/bin/cloudapp
+#
+# Inspired by https://github.com/albburtsev/devbox/blob/master/dotfiles/bin/backup
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+#
+
+CONFIG_FILE="$HOME/.backup"
+LOG_FILE="$HOME/backup.log"
+IGNORE_FILE=".backupignore"
+DEFAULT_IGNORES="--exclude='.git' --exclude='node_modules' --exclude='bower_components'"
+
+# Common stuff
+RED="$(tput setaf 1)"
+CYAN="$(tput setaf 6)"
+UNDERLINE="$(tput sgr 0 1)"
+NOCOLOR="$(tput sgr0)"
+
+function header() { echo -e "$UNDERLINE$CYAN$1$NOCOLOR"; }
+function print_error() { echo -e "$UNDERLINE$RED$1$NOCOLOR\n"; }
+
+command -v mysqldump >/dev/null 2>&1 || { echo >&2 "mysqldump not installed."; exit 1; }
+command -v cloudapp >/dev/null 2>&1 || { echo >&2 "cloudapp not installed."; exit 1; }
+
+project=
+project_name=
+base_name=
+mysql_host=
+mysql_dbname=
+mysql_user=
+mysql_password=
+archive_suffix=$(date '+%Y-%m-%d')
+
+# Backup project
+function backup_project() {
+	project="$1"
+	project_name=$(basename "$project")
+	base_name="${project_name}_${archive_suffix}"
+	header "Backing up $project_name..."
+	backup_db
+	#backup_dir
+	echo
+}
+
+# Auto detect database credentials
+function detect_db_params() {
+	# Reset
+	mysql_host=
+	mysql_dbname=
+	mysql_user=
+	mysql_password=
+
+	# WordPress
+	local wp=$(find . -maxdepth 2 -name "wp-config.php" -print -quit)
+	if [ -f "$wp" ]; then
+		echo "WordPress installation detected."
+		mysql_host=$(perl -nle 'print $1 if /DB_HOST.+?\x27(.*?)\x27.*?$/' < "$wp")
+		mysql_dbname=$(perl -nle 'print $1 if /DB_NAME.+?\x27(.*?)\x27.*?$/' < "$wp")
+		mysql_user=$(perl -nle 'print $1 if /DB_USER.+?\x27(.*?)\x27.*?$/' < "$wp")
+		mysql_password=$(perl -nle 'print $1 if /DB_PASSWORD.+?\x27(.*?)\x27.*?$/' < "$wp")
+		#echo "$mysql_host:$mysql_dbname:$mysql_user:$mysql_password"
+		return
+	fi
+
+	# Koken
+	local koken=$(find . -maxdepth 5 -name "database.php" -print -quit)
+	local koken2=$(find . -maxdepth 5 -name "Koken.php" -print -quit)
+	if [ -f "$koken" ] && [ -f "$koken2" ]; then
+		echo "Koken installation detected."
+		mysql_host=$(perl -nle 'print $1 if /hostname.*?=>.*?\x27(.*?)\x27.*?$/' < "$koken")
+		mysql_dbname=$(perl -nle 'print $1 if /database.*?=>.*?\x27(.*?)\x27.*?$/' < "$koken")
+		mysql_user=$(perl -nle 'print $1 if /username.*?=>.*?\x27(.*?)\x27.*?$/' < "$koken")
+		mysql_password=$(perl -nle 'print $1 if /password.*?=>.*?\x27(.*?)\x27.*?$/' < "$koken")
+		#echo "$mysql_host:$mysql_dbname:$mysql_user:$mysql_password"
+		return
+	fi
+
+	# PhpBB
+	local phpbb=$(find . -maxdepth 2 -name "config.php" -print -quit)
+	local phpbb2=$(find . -maxdepth 4 -name "functions_privmsgs.php" -print -quit)
+	if [ -f "$phpbb" ] && [ -f "$phpbb2" ]; then
+		echo "PhpBB installation detected."
+		mysql_host=$(perl -nle 'print $1 if /\$dbhost.*?=.*?\x27(.*?)\x27.*?$/' < "$phpbb")
+		mysql_dbname=$(perl -nle 'print $1 if /\$dbname.*?=.*?\x27(.*?)\x27.*?$/' < "$phpbb")
+		mysql_user=$(perl -nle 'print $1 if /\$dbuser.*?=.*?\x27(.*?)\x27.*?$/' < "$phpbb")
+		mysql_password=$(perl -nle 'print $1 if /\$dbpasswd.*?=.*?\x27(.*?)\x27.*?$/' < "$phpbb")
+		#echo "$mysql_host:$mysql_dbname:$mysql_user:$mysql_password"
+		return
+	fi
+}
+
+# Backup database
+function backup_db() {
+	echo
+	echo "Backing up database..."
+	cd "$project"
+	detect_db_params
+	return
+
+	# Check db existance
+	if [ -z "$mysql_host" ] || [ -z "$mysql_dbname" ]; then
+		echo "No database found in project, skipping."
+		return
+	fi
+
+	local dump_name="${base_name}.sql"
+	local archive_name="${dump_name}.gz"
+
+	local temp_dir=$(mktemp -d) && {
+		cd "$temp_dir"
+
+		# Create dump
+		mysqldump -c -h "$mysql_host" -P "$mysql_port" -u "$mysql_user" --password="$mysql_password" "$mysql_dbname" > "$dump_name" 2>>"$LOG_FILE"
+		if [ $? -ne 0 ]; then
+			error "Can not create MySQL dump."
+			return
+		fi
+
+		# Compress and save
+		gzip "$dump_name"
+		save "$archive_name"
+
+		rm -rf "$temp_dir"
+	}
+}
+
+# Backup project files
+function backup_dir() {
+	echo
+	echo "Backing up files..."
+	cd "$project"
+
+	# Read ignore files
+	local ignores_joined="$DEFAULT_IGNORES"
+	if [ -f "$IGNORE_FILE" ]; then
+		readarray -t ignores < "$IGNORE_FILE"
+		for ignore in "${ignores[@]}"; do
+			ignores_joined="$ignores_joined --exclude='$ignore'"
+		done
+	fi
+
+	# Create and save archive
+	local temp_dir=$(mktemp -d) && {
+		local archive_name="$temp_dir/${base_name}.tar.gz"
+		eval "tar -zc ${ignores_joined} --file=${archive_name} . 2>> '$LOG_FILE'"
+		save "$archive_name"
+		rm -rf "$temp_dir"
+	}
+}
+
+# Upload file to CloudApp
+function save() {
+	local file="$1"
+	cloudapp "$file" 2>>"$LOG_FILE"
+	if [ $? -ne 0 ]; then
+		error "Can not save $file to CloudApp."
+	fi
+}
+
+# Print and log error
+function error() {
+	local message="$1"
+	print_error "$message"
+	echo "[$(date '+%Y.%m.%d %H:%M')] $project_name: $message" >> "$LOG_FILE"
+}
+
+function main() {
+	# Check config file
+	if [ ! -f "$CONFIG_FILE" ]; then
+		error "Config file $CONFIG_FILE not found."
+		exit 1
+	fi
+
+	# Read config file
+	readarray -t projects < "$CONFIG_FILE"
+
+	# Backup
+	for project in "${projects[@]}"; do
+		backup_project "$project"
+	done
+}
+
+# Run
+main
