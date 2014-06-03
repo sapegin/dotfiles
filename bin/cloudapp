@@ -19,6 +19,9 @@
 # https://github.com/sapegin/dotfiles
 #
 
+from __future__ import print_function
+
+
 CONFIG = '~/.cloudapp'
 AUTH_URL = 'http://my.cl.ly'
 API_URL = 'http://my.cl.ly/items/new'
@@ -31,7 +34,7 @@ import sys
 
 
 def error(message):
-	print(message)
+	print(message, file=sys.stderr)
 	exit(1)
 
 def main():
