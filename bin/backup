@@ -56,7 +56,7 @@ function backup_project() {
 	base_name="${project_name}_${archive_suffix}"
 	header "Backing up $project_name..."
 	backup_db
-	#backup_dir
+	backup_dir
 	echo
 }
 
@@ -81,16 +81,19 @@ function detect_db_params() {
 	fi
 
 	# Koken
-	local koken=$(find . -maxdepth 5 -name "database.php" -print -quit)
 	local koken2=$(find . -maxdepth 5 -name "Koken.php" -print -quit)
-	if [ -f "$koken" ] && [ -f "$koken2" ]; then
-		echo "Koken installation detected."
-		mysql_host=$(perl -nle 'print $1 if /hostname.*?=>.*?\x27(.*?)\x27.*?$/' < "$koken")
-		mysql_dbname=$(perl -nle 'print $1 if /database.*?=>.*?\x27(.*?)\x27.*?$/' < "$koken")
-		mysql_user=$(perl -nle 'print $1 if /username.*?=>.*?\x27(.*?)\x27.*?$/' < "$koken")
-		mysql_password=$(perl -nle 'print $1 if /password.*?=>.*?\x27(.*?)\x27.*?$/' < "$koken")
-		#echo "$mysql_host:$mysql_dbname:$mysql_user:$mysql_password"
-		return
+	local koken3=$(find . -maxdepth 5 -name "user_setup.php" -print -quit)
+	if [ -f "$koken2" ] && [ -f "$koken3" ]; then
+		local koken=$(dirname "$koken3")"/database.php"
+		if [ -f "$koken" ]; then
+			echo "Koken installation detected."
+			mysql_host=$(perl -nle 'print $1 if /hostname.*?=>.*?\x27(.*?)\x27.*?$/' < "$koken")
+			mysql_dbname=$(perl -nle 'print $1 if /database.*?=>.*?\x27(.*?)\x27.*?$/' < "$koken")
+			mysql_user=$(perl -nle 'print $1 if /username.*?=>.*?\x27(.*?)\x27.*?$/' < "$koken")
+			mysql_password=$(perl -nle 'print $1 if /password.*?=>.*?\x27(.*?)\x27.*?$/' < "$koken")
+			#echo "$mysql_host:$mysql_dbname:$mysql_user:$mysql_password"
+			return
+		fi
 	fi
 
 	# PhpBB
@@ -113,7 +116,6 @@ function backup_db() {
 	echo "Backing up database..."
 	cd "$project"
 	detect_db_params
-	return
 
 	# Check db existance
 	if [ -z "$mysql_host" ] || [ -z "$mysql_dbname" ]; then

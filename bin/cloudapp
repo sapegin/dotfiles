@@ -10,6 +10,9 @@
 #   email
 #   password  
 # 
+# Requires:
+# - requests - pip install requests
+#
 # API: https://github.com/cloudapp/api/blob/master/upload-file.md
 #
 # Inspired by https://github.com/holman/dotfiles/blob/master/bin/cloudapp
