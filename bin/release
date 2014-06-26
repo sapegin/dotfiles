@@ -135,6 +135,7 @@ git commit -am "v$new_ver"
 git tag "v$new_ver"
 
 # Push everything
+git push origin
 git push origin --tags
 
 # Publish npm package
