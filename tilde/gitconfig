@@ -7,9 +7,7 @@
 	new = green bold
 [core]
 	editor = nano
-	# http://stackoverflow.com/questions/136178/git-diff-handling-long-lines
-	# If doesn't work, try: pager = less -+$LESS -FRX
-	pager = less -r
+	pager = less --chop-long-lines --quit-if-one-screen
 	autocrlf = false
 	safecrlf = false
 	mergeoptions = --no-edit
