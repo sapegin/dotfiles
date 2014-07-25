@@ -49,7 +49,7 @@ echo
 # git-friendly
 header "Updating git-friendly..."
 sudo -v
-sudo bash < <( curl https://raw.github.com/jamiew/git-friendly/master/install.sh)
+sudo bash < <( curl https://raw.githubusercontent.com/jamiew/git-friendly/master/install.sh)
 echo
 
 # Nyan cat! Yay!
