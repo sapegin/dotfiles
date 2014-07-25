@@ -74,7 +74,6 @@ npm install -g jshint
 npm install -g jscs
 npm install -g bower
 npm install -g docpad
-npm install -g replace
 npm install -g npm-check-updates
 
 # Python
