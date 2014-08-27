@@ -92,12 +92,16 @@ header "Releasing v$new_ver..."
 
 # Update bower.json
 if [ -n "$cmpnt_ver" ]; then
-	sed -i '' "s^$current_ver^$new_ver^" bower.json
+	jq ".version = \"$new_ver\"" bower.json > bower.json_
+	rm bower.json
+	mv bower.json_ bower.json
 fi
 
 # Update package.json
 if [ -n "$pkg_ver" ]; then
-	sed -i '' "s^$current_ver^$new_ver^" package.json
+	jq ".version = \"$new_ver\"" package.json > package.json_
+	rm package.json
+	mv package.json_ package.json
 fi
 
 # Update *.jquery.json
