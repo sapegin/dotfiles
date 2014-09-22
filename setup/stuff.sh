@@ -28,12 +28,13 @@ brew install homebrew/dupes/grep
 brew install git
 brew install git-extras
 brew install hub
-sudo bash < <( curl https://raw.github.com/jamiew/git-friendly/master/install.sh)
+sudo bash < <( curl https://raw.githubusercontent.com/jamiew/git-friendly/master/install.sh)
 
 # MySQL
 brew install mysql
 unset TMPDIR
 mysql_install_db --verbose --user=`whoami` --basedir="$(brew --prefix mysql)" --datadir=/usr/local/var/mysql --tmpdir=/tmp
+mysql.server start
 /usr/local/opt/mysql/bin/mysqladmin -u root password 'root'
 
 # PHP
@@ -60,6 +61,7 @@ brew install the_silver_searcher
 
 # Everything else
 brew install unrar
+brew install fontforge
 brew install msmtp --with-macosx-keyring
 brew install mutt --sidebar-patch
 
