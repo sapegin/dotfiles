@@ -43,6 +43,7 @@ sudo cp php.ini.default php.ini
 sudo sed -i '' "s^mysql.default_socket =^mysql.default_socket = /tmp/mysql.sock^" php.ini
 sudo sed -i '' "s^;date.timezone =^date.timezone = Europe/Moscow^" php.ini
 sudo sed -i '' "s^;extension=php_sqlite3.dll^extension=php_sqlite3.dll^" php.ini
+sudo sed -i '' "s^display_errors = Off^display_errors = On^" php.ini
 
 # Apache: enable PHP, .htaccess files, virtual hosts and set it to run as current user
 cd /etc/apache2
