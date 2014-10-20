@@ -113,6 +113,9 @@ alias venv-init='test -d ENV && echo "Virtualenv already exists." || virtualenv 
 alias dm="python manage.py"
 alias dms="python manage.py runserver"
 
+# Homebrew
+alias brew-up="brew update; brew upgrade; brew cleanup; brew prune"
+
 # Restart Linux service
 rstrt() { sudo service $@ restart; }
 
