@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+# Returns list of unpublished blog posts in Afred’s Script Filter XML format.
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+#
+
+FILES=~/Dropbox/Projects/_Repos/blog.sapegin.me/src/documents_*/all/*.html.md
+
+echo '<?xml version="1.0"?><items>'
+
+found=0
+for file in $FILES; do
+	if grep -q 'unpublished: true' $file; then
+		found=1
+		title=$(perl -nle 'print $1 if /^title: \x27(.*?)\x27$/' "$file")
+		lang=$(echo "$file" | perl -nle 'print $1 if /documents_(..)/')
+		case $lang in
+			ru) lang="Russian" ;;
+			en) lang="English" ;;
+		esac
+		echo "<item arg='$file' valid='yes' autocomplete='$file' type='file'>"
+		echo "	<title>$title</title>"
+		echo "	<subtitle>$lang</subtitle>"
+		echo "	<icon type='fileicon'>$file</icon>"
+		echo "</item>"
+	fi
+done
+
+if [ "$found" == "0" ]; then
+	echo "<item valid='no'>"
+	echo "	<title>No unpublished posts found.</title>"
+	echo "</item>"
+fi
+
+echo '</items>'

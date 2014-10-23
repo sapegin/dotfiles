@@ -2,59 +2,30 @@
 
 # Publishes post to my blog: removes unpublished attribute, updates date, commits and deploys.
 #
-# Usage:
-#   nano-publish <slug> <en|ru>
+# This script shuld be run from Alfred workflow.
 #
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
 # https://github.com/sapegin/dotfiles
 #
 
-SLUG=$1
-LANG=$2
-BLOG_DIR=~/Dropbox/Projects/_Repos/blog.sapegin.me
-DEST="src/documents_$LANG/all/$SLUG.html.md"
-TEMP="${DEST}_nanopublish"
-DATE=$(date +"%b %e, %Y")
+BLOG_DIR="$HOME/Dropbox/Projects/_Repos/blog.sapegin.me"
+DATE_FORMAT="%b %e, %Y"
 
-
-# Common stuff
-RED="$(tput setaf 1)"
-UNDERLINE="$(tput sgr 0 1)"
-NOCOLOR="$(tput sgr0)"
-function error() { echo -e "\n$UNDERLINE$RED$1$NOCOLOR\n"; exit 1; }
-
-function usage() {
-	echo "Usage:"
-	echo "  `basename $0` <slug> <en|ru>"
-	echo
-	exit 1
-}
-
-# Check CLI params
-if [ -z "$SLUG" ] || [ -z "$LANG" ]; then
-	usage
-fi
-if [ "$LANG" != "en" ] && [ "$LANG" != "ru" ]; then
-	usage
-fi
+filepath="$1"
+date=$(date +"$DATE_FORMAT")
 
 cd "$BLOG_DIR"
 
-# Check post file
-if [ ! -f "$DEST" ]; then
-	error "Post file $DEST not found."
-fi
-
-# Remove unpublished and update date
-cp "$DEST" "$TEMP"
-cat "$TEMP" | perl -0pe 's/unpublished: true\n//' | perl -0pe "s/date: .*\n/date: $DATE\n/" > "$DEST"
-rm "$TEMP"
+# Remove unpublished flag and update date
+tempfile="${filepath}_nanopublish"
+cp "$filepath" "$tempfile"
+cat "$tempfile" | perl -0pe 's/unpublished: true\n//' | perl -0pe "s/date: .*\n/date: $date\n/" > "$filepath"
+rm "$tempfile"
 
 # Commit
-git add "$DEST"
-git commit -m "Publish post." "$DEST"
+git add "$filepath"
+git commit -m "Publish post." "$filepath"
 
 # Deploy
-git push
-shipit
+nano-deploy "Post published."

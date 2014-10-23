@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+# Commits changes to blog.
+#
+# This script shuld be run from Alfred workflow.
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+#
+
+BLOG_DIR="$HOME/Dropbox/Projects/_Repos/blog.sapegin.me"
+
+# Common stuff
+function ask() {
+	osascript <<EOT
+		tell app "System Events"
+			text returned of (display dialog "$1" default answer "$2" buttons {"OK"} default button 1 with title "Nano")
+		end tell
+EOT
+}
+
+cd "$BLOG_DIR"
+
+# Ask commit message
+message=$(ask "Commit message:" "`commit`")
+
+# Commit
+git add .
+git commit -m "$message"
+
+# Show notification
+terminal-notifier -message "Changes committed." -title "Nano" -group "nano"

@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+# Deploys blog.
+#
+# This script shuld be run from Alfred workflow.
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+#
+
+# TODO: Show deploy errors
+
+BLOG_DIR="$HOME/Dropbox/Projects/_Repos/blog.sapegin.me"
+
+cd "$BLOG_DIR"
+
+# Pull
+if [ "$2" == "--pull" ] || [ "$2" == "--pull" ]; then
+	git pull
+fi
+
+# Deploy
+git push
+shipit
+
+# Copy URL to clipboad
+subtitle=""
+if [ "$2" != "" ] && [ "$2" != "--pull" ]; then
+	echo "$2" | pbcopy
+	subtitle="URL copied to clipboard."
+fi
+
+# Show notification
+terminal-notifier -message "$1" -title "Nano" -group "nano" -subtitle "$subtitle"

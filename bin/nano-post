@@ -1,65 +1,78 @@
 #!/usr/bin/env bash
 
-# Copies Markdown file from Writer Pro’s iCloud folder (should be in Editing mode) to my blog’s folder,
-# add YAML front matter and opens it in default editor.
-#
-# Usage:
-#   nano-post <filename> <slug> <en|ru>
+# Copies current opened in iA Writer Pro file to my blog’s folder, adds YAML front matter and opens it in Sublime Text.
+# 
+# Files should be named like this: `SomeName_En.md`, where `En` is file’s language: En or Ru.
+# 
+# This script shuld be run from Alfred workflow.
 #
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
 # https://github.com/sapegin/dotfiles
 #
 
-NAME=$1
-SLUG=$2
-LANG=$3
-BLOG_DIR=~/Dropbox/Projects/_Repos/blog.sapegin.me/src/documents_$LANG/all
-SOURCE="$NAME.md"
-DEST="$BLOG_DIR/$SLUG.html.md"
-DATE=$(date +"%b %e, %Y")
-
+# Filepath = FILEPATH_PREFIX + language code + FILEPATH_SUFFIX + slug + FILEPATH_EXT
+FILEPATH_PREFIX="$HOME/Dropbox/Projects/_Repos/blog.sapegin.me/src/documents_"
+FILEPATH_SUFFIX="/all/"
+FILEPATH_EXT=".html.md"
+DATE_FORMAT="%b %e, %Y"
 
 # Common stuff
-RED="$(tput setaf 1)"
-UNDERLINE="$(tput sgr 0 1)"
-NOCOLOR="$(tput sgr0)"
-function error() { echo -e "\n$UNDERLINE$RED$1$NOCOLOR\n"; exit 1; }
-
-function usage() {
-	echo "Usage:"
-	echo "  `basename $0` <filename> <slug> <en|ru>"
-	echo
-	exit 1
+function error() {
+	osascript <<EOT
+		tell app "System Events"
+			display dialog "$1" buttons {"OK"} default button 1 with icon caution with title "Nano"
+			return
+		end tell
+EOT
+	exit 1;
+}
+function ask() {
+	osascript <<EOT
+		tell app "System Events"
+			text returned of (display dialog "$1" default answer "$2" buttons {"OK"} default button 1 with title "Nano")
+		end tell
+EOT
 }
 
-# Check CLI params
-if [ -z "$NAME" ] || [ -z "$SLUG" ] || [ -z "$LANG" ]; then
-	usage
-fi
-if [ "$LANG" != "en" ] && [ "$LANG" != "ru" ]; then
-	usage
+# TODO: Check whether file has a name
+
+# Topmost opened in iA Writer Pro file
+source_file=$(osascript -e 'tell application "iA Writer Pro" to set filepath to file of document 1' -e 'POSIX path of filepath')
+source_name=$(basename "$source_file")
+
+# Language
+lang=$(echo "$source_name" | perl -ne 'm/_(\w\w)\.md$/; print lc $1')
+if [ "$lang" != "en" ] && [ "$lang" != "ru" ]; then
+	error "Unknown language: $lang"
 fi
 
-# Check dest file
-if [ -f "$DEST" ]; then
-	error "Destination file $DEST already exists."
+# Default slug: convert CamelCase file name to under_score, strip language and extension
+slug=$(echo "$source_name" | perl -pe 's/([A-Z])/-\l\1/g' | perl -pe 's/^-(.*?)_-\w\w\.md/\1/')
+
+# Ask user to review the slug
+slug=$(ask "Post slug:" "$slug")
+if [ -z "$slug" ]; then
+	error "You need to enter a post slug."
 fi
 
-# Open Writer Pro’s iCloud folder
-cd ~/Library/Mobile\ Documents/27N4MQEA55~pro~writer/Documents/Edit
+# Destination Markdown file path
+dest="$FILEPATH_PREFIX$lang$FILEPATH_SUFFIX$slug$FILEPATH_EXT"
 
-# Check source file
-if [ ! -f "$SOURCE" ]; then
-	error "Source file $(pwd)/$SOURCE not found."
+# Check dest file existence
+if [ -f "$dest" ]; then
+	error "Destination file $dest already exists."
 fi
 
 # Read post title
-TITLE=$(grep -m 1 '#' "$SOURCE" | sed -e 's^# ^^')
+title=$(grep -m 1 '#' "$source_file" | sed -e 's^# ^^')
+
+# Publishing date (today)
+date=$(date +"$DATE_FORMAT")
 
 # Copy template and source file to destination folder
-sed -e "s^{title}^$TITLE^" -e "s^{date}^$DATE^" ~/dotfiles/bin/nano-post.tmpl > "$DEST"
-cat "$SOURCE" | perl -0pe 's/#.*\n//' >> "$DEST"
+sed -e "s^{title}^$title^" -e "s^{date}^$date^" ~/dotfiles/bin/nano-post.tmpl > "$dest"
+cat "$source_file" | perl -0pe 's/#.*\n//' >> "$dest"
 
-# Open file in editor
-$EDITOR "$DEST"
+# Open the file in Sublime Text
+open -a "Sublime Text" "$dest"
