@@ -4,7 +4,7 @@
 # 
 # Files should be named like this: `SomeName_En.md`, where `En` is file’s language: En or Ru.
 # 
-# This script shuld be run from Alfred workflow.
+# This script should be run from Alfred workflow.
 #
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
