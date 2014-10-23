@@ -25,7 +25,7 @@ fi
 # Last commit’s author
 author="$(git --no-pager show -s --format='%an <%ae>' HEAD)"
 
-# Soft undo all branch-uniq commits
+# Soft undo all branch-unique commits
 git reset --soft master
 
 # Commit back as a single commit
