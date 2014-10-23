@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# Shows GUI error message.
+#
+# Usage:
+#   dlg-prompt <text> [title]
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+#
+
+osascript <<EOT
+	tell app "System Events"
+		display dialog "$1" buttons {"OK"} default button 1 with icon caution with title "$2"
+		return  -- Suppress result
+	end tell
+EOT

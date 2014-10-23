@@ -19,20 +19,11 @@ DATE_FORMAT="%b %e, %Y"
 
 # Common stuff
 function error() {
-	osascript <<EOT
-		tell app "System Events"
-			display dialog "$1" buttons {"OK"} default button 1 with icon caution with title "Nano"
-			return
-		end tell
-EOT
-	exit 1;
+	dlg-error "$1" "Nano"
+	exit 1
 }
 function ask() {
-	osascript <<EOT
-		tell app "System Events"
-			text returned of (display dialog "$1" default answer "$2" buttons {"OK"} default button 1 with title "Nano")
-		end tell
-EOT
+	dlg-prompt "$1" "$2" "Nano"
 }
 
 # TODO: Check whether file has a name

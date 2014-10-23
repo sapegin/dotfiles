@@ -13,11 +13,7 @@ BLOG_DIR="$HOME/Dropbox/Projects/_Repos/blog.sapegin.me"
 
 # Common stuff
 function ask() {
-	osascript <<EOT
-		tell app "System Events"
-			text returned of (display dialog "$1" default answer "$2" buttons {"OK"} default button 1 with title "Nano")
-		end tell
-EOT
+	dlg-prompt "$1" "$2" "Nano"
 }
 
 cd "$BLOG_DIR"
