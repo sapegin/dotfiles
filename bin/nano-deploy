@@ -4,6 +4,9 @@
 #
 # This script should be run from Alfred workflow.
 #
+# Requires:
+# - terminal-notifier - brew instal terminal-notifier
+#
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
 # https://github.com/sapegin/dotfiles
@@ -12,6 +15,8 @@
 # TODO: Show deploy errors
 
 BLOG_DIR="$HOME/Dropbox/Projects/_Repos/blog.sapegin.me"
+
+command -v terminal-notifier >/dev/null 2>&1 || { error "terminal-notifier not installed: see comments for instructions."; exit 1; }
 
 cd "$BLOG_DIR"
 
