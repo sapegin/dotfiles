@@ -6,6 +6,7 @@
 #
 # Requires:
 # - terminal-notifier - brew instal terminal-notifier
+# - shipit - https://github.com/sapegin/shipit
 #
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
@@ -17,6 +18,7 @@
 BLOG_DIR="$HOME/Dropbox/Projects/_Repos/blog.sapegin.me"
 
 command -v terminal-notifier >/dev/null 2>&1 || { error "terminal-notifier not installed: see comments for instructions."; exit 1; }
+command -v shipit >/dev/null 2>&1 || { error "shipit not installed: see comments for instructions."; exit 1; }
 
 cd "$BLOG_DIR"
 
