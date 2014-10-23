@@ -16,7 +16,7 @@ BLOG_DIR="$HOME/Dropbox/Projects/_Repos/blog.sapegin.me"
 cd "$BLOG_DIR"
 
 # Pull
-if [ "$2" == "--pull" ] || [ "$2" == "--pull" ]; then
+if [ "$2" == "--pull" ] || [ "$3" == "--pull" ]; then
 	git pull
 fi
 
