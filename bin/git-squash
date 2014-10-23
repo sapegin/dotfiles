@@ -29,5 +29,5 @@ author="$(git --no-pager show -s --format='%an <%ae>' HEAD)"
 git reset --soft master
 
 # Commit back as a single commit
-git a .
+git add .
 git commit -m "$1" --author "$author"
