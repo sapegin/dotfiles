@@ -27,10 +27,11 @@ sudo sed -i '' "s^display_errors = Off^display_errors = On^" php.ini
 cd /etc/apache2
 sudo cp httpd.conf httpd.conf.bak
 sudo cp extra/httpd-vhosts.conf extra/httpd-vhosts.conf.bak
+sudo sed -i '' "s^#\(LoadModule rewrite_module\)^\1^" httpd.conf
 sudo sed -i '' "s^#\(LoadModule php5_module\)^\1^" httpd.conf
 sudo sed -i '' "s^#\(Include /private/etc/apache2/extra/httpd-vhosts.conf\)^\1^" httpd.conf
 sudo sed -i '' "s^User _www^User `whoami`^" httpd.conf
 sudo sed -i '' "s^Group _www^Group staff^" httpd.conf
-echo -e "NameVirtualHost *:80\n\n<Directory />\n    AllowOverride All\n    Allow from all\n</Directory>\n" | sudo tee extra/httpd-vhosts.conf
+echo -e "NameVirtualHost *:80\n\n<Directory />\n    AllowOverride All\n    Require all granted\n</Directory>\n" | sudo tee extra/httpd-vhosts.conf
 cd -
 sudo apachectl graceful
