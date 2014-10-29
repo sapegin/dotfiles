@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Installs Homebrew, Git, git-extras, git-friendly, hub, Node.js, configures Apache, PHP, MySQL, etc.
+# Installs Homebrew, Git, git-extras, git-friendly, hub, Node.js, etc.
 
 # Ask for the administrator password upfront
 sudo -v
@@ -29,32 +29,6 @@ brew install git
 brew install git-extras
 brew install hub
 sudo bash < <( curl https://raw.githubusercontent.com/jamiew/git-friendly/master/install.sh)
-
-# MySQL
-brew install mysql
-unset TMPDIR
-mysql_install_db --verbose --user=`whoami` --basedir="$(brew --prefix mysql)" --datadir=/usr/local/var/mysql --tmpdir=/tmp
-mysql.server start
-/usr/local/opt/mysql/bin/mysqladmin -u root password 'root'
-
-# PHP
-cd /etc
-sudo cp php.ini.default php.ini 
-sudo sed -i '' "s^mysql.default_socket =^mysql.default_socket = /tmp/mysql.sock^" php.ini
-sudo sed -i '' "s^;date.timezone =^date.timezone = Europe/Moscow^" php.ini
-sudo sed -i '' "s^;extension=php_sqlite3.dll^extension=php_sqlite3.dll^" php.ini
-sudo sed -i '' "s^display_errors = Off^display_errors = On^" php.ini
-
-# Apache: enable PHP, .htaccess files, virtual hosts and set it to run as current user
-cd /etc/apache2
-sudo cp httpd.conf httpd.conf.bak
-sudo cp extra/httpd-vhosts.conf extra/httpd-vhosts.conf.bak
-sudo sed -i '' "s^#\(LoadModule php5_module\)^\1^" httpd.conf
-sudo sed -i '' "s^#\(Include /private/etc/apache2/extra/httpd-vhosts.conf\)^\1^" httpd.conf
-sudo sed -i '' "s^User _www^User `whoami`^" httpd.conf
-sudo sed -i '' "s^Group _www^Group staff^" httpd.conf
-echo -e "NameVirtualHost *:80\n\n<Directory />\n    AllowOverride All\n    Allow from all\n</Directory>\n" | sudo tee extra/httpd-vhosts.conf
-cd -
 
 # Extend global $PATH
 echo -e "setenv PATH $HOME/dotfiles/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" | sudo tee /etc/launchd.conf
