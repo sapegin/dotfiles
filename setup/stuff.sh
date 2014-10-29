@@ -59,12 +59,11 @@ cd -
 # Extend global $PATH
 echo -e "setenv PATH $HOME/dotfiles/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" | sudo tee /etc/launchd.conf
 
-# Ag, the better ack, which is the better grep
-brew install the_silver_searcher
-
 # Everything else
+brew install the_silver_searcher
 brew install unrar
-brew install fontforge
+brew install gist
+brew install ttfautohint fontforge --with-python
 brew install msmtp --with-macosx-keyring
 brew install mutt --sidebar-patch
 
