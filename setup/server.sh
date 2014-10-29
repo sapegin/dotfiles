@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Configures Apache, PHP and MySQL.
+# Configures Apache (OS X), PHP (OS X) and MySQL (Homebrew).
 
 # Require Homebrew
 command -v brew >/dev/null 2>&1 || { echo >&2 "Please install Homebrew first."; exit 1; }
