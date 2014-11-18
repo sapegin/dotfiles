@@ -116,6 +116,10 @@ alias dms="python manage.py runserver"
 # Homebrew
 alias brew-up="brew update; brew upgrade; brew cleanup; brew prune"
 
+# Gist
+alias gist-paste="gist --private --copy --paste --filename"  # gist-paste filename.ext -- creates private Gist from the clipboard
+alias gist-file="gist --private --copy"  # gist-file filename.ext -- creates private Gist from a file
+
 # Restart Linux service
 rstrt() { sudo service $@ restart; }
 
