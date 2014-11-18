@@ -16,6 +16,9 @@
 		"Stylus",
 		"SublimeLinter",
 		"SublimeLinter-coffeelint",
+		"SublimeLinter-jscs",
+		"SublimeLinter-jshint",
+		"SublimeLinter-json",
 		"Theme - Soda"
 	]
 }
