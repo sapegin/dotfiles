@@ -77,7 +77,7 @@ for method in GET HEAD POST PUT DELETE TRACE OPTIONS; do
 done
 
 # Download file and save it with filename of remote file
-alias get="curl -O"
+alias get="curl -O -L"
 
 # Download web page with all assets
 alias getpage="wget --no-clobber --page-requisites --html-extension --convert-links --no-host-directories"
