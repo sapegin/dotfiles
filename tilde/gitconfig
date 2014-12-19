@@ -12,6 +12,7 @@
 	safecrlf = false
 	mergeoptions = --no-edit
 	excludesfile = ~/.gitignore
+	quotepath = false
 [alias]
 	a = add
 	ua = reset HEAD
