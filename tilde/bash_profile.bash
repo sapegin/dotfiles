@@ -47,6 +47,7 @@ PATH='/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin'
 command -v brew >/dev/null 2>&1 && _prepend_path "$(brew --prefix coreutils)/libexec/gnubin"
 [ -d ~/dotfiles/bin ] && _prepend_path "$HOME/dotfiles/bin"
 [ -d ~/bin ] && _prepend_path "$HOME/bin"
+[ -d ~/.nvm ] && _prepend_path "$HOME/.nvm"
 export PATH
 
 # Colors
@@ -68,6 +69,12 @@ for file in ~/dotfiles/includes/bash_{prompt,aliases,functions,git}.bash; do
 	[ -r "$file" ] && source "$file"
 done
 unset file
+
+# nvm
+if command -v brew >/dev/null 2>&1; then
+	export NVM_DIR="$HOME/.nvm"
+	source $(brew --prefix nvm)/nvm.sh
+fi
 
 # If possible, add tab completion for many commands
 [ -f /etc/bash_completion ] && source /etc/bash_completion
