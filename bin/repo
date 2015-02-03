@@ -2,8 +2,8 @@
 
 // Magic project opener: opens repository using fuzzy search.
 // 
-// Usage:
-//   repo <name>
+// Should be used via Bash alias like this:
+//   function proj { cd "$("$HOME/dotfiles/bin/repo" $1)"; }
 //
 // Author: Artem Sapegin, sapegin.me
 // License: MIT
