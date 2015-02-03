@@ -40,8 +40,13 @@
 	"highlight_line": true,
 	"ignored_packages":
 	[
-		"Vintage",
-		"Markdown"
+		"Markdown",
+		"Vintage"
+	],
+	"indent_guide_options":
+	[
+		"draw_normal",
+		"draw_active"
 	],
 	"line_padding_bottom": 1,
 	"line_padding_top": 1,
@@ -54,10 +59,5 @@
 	"scroll_past_end": true,
 	"tab_completion": true,
 	"theme": "Soda Light 3.sublime-theme",
-	"wide_caret": true,
-	"indent_guide_options":
-	[
-		"draw_normal",
-		"draw_active"
-	]
+	"wide_caret": true
 }
