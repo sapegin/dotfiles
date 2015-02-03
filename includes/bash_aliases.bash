@@ -124,9 +124,7 @@ alias gist-file="gist --private --copy"  # gist-file filename.ext -- creates pri
 rstrt() { sudo service $@ restart; }
 
 # Magic Project Opener
-function proj { cd "$("$HOME/dotfiles/bin/opener.py" "$HOME/Dropbox/Projects" $1 -w project $2)"; }
-function repo { cd "$("$HOME/dotfiles/bin/opener.py" "$HOME/Dropbox/Projects" $1 -w repo $2)"; }
-function wptheme { cd "$("$HOME/dotfiles/bin/opener.py" "$HOME/Dropbox/Projects" $1 -w wptheme $2)"; }
+function repo { cd "$("$HOME/dotfiles/bin/repo" $1)"; }
 
 # Color conversion
 alias hex2hsl="color.js $1 $2"

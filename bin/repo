@@ -1,0 +1,86 @@
+#!/usr/bin/env node
+
+// Magic project opener: opens repository using fuzzy search.
+// 
+// Usage:
+//   repo <name>
+//
+// Author: Artem Sapegin, sapegin.me
+// License: MIT
+// https://github.com/sapegin/dotfiles
+//
+
+var fs = require('fs');
+var path = require('path');
+
+var PROJECTS_DIR = path.join(process.env.HOME, 'Dropbox/Projects');
+var SKIP_PROJECTS = ['_Archive', '_Sublime'];
+var SKIP_PREFIXES = ['_Forks', '_Repos', 'Misc'];
+
+var args = process.argv.splice(2);
+if (args.length !== 1) {
+	console.log('Usage: repo <name>');
+	process.exit(1);
+}
+
+var repo = find(getRepos(PROJECTS_DIR), args[0]);
+if (repo) {
+	console.log(path.join(PROJECTS_DIR, repo));
+}
+
+function find(repos, name) {
+	// Fuzzy search
+	var nameRegexp = new RegExp(name.replace(/[^a-z0-9]/gi, '').split('').join('.*'), 'i');
+	var filterRegexp = new RegExp('^(' + SKIP_PREFIXES.join('|') + ')/', 'i');
+	repos = repos.filter(function(repo) {
+		repo = repo.replace(filterRegexp, '');
+		return nameRegexp.test(repo);
+	});
+
+	// Found?
+	if (!repos.length) {
+		console.log('Repository not found');
+		process.exit(1);
+	}
+
+	// Order by repo name’s length
+	var length = function(repo) {
+		return path.basename(repo).length;
+	};
+	repos.sort(function(a, b) {
+		return length(a) > length(b);
+	});
+
+	// Return the most probable result
+	return repos[0];
+}
+
+
+function getRepos(dir) {
+	var projects = getDirs(dir);
+	var repos = [];
+	projects.forEach(function(projectName) {
+		if (SKIP_PROJECTS.indexOf(projectName) !== -1) return false;
+		var projectDir = path.join(dir, projectName);
+		var subDirs = getDirs(projectDir);
+		subDirs.forEach(function(subDirName) {
+			if (fs.existsSync(path.join(projectDir, subDirName, '.git'))) {
+				repos.push(path.join(projectName, subDirName));
+			}
+		});
+	});
+
+	return repos;
+}
+
+function getDirs(dir) {
+	var dirs = fs.readdirSync(dir);
+	dirs = removeHidden(dirs);
+	return dirs;
+}
+
+function removeHidden(files) {
+	return files.filter(function(name) {
+		return name[0] !== '.';
+	})
+}
