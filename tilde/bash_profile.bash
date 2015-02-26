@@ -71,7 +71,7 @@ done
 unset file
 
 # nvm
-if command -v nvm >/dev/null 2>&1; then
+if [ -d ~/.nvm ]; then
 	export NVM_DIR="$HOME/.nvm"
 	source $(brew --prefix nvm)/nvm.sh
 fi
