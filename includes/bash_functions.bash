@@ -325,12 +325,12 @@ function theme() {
 	local DIRS=( "wp-content/themes/$project" 'wp-content/themes/*' "storage/themes/$project" 'storage/themes/*' "htdocs/storage/themes/$project" 'htdocs/storage/themes/*' )
 	for dir in "${DIRS[@]}"
 	do
-		if [ -d $dir ]; then
-			cd $dir
+		if [ -d "$dir" ]; then
+			cd "$dir"
 			return
 		fi
 	done
-	error "Theme not found."
+	echo "Theme not found."
 }
 
 # Add special aliases that will copy result to clipboard (escape → escape+)
