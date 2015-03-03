@@ -1,0 +1,220 @@
+#!/usr/bin/env node
+
+// Magically opens a site in a browser (creates dev server if necessary).
+// 
+// Supported engines:
+//   - Wordpress
+// 
+// Author: Artem Sapegin, sapegin.me
+// License: MIT
+// https://github.com/sapegin/dotfiles
+//
+
+'use strict';
+
+var fs = require('fs');
+var path = require('path');
+var util = require('util');
+var chalk = require('chalk');
+var sh = require('execSync');
+
+function run() {
+	cdToProjectRoot();
+	
+	var kind = getProjectType();
+	var browse;
+	switch (kind) {
+		case 'wordpress':
+			browse = new BrowseWordpress();
+			break;
+		default:
+			error('Unknown project type.');
+	}
+	browse.open();
+}
+
+function error(message) {
+	console.log('\n' + chalk.red(message));
+	process.exit(1);
+}
+
+function ok() {
+	console.log(chalk.green('OK'));
+}
+
+function readFile(filepath) {
+	return fs.readFileSync(filepath, {encoding: 'utf8'});
+}
+
+function cdToProjectRoot() {
+	var tries = 20;
+	while (tries && !fs.existsSync('.git')) {
+		process.chdir('..');
+		tries -= 1;
+	}
+	if (!tries) {
+		error('Cannot find project root.');
+	}
+}
+
+function appendSystemFile(filepath, contents) {
+	sh.run(
+		'echo "\n\n' +
+		contents + '\n' +
+		'" | sudo tee -a ' + filepath + ' > /dev/null'
+	);
+}
+
+function getProjectName() {
+	return path.basename(process.cwd());
+}
+
+function getProjectType() {
+	if (isWordpress()) {
+		return 'wordpress';
+	}
+}
+
+function isStringInFile(filepath, string) {
+	var contents = readFile(filepath);
+	return contents.indexOf(string) !== -1;
+}
+
+function isWordpress() {
+	return fs.existsSync('wp-config.php');
+}
+
+function isWordpressTheme() {
+	return fs.existsSync('header.php') && fs.existsSync('footer.php') && fs.existsSync('functions.php');
+}
+
+
+/**
+ * Base class
+ */
+function Browse() {
+}
+
+Browse.prototype = {
+	open: function() {
+		this.hostName = getProjectName();
+		console.log('Opening ' + this.hostName + '...');
+		this.runCommands();
+	},
+
+	runCommands: function() {
+		this.addVirtualHost();
+		this.addHost();
+		this.startApache();
+		this.startMysql();
+		this.createDatabase();
+		this.openBrowser();
+	},
+
+	addVirtualHost: function() {
+		var vhostsConfPath = '/etc/apache2/extra/httpd-vhosts.conf';
+		if (isStringInFile(vhostsConfPath, 'ServerName ' + this.hostName + '\n')) return;
+
+		process.stdout.write('Adding virtual host... ');
+
+		appendSystemFile(vhostsConfPath, [
+			'<VirtualHost *:80>',
+			'   DocumentRoot ' + process.cwd(),
+			'   ServerName ' + this.hostName,
+			'</VirtualHost>'
+		].join('\n'));
+
+		// Restart Apache
+		sh.run('sudo apachectl graceful');
+
+		ok();
+	},
+
+	addHost: function() {
+		var hostsFilePath = '/etc/hosts';
+		if (isStringInFile(hostsFilePath, '127.0.0.1 ' + this.hostName + '\n')) return;
+
+		process.stdout.write('Adding host to /etc/hosts... ');
+
+		appendSystemFile(hostsFilePath,
+			'127.0.0.1 ' + this.hostName + '\n'
+		);
+
+		// Flush DNS cache
+		sh.run('dscacheutil -flushcache');
+
+		ok();
+	},
+
+	startApache: function() {
+		process.stdout.write('Starting Apache... ');
+
+		var result = sh.exec('ps ax | grep httpd | wc -l');
+		if (parseInt(result.stdout) <= 2) {  // Apache not started
+			sh.run('sudo apachectl start');
+		}
+
+		ok();
+	},
+
+	startMysql: function() {
+		process.stdout.write('Starting MySQL... ');
+
+		var result = sh.exec('mysql.server start');
+		if (result.stdout.indexOf('SUCCESS!') !== -1) {
+			ok();
+		}
+		else {
+			console.log();
+			console.log(result.stdout);
+		}
+	},
+
+	createDatabase: function() {
+		var dbParams = this.getDatabaseParams();
+		var prefix = 'MYSQL_PWD=' + dbParams.password;
+		var connection = '-u' + dbParams.username + ' -h ' + dbParams.host;
+		var dbName = 'wp_' + this.projectName;
+		var result = sh.exec(prefix + ' mysql -Bb -e \'\' ' + connection + ' ' + dbName);
+		if (result.code !== 0) {  // Database not exists
+			process.stdout.write('Creating database... ');
+			sh.run(prefix + ' mysqladmin ' + connection + ' create ' + dbName);
+			ok();
+		}
+	},
+
+	openBrowser: function() {
+		sh.run('open "http://' + this.hostName + '/"');
+	}
+};
+
+
+/**
+ * Wordpress
+ */
+function BrowseWordpress() {
+}
+
+util.inherits(BrowseWordpress, Browse);
+
+BrowseWordpress.prototype.getDatabaseParams = function() {
+	var configFile = readFile('wp-config.php');
+	var params = {};
+	var m;
+
+	// User name
+	m = configFile.match(/define\('DB_USER', '([^']*)'/);
+	params.username = m[1];
+
+	// Password
+	m = configFile.match(/define\('DB_PASSWORD', '([^']*)'/);
+	params.password = m[1];
+	
+	// Host
+	m = configFile.match(/define\('DB_HOST', '([^']*)'/);
+	params.host = m[1];
+		
+	return params;
+};
+
+run();
