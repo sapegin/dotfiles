@@ -3,15 +3,11 @@
 	"in_process_packages":
 	[
 	],
-	"installed_dependencies":
-	[
-		"0_package_control_loader",
-		"bz2"
-	],
 	"installed_packages":
 	[
 		"AdvancedNewFile",
 		"Better CoffeeScript",
+		"Chain of Command",
 		"Color Highlighter",
 		"DocBlockr",
 		"ECT",
@@ -19,11 +15,14 @@
 		"Emmet",
 		"GitGutter",
 		"Hayaku - tools for writing CSS faster",
+		"HTML-CSS-JS Prettify",
 		"Jade",
 		"Koken",
 		"MarkdownEditing",
 		"Package Control",
 		"Project Manager",
+		"ReactJS",
+		"RegReplace",
 		"Stylus",
 		"SublimeLinter",
 		"SublimeLinter-coffeelint",

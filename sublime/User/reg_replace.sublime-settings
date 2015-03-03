@@ -1,0 +1,10 @@
+{
+    "replacements": {
+        "js_class": {
+            "find": " class=\"",
+            "replace": " className=\"",
+            "greedy": true,
+            "case": false
+        }
+    }
+}

@@ -6,5 +6,20 @@
 	{ "keys": ["f3"], "command": "find_next" },
 	{ "keys": ["super+r"], "command": "show_panel", "args": {"panel": "replace"} },
 	{ "keys": ["super+g"], "command": "show_overlay", "args": {"overlay": "goto", "text": ":"} },
-	{ "keys": ["super+l"], "command": "show_overlay", "args": {"overlay": "goto", "text": "@"} }
+	{ "keys": ["super+l"], "command": "show_overlay", "args": {"overlay": "goto", "text": "@"} },
+	{
+		"keys": ["tab"],
+		"command": "chain", 
+		"args": {
+			"commands": [
+				["expand_abbreviation_by_tab"],
+				["reg_replace", {"replacements": ["js_class"]}]
+			]
+		},
+		"context": [
+			{"operand": "source.js", "operator": "equal", "match_all": true, "key": "selector"}, 
+			{"key": "preceding_text", "operator": "regex_contains", "operand": "(\\w+>\\w+|\\s(\\.?|a|div|span|p|button)\\.\\w+)", "match_all": true},
+			{"key": "selection_empty", "operator": "equal", "operand": true, "match_all": true}
+		]
+	}
 ]
