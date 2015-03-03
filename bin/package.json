@@ -1,0 +1,10 @@
+{
+  "name": "dotfiles",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "chalk": "~1.0.0",
+    "execSync": "~1.0.2"
+  },
+  "devDependencies": {}
+}
