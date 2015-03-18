@@ -16,7 +16,7 @@ var fs = require('fs');
 var path = require('path');
 var util = require('util');
 var chalk = require('chalk');
-var sh = require('execSync');
+var execSync = require('child_process').execSync;
 
 function run() {
 	cdToProjectRoot();
@@ -53,12 +53,12 @@ function cdToProjectRoot() {
 		tries -= 1;
 	}
 	if (!tries) {
-		error('Cannot find project root.');
+		error('Cannot find project root or Git repository not yet created.');
 	}
 }
 
 function appendSystemFile(filepath, contents) {
-	sh.run(
+	execSync(
 		'echo "\n\n' +
 		contents + '\n' +
 		'" | sudo tee -a ' + filepath + ' > /dev/null'
@@ -125,7 +125,7 @@ Browse.prototype = {
 		].join('\n'));
 
 		// Restart Apache
-		sh.run('sudo apachectl graceful');
+		execSync('sudo apachectl graceful');
 
 		ok();
 	},
@@ -141,7 +141,7 @@ Browse.prototype = {
 		);
 
 		// Flush DNS cache
-		sh.run('dscacheutil -flushcache');
+		execSync('dscacheutil -flushcache');
 
 		ok();
 	},
@@ -149,9 +149,9 @@ Browse.prototype = {
 	startApache: function() {
 		process.stdout.write('Starting Apache... ');
 
-		var result = sh.exec('ps ax | grep httpd | wc -l');
-		if (parseInt(result.stdout) <= 2) {  // Apache not started
-			sh.run('sudo apachectl start');
+		var result = execSync('ps ax | grep httpd | wc -l');
+		if (parseInt(result.toString()) <= 2) {  // Apache not started
+			execSync('sudo apachectl start');
 		}
 
 		ok();
@@ -160,13 +160,13 @@ Browse.prototype = {
 	startMysql: function() {
 		process.stdout.write('Starting MySQL... ');
 
-		var result = sh.exec('mysql.server start');
-		if (result.stdout.indexOf('SUCCESS!') !== -1) {
+		var result = execSync('mysql.server start');
+		if (result.toString().indexOf('SUCCESS!') !== -1) {
 			ok();
 		}
 		else {
 			console.log();
-			console.log(result.stdout);
+			console.log(result.toString());
 		}
 	},
 
@@ -174,17 +174,20 @@ Browse.prototype = {
 		var dbParams = this.getDatabaseParams();
 		var prefix = 'MYSQL_PWD=' + dbParams.password;
 		var connection = '-u' + dbParams.username + ' -h ' + dbParams.host;
-		var dbName = 'wp_' + this.projectName;
-		var result = sh.exec(prefix + ' mysql -Bb -e \'\' ' + connection + ' ' + dbName);
-		if (result.code !== 0) {  // Database not exists
+		var dbName = 'wp_' + this.hostName;
+		try {
+			execSync(prefix + ' mysql -Bb -e \'\' ' + connection + ' ' + dbName, {stdio: {stderr: 'ignore'}});
+		}
+		catch (e) {
+			// Database not exists
 			process.stdout.write('Creating database... ');
-			sh.run(prefix + ' mysqladmin ' + connection + ' create ' + dbName);
+			execSync(prefix + ' mysqladmin ' + connection + ' create ' + dbName);
 			ok();
 		}
 	},
 
 	openBrowser: function() {
-		sh.run('open "http://' + this.hostName + '/"');
+		execSync('open "http://' + this.hostName + '/"');
 	}
 };
 
