@@ -4,7 +4,7 @@
 	"bold_folder_labels": true,
 	"caret_extra_width": 1,
 	"caret_style": "solid",
-	"color_scheme": "Packages/User/Tomorrow (SL).tmTheme",
+	"color_scheme": "Packages/User/SublimeLinter/Tomorrow (SL).tmTheme",
 	"create_window_at_startup": false,
 	"default_line_ending": "unix",
 	"detect_indentation": true,
@@ -40,8 +40,8 @@
 	"highlight_line": true,
 	"ignored_packages":
 	[
-		"Markdown",
-		"Vintage"
+		"Vintage",
+		"Markdown"
 	],
 	"indent_guide_options":
 	[
