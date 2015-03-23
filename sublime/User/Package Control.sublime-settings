@@ -6,6 +6,7 @@
 	"installed_packages":
 	[
 		"AdvancedNewFile",
+		"Babel",
 		"Better CoffeeScript",
 		"Chain of Command",
 		"Color Highlighter",
@@ -21,7 +22,6 @@
 		"MarkdownEditing",
 		"Package Control",
 		"Project Manager",
-		"ReactJS",
 		"RegReplace",
 		"Stylus",
 		"SublimeLinter",
