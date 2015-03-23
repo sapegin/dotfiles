@@ -176,7 +176,7 @@ Browse.prototype = {
 		var connection = '-u' + dbParams.username + ' -h ' + dbParams.host;
 		var dbName = 'wp_' + this.hostName;
 		try {
-			execSync(prefix + ' mysql -Bb -e \'\' ' + connection + ' ' + dbName, {stdio: {stderr: 'ignore'}});
+			execSync(prefix + ' mysql -Bb -e \'\' ' + connection + ' ' + dbName, {stdio: 'ignore'});
 		}
 		catch (e) {
 			// Database not exists
