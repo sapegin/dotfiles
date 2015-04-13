@@ -141,9 +141,14 @@ function ssh-add-host() {
 	local username=$1
 	local hostname=$2
 	local identifier=$3
+	local port=$4
+
+	if [[ "$port" == "" ]]; then
+		port="22"
+	fi
 
 	if [[ "$identifier" == "" ]] || [[ "$username" == "" ]] || [[ "$hostname" == "" ]]; then
-		echo "Usage: ssh-add-host <username> <hostname> <identifier>"
+		echo "Usage: ssh-add-host <username> <hostname> <identifier> [port]"
 	else
 		header "Generating key..."
 		if [ ! -f "$HOME/.ssh/$identifier.id_rsa" ]; then
@@ -151,7 +156,7 @@ function ssh-add-host() {
 		fi
 
 		if ! grep -Fxiq "host $identifier" "$HOME/.ssh/config"; then
-			echo -e "Host $identifier\n\tHostName $hostname\n\tUser $username\n\tIdentityFile ~/.ssh/$identifier.id_rsa" >> ~/.ssh/config
+			echo -e "Host $identifier\n\tHostName $hostname\n\tPort $port\n\tUser $username\n\tIdentityFile ~/.ssh/$identifier.id_rsa" >> ~/.ssh/config
 		fi
 
 		header "Uploading key..."
