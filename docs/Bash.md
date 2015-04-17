@@ -88,7 +88,7 @@ Get a character’s Unicode code point: `£` → `\x00A3`.
 
 Convert #hex color to HSL/HSLA. `#dead00` → `hsl(47,99%,44%)`.
 
-### hex2hsl <[#]dead00> [alpha]
+### hex2rgb <[#]dead00> [alpha]
 
 Convert #hex color to RGB/RGBA. `#dead00` → `rgb(222,173,0)`.
 
