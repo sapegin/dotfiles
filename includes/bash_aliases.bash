@@ -129,3 +129,6 @@ function repo { cd "$("$HOME/dotfiles/bin/repo" $1)"; }
 # Color conversion
 alias hex2hsl="color.js $1 $2"
 alias hex2rgb="color.js --rgb $1 $2"
+
+# The Fuck
+alias fuck='$(thefuck $(fc -ln -1))'
