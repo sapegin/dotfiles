@@ -114,7 +114,7 @@ alias dm="python manage.py"
 alias dms="python manage.py runserver"
 
 # Homebrew
-alias brew-up="brew update; brew upgrade; brew cleanup; brew prune"
+alias brew-up="brew update; brew upgrade --all; brew cleanup; brew prune"
 
 # Gist
 alias gist-paste="gist --private --copy --paste --filename"  # gist-paste filename.ext -- creates private Gist from the clipboard

@@ -12,7 +12,7 @@ command -v brew >/dev/null 2>&1 || ruby -e "$(curl -fsSkL raw.github.com/mxcl/ho
 brew update
 
 # Upgrade any already-installed formulae
-brew upgrade
+brew upgrade --all
 
 # GNU core utilities (those that come with OS X are outdated)
 brew install coreutils
