@@ -70,6 +70,22 @@ Useful when you use some kind of [typography layout](http://ilyabirman.ru/projec
 bash  <(curl -fsSkL raw.github.com/bolknote/shellgames/master/us_layout_remover.sh)
 ```
 
+### How to open files in different apps depending on their location by Cmd+click in iTerm2
+
+Create a script:
+
+```bash
+#!/usr/bin/env bash
+
+if  [[ "$1" == /Users/admin/badoo/* ]]; then
+	/usr/local/bin/pstorm "$1"
+	open /Applications/PhpStorm.app  # Focus
+else
+	open "$1"
+fi
+```
+
+Go to iTerm2 preferences → Profiles → Advanced → Semantic History. Choose *Run command* and type: `/Users/admin/bin/iopen "\1"`.
 
 ## Misc
 
