@@ -100,7 +100,7 @@ alias replace="replace --exclude='node_modules,bower_components'"
 
 # Grunt
 alias gw="grunt watch --stack --debug"
-alias gs="grunt connect watch --stack --debug"
+alias gww="grunt browserSync watch --stack --debug"
 
 # Tâmia
 tm() { yo tamia:$@; }
