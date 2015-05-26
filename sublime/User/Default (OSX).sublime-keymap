@@ -8,18 +8,43 @@
 	{ "keys": ["super+g"], "command": "show_overlay", "args": {"overlay": "goto", "text": ":"} },
 	{ "keys": ["super+l"], "command": "show_overlay", "args": {"overlay": "goto", "text": "@"} },
 	{
-		"keys": ["tab"],
-		"command": "chain", 
-		"args": {
-			"commands": [
-				["expand_abbreviation_by_tab"],
-				["reg_replace", {"replacements": ["js_class"]}]
-			]
-		},
+		"keys": ["tab"], 
+		"command": "expand_abbreviation_by_tab", 
+
+		// Examples: source.js, text.html - source
 		"context": [
-			{"operand": "source.js", "operator": "equal", "match_all": true, "key": "selector"}, 
-			{"key": "preceding_text", "operator": "regex_contains", "operand": "(\\w+>\\w+|\\s(\\.?|a|div|span|p|button)\\.\\w+)", "match_all": true},
-			{"key": "selection_empty", "operator": "equal", "operand": true, "match_all": true}
+			{
+				"operand": "source.js",
+				"operator": "equal",
+				"match_all": true,
+				"key": "selector"
+			}, 
+
+			// Run only if there's no selected text
+			{
+				"match_all": true, 
+				"key": "selection_empty"
+				},
+
+			// Don't work if there are active tabstops
+			{
+				"operator": "equal",
+				"operand": false,
+				"match_all": true,
+				"key": "has_next_field"
+				}, 
+
+			// Don't work if completion popup is visible and you want to insert completion with Tab
+			{
+				"operand": false,
+				"operator": "equal",
+				"match_all": true,
+				"key": "auto_complete_visible"
+			}, 
+			{
+				"match_all": true,
+				"key": "is_abbreviation"
+			}
 		]
 	}
 ]
