@@ -20,12 +20,16 @@ var execSync = require('child_process').execSync;
 
 function run() {
 	cdToProjectRoot();
-	
+
 	var kind = getProjectType();
 	var browse;
+	console.log('Project type:', kind);
 	switch (kind) {
 		case 'wordpress':
 			browse = new BrowseWordpress();
+			break;
+		case 'koken':
+			browse = new BrowseKoken();
 			break;
 		default:
 			error('Unknown project type.');
@@ -73,6 +77,9 @@ function getProjectType() {
 	if (isWordpress()) {
 		return 'wordpress';
 	}
+	if (isKoken()) {
+		return 'koken';
+	}
 }
 
 function isStringInFile(filepath, string) {
@@ -81,11 +88,22 @@ function isStringInFile(filepath, string) {
 }
 
 function isWordpress() {
-	return fs.existsSync('wp-config.php');
+	return fs.existsSync(getPath('wp-config.php'));
+}
+
+function isKoken() {
+	return fs.existsSync(getPath('api.php')) && fs.existsSync(getPath('dl.php')) && fs.existsSync(getPath('i.php'));
 }
 
 function isWordpressTheme() {
 	return fs.existsSync('header.php') && fs.existsSync('footer.php') && fs.existsSync('functions.php');
+}
+
+function getPath(filepath) {
+	if (fs.existsSync('htdocs')) {
+		filepath = path.join('htdocs', filepath);
+	}
+	return filepath;
 }
 
 
@@ -201,7 +219,7 @@ function BrowseWordpress() {
 util.inherits(BrowseWordpress, Browse);
 
 BrowseWordpress.prototype.getDatabaseParams = function() {
-	var configFile = readFile('wp-config.php');
+	var configFile = readFile(getPath('wp-config.php'));
 	var params = {};
 	var m;
 
@@ -217,6 +235,34 @@ BrowseWordpress.prototype.getDatabaseParams = function() {
 	m = configFile.match(/define\('DB_HOST', '([^']*)'/);
 	params.host = m[1];
 		
+	return params;
+};
+
+/**
+ * Koken
+ */
+function BrowseKoken() {
+}
+
+util.inherits(BrowseKoken, Browse);
+
+BrowseKoken.prototype.getDatabaseParams = function() {
+	var configFile = readFile(getPath('storage/configuration/database.php'));
+	var params = {};
+	var m;
+
+	// User name
+	m = configFile.match(/'username' => '([^']*)'/);
+	params.username = m[1];
+
+	// Password
+	m = configFile.match(/'password' => '([^']*)'/);
+	params.password = m[1];
+
+	// Host
+	m = configFile.match(/'hostname' => '([^']*)'/);
+	params.host = m[1];
+
 	return params;
 };
 
