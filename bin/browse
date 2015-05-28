@@ -95,10 +95,6 @@ function isKoken() {
 	return fs.existsSync(getPath('api.php')) && fs.existsSync(getPath('dl.php')) && fs.existsSync(getPath('i.php'));
 }
 
-function isWordpressTheme() {
-	return fs.existsSync('header.php') && fs.existsSync('footer.php') && fs.existsSync('functions.php');
-}
-
 function getPath(filepath) {
 	if (fs.existsSync('htdocs')) {
 		filepath = path.join('htdocs', filepath);
