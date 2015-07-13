@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+# Shows my commits since yesterday or since last Friday.
+# 
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+#
+
+
+function yesterworkday() {
+	if [[ "1" == "$(date +%u)" ]]
+	then 
+		echo "last friday"
+	else
+		echo "yesterday"
+	fi
+}
+
+git log --branches=develop --no-merges --pretty=format:'%C(bold)%s%C(reset)  %cd, %h' --date=local --since="$(yesterworkday)" --author="$(git config user.name)"
