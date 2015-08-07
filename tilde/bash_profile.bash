@@ -148,5 +148,8 @@ export PAGER='less'
 # Homebrew install badge: beer sucks, coffee rules
 export HOMEBREW_INSTALL_BADGE='☕'
 
+# Disable bundle for git-friendly
+export GIT_FRIENDLY_NO_BUNDLE=true
+
 # Load extra (private) settings
 [ -f ~/.bashlocal ] && source ~/.bashlocal
