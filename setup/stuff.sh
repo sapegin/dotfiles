@@ -6,7 +6,7 @@
 sudo -v
 
 # Install Homebrew
-command -v brew >/dev/null 2>&1 || ruby -e "$(curl -fsSkL raw.github.com/mxcl/homebrew/go)"
+#command -v brew >/dev/null 2>&1 || ruby -e "$(curl -fsSkL raw.github.com/mxcl/homebrew/go)"
 
 # Make sure we’re using the latest Homebrew
 brew update

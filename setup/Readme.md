@@ -67,7 +67,7 @@ git config -f ~/.gitlocal user.name "Artem Sapegin"
 Useful when you use some kind of [typography layout](http://ilyabirman.ru/projects/typography-layout/).
 
 ```bash
-bash  <(curl -fsSkL raw.github.com/bolknote/shellgames/master/us_layout_remover.sh)
+bash  <(curl -fsSkL https://raw.githubusercontent.com/bolknote/shellgames/master/us_layout_remover.sh)
 ```
 
 ### How to open files in different apps depending on their location by Cmd+click in iTerm2
