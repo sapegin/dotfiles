@@ -27,7 +27,9 @@
 	up = !git pull origin $(git symbolic-ref --short HEAD)
 	go = !git checkout $1 && git up
 	mmm = !git fetch origin master && git merge origin/master
+	ddd = !git fetch origin develop && git merge origin/develop
 	master = !git checkout master && git pull
+	develop = !git checkout develop && git pull
 	l = log --graph --pretty=format:'%C(magenta)%h%C(blue)%d%Creset %s %C(blue bold)- %an, %ar%Creset'
 	ll = log --stat --abbrev-commit
 	my = !git log --branches=* --no-merges --pretty=format:'%C(reset)%C(bold)%cd %C(reset)%C(white)%s  %C(reset)%h' --date=short --author=\"$(git config user.name)\"
