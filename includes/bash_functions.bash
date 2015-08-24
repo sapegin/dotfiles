@@ -338,7 +338,15 @@ function theme() {
 	echo "Theme not found."
 }
 
-# Add special aliases that will copy result to clipboard (escape → escape+)
-for cmd in password hex2hsl hex2rgb escape codepoint ssh-key myip; do
-	eval "function $cmd+() { $cmd \$@ | c; }"
-done
+# Runs given command using binary in node_modules/.bin of the current project
+# https://github.com/ai/environment
+function n() {
+    if [ -d `npm bin` ]; then
+        PROG="$1"
+        shift
+        `npm bin`/$PROG "$@"
+    else
+        echo 'No node_modules in any dir of current path' 1>&2
+        return 1
+    fi
+}
