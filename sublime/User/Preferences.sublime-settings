@@ -28,8 +28,8 @@
 		"node_modules",
 		"bower_components"
 	],
-	"font_face": "Consolas",
-	"font_size": 17.0,
+	"font_face": "Hack",
+	"font_size": 16.6,
 	"hayaku_CSS_colors_case": "lowercase",
 	"hayaku_CSS_numbers_leading_zero": false,
 	"hayaku_CSS_syntax_autoguess":
