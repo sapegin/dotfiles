@@ -1,5 +1,6 @@
 {
 	"auto_upgrade_last_run": null,
+	"bootstrapped": true,
 	"in_process_packages":
 	[
 	],
@@ -28,6 +29,7 @@
 		"SublimeLinter-jscs",
 		"SublimeLinter-jshint",
 		"SublimeLinter-json",
+		"Theme - El Capitan",
 		"Theme - Soda"
 	]
 }

@@ -59,6 +59,7 @@
 	"save_on_focus_lost": true,
 	"scroll_past_end": true,
 	"tab_completion": true,
-	"theme": "Soda Light 3.sublime-theme",
-	"wide_caret": true
+	"theme": "El Capitan.sublime-theme",
+	"wide_caret": true,
+	"el_capitan_font_helvetica_neue": true
 }
