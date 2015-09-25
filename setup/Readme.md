@@ -62,6 +62,14 @@ git config -f ~/.gitlocal user.email "artem@sapegin.ru"
 git config -f ~/.gitlocal user.name "Artem Sapegin"
 ```
 
+### Per repository Git identity
+
+```
+cd ~/repo
+git config user.email "artem.sapegin@example.com"
+git config user.name "Artem Sapegin"
+```
+
 ### How to remove US English keyboard layout on Mac OS X
 
 Useful when you use some kind of [typography layout](http://ilyabirman.ru/projects/typography-layout/).
