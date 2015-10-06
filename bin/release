@@ -41,7 +41,7 @@ fi
 # Dirty repo?
 if [ "$(git status --porcelain 2>/dev/null)" ]; then
 	error "Repo is dirty."
-	echo "Pleae commit changes before continue."
+	echo "Commit changes before continue."
 	echo
 	git status
 	exit 1
