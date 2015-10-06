@@ -25,7 +25,7 @@
 	d = diff --color-words
 	s = status -sb
 	new = flow feature start
-	done = flow feature finish "$(git symbolic-ref --short HEAD | sed -n 's/^feature\\///p')"
+	done = !git flow feature finish "$(git symbolic-ref --short HEAD | sed -n 's/^feature\\///p')"
 	up = !git pull origin $(git symbolic-ref --short HEAD)
 	go = !git checkout $1 && git up
 	mmm = !git fetch origin master && git rebase origin/master
