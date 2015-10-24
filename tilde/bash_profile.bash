@@ -117,7 +117,9 @@ export CLICOLOR=1
 # Tell grep to highlight matches
 export GREP_OPTIONS='--color=auto'
 
-# Make less the default pager, and specify some useful defaults.
+# Make less the default pager, add some options and enable syntax highlight using source-highlight
+LESSPIPE=`which src-hilite-lesspipe.sh`
+[ -n "$LESSPIPE" ] && export LESSOPEN="| ${LESSPIPE} %s"
 less_options=(
 	# If the entire text fits on one screen, just show it and quit. (Be more
 	# like "cat" and less like "more".)
