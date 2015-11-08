@@ -128,12 +128,8 @@ fi
 # Commit changed files
 git commit -am "v$new_ver"
 
-# Create tag
-git tag "v$new_ver"
-
 # Push everything
 git push origin
-git push origin --tags
 
 # Publish npm package
 if [ -n "$pkg_ver" ]; then
