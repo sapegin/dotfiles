@@ -59,7 +59,7 @@ fi
 
 # Heading
 date=$(date +"%Y-%m-%d")
-heading="# $new_ver - $date\n\n"
+heading="# ${new_ver/v/} - $date\n\n"
 
 # Write to a temporary file:
 # 1. Heading
