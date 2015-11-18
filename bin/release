@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Releases the next version of the product
+# Releases the next version of the product to npm or Bower
 # 
 # Usage:
 #   release <major|minor|patch>
@@ -9,6 +9,7 @@
 # Requires:
 # - semver - https://github.com/sekati/semver
 # - jq - brew install jq
+# - github-release-from-changelog - npm i -g github-release-from-changelog
 #
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
@@ -32,6 +33,7 @@ function usage() {
 
 command -v semver >/dev/null 2>&1 || { error "semver not installed: see comments for instructions."; exit 1; }
 command -v jq >/dev/null 2>&1 || { error "jq not installed: see comments for instructions."; exit 1; }
+command -v github-release-from-changelog >/dev/null 2>&1 || { error "github-release-from-changelog not installed: see comments for instructions."; exit 1; }
 
 if [ -z "$1" ]; then
 	usage
@@ -48,7 +50,6 @@ if [ "$(git status --porcelain 2>/dev/null)" ]; then
 fi
 
 # Read existing versions
-jq_ver=$(find . -maxdepth 1 -name "*.jquery.json" | xargs cat | jq -r ".version")
 cmpnt_ver=$(find . -maxdepth 1 -name "bower.json" | xargs cat | jq -r ".version")
 pkg_ver=$(find . -maxdepth 1 -name "package.json" | xargs cat | jq -r ".version")
 
@@ -57,7 +58,6 @@ pkg_ver=$(find . -maxdepth 1 -name "package.json" | xargs cat | jq -r ".version"
 
 # Verify current versions 
 current_ver=
-[ -n "$jq_ver" ] && current_ver="$jq_ver"
 [ -n "$cmpnt_ver" ] && current_ver="$cmpnt_ver"
 [ -n "$pkg_ver" ] && current_ver="$pkg_ver"
 [ -z "$current_ver" ] && current_ver="0.0.0"
@@ -65,13 +65,11 @@ current_ver=
 # Validate current versions and determine new version
 dontmatch() {
 	error "Current versions don’t match."
-	if [ -n "$jq_ver" ] && [ "$jq_ver" != "0.0.0" ]; then echo "*.jquery.json: $CYAN$jq_ver$NOCOLOR"; fi
 	if [ -n "$cmpnt_ver" ] && [ "$cmpnt_ver" != "0.0.0" ]; then echo "bower.json: $CYAN$cmpnt_ver$NOCOLOR"; fi
 	if [ -n "$pkg_ver" ] && [ "$pkg_ver" != "0.0.0" ]; then echo "package.json: $CYAN$pkg_ver$NOCOLOR"; fi
 	exit 1
 }
 if [ "$1" == "major" ] || [ "$1" == "minor" ] || [ "$1" == "patch" ]; then
-	if [ -n "$jq_ver" ] && [ "$jq_ver" != "0.0.0" ] && [ "$current_ver" != "$jq_ver" ]; then dontmatch; fi
 	if [ -n "$cmpnt_ver" ] && [ "$cmpnt_ver" != "0.0.0" ] && [ "$current_ver" != "$cmpnt_ver" ]; then dontmatch; fi
 	if [ -n "$pkg_ver" ] && [ "$pkg_ver" != "0.0.0" ] && [ "$current_ver" != "$pkg_ver" ]; then dontmatch; fi
 else
@@ -104,11 +102,6 @@ if [ -n "$pkg_ver" ]; then
 	mv package.json_ package.json
 fi
 
-# Update *.jquery.json
-if [ -n "$jq_ver" ]; then
-	find . -maxdepth 1 -name "*.jquery.json" | xargs sed -i '' "s^$current_ver^$new_ver^"
-fi
-
 # Build and run tests
 status=0
 if [ -f Gruntfile.* ] || [ -f src/Gruntfile.* ]; then
@@ -135,16 +128,15 @@ fi
 # Commit changed files
 git commit -am "v$new_ver"
 
-# Create tag
-git tag "v$new_ver"
-
 # Push everything
 git push origin
-git push origin --tags
 
 # Publish npm package
 if [ -n "$pkg_ver" ]; then
 	npm publish
 fi
+
+# Publish release notes to GitHub
+github-release-from-changelog --filename Changelog.md
 
 echo "Done."

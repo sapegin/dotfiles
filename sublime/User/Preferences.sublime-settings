@@ -60,6 +60,5 @@
 	"scroll_past_end": true,
 	"tab_completion": true,
 	"theme": "El Capitan.sublime-theme",
-	"wide_caret": true,
-	"el_capitan_font_helvetica_neue": true
+	"wide_caret": true
 }
