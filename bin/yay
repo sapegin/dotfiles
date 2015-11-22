@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+# Upload current directory to special directory on my hosting
+# 
+# Usage:
+#   yay
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+#
+
+local server="seal"
+local dir=`basename "$(pwd)"`
+local remote="~/sites/yay.sapegin.me/htdocs/$dir"
+local url="http://yay.sapegin.me/$dir/"
+
+tar cp --exclude '.git' --exclude 'node_modules' . | gzip | ssh $server "mkdir -p "$remote"; gzip -cd | tar x -C "$remote""
+
+echo "Current directory has been uploaded to $url."
+if command -v pbcopy >/dev/null 2>&1; then
+	echo -n "$url" | pbcopy
+	echo "URL has been copied to the clipboard."
+fi

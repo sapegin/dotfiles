@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+# Opens project’s theme folder.
+# Supports Wordpress and Koken.
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+#
+
+local project=`basename "$(pwd)"`
+local DIRS=( "wp-content/themes/$project" 'wp-content/themes/*' "storage/themes/$project" 'storage/themes/*' "htdocs/storage/themes/$project" 'htdocs/storage/themes/*' )
+for dir in "${DIRS[@]}"
+do
+	if [ -d "$dir" ]; then
+		cd "$dir"
+		return
+	fi
+done
+echo "Theme not found."

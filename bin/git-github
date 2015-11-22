@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# Setup syncronization of the current Git repo with GitHub repo of the same name
+# 
+# Usage:
+#   git-github [repo]
+#   
+
+if [[ -n $GITHUB_USER ]]; then
+	echo "\$GITHUB_USER is not defined."
+	exit 1
+fi
+
+local repo=${1-`basename "$(pwd)"`}
+git remote add origin "git@github.com:$GITHUB_USER/$repo.git"
+git push -u origin master

@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# Setup syncronization of the current Git repo with Bitbucket repo of the same name
+# 
+# Usage:
+#   git-bitbucket [repo]
+#   
+
+if [[ -n $BITBUCKET_USER ]]; then
+	echo "\$BITBUCKET_USER is not defined."
+	exit 1
+fi
+
+local repo=${1-`basename "$(pwd)"`}
+git remote add origin "git@bitbucket.org:$bitbucket_user/$repo.git"
+git push -u origin master
