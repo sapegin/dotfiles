@@ -67,9 +67,6 @@ git-conflicts() { git ls-files -u | awk '{print $4}' | sort -u; }
 alias gist-paste="gist --private --copy --paste --filename"  # gist-paste filename.ext -- creates private Gist from the clipboard
 alias gist-file="gist --private --copy"  # gist-file filename.ext -- creates private Gist from a file
 
-# The Fuck
-alias fuck='$(thefuck $(fc -ln -1))'
-
 # Quick grep: ag, ack or grep
 # USAGE: g match
 # USAGE: g txt+md match  # Only for ag
