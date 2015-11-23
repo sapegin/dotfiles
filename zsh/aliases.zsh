@@ -60,9 +60,6 @@ alias pff="push && shipit"
 # `cd` to Git repo root
 alias gr='git rev-parse 2>/dev/null && cd "./$(git rev-parse --show-cdup)"'
 
-# List of files with unresolved Git conflicts
-git-conflicts() { git ls-files -u | awk '{print $4}' | sort -u; }
-
 # Gist
 alias gist-paste="gist --private --copy --paste --filename"  # gist-paste filename.ext -- creates private Gist from the clipboard
 alias gist-file="gist --private --copy"  # gist-file filename.ext -- creates private Gist from a file
