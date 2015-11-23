@@ -11,7 +11,7 @@ alias -- +x="chmod +x"
 # Trim new lines and copy to clipboard
 alias c="tr -d '\n' | pbcopy"
 
-# cd into whatever is the forefront Finder window.
+# cd into whatever is the forefront Finder window
 cdf() { cd "`osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)'`"; }
 
 # Find shorthand
@@ -51,7 +51,7 @@ alias replace="replace --exclude='node_modules'"
 alias gw="grunt watch --stack --debug"
 alias gww="grunt browserSync watch --stack --debug"
 
-# Tâmia
+# Tâmia generator
 tm() { yo tamia:$@; }
 
 # Push and deploy using Shipit
@@ -61,8 +61,8 @@ alias pff="push && shipit"
 alias gr='git rev-parse 2>/dev/null && cd "./$(git rev-parse --show-cdup)"'
 
 # Gist
-alias gist-paste="gist --private --copy --paste --filename"  # gist-paste filename.ext -- creates private Gist from the clipboard
-alias gist-file="gist --private --copy"  # gist-file filename.ext -- creates private Gist from a file
+alias gist-paste="gist --private --copy --paste --filename"  # gist-paste filename.ext -- create private Gist from the clipboard contents
+alias gist-file="gist --private --copy"  # gist-file filename.ext -- create private Gist from a file
 
 # Quick grep: ag, ack or grep
 # USAGE: g match

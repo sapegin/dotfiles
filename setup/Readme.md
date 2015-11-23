@@ -2,31 +2,15 @@
 
 * [Command Line Tools for Xcode](https://developer.apple.com/downloads)
 
-
-## :skull: Bootstrap :skull:
-
-Run `./bootstrap.sh` (or separate scripts in this folder) and make you some coffee. Then open Chrome (now it’s your default browser) and install [all needed apps](https://github.com/sapegin/dotfiles/wiki/OS-X-Apps).
-
-**Warning**. Your Mac can turn into a pumpkin.
-
-
 ## Scripts
 
 ### stuff
 
 Installs Homebrew, Git, [git-extras](https://github.com/visionmedia/git-extras), [git-friendly](https://github.com/jamiew/git-friendly), Node.js, JSHint, Grunt, configures Apache, PHP, MySQL, etc.
 
-### bash
+### zsh
 
-Installs Bash 4 and registers it as a default shell. Needs Homebrew.
-
-### consolas
-
-Installs Consolas font. Needs Homebrew.
-
-### imgo
-
-Installs [imgo](https://github.com/imgo/imgo) CLI image optimizer. Needs Homebrew.
+Installs zsh and Oh My Zsh, registers zsh as a default shell.
 
 ### osx
 
@@ -35,14 +19,6 @@ Sane OSX defaults. Based on [~/.osx](http://mths.be/osx) by @mathiasbynens.
 ### sublime-settings
 
 Enables Sublime settings syncronization (see `../sublime/User` folder).
-
-### sublime-packages
-
-Installs/updates Sublime packages from Package Control (listed in `../sublime/User/Package Control.sublime-settings`) and GitHub (listed in script itself).
-
-### apps
-
-Installs Chrome and makes it default browser.
 
 ### quicklook
 

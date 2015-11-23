@@ -2,63 +2,27 @@
 
 ## Aliases
 
-### Shorthands
-
-* **git a** → git add
-
-* **git ua** → git reset HEAD
-
-* **git b** → git branch
-
-* **git c** → git commit
-
-* **git ca** → git commit -a
-
-* **git cm** → git commit -m
-
-* **git cam** → git commit -am
-
-* **git co** → git checkout
-
-* **git d** → git diff --color-words
-
-* **git s** → git status -sb
-
-### git l
-
-Simple one-line-per-commit log.
-
-### git ll
-
-Log with list of changed files for each commit.
-
-### git-append
-
-Add all staged files to previous commit.
-
-### git-conflicts
-
-List of files with unresolved conflicts.
-
-### git-root (or gr)
-
-Jump to root folder of Git repo.
-
-### git-github [repo]
-
-Setup syncronization of current Git repo with GitHub repo of the same name
-
-### git-bitbucket [repo]
-
-Setup syncronization of current Git repo with Bitbucket repo of the same name
-
-### git-fork <original-author>
-
-Add remote upstream.
-
-### git-upstream [branch]
-
-Sync branch (`master` by default) with upstream.
+* **git a** → `git add`
+* **git ua** → `git reset HEAD` (unadd)
+* **git c** → `git commit`
+* **git ca** → `git commit -a`
+* **git cm** → `git commit -m`
+* **git cam** → `git commit -am`
+* **git cne** → `git commit --no-edit`
+* **git co** → `git checkout`
+* **git d** → `git diff --color-words`
+* **git s** → `git status -sb`
+* **git new <feature>** → Start a git-flow feature.
+* **git done <feature>** → Finish a git-flow feature in the current branch.
+* **git go** → Checkout branch and pull.
+* **git master** → Checkout `master` branch.
+* **git develop** → Checkout `develop` branch.
+* **git mmm** → Merge `master` into the current branch.
+* **git ddd** → Merge `develop` into the current branch.
+* **git l** → Simple one-line-per-commit log.
+* **git ll** → Log with list of changed files for each commit.
+* **git wtf** → List of files with unresolved Git conflicts..
+* **git my** → List of all my commits.
 
 
 ## [git-friendly](https://github.com/jamiew/git-friendly)

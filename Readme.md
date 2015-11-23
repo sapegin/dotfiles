@@ -5,20 +5,18 @@
 
 ## Features
 
-* Custom color scheme.
-* Custom Bash prompt, useful aliases, etc.
-* Git config, Git global ignore file.
-* Dotfiles syncronization (`sync.py`).
-* Sensible OS X defaults (`setup/osx.sh`).
-* Sublime Text 3 settings syncronization and packages autoinstall (`setup/sublime-settings.sh`).
-* Consolas font install script (`setup/consolas.sh`).
-* Bash4 install script (`setup/bash.sh`).
-* OS X, Homebrew, NPM, etc. update script (`setup/update.sh`).
-* My magic project opener (`bin/repo`).
-* Many other useful scripts in `bin/` directory.
-* [Bash](https://github.com/sapegin/dotfiles/blob/master/docs/Bash.md) & [Git](https://github.com/sapegin/dotfiles/blob/master/docs/Git.md) aliases and scripts.
-* User scripts for browser: `userscripts/`.
-* Stop words lists that I use with Marked 2: `dict/`.
+* Custom color scheme for iTerm and Terminal.app: [Squirrelsong](https://github.com/sapegin/dotfiles/tree/master/color).
+* Custom zsh theme with Git status, etc: [Squirrelbook](https://github.com/sapegin/dotfiles/blob/zsh/zsh/themes/squirrelbook.zsh-theme).
+* Dotfiles syncronization: [sync.py](https://github.com/sapegin/dotfiles/blob/master/sync.py).
+* Sensible OS X defaults: [setup/osx.sh](https://github.com/sapegin/dotfiles/blob/master/setup/osx.sh).
+* Sublime Text 3 settings syncronization: [setup/sublime-settings.sh](https://github.com/sapegin/dotfiles/blob/master/setup/sublime-settings.sh).
+* zsh install script: [setup/zsh.sh](https://github.com/sapegin/dotfiles/blob/zsh/setup/zsh.sh).
+* My magic project opener ([bin/repo](https://github.com/sapegin/dotfiles/blob/master/bin/repo)).
+* [zsh aliases](https://github.com/sapegin/dotfiles/blob/zsh/docs/Zsh.md).
+* [Git aliases](https://github.com/sapegin/dotfiles/blob/zsh/docs/Git.md).
+* [Lots of scripts](https://github.com/sapegin/dotfiles/tree/master/bin).
+* User scripts for browser: [userscripts/](https://github.com/sapegin/dotfiles/tree/master/userscripts).
+* Stop words lists that I use with Marked 2: [dict/](https://github.com/sapegin/dotfiles/tree/master/dict).
 * [Mac OS X apps I use](https://github.com/sapegin/dotfiles/wiki/OS-X-Apps).
 
 
@@ -59,7 +57,7 @@ You can use any file extensions in `tilde/` to invoke proper syntax highlighting
 
 ## Further customization
 
-* Add any Bash profile customizations to `~/.bashlocal`.
+* Add any zsh profile customizations to `~/.zshlocal`.
 * Add your git username/email/etc. to `~/.gitlocal`.
 
 
