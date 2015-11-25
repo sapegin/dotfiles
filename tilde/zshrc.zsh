@@ -27,7 +27,7 @@ export PATH
 # nvm
 if [ -d ~/.nvm ]; then
 	export NVM_DIR="$HOME/.nvm"
-	source $(brew --prefix nvm)/nvm.sh
+	source "$NVM_DIR/nvm.sh"
 fi
 
 # Preferred editor for local and remote sessions
