@@ -14,9 +14,6 @@ alias c="tr -d '\n' | pbcopy"
 # cd into whatever is the forefront Finder window
 cdf() { cd "`osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)'`"; }
 
-# Find shorthand
-f() { find . -name "$1" 2>/dev/null; }
-
 # Update dotfiles
 alias dotfiles="pushd "$HOME/dotfiles" > /dev/null 2>&1; git pull && ./sync.py && source "$HOME/.zshrc"; popd > /dev/null 2>&1; nyan"
 

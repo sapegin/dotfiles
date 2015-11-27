@@ -7,7 +7,6 @@
 | `e` | `$EDITOR` |
 | `gh` | `github` |
 | `+x` / `x+` | `chmod +x` |
-| `f <what>` | Recursively find file in the current directory. |
 | `c` | Trim new lines and copy text to the clipboard. |
 | `cdf` | `cd` into whatever is the forefront Finder window. |
 | `dotfiles` | Update dotfiles. Pull latest version from GitHub, syncronize symlinks and reread `~/.zshrc`. |
