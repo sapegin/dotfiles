@@ -60,25 +60,3 @@ alias gr='git rev-parse 2>/dev/null && cd "./$(git rev-parse --show-cdup)"'
 # Gist
 alias gist-paste="gist --private --copy --paste --filename"  # gist-paste filename.ext -- create private Gist from the clipboard contents
 alias gist-file="gist --private --copy"  # gist-file filename.ext -- create private Gist from a file
-
-# Quick grep: ag, ack or grep
-# USAGE: g match
-# USAGE: g txt+md match  # Only for ag
-# USAGE: g -s match; g php -s match  # Case sensitive; only for ag
-if command -v ag >/dev/null 2>&1; then
-	function _g() {
-		ag --ignore-case --color-line-number='0;36' --color-match='0;35;4' --color-path='1;37' "$@"
-	}
-	function g() {
-		if (( "$#" >= 2 )) && [[ ${1:0:1} != "-" ]]; then  # More than 2 arguments and the second is not a flag
-			local exts=$(echo $1 | tr '+' '|'); shift
-			_g -G "\.($exts)$" "$@"
-		else
-			_g "$@"
-		fi
-	}
-elif command -v ack >/dev/null 2>&1; then
-	alias g="ack -ri";
-else
-	alias g="grep -ri";
-fi

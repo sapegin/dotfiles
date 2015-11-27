@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+# Quick grep: ag, ack or grep
+# 
+# Usage:
+#   g match
+#   
+# Usage with ag:
+#   g txt+md match
+#   g -s match
+#   g php -s match
+#   
+#   -s -- case sensitive
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+#
+
+if command -v ag >/dev/null 2>&1; then
+	function _g() {
+		ag --ignore-case --color-line-number='0;36' --color-match='0;35;4' --color-path='1;37' "$@"
+	}
+
+	if (( "$#" >= 2 )) && [[ ${1:0:1} != "-" ]]; then  # More than 2 arguments and the second is not a flag
+		local exts=$(echo $1 | tr '+' '|'); shift
+		_g -G "\.($exts)$" "$@"
+	else
+		_g "$@"
+	fi
+elif command -v ack >/dev/null 2>&1; then
+	ack -ri "$@"
+else
+	grep -ri "$@"
+fi

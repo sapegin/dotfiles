@@ -25,4 +25,3 @@
 | `gr` | `cd` to Git repo root. |
 | `gist-paste <filename.ext>` | Create private Gist from the clipboard contents. |
 | `gist-file <filename.ext>` | create private Gist from a file. |
-| `g [txt+md] [-s] <match>` | Quick grep: ag, ack or grep (`-s` — case sensitive). |
