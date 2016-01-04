@@ -104,17 +104,7 @@ fi
 
 # Build and run tests
 status=0
-if [ -f Gruntfile.* ] || [ -f src/Gruntfile.* ]; then
-	if [ -f Gruntfile.* ]; then
-		grunt build
-		status=$?
-	elif [ -f src/Gruntfile.* ]; then
-		pushd src
-		grunt build
-		status=$?
-		popd
-	fi
-elif [ -f package.json ]; then
+if [ -f package.json ]; then
 	npm test
 	status=$?
 fi
