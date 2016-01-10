@@ -40,6 +40,11 @@ if [ -z "$1" ]; then
 	exit 1
 fi
 
+if [ ! -f "package.json" ]; then
+	error "package.json not found."
+	exit 1	
+fi
+
 # Dirty repo?
 if [ "$(git status --porcelain 2>/dev/null)" ]; then
 	error "Repo is dirty."
