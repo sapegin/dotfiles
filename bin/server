@@ -6,8 +6,9 @@
 #   server [port]
 #
 
-local port="${1:-8000}"
-echo "Access from network: http://$(myip):$port"
+port="${1:-8000}"
+myip=$(ifconfig | grep "inet " | grep -v 127.0.0.1 | awk '{print $2}')
+echo "Access from the network: http://$myip:$port"
 echo
 open "http://localhost:${port}/"
 
