@@ -8,13 +8,14 @@
 # https://github.com/sapegin/dotfiles
 #
 
-local project=`basename "$(pwd)"`
-local DIRS=( "wp-content/themes/$project" 'wp-content/themes/*' "storage/themes/$project" 'storage/themes/*' "htdocs/storage/themes/$project" 'htdocs/storage/themes/*' )
-for dir in "${DIRS[@]}"
+project=`basename "$(pwd)"`
+dirs=( "wp-content/themes/$project" 'wp-content/themes/*' "storage/themes/$project" 'storage/themes/*' "htdocs/storage/themes/$project" 'htdocs/storage/themes/*' )
+for dir in "${dirs[@]}"
 do
 	if [ -d "$dir" ]; then
+		echo "$dir"
 		cd "$dir"
-		return
+		exit
 	fi
 done
 echo "Theme not found."
