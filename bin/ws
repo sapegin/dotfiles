@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+# Open current project in WebStorm or pass all parameters to `wstorm`
+# 
+# Usage:
+#   ws [params]
+
+
+if [ -z "$1" ]; then
+	git rev-parse 2>/dev/null && cd "./$(git rev-parse --show-cdup)"
+	wstorm .
+else
+	wstorm "$@"
+fi
