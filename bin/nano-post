@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Copies current opened in iA Writer Pro file to my blog’s folder, adds YAML front matter and opens it in Sublime Text.
-# 
+# Copies current opened in iA Writer Pro file to my blog’s folder, adds YAML front matter and opens it in the default editor.
+#
 # Files should be named like this: `SomeName_En.md`, where `En` is file’s language: En or Ru.
-# 
+#
 # This script should be run from Alfred workflow.
 #
 # Author: Artem Sapegin, sapegin.me
@@ -65,5 +65,5 @@ date=$(date +"$DATE_FORMAT")
 sed -e "s^{title}^$title^" -e "s^{date}^$date^" ~/dotfiles/bin/nano-post.tmpl > "$dest"
 cat "$source_file" | perl -0pe 's/#.*\n//' >> "$dest"
 
-# Open the file in Sublime Text
-open -a "Sublime Text" "$dest"
+# Open the file in the editor
+$EDITOR "$dest"

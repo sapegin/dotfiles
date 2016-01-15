@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Updates changelog file with a list of commits since the latest version tag.
-# 
+#
 # Usage:
 #   git-changelog <major|minor|patch>
 #
@@ -77,4 +77,4 @@ fi
 mv $tmp $FILENAME
 
 # Open in an editor
-subl $FILENAME
+$EDITOR $FILENAME
