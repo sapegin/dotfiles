@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Releases the next version of the product to npm or Bower
+# Releases the next version of the product to npm.
 # 
 # Usage:
 #   release <major|minor|patch>
@@ -35,11 +35,13 @@ command -v semver >/dev/null 2>&1 || { error "semver not installed: see comments
 command -v jq >/dev/null 2>&1 || { error "jq not installed: see comments for instructions."; exit 1; }
 command -v github-release-from-changelog >/dev/null 2>&1 || { error "github-release-from-changelog not installed: see comments for instructions."; exit 1; }
 
+# Empty arguments
 if [ -z "$1" ]; then
 	usage
 	exit 1
 fi
 
+# No package.json
 if [ ! -f "package.json" ]; then
 	error "package.json not found."
 	exit 1	
@@ -55,7 +57,6 @@ if [ "$(git status --porcelain 2>/dev/null)" ]; then
 fi
 
 # Read existing versions
-cmpnt_ver=$(find . -maxdepth 1 -name "bower.json" | xargs cat | jq -r ".version")
 pkg_ver=$(find . -maxdepth 1 -name "package.json" | xargs cat | jq -r ".version")
 
 # Non npm package 
@@ -63,21 +64,12 @@ pkg_ver=$(find . -maxdepth 1 -name "package.json" | xargs cat | jq -r ".version"
 
 # Verify current versions 
 current_ver=
-[ -n "$cmpnt_ver" ] && current_ver="$cmpnt_ver"
 [ -n "$pkg_ver" ] && current_ver="$pkg_ver"
 [ -z "$current_ver" ] && current_ver="0.0.0"
 
-# Validate current versions and determine new version
-dontmatch() {
-	error "Current versions don’t match."
-	if [ -n "$cmpnt_ver" ] && [ "$cmpnt_ver" != "0.0.0" ]; then echo "bower.json: $CYAN$cmpnt_ver$NOCOLOR"; fi
-	if [ -n "$pkg_ver" ] && [ "$pkg_ver" != "0.0.0" ]; then echo "package.json: $CYAN$pkg_ver$NOCOLOR"; fi
-	exit 1
-}
-if [ "$1" == "major" ] || [ "$1" == "minor" ] || [ "$1" == "patch" ]; then
-	if [ -n "$cmpnt_ver" ] && [ "$cmpnt_ver" != "0.0.0" ] && [ "$current_ver" != "$cmpnt_ver" ]; then dontmatch; fi
-	if [ -n "$pkg_ver" ] && [ "$pkg_ver" != "0.0.0" ] && [ "$current_ver" != "$pkg_ver" ]; then dontmatch; fi
-else
+# Determine the new version
+new_ver=
+if [ "$1" != "major" ] && [ "$1" != "minor" ] && [ "$1" != "patch" ]; then
 	if [ "$2" != "--force" ]; then
 		error "Custom versions possible only with --force key."
 		usage
@@ -93,13 +85,6 @@ fi
 
 header "Releasing v$new_ver..."
 
-# Update bower.json
-if [ -n "$cmpnt_ver" ]; then
-	jq ".version = \"$new_ver\"" bower.json > bower.json_
-	rm bower.json
-	mv bower.json_ bower.json
-fi
-
 # Update package.json
 if [ -n "$pkg_ver" ]; then
 	jq ".version = \"$new_ver\"" package.json > package.json_
@@ -108,11 +93,8 @@ if [ -n "$pkg_ver" ]; then
 fi
 
 # Build and run tests
-status=0
-if [ -f package.json ]; then
-	npm test
-	status=$?
-fi
+npm test
+status=$?
 
 # Revert changes and exit if build/tests failed
 if [ $status -ne 0 ]; then
@@ -127,9 +109,7 @@ git commit -am "v$new_ver"
 git push origin
 
 # Publish npm package
-if [ -n "$pkg_ver" ]; then
-	npm publish
-fi
+npm publish
 
 # Publish release notes to GitHub
 github-release-from-changelog --filename Changelog.md
