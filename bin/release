@@ -77,7 +77,7 @@ if [ "$1" != "major" ] && [ "$1" != "minor" ] && [ "$1" != "patch" ]; then
 		exit 1
 	fi
 	new_ver="$1"
-	if [ "$3" == "--beta"]; then
+	if [ "$3" == "--beta" ]; then
 		beta=true
 	fi
 fi
