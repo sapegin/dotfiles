@@ -27,7 +27,7 @@ function error() { echo -e "$UNDERLINE$RED$1$NOCOLOR\n"; }
 function usage() {
 	echo "Usage:"
 	echo "  `basename $0` <major|minor|patch>"
-	echo "  `basename $0` <VERSION> --force"
+	echo "  `basename $0` <VERSION> --force [--beta]"
 	echo
 }
 
@@ -69,6 +69,7 @@ current_ver=
 
 # Determine the new version
 new_ver=
+beta=
 if [ "$1" != "major" ] && [ "$1" != "minor" ] && [ "$1" != "patch" ]; then
 	if [ "$2" != "--force" ]; then
 		error "Custom versions possible only with --force key."
@@ -76,6 +77,9 @@ if [ "$1" != "major" ] && [ "$1" != "minor" ] && [ "$1" != "patch" ]; then
 		exit 1
 	fi
 	new_ver="$1"
+	if [ "$3" == "--beta"]; then
+		beta=true
+	fi
 fi
 if [ -z "$new_ver" ]; then
 	[ "$1" == "patch" ] && new_ver=$(semver -p $current_ver)
@@ -109,7 +113,11 @@ git commit -am "v$new_ver"
 git push origin
 
 # Publish npm package
-npm publish
+if [ -n "$beta" ]; then
+	npm publish --tag beta
+else
+	npm publish
+fi
 
 # Publish release notes to GitHub
 github-release-from-changelog --filename Changelog.md
