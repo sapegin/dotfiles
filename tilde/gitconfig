@@ -7,7 +7,7 @@
 	new = green bold
 [core]
 	editor = nano
-	pager = less --chop-long-lines --quit-if-one-screen
+	pager = less --chop-long-lines --quit-if-one-screen --no-init
 	autocrlf = false
 	safecrlf = false
 	mergeoptions = --no-edit
