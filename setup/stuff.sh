@@ -41,26 +41,12 @@ brew install ttfautohint fontforge --with-python
 brew install msmtp --with-macosx-keyring
 brew install mutt --sidebar-patch
 
-# nvm
-brew install nvm
-mkdir "$HOME/.nvm"
-export NVM_DIR="$HOME/.nvm"
-source $(brew --prefix nvm)/nvm.sh
-nvm install stable
-nvm use stable
-nvm alias default stable
-
 # Node.js
-brew install casperjs
+curl -L http://git.io/n-install | bash
 npm config set loglevel warn
 npm config set save-prefix '~'
-npm install -g grunt-cli
 npm install -g yo
-npm install -g jshint
-npm install -g jscs
-npm install -g bower
-npm install -g docpad
-npm install -g npm-check-updates
+npm install -g npm-upgrade
 
 # Python
 brew install python
