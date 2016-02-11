@@ -7,7 +7,7 @@
 	new = green bold
 [core]
 	editor = nano
-	pager = less --chop-long-lines --quit-if-one-screen --no-init
+	pager = diff-so-fancy | less --chop-long-lines --quit-if-one-screen --no-init --tabs=1,5 -R
 	autocrlf = false
 	safecrlf = false
 	mergeoptions = --no-edit
@@ -71,6 +71,14 @@
 	prompt = false
 [merge]
 	tool = Kaleidoscope
+
+# diff-so-fancy
+[color "diff-highlight"]
+	oldNormal = red bold
+	oldHighlight = red bold 52
+	newNormal = green bold
+	newHighlight = green bold 22
+
 
 # Include local settings
 # Requires Git 1.7.10

@@ -47,6 +47,7 @@ npm config set loglevel warn
 npm config set save-prefix '~'
 npm install -g yo
 npm install -g npm-upgrade
+npm install -g diff-so-fancy
 
 # Python
 brew install python
