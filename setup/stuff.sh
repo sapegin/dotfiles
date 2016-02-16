@@ -48,6 +48,7 @@ npm config set save-prefix '~'
 npm install -g yo
 npm install -g npm-upgrade
 npm install -g diff-so-fancy
+npm install -g github-release-from-changelog
 
 # Python
 brew install python
