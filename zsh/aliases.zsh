@@ -5,6 +5,7 @@ alias o="open"
 alias oo="open ."
 alias e="$EDITOR"
 alias gh="github"
+alias rm="trash"
 alias x+="chmod +x"
 alias -- +x="chmod +x"
 
