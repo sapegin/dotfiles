@@ -2,7 +2,7 @@
 
 # Commits changes to blog.
 #
-# This script should be run from Alfred workflow.
+# This script should be used from Alfred workflow.
 #
 # Requires:
 # - terminal-notifier - brew instal terminal-notifier

@@ -2,7 +2,7 @@
 
 # Publishes post to my blog: removes unpublished attribute, updates date, commits and deploys.
 #
-# This script should be run from Alfred workflow.
+# This script should be used from Alfred workflow.
 #
 # Author: Artem Sapegin, sapegin.me
 # License: MIT

@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 
-# Copies current opened in iA Writer Pro file to my blog’s folder, adds YAML front matter and opens it in the default editor.
+# Copies current opened in iA Writer file to my blog’s folder, adds YAML front matter and opens it in Sublime Text.
 #
 # Files should be named like this: `SomeName_En.md`, where `En` is file’s language: En or Ru.
+# Or in plain text (`Some Name`): English will be used by default.
 #
-# This script should be run from Alfred workflow.
+# This script should be used from Alfred workflow.
 #
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
@@ -12,9 +13,9 @@
 #
 
 # Filepath = FILEPATH_PREFIX + language code + FILEPATH_SUFFIX + slug + FILEPATH_EXT
-FILEPATH_PREFIX="$HOME/Dropbox/Projects/_Repos/blog.sapegin.me/src/documents_"
+FILEPATH_PREFIX="$HOME/Dropbox/Projects/_Repos/blog.sapegin.me/source/"
 FILEPATH_SUFFIX="/all/"
-FILEPATH_EXT=".html.md"
+FILEPATH_EXT=".md"
 DATE_FORMAT="%b %e, %Y"
 
 # Common stuff
@@ -28,18 +29,26 @@ function ask() {
 
 # TODO: Check whether file has a name
 
-# Topmost opened in iA Writer Pro file
-source_file=$(osascript -e 'tell application "iA Writer Pro" to set filepath to file of document 1' -e 'POSIX path of filepath')
+# Topmost opened in iA Writer file
+source_file=$(osascript -e 'tell application "iA Writer" to set filepath to file of document 1' -e 'POSIX path of filepath')
 source_name=$(basename "$source_file")
 
 # Language
 lang=$(echo "$source_name" | perl -ne 'm/_(\w\w)\.md$/; print lc $1')
 if [ "$lang" != "en" ] && [ "$lang" != "ru" ]; then
-	error "Unknown language: $lang"
+	$lang="en"
 fi
 
-# Default slug: convert CamelCase file name to under_score, strip language and extension
-slug=$(echo "$source_name" | perl -pe 's/([A-Z])/-\l\1/g' | perl -pe 's/^-(.*?)_-\w\w\.md/\1/')
+# Default slug: convert CamelCase or plain text file name to under_score, strip language and extension
+slug=$(
+	echo "$source_name" |
+	perl -pe 's/\.md$//' |          # Remove extension
+	perl -pe 's/_(?:En|Ru)$//' |    # Remove language
+	perl -pe 's/([A-Z])/-\l\1/g' |  # CamelCase to dashes
+	perl -pe 's/ /-/g' |            # Spaces to dashes
+	perl -pe 's/--/-/g' |           # Remove double spaces
+	perl -pe 's/^-//'               # Remove dash in the beginning
+) 
 
 # Ask user to review the slug
 slug=$(ask "Post slug:" "$slug")
@@ -62,8 +71,8 @@ title=$(grep -m 1 '#' "$source_file" | sed -e 's^# ^^')
 date=$(date +"$DATE_FORMAT")
 
 # Copy template and source file to destination folder
-sed -e "s^{title}^$title^" -e "s^{date}^$date^" ~/dotfiles/bin/nano-post.tmpl > "$dest"
+sed -e "s^{title}^$title^" -e "s^{date}^$date^" -e "s^{lang}^$lang^" "$HOME/dotfiles/bin/nano-post.tmpl" > "$dest"
 cat "$source_file" | perl -0pe 's/#.*\n//' >> "$dest"
 
-# Open the file in the editor
-$EDITOR "$dest"
+# Open the file in the editor ($EDITOR isn’t available in Alfred)
+subl "$dest"

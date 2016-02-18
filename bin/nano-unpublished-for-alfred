@@ -7,7 +7,7 @@
 # https://github.com/sapegin/dotfiles
 #
 
-FILES=~/Dropbox/Projects/_Repos/blog.sapegin.me/src/documents_*/all/*.html.md
+FILES=~/Dropbox/Projects/_Repos/blog.sapegin.me/source/*/all/*.md
 
 echo '<?xml version="1.0"?><items>'
 
@@ -16,7 +16,7 @@ for file in $FILES; do
 	if grep -q 'unpublished: true' $file; then
 		found=1
 		title=$(perl -nle 'print $1 if /^title: \x27(.*?)\x27$/' "$file")
-		lang=$(echo "$file" | perl -nle 'print $1 if /documents_(..)/')
+		lang=$(perl -nle 'print $1 if /^lang: (.*?)$/' "$file")
 		case $lang in
 			ru) lang="Russian" ;;
 			en) lang="English" ;;
