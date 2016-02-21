@@ -63,10 +63,6 @@ ascertain
 assemble assistance
 assist
 assistance
-at an early date
-at its discretion
-at the moment
-at the present time
 attain
 attempt
 attend
@@ -154,6 +150,7 @@ disseminate
 documentation
 domiciled in
 dominant
+due to
 due to the fact of
 due to the fact that
 duration
@@ -274,6 +271,7 @@ in receipt of
 in regard to
 in relation to
 in respect of
+in spite of that fact that
 in the absence of
 in the amount of
 in the course of
