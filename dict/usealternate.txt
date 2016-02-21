@@ -123,7 +123,6 @@ costs the sum of
 counter
 courteous
 cumulative
-currently
 customary
 deduct
 deem
@@ -248,7 +247,6 @@ herewith
 hitherto
 hold in abeyance
 hope and trust
-however
 identical
 identify
 if and when
@@ -286,7 +284,6 @@ in the near future
 in the neighbourhood of
 in view of
 in view of the above
-in view of the fact that
 inappropriate
 inasmuch as
 inception
@@ -447,8 +444,6 @@ retain
 review
 revised
 said
-some
-such
 scrutinise
 select
 selection
@@ -458,6 +453,7 @@ similar to
 similarly
 solely
 solicit
+some
 specified
 state
 state-of-the-art
@@ -472,6 +468,7 @@ subsequently
 substantial
 substantially
 successfully complete
+such
 sufficient
 supplement
 supplementary
