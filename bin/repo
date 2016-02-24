@@ -76,13 +76,7 @@ function getRepos(dir) {
 }
 
 function getDirs(dir) {
-	var dirs = fs.readdirSync(dir);
-	dirs = removeHidden(dirs);
-	return dirs;
-}
-
-function removeHidden(files) {
-	return files.filter(function(name) {
-		return name[0] !== '.';
-	});
+	return fs.readdirSync(dir).filter(
+		file => fs.statSync(path.join(dir, file)).isDirectory()
+	);
 }
