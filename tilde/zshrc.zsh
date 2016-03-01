@@ -97,6 +97,9 @@ ZSH_CUSTOM="$HOME/dotfiles/zsh"
 plugins=(brew extract git-extras git-flow thefuck vagrant)
 source $ZSH/oh-my-zsh.sh
 
+# Disable sharing history between terminals enabled by Oh My Zsh
+unsetopt share_history
+
 # Load extra (private) settings
 [ -f ~/.zshlocal ] && source ~/.zshlocal
 
