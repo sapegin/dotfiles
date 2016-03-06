@@ -56,6 +56,13 @@ if [ "$(git status --porcelain 2>/dev/null)" ]; then
 	exit 1
 fi
 
+# Remote has new commits?
+diff=$(git rev-list --count --left-only @'{u}'...HEAD)
+if [ "$diff" != "0" ]; then
+	error "Remote history differ. Please pull changes."
+	exit 1
+fi
+
 # Read existing versions
 pkg_ver=$(find . -maxdepth 1 -name "package.json" | xargs cat | jq -r ".version")
 
