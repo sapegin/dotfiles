@@ -71,6 +71,14 @@ fi
 
 Go to iTerm2 preferences → Profiles → Advanced → Semantic History. Choose *Run command* and type: `/Users/admin/bin/iopen "\1"`.
 
+### Useful iTerm2 triggers
+
+Go to iTerm2 preferences → Profiles → Advanced → Triggers. Click *Edit*.
+
+Description | RegExp | Action | Color
+----------- | ------ | ------ | ----- 
+Highlight Git merge conflicts | `CONFLICT \(content\)\:.*` | Highlight Text | Text: `f2ac00`
+
 ## Misc
 
 * [OSX Python developer guide](https://gist.github.com/902296)
