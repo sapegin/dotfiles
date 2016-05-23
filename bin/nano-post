@@ -36,7 +36,7 @@ source_name=$(basename "$source_file")
 # Language
 lang=$(echo "$source_name" | perl -ne 'm/_(\w\w)\.md$/; print lc $1')
 if [ "$lang" != "en" ] && [ "$lang" != "ru" ]; then
-	$lang="en"
+	lang="en"
 fi
 
 # Default slug: convert CamelCase or plain text file name to under_score, strip language and extension
