@@ -4,6 +4,7 @@ a dark and stormy night
 a far cry
 a fine kettle of fish
 a loose cannon
+a matter of time
 a penny saved is a penny earned
 a total of
 a tough row to hoe
@@ -211,6 +212,7 @@ business-to-business
 business-to-consumer
 busy as a bee
 by hook or by crook
+by virtue of
 call a spade a spade
 called onto the carpet
 calm before the storm
@@ -239,6 +241,7 @@ certainly
 checkered past
 chomping at the bit
 circle back
+clean slate
 cleanliness is next to godliness
 clear
 clear as a bell
@@ -276,6 +279,7 @@ cooperative learning
 core competency
 cost a king's ransom
 cost a king’s ransom
+could care less
 could possibly
 count your blessings
 crack of dawn
@@ -492,6 +496,8 @@ free gift
 free value
 frequently
 fresh as a daisy
+from the point of view
+from where we are standing
 frozen ice
 frozen tundra
 fulfilment issues
@@ -502,6 +508,9 @@ fuse together
 future plans
 fuzzy logic
 gains
+game changer
+game changing
+game-changer
 garbage in, garbage out
 gather together
 general public
@@ -641,6 +650,7 @@ in my opinion
 in my understanding
 in my view
 in terms of
+in the attempt that
 in the end
 in the final analysis
 in the gutter
@@ -678,10 +688,14 @@ is responsible for
 it ain't over till the fat lady sings
 it ain’t over till the fat lady sings
 it goes without saying
+it is
+it is determined
+it is important to note that
 it seems like
 it should be understood
 it takes all kinds
 it takes one to know one
+it was determined
 it would be
 it's a small world
 it's only a matter of time
@@ -794,6 +808,7 @@ lounge lizard
 loved and lost
 low hanging fruit
 low man on the totem pole
+low-hanging fruit
 luck of the draw
 luck of the Irish
 made a decision to
@@ -1238,6 +1253,7 @@ tee off
 temper tantrum
 tend
 the fact of the matter is
+the fact that
 the first step is to
 the important thing is to
 the month of
@@ -1263,6 +1279,7 @@ thick as thieves
 thin as a rail
 think outside of the box
 think outside the box
+thinking outside the box
 third time's the charm
 third time’s the charm
 this day and age
@@ -1407,6 +1424,7 @@ worst nightmare
 worth its weight in gold
 would
 write down
+writing on the wall
 wrong side of the bed
 yanking your chain
 yappy as a dog

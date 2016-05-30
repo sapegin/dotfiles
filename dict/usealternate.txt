@@ -33,6 +33,7 @@ afford an opportunity
 afforded
 aforesaid
 aggregate
+agreement
 aircraft
 aligned
 alleviate
@@ -40,6 +41,8 @@ allocate
 along the lines of
 alternative
 alternatively
+am
+amazing
 ameliorate
 amendment
 and/or
@@ -53,6 +56,9 @@ appropriate
 appropriate to
 approximate
 approximately
+are
+arrangement
+arrival
 arrive onboard
 as a consequence of
 as a means of
@@ -69,11 +75,21 @@ attend
 attributable to
 authorise
 authority to
+awesome
 axiomatic
+back of the envelope
+based on
+be desirous of
+be in attendance
+be in possession of
+be in violation
+beautiful
+being
 belated
 beneficial
 benefit
 bestow
+boring
 breach
 by means of
 calculate
@@ -83,15 +99,19 @@ cease
 circumvent
 clarification
 close proximity
+clumsy
+clunky
 combat environment
 combine
 combined
 commence
+commonplace
 communicate
 competent
 compile
 complete
 completion
+compliance
 comply with
 component
 comprise
@@ -113,7 +133,9 @@ contains
 contemplate
 contrary to
 convene
+conversion
 correct
+correction
 correspond
 costs the sum of
 counter
@@ -126,6 +148,7 @@ deem to be
 defer
 deficiency
 delete
+delicious
 demonstrate
 denote
 depart
@@ -136,6 +159,8 @@ despatch
 despite the fact that
 determine
 detrimental
+dichotomy
+difficult
 difficulties
 diminish
 disburse
@@ -147,12 +172,15 @@ discrete
 discuss
 dispatch
 disseminate
+do
 documentation
 domiciled in
 dominant
+dry
 due to
 due to the fact of
 due to the fact that
+dull
 duration
 during the period
 during which time
@@ -188,6 +216,8 @@ evidenced
 evident
 evince
 ex officio
+examination
+excellent
 exceptionally
 excessive
 exclude
@@ -229,9 +259,16 @@ furnish
 further to
 furthermore
 generate
+get
 give consideration to
 grant
+great
+ground zero
+hard
+has
 has a requirement for
+have
+heart of the action
 henceforth
 hereby
 herein
@@ -244,14 +281,18 @@ herewith
 hitherto
 hold in abeyance
 hope and trust
+hub
 identical
 identify
 if and when
 illustrate
 immediately
+immersive experience
 impacted
 implement
 imply
+important
+in a manner simmilar to
 in a number of cases
 in a timely manner
 in accordance with
@@ -272,73 +313,102 @@ in regard to
 in relation to
 in respect of
 in spite of that fact that
+in spite of the fact that
+in terms of
 in the absence of
 in the amount of
+in the case of
 in the course of
 in the event of
 in the event that
+in the instance of
 in the majority of instances
 in the near future
 in the neighbourhood of
 in view of
 in view of the above
+in view of the fact that
 inappropriate
 inasmuch as
 inception
 incorporating
+incredible
 incumbent upon
 incurred
 indicate
 indication
+individual
 inform
 initial
 initially
 initiate
 insert
+insofar as
 instances
 intend to
+interesting
 interface
 interpose no objection
 intimate
 irrespective of
+is
 is applicable to
 is authorized to
+is her preference
+is his preference
+is imperative that
 is in accordance with
 is in consonance with
+is in need of
 is of the opinion
+is to be
 issue
 it appears
+it is
 it is essential
 it is known that
 it is requested
 jeopardise
+leverage
 liaise with
 liaison
 limited number
+literally
 locality
 locate
 magnitude
 maintain
+major
 mandatory
 manner
 manufacture
 marginal
 material
 materialise
+matter-of-fact
 maximum
 may in the future
+Mecca
 merchandise
 methodology
 minimize
 minimum
 mislay
+mission critical
 modification
 modify
 monitor
 moreover
+motivation
+mull over
+mundane
+natural
 necessitate
 negligible
 nevertheless
+nice
+no big deal
+no problem
 not later than
 notify
 notwithstanding
@@ -349,27 +419,37 @@ obligatory
 observe
 obtain
 occasioned by
+of the nature of
+of the order of
 on behalf of
 on numerous occasions
 on receipt of
 on request
 on the grounds that
 on the occasion that
+on the same page
 operate
 optimum
 option
 ordinarily
+organizational
 otherwise
 outstanding
 owing to
+owing to the fact that
+paradigm shift
 parameters
 partially
 participate
 particulars
+pedagogy
 per annum
 percentage of
+perfection
 perform
+performance
 permissible
+permission
 permit
 personnel
 persons
@@ -401,6 +481,7 @@ projected
 prolonged
 promptly
 promulgate
+promulgation
 proportion
 provide
 provided that
@@ -411,6 +492,7 @@ purchase
 pursuant to
 qualify for
 reconsider
+redaction
 reduce
 reduction
 refer to
@@ -437,10 +519,12 @@ requirement
 requirements
 reside
 residence
+resistance
 restriction
 retain
 review
 revised
+robust
 said
 scrutinise
 select
@@ -453,9 +537,12 @@ solely
 solicit
 some
 specified
+starvation
 state
 state-of-the-art
 statutory
+strategic
+strenuous
 subject
 subject to
 submit
@@ -474,6 +561,7 @@ supply
 tenant
 terminate
 that being the case
+that is
 the question as to whether
 the undersigned
 thereafter
@@ -482,15 +570,27 @@ therefore
 therein
 thereof
 thereto
+think about
 this activity
 this command
+this is
+thorough
 thus
 time period
 timely
+to be arranged for
+to be denied
+to be in dire straits
+to be the object of
+to be wed on
+to be wed to
 to date
+to put
+to say
 to the extent that
 transfer
 transmit
+trivial
 ultimately
 unavailability
 under the provisions of
@@ -508,13 +608,17 @@ utilization
 utilize
 validate
 variation
+very
 viable
 vice
 virtually
 visualise
 warrant
+was
+was in need of
 ways and means
 we have pleasure in whatsoever
+were
 whensoever
 whereas
 whether or not
@@ -528,4 +632,5 @@ with the minimum of delay
 witnessed
 you are requested
 your attention is drawn
+zero-sum game
 и/или
