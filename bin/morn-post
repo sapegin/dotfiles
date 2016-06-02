@@ -37,7 +37,7 @@ title=$(grep -m 1 '#' "$source_file" | sed -e 's^# ^^')
 
 # Language: Russian if name contains cyrillic, English otherwise
 lang="en"
-if echo "$title" | grep '[а-яА-Я]' >/dev/null; then
+if echo "$title" | grep "[АаБбВвГгДдЕеЁёЖжЗзИиЙйКкЛлМмНнОоПпРрСсТтУуФфХхЦцЧчШшЩщЪъЫыЬьЭэЮюЯя]" >/dev/null; then
 	lang="ru"
 fi
 
