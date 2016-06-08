@@ -1,0 +1,56 @@
+#!/usr/bin/env node
+
+/*
+ * Returns list of blog posts and pages in Afred’s Script Filter XML format.
+ *
+ * Author: Artem Sapegin, sapegin.me
+ * License: MIT
+ * https://github.com/sapegin/dotfiles
+*/
+
+const fs = require('fs');
+const path = require('path');
+const userHome = require('user-home');
+const glob = require('glob');
+
+const DIR = `${userHome}/Dropbox/Projects/Morning.photos/morning.photos/source`;
+
+var files = glob.sync(`${DIR}/**/*.{md,txt}`);
+
+var query = process.argv[2];
+var regexp = new RegExp(query, 'i');
+var items = files
+	.map(file => {
+		var contents = fs.readFileSync(file, 'utf8');
+		var title = contents.match(/^title: [\x22\x27]?(.*?)[\x22\x27]?$/im);
+		var date = contents.match(/^date: (.*?)$/m);
+		return {
+			title: title ? title[1] : '<***>',
+			date: date ? date[1] : path.basename(file),
+			file,
+		};
+	})
+	.filter(doc => regexp.test(doc.title))
+	.map(doc => ({
+		title: doc.title,
+		subtitle: doc.date,
+		uid: doc.file,
+		type: 'file',
+		valid: true,
+		arg: doc.file,
+		icon: {
+			type: 'fileicon',
+			path: doc.file,
+		},
+	}))
+;
+
+if (!items.length) {
+	items = [
+		{
+			valid: false,
+			title: 'Nothing found. ',
+		},
+	];
+}
+console.log(JSON.stringify({ items }));
