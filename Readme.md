@@ -1,6 +1,6 @@
 # Artem Sapegin’s dotfiles
 
-![Terminal.app](https://raw.github.com/sapegin/dotfiles/master/color/squirrelsong_terminal.png)
+![iTerm2](http://wow.sapegin.me/1r1B0f1M1q2W/squirrelsong.png)
 
 
 ## Features
