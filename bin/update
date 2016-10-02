@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Get OS X software updates, update Homebrew, NPM, Ruby packages, dotfiles and some other software
+# Get OS X software updates, update Homebrew, npm, Ruby packages, dotfiles and some other software
 
 function header() {
 	echo -e "$(tput sgr 0 1)$(tput setaf 6)$1$(tput sgr0)"
@@ -34,10 +34,9 @@ brew cleanup
 brew prune
 echo
 
-# NPM
-header "Updating NPM..."
-sudo -v
-npm update npm -g
+# npm
+header "Updating npm..."
+npm install -g npm@latest
 npm update -g
 echo
 
