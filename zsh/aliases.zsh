@@ -48,6 +48,9 @@ alias replace="replace --exclude='node_modules'"
 # Push and deploy using Shipit
 alias pff="push && shipit"
 
+# Run npm script without annoying noise
+alias nr="npm run --silent"
+
 # `cd` to Git repo root
 alias gr='git rev-parse 2>/dev/null && cd "./$(git rev-parse --show-cdup)"'
 
