@@ -45,13 +45,6 @@ rstrt() { sudo service $@ restart; }
 # github.com/harthur/replace
 alias replace="replace --exclude='node_modules'"
 
-# Grunt
-alias gw="grunt watch --stack --debug"
-alias gww="grunt browserSync watch --stack --debug"
-
-# Tâmia generator
-tm() { yo tamia:$@; }
-
 # Push and deploy using Shipit
 alias pff="push && shipit"
 
