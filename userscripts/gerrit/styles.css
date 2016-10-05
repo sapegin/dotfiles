@@ -1,0 +1,236 @@
+/* Fonts */
+
+* {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+		"Droid Sans", "Helvetica Neue", sans-serif !important;
+}
+pre,
+code,
+pre *,
+code * {
+	font-family: Consolas, "Liberation Mono", Menlo, monospace !important;
+}
+
+/* Colors */
+
+a,
+a:link,
+a:visited {
+	color: #1e6da3 !important;
+}
+a:hover,
+a:active,
+a:focus {
+	color: #3496da !important;
+}
+
+.com-google-gerrit-client-diff-DiffTable_BinderImpl_GenCss_style-b .com-google-gerrit-client-diff-DiffTable_BinderImpl_GenCss_style-diff {
+	background-color: #a6f3a6 !important;
+}
+.com-google-gerrit-client-diff-DiffTable_BinderImpl_GenCss_style-b .com-google-gerrit-client-diff-DiffTable_BinderImpl_GenCss_style-intralineBg {
+	background-color: #eaffea !important;
+}
+.com-google-gerrit-client-diff-DiffTable_BinderImpl_GenCss_style-a .com-google-gerrit-client-diff-DiffTable_BinderImpl_GenCss_style-diff {
+	background-color: #f8cbcb !important;
+}
+.com-google-gerrit-client-diff-DiffTable_BinderImpl_GenCss_style-a .com-google-gerrit-client-diff-DiffTable_BinderImpl_GenCss_style-intralineBg {
+	background-color: #ffecec !important;
+}
+
+/* Buttons */
+
+button,
+.com-google-gerrit-client-diff-DraftBox_BinderImpl_GenCss_style-button,
+.com-google-gerrit-client-change-Resources-Style-button {
+	background: white !important;
+	color: #666 !important;
+	border: 1px solid #ccc !important;
+	border-radius: 2px !important;
+	font-size: 1em !important;
+	padding: .34em .75em !important;
+}
+button:focus,
+button:hover,
+button:active,
+.com-google-gerrit-client-diff-DraftBox_BinderImpl_GenCss_style-button:focus,
+.com-google-gerrit-client-diff-DraftBox_BinderImpl_GenCss_style-button:hover,
+.com-google-gerrit-client-diff-DraftBox_BinderImpl_GenCss_style-button:active,
+.com-google-gerrit-client-change-Resources-Style-button:focus,
+.com-google-gerrit-client-change-Resources-Style-button:hover,
+.com-google-gerrit-client-change-Resources-Style-button:active {
+	color: #000 !important;
+	border-color: #666;
+}
+.com-google-gerrit-client-diff-CommentBox-Style-commentBox button div,
+.com-google-gerrit-client-change-Resources-Style-button div,
+.com-google-gerrit-client-change-Resources-Style-popup button div,
+.com-google-gerrit-client-change-ChangeScreen_BinderImpl_GenCss_style-headerButtons button div,
+#change_actions button div {
+	color: inherit !important;
+	width: auto !important;
+}
+button.com-google-gerrit-client-change-ChangeScreen_BinderImpl_GenCss_style-highlight,
+.com-google-gerrit-client-change-Actions_BinderImpl_GenCss_style-submit {
+	background-color: #1e6da3 !important;
+	border-color: #1a5f8d !important;
+	color: #fff !important;
+}
+button.com-google-gerrit-client-change-ChangeScreen_BinderImpl_GenCss_style-highlight:focus,
+button.com-google-gerrit-client-change-ChangeScreen_BinderImpl_GenCss_style-highlight:hover,
+button.com-google-gerrit-client-change-ChangeScreen_BinderImpl_GenCss_style-highlight:active,
+.com-google-gerrit-client-change-Actions_BinderImpl_GenCss_style-submit:focus,
+.com-google-gerrit-client-change-Actions_BinderImpl_GenCss_style-submit:hover,
+.com-google-gerrit-client-change-Actions_BinderImpl_GenCss_style-submit:active {
+	color: #efefef !important;
+}
+button.com-google-gerrit-client-diff-DraftBox_BinderImpl_GenCss_style-button div {
+	width: auto !important;
+}
+.com-google-gwtexpui-clippy-client-ClippyCss-copier {
+	border: none !important;
+	padding: 0 !important;
+}
+
+/* Toolbars */
+
+.com-google-gerrit-client-change-ChangeScreen_BinderImpl_GenCss_style-subjectLine,
+.com-google-gerrit-client-change-ChangeScreen_BinderImpl_GenCss_style-headerLine,
+.com-google-gerrit-client-change-ChangeScreen_BinderImpl_GenCss_style-sectionHeader {
+	background-color: #f1f1f1 !important;
+}
+.com-google-gerrit-client-change-ChangeScreen_BinderImpl_GenCss_style-headerLine {
+	height: 36px !important;
+}
+.com-google-gerrit-client-change-ChangeScreen_BinderImpl_GenCss_style-sectionHeader {
+	height: 24px !important;
+}
+.com-google-gerrit-client-change-ChangeScreen_BinderImpl_GenCss_style-sectionHeader .com-google-gerrit-client-change-ChangeScreen_BinderImpl_GenCss_style-headerButtons {
+	height: auto !important;
+	border-left: 1px solid #ccc !important;
+}
+
+/* Labels */
+
+.com-google-gerrit-client-change-ChangeScreen_BinderImpl_GenCss_style-label_user {
+	border: none !important;
+	background-color: #8bded2 !important;
+	border-radius: 2px !important;
+	padding: 2px 6px !important;
+}
+.com-google-gerrit-client-change-ChangeScreen_BinderImpl_GenCss_style-label_user button {
+	font-size: 19px !important;
+	padding: 0 !important;
+	background: none !important;
+	border: none !important;
+	opacity: .5 !important;
+}
+
+/* Diff */
+
+.com-google-gerrit-client-diff-Header_BinderImpl_GenCss_style-header {
+	margin: 15px 5px 7px !important;
+	font-size: 18px !important;
+}
+.com-google-gerrit-client-diff-Header_BinderImpl_GenCss_style-path a {
+	opacity: 0.3 !important;
+}
+.com-google-gerrit-client-diff-SkipBar_BinderImpl_GenCss_style-skipBar {
+	opacity: 0.5 !important;
+}
+.com-google-gerrit-client-diff-PatchSetSelectBox_BinderImpl_GenCss_style-selected {
+	background: none !important;
+}
+
+/* Comment boxes */
+
+.com-google-gerrit-client-diff-CommentBox-Style-commentWidgets,
+.com-google-gerrit-client-change-ChangeScreen_BinderImpl_GenCss_style-replyBox {
+	background-color: #f1f1f1 !important;
+	border: 1px solid #ccc !important;
+	-webkit-box-shadow: 0 1px 5px rgba(0,0,0,.2) !important;
+	   -moz-box-shadow: 0 1px 5px rgba(0,0,0,.2) !important;
+	        box-shadow: 0 1px 5px rgba(0,0,0,.2) !important;
+}
+.com-google-gerrit-client-change-ChangeScreen_BinderImpl_GenCss_style-replyBox {
+	width: 800px !important;
+}
+.com-google-gerrit-client-diff-CommentBox-Style-contents {
+	margin: 10px 20px !important;
+	padding: 0 !important;
+}
+.com-google-gerrit-client-diff-DraftBox_BinderImpl_GenCss_style-draft {
+	margin-bottom: 3px !important;
+	text-align: left !important;
+	background: none !important;
+	color: #333 !important;
+	font-weight: bold !important;
+}
+.com-google-gerrit-client-diff-DraftBox_BinderImpl_GenCss_style-editArea,
+.gwt-TextArea {
+	box-sizing: border-box !important;
+	max-width: none !important;
+	width: 100% !important;
+	margin-bottom: 5px !important;
+	font-size: 16px !important;
+}
+.com-google-gerrit-client-diff-CommentBox-Style-commentBox button {
+	margin-right: 0 !important;
+	margin-left: 5px !important;
+}
+.com-google-gerrit-client-diff-DraftBox_BinderImpl_GenCss_style-editArea + div,
+.com-google-gerrit-client-change-ReplyBox_BinderImpl_GenCss_style-comments + div {
+	text-align: right !important;
+}
+button.com-google-gerrit-client-diff-DraftBox_BinderImpl_GenCss_style-discard,
+.com-google-gerrit-client-change-ReplyBox_BinderImpl_GenCss_style-cancel {
+	position: static !important;
+}
+.com-google-gerrit-client-change-Resources-Style-section {
+	border-bottom: 1px solid #ccc !important;
+}
+
+
+/* Name suggest */
+
+.gwt-SuggestBoxPopup {
+	border: 1px solid #ccc !important;
+	box-shadow: 0 1px 5px rgba(0,0,0,.2) !important;
+}
+.suggestPopupTop,
+.suggestPopupRight,
+.suggestPopupBottom,
+.suggestPopupLeft {
+	display: none !important;
+}
+.gwt-SuggestBoxPopup .item-selected {
+	background-color: #f1f1f1 !important;
+}
+.com-google-gerrit-client-change-Reviewers_BinderImpl_GenCss_style-suggestBox {
+	font-size: 16px !important;
+	margin: 5px 0 !important;
+}
+.com-google-gerrit-client-change-Reviewers_BinderImpl_GenCss_style-error + div {
+	text-align: right !important;
+}
+
+/* Yellow popup at the right bottom corner */
+
+.com-google-gerrit-client-change-UpdateAvailableBar_BinderImpl_GenCss_style-popup {
+	bottom: 5px !important;
+	right: 5px !important;
+}
+.com-google-gerrit-client-change-UpdateAvailableBar_BinderImpl_GenCss_style-bar {
+	font-size: 110% !important;
+}
+
+/* Misc. */
+
+.com-google-gerrit-client-change-CommitBox_BinderImpl_GenCss_style-scroll {
+	border-right: 1px solid #ccc !important;
+	border-bottom: 1px solid #ccc !important;
+}
+
+hr {
+	border-top: 0;
+	border-bottom: 1px solid #ccc !important;
+}

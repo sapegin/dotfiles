@@ -1,0 +1,10 @@
+{
+  "manifest_version": 2,
+  "name": "Gerrit Refined",
+  "version": "0.0.1",
+  "description": "Better styles for Gerrit",
+  "content_scripts": [{
+  	"matches": ["https://gerrit.it.here.com/*"],
+    "css": ["styles.css"]
+  }]
+}
