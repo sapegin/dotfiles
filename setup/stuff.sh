@@ -35,17 +35,13 @@ echo -e "setenv PATH $HOME/dotfiles/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/
 
 # Everything else
 brew install the_silver_searcher
-brew install unrar
 brew install gist
-brew install ttfautohint fontforge --with-python
-brew install msmtp --with-macosx-keyring
-brew install mutt --sidebar-patch
 
 # Node.js
 curl -L http://git.io/n-install | bash
 npm config set loglevel warn
 npm config set save-prefix '~'
-npm install -g yo
+npm install -g yarn
 npm install -g npm-upgrade
 npm install -g diff-so-fancy
 npm install -g github-release-from-changelog
