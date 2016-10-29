@@ -35,14 +35,14 @@
 	"hayaku_CSS_syntax_autoguess":
 	[
 		"selector {",
-		"	property:value;",
-		"	}"
+		"\tproperty:value;",
+		"\t}"
 	],
 	"highlight_line": true,
 	"ignored_packages":
 	[
-		"Vintage",
-		"Markdown"
+		"Markdown",
+		"Vintage"
 	],
 	"indent_guide_options":
 	[
