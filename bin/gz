@@ -1,9 +1,40 @@
 #!/usr/bin/env bash
 
 # Compare original and gzipped file size
+# 
+# Usage:
+#   gz <file>
+#
+# Requires:
+# - pretty-bytes-cli - npm i -g pretty-bytes-cli
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+
+# Common stuff
+RED="$(tput setaf 1)"
+CYAN="$(tput setaf 6)"
+UNDERLINE="$(tput sgr 0 1)"
+NOCOLOR="$(tput sgr0)"
+function error() { echo -e "$UNDERLINE$RED$1$NOCOLOR\n"; }
+
+function usage() {
+	echo "Usage:"
+	echo "  `basename $0` <file>"
+	echo
+}
+
+command -v pretty-bytes >/dev/null 2>&1 || { error "pretty-bytes-cli not installed: see comments for instructions."; exit 1; }
+
+# Empty arguments
+if [ -z "$1" ]; then
+	usage
+	exit 1
+fi
 
 origsize=$(wc -c < "$1")
 gzipsize=$(gzip -c "$1" | wc -c)
 ratio=$(echo "$gzipsize * 100/ $origsize" | bc -l)
-printf "Original: %d bytes\n" "$origsize"
-printf "Gzipped: %d bytes (%2.2f%%)\n" "$gzipsize" "$ratio"
+printf "Original: $CYAN%s$NOCOLOR\n" "$(pretty-bytes $origsize)"
+printf "Gzipped:  $CYAN%s$NOCOLOR (%2.2f%%)\n" "$(pretty-bytes $gzipsize)" "$ratio"
