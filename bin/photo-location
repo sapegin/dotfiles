@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+# Prints photo GPS location in a format acceptable by Lightroom:
+# 50°54'46" N 14°15'38" E
+# 
+# Usage:
+#   photo-location <file>
+#
+# Requires:
+# - exiftool - brew install exiftool
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+
+# Common stuff
+RED="$(tput setaf 1)"
+CYAN="$(tput setaf 6)"
+UNDERLINE="$(tput sgr 0 1)"
+NOCOLOR="$(tput sgr0)"
+function error() { echo -e "$UNDERLINE$RED$1$NOCOLOR\n"; }
+
+function usage() {
+	echo "Usage:"
+	echo "  `basename $0` <file>"
+	echo
+}
+
+command -v exiftool >/dev/null 2>&1 || { error "exiftool not installed: brew install exiftool"; exit 1; }
+
+# Empty arguments
+if [ -z "$1" ]; then
+	usage
+	exit 1
+fi
+
+# Read location
+loc=$(exiftool -p '$GPSLatitude $GPSLongitude' $1)
+
+# Format: 50 deg 54' 39.12" N 14 deg 15' 39.20" E → 50°54'46" N 14°15'38" E
+loc=$(
+	echo "$loc" |
+	perl -pe 's/ deg /˚/g' |
+	perl -pe "s/' /'/g" |
+	perl -pe 's/(\d\d).\d\d"/\1"/g'
+)
+
+echo "$loc"
