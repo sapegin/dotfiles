@@ -42,11 +42,14 @@ brew install exiftool
 curl -L http://git.io/n-install | bash
 npm config set loglevel warn
 npm config set save-prefix '~'
-npm install -g yarn
 npm install -g npm-upgrade
 npm install -g diff-so-fancy
 npm install -g github-release-from-changelog
 npm install -g trash-cli
+
+# Yarn
+npm install -g yarn
+yarn config set save-prefix '~'
 
 # Python
 brew install python
