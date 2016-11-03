@@ -94,7 +94,7 @@ HIST_STAMPS="dd.mm.yyyy"
 ZSH_CUSTOM="$HOME/dotfiles/zsh"
 # Plugins (see ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-plugins=(brew extract git-extras)
+plugins=(extract git-extras)
 source $ZSH/oh-my-zsh.sh
 
 # Disable sharing history between terminals enabled by Oh My Zsh
