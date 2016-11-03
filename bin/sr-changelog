@@ -38,17 +38,20 @@ const SECTION_TITLES = {
 const WEATHER_CITY = 'Berlin, Germany';
 const WEATHER = '☂☂☂☂☂❄☂☂☂☂☂☂☂❄☂❄❄☂☂☁☁☁☁☁☁☁☁☁☁☁☁☾☀☾☁☂☀☂☂☂☂❄❄❄☁☂❄☂';
 
-const renderSection = ({ title, changes }) => `
+const renderSection = ({ title, changes }) => trim(`
 # ${title}
 
 ${changes.join('\n\n')}
-`.trim();
+`);
 
-const renderChange = ({ subject, body }) => `
+const renderChange = ({ subject, body, footer }) => trim(`
 ## ${subject}
 
 ${body || ''}
-`.trim();
+${footer ? footer.replace(`${BREAKING_MARKER}:`, '') : ''}
+`);
+
+const trim = text => text.replace(/\n\n+/g, '\n\n').trim();
 
 const is = (a, b) => (a || '').toUpperCase() === (b || '').toUpperCase();
 
