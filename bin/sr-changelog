@@ -48,6 +48,7 @@ const renderChange = ({ subject, body, footer }) => trim(`
 ## ${subject}
 
 ${body || ''}
+
 ${footer ? footer.replace(`${BREAKING_MARKER}:`, '') : ''}
 `);
 
