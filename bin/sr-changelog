@@ -17,6 +17,7 @@ const fs = require('fs');
 const path = require('path');
 const opn = require('opn');
 const git = require('git-lib');
+const weather = require('yahoo-weather');
 const gitLatestSemverTag = require('git-latest-semver-tag');
 const commitsBetween = require('commits-between');
 const conventionalCommitsParser = require('conventional-commits-parser');
@@ -34,6 +35,8 @@ const SECTION_TITLES = {
 	[SECTION_FEATURE]: 'New features',
 	[SECTION_FIX]: 'Fixes',
 };
+const WEATHER_CITY = 'Berlin, Germany';
+const WEATHER = '☂☂☂☂☂❄☂☂☂☂☂☂☂❄☂❄❄☂☂☁☁☁☁☁☁☁☁☁☁☁☁☾☀☾☁☂☀☂☂☂☂❄❄❄☁☂❄☂';
 
 const renderSection = ({ title, changes }) => `
 # ${title}
@@ -119,6 +122,20 @@ function generateSection(title, commits) {
 	return renderSection({ title, changes });
 }
 
+function getWeatherIcon() {
+	return new Promise((resolve) => {
+		weather(WEATHER_CITY).then(
+			info => {
+				const index = Number(info.item.condition.code);
+		  		resolve(WEATHER[index] || '☁');
+		  	},
+		  	() => {
+		  		resolve('☁');
+		  	}
+		);
+	});
+}
+
 function buildChangelog() {
 	gitLatestSemverTag((err, tag) => {
 		if (err) {
@@ -160,7 +177,12 @@ function commitChangelog() {
 	console.log('Commiting changelog...');
 
 	const changelog = fs.readFileSync(CHANGELOG_FILE, 'utf8');
-	git.commit(`${TYPE_CHANGELOG}:\n\n${changelog}`, '--allow-empty');
+	getWeatherIcon()
+		.then(icon => {
+			git.commit(`${TYPE_CHANGELOG}: ${icon}\n\n${changelog}`, '--allow-empty')
+			console.log('Done.');
+		})
+	;
 }
 
 const command = process.argv[2];

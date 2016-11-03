@@ -10,6 +10,7 @@
     "conventional-commits-parser": "~1.3.0",
     "git-latest-semver-tag": "~1.0.2",
     "git-lib": "~1.6.0",
-    "opn": "~4.0.2"
+    "opn": "~4.0.2",
+    "yahoo-weather": "~2.2.0"
   }
 }
