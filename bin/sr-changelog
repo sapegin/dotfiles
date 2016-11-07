@@ -39,13 +39,13 @@ const WEATHER_CITY = 'Berlin, Germany';
 const WEATHER = '☂☂☂☂☂❄☂☂☂☂☂☂☂❄☂❄❄☂☂☁☁☁☁☁☁☁☁☁☁☁☁☾☀☾☁☂☀☂☂☂☂❄❄❄☁☂❄☂';
 
 const renderSection = ({ title, changes }) => trim(`
-# ${title}
+## ${title}
 
 ${changes.join('\n\n')}
 `);
 
 const renderChange = ({ subject, body, footer }) => trim(`
-## ${subject}
+### ${subject}
 
 ${body || ''}
 
