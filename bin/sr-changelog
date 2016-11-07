@@ -33,7 +33,7 @@ const SECTION_FIX = 'fix';
 const SECTION_TITLES = {
 	[SECTION_BREAKING]: 'Breaking changes',
 	[SECTION_FEATURE]: 'New features',
-	[SECTION_FIX]: 'Fixes',
+	[SECTION_FIX]: 'Bug fixes',
 };
 const WEATHER_CITY = 'Berlin, Germany';
 const WEATHER = '☂☂☂☂☂❄☂☂☂☂☂☂☂❄☂❄❄☂☂☁☁☁☁☁☁☁☁☁☁☁☁☾☀☾☁☂☀☂☂☂☂❄❄❄☁☂❄☂';
