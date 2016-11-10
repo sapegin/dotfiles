@@ -9,7 +9,7 @@
 * Custom zsh theme with Git status, etc: [Squirrelbook](https://github.com/sapegin/dotfiles/tree/master/zsh/themes/squirrelbook.zsh-theme).
 * Dotfiles syncronization: [sync.py](https://github.com/sapegin/dotfiles/blob/master/sync.py).
 * Sensible OS X defaults: [setup/osx.sh](https://github.com/sapegin/dotfiles/blob/master/setup/osx.sh).
-* Sublime Text 3 settings syncronization: [setup/sublime-settings.sh](https://github.com/sapegin/dotfiles/blob/master/setup/sublime-settings.sh).
+* Visual Studio Code settings syncronization: [vscode](https://github.com/sapegin/dotfiles/blob/master/vscode/).
 * zsh install script: [setup/zsh.sh](https://github.com/sapegin/dotfiles/tree/master/setup/zsh.sh).
 * My magic project opener ([bin/repo](https://github.com/sapegin/dotfiles/blob/master/bin/repo)).
 * [zsh aliases](https://github.com/sapegin/dotfiles/tree/master/docs/Zsh.md).

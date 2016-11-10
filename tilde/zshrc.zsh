@@ -26,7 +26,7 @@ export PATH
 if [[ -n $SSH_CONNECTION ]]; then
 	export EDITOR='nano'
 else
-	export EDITOR='subl'
+	export EDITOR='code'
 fi
 
 # Make less the default pager, add some options and enable syntax highlight using source-highlight
