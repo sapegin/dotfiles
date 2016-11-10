@@ -1,0 +1,19 @@
+// Place your settings in this file to overwrite the default settings
+{
+    "editor.fontFamily": "Hack",
+    "editor.fontSize": 15,
+    "editor.rulers": [120],
+    "editor.roundedSelection": false,
+    "editor.wrappingColumn": 0,
+    "editor.autoClosingBrackets": false,
+    "editor.cursorBlinking": "solid",
+    "workbench.editor.showTabs": false,
+    "workbench.sideBar.location": "right",
+    "window.reopenFolders": "all",
+    "files.autoSave": "onWindowChange",
+    "explorer.openEditors.visible": 0,
+    "html.format.wrapLineLength": 0,
+    "html.suggest.angular1": false,
+    "html.suggest.ionic": false,
+    "extensions.autoUpdate": true
+}

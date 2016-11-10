@@ -1,0 +1,7 @@
+[
+    { "key": "cmd+e",          "command": "workbench.action.showAllEditors" },
+    { "key": "cmd+d",           "command": "editor.action.copyLinesDownAction",
+                                   "when": "editorTextFocus && !editorReadonly" },
+    { "key": "cmd+y",           "command": "editor.action.deleteLines",
+                                   "when": "editorTextFocus && !editorReadonly" }
+]
