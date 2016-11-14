@@ -130,8 +130,13 @@ function getWeatherIcon() {
 	return new Promise((resolve) => {
 		weather(WEATHER_CITY).then(
 			info => {
-				const index = Number(info.item.condition.code);
-		  		resolve(WEATHER[index] || '☁');
+				try {
+					const index = Number(info.item.condition.code);
+					resolve(WEATHER[index] || '☁');
+				}
+				catch (e) {
+		  			resolve('☁');
+				}
 		  	},
 		  	() => {
 		  		resolve('☁');
