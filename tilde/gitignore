@@ -17,6 +17,9 @@ Thumbs.db
 # npm
 npm-debug.log
 
+# Yarn
+yarn-error.log
+
 # IDEs stuff
 .idea
 .rubymine_helpers
