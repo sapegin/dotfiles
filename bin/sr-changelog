@@ -190,6 +190,8 @@ function commitChangelog() {
 		.then(icon => {
 			git.commit(`${TYPE_CHANGELOG}: ${icon}\n\n${changelog}`, '--allow-empty')
 			console.log('Done.');
+			console.log('');
+			console.log('Don’t forget to push!');
 		})
 	;
 }
