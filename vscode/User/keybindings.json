@@ -6,5 +6,7 @@
                                    "when": "editorTextFocus && !editorReadonly" },
     { "key": "cmd+g",           "command": "workbench.action.gotoLine" },
     { "key": "ctrl+g",          "command": "editor.action.addSelectionToNextFindMatch",
-                                    "when": "editorFocus" }
+                                   "when": "editorFocus" },
+    { "key": "alt+down",        "command": "editor.action.insertCursorBelow",
+                                   "when": "editorTextFocus" }
 ]
