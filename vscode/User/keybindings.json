@@ -1,8 +1,8 @@
 [
-    { "key": "cmd+e",          "command": "workbench.action.showAllEditors" },
     /*
      * Internal functions
      */
+    { "key": "cmd+e",           "command": "workbench.action.quickOpen" },
     { "key": "cmd+g",           "command": "workbench.action.gotoLine" },
     { "key": "cmd+y",           "command": "editor.action.deleteLines",
                                    "when": "editorTextFocus && !editorReadonly" },
