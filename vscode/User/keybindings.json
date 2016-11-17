@@ -1,12 +1,19 @@
 [
     { "key": "cmd+e",          "command": "workbench.action.showAllEditors" },
-    { "key": "cmd+d",           "command": "editor.action.copyLinesDownAction",
-                                   "when": "editorTextFocus && !editorReadonly" },
+    /*
+     * Internal functions
+     */
+    { "key": "cmd+g",           "command": "workbench.action.gotoLine" },
     { "key": "cmd+y",           "command": "editor.action.deleteLines",
                                    "when": "editorTextFocus && !editorReadonly" },
-    { "key": "cmd+g",           "command": "workbench.action.gotoLine" },
     { "key": "ctrl+g",          "command": "editor.action.addSelectionToNextFindMatch",
                                    "when": "editorFocus" },
     { "key": "alt+down",        "command": "editor.action.insertCursorBelow",
-                                   "when": "editorTextFocus" }
+                                   "when": "editorTextFocus" },
+    /*
+     * Plugins
+     */
+    // Contextual Duplicate
+    { "key": "cmd+d",           "command": "lafe.duplicateCode",
+                                   "when": "editorTextFocus && !editorReadonly" }
 ]

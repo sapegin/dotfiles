@@ -18,3 +18,5 @@ Run “Install 'code' command in PATH” from the command palette (View → Comm
 * ESLint
 * Tomorrow Theme
 * Unique Lines
+* change-case
+* Contextual Duplicate
