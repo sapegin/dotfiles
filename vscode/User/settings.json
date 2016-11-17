@@ -9,6 +9,7 @@
     "editor.cursorBlinking": "solid",
     "workbench.editor.showTabs": false,
     "workbench.sideBar.location": "right",
+    "workbench.activityBar.visible": false,
     "window.reopenFolders": "all",
     "files.autoSave": "onWindowChange",
     "explorer.openEditors.visible": 0,
