@@ -51,6 +51,15 @@ alias nr="npm run --silent"
 # yarn run
 alias yr='yarn run'
 
+# Ban npm if project uses Yarn
+npm() {
+	if [ -f "yarn.lock" ]; then
+		echo "$(tput sgr 0 1)$(tput setaf 1)You should use Yarn for this project.$(tput sgr0)"
+		return
+	fi
+	command npm $@
+}
+
 # Push and deploy using Shipit
 alias pff="push && shipit"
 
