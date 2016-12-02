@@ -20,3 +20,4 @@ Run “Install 'code' command in PATH” from the command palette (View → Comm
 * Unique Lines
 * change-case
 * Contextual Duplicate
+* Color Highlight

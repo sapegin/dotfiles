@@ -16,5 +16,8 @@
     "html.format.wrapLineLength": 0,
     "html.suggest.angular1": false,
     "html.suggest.ionic": false,
-    "extensions.autoUpdate": true
+    "extensions.autoUpdate": true,
+
+    // Plugins
+    "color-highlight.matchWords": false
 }
