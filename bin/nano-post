@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copies current opened in iA Writer file to my blog’s folder, adds YAML front matter and opens it in Sublime Text.
+# Copies current opened in iA Writer file to my blog’s folder, adds YAML front matter and opens it in Code.
 #
 # Files should be named like this: `SomeName_En.md`, where `En` is file’s language: En or Ru.
 # Or in plain text (`Some Name`): English will be used by default.
@@ -75,4 +75,4 @@ sed -e "s^{title}^$title^" -e "s^{date}^$date^" -e "s^{lang}^$lang^" "$HOME/dotf
 cat "$source_file" | perl -0pe 's/#.*\n//' >> "$dest"
 
 # Open the file in the editor ($EDITOR isn’t available in Alfred)
-subl "$dest"
+code "$dest"
