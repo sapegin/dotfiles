@@ -16,8 +16,7 @@ var fs = require('fs');
 var path = require('path');
 
 var PROJECTS_DIR = path.join(process.env.HOME, 'Dropbox/Projects');
-var SKIP_PROJECTS = ['_Archive', '_Sublime'];
-var SKIP_PREFIXES = ['_Forks', '_Repos', 'Misc'];
+var SKIP_PREFIXES = ['_Repos', 'Misc'];
 
 var args = process.argv.splice(2);
 if (args.length !== 1) {
@@ -62,7 +61,6 @@ function getRepos(dir) {
 	var projects = getDirs(dir);
 	var repos = [];
 	projects.forEach(function(projectName) {
-		if (SKIP_PROJECTS.indexOf(projectName) !== -1) return false;
 		var projectDir = path.join(dir, projectName);
 		var subDirs = getDirs(projectDir);
 		subDirs.forEach(function(subDirName) {
