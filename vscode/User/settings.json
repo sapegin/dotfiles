@@ -1,5 +1,5 @@
-// Place your settings in this file to overwrite the default settings
 {
+    // Internal
     "editor.fontFamily": "Hack",
     "editor.fontSize": 15,
     "editor.rulers": [120],
@@ -11,6 +11,7 @@
     "workbench.sideBar.location": "right",
     "workbench.activityBar.visible": false,
     "window.reopenFolders": "all",
+    "window.zoomLevel": 0,
     "files.autoSave": "onWindowChange",
     "explorer.openEditors.visible": 0,
     "html.format.wrapLineLength": 0,

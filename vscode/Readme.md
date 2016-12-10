@@ -14,10 +14,14 @@ Run “Install 'code' command in PATH” from the command palette (View → Comm
 ## Installed plugins
 
 * beautify
+* change-case
+* Color Highlight
+* Contextual Duplicate
 * EditorConfig for VS Code
 * ESLint
-* Tomorrow Theme
+* [Squirrelsong Light Theme](https://marketplace.visualstudio.com/items?itemName=sapegin.Theme-SquirrelsongLight)
 * Unique Lines
-* change-case
-* Contextual Duplicate
-* Color Highlight
+
+## Missing features
+
+* Show whitespace on text selection.
