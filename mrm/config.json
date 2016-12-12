@@ -1,0 +1,9 @@
+{
+    "name": "Artem Sapegin",
+    "email": "artem@sapegin.ru",
+    "url": "http://sapegin.me",
+    "github": "sapegin",
+    "aliases": {
+        "node": ["license", "readme", "contributing", "package", "editorconfig", "eslint", "gitignore"]
+    }
+}
