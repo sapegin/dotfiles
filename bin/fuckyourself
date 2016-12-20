@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-# Print random domain from list of domains prohibited in Russia.
-# http://bolknote.ru/2013/01/10/~3831#05
-
-domain=$(curl -so- http://flisti.ru/stop-list.txt | iconv -f cp1251 | awk -F'[\t\.]' 'BEGIN {srand()} $3 {print rand(), $3}' | sort -n | tail -1)
-php -r '$s=explode(" ", $argv[1]); echo mb_convert_case("${s[1]}!\n", MB_CASE_TITLE, "UTF-8");' "$domain"
