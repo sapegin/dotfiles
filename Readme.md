@@ -8,7 +8,7 @@
 * Custom color scheme for iTerm and Terminal.app: [Squirrelsong](https://github.com/sapegin/dotfiles/tree/master/color).
 * Custom zsh theme with Git status, etc: [Squirrelbook](https://github.com/sapegin/dotfiles/tree/master/zsh/themes/squirrelbook.zsh-theme).
 * Dotfiles syncronization: [sync.py](https://github.com/sapegin/dotfiles/blob/master/sync.py).
-* Sensible OS X defaults: [setup/osx.sh](https://github.com/sapegin/dotfiles/blob/master/setup/osx.sh).
+* Sensible macOS defaults: [setup/osx.sh](https://github.com/sapegin/dotfiles/blob/master/setup/osx.sh).
 * Visual Studio Code settings syncronization: [vscode](https://github.com/sapegin/dotfiles/blob/master/vscode/).
 * zsh install script: [setup/zsh.sh](https://github.com/sapegin/dotfiles/tree/master/setup/zsh.sh).
 * My magic project opener ([bin/repo](https://github.com/sapegin/dotfiles/blob/master/bin/repo)).
@@ -17,7 +17,7 @@
 * [Lots of scripts](https://github.com/sapegin/dotfiles/tree/master/bin).
 * User scripts for browser: [userscripts/](https://github.com/sapegin/dotfiles/tree/master/userscripts).
 * Stop words lists that I use with Marked 2: [dict/](https://github.com/sapegin/dotfiles/tree/master/dict).
-* [Mac OS X apps I use](https://github.com/sapegin/dotfiles/wiki/OS-X-Apps).
+* [macOS apps I use](https://github.com/sapegin/dotfiles/wiki/OS-X-Apps).
 
 
 ## Installation
@@ -70,7 +70,6 @@ You can use any file extensions in `tilde/` to invoke proper syntax highlighting
 * [Zach Holman’s dotfiles](https://github.com/holman/dotfiles)
 * [Jacob Gillespie’s dotfiles](https://github.com/jacobwg/dotfiles)
 * [Yet Another Dotfile Repo](https://github.com/skwp/dotfiles)
-* [Mac OS X Lion Setup](https://github.com/ptb/Mac-OS-X-Lion-Setup)
 
 
 ---

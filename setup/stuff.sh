@@ -14,13 +14,13 @@ brew update
 # Upgrade any already-installed formulae
 brew upgrade --all
 
-# GNU core utilities (those that come with OS X are outdated)
+# GNU core utilities (those that come with macOS are outdated)
 brew install coreutils
 # GNU `find`, `locate`, `updatedb`, and `xargs`, g-prefixed
 brew install findutils
 brew install tree
 
-# More recent versions of some OS X tools
+# More recent versions of some macOS tools
 brew tap homebrew/dupes
 brew install homebrew/dupes/grep
 

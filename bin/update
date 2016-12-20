@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Get OS X software updates, update Homebrew, npm, Ruby packages, dotfiles and some other software
+# Get macOS software updates, update Homebrew, npm, Ruby packages, dotfiles and some other software
 
 function header() {
 	echo -e "$(tput sgr 0 1)$(tput setaf 6)$1$(tput sgr0)"
@@ -19,8 +19,8 @@ source "$HOME/.bashrc"
 popd
 echo
 
-# OS X
-header "Updating OS X..."
+# macOS
+header "Updating macOS..."
 sudo -v
 sudo softwareupdate -i -a
 echo

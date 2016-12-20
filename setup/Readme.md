@@ -26,7 +26,7 @@ Installs quick look plugins: qlImageSize.
 
 ### update
 
-Get OS X software updates, update Homebrew, NPM, Ruby packages, dotfiles and some other software.
+Get macOS software updates, update Homebrew, NPM, Ruby packages, dotfiles and some other software.
 
 
 ## Tips & Tricks
@@ -46,7 +46,7 @@ git config user.email "artem.sapegin@example.com"
 git config user.name "Artem Sapegin"
 ```
 
-### How to remove US English keyboard layout on Mac OS X
+### How to remove US English keyboard layout on macOS
 
 Useful when you use some kind of [typography layout](http://ilyabirman.ru/projects/typography-layout/).
 
