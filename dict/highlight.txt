@@ -1,6 +1,6 @@
 build system
 CLI
-frontend
+front-end
 GUI
 hot key
 hot-key
