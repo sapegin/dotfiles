@@ -24,4 +24,7 @@ Run “Install 'code' command in PATH” from the command palette (View → Comm
 
 ## Missing features
 
-* Show whitespace on text selection.
+* Show whitespace on text selection (tabs, spaces, etc.) like in Sublime Text.
+* `workbench.action.quickOpen` should preselect previous file by default (not current one) like in JetBrains.
+* Really working reopening of all files on restart (only works if I open a folder but stopped to work as soon as I open a file from command line).
+* Sane status bar color.
