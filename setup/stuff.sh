@@ -37,6 +37,7 @@ echo -e "setenv PATH $HOME/dotfiles/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/
 brew install the_silver_searcher
 brew install gist
 brew install exiftool
+brew install zsh-syntax-highlighting
 
 # Node.js
 curl -L http://git.io/n-install | bash  # n, Node version manager

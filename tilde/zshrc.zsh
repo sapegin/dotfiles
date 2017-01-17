@@ -99,6 +99,9 @@ ZSH_CUSTOM="$HOME/dotfiles/zsh"
 plugins=(extract git-extras)
 source $ZSH/oh-my-zsh.sh
 
+# Enable zsh-syntax-highlighting
+[ -f /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
 # Disable sharing history between terminals enabled by Oh My Zsh
 unsetopt share_history
 
