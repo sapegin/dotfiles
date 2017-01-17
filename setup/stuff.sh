@@ -28,7 +28,7 @@ brew install homebrew/dupes/grep
 brew install git
 brew install git-extras
 brew install hub
-sudo bash < <( curl https://raw.githubusercontent.com/jamiew/git-friendly/master/install.sh)
+sudo bash < <( curl https://raw.githubusercontent.com/jamiew/git-friendly/master/install.sh)  # git-friendly
 
 # Extend global $PATH
 echo -e "setenv PATH $HOME/dotfiles/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" | sudo tee /etc/launchd.conf
@@ -39,17 +39,14 @@ brew install gist
 brew install exiftool
 
 # Node.js
-curl -L http://git.io/n-install | bash
+curl -L http://git.io/n-install | bash  # n, Node version manager
 npm config set loglevel warn
-npm config set save-prefix '~'
 npm install -g npm-upgrade
 npm install -g diff-so-fancy
-npm install -g github-release-from-changelog
 npm install -g trash-cli
 
 # Yarn
 npm install -g yarn
-yarn config set save-prefix '~'
 
 # Python
 brew install python
