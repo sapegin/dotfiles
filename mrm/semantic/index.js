@@ -1,5 +1,6 @@
 'use strict';
 
+const fs = require('fs');
 const { MrmError, json, lines, yaml, install } = require('mrm-core');
 
 const packages = [
@@ -7,6 +8,13 @@ const packages = [
 ];
 
 module.exports = function() {
+    // Require .travis.yml
+    if (!fs.existsSync('.travis.yml')) {
+        throw new MrmError(`Run travis task first:
+
+  mrm travis`);
+    }
+
 	// package.json
 	const packageJson = json('package.json');
 
