@@ -54,10 +54,19 @@ module.exports = function() {
 		.save()
 	;
 
-	// .eslintignore
+	// ESLint
 	if (packageJson.get(`devDependencies.eslint`)) {
 		lines('.eslintignore')
 			.append('coverage')
+			.save()
+		;
+		json('.eslintrc')
+			.merge({
+				globals: {
+					jest: false,
+					expect: false,
+				},
+			})
 			.save()
 		;
 	}
