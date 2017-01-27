@@ -72,6 +72,8 @@ module.exports = function() {
 	}
 
 	// package.json: dependencies
-	install(packages);
+	if (!packageJson.get(`devDependencies.jest`)) {
+		install(packages);
+	}
 };
 module.exports.description = 'Adds Jest';
