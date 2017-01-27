@@ -42,11 +42,25 @@ module.exports = function() {
 
 	packageJson.save();
 
+	// .gitignore
+	lines('.gitignore')
+		.append('coverage')
+		.save()
+	;
+
 	// .npmignore
 	lines('.npmignore')
 		.append('__tests__')
 		.save()
 	;
+
+	// .eslintignore
+	if (packageJson.get(`devDependencies.eslint`)) {
+		lines('.eslintignore')
+			.append('coverage')
+			.save()
+		;
+	}
 
 	// package.json: dependencies
 	install(packages);
