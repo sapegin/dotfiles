@@ -25,8 +25,8 @@ module.exports = function(config) {
 	}
 
 	// Add Codecov package badge to Readme
-	const packageJson = json('package.json');
-	const url = `https://codecov.io/gh/${config('github')}/${packageJson.name}`;
+	const pkg = json('package.json');
+	const url = `https://codecov.io/gh/${config('github')}/${pkg.get('name')}`;
 	markdown(config('readme', 'Readme.md'))
 		.addBadge(
 			`${url}/branch/master/graph/badge.svg`,
