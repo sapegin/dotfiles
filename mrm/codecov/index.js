@@ -18,6 +18,7 @@ module.exports = function(config) {
 	if (!travisYml.get('after_success', []).includes(uploadCommand)) {
 		travisYml
 			.merge({
+				script: ['yarn run test:coverage'],
 				after_success: [uploadCommand],
 			})
 			.save()
