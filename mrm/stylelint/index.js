@@ -39,7 +39,7 @@ module.exports = function() {
 	;
 
 	// package.json
-	const packageJson = json('package.json')
+	const pkg = json('package.json')
 		.merge({
 			scripts: {
 				'lint:css': `stylelint '**/*${ext}'`,
@@ -48,18 +48,18 @@ module.exports = function() {
 	;
 
 	// package.json: test command
-	const test = packageJson.get('scripts.test');
+	const test = pkg.get('scripts.test');
 	if (!test || test === defaultTest) {
-		packageJson.set('scripts.test', 'npm run lint:css');
+		pkg.set('scripts.test', 'npm run lint:css');
 	}
 	else if (!test.includes('lint:css')) {
-		packageJson.set('scripts.test', `npm run lint:css && ${test}`);
+		pkg.set('scripts.test', `npm run lint:css && ${test}`);
 	}
 
-	packageJson.save();
+	pkg.save();
 
 	// package.json: dependencies
-	if (!packageJson.get(`devDependencies.${preset}`)) {
+	if (!pkg.get(`devDependencies.${preset}`)) {
 		install(packages);
 	}
 };

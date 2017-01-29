@@ -9,7 +9,7 @@ const packages = [
 
 module.exports = function() {
 	// package.json
-	const packageJson = json('package.json')
+	const pkg = json('package.json')
 		.merge({
 			scripts: {
 				'test:jest': 'jest',
@@ -20,9 +20,9 @@ module.exports = function() {
 	;
 
 	// Babel
-	if (packageJson.get(`devDependencies.babel-core`)) {
+	if (pkg.get(`devDependencies.babel-core`)) {
 		packages.push('babel-jest');
-		packageJson.merge({
+		pkg.merge({
 			jest: {
 				testPathIgnorePatterns: [
 					"<rootDir>/lib/"
@@ -32,15 +32,15 @@ module.exports = function() {
 	}
 
 	// package.json: test command
-	const test = packageJson.get('scripts.test');
+	const test = pkg.get('scripts.test');
 	if (!test || test === defaultTest) {
-		packageJson.set('scripts.test', 'npm run test:jest');
+		pkg.set('scripts.test', 'npm run test:jest');
 	}
 	else if (!test.includes('test:jest')) {
-		packageJson.set('scripts.test', `${test} && npm run test:jest`);
+		pkg.set('scripts.test', `${test} && npm run test:jest`);
 	}
 
-	packageJson.save();
+	pkg.save();
 
 	// .gitignore
 	lines('.gitignore')
@@ -55,7 +55,7 @@ module.exports = function() {
 	;
 
 	// ESLint
-	if (packageJson.get(`devDependencies.eslint`)) {
+	if (pkg.get(`devDependencies.eslint`)) {
 		lines('.eslintignore')
 			.append('coverage')
 			.save()

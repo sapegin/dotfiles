@@ -16,9 +16,9 @@ module.exports = function() {
     }
 
 	// package.json
-	const packageJson = json('package.json');
+	const pkg = json('package.json');
 
-	if (!packageJson.get('devDependencies.semantic-release')) {
+	if (!pkg.get('devDependencies.semantic-release')) {
 		throw new MrmError(`Install semantic-release first:
 
   yarn global add semantic-release-cli
@@ -31,11 +31,11 @@ https://github.com/semantic-release/semantic-release#setup
 `);
 	}
 
-	if (packageJson.get('devDependencies.semantic-release-tamia')) {
+	if (pkg.get('devDependencies.semantic-release-tamia')) {
 		return;
 	}
 
-	packageJson
+	pkg
 		.merge({
 			scripts: {
 				'semantic-release': 'semantic-release pre && npm publish && semantic-release post',
