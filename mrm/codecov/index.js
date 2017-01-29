@@ -1,20 +1,20 @@
 'use strict';
 
-const fs = require('fs');
 const { MrmError, json, yaml, markdown } = require('mrm-core');
 
 const uploadCommand = 'bash <(curl -s https://codecov.io/bash)';
 
 module.exports = function(config) {
+	const travisYml = yaml('.travis.yml');
+
     // Require .travis.yml
-    if (!fs.existsSync('.travis.yml')) {
+	if (!travisYml.exists()) {
         throw new MrmError(`Run travis task first:
 
   mrm travis`);
     }
 
 	// .travis.yml
-	const travisYml = yaml('.travis.yml');
 	if (!travisYml.get('after_success', []).includes(uploadCommand)) {
 		travisYml
 			.merge({

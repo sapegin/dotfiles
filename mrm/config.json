@@ -3,6 +3,7 @@
     "email": "artem@sapegin.ru",
     "url": "http://sapegin.me",
     "github": "sapegin",
+    "eslintPreset": "tamia",
     "aliases": {
         "node": ["license", "readme", "contributing", "package", "editorconfig", "eslint", "gitignore"]
     }
