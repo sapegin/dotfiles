@@ -5,6 +5,7 @@
     "github": "sapegin",
     "eslintPreset": "tamia",
     "aliases": {
-        "node": ["license", "readme", "contributing", "package", "editorconfig", "eslint", "gitignore"]
+        "node": ["license", "readme", "contributing", "package", "editorconfig", "gitignore", "eslint"],
+        "site": ["package", "editorconfig", "gitignore", "eslint", "stylelint", "tamia"]
     }
 }
