@@ -4,6 +4,7 @@
         "common-misspellings": true,
         "write-good": {
             "adverb": false,
+            "passive": false,
             "tooWordy": false,
             "weasel": false
         }
