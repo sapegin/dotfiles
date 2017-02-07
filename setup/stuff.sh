@@ -39,18 +39,23 @@ brew install gist
 brew install exiftool
 brew install zsh-syntax-highlighting
 
-# Node.js
+# Node
 curl -L http://git.io/n-install | bash  # n, Node version manager
 npm config set loglevel warn
 npm install -g npm-upgrade
 npm install -g diff-so-fancy
 npm install -g trash-cli
+npm install -g proselint
+npm install -g textlint
+npm install -g textlint-rule-terminology
+npm install -g textlint-rule-common-misspellings
 
 # Yarn
 npm install -g yarn
 
 # Python
 brew install python
+pip install proselint
 
 # Remove outdated versions from the cellar
 brew cleanup
