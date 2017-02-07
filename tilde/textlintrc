@@ -4,7 +4,7 @@
         "common-misspellings": true,
         "write-good": {
             "adverb": false,
-            "tooWordy": false
+            "tooWordy": false,
             "weasel": false
         }
     }
