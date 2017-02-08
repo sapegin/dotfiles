@@ -1,7 +1,7 @@
 'use strict';
 
 const fs = require('fs');
-const { MrmError, json, lines, yaml, install } = require('mrm-core');
+const { MrmError, json, lines, yaml, markdown, install } = require('mrm-core');
 
 const packages = [
 	'semantic-release-tamia',
@@ -70,7 +70,21 @@ https://github.com/semantic-release/semantic-release#setup
 		.save()
 	;
 
-	// package.json: dependencies
+	// Add npm package badge to Readme
+	const name = pkg.get('name');
+	const readme = markdown(config('readme', 'Readme.md'));
+	if (readme.exists()) {
+		readme
+			.addBadge(
+				`https://img.shields.io/npm/v/${name}.svg`,
+				`https://www.npmjs.com/package/${name}`,
+				'npm'
+			)
+			.save()
+		;
+	}
+
+	// Dependencies
 	install(packages);
 };
 module.exports.description = 'Customizes semantic-release';
