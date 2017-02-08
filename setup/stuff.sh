@@ -49,6 +49,7 @@ npm install -g proselint
 npm install -g textlint
 npm install -g textlint-rule-terminology
 npm install -g textlint-rule-common-misspellings
+npm install -g textlint-rule-no-dead-link
 
 # Yarn
 npm install -g yarn

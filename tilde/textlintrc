@@ -7,6 +7,7 @@
             "passive": false,
             "tooWordy": false,
             "weasel": false
-        }
+        },
+        "no-dead-link": true
     }
 }
