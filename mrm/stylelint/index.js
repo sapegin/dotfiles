@@ -58,9 +58,7 @@ module.exports = function() {
 
 	pkg.save();
 
-	// package.json: dependencies
-	if (!pkg.get(`devDependencies.${preset}`)) {
-		install(packages);
-	}
+	// Dependencies
+	install(packages);
 };
 module.exports.description = 'Adds stylelint with a standard preset';

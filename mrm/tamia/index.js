@@ -114,16 +114,16 @@ module.exports = function(config) {
 
 	// .eslintignore
 	lines('.eslintignore')
-		.append('build')
+		.append('build/')
 		.save()
 	;
 
 	// .gitignore
 	lines('.gitignore')
 		.append([
-			'public/*.html',
-			'public/build/*.js',
-			'public/build/*.css',
+			'/public/*.html',
+			'/public/build/*.js',
+			'/public/build/*.css',
 		])
 		.save()
 	;

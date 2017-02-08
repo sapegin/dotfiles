@@ -1,6 +1,7 @@
 'use strict';
 
-const { json, lines, install } = require('mrm-core');
+const fs = require('fs');
+const { json, lines, copyFiles, install } = require('mrm-core');
 
 const defaultTest = 'echo "Error: no test specified" && exit 1';
 const packages = [
@@ -19,8 +20,10 @@ module.exports = function() {
 		})
 	;
 
+	const hasBabel = pkg.get(`devDependencies.babel-core`);
+
 	// Babel
-	if (pkg.get(`devDependencies.babel-core`)) {
+	if (hasBabel) {
 		packages.push('babel-jest');
 		pkg.merge({
 			jest: {
@@ -44,22 +47,26 @@ module.exports = function() {
 
 	// .gitignore
 	lines('.gitignore')
-		.append('coverage')
+		.append('coverage/')
 		.save()
 	;
 
 	// .npmignore
 	lines('.npmignore')
-		.append('__tests__')
+		.append('__tests__/')
 		.save()
 	;
 
 	// ESLint
 	if (pkg.get(`devDependencies.eslint`)) {
-		lines('.eslintignore')
-			.append('coverage')
-			.save()
+		const eslintignore = lines('.eslintignore')
+			.append('coverage/*')
 		;
+		if (hasBabel) {
+			eslintignore.append('lib/*');
+		}
+		eslintignore.save();
+
 		json('.eslintrc')
 			.merge({
 				globals: {
@@ -71,7 +78,12 @@ module.exports = function() {
 		;
 	}
 
-	// package.json: dependencies
+	// Test template for small projects
+	if (fs.existsSync('index.js')) {
+		copyFiles(__dirname, 'test.js');
+	}
+
+	// Dependencies
 	install(packages);
 };
 module.exports.description = 'Adds Jest';
