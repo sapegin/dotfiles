@@ -2,7 +2,6 @@
 
 const { json, lines, install } = require('mrm-core');
 
-const defaultTest = 'echo "Error: no test specified" && exit 1';
 const ext = '.pcss';
 const preset = 'stylelint-config-standard';
 const packages = [
@@ -47,13 +46,14 @@ module.exports = function() {
 		})
 	;
 
-	// package.json: test command
-	const test = pkg.get('scripts.test');
-	if (!test || test === defaultTest) {
-		pkg.set('scripts.test', 'npm run lint:css');
+	// package.json: pretest command
+	const lintCommand = 'npm run lint:css';
+	const pretest = pkg.get('scripts.pretest');
+	if (!pretest) {
+		pkg.set('scripts.pretest', lintCommand);
 	}
-	else if (!test.includes('lint:css')) {
-		pkg.set('scripts.test', `npm run lint:css && ${test}`);
+	else if (!pretest.includes(lintCommand)) {
+		pkg.set('scripts.pretest', `${pretest} && ${lintCommand}`);
 	}
 
 	pkg.save();
