@@ -12,6 +12,7 @@
     "workbench.activityBar.visible": false,
     "window.reopenFolders": "all",
     "window.zoomLevel": 0,
+    "window.openFilesInNewWindow": "off",
     "window.openFoldersInNewWindow": "off",
     "files.autoSave": "onWindowChange",
     "files.hotExit": "onExitAndWindowClose",
