@@ -30,13 +30,6 @@ module.exports = function() {
 		;
 	}
 
-	// .stylelintignore
-	const stylelintignore = lines('.stylelintignore');
-	stylelintignore
-		.add('node_modules')
-		.save()
-	;
-
 	// package.json
 	const pkg = json('package.json')
 		.merge({
