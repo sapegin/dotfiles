@@ -47,23 +47,23 @@ module.exports = function() {
 
 	// .gitignore
 	lines('.gitignore')
-		.append('coverage/')
+		.add('coverage/')
 		.save()
 	;
 
 	// .npmignore
 	lines('.npmignore')
-		.append('__tests__/')
+		.add('__tests__/')
 		.save()
 	;
 
 	// ESLint
 	if (pkg.get(`devDependencies.eslint`)) {
 		const eslintignore = lines('.eslintignore')
-			.append('coverage/*')
+			.add('coverage/*')
 		;
 		if (hasBabel) {
-			eslintignore.append('lib/*');
+			eslintignore.add('lib/*');
 		}
 		eslintignore.save();
 

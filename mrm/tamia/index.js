@@ -1,17 +1,12 @@
 'use strict';
 
 const fs = require('fs');
+const path = require('path');
 const mkdirp = require('mkdirp');
-const { MrmError, json, yaml, lines, template, install } = require('mrm-core');
-
-/* TODO:
-config.pcss
-styles.pcss
-base fledermaus template
-*/
+const { MrmError, json, yaml, lines, template, copyFiles, install } = require('mrm-core');
 
 const dependencies = [
-	'tamia',
+	'tamia@3.0.0-aplha.3',
 ];
 const devDependencies = [
 	'babel-cli',
@@ -29,13 +24,6 @@ const requireTask = task => {
 
 mrm ${task}`);
 };
-
-const copyTemplate = filepath => {
-	const file = template(filepath, path.join(__dirname, filepath));
-	if (!file.get()) {
-		file.apply().save();
-	}
-}
 
 module.exports = function(config) {
     // Require EditorConfig
@@ -66,6 +54,7 @@ module.exports = function(config) {
 	// package.json
 	const pkg = json('package.json');
 	pkg
+		.unset('scripts.lint')
 		.merge({
 			name,
 			version: '0.0.0',
@@ -87,13 +76,10 @@ module.exports = function(config) {
 		.save()
 	;
 
-	// TODO: remove scripts.lint
-
 	// .babelrc
 	json('.babelrc')
-		.merge({
-			presets: ['./node_modules/tamia-build/config/babel-preset'],
-		})
+		.unset('plugins')
+		.set('presets', ['./node_modules/tamia-build/config/babel-preset'])
 		.save()
 	;
 
@@ -114,13 +100,13 @@ module.exports = function(config) {
 
 	// .eslintignore
 	lines('.eslintignore')
-		.append('build/')
+		.add('build/')
 		.save()
 	;
 
 	// .gitignore
 	lines('.gitignore')
-		.append([
+		.add([
 			'/public/*.html',
 			'/public/build/*.js',
 			'/public/build/*.css',
@@ -159,15 +145,17 @@ module.exports = function(config) {
 	}
 
 	// Copy templates (no update)
-	copyTemplate('js/main.js');
-	copyTemplate('source/index.md');
-	copyTemplate('src/index.js');
-	copyTemplate('styles/config.pcss');
-	copyTemplate('styles/styles.pcss');
-	copyTemplate('templates/Base.jsx');
-	copyTemplate('templates/Page.jsx');
+	copyFiles(__dirname, [
+		'js/main.js',
+		'source/index.md',
+		'src/index.js',
+		'styles/config.pcss',
+		'styles/styles.pcss',
+		'templates/Base.jsx',
+		'templates/Page.jsx',
+	], { overwrite: false });
 
-	// package.json: dependencies
+	// Dependencies
 	install(dependencies, { dev: false });
 	install(devDependencies);
 };

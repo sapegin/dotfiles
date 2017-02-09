@@ -33,7 +33,7 @@ module.exports = function() {
 	// .stylelintignore
 	const stylelintignore = lines('.stylelintignore');
 	stylelintignore
-		.append('node_modules')
+		.add('node_modules')
 		.save()
 	;
 

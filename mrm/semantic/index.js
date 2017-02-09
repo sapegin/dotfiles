@@ -66,7 +66,7 @@ https://github.com/semantic-release/semantic-release#setup
 
 	// .gitignore
 	lines('.gitignore')
-		.append('Changelog.md')
+		.add('Changelog.md')
 		.save()
 	;
 
