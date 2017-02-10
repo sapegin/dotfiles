@@ -1,6 +1,6 @@
 # Visual Studio Code settings
 
-## Enable syncronization
+## Enable synchronization
 
 ```shell
 rm -rf ~/Library/Application\ Support/Code/User
@@ -19,6 +19,7 @@ Run “Install 'code' command in PATH” from the command palette (View → Comm
 * Contextual Duplicate
 * EditorConfig for VS Code
 * ESLint
+* [SpellChecker](https://marketplace.visualstudio.com/items?itemName=swyphcosmo.spellchecker)
 * [Squirrelsong Light Theme](https://marketplace.visualstudio.com/items?itemName=sapegin.Theme-SquirrelsongLight)
 * Unique Lines
 
