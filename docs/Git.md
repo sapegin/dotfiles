@@ -44,11 +44,6 @@ Switch branches or create new local branch if it doesn’t exist. Intelligently 
 Merge the specified branch into the current branch. Rebases first if the branch is local-only.
 
 
-## [git-extras](https://github.com/visionmedia/git-extras)
+## [git-extras](https://github.com/tj/git-extras)
 
-See `git extras --help` or [documentation](https://github.com/visionmedia/git-extras/blob/master/Readme.md) for all available commands.
-
-
-## [hub](https://github.com/defunkt/hub)
-
-See `hub help` or [documentation](http://defunkt.io/hub/hub.1.html) for all available commands.
+See `git extras --help` or [documentation](https://github.com/tj/git-extras/blob/master/Readme.md) for all available commands.

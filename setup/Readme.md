@@ -6,19 +6,19 @@
 
 ### stuff
 
-Installs Homebrew, Git, [git-extras](https://github.com/visionmedia/git-extras), [git-friendly](https://github.com/jamiew/git-friendly), Node.js, JSHint, Grunt, configures Apache, PHP, MySQL, etc.
+Installs Homebrew, Git, [git-extras](https://github.com/tj/git-extras), [git-friendly](https://github.com/jamiew/git-friendly), Node, configures Apache, PHP, MySQL, etc.
 
 ### zsh
 
-Installs zsh and Oh My Zsh, registers zsh as a default shell.
+Installs zsh and Oh My Zsh, registers zsh as the default shell.
 
 ### osx
 
-Sane OSX defaults. Based on [~/.osx](http://mths.be/osx) by @mathiasbynens.
+Sane OSX defaults. Based on [~/.osx](https://github.com/mathiasbynens/dotfiles/blob/master/.macos) by @mathiasbynens.
 
 ### sublime-settings
 
-Enables Sublime settings syncronization (see `../sublime/User` folder).
+Enables Sublime settings synchronization (see `../sublime/User` folder).
 
 ### quicklook
 
@@ -26,7 +26,7 @@ Installs quick look plugins: qlImageSize.
 
 ### update
 
-Get macOS software updates, update Homebrew, NPM, Ruby packages, dotfiles and some other software.
+Get macOS software updates, update Homebrew, npm, Ruby packages, dotfiles and some other software.
 
 
 ## Tips & Tricks
@@ -81,4 +81,4 @@ Highlight Git merge conflicts | `CONFLICT \(content\)\:.*` | Highlight Text | Te
 
 ## Misc
 
-* [OSX Python developer guide](https://gist.github.com/902296)
+* [OSX Python developer guide](https://gist.github.com/stefanfoulis/902296)

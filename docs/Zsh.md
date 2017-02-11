@@ -10,7 +10,7 @@
 | `c` | Trim new lines and copy text to the clipboard. |
 | `cdf` | `cd` into whatever is the forefront Finder window. |
 | `dotfiles` | Update dotfiles. Pull latest version from GitHub, syncronize symlinks and reread `~/.zshrc`. |
-| `repo <project>` | Change current directory to the project’s Git repo. Uses fuzzy search. |
+| `repo <project>` | Change current directory to the project’s Git repository. Uses fuzzy search. |
 | `emptytrash` | Empty the Trash on all mounted volumes and the main HDD. Also, clear Apple’s System Logs to improve shell startup speed. |
 | `dos2unix <filepath>` | Convert file to Unix line endings. |
 | `myip` | Display my IP. |
@@ -22,6 +22,6 @@
 | `gww` | `grunt browserSync watch --stack --debug` |
 | `tm <command>` | Run [Tâmia generator](https://github.com/tamiadev/generator-tamia). |
 | `pff` | Git push and deploy using [Shipit](https://github.com/sapegin/shipit). |
-| `gr` | `cd` to Git repo root. |
+| `gr` | `cd` to Git repository root. |
 | `gist-paste <filename.ext>` | Create private Gist from the clipboard contents. |
 | `gist-file <filename.ext>` | create private Gist from a file. |
