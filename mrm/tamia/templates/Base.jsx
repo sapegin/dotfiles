@@ -1,5 +1,5 @@
-import Script from 'tamia/src/components/Script';
-import Style from 'tamia/src/components/Style';
+import Script from 'tamia/lib/components/Script';
+import Style from 'tamia/lib/components/Style';
 import '../styles/styles.pcss';
 
 export default function(props, children, { pageTitle, option }) {

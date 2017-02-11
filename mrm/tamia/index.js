@@ -10,7 +10,6 @@ const dependencies = [
 ];
 const devDependencies = [
 	'babel-cli',
-	'babel-core',
 	'babel-eslint',
 	'chokidar-cli',
 	'classnames',

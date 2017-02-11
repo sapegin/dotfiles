@@ -1,5 +1,5 @@
-import { Alpha } from 'tamia/src/components/Text';
-import Block from 'tamia/src/components/Block';
+import { Alpha } from 'tamia/lib/components/Text';
+import Block from 'tamia/lib/components/Block';
 import Base from './Base';
 
 export default function({ title, content, typo, typoTitle }) {
