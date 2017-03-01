@@ -69,9 +69,8 @@ module.exports = function() {
 
 		json('.eslintrc')
 			.merge({
-				globals: {
-					jest: false,
-					expect: false,
+				env: {
+					jest: true,
 				},
 			})
 			.save()
