@@ -12,11 +12,16 @@ function _prepend_path() {
 	fi
 }
 
+# n, Node version manager (http://git.io/n-install-repo)
+export N_PREFIX="$HOME/n"
+
 # Construct $PATH
 # 1. Default paths
 # 2. ./node_modules/.bin - shorcut to run locally installed Node bins
-# 3. Custom bin folder for Ruby, CoreUtils, dotfiles, etc.
+# 3. Custom bin folder for n, Yarn, Ruby, CoreUtils, dotfiles, etc.
 PATH='/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:./node_modules/.bin'
+[ -d ~/.yarn/bin ] && _prepend_path "$HOME/.yarn/bin"
+[ -d "$N_PREFIX/bin" ] && _prepend_path "$N_PREFIX/bin"
 [ -d /usr/local/bin ] && _prepend_path "/usr/local/bin"
 [ -d /usr/local/opt/ruby/bin ] && _prepend_path "/usr/local/opt/ruby/bin"
 [ -d /usr/local/opt/coreutils/libexec/gnubin ] && _prepend_path "/usr/local/opt/coreutils/libexec/gnubin"
@@ -107,5 +112,3 @@ unsetopt share_history
 
 # Load extra (private) settings
 [ -f ~/.zshlocal ] && source ~/.zshlocal
-
-export N_PREFIX="$HOME/n"; [[ :$PATH: == *":$N_PREFIX/bin:"* ]] || PATH+=":$N_PREFIX/bin"  # Added by n-install (see http://git.io/n-install-repo).
