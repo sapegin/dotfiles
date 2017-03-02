@@ -1,6 +1,7 @@
 {
     "rules": {
         "terminology": true,
+        "apostrophe": true,
         "common-misspellings": true,
         "write-good": {
             "adverb": false,
