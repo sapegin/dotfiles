@@ -2,11 +2,10 @@
 
 const fs = require('fs');
 const path = require('path');
-const mkdirp = require('mkdirp');
-const { MrmError, json, yaml, lines, template, copyFiles, install } = require('mrm-core');
+const { MrmError, json, yaml, lines, template, copyFiles, makeDirs, install } = require('mrm-core');
 
 const dependencies = [
-	'tamia@3.0.0-aplha.3',
+	'tamia@3.0.0-aplha.4',
 ];
 const devDependencies = [
 	'babel-cli',
@@ -41,14 +40,16 @@ module.exports = function(config) {
 	const name = path.basename(process.cwd());
 
 	// Create directories
-	mkdirp.sync('config');
-	mkdirp.sync('js');
-	mkdirp.sync('public');
-	mkdirp.sync('source');
-	mkdirp.sync('src');
-	mkdirp.sync('styles');
-	mkdirp.sync('templates');
-	mkdirp.sync('templates/components');
+	makeDirs([
+		'config',
+		'js',
+		'public',
+		'source',
+		'src',
+		'styles',
+		'templates',
+		'templates/components',
+	]);
 
 	// package.json
 	const pkg = json('package.json');
@@ -106,7 +107,7 @@ module.exports = function(config) {
 	// .gitignore
 	lines('.gitignore')
 		.add([
-			'/public/*.html',
+			'/public/**/*.html',
 			'/public/build/*.js',
 			'/public/build/*.css',
 		])
