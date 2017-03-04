@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "chalk": "^1.1.3",
+    "fastmatter": "^1.1.1",
     "glob": "^7.1.1",
     "mkdirp": "~0.5.1",
     "mrm-core": "^1.0.0",

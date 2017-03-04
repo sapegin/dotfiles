@@ -1,0 +1,28 @@
+#!/usr/bin/env node
+
+// Replaces frontmatter with Markdown heading tag
+//
+// USAGE:
+//   stripfrontmatter '*.md'
+//
+// Author: Artem Sapegin, sapegin.me
+// License: MIT
+// https://github.com/sapegin/dotfiles
+//
+
+const fs = require('fs');
+const fastmatter = require('fastmatter');
+const glob = require('glob');
+
+const pattern = process.argv[2];
+
+const files = glob.sync(pattern);
+files.forEach(file => {
+    console.log(`${file}...`);
+    let contents = fs.readFileSync(file, 'utf8');
+    const frontmatter = fastmatter(contents);
+    fs.writeFileSync(file, `# ${frontmatter.attributes.title}
+
+${frontmatter.body}
+`);
+});
