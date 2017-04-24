@@ -24,5 +24,6 @@
     "extensions.autoUpdate": true,
 
     // Plugins
-    "color-highlight.matchWords": false
+    "color-highlight.matchWords": false,
+    "whiteviz.color.light": "rgba(0, 0, 0, 0.15)"
 }
