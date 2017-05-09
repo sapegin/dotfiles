@@ -30,5 +30,8 @@
 
     // Plugins
     "color-highlight.matchWords": false,
-    "whiteviz.color.light": "rgba(0, 0, 0, 0.15)"
+    "whiteviz.color.light": "rgba(0, 0, 0, 0.15)",
+    "files.associations": {
+        "*.pcss": "css"
+    }
 }
