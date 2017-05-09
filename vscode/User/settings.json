@@ -11,6 +11,11 @@
     "workbench.sideBar.location": "right",
     "workbench.activityBar.visible": false,
     "workbench.colorTheme": "Squirrelsong Light",
+    "workbench.colorCustomizations": {
+        "statusBar.foreground" : "#484848",
+        "statusBar.background" : "#e5e5e5",
+        "statusBar.noFolderBackground" : "#e5e5e5"
+    },
     "window.reopenFolders": "all",
     "window.zoomLevel": 0,
     "window.openFilesInNewWindow": "off",
