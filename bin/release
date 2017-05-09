@@ -9,7 +9,6 @@
 # Requires:
 # - semver - https://github.com/sekati/semver
 # - jq - brew install jq
-# - github-release-from-changelog - npm i -g github-release-from-changelog
 #
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
@@ -33,7 +32,6 @@ function usage() {
 
 command -v semver >/dev/null 2>&1 || { error "semver not installed: see comments for instructions."; exit 1; }
 command -v jq >/dev/null 2>&1 || { error "jq not installed: see comments for instructions."; exit 1; }
-command -v github-release-from-changelog >/dev/null 2>&1 || { error "github-release-from-changelog not installed: see comments for instructions."; exit 1; }
 
 # Empty arguments
 if [ -z "$1" ]; then
@@ -129,8 +127,5 @@ if [ -n "$beta" ]; then
 else
 	npm publish
 fi
-
-# Publish release notes to GitHub
-github-release-from-changelog --filename Changelog.md
 
 echo "Done."
