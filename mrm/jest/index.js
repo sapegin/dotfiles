@@ -66,15 +66,6 @@ module.exports = function() {
 			eslintignore.add('lib/*');
 		}
 		eslintignore.save();
-
-		json('.eslintrc')
-			.merge({
-				env: {
-					jest: true,
-				},
-			})
-			.save()
-		;
 	}
 
 	// Test template for small projects
