@@ -27,11 +27,12 @@
     "html.suggest.angular1": false,
     "html.suggest.ionic": false,
     "extensions.autoUpdate": true,
+    "files.associations": {
+        "*.pcss": "css"
+    },
 
     // Plugins
     "color-highlight.matchWords": false,
-    "whiteviz.color.light": "rgba(0, 0, 0, 0.15)",
-    "files.associations": {
-        "*.pcss": "css"
-    }
+    "eslint.autoFixOnSave": true,
+    "whiteviz.color.light": "rgba(0, 0, 0, 0.15)"
 }
