@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+#
+# Runs Textlint and Proselint on topmost opened in iA Writer file
+#
+# Requires:
+# - Textlint - https://textlint.github.io/
+# - Proselint - http://proselint.com/
+# - Proselint JS wrapper - https://github.com/sapegin/proselint
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+#
+
+command -v textlint >/dev/null 2>&1 || { echo >&2 "textlint is not installed: yarn global add textlint."; exit 1; }
+command -v proselintjs >/dev/null 2>&1 || { echo >&2 "proselintjs is not installed: yarn global add proselint."; exit 1; }
+command -v proselint >/dev/null 2>&1 || { echo >&2 "proselint is not installed: pip install proselint."; exit 1; }
+
+# Topmost opened in iA Writer file
+source_file=$(osascript -e 'tell application "iA Writer" to set filepath to file of document 1' -e 'POSIX path of filepath')
+
+echo "Running Textlint..."
+textlint "$source_file"
+
+echo "Running Proselint..."
+proselintjs "$source_file"
