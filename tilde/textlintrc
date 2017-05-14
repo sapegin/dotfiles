@@ -2,6 +2,7 @@
     "rules": {
         "terminology": true,
         "apostrophe": true,
+        "diacritics": true,
         "common-misspellings": true,
         "write-good": {
             "adverb": false,
