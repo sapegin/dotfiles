@@ -4,6 +4,7 @@
     "url": "http://sapegin.me",
     "github": "sapegin",
     "eslintPreset": "tamia",
+    "eslintPeerDependencies": ["prettier", "eslint-plugin-prettier"],
     "aliases": {
         "node": ["license", "readme", "contributing", "package", "editorconfig", "gitignore", "eslint"],
         "site": ["package", "editorconfig", "gitignore", "eslint", "stylelint", "tamia"]
