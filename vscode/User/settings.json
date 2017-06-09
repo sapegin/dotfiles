@@ -7,6 +7,8 @@
     "editor.wordWrap": "on",
     "editor.autoClosingBrackets": false,
     "editor.cursorBlinking": "solid",
+    "editor.minimap.enabled": false,
+    "editor.renderIndentGuides": false,
     "workbench.editor.showTabs": false,
     "workbench.sideBar.location": "right",
     "workbench.activityBar.visible": false,
