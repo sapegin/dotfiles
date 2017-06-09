@@ -30,7 +30,8 @@
     "html.suggest.ionic": false,
     "extensions.autoUpdate": true,
     "files.associations": {
-        "*.pcss": "css"
+        "*.pcss": "css",
+        "*.js.snap": "javascript"
     },
 
     // Plugins
