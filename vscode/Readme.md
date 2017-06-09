@@ -19,6 +19,7 @@ Run “Install 'code' command in PATH” from the command palette (View → Comm
 * Contextual Duplicate
 * EditorConfig for VS Code
 * ESLint
+* [Markdown Shortcuts](https://marketplace.visualstudio.com/items?itemName=mdickin.markdown-shortcuts)
 * [SpellChecker](https://marketplace.visualstudio.com/items?itemName=swyphcosmo.spellchecker)
 * [Squirrelsong Light Theme](https://marketplace.visualstudio.com/items?itemName=sapegin.Theme-SquirrelsongLight)
 * Unique Lines

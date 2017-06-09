@@ -15,5 +15,8 @@
      */
     // Contextual Duplicate
     { "key": "cmd+d",           "command": "lafe.duplicateCode",
+                                   "when": "editorTextFocus && !editorReadonly" },
+    // Markdown Shortcuts
+    { "key": "cmd+k",           "command": "md-shortcut.toggleLink",
                                    "when": "editorTextFocus && !editorReadonly" }
 ]
