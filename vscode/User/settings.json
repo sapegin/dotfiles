@@ -9,6 +9,7 @@
     "editor.cursorBlinking": "solid",
     "editor.minimap.enabled": false,
     "editor.renderIndentGuides": false,
+    "editor.renderWhitespace": "all",
     "workbench.editor.showTabs": false,
     "workbench.sideBar.location": "right",
     "workbench.activityBar.visible": false,
@@ -16,7 +17,8 @@
     "workbench.colorCustomizations": {
         "statusBar.foreground" : "#484848",
         "statusBar.background" : "#e5e5e5",
-        "statusBar.noFolderBackground" : "#e5e5e5"
+        "statusBar.noFolderBackground" : "#e5e5e5",
+        "editorWhitespace.foreground": "#ffffff44"
     },
     "window.reopenFolders": "all",
     "window.zoomLevel": 0,
@@ -35,6 +37,5 @@
 
     // Plugins
     "color-highlight.matchWords": false,
-    "eslint.autoFixOnSave": true,
-    "whiteviz.color.light": "rgba(0, 0, 0, 0.15)"
+    "eslint.autoFixOnSave": true
 }
