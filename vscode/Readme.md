@@ -23,7 +23,6 @@ Run “Install 'code' command in PATH” from the command palette (View → Comm
 * [SpellChecker](https://marketplace.visualstudio.com/items?itemName=swyphcosmo.spellchecker)
 * [Squirrelsong Light Theme](https://marketplace.visualstudio.com/items?itemName=sapegin.Theme-SquirrelsongLight)
 * Unique Lines
-* [WhiteViz](https://marketplace.visualstudio.com/items?itemName=spywhere.whiteviz)
 
 ## Missing features
 
