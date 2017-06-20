@@ -5,8 +5,10 @@
     "github": "sapegin",
     "eslintPreset": "tamia",
     "eslintPeerDependencies": ["prettier", "eslint-plugin-prettier"],
+    "stylelintExtensions": ".pcss",
     "aliases": {
         "node": ["license", "readme", "contributing", "package", "editorconfig", "gitignore", "eslint"],
-        "site": ["package", "editorconfig", "gitignore", "eslint", "stylelint", "tamia"]
+        "site": ["package", "editorconfig", "gitignore", "eslint", "stylelint", "tamia"],
+        "sync": ["license", "editorconfig", "gitignore", "eslint"]
     }
 }
