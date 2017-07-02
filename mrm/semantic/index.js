@@ -7,7 +7,7 @@ const packages = [
 	'semantic-release-tamia',
 ];
 
-module.exports = function() {
+module.exports = function(config) {
     // Require .travis.yml
     if (!fs.existsSync('.travis.yml')) {
         throw new MrmError(`Run travis task first:
@@ -21,7 +21,7 @@ module.exports = function() {
 	if (!pkg.get('devDependencies.semantic-release')) {
 		throw new MrmError(`Install semantic-release first:
 
-  yarn global add semantic-release-cli
+  npm i -g semantic-release-cli@latest
   semantic-release-cli setup
 
 WARNING: Do not agree to update your .travis.yml.
