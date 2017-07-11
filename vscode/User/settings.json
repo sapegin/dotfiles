@@ -13,6 +13,7 @@
     "workbench.editor.showTabs": false,
     "workbench.sideBar.location": "right",
     "workbench.activityBar.visible": false,
+    "workbench.commandPalette.preserveInput": false,
     "workbench.colorTheme": "Squirrelsong Light",
     "workbench.colorCustomizations": {
         "statusBar.foreground" : "#484848",
@@ -20,7 +21,6 @@
         "statusBar.noFolderBackground" : "#e5e5e5",
         "editorWhitespace.foreground": "#ffffff44"
     },
-    "window.reopenFolders": "all",
     "window.zoomLevel": 0,
     "window.openFilesInNewWindow": "off",
     "window.openFoldersInNewWindow": "off",
