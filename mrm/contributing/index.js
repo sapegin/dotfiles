@@ -12,8 +12,7 @@ module.exports = function(config) {
 			.apply(config(), {
 				package: path.basename(process.cwd()),
 			})
-			.save()
-		;
+			.save();
 	}
 };
 module.exports.description = 'Adds contributing guidelines';

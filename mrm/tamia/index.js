@@ -4,9 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const { MrmError, json, yaml, lines, template, copyFiles, makeDirs, install } = require('mrm-core');
 
-const dependencies = [
-	'tamia@3.0.0-aplha.4',
-];
+const dependencies = ['tamia@3.0.0-aplha.4'];
 const devDependencies = [
 	'babel-cli',
 	'babel-eslint',
@@ -24,18 +22,18 @@ mrm ${task}`);
 };
 
 module.exports = function(config) {
-    // Require EditorConfig
-    if (!fs.existsSync('.editorconfig')) {
+	// Require EditorConfig
+	if (!fs.existsSync('.editorconfig')) {
 		requireTask('eslint');
-    }
-    // Require ESLint
-    if (!fs.existsSync('.eslintrc')) {
+	}
+	// Require ESLint
+	if (!fs.existsSync('.eslintrc')) {
 		requireTask('eslint');
-    }
-    // Require stylelint
-    if (!fs.existsSync('.stylelintrc')) {
+	}
+	// Require stylelint
+	if (!fs.existsSync('.stylelintrc')) {
 		requireTask('stylelint');
-    }
+	}
 
 	const name = path.basename(process.cwd());
 
@@ -61,11 +59,12 @@ module.exports = function(config) {
 			private: true,
 			license: 'See license in <Readme.md>',
 			scripts: {
-				'start': 'tamia server & npm run build:watch',
-				'test': 'npm run lint:css && npm run lint:js',
-				'bundle': 'tamia bundle',
-				'build': 'BABEL_DISABLE_CACHE=1 babel-node src',
-				'build:watch': "chokidar source 'templates/**/*.jsx' -c 'BABEL_DISABLE_CACHE=1 babel-node src'",
+				start: 'tamia server & npm run build:watch',
+				test: 'npm run lint:css && npm run lint:js',
+				bundle: 'tamia bundle',
+				build: 'BABEL_DISABLE_CACHE=1 babel-node src',
+				'build:watch':
+					"chokidar source 'templates/**/*.jsx' -c 'BABEL_DISABLE_CACHE=1 babel-node src'",
 				'lint:js': 'eslint . --fix --ext .js,.jsx',
 				'lint:css': "stylelint '**/*.pcss'",
 			},
@@ -73,15 +72,13 @@ module.exports = function(config) {
 				node: '>=7',
 			},
 		})
-		.save()
-	;
+		.save();
 
 	// .babelrc
 	json('.babelrc')
 		.unset('plugins')
 		.set('presets', ['./node_modules/tamia-build/config/babel-preset'])
-		.save()
-	;
+		.save();
 
 	// .eslintrc
 	json('.eslintrc')
@@ -95,34 +92,27 @@ module.exports = function(config) {
 				'react/prop-types': 0,
 			},
 		})
-		.save()
-	;
+		.save();
 
 	// .eslintignore
-	lines('.eslintignore')
-		.add('build/')
-		.save()
-	;
+	lines('.eslintignore').add('build/').save();
 
 	// .gitignore
 	lines('.gitignore')
-		.add([
-			'/public/**/*.html',
-			'/public/build/*.js',
-			'/public/build/*.css',
-		])
-		.save()
-	;
+		.add(['/public/**/*.html', '/public/build/*.js', '/public/build/*.css'])
+		.save();
 
 	// Create Readme.md (no update)
 	const readme = template('Readme.md', path.join(__dirname, 'Readme.md'));
 	if (!readme.get()) {
 		readme
-			.apply({
-				package: name,
-			}, config())
-			.save()
-		;
+			.apply(
+				{
+					package: name,
+				},
+				config()
+			)
+			.save();
 	}
 
 	// Create Fledermaus config (no update)
@@ -140,20 +130,23 @@ module.exports = function(config) {
 				title: 'My site',
 				description: 'My awesome site',
 			})
-			.save()
-		;
+			.save();
 	}
 
 	// Copy templates (no update)
-	copyFiles(__dirname, [
-		'js/main.js',
-		'source/index.md',
-		'src/index.js',
-		'styles/config.pcss',
-		'styles/styles.pcss',
-		'templates/Base.jsx',
-		'templates/Page.jsx',
-	], { overwrite: false });
+	copyFiles(
+		__dirname,
+		[
+			'js/main.js',
+			'source/index.md',
+			'src/index.js',
+			'styles/config.pcss',
+			'styles/styles.pcss',
+			'templates/Base.jsx',
+			'templates/Page.jsx',
+		],
+		{ overwrite: false }
+	);
 
 	// Dependencies
 	install(dependencies, { dev: false });

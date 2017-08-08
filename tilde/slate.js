@@ -1,29 +1,32 @@
-var fullscreen = S.op('move', {
+/* global S */
+'use strict';
+
+const fullscreen = S.op('move', {
 	x: 'screenOriginX',
 	y: 'screenOriginY',
 	width: 'screenSizeX',
-	height: 'screenSizeY'
+	height: 'screenSizeY',
 });
 
-var middle = S.op('move', {
+const middle = S.op('move', {
 	x: 'screenOriginX+screenSizeX/4',
 	y: 'screenOriginY',
 	width: 'screenSizeX/2',
-	height: 'screenSizeY'
+	height: 'screenSizeY',
 });
 
-var leftHalf = S.op('move', {
+const leftHalf = S.op('move', {
 	x: 'screenOriginX',
 	y: 'screenOriginY',
 	width: 'screenSizeX/2',
-	height: 'screenSizeY'
+	height: 'screenSizeY',
 });
 
-var rightHalf = S.op('move', {
+const rightHalf = S.op('move', {
 	x: 'screenSizeX/2',
 	y: 'screenOriginY',
 	width: 'screenSizeX/2',
-	height: 'screenSizeY'
+	height: 'screenSizeY',
 });
 
 S.bnda({

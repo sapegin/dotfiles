@@ -3,17 +3,15 @@
 const fs = require('fs');
 const { MrmError, json, lines, yaml, markdown, install } = require('mrm-core');
 
-const packages = [
-	'semantic-release-tamia',
-];
+const packages = ['semantic-release-tamia'];
 
 module.exports = function(config) {
-    // Require .travis.yml
-    if (!fs.existsSync('.travis.yml')) {
-        throw new MrmError(`Run travis task first:
+	// Require .travis.yml
+	if (!fs.existsSync('.travis.yml')) {
+		throw new MrmError(`Run travis task first:
 
   mrm travis`);
-    }
+	}
 
 	// package.json
 	const pkg = json('package.json');
@@ -46,29 +44,20 @@ https://github.com/semantic-release/semantic-release#setup
 				verifyRelease: 'semantic-release-tamia/verifyRelease',
 			},
 		})
-		.save()
-	;
+		.save();
 
 	// .travis.yml
 	yaml('.travis.yml')
 		.merge({
-			after_success: [
-				'npm run semantic-release',
-			],
+			after_success: ['npm run semantic-release'],
 			branches: {
-				except: [
-					'/^v\\d+\\.\\d+\\.\\d+$/',
-				],
+				except: ['/^v\\d+\\.\\d+\\.\\d+$/'],
 			},
 		})
-		.save()
-	;
+		.save();
 
 	// .gitignore
-	lines('.gitignore')
-		.add('Changelog.md')
-		.save()
-	;
+	lines('.gitignore').add('Changelog.md').save();
 
 	// Add npm package badge to Readme
 	const name = pkg.get('name');
@@ -80,8 +69,7 @@ https://github.com/semantic-release/semantic-release#setup
 				`https://www.npmjs.com/package/${name}`,
 				'npm'
 			)
-			.save()
-		;
+			.save();
 	}
 
 	// Dependencies
