@@ -16,10 +16,6 @@ Installs zsh and Oh My Zsh, registers zsh as the default shell.
 
 Sane OSX defaults. Based on [~/.osx](https://github.com/mathiasbynens/dotfiles/blob/master/.macos) by @mathiasbynens.
 
-### sublime-settings
-
-Enables Sublime settings synchronization (see `../sublime/User` folder).
-
 ### quicklook
 
 Installs quick look plugins: qlImageSize.
@@ -76,7 +72,7 @@ Go to iTerm2 preferences → Profiles → Advanced → Semantic History. Choose 
 Go to iTerm2 preferences → Profiles → Advanced → Triggers. Click *Edit*.
 
 Description | RegExp | Action | Color
------------ | ------ | ------ | ----- 
+----------- | ------ | ------ | -----
 Highlight Git merge conflicts | `CONFLICT \(content\)\:.*` | Highlight Text | Text: `f2ac00`
 
 ## Misc

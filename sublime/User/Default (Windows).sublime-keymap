@@ -1,4 +1,0 @@
-[
-	{ "keys": ["ctrl+d"], "command": "duplicate_line" },
-	{ "keys": ["ctrl+y"], "command": "run_macro_file", "args": {"file": "Packages/Default/Delete Line.sublime-macro"} }
-]

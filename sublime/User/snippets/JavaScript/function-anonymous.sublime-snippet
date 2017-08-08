@@ -1,8 +1,0 @@
-<snippet>
-	<content><![CDATA[
-function($1) { ${0:$TM_SELECTED_TEXT} }
-]]></content>
-	<tabTrigger>afun</tabTrigger>
-	<scope>source.js</scope>
-	<description>Anonymous Function</description>
-</snippet>
