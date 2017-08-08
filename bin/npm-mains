@@ -1,0 +1,21 @@
+#!/usr/bin/env node
+'use strict';
+
+/*
+ * Prints main files of all npm dependencies.
+ *
+ * Author: Artem Sapegin, sapegin.me
+ * License: MIT
+ * https://github.com/sapegin/dotfiles
+ */
+
+const path = require('path');
+const glob = require('glob');
+
+const pkgs = glob.sync('node_modules/**/package.json');
+pkgs.forEach(file => {
+	const { name, main } = require(path.join(process.cwd(), file));
+	if (main) {
+		console.log(`${name}: ${main}`);
+	}
+});
