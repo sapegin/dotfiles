@@ -106,12 +106,11 @@ module.exports = function(config) {
 	const readme = template('Readme.md', path.join(__dirname, 'Readme.md'));
 	if (!readme.get()) {
 		readme
-			.apply(
-				{
-					package: name,
-				},
-				config()
-			)
+			.apply({
+				name: config('name'),
+				url: config('url'),
+				package: name,
+			})
 			.save();
 	}
 

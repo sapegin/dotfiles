@@ -3,13 +3,13 @@
 const path = require('path');
 const { template } = require('mrm-core');
 
-module.exports = function(config) {
+module.exports = function() {
 	// Create Contributing.md (no update)
 	const filename = 'Contributing.md';
 	const contributing = template(filename, path.join(__dirname, filename));
 	if (!contributing.exists()) {
 		contributing
-			.apply(config(), {
+			.apply({
 				package: path.basename(process.cwd()),
 			})
 			.save();
