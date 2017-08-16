@@ -43,21 +43,18 @@ brew install zsh-syntax-highlighting
 curl -L http://git.io/n-install | bash  # n, Node version manager
 npm config set loglevel warn
 
-# Yarn
-curl -o- -L https://yarnpkg.com/install.sh | bash
-
 # Npm
-yarn global add npm-upgrade
-yarn global add diff-so-fancy
-yarn global add trash-cli
-yarn global add proselint
-yarn global add textlint
-yarn global add textlint-rule-apostrophe
-yarn global add textlint-rule-common-misspellings
-yarn global add textlint-rule-diacritics
-yarn global add textlint-rule-no-dead-link
-yarn global add textlint-rule-terminology
-yarn global add textlint-rule-write-good
+npm i -g npm-upgrade
+npm i -g diff-so-fancy
+npm i -g trash-cli
+npm i -g proselint
+npm i -g textlint
+npm i -g textlint-rule-apostrophe
+npm i -g textlint-rule-common-misspellings
+npm i -g textlint-rule-diacritics
+npm i -g textlint-rule-no-dead-link
+npm i -g textlint-rule-terminology
+npm i -g textlint-rule-write-good
 
 # Python
 brew install python

@@ -13,8 +13,8 @@
 # https://github.com/sapegin/dotfiles
 #
 
-command -v textlint >/dev/null 2>&1 || { echo >&2 "textlint is not installed: yarn global add textlint."; exit 1; }
-command -v proselintjs >/dev/null 2>&1 || { echo >&2 "proselintjs is not installed: yarn global add proselint."; exit 1; }
+command -v textlint >/dev/null 2>&1 || { echo >&2 "textlint is not installed: npm i -g textlint."; exit 1; }
+command -v proselintjs >/dev/null 2>&1 || { echo >&2 "proselintjs is not installed: npm i -g proselint."; exit 1; }
 command -v proselint >/dev/null 2>&1 || { echo >&2 "proselint is not installed: pip install proselint."; exit 1; }
 
 # Topmost opened in iA Writer file
