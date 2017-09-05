@@ -18,5 +18,16 @@
                                    "when": "editorTextFocus && !editorReadonly" },
     // Markdown Shortcuts
     { "key": "cmd+k",           "command": "md-shortcut.toggleLink",
-                                   "when": "editorTextFocus && !editorReadonly" }
-]
+                                "when": "editorTextFocus && !editorReadonly"
+                            },
+                            {
+                                "key": "shift+f6",
+                                "command": "editor.action.rename",
+                                "when": "editorHasRenameProvider && editorTextFocus && !editorReadonly"
+                            },
+                            {
+                                "key": "f2",
+                                "command": "-editor.action.rename",
+                                "when": "editorHasRenameProvider && editorTextFocus && !editorReadonly"
+                            }
+                        ]
