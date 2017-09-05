@@ -24,7 +24,8 @@
 	co = checkout
 	d = diff --color-words
 	s = status -sb
-	gerrit = push gerrit HEAD:refs/for/develop
+	gerrit = push origin HEAD:refs/for/master
+	gerrit-old = push gerrit HEAD:refs/for/develop
 	new = !git pull origin develop && git flow feature start
 	done = !git pull origin develop && git flow feature finish "$(git symbolic-ref --short HEAD | sed -n 's/^feature\\///p')"
 	go = !git checkout $1 && pull
