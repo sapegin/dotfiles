@@ -7,7 +7,7 @@
     "eslintPeerDependencies": ["prettier", "eslint-plugin-prettier"],
     "stylelintExtensions": ".pcss",
     "aliases": {
-        "node": ["license", "readme", "contributing", "package", "editorconfig", "gitignore", "eslint"],
+        "node": ["license", "readme", "contributing", "package", "editorconfig", "gitignore", "eslint", "jsconfig"],
         "site": ["package", "editorconfig", "gitignore", "eslint", "stylelint", "tamia"],
         "sync": ["license", "editorconfig", "gitignore", "eslint"]
     }
