@@ -10,6 +10,7 @@
     "editor.minimap.enabled": false,
     "editor.renderIndentGuides": false,
     "editor.renderWhitespace": "all",
+    "editor.autoIndent": true,
     "workbench.editor.showTabs": false,
     "workbench.sideBar.location": "right",
     "workbench.activityBar.visible": false,
@@ -38,5 +39,6 @@
 
     // Plugins
     "color-highlight.matchWords": false,
-    "eslint.autoFixOnSave": true
+    "eslint.autoFixOnSave": true,
+    "python.linting.enabledWithoutWorkspace": false
 }
