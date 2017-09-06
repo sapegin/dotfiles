@@ -57,7 +57,9 @@ https://github.com/semantic-release/semantic-release#setup
 		.save();
 
 	// .gitignore
-	lines('.gitignore').add('Changelog.md').save();
+	lines('.gitignore')
+		.add('Changelog.md')
+		.save();
 
 	// Add npm package badge to Readme
 	const name = pkg.get('name');

@@ -7,7 +7,7 @@
     "fastmatter": "^1.1.1",
     "glob": "^7.1.2",
     "mkdirp": "~0.5.1",
-    "mrm-core": "^2.1.1",
+    "mrm-core": "^2.2.2",
     "user-home": "^2.0.0"
   },
   "scripts": {
@@ -15,9 +15,9 @@
     "pretest": "npm run lint"
   },
   "devDependencies": {
-    "eslint": "^4.4.1",
-    "eslint-config-tamia": "^4.1.2",
-    "eslint-plugin-prettier": "^2.1.2",
-    "prettier": "^1.5.3"
+    "eslint": "^4.6.1",
+    "eslint-config-tamia": "^4.2.1",
+    "eslint-plugin-prettier": "^2.2.0",
+    "prettier": "^1.6.1"
   }
 }

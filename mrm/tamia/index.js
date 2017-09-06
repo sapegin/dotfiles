@@ -95,7 +95,9 @@ module.exports = function(config) {
 		.save();
 
 	// .eslintignore
-	lines('.eslintignore').add('build/').save();
+	lines('.eslintignore')
+		.add('build/')
+		.save();
 
 	// .gitignore
 	lines('.gitignore')
