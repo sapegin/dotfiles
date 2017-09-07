@@ -11,5 +11,8 @@
             "weasel": false
         },
         "no-dead-link": true
+    },
+	"filters": {
+        "comments": true
     }
 }

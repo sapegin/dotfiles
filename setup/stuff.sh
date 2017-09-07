@@ -49,6 +49,7 @@ npm i -g diff-so-fancy
 npm i -g trash-cli
 npm i -g proselint
 npm i -g textlint
+npm i -g textlint-filter-rule-comments
 npm i -g textlint-rule-apostrophe
 npm i -g textlint-rule-common-misspellings
 npm i -g textlint-rule-diacritics
