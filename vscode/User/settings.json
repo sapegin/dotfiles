@@ -40,5 +40,10 @@
     // Plugins
     "color-highlight.matchWords": false,
     "eslint.autoFixOnSave": true,
-    "python.linting.enabledWithoutWorkspace": false
+    "eslint.validate": [
+      "javascript",
+      "javascriptreact",
+      { "language": "typescript", "autoFix": true },
+      { "language": "typescriptreact", "autoFix": true }
+    ]
 }
