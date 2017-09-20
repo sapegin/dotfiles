@@ -5,6 +5,12 @@
     "github": "sapegin",
     "eslintPreset": "tamia",
     "eslintPeerDependencies": ["prettier", "eslint-plugin-prettier"],
+    "semanticConfig": {
+      "analyzeCommits": "semantic-release-tamia/analyzeCommits",
+      "generateNotes": "semantic-release-tamia/generateNotes",
+      "verifyRelease": "semantic-release-tamia/verifyRelease"
+    },
+    "semanticPeerDependencies": ["semantic-release-tamia"],
     "stylelintExtensions": ".pcss",
     "aliases": {
         "node": ["license", "readme", "contributing", "package", "editorconfig", "gitignore", "eslint", "jsconfig"],
