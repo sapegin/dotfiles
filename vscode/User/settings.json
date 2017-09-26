@@ -25,6 +25,8 @@
     "window.zoomLevel": 0,
     "window.openFilesInNewWindow": "off",
     "window.openFoldersInNewWindow": "off",
+    "window.restoreWindows": "all",
+    "window.titleBarStyle": "native",
     "files.autoSave": "onWindowChange",
     "files.hotExit": "onExitAndWindowClose",
     "explorer.openEditors.visible": 0,
