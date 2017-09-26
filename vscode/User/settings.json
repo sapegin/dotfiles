@@ -1,51 +1,51 @@
 {
-    // Internal
-    "editor.fontFamily": "Hack",
-    "editor.fontSize": 15,
-    "editor.rulers": [100],
-    "editor.roundedSelection": false,
-    "editor.wordWrap": "on",
-    "editor.autoClosingBrackets": false,
-    "editor.cursorBlinking": "solid",
-    "editor.minimap.enabled": false,
-    "editor.renderIndentGuides": false,
-    "editor.renderWhitespace": "all",
-    "editor.autoIndent": true,
-    "workbench.editor.showTabs": false,
-    "workbench.sideBar.location": "right",
-    "workbench.activityBar.visible": false,
-    "workbench.commandPalette.preserveInput": false,
-    "workbench.colorTheme": "Squirrelsong Light",
-    "workbench.colorCustomizations": {
-        "statusBar.foreground" : "#484848",
-        "statusBar.background" : "#e5e5e5",
-        "statusBar.noFolderBackground" : "#e5e5e5",
-        "editorWhitespace.foreground": "#ffffff44"
-    },
-    "window.zoomLevel": 0,
-    "window.openFilesInNewWindow": "off",
-    "window.openFoldersInNewWindow": "off",
-    "window.restoreWindows": "all",
-    "window.titleBarStyle": "native",
-    "files.autoSave": "onWindowChange",
-    "files.hotExit": "onExitAndWindowClose",
-    "explorer.openEditors.visible": 0,
-    "html.format.wrapLineLength": 0,
-    "html.suggest.angular1": false,
-    "html.suggest.ionic": false,
-    "extensions.autoUpdate": true,
-    "files.associations": {
-        "*.pcss": "css",
-        "*.js.snap": "javascript"
-    },
+  // Internal
+  "editor.fontFamily": "Hack",
+  "editor.fontSize": 15,
+  "editor.rulers": [100],
+  "editor.roundedSelection": false,
+  "editor.wordWrap": "on",
+  "editor.autoClosingBrackets": false,
+  "editor.cursorBlinking": "solid",
+  "editor.minimap.enabled": false,
+  "editor.renderIndentGuides": false,
+  "editor.renderWhitespace": "all",
+  "editor.autoIndent": true,
+  "workbench.editor.showTabs": false,
+  "workbench.sideBar.location": "right",
+  "workbench.activityBar.visible": false,
+  "workbench.commandPalette.preserveInput": false,
+  "workbench.colorTheme": "Squirrelsong Light",
+  "workbench.colorCustomizations": {
+    "statusBar.foreground": "#484848",
+    "statusBar.background": "#e5e5e5",
+    "statusBar.noFolderBackground": "#e5e5e5",
+    "editorWhitespace.foreground": "#ffffff44"
+  },
+  "window.zoomLevel": 0,
+  "window.openFilesInNewWindow": "off",
+  "window.openFoldersInNewWindow": "off",
+  "window.restoreWindows": "all",
+  "window.titleBarStyle": "native",
+  "files.autoSave": "onWindowChange",
+  "files.hotExit": "onExitAndWindowClose",
+  "explorer.openEditors.visible": 0,
+  "html.format.wrapLineLength": 0,
+  "html.suggest.angular1": false,
+  "html.suggest.ionic": false,
+  "extensions.autoUpdate": true,
+  "files.associations": {
+    "*.pcss": "css",
+    "*.js.snap": "javascript"
+  },
 
-    // Plugins
-    "color-highlight.matchWords": false,
-    "eslint.autoFixOnSave": true,
-    "eslint.validate": [
-      "javascript",
-      "javascriptreact",
-      { "language": "typescript", "autoFix": true },
-      { "language": "typescriptreact", "autoFix": true }
-    ]
+  // Plugins
+  "color-highlight.matchWords": false,
+  "eslint.autoFixOnSave": true,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    { "language": "typescript", "autoFix": true },
+    { "language": "typescriptreact", "autoFix": true }
+  ]
 }
