@@ -103,6 +103,11 @@ ZSH_CUSTOM="$HOME/dotfiles/zsh"
 plugins=(extract git-extras)
 source $ZSH/oh-my-zsh.sh
 
+# Autocompletion for git-friendly
+fpath=($(brew --prefix)/share/zsh/functions $fpath)
+autoload -Uz _git && _git
+compdef __git_branch_names branch
+
 # Enable zsh-syntax-highlighting
 [ -f /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
