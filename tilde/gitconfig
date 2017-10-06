@@ -38,6 +38,8 @@
 	ll = log --stat --abbrev-commit
 	my = !git log --branches=* --no-merges --pretty=format:'%C(reset)%C(bold)%cd %C(reset)%C(white)%s  %C(reset)%h' --date=short --author=\"$(git config user.name)\"
 	wtf = diff --name-only --diff-filter=U
+	# Cancel local commits in the branch: git fuck master
+	fuck = "!f() { git reset --hard origin/$1; }; f"
 [push]
 	default = current
 
