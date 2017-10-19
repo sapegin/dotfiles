@@ -1,0 +1,61 @@
+{
+  "alfredtheme" : {
+    "result" : {
+      "textSpacing" : 5,
+      "subtext" : {
+        "size" : 12,
+        "colorSelected" : "#00000059",
+        "font" : "System Light",
+        "color" : "#00000059"
+      },
+      "shortcut" : {
+        "size" : 16,
+        "colorSelected" : "#00000059",
+        "font" : "System Light",
+        "color" : "#00000059"
+      },
+      "backgroundSelected" : "#69696959",
+      "text" : {
+        "size" : 18,
+        "colorSelected" : "#000000A5",
+        "font" : "System Light",
+        "color" : "#000000A5"
+      },
+      "iconPaddingHorizontal" : 4,
+      "paddingVertical" : 3,
+      "iconSize" : 40
+    },
+    "search" : {
+      "paddingVertical" : 4,
+      "background" : "#FFFFFF00",
+      "spacing" : 4,
+      "text" : {
+        "size" : 34,
+        "colorSelected" : "#000000FF",
+        "font" : "System Light",
+        "color" : "#000000A5"
+      },
+      "backgroundSelected" : "#B4D5FFFF"
+    },
+    "window" : {
+      "color" : "#FFFFFFD9",
+      "paddingHorizontal" : 0,
+      "width" : 559,
+      "borderPadding" : 0,
+      "borderColor" : "#0000007F",
+      "blur" : 40,
+      "roundness" : 3,
+      "paddingVertical" : 4
+    },
+    "credit" : "Artem Sapegin",
+    "separator" : {
+      "color" : "#CBCBCBF3",
+      "thickness" : 0
+    },
+    "scrollbar" : {
+      "color" : "#A9A9A9FF",
+      "thickness" : 2
+    },
+    "name" : "Squirrel X"
+  }
+}

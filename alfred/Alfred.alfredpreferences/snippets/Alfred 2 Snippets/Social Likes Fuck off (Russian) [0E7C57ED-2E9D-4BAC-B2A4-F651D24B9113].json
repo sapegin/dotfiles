@@ -1,0 +1,9 @@
+{
+  "alfredsnippet" : {
+    "snippet" : "Здравствуйте.\n\nУ вас на сайте используется мой скрипт социальных кнопок (http:\/\/sapegin.github.io\/social-likes\/ru\/). Исправьте, пожалуйста, data-via=\"sapegin\" в коде на свой твитер-аккаунт, чтобы мне в mentions не валились все лайки ваших пользователей.\n",
+    "dontautoexpand" : true,
+    "uid" : "0E7C57ED-2E9D-4BAC-B2A4-F651D24B9113",
+    "name" : "Social Likes: Fuck off (Russian)",
+    "keyword" : ""
+  }
+}

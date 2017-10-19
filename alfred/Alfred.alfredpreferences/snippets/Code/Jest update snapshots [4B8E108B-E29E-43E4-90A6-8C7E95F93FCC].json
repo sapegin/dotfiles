@@ -1,0 +1,9 @@
+{
+  "alfredsnippet" : {
+    "snippet" : "npm run test:jest -- -u",
+    "dontautoexpand" : true,
+    "uid" : "4B8E108B-E29E-43E4-90A6-8C7E95F93FCC",
+    "name" : "Jest: update snapshots",
+    "keyword" : ""
+  }
+}

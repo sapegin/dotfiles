@@ -1,0 +1,9 @@
+{
+  "alfredsnippet" : {
+    "snippet" : "Здравствуйте,\n\nОтпишите, пожалуйста, от вашего смс-спама номер +7 926 556-34-33.\n",
+    "dontautoexpand" : true,
+    "uid" : "7B583704-2A5B-4086-B1D3-3343475DFBB9",
+    "name" : "Stop SMS Spam",
+    "keyword" : ""
+  }
+}

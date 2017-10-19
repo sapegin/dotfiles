@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<workflow>
+  <name>Alfred Faker</name>
+  <version>1.0</version>
+  <bundle>com.groenewege.faker</bundle>
+  <updated>1434625771</updated>
+  <file>faker.alfredworkflow</file>
+</workflow>

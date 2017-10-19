@@ -1,0 +1,9 @@
+{
+  "alfredsnippet" : {
+    "snippet" : "\/* eslint-disable {cursor} *\/\n",
+    "dontautoexpand" : true,
+    "uid" : "303A411D-B581-4B0D-B55F-2B1E9CD251C4",
+    "name" : "ESLint: disable file",
+    "keyword" : ""
+  }
+}
