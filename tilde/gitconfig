@@ -21,6 +21,7 @@
 	cm = commit -m
 	cam = commit -am
 	cne = commit --no-edit
+	amend = commit --amend
 	co = checkout
 	d = diff --color-words
 	s = status -sb
