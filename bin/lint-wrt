@@ -20,8 +20,8 @@ command -v proselint >/dev/null 2>&1 || { echo >&2 "proselint is not installed: 
 # Topmost opened in iA Writer file
 source_file=$(osascript -e 'tell application "iA Writer" to set filepath to file of document 1' -e 'POSIX path of filepath')
 
-echo "Running Textlint..."
-textlint "$source_file"
+echo "Running Textlint.."
+textlint $@ "$source_file"
 
 echo "Running Proselint..."
 proselintjs "$source_file"
