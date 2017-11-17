@@ -1,10 +1,12 @@
 [color]
 	ui = auto
+
 [color "diff"]
 	meta = blue
 	frag = white
 	old = red bold
 	new = green bold
+
 [core]
 	editor = nano
 	pager = diff-so-fancy | less --chop-long-lines --quit-if-one-screen --no-init --tabs=1,5 -R
@@ -13,7 +15,9 @@
 	mergeoptions = --no-edit
 	excludesfile = ~/.gitignore
 	quotepath = false
+
 [alias]
+	# Simple shortcuts
 	a = add
 	ua = reset HEAD
 	c = commit
@@ -25,48 +29,36 @@
 	co = checkout
 	d = diff --color-words
 	s = status -sb
+	# Push changes to Gerrit
 	gerrit = push origin HEAD:refs/for/master
 	gerrit-old = push gerrit HEAD:refs/for/develop
-	new = !git pull origin develop && git flow feature start
-	done = !git pull origin develop && git flow feature finish "$(git symbolic-ref --short HEAD | sed -n 's/^feature\\///p')"
-	go = !git checkout $1 && pull
-	master = !git checkout master && pull
-	develop = !git checkout develop && pull
+	# Rebase current branch using a fresh master
 	mmm = !git fetch origin master && git rebase origin/master
+	# Rebase current branch using a fresh develop
 	ddd = !git fetch origin develop && git rebase origin/develop
+	# Compact and readable log
 	l = log --graph --pretty=format:'%C(magenta)%h%C(blue)%d%Creset %s %C(blue bold)- %an, %ar%Creset'
+	# Log with list of changed files for each commit
 	ll = log --stat --abbrev-commit
+	# List of my own commits
 	my = !git log --branches=* --no-merges --pretty=format:'%C(reset)%C(bold)%cd %C(reset)%C(white)%s  %C(reset)%h' --date=short --author=\"$(git config user.name)\"
 	wtf = diff --name-only --diff-filter=U
-	# Add changes and continue rebase
+	# Rebase: add changes and continue
 	cont = !git add . && git rebase --continue
-	# Skip a rebase step
+	# Rebase: skip a rebase step
 	skip = rebase --skip
-	# Abort rebase
+	# Rebase: abort
 	abort = rebase --abort
 	# Cancel local commits in the branch: git fuck master
 	fuck = "!f() { git reset --hard origin/$1; }; f"
+
 [push]
 	default = current
 
-# Any GitHub repo with my username should be checked out r/w by default
+# Any GitHub repo with my username should be checked out read/write by default
 # http://rentzsch.tumblr.com/post/564806957/public-but-hackable-git-submodules
 [url "git@github.com:sapegin/"]
 	insteadOf = "git://github.com/sapegin/"
-
-# URL shorthands
-[url "git@github.com:"]
-	insteadOf = "gh:"
-	pushInsteadOf = "github:"
-	pushInsteadOf = "git://github.com/"
-[url "git://github.com/"]
-	insteadOf = "github:"
-[url "git@gist.github.com:"]
-	insteadOf = "gst:"
-	pushInsteadOf = "gist:"
-	pushInsteadOf = "git://gist.github.com/"
-[url "git://gist.github.com/"]
-	insteadOf = "gist:"
 
 # Kaleidoscope
 [difftool "Kaleidoscope"]
@@ -83,13 +75,12 @@
 [merge]
 	tool = Kaleidoscope
 
-# diff-so-fancy
+# https://github.com/so-fancy/diff-so-fancy
 [color "diff-highlight"]
 	oldNormal = red bold
 	oldHighlight = red bold 52
 	newNormal = green bold
 	newHighlight = green bold 22
-
 
 # Include local settings
 # Requires Git 1.7.10
@@ -97,6 +88,8 @@
 # git config -f ~/.gitlocal user.name "Artem Sapegin"
 [include]
 	path = .gitlocal
+
+# Some random bullshit that always appers at the end of the config file
 [filter "media"]
 	required = true
 	clean = git media clean %f
