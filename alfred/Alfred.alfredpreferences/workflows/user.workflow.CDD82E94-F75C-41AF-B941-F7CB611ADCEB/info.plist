@@ -55,7 +55,7 @@
 				<string>Copy</string>
 			</dict>
 		</array>
-		<key>dash_keyword_awesome</key>
+		<key>dash_keyword_bash</key>
 		<array>
 			<dict>
 				<key>destinationuid</key>
@@ -82,7 +82,7 @@
 				<string></string>
 			</dict>
 		</array>
-		<key>dash_keyword_bootstrap</key>
+		<key>dash_keyword_chrome</key>
 		<array>
 			<dict>
 				<key>destinationuid</key>
@@ -109,7 +109,7 @@
 				<string></string>
 			</dict>
 		</array>
-		<key>dash_keyword_chai</key>
+		<key>dash_keyword_color</key>
 		<array>
 			<dict>
 				<key>destinationuid</key>
@@ -164,6 +164,60 @@
 			</dict>
 		</array>
 		<key>dash_keyword_emoji</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>dash_action_normal</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>dash_action_cmd</string>
+				<key>modifiers</key>
+				<integer>1048576</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>dash_action_alt</string>
+				<key>modifiers</key>
+				<integer>524288</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>dash_keyword_fa</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>dash_action_normal</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>dash_action_cmd</string>
+				<key>modifiers</key>
+				<integer>1048576</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>dash_action_alt</string>
+				<key>modifiers</key>
+				<integer>524288</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>dash_keyword_github</key>
 		<array>
 			<dict>
 				<key>destinationuid</key>
@@ -271,7 +325,7 @@
 				<string></string>
 			</dict>
 		</array>
-		<key>dash_keyword_jquery</key>
+		<key>dash_keyword_lodash</key>
 		<array>
 			<dict>
 				<key>destinationuid</key>
@@ -298,7 +352,34 @@
 				<string></string>
 			</dict>
 		</array>
-		<key>dash_keyword_lodash</key>
+		<key>dash_keyword_manpages</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>dash_action_normal</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>dash_action_cmd</string>
+				<key>modifiers</key>
+				<integer>1048576</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>dash_action_alt</string>
+				<key>modifiers</key>
+				<integer>524288</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>dash_keyword_markdown</key>
 		<array>
 			<dict>
 				<key>destinationuid</key>
@@ -352,7 +433,34 @@
 				<string></string>
 			</dict>
 		</array>
-		<key>dash_keyword_rails</key>
+		<key>dash_keyword_npm</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>dash_action_normal</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>dash_action_cmd</string>
+				<key>modifiers</key>
+				<integer>1048576</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>dash_action_alt</string>
+				<key>modifiers</key>
+				<integer>524288</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>dash_keyword_python3</key>
 		<array>
 			<dict>
 				<key>destinationuid</key>
@@ -406,60 +514,6 @@
 				<string></string>
 			</dict>
 		</array>
-		<key>dash_keyword_reactnative</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>dash_action_normal</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-			</dict>
-			<dict>
-				<key>destinationuid</key>
-				<string>dash_action_cmd</string>
-				<key>modifiers</key>
-				<integer>1048576</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-			</dict>
-			<dict>
-				<key>destinationuid</key>
-				<string>dash_action_alt</string>
-				<key>modifiers</key>
-				<integer>524288</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-			</dict>
-		</array>
-		<key>dash_keyword_redux</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>dash_action_normal</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-			</dict>
-			<dict>
-				<key>destinationuid</key>
-				<string>dash_action_cmd</string>
-				<key>modifiers</key>
-				<integer>1048576</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-			</dict>
-			<dict>
-				<key>destinationuid</key>
-				<string>dash_action_alt</string>
-				<key>modifiers</key>
-				<integer>524288</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-			</dict>
-		</array>
 		<key>dash_keyword_ruby</key>
 		<array>
 			<dict>
@@ -487,7 +541,7 @@
 				<string></string>
 			</dict>
 		</array>
-		<key>dash_keyword_sass</key>
+		<key>dash_keyword_snip</key>
 		<array>
 			<dict>
 				<key>destinationuid</key>
@@ -514,7 +568,34 @@
 				<string></string>
 			</dict>
 		</array>
-		<key>dash_keyword_snip</key>
+		<key>dash_keyword_tamia</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>dash_action_normal</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>dash_action_cmd</string>
+				<key>modifiers</key>
+				<integer>1048576</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>dash_action_alt</string>
+				<key>modifiers</key>
+				<integer>524288</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>dash_keyword_webpack</key>
 		<array>
 			<dict>
 				<key>destinationuid</key>
@@ -715,719 +796,6 @@ That said, you can edit anything else within this workflow (including adding new
 				<key>argumenttype</key>
 				<integer>0</integer>
 				<key>escaping</key>
-				<integer>0</integer>
-				<key>runningsubtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>script</key>
-				<string>Dash dynamically updates this workflow with docset and search profile keywords.
-
-Do not try to change the keywords from within Alfred, as Dash will overwrite your changes. If you want to change a keyword, change it from within Dash (in Preferences &gt; Docsets).
-
-That said, you can edit anything else within this workflow (including adding new triggers/actions/hotkeys).</string>
-				<key>subtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>title</key>
-				<string>PLEASE README</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>dash_note_readme</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>escaping</key>
-				<integer>0</integer>
-				<key>runningsubtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>script</key>
-				<string>Dash dynamically updates this workflow with docset and search profile keywords.
-
-Do not try to change the keywords from within Alfred, as Dash will overwrite your changes. If you want to change a keyword, change it from within Dash (in Preferences &gt; Docsets).
-
-That said, you can edit anything else within this workflow (including adding new triggers/actions/hotkeys).</string>
-				<key>subtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>title</key>
-				<string>PLEASE README</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>dash_note_readme</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>escaping</key>
-				<integer>0</integer>
-				<key>runningsubtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>script</key>
-				<string>Dash dynamically updates this workflow with docset and search profile keywords.
-
-Do not try to change the keywords from within Alfred, as Dash will overwrite your changes. If you want to change a keyword, change it from within Dash (in Preferences &gt; Docsets).
-
-That said, you can edit anything else within this workflow (including adding new triggers/actions/hotkeys).</string>
-				<key>subtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>title</key>
-				<string>PLEASE README</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>dash_note_readme</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>escaping</key>
-				<integer>0</integer>
-				<key>runningsubtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>script</key>
-				<string>Dash dynamically updates this workflow with docset and search profile keywords.
-
-Do not try to change the keywords from within Alfred, as Dash will overwrite your changes. If you want to change a keyword, change it from within Dash (in Preferences &gt; Docsets).
-
-That said, you can edit anything else within this workflow (including adding new triggers/actions/hotkeys).</string>
-				<key>subtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>title</key>
-				<string>PLEASE README</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>dash_note_readme</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>escaping</key>
-				<integer>0</integer>
-				<key>runningsubtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>script</key>
-				<string>Dash dynamically updates this workflow with docset and search profile keywords.
-
-Do not try to change the keywords from within Alfred, as Dash will overwrite your changes. If you want to change a keyword, change it from within Dash (in Preferences &gt; Docsets).
-
-That said, you can edit anything else within this workflow (including adding new triggers/actions/hotkeys).</string>
-				<key>subtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>title</key>
-				<string>PLEASE README</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>dash_note_readme</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>escaping</key>
-				<integer>0</integer>
-				<key>runningsubtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>script</key>
-				<string>Dash dynamically updates this workflow with docset and search profile keywords.
-
-Do not try to change the keywords from within Alfred, as Dash will overwrite your changes. If you want to change a keyword, change it from within Dash (in Preferences &gt; Docsets).
-
-That said, you can edit anything else within this workflow (including adding new triggers/actions/hotkeys).</string>
-				<key>subtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>title</key>
-				<string>PLEASE README</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>dash_note_readme</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>escaping</key>
-				<integer>0</integer>
-				<key>runningsubtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>script</key>
-				<string>Dash dynamically updates this workflow with docset and search profile keywords.
-
-Do not try to change the keywords from within Alfred, as Dash will overwrite your changes. If you want to change a keyword, change it from within Dash (in Preferences &gt; Docsets).
-
-That said, you can edit anything else within this workflow (including adding new triggers/actions/hotkeys).</string>
-				<key>subtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>title</key>
-				<string>PLEASE README</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>dash_note_readme</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>escaping</key>
-				<integer>0</integer>
-				<key>runningsubtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>script</key>
-				<string>Dash dynamically updates this workflow with docset and search profile keywords.
-
-Do not try to change the keywords from within Alfred, as Dash will overwrite your changes. If you want to change a keyword, change it from within Dash (in Preferences &gt; Docsets).
-
-That said, you can edit anything else within this workflow (including adding new triggers/actions/hotkeys).</string>
-				<key>subtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>title</key>
-				<string>PLEASE README</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>dash_note_readme</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>escaping</key>
-				<integer>0</integer>
-				<key>runningsubtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>script</key>
-				<string>Dash dynamically updates this workflow with docset and search profile keywords.
-
-Do not try to change the keywords from within Alfred, as Dash will overwrite your changes. If you want to change a keyword, change it from within Dash (in Preferences &gt; Docsets).
-
-That said, you can edit anything else within this workflow (including adding new triggers/actions/hotkeys).</string>
-				<key>subtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>title</key>
-				<string>PLEASE README</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>dash_note_readme</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>escaping</key>
-				<integer>0</integer>
-				<key>runningsubtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>script</key>
-				<string>Dash dynamically updates this workflow with docset and search profile keywords.
-
-Do not try to change the keywords from within Alfred, as Dash will overwrite your changes. If you want to change a keyword, change it from within Dash (in Preferences &gt; Docsets).
-
-That said, you can edit anything else within this workflow (including adding new triggers/actions/hotkeys).</string>
-				<key>subtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>title</key>
-				<string>PLEASE README</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>dash_note_readme</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>escaping</key>
-				<integer>0</integer>
-				<key>runningsubtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>script</key>
-				<string>Dash dynamically updates this workflow with docset and search profile keywords.
-
-Do not try to change the keywords from within Alfred, as Dash will overwrite your changes. If you want to change a keyword, change it from within Dash (in Preferences &gt; Docsets).
-
-That said, you can edit anything else within this workflow (including adding new triggers/actions/hotkeys).</string>
-				<key>subtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>title</key>
-				<string>PLEASE README</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>dash_note_readme</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>escaping</key>
-				<integer>0</integer>
-				<key>runningsubtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>script</key>
-				<string>Dash dynamically updates this workflow with docset and search profile keywords.
-
-Do not try to change the keywords from within Alfred, as Dash will overwrite your changes. If you want to change a keyword, change it from within Dash (in Preferences &gt; Docsets).
-
-That said, you can edit anything else within this workflow (including adding new triggers/actions/hotkeys).</string>
-				<key>subtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>title</key>
-				<string>PLEASE README</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>dash_note_readme</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>escaping</key>
-				<integer>0</integer>
-				<key>runningsubtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>script</key>
-				<string>Dash dynamically updates this workflow with docset and search profile keywords.
-
-Do not try to change the keywords from within Alfred, as Dash will overwrite your changes. If you want to change a keyword, change it from within Dash (in Preferences &gt; Docsets).
-
-That said, you can edit anything else within this workflow (including adding new triggers/actions/hotkeys).</string>
-				<key>subtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>title</key>
-				<string>PLEASE README</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>dash_note_readme</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>escaping</key>
-				<integer>0</integer>
-				<key>runningsubtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>script</key>
-				<string>Dash dynamically updates this workflow with docset and search profile keywords.
-
-Do not try to change the keywords from within Alfred, as Dash will overwrite your changes. If you want to change a keyword, change it from within Dash (in Preferences &gt; Docsets).
-
-That said, you can edit anything else within this workflow (including adding new triggers/actions/hotkeys).</string>
-				<key>subtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>title</key>
-				<string>PLEASE README</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>dash_note_readme</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>escaping</key>
-				<integer>0</integer>
-				<key>runningsubtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>script</key>
-				<string>Dash dynamically updates this workflow with docset and search profile keywords.
-
-Do not try to change the keywords from within Alfred, as Dash will overwrite your changes. If you want to change a keyword, change it from within Dash (in Preferences &gt; Docsets).
-
-That said, you can edit anything else within this workflow (including adding new triggers/actions/hotkeys).</string>
-				<key>subtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>title</key>
-				<string>PLEASE README</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>dash_note_readme</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>escaping</key>
-				<integer>0</integer>
-				<key>runningsubtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>script</key>
-				<string>Dash dynamically updates this workflow with docset and search profile keywords.
-
-Do not try to change the keywords from within Alfred, as Dash will overwrite your changes. If you want to change a keyword, change it from within Dash (in Preferences &gt; Docsets).
-
-That said, you can edit anything else within this workflow (including adding new triggers/actions/hotkeys).</string>
-				<key>subtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>title</key>
-				<string>PLEASE README</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>dash_note_readme</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>escaping</key>
-				<integer>0</integer>
-				<key>runningsubtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>script</key>
-				<string>Dash dynamically updates this workflow with docset and search profile keywords.
-
-Do not try to change the keywords from within Alfred, as Dash will overwrite your changes. If you want to change a keyword, change it from within Dash (in Preferences &gt; Docsets).
-
-That said, you can edit anything else within this workflow (including adding new triggers/actions/hotkeys).</string>
-				<key>subtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>title</key>
-				<string>PLEASE README</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>dash_note_readme</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>escaping</key>
-				<integer>0</integer>
-				<key>runningsubtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>script</key>
-				<string>Dash dynamically updates this workflow with docset and search profile keywords.
-
-Do not try to change the keywords from within Alfred, as Dash will overwrite your changes. If you want to change a keyword, change it from within Dash (in Preferences &gt; Docsets).
-
-That said, you can edit anything else within this workflow (including adding new triggers/actions/hotkeys).</string>
-				<key>subtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>title</key>
-				<string>PLEASE README</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>dash_note_readme</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>escaping</key>
-				<integer>0</integer>
-				<key>runningsubtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>script</key>
-				<string>Dash dynamically updates this workflow with docset and search profile keywords.
-
-Do not try to change the keywords from within Alfred, as Dash will overwrite your changes. If you want to change a keyword, change it from within Dash (in Preferences &gt; Docsets).
-
-That said, you can edit anything else within this workflow (including adding new triggers/actions/hotkeys).</string>
-				<key>subtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>title</key>
-				<string>PLEASE README</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>dash_note_readme</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>escaping</key>
-				<integer>0</integer>
-				<key>runningsubtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>script</key>
-				<string>Dash dynamically updates this workflow with docset and search profile keywords.
-
-Do not try to change the keywords from within Alfred, as Dash will overwrite your changes. If you want to change a keyword, change it from within Dash (in Preferences &gt; Docsets).
-
-That said, you can edit anything else within this workflow (including adding new triggers/actions/hotkeys).</string>
-				<key>subtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>title</key>
-				<string>PLEASE README</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>dash_note_readme</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>escaping</key>
-				<integer>0</integer>
-				<key>runningsubtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>script</key>
-				<string>Dash dynamically updates this workflow with docset and search profile keywords.
-
-Do not try to change the keywords from within Alfred, as Dash will overwrite your changes. If you want to change a keyword, change it from within Dash (in Preferences &gt; Docsets).
-
-That said, you can edit anything else within this workflow (including adding new triggers/actions/hotkeys).</string>
-				<key>subtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>title</key>
-				<string>PLEASE README</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>dash_note_readme</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>escaping</key>
-				<integer>0</integer>
-				<key>runningsubtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>script</key>
-				<string>Dash dynamically updates this workflow with docset and search profile keywords.
-
-Do not try to change the keywords from within Alfred, as Dash will overwrite your changes. If you want to change a keyword, change it from within Dash (in Preferences &gt; Docsets).
-
-That said, you can edit anything else within this workflow (including adding new triggers/actions/hotkeys).</string>
-				<key>subtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>title</key>
-				<string>PLEASE README</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>dash_note_readme</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>escaping</key>
-				<integer>0</integer>
-				<key>runningsubtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>script</key>
-				<string>Dash dynamically updates this workflow with docset and search profile keywords.
-
-Do not try to change the keywords from within Alfred, as Dash will overwrite your changes. If you want to change a keyword, change it from within Dash (in Preferences &gt; Docsets).
-
-That said, you can edit anything else within this workflow (including adding new triggers/actions/hotkeys).</string>
-				<key>subtext</key>
-				<string>Please read what's in the "Script:" section below</string>
-				<key>title</key>
-				<string>PLEASE README</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>dash_note_readme</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>escaping</key>
 				<integer>110</integer>
 				<key>keyword</key>
 				<string>snip</string>
@@ -1459,15 +827,15 @@ That said, you can edit anything else within this workflow (including adding new
 				<key>escaping</key>
 				<integer>110</integer>
 				<key>keyword</key>
-				<string>awesome</string>
+				<string>bash</string>
 				<key>runningsubtext</key>
 				<string>Searching for "{query}"</string>
 				<key>script</key>
-				<string>./dashAlfredWorkflow "awesome:{query}"</string>
+				<string>./dashAlfredWorkflow "bash:{query}"</string>
 				<key>subtext</key>
-				<string>Search Font Awesome for "{query}"</string>
+				<string>Search Bash for "{query}"</string>
 				<key>title</key>
-				<string>Search Font Awesome</string>
+				<string>Search Bash</string>
 				<key>type</key>
 				<integer>0</integer>
 				<key>withspace</key>
@@ -1476,7 +844,7 @@ That said, you can edit anything else within this workflow (including adding new
 			<key>type</key>
 			<string>alfred.workflow.input.scriptfilter</string>
 			<key>uid</key>
-			<string>dash_keyword_awesome</string>
+			<string>dash_keyword_bash</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -1488,15 +856,15 @@ That said, you can edit anything else within this workflow (including adding new
 				<key>escaping</key>
 				<integer>110</integer>
 				<key>keyword</key>
-				<string>bootstrap</string>
+				<string>chrome</string>
 				<key>runningsubtext</key>
 				<string>Searching for "{query}"</string>
 				<key>script</key>
-				<string>./dashAlfredWorkflow "bootstrap:{query}"</string>
+				<string>./dashAlfredWorkflow "chrome:{query}"</string>
 				<key>subtext</key>
-				<string>Search Bootstrap 3 for "{query}"</string>
+				<string>Search Chrome Developer Tools for "{query}"</string>
 				<key>title</key>
-				<string>Search Bootstrap 3</string>
+				<string>Search Chrome Developer Tools</string>
 				<key>type</key>
 				<integer>0</integer>
 				<key>withspace</key>
@@ -1505,7 +873,7 @@ That said, you can edit anything else within this workflow (including adding new
 			<key>type</key>
 			<string>alfred.workflow.input.scriptfilter</string>
 			<key>uid</key>
-			<string>dash_keyword_bootstrap</string>
+			<string>dash_keyword_chrome</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -1517,15 +885,15 @@ That said, you can edit anything else within this workflow (including adding new
 				<key>escaping</key>
 				<integer>110</integer>
 				<key>keyword</key>
-				<string>chai</string>
+				<string>color</string>
 				<key>runningsubtext</key>
 				<string>Searching for "{query}"</string>
 				<key>script</key>
-				<string>./dashAlfredWorkflow "chai:{query}"</string>
+				<string>./dashAlfredWorkflow "color:{query}"</string>
 				<key>subtext</key>
-				<string>Search Chai for "{query}"</string>
+				<string>Search CSS Named Colors for "{query}"</string>
 				<key>title</key>
-				<string>Search Chai</string>
+				<string>Search CSS Named Colors</string>
 				<key>type</key>
 				<integer>0</integer>
 				<key>withspace</key>
@@ -1534,7 +902,7 @@ That said, you can edit anything else within this workflow (including adding new
 			<key>type</key>
 			<string>alfred.workflow.input.scriptfilter</string>
 			<key>uid</key>
-			<string>dash_keyword_chai</string>
+			<string>dash_keyword_color</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -1593,6 +961,64 @@ That said, you can edit anything else within this workflow (including adding new
 			<string>alfred.workflow.input.scriptfilter</string>
 			<key>uid</key>
 			<string>dash_keyword_emoji</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>escaping</key>
+				<integer>110</integer>
+				<key>keyword</key>
+				<string>fa</string>
+				<key>runningsubtext</key>
+				<string>Searching for "{query}"</string>
+				<key>script</key>
+				<string>./dashAlfredWorkflow "fa:{query}"</string>
+				<key>subtext</key>
+				<string>Search Font Awesome for "{query}"</string>
+				<key>title</key>
+				<string>Search Font Awesome</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>dash_keyword_fa</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>escaping</key>
+				<integer>110</integer>
+				<key>keyword</key>
+				<string>github</string>
+				<key>runningsubtext</key>
+				<string>Searching for "{query}"</string>
+				<key>script</key>
+				<string>./dashAlfredWorkflow "github:{query}"</string>
+				<key>subtext</key>
+				<string>Search airbnb/enzyme for "{query}"</string>
+				<key>title</key>
+				<string>Search airbnb/enzyme</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>dash_keyword_github</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -1691,35 +1117,6 @@ That said, you can edit anything else within this workflow (including adding new
 				<key>escaping</key>
 				<integer>110</integer>
 				<key>keyword</key>
-				<string>jquery</string>
-				<key>runningsubtext</key>
-				<string>Searching for "{query}"</string>
-				<key>script</key>
-				<string>./dashAlfredWorkflow "jquery:{query}"</string>
-				<key>subtext</key>
-				<string>Search jQuery for "{query}"</string>
-				<key>title</key>
-				<string>Search jQuery</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>dash_keyword_jquery</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>escaping</key>
-				<integer>110</integer>
-				<key>keyword</key>
 				<string>lodash</string>
 				<key>runningsubtext</key>
 				<string>Searching for "{query}"</string>
@@ -1738,6 +1135,64 @@ That said, you can edit anything else within this workflow (including adding new
 			<string>alfred.workflow.input.scriptfilter</string>
 			<key>uid</key>
 			<string>dash_keyword_lodash</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>escaping</key>
+				<integer>110</integer>
+				<key>keyword</key>
+				<string>manpages</string>
+				<key>runningsubtext</key>
+				<string>Searching for "{query}"</string>
+				<key>script</key>
+				<string>./dashAlfredWorkflow "manpages:{query}"</string>
+				<key>subtext</key>
+				<string>Search Man Pages for "{query}"</string>
+				<key>title</key>
+				<string>Search Man Pages</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>dash_keyword_manpages</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>escaping</key>
+				<integer>110</integer>
+				<key>keyword</key>
+				<string>markdown</string>
+				<key>runningsubtext</key>
+				<string>Searching for "{query}"</string>
+				<key>script</key>
+				<string>./dashAlfredWorkflow "markdown:{query}"</string>
+				<key>subtext</key>
+				<string>Search Markdown for "{query}"</string>
+				<key>title</key>
+				<string>Search Markdown</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>dash_keyword_markdown</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -1778,15 +1233,15 @@ That said, you can edit anything else within this workflow (including adding new
 				<key>escaping</key>
 				<integer>110</integer>
 				<key>keyword</key>
-				<string>rails</string>
+				<string>npm</string>
 				<key>runningsubtext</key>
 				<string>Searching for "{query}"</string>
 				<key>script</key>
-				<string>./dashAlfredWorkflow "rails:{query}"</string>
+				<string>./dashAlfredWorkflow "npm:{query}"</string>
 				<key>subtext</key>
-				<string>Search Ruby on Rails 5 for "{query}"</string>
+				<string>Search npm for "{query}"</string>
 				<key>title</key>
-				<string>Search Ruby on Rails 5</string>
+				<string>Search npm</string>
 				<key>type</key>
 				<integer>0</integer>
 				<key>withspace</key>
@@ -1795,7 +1250,36 @@ That said, you can edit anything else within this workflow (including adding new
 			<key>type</key>
 			<string>alfred.workflow.input.scriptfilter</string>
 			<key>uid</key>
-			<string>dash_keyword_rails</string>
+			<string>dash_keyword_npm</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>escaping</key>
+				<integer>110</integer>
+				<key>keyword</key>
+				<string>python3</string>
+				<key>runningsubtext</key>
+				<string>Searching for "{query}"</string>
+				<key>script</key>
+				<string>./dashAlfredWorkflow "python3:{query}"</string>
+				<key>subtext</key>
+				<string>Search Python 3 for "{query}"</string>
+				<key>title</key>
+				<string>Search Python 3</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>dash_keyword_python3</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -1836,64 +1320,6 @@ That said, you can edit anything else within this workflow (including adding new
 				<key>escaping</key>
 				<integer>110</integer>
 				<key>keyword</key>
-				<string>reactnative</string>
-				<key>runningsubtext</key>
-				<string>Searching for "{query}"</string>
-				<key>script</key>
-				<string>./dashAlfredWorkflow "reactnative:{query}"</string>
-				<key>subtext</key>
-				<string>Search React Native for "{query}"</string>
-				<key>title</key>
-				<string>Search React Native</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>dash_keyword_reactnative</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>escaping</key>
-				<integer>110</integer>
-				<key>keyword</key>
-				<string>redux</string>
-				<key>runningsubtext</key>
-				<string>Searching for "{query}"</string>
-				<key>script</key>
-				<string>./dashAlfredWorkflow "redux:{query}"</string>
-				<key>subtext</key>
-				<string>Search Redux for "{query}"</string>
-				<key>title</key>
-				<string>Search Redux</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>dash_keyword_redux</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>escaping</key>
-				<integer>110</integer>
-				<key>keyword</key>
 				<string>ruby</string>
 				<key>runningsubtext</key>
 				<string>Searching for "{query}"</string>
@@ -1923,15 +1349,15 @@ That said, you can edit anything else within this workflow (including adding new
 				<key>escaping</key>
 				<integer>110</integer>
 				<key>keyword</key>
-				<string>sass</string>
+				<string>tamia</string>
 				<key>runningsubtext</key>
 				<string>Searching for "{query}"</string>
 				<key>script</key>
-				<string>./dashAlfredWorkflow "sass:{query}"</string>
+				<string>./dashAlfredWorkflow "tamia:{query}"</string>
 				<key>subtext</key>
-				<string>Search Sass for "{query}"</string>
+				<string>Search Tâmia for "{query}"</string>
 				<key>title</key>
-				<string>Search Sass</string>
+				<string>Search Tâmia</string>
 				<key>type</key>
 				<integer>0</integer>
 				<key>withspace</key>
@@ -1940,7 +1366,36 @@ That said, you can edit anything else within this workflow (including adding new
 			<key>type</key>
 			<string>alfred.workflow.input.scriptfilter</string>
 			<key>uid</key>
-			<string>dash_keyword_sass</string>
+			<string>dash_keyword_tamia</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>escaping</key>
+				<integer>110</integer>
+				<key>keyword</key>
+				<string>webpack</string>
+				<key>runningsubtext</key>
+				<string>Searching for "{query}"</string>
+				<key>script</key>
+				<string>./dashAlfredWorkflow "webpack:{query}"</string>
+				<key>subtext</key>
+				<string>Search webpack for "{query}"</string>
+				<key>title</key>
+				<string>Search webpack</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>dash_keyword_webpack</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -1983,17 +1438,17 @@ The keyword is either a docset keyword (defined in Preferences &gt; Docsets) or 
 			<key>ypos</key>
 			<real>10</real>
 		</dict>
-		<key>dash_keyword_awesome</key>
+		<key>dash_keyword_bash</key>
 		<dict>
 			<key>ypos</key>
 			<integer>1170</integer>
 		</dict>
-		<key>dash_keyword_bootstrap</key>
+		<key>dash_keyword_chrome</key>
 		<dict>
 			<key>ypos</key>
 			<integer>1290</integer>
 		</dict>
-		<key>dash_keyword_chai</key>
+		<key>dash_keyword_color</key>
 		<dict>
 			<key>ypos</key>
 			<integer>1410</integer>
@@ -2008,70 +1463,85 @@ The keyword is either a docset keyword (defined in Preferences &gt; Docsets) or 
 			<key>ypos</key>
 			<integer>1650</integer>
 		</dict>
-		<key>dash_keyword_html</key>
+		<key>dash_keyword_fa</key>
 		<dict>
 			<key>ypos</key>
 			<integer>1770</integer>
 		</dict>
-		<key>dash_keyword_immutable</key>
+		<key>dash_keyword_github</key>
 		<dict>
 			<key>ypos</key>
 			<integer>1890</integer>
 		</dict>
-		<key>dash_keyword_javascript</key>
+		<key>dash_keyword_html</key>
 		<dict>
 			<key>ypos</key>
 			<integer>2010</integer>
 		</dict>
-		<key>dash_keyword_jquery</key>
+		<key>dash_keyword_immutable</key>
 		<dict>
 			<key>ypos</key>
 			<integer>2130</integer>
 		</dict>
-		<key>dash_keyword_lodash</key>
+		<key>dash_keyword_javascript</key>
 		<dict>
 			<key>ypos</key>
 			<integer>2250</integer>
 		</dict>
-		<key>dash_keyword_nodejs</key>
+		<key>dash_keyword_lodash</key>
 		<dict>
 			<key>ypos</key>
 			<integer>2370</integer>
 		</dict>
-		<key>dash_keyword_rails</key>
+		<key>dash_keyword_manpages</key>
 		<dict>
 			<key>ypos</key>
 			<integer>2490</integer>
 		</dict>
-		<key>dash_keyword_react</key>
+		<key>dash_keyword_markdown</key>
 		<dict>
 			<key>ypos</key>
 			<integer>2610</integer>
 		</dict>
-		<key>dash_keyword_reactnative</key>
+		<key>dash_keyword_nodejs</key>
 		<dict>
 			<key>ypos</key>
 			<integer>2730</integer>
 		</dict>
-		<key>dash_keyword_redux</key>
+		<key>dash_keyword_npm</key>
 		<dict>
 			<key>ypos</key>
 			<integer>2850</integer>
 		</dict>
-		<key>dash_keyword_ruby</key>
+		<key>dash_keyword_python3</key>
 		<dict>
 			<key>ypos</key>
 			<integer>2970</integer>
 		</dict>
-		<key>dash_keyword_sass</key>
+		<key>dash_keyword_react</key>
 		<dict>
 			<key>ypos</key>
 			<integer>3090</integer>
+		</dict>
+		<key>dash_keyword_ruby</key>
+		<dict>
+			<key>ypos</key>
+			<integer>3210</integer>
 		</dict>
 		<key>dash_keyword_snip</key>
 		<dict>
 			<key>ypos</key>
 			<integer>930</integer>
+		</dict>
+		<key>dash_keyword_tamia</key>
+		<dict>
+			<key>ypos</key>
+			<integer>3330</integer>
+		</dict>
+		<key>dash_keyword_webpack</key>
+		<dict>
+			<key>ypos</key>
+			<integer>3450</integer>
 		</dict>
 		<key>dash_note_readme</key>
 		<dict>
