@@ -36,7 +36,8 @@
   "extensions.autoUpdate": true,
   "files.associations": {
     "*.pcss": "css",
-    "*.js.snap": "javascript"
+    "*.js.snap": "javascript",
+    ".prettierrc": "json"
   },
 
   // Plugins
