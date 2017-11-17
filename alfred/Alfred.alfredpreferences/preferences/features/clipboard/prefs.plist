@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>autoExpandRestoreClipboardAfter</key>
-	<real>1</real>
+	<real>3</real>
 	<key>autoExpandSnippetsSound</key>
 	<false/>
 	<key>hotkey</key>
