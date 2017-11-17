@@ -66,3 +66,12 @@ alias gr='git rev-parse 2>/dev/null && cd "./$(git rev-parse --show-cdup)"'
 # Gist
 alias gist-paste="gist --private --copy --paste --filename"  # gist-paste filename.ext -- create private Gist from the clipboard contents
 alias gist-file="gist --private --copy"  # gist-file filename.ext -- create private Gist from a file
+
+# git-friendly: pull after branch change
+br() {
+	branch $@
+	if [ "$1" != "-d" ] && [ "$1" != "-D" ] && [ "$1" != "" ]; then
+		echo
+		pull
+	fi
+}
