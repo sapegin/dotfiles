@@ -2,22 +2,22 @@
   "name": "dotfiles",
   "version": "0.0.0",
   "private": true,
-  "dependencies": {
-    "chalk": "^2.1.0",
-    "fastmatter": "^1.1.1",
-    "glob": "^7.1.2",
-    "mkdirp": "~0.5.1",
-    "mrm-core": "^2.2.2",
-    "user-home": "^2.0.0"
-  },
   "scripts": {
     "lint": "eslint . --cache --fix",
     "pretest": "npm run lint"
   },
   "devDependencies": {
+    "chalk": "^2.1.0",
     "eslint": "^4.6.1",
     "eslint-config-tamia": "^4.2.1",
     "eslint-plugin-prettier": "^2.2.0",
-    "prettier": "^1.6.1"
+    "fastmatter": "^1.1.1",
+    "glob": "^7.1.2",
+    "mkdirp": "~0.5.1",
+    "mrm-core": "^2.2.2",
+    "prettier": "^1.8.2",
+    "proselint": "^0.1.7",
+    "textlint": "^9.1.1",
+    "user-home": "^2.0.0"
   }
 }

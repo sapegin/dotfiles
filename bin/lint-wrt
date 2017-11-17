@@ -13,15 +13,18 @@
 # https://github.com/sapegin/dotfiles
 #
 
-command -v textlint >/dev/null 2>&1 || { echo >&2 "textlint is not installed: npm i -g textlint."; exit 1; }
-command -v proselintjs >/dev/null 2>&1 || { echo >&2 "proselintjs is not installed: npm i -g proselint."; exit 1; }
 command -v proselint >/dev/null 2>&1 || { echo >&2 "proselint is not installed: pip install proselint."; exit 1; }
+
+bin="$(dirname $(dirname $0))/node_modules/.bin"
 
 # Topmost opened in iA Writer file
 source_file=$(osascript -e 'tell application "iA Writer" to set filepath to file of document 1' -e 'POSIX path of filepath')
 
 echo "Running Textlint.."
-textlint $@ "$source_file"
+$bin/textlint --config ../tilde/textlintrc $@ "$source_file"
 
 echo "Running Proselint..."
-proselintjs "$source_file"
+$bin/proselintjs "$source_file"
+
+echo "Running Prettier..."
+$bin/prettier --no-config --print-width 70 --no-prose-wrap --write "$source_file"
