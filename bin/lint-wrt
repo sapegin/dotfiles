@@ -15,13 +15,14 @@
 
 command -v proselint >/dev/null 2>&1 || { echo >&2 "proselint is not installed: pip install proselint."; exit 1; }
 
-bin="$(dirname $(dirname $0))/node_modules/.bin"
+root="$(dirname $(dirname $0))"
+bin="$root/node_modules/.bin"
 
 # Topmost opened in iA Writer file
 source_file=$(osascript -e 'tell application "iA Writer" to set filepath to file of document 1' -e 'POSIX path of filepath')
 
 echo "Running Textlint.."
-$bin/textlint --config ../tilde/textlintrc $@ "$source_file"
+$bin/textlint --config $root/tilde/textlintrc $@ "$source_file"
 
 echo "Running Proselint..."
 $bin/proselintjs "$source_file"

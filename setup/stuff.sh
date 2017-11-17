@@ -54,6 +54,7 @@ npm i -g textlint-rule-apostrophe
 npm i -g textlint-rule-common-misspellings
 npm i -g textlint-rule-diacritics
 npm i -g textlint-rule-no-dead-link
+npm i -g textlint-rule-stop-words
 npm i -g textlint-rule-terminology
 npm i -g textlint-rule-write-good
 
