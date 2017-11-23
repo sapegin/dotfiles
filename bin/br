@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+# git-friendly: pull after branch change
+#
+# Usage:
+#   br [branch]
+#   br -d [branch]
+#   br -D [branch]
+#   br -
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+
+branch $@
+if [ "$1" != "-d" ] && [ "$1" != "-D" ] && [ "$1" != "" ]; then
+	local_branch_exists=$(git branch --no-color | egrep " $1\$")
+	if [ -n "$local_branch_exists" ] && [ ! "$local_branch_exists" == '' ]; then
+		echo
+		pull
+	fi
+fi

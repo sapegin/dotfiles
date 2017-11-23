@@ -3,11 +3,14 @@ alias sudo="sudo "
 
 alias o="open"
 alias oo="open ."
+alias f="print"
 alias e="$EDITOR"
 alias gh="github"
 alias rm="trash"
 alias x+="chmod +x"
 alias -- +x="chmod +x"
+alias k="open -a ForkLift"
+alias kk="open -a ForkLift ."
 
 # Trim new lines and copy to clipboard
 alias c="tr -d '\n' | pbcopy"
@@ -66,12 +69,3 @@ alias gr='git rev-parse 2>/dev/null && cd "./$(git rev-parse --show-cdup)"'
 # Gist
 alias gist-paste="gist --private --copy --paste --filename"  # gist-paste filename.ext -- create private Gist from the clipboard contents
 alias gist-file="gist --private --copy"  # gist-file filename.ext -- create private Gist from a file
-
-# git-friendly: pull after branch change
-br() {
-	branch $@
-	if [ "$1" != "-d" ] && [ "$1" != "-D" ] && [ "$1" != "" ]; then
-		echo
-		pull
-	fi
-}
