@@ -28,4 +28,4 @@ echo "Running Proselint..."
 $bin/proselintjs "$source_file"
 
 echo "Running Prettier..."
-$bin/prettier --no-config --print-width 70 --no-prose-wrap --write "$source_file"
+$bin/prettier --no-config --print-width 70 --single-quote --no-prose-wrap --write "$source_file"
