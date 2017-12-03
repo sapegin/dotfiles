@@ -4,6 +4,7 @@
         "apostrophe": true,
         "diacritics": true,
         "common-misspellings": true,
+        "stop-words": true,
         "write-good": {
             "adverb": false,
             "passive": false,
