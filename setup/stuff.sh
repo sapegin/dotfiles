@@ -16,6 +16,7 @@ brew upgrade --all
 
 # GNU core utilities (those that come with macOS are outdated)
 brew install coreutils
+
 # GNU `find`, `locate`, `updatedb`, and `xargs`, g-prefixed
 brew install findutils
 brew install tree
@@ -47,16 +48,6 @@ npm config set loglevel warn
 npm i -g npm-upgrade
 npm i -g diff-so-fancy
 npm i -g trash-cli
-npm i -g proselint
-npm i -g textlint
-npm i -g textlint-filter-rule-comments
-npm i -g textlint-rule-apostrophe
-npm i -g textlint-rule-common-misspellings
-npm i -g textlint-rule-diacritics
-npm i -g textlint-rule-no-dead-link
-npm i -g textlint-rule-stop-words
-npm i -g textlint-rule-terminology
-npm i -g textlint-rule-write-good
 
 # Python
 brew install python
