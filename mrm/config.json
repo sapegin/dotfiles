@@ -13,7 +13,8 @@
     "semanticPeerDependencies": ["semantic-release-tamia"],
     "stylelintExtensions": ".pcss",
     "aliases": {
-        "node": ["package", "license", "readme", "contributing", "editorconfig", "gitignore", "eslint", "lintstaged", "jsconfig"],
+        "node": ["package", "editorconfig", "gitignore", "eslint", "lintstaged", "jsconfig"],
+        "oss": ["package", "license", "readme", "contributing", "editorconfig", "gitignore", "eslint", "lintstaged", "jsconfig"],
         "site": ["package", "editorconfig", "gitignore", "eslint", "stylelint", "tamia"],
         "sync": ["license", "editorconfig", "gitignore", "eslint"]
     }
