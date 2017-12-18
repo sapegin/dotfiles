@@ -3,7 +3,6 @@ alias sudo="sudo "
 
 alias o="open"
 alias oo="open ."
-alias f="print"
 alias e="$EDITOR"
 alias gh="github"
 alias rm="trash"

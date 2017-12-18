@@ -112,6 +112,18 @@ compdef __git_branch_names branch br
 [ -f /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # Enable fzf: https://github.com/junegunn/fzf
+# Use fd (https://github.com/sharkdp/fd) to respect .gitignore
+export FZF_DEFAULT_COMMAND='fd --type f'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+# Use * instead of ** to trigger autocomletion
+export FZF_COMPLETION_TRIGGER='*'
+# Use fd to respect .gitignore and exclude .git directory
+_fzf_compgen_path() {
+  fd --hidden --exclude ".git" . "$1"
+}
+_fzf_compgen_dir() {
+  fd --type d --hidden --exclude ".git" . "$1"
+}
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # Disable sharing history between terminals enabled by Oh My Zsh
