@@ -1,0 +1,592 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>de.gh01.alfred.github</string>
+	<key>connections</key>
+	<dict>
+		<key>14CA19E2-6328-4201-905E-A751E2BA47B5</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>ABE8DD6E-CD29-4E70-87CF-1382A0446009</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>29045171-6618-4FA4-BAB0-39C10422CF31</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>67ADBB8D-C705-4981-BB9B-7C9238BEFF2E</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>94B48881-907F-4752-AAA0-234EA30CFC18</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>FC76BC27-8BCB-4BEE-AD42-EAC2D9B01F0F</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>95CD1A63-A0C6-4458-9817-9C6B1A90C827</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>29045171-6618-4FA4-BAB0-39C10422CF31</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>9715D8FA-0199-450F-99B8-64796B5AC6CB</string>
+				<key>modifiers</key>
+				<integer>1048576</integer>
+				<key>modifiersubtext</key>
+				<string>Copy and paste URL</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>9715D8FA-0199-450F-99B8-64796B5AC6CB</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>87F10E6D-697C-47CE-BD78-E7174F5DF815</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>ABE8DD6E-CD29-4E70-87CF-1382A0446009</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>95CD1A63-A0C6-4458-9817-9C6B1A90C827</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>DAA505B9-F86C-4AF8-818B-8F614F01485E</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>94B48881-907F-4752-AAA0-234EA30CFC18</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>FC76BC27-8BCB-4BEE-AD42-EAC2D9B01F0F</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>29045171-6618-4FA4-BAB0-39C10422CF31</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>9715D8FA-0199-450F-99B8-64796B5AC6CB</string>
+				<key>modifiers</key>
+				<integer>1048576</integer>
+				<key>modifiersubtext</key>
+				<string>Copy and paste URL</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+	</dict>
+	<key>createdby</key>
+	<string>Gregor Harlan</string>
+	<key>description</key>
+	<string>GitHub for Alfred</string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>GitHub</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>0</integer>
+				<key>focusedappvariable</key>
+				<false/>
+				<key>focusedappvariablename</key>
+				<string></string>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>2</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>DAA505B9-F86C-4AF8-818B-8F614F01485E</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>36</integer>
+				<key>keyword</key>
+				<string>gh</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<false/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>2</integer>
+				<key>runningsubtext</key>
+				<string>Loading results…</string>
+				<key>script</key>
+				<string>php -f search.php -- github "{query}"</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string>Search or type a command</string>
+				<key>title</key>
+				<string>gh...</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>FC76BC27-8BCB-4BEE-AD42-EAC2D9B01F0F</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>36</integer>
+				<key>script</key>
+				<string>php -f action.php -- "{query}"</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>29045171-6618-4FA4-BAB0-39C10422CF31</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<true/>
+				<key>removeextension</key>
+				<false/>
+				<key>text</key>
+				<string>{query}</string>
+				<key>title</key>
+				<string>GitHub</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>67ADBB8D-C705-4981-BB9B-7C9238BEFF2E</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string>{query}</string>
+				<key>variables</key>
+				<dict>
+					<key>hotkey</key>
+					<string>1</string>
+				</dict>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.argument</string>
+			<key>uid</key>
+			<string>94B48881-907F-4752-AAA0-234EA30CFC18</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>0</integer>
+				<key>focusedappvariable</key>
+				<false/>
+				<key>focusedappvariablename</key>
+				<string></string>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>2</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>14CA19E2-6328-4201-905E-A751E2BA47B5</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>36</integer>
+				<key>keyword</key>
+				<string>ghe</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>2</integer>
+				<key>runningsubtext</key>
+				<string>Loading results…</string>
+				<key>script</key>
+				<string>php -f search.php -- enterprise "{query}"</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string>Search or type a command (GitHub Enterprise)</string>
+				<key>title</key>
+				<string>ghe...</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>95CD1A63-A0C6-4458-9817-9C6B1A90C827</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>autopaste</key>
+				<true/>
+				<key>clipboardtext</key>
+				<string>{query}</string>
+				<key>transient</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.clipboard</string>
+			<key>uid</key>
+			<string>87F10E6D-697C-47CE-BD78-E7174F5DF815</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string>{query}</string>
+				<key>variables</key>
+				<dict>
+					<key>hotkey</key>
+					<string>1</string>
+				</dict>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.argument</string>
+			<key>uid</key>
+			<string>ABE8DD6E-CD29-4E70-87CF-1382A0446009</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>inputstring</key>
+				<string>{query}</string>
+				<key>matchcasesensitive</key>
+				<false/>
+				<key>matchmode</key>
+				<integer>2</integer>
+				<key>matchstring</key>
+				<string>^\w+://</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.filter</string>
+			<key>uid</key>
+			<string>9715D8FA-0199-450F-99B8-64796B5AC6CB</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string>Changelog
+=========
+
+Version 1.6.1 – 2017-09-23
+--------------------------
+
+### Bugfixes
+
+* Support for macOS 10.13 High Sierra
+* Commit search results had wrong urls on GitHub Enterprise (@beparker)
+
+
+Version 1.6 – 2017-05-07
+------------------------
+
+### Features
+
+* new command `gh user/repo projects` (@dagio)
+* new command `gh my pulls review requested` (@AeroEchelon)
+* better sorting for issues (most recently updated on top) and commits (most recent on top) (@danielma)
+
+### Bugfixes
+
+* On macOS 10.12.5 Beta URLs didnt opened in browser anymore
+
+
+Version 1.5 – 2016-12-13
+------------------------
+
+### Features
+
+* new commands for searching repos and users globally in GitHub (`gh s repo` and `gh s @user`)
+* new command `gh my repos` (@jacobkossman)
+* new command `gh &gt; delete database`
+* source repos with higher priority than forks
+
+### Bugfixes
+
+* in some situations private repos were missing (@lxynox)
+* after saving GitHub Enterprise url the workflow didnt reopen correctly
+* updated user sub commands (Activity tab does not exist any more on GitHub)
+
+
+Version 1.4.1 – 2016-22-07
+--------------------------
+
+* fixed reading environment variables (important for hotkey support)
+
+
+Version 1.4 – 2016-22-07
+------------------------
+
+* Hotkey support
+* use native update mechanism of Alfred (to keep your hotkeys)
+* new command `gh user/repo releases` (@altern8tif)
+* cache warmup after login
+* lower cpu usage in multi curl
+* fixed autocomplete values in GitHub Enterprise
+
+
+Version 1.3 – 2016-17-07
+------------------------
+
+**Important:** This is the last version for Alfred 2.
+
+* Disabled updates in Alfred 2
+* Updates in Alfred 3 are loaded from new location (GitHub releases)
+
+
+Version 1.2 – 2016-04-17
+------------------------
+
+### Features
+
+* New sub commands for `gh my issues/pull`: `created`, `assigned` and `mentioned`
+* New help command: `gh &gt; help`
+* Longer cache lifetime
+
+
+Version 1.1 – 2015-01-10
+------------------------
+
+### Features
+
+* GitHub Enterprise support (use `ghe`)
+* Commit search (`gh user/repo *hash`)
+
+### Bugfixes
+
+* A space after `gh` is required to avoid confusion when using commands of other workflows like `ghost`
+</string>
+	<key>uidata</key>
+	<dict>
+		<key>14CA19E2-6328-4201-905E-A751E2BA47B5</key>
+		<dict>
+			<key>colorindex</key>
+			<integer>9</integer>
+			<key>note</key>
+			<string>GitHub Enterprise</string>
+			<key>xpos</key>
+			<integer>30</integer>
+			<key>ypos</key>
+			<integer>230</integer>
+		</dict>
+		<key>29045171-6618-4FA4-BAB0-39C10422CF31</key>
+		<dict>
+			<key>xpos</key>
+			<integer>600</integer>
+			<key>ypos</key>
+			<integer>40</integer>
+		</dict>
+		<key>67ADBB8D-C705-4981-BB9B-7C9238BEFF2E</key>
+		<dict>
+			<key>xpos</key>
+			<integer>790</integer>
+			<key>ypos</key>
+			<integer>40</integer>
+		</dict>
+		<key>87F10E6D-697C-47CE-BD78-E7174F5DF815</key>
+		<dict>
+			<key>xpos</key>
+			<integer>790</integer>
+			<key>ypos</key>
+			<integer>230</integer>
+		</dict>
+		<key>94B48881-907F-4752-AAA0-234EA30CFC18</key>
+		<dict>
+			<key>colorindex</key>
+			<integer>12</integer>
+			<key>xpos</key>
+			<integer>220</integer>
+			<key>ypos</key>
+			<integer>70</integer>
+		</dict>
+		<key>95CD1A63-A0C6-4458-9817-9C6B1A90C827</key>
+		<dict>
+			<key>colorindex</key>
+			<integer>9</integer>
+			<key>note</key>
+			<string>GitHub Enterprise</string>
+			<key>xpos</key>
+			<integer>330</integer>
+			<key>ypos</key>
+			<integer>230</integer>
+		</dict>
+		<key>9715D8FA-0199-450F-99B8-64796B5AC6CB</key>
+		<dict>
+			<key>xpos</key>
+			<integer>680</integer>
+			<key>ypos</key>
+			<integer>260</integer>
+		</dict>
+		<key>ABE8DD6E-CD29-4E70-87CF-1382A0446009</key>
+		<dict>
+			<key>colorindex</key>
+			<integer>9</integer>
+			<key>xpos</key>
+			<integer>220</integer>
+			<key>ypos</key>
+			<integer>260</integer>
+		</dict>
+		<key>DAA505B9-F86C-4AF8-818B-8F614F01485E</key>
+		<dict>
+			<key>colorindex</key>
+			<integer>12</integer>
+			<key>note</key>
+			<string>github.com</string>
+			<key>xpos</key>
+			<integer>30</integer>
+			<key>ypos</key>
+			<integer>40</integer>
+		</dict>
+		<key>FC76BC27-8BCB-4BEE-AD42-EAC2D9B01F0F</key>
+		<dict>
+			<key>colorindex</key>
+			<integer>12</integer>
+			<key>note</key>
+			<string>github.com</string>
+			<key>xpos</key>
+			<integer>330</integer>
+			<key>ypos</key>
+			<integer>40</integer>
+		</dict>
+	</dict>
+	<key>variables</key>
+	<dict>
+		<key>hotkey</key>
+		<string>0</string>
+	</dict>
+	<key>version</key>
+	<string>1.6.1</string>
+	<key>webaddress</key>
+	<string>https://github.com/gharlan/alfred-github-workflow</string>
+</dict>
+</plist>
