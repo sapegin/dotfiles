@@ -39,6 +39,7 @@ brew install the_silver_searcher
 brew install gist
 brew install exiftool
 brew install zsh-syntax-highlighting
+brew install fzf && $(brew --prefix)/opt/fzf/install
 
 # Node
 curl -L http://git.io/n-install | bash  # n, Node version manager

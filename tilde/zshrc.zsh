@@ -108,8 +108,11 @@ fpath=($(brew --prefix)/share/zsh/functions $fpath)
 autoload -Uz _git && _git
 compdef __git_branch_names branch br
 
-# Enable zsh-syntax-highlighting
+# Enable zsh-syntax-highlighting: https://github.com/zsh-users/zsh-syntax-highlighting
 [ -f /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# Enable fzf: https://github.com/junegunn/fzf
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # Disable sharing history between terminals enabled by Oh My Zsh
 unsetopt share_history
