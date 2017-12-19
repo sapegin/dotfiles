@@ -4,7 +4,7 @@
     "url": "http://sapegin.me",
     "github": "sapegin",
     "eslintPreset": "tamia",
-    "eslintPeerDependencies": ["prettier", "eslint-plugin-prettier"],
+    "eslintObsoleteDependencies": ["eslint-plugin-prettier"],
     "semanticConfig": {
       "analyzeCommits": "semantic-release-tamia/analyzeCommits",
       "generateNotes": "semantic-release-tamia/generateNotes",
@@ -12,9 +12,15 @@
     },
     "semanticPeerDependencies": ["semantic-release-tamia"],
     "stylelintExtensions": ".pcss",
+    "prettierPattern": "**/*.{js,md}",
+    "prettierOptions": {
+      "singleQuote": true,
+      "trailingComma": "es5",
+      "useTabs": true
+    },
     "aliases": {
-        "node": ["package", "editorconfig", "gitignore", "eslint", "lintstaged", "jsconfig"],
-        "oss": ["package", "license", "readme", "contributing", "editorconfig", "gitignore", "eslint", "lintstaged", "jsconfig"],
+        "node": ["package", "editorconfig", "gitignore", "eslint", "prettier", "lintstaged", "jsconfig"],
+        "oss": ["package", "license", "readme", "contributing", "editorconfig", "gitignore", "eslint", "prettier", "lintstaged", "jsconfig"],
         "site": ["package", "editorconfig", "gitignore", "eslint", "stylelint", "tamia"],
         "sync": ["license", "editorconfig", "gitignore", "eslint"]
     }
