@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
 // Magically opens a site in a browser (creates dev server if necessary).
-// 
+//
 // Supported engines:
 //   - Wordpress
-// 
+//
 // Author: Artem Sapegin, sapegin.me
 // License: MIT
 // https://github.com/sapegin/dotfiles
@@ -12,17 +12,17 @@
 
 'use strict';
 
-var fs = require('fs');
-var path = require('path');
-var util = require('util');
-var chalk = require('chalk');
-var execSync = require('child_process').execSync;
+const fs = require('fs');
+const path = require('path');
+const util = require('util');
+const chalk = require('chalk');
+const execSync = require('child_process').execSync;
 
 function run() {
 	cdToProjectRoot();
 
-	var kind = getProjectType();
-	var browse;
+	const kind = getProjectType();
+	let browse;
 	console.log('Project type:', kind);
 	switch (kind) {
 		case 'wordpress':
@@ -47,11 +47,11 @@ function ok() {
 }
 
 function readFile(filepath) {
-	return fs.readFileSync(filepath, {encoding: 'utf8'});
+	return fs.readFileSync(filepath, { encoding: 'utf8' });
 }
 
 function cdToProjectRoot() {
-	var tries = 20;
+	let tries = 20;
 	while (tries && !fs.existsSync('.git')) {
 		process.chdir('..');
 		tries -= 1;
@@ -62,11 +62,7 @@ function cdToProjectRoot() {
 }
 
 function appendSystemFile(filepath, contents) {
-	execSync(
-		'echo "\n\n' +
-		contents + '\n' +
-		'" | sudo tee -a ' + filepath + ' > /dev/null'
-	);
+	execSync('echo "\n\n' + contents + '\n' + '" | sudo tee -a ' + filepath + ' > /dev/null');
 }
 
 function getProjectName() {
@@ -83,7 +79,7 @@ function getProjectType() {
 }
 
 function isStringInFile(filepath, string) {
-	var contents = readFile(filepath);
+	const contents = readFile(filepath);
 	return contents.indexOf(string) !== -1;
 }
 
@@ -92,7 +88,11 @@ function isWordpress() {
 }
 
 function isKoken() {
-	return fs.existsSync(getPath('api.php')) && fs.existsSync(getPath('dl.php')) && fs.existsSync(getPath('i.php'));
+	return (
+		fs.existsSync(getPath('api.php')) &&
+		fs.existsSync(getPath('dl.php')) &&
+		fs.existsSync(getPath('i.php'))
+	);
 }
 
 function getPath(filepath) {
@@ -102,21 +102,19 @@ function getPath(filepath) {
 	return filepath;
 }
 
-
 /**
  * Base class
  */
-function Browse() {
-}
+function Browse() {}
 
 Browse.prototype = {
-	open: function() {
+	open() {
 		this.hostName = getProjectName();
 		console.log('Opening ' + this.hostName + '...');
 		this.runCommands();
 	},
 
-	runCommands: function() {
+	runCommands() {
 		this.addVirtualHost();
 		this.addHost();
 		this.startApache();
@@ -125,18 +123,23 @@ Browse.prototype = {
 		this.openBrowser();
 	},
 
-	addVirtualHost: function() {
-		var vhostsConfPath = '/etc/apache2/extra/httpd-vhosts.conf';
-		if (isStringInFile(vhostsConfPath, 'ServerName ' + this.hostName + '\n')) return;
+	addVirtualHost() {
+		const vhostsConfPath = '/etc/apache2/extra/httpd-vhosts.conf';
+		if (isStringInFile(vhostsConfPath, 'ServerName ' + this.hostName + '\n')) {
+			return;
+		}
 
 		process.stdout.write('Adding virtual host... ');
 
-		appendSystemFile(vhostsConfPath, [
-			'<VirtualHost *:80>',
-			'   DocumentRoot ' + process.cwd(),
-			'   ServerName ' + this.hostName,
-			'</VirtualHost>'
-		].join('\n'));
+		appendSystemFile(
+			vhostsConfPath,
+			[
+				'<VirtualHost *:80>',
+				'   DocumentRoot ' + process.cwd(),
+				'   ServerName ' + this.hostName,
+				'</VirtualHost>',
+			].join('\n')
+		);
 
 		// Restart Apache
 		execSync('sudo apachectl graceful');
@@ -144,15 +147,15 @@ Browse.prototype = {
 		ok();
 	},
 
-	addHost: function() {
-		var hostsFilePath = '/etc/hosts';
-		if (isStringInFile(hostsFilePath, '127.0.0.1 ' + this.hostName + '\n')) return;
+	addHost() {
+		const hostsFilePath = '/etc/hosts';
+		if (isStringInFile(hostsFilePath, '127.0.0.1 ' + this.hostName + '\n')) {
+			return;
+		}
 
 		process.stdout.write('Adding host to /etc/hosts... ');
 
-		appendSystemFile(hostsFilePath,
-			'127.0.0.1 ' + this.hostName + '\n'
-		);
+		appendSystemFile(hostsFilePath, '127.0.0.1 ' + this.hostName + '\n');
 
 		// Flush DNS cache
 		execSync('dscacheutil -flushcache');
@@ -160,39 +163,38 @@ Browse.prototype = {
 		ok();
 	},
 
-	startApache: function() {
+	startApache() {
 		process.stdout.write('Starting Apache... ');
 
-		var result = execSync('ps ax | grep httpd | wc -l');
-		if (parseInt(result.toString()) <= 2) {  // Apache not started
+		const result = execSync('ps ax | grep httpd | wc -l');
+		if (parseInt(result.toString()) <= 2) {
+			// Apache not started
 			execSync('sudo apachectl start');
 		}
 
 		ok();
 	},
 
-	startMysql: function() {
+	startMysql() {
 		process.stdout.write('Starting MySQL... ');
 
-		var result = execSync('mysql.server start');
+		const result = execSync('mysql.server start');
 		if (result.toString().indexOf('SUCCESS!') !== -1) {
 			ok();
-		}
-		else {
+		} else {
 			console.log();
 			console.log(result.toString());
 		}
 	},
 
-	createDatabase: function() {
-		var dbParams = this.getDatabaseParams();
-		var prefix = 'MYSQL_PWD=' + dbParams.password;
-		var connection = '-u' + dbParams.username + ' -h ' + dbParams.host;
-		var dbName = 'wp_' + this.hostName;
+	createDatabase() {
+		const dbParams = this.getDatabaseParams();
+		const prefix = 'MYSQL_PWD=' + dbParams.password;
+		const connection = '-u' + dbParams.username + ' -h ' + dbParams.host;
+		const dbName = 'wp_' + this.hostName;
 		try {
-			execSync(prefix + ' mysql -Bb -e \'\' ' + connection + ' ' + dbName, {stdio: 'ignore'});
-		}
-		catch (e) {
+			execSync(prefix + " mysql -Bb -e '' " + connection + ' ' + dbName, { stdio: 'ignore' });
+		} catch (e) {
 			// Database not exists
 			process.stdout.write('Creating database... ');
 			execSync(prefix + ' mysqladmin ' + connection + ' create ' + dbName);
@@ -200,24 +202,22 @@ Browse.prototype = {
 		}
 	},
 
-	openBrowser: function() {
+	openBrowser() {
 		execSync('open "http://' + this.hostName + '/"');
-	}
+	},
 };
-
 
 /**
  * Wordpress
  */
-function BrowseWordpress() {
-}
+function BrowseWordpress() {}
 
 util.inherits(BrowseWordpress, Browse);
 
 BrowseWordpress.prototype.getDatabaseParams = function() {
-	var configFile = readFile(getPath('wp-config.php'));
-	var params = {};
-	var m;
+	const configFile = readFile(getPath('wp-config.php'));
+	const params = {};
+	let m;
 
 	// User name
 	m = configFile.match(/define\('DB_USER', '([^']*)'/);
@@ -226,26 +226,25 @@ BrowseWordpress.prototype.getDatabaseParams = function() {
 	// Password
 	m = configFile.match(/define\('DB_PASSWORD', '([^']*)'/);
 	params.password = m[1];
-	
+
 	// Host
 	m = configFile.match(/define\('DB_HOST', '([^']*)'/);
 	params.host = m[1];
-		
+
 	return params;
 };
 
 /**
  * Koken
  */
-function BrowseKoken() {
-}
+function BrowseKoken() {}
 
 util.inherits(BrowseKoken, Browse);
 
 BrowseKoken.prototype.getDatabaseParams = function() {
-	var configFile = readFile(getPath('storage/configuration/database.php'));
-	var params = {};
-	var m;
+	const configFile = readFile(getPath('storage/configuration/database.php'));
+	const params = {};
+	let m;
 
 	// User name
 	m = configFile.match(/'username' => '([^']*)'/);

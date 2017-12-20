@@ -18,11 +18,14 @@ const pattern = process.argv[2];
 
 const files = glob.sync(pattern);
 files.forEach(file => {
-    console.log(`${file}...`);
-    let contents = fs.readFileSync(file, 'utf8');
-    const frontmatter = fastmatter(contents);
-    fs.writeFileSync(file, `# ${frontmatter.attributes.title}
+	console.log(`${file}...`);
+	const contents = fs.readFileSync(file, 'utf8');
+	const frontmatter = fastmatter(contents);
+	fs.writeFileSync(
+		file,
+		`# ${frontmatter.attributes.title}
 
 ${frontmatter.body}
-`);
+`
+	);
 });

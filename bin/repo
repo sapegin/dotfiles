@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 // Magic project opener: opens repository using fuzzy search.
-// 
+//
 // Should be used via Bash alias like this:
 //   function proj { cd "$("$HOME/dotfiles/bin/repo" $1)"; }
 //
@@ -12,27 +12,33 @@
 
 'use strict';
 
-var fs = require('fs');
-var path = require('path');
+const fs = require('fs');
+const path = require('path');
 
-var PROJECTS_DIR = path.join(process.env.HOME, 'Dropbox/Projects');
-var SKIP_PREFIXES = ['_Repos', 'Misc'];
+const PROJECTS_DIR = path.join(process.env.HOME, 'Dropbox/Projects');
+const SKIP_PREFIXES = ['_Repos', 'Misc'];
 
-var args = process.argv.splice(2);
+const args = process.argv.splice(2);
 if (args.length !== 1) {
 	console.log('Usage: repo <name>');
 	process.exit(1);
 }
 
-var repo = find(getRepos(PROJECTS_DIR), args[0]);
+const repo = find(getRepos(PROJECTS_DIR), args[0]);
 if (repo) {
 	console.log(path.join(PROJECTS_DIR, repo));
 }
 
 function find(repos, name) {
 	// Fuzzy search
-	var nameRegexp = new RegExp(name.replace(/[^a-z0-9]/gi, '').split('').join('.*'), 'i');
-	var filterRegexp = new RegExp('^(' + SKIP_PREFIXES.join('|') + ')/', 'i');
+	const nameRegexp = new RegExp(
+		name
+			.replace(/[^a-z0-9]/gi, '')
+			.split('')
+			.join('.*'),
+		'i'
+	);
+	const filterRegexp = new RegExp('^(' + SKIP_PREFIXES.join('|') + ')/', 'i');
 	repos = repos.filter(function(repo) {
 		repo = repo.replace(filterRegexp, '');
 		return nameRegexp.test(repo);
@@ -45,7 +51,7 @@ function find(repos, name) {
 	}
 
 	// Order by repo name’s length
-	var length = function(repo) {
+	const length = function(repo) {
 		return path.basename(repo).length;
 	};
 	repos.sort(function(a, b) {
@@ -56,13 +62,12 @@ function find(repos, name) {
 	return repos[0];
 }
 
-
 function getRepos(dir) {
-	var projects = getDirs(dir);
-	var repos = [];
+	const projects = getDirs(dir);
+	const repos = [];
 	projects.forEach(function(projectName) {
-		var projectDir = path.join(dir, projectName);
-		var subDirs = getDirs(projectDir);
+		const projectDir = path.join(dir, projectName);
+		const subDirs = getDirs(projectDir);
 		subDirs.forEach(function(subDirName) {
 			if (fs.existsSync(path.join(projectDir, subDirName, '.git'))) {
 				repos.push(path.join(projectName, subDirName));
@@ -74,7 +79,5 @@ function getRepos(dir) {
 }
 
 function getDirs(dir) {
-	return fs.readdirSync(dir).filter(
-		file => fs.statSync(path.join(dir, file)).isDirectory()
-	);
+	return fs.readdirSync(dir).filter(file => fs.statSync(path.join(dir, file)).isDirectory());
 }

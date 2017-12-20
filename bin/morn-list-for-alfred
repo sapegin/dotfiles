@@ -15,15 +15,15 @@ const glob = require('glob');
 
 const DIR = `${userHome}/Dropbox/Projects/Morning.photos/morning.photos/source`;
 
-var files = glob.sync(`${DIR}/**/*.{md,txt}`);
+const files = glob.sync(`${DIR}/**/*.{md,txt}`);
 
-var query = process.argv[2];
-var regexp = new RegExp(query, 'i');
-var items = files
+const query = process.argv[2];
+const regexp = new RegExp(query, 'i');
+let items = files
 	.map(file => {
-		var contents = fs.readFileSync(file, 'utf8');
-		var title = contents.match(/^title: [\x22\x27]?(.*?)[\x22\x27]?$/im);
-		var date = contents.match(/^date: (.*?)$/m);
+		const contents = fs.readFileSync(file, 'utf8');
+		const title = contents.match(/^title: [\x22\x27]?(.*?)[\x22\x27]?$/im);
+		const date = contents.match(/^date: (.*?)$/m);
 		return {
 			title: title ? title[1] : '<***>',
 			date: date ? date[1] : path.basename(file),
@@ -42,8 +42,7 @@ var items = files
 			type: 'fileicon',
 			path: doc.file,
 		},
-	}))
-;
+	}));
 
 if (!items.length) {
 	items = [
