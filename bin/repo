@@ -10,13 +10,14 @@
 // https://github.com/sapegin/dotfiles
 //
 
-'use strict';
-
 const fs = require('fs');
 const path = require('path');
 
-const PROJECTS_DIR = path.join(process.env.HOME, 'Dropbox/Projects');
-const SKIP_PREFIXES = ['_Repos', 'Misc'];
+const PROJECTS_DIR = path.join(process.env.HOME, '_');
+
+const getDirs = d => fs.readdirSync(d).filter(f => fs.statSync(path.join(d, f)).isDirectory());
+
+const length = r => path.basename(r).length;
 
 const args = process.argv.splice(2);
 if (args.length !== 1) {
@@ -24,7 +25,7 @@ if (args.length !== 1) {
 	process.exit(1);
 }
 
-const repo = find(getRepos(PROJECTS_DIR), args[0]);
+const repo = find(getDirs(PROJECTS_DIR), args[0]);
 if (repo) {
 	console.log(path.join(PROJECTS_DIR, repo));
 }
@@ -38,11 +39,7 @@ function find(repos, name) {
 			.join('.*'),
 		'i'
 	);
-	const filterRegexp = new RegExp('^(' + SKIP_PREFIXES.join('|') + ')/', 'i');
-	repos = repos.filter(function(repo) {
-		repo = repo.replace(filterRegexp, '');
-		return nameRegexp.test(repo);
-	});
+	repos = repos.filter(r => nameRegexp.test(r));
 
 	// Found?
 	if (!repos.length) {
@@ -50,34 +47,9 @@ function find(repos, name) {
 		process.exit(1);
 	}
 
-	// Order by repo name’s length
-	const length = function(repo) {
-		return path.basename(repo).length;
-	};
-	repos.sort(function(a, b) {
-		return length(a) > length(b);
-	});
+	// Order by repo name length
+	repos.sort((a, b) => length(a) > length(b));
 
 	// Return the most probable result
 	return repos[0];
-}
-
-function getRepos(dir) {
-	const projects = getDirs(dir);
-	const repos = [];
-	projects.forEach(function(projectName) {
-		const projectDir = path.join(dir, projectName);
-		const subDirs = getDirs(projectDir);
-		subDirs.forEach(function(subDirName) {
-			if (fs.existsSync(path.join(projectDir, subDirName, '.git'))) {
-				repos.push(path.join(projectName, subDirName));
-			}
-		});
-	});
-
-	return repos;
-}
-
-function getDirs(dir) {
-	return fs.readdirSync(dir).filter(file => fs.statSync(path.join(dir, file)).isDirectory());
 }
