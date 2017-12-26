@@ -1,6 +1,7 @@
 {
   // Internal
   "editor.fontFamily": "Hack",
+  "editor.fontLigatures": true,
   "editor.fontSize": 15,
   "editor.rulers": [80],
   "editor.roundedSelection": false,
