@@ -1,9 +1,0 @@
-{
-  "alfredsnippet" : {
-    "snippet" : "\/\/ eslint-disable-next-line {cursor}",
-    "dontautoexpand" : true,
-    "uid" : "9FB4E018-17BA-451B-A9C9-F099B5318242",
-    "name" : "ESLint: disable next line",
-    "keyword" : ""
-  }
-}

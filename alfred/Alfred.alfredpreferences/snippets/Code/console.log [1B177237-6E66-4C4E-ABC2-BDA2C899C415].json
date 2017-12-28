@@ -1,8 +1,0 @@
-{
-  "alfredsnippet" : {
-    "snippet" : "console.log({cursor})",
-    "uid" : "1B177237-6E66-4C4E-ABC2-BDA2C899C415",
-    "name" : "console.log",
-    "keyword" : "cl("
-  }
-}

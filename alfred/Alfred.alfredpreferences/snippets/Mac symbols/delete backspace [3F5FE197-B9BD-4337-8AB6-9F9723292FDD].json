@@ -1,9 +1,0 @@
-{
-  "alfredsnippet" : {
-    "snippet" : "⌫",
-    "dontautoexpand" : true,
-    "uid" : "3F5FE197-B9BD-4337-8AB6-9F9723292FDD",
-    "name" : "delete \/ backspace",
-    "keyword" : "del"
-  }
-}

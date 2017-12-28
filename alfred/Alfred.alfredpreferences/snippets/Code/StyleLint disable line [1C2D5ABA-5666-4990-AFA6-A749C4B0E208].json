@@ -1,9 +1,0 @@
-{
-  "alfredsnippet" : {
-    "snippet" : "\/\/ stylelint-disable-line {cursor}",
-    "dontautoexpand" : true,
-    "uid" : "1C2D5ABA-5666-4990-AFA6-A749C4B0E208",
-    "name" : "StyleLint: disable line",
-    "keyword" : ""
-  }
-}

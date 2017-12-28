@@ -1,9 +1,0 @@
-{
-  "alfredsnippet" : {
-    "snippet" : "\/* stylelint-disable {cursor} *\/",
-    "dontautoexpand" : true,
-    "uid" : "000C6DE1-4EF3-459D-95EF-1B4040BD8579",
-    "name" : "StyleLint: disable file",
-    "keyword" : ""
-  }
-}
