@@ -7,7 +7,7 @@
 # https://github.com/sapegin/dotfiles
 #
 
-FILES=~/Dropbox/Projects/_Repos/blog.sapegin.me/source/*/all/*.md
+FILES=~/_/blog.sapegin.me/source/*/all/*.md
 
 echo '<?xml version="1.0"?><items>'
 

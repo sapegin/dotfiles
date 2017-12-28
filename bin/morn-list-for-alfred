@@ -13,7 +13,7 @@ const path = require('path');
 const userHome = require('user-home');
 const glob = require('glob');
 
-const DIR = `${userHome}/Dropbox/Projects/Morning.photos/morning.photos/source`;
+const DIR = `${userHome}/_/morning.photos/source`;
 
 const files = glob.sync(`${DIR}/**/*.{md,txt}`);
 

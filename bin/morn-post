@@ -10,7 +10,7 @@
 #
 
 # Filepath = FILEPATH_PREFIX + language code + FILEPATH_SUFFIX + slug + FILEPATH_EXT
-FILEPATH_PREFIX="$HOME/Dropbox/Projects/Morning.photos/morning.photos/source/"
+FILEPATH_PREFIX="$HOME/_/morning.photos/source/"
 FILEPATH_SUFFIX="/blog/"
 FILEPATH_EXT=".md"
 TEMPLATE_FILE="morn-post.tmpl"

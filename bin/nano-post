@@ -13,7 +13,7 @@
 #
 
 # Filepath = FILEPATH_PREFIX + language code + FILEPATH_SUFFIX + slug + FILEPATH_EXT
-FILEPATH_PREFIX="$HOME/Dropbox/Projects/_Repos/blog.sapegin.me/source/"
+FILEPATH_PREFIX="$HOME/_/blog.sapegin.me/source/"
 FILEPATH_SUFFIX="/all/"
 FILEPATH_EXT=".md"
 DATE_FORMAT="%b %e, %Y"
@@ -48,7 +48,7 @@ slug=$(
 	perl -pe 's/ /-/g' |            # Spaces to dashes
 	perl -pe 's/--/-/g' |           # Remove double spaces
 	perl -pe 's/^-//'               # Remove dash in the beginning
-) 
+)
 
 # Ask user to review the slug
 slug=$(ask "Post slug:" "$slug")

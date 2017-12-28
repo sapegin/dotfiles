@@ -9,7 +9,7 @@
 # https://github.com/sapegin/dotfiles
 #
 
-BLOG_DIR="$HOME/Dropbox/Projects/_Repos/blog.sapegin.me"
+BLOG_DIR="$HOME/_/blog.sapegin.me"
 DATE_FORMAT="%b %e, %Y"
 
 filepath="$1"
