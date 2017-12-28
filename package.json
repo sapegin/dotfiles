@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "lint": "eslint . --cache --fix",
-    "test": "npm run lint"
+    "test": "npm run lint",
+    "posttest": "npm run format",
+    "format": "prettier --write '**/*.{js,md}'"
   },
   "dependencies": {
     "chalk": "^2.3.0",
