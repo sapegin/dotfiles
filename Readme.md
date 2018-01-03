@@ -29,6 +29,7 @@ Prerequisites:
 1. [Install Xcode Command Line Tools](http://railsapps.github.io/xcode-command-line-tools.html).
 1. [Generate SSH key](https://help.github.com/articles/generating-ssh-keys/).
 1. [Install Homebrew](http://brew.sh/).
+1. [Install Oh My Zsh](https://github.com/robbyrussell/oh-my-zsh)
 
 Then run these commands in the terminal:
 
