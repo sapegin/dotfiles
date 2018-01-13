@@ -25,7 +25,6 @@
     "statusBar.noFolderBackground": "#e5e5e5",
     "editorWhitespace.foreground": "#ffffff44"
   },
-  "window.zoomLevel": 0,
   "window.openFilesInNewWindow": "off",
   "window.openFoldersInNewWindow": "off",
   "window.restoreWindows": "all",
@@ -45,6 +44,7 @@
 
   // Plugins
   "color-highlight.matchWords": false,
+  "prettier.requireConfig": true,
   "[javascript]": {
     "editor.formatOnSave": true
   },
