@@ -20,8 +20,8 @@ source_file="$1"
 shift
 
 echo
-echo "Running Textlint.."
-echo $bin/textlint --config $root/.textlintrc $@ "$source_file"
+echo "Running Textlint..."
+$bin/textlint --config $root/.textlintrc $@ "$source_file"
 
 echo
 echo "Running Proselint..."

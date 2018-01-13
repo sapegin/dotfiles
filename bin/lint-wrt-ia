@@ -12,4 +12,4 @@
 source_file=$(osascript -e 'tell application "iA Writer" to set filepath to file of document 1' -e 'POSIX path of filepath')
 
 root="$(dirname $(dirname $0))"
-$root/lint-wrt "$source_file" $@
+$root/bin/lint-wrt "$source_file" $@
