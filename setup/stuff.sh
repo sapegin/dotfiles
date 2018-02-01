@@ -29,7 +29,8 @@ brew install homebrew/dupes/grep
 brew install git
 brew install git-extras
 brew install hub
-sudo bash < <( curl https://raw.githubusercontent.com/jamiew/git-friendly/master/install.sh)  # git-friendly
+# git-friendly
+curl -sS https://raw.githubusercontent.com/jamiew/git-friendly/master/install.sh | bash
 
 # Extend global $PATH
 echo -e "setenv PATH $HOME/dotfiles/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" | sudo tee /etc/launchd.conf
@@ -43,7 +44,8 @@ brew install fd
 brew install fzf && $(brew --prefix)/opt/fzf/install
 
 # Node
-curl -L http://git.io/n-install | bash  # n, Node version manager
+# n, Node version manager
+curl -L http://git.io/n-install | bash
 npm config set loglevel warn
 
 # Npm
