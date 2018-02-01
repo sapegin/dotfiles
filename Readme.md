@@ -37,7 +37,7 @@ Then run these commands in the terminal:
 brew install git
 git clone git@github.com:sapegin/dotfiles.git ~/dotfiles
 cd ~/dotfiles
-./sync
+./sync.py
 cd ~/dotfiles/setup
 ```
 
