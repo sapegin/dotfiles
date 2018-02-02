@@ -15,6 +15,8 @@
 	mergeoptions = --no-edit
 	excludesfile = ~/.gitignore
 	quotepath = false
+	# Enable parallel index preload for operations like git diff
+	preloadindex = true
 
 [alias]
 	# Simple shortcuts
@@ -53,7 +55,16 @@
 	fuck = "!f() { git reset --hard origin/$1; }; f"
 
 [push]
+	# When pushing code, always push only your current branch to a branch of the same name
 	default = current
+
+[fetch]
+	# Automatically prune deleted branches from your local copy when you fetch (or pull)
+	prune = true
+
+[log]
+	# Show branch names with git log
+	decorate = short
 
 # Any GitHub repo with my username should be checked out read/write by default
 # http://rentzsch.tumblr.com/post/564806957/public-but-hackable-git-submodules
