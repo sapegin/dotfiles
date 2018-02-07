@@ -31,9 +31,6 @@
 	co = checkout
 	d = diff --color-words
 	s = status -sb
-	# Push changes to Gerrit
-	gerrit = push origin HEAD:refs/for/master
-	gerrit-old = push gerrit HEAD:refs/for/develop
 	# Rebase current branch using a fresh master
 	mmm = !git fetch origin master && git rebase origin/master
 	# Rebase current branch using a fresh develop
@@ -44,6 +41,8 @@
 	ll = log --stat --abbrev-commit
 	# List of my own commits
 	my = !git log --branches=* --no-merges --pretty=format:'%C(reset)%C(bold)%cd %C(reset)%C(white)%s  %C(reset)%h' --date=short --author=\"$(git config user.name)\"
+	# List of branches ordered by last change
+	branches = for-each-ref --sort=-committerdate refs/heads/ --format='%(color:bold)%(refname:short)%(color:reset)\t%(committerdate:relative)'
 	wtf = diff --name-only --diff-filter=U
 	# Rebase: add changes and continue
 	cont = !git add . && git rebase --continue

@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+# Run command in each repo
+#
+# Usage:
+#   w <command>
+#   w git status
+#   w br master
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+
+ROOT="$HOME/codebase/"
+REPOS="resources php"
+
+CYAN="$(tput setaf 6)"
+NOCOLOR="$(tput sgr0)"
+
+if [ -z "$1" ]; then
+	echo "Usage:"
+	echo "  `basename $0` <command>"
+	echo
+	exit 1
+fi
+
+for repo in $REPOS; do
+	echo "📺  ${CYAN}$repo${NOCOLOR}"
+	echo
+	cd ${ROOT}$repo
+	$@
+	echo
+done
