@@ -43,6 +43,7 @@
 	my = !git log --branches=* --no-merges --pretty=format:'%C(reset)%C(bold)%cd %C(reset)%C(white)%s  %C(reset)%h' --date=short --author=\"$(git config user.name)\"
 	# List of branches ordered by last change
 	branches = for-each-ref --sort=-committerdate refs/heads/ --format='%(color:bold)%(refname:short)%(color:reset)\t%(committerdate:relative)'
+	# List of files with merge conflicts
 	wtf = diff --name-only --diff-filter=U
 	# Rebase: add changes and continue
 	cont = !git add . && git rebase --continue
