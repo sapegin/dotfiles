@@ -15,7 +15,10 @@ ROOT="$HOME/codebase/"
 REPOS="resources php"
 
 CYAN="$(tput setaf 6)"
+UNDERLINE="$(tput sgr 0 1)"
 NOCOLOR="$(tput sgr0)"
+
+function header() { echo -e "$1  $UNDERLINE$CYAN$2$NOCOLOR\n"; }
 
 if [ -z "$1" ]; then
 	echo "Usage:"
@@ -25,8 +28,7 @@ if [ -z "$1" ]; then
 fi
 
 for repo in $REPOS; do
-	echo "📺  ${CYAN}$repo${NOCOLOR}"
-	echo
+	header "📺" "$repo"
 	cd ${ROOT}$repo
 	$@
 	echo
