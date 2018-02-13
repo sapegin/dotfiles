@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+
+# Prepare a branch for deployment
+#
+# Usage:
+#   wf-done
+#   wf-done -f # With force-push
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+
+# Exit on any failed command
+set -e
+
+RED="$(tput setaf 1)"
+CYAN="$(tput setaf 6)"
+MAGENTA="$(tput setaf 5)"
+UNDERLINE="$(tput sgr 0 1)"
+BOLD="$(tput bold)"
+NOCOLOR="$(tput sgr0)"
+
+function header() { echo -e "\n$1  $UNDERLINE$CYAN$2$NOCOLOR\n"; }
+function error() { echo -e "\n$UNDERLINE$RED$1$NOCOLOR\n"; }
+
+command -v wf >/dev/null 2>&1 || { echo >&2 "wf is not installed"; exit 1; }
+
+# Dirty repo?
+if [ "$(git status --porcelain 2>/dev/null)" ]; then
+	error "Repo is dirty"
+	echo "You nave uncommitted changes, commit them before continue."
+	echo
+	git status
+	exit 1
+fi
+
+# Remote has new commits?
+diff=$(git rev-list --count --left-only @'{u}'...HEAD)
+if [ "$diff" != "0" ]; then
+	error "Remote history differs"
+	echo "Pull changes before continue."
+	echo
+	exit 1
+fi
+
+header "🐶" "Sniffing..."
+wf sniff
+
+if [ -f "package.json" ]; then
+	header "💣" "Testing..."
+	npm test
+fi
+
+header "💇" "Formatting..."
+wf format
+
+# Restore package-lock.json
+git checkout package-lock.json
+
+header "✂️" "Squashing..."
+git branch --set-upstream-to=origin/master
+git rebase -i
+
+header "🔮" "Rebasing..."
+git pull --rebase origin master
+
+if [ "$1" == "-f" ] || [ "$1" == "--force" ]; then
+	header "🚀" "Pushing..."
+	git push -f
+fi
+
+echo
+echo
+echo -e $BOLD"        ."$NOCOLOR
+echo -e $BOLD"       /'"$NOCOLOR
+echo -e $BOLD"      //"$NOCOLOR
+echo -e $BOLD"  .  //"$NOCOLOR
+echo -e $BOLD"  |\//7"$NOCOLOR
+echo -e $BOLD" /' \" \\"$NOCOLOR
+echo -e $BOLD".   "$NOCOLOR$MAGENTA". ."$NOCOLOR"    "$CYAN"Your branch is ready!"$NOCOLOR
+echo -e $BOLD"| (    \\"$NOCOLOR
+echo -e $BOLD"|  '._  '  /"$NOCOLOR
+echo -e $BOLD"/    \'-'"$NOCOLOR
+echo
+echo "Now join the deployment queue here:"
+echo "http://deploy.wayfair.com/v/integrator/join_queue"
+echo
