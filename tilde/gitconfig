@@ -31,6 +31,7 @@
 	co = checkout
 	d = diff --color-words
 	s = status -sb
+	cp = cherry-pick
 	# Rebase current branch using a fresh master
 	mmm = !git fetch origin master && git rebase origin/master
 	# Rebase current branch using a fresh develop
