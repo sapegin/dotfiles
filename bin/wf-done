@@ -16,12 +16,38 @@ set -e
 RED="$(tput setaf 1)"
 CYAN="$(tput setaf 6)"
 MAGENTA="$(tput setaf 5)"
+YELLOW="$(tput setaf 3)"
+GREEN="$(tput setaf 2)"
 UNDERLINE="$(tput sgr 0 1)"
 BOLD="$(tput bold)"
 NOCOLOR="$(tput sgr0)"
 
 function header() { echo -e "\n$1  $UNDERLINE$CYAN$2$NOCOLOR\n"; }
 function error() { echo -e "\n$UNDERLINE$RED$1$NOCOLOR\n"; }
+
+function unicorn() {
+	echo -e $BOLD"        ."$NOCOLOR
+	echo -e $BOLD"       /'"$NOCOLOR
+	echo -e $BOLD"      //"$NOCOLOR
+	echo -e $BOLD"  .  //"$NOCOLOR
+	echo -e $BOLD"  |\//7"$NOCOLOR
+	echo -e $BOLD" /' \" \\"$NOCOLOR
+	echo -e $BOLD".   "$NOCOLOR$MAGENTA". ."$NOCOLOR"    "$CYAN"Your branch is ready!"$NOCOLOR
+	echo -e $BOLD"| (    \\"$NOCOLOR
+	echo -e $BOLD"|  '._  '  /"$NOCOLOR
+	echo -e $BOLD"/    \'-'"$NOCOLOR
+}
+
+function nyan() {
+	echo -en $RED"-_-_-_-_-_-_-_"
+	echo -e $NOCOLOR$BOLD$BOLD",------,"$NOCOLOR
+	echo -en $YELLOW$WHIT"_-_-_-_-_-_-_-"
+	echo -e $NOCOLOR$BOLD$BOLD"|   /\_/\\"$NOCOLOR"  "$CYAN"Your branch is ready!"$NOCOLOR
+	echo -en $GREEN"-_-_-_-_-_-_-"
+	echo -e $NOCOLOR$BOLD$BOLD"~|__( "$MAGENTA"^"$NOCOLOR$BOLD" ."$MAGENTA"^"$NOCOLOR$BOLD")  /"$NOCOLOR
+	echo -en $CYAN"-_-_-_-_-_-_-"
+	echo -e $NOCOLOR$BOLD$BOLD'""  ""'$NOCOLOR
+}
 
 command -v wf >/dev/null 2>&1 || { echo >&2 "wf is not installed"; exit 1; }
 
@@ -43,19 +69,28 @@ if [ "$diff" != "0" ]; then
 	exit 1
 fi
 
+TYPE="php"
+if [ -f "package.json" ]; then
+	TYPE="resources"
+fi
+
 header "🐶" "Sniffing..."
 wf sniff
 
-if [ -f "package.json" ]; then
-	header "💣" "Testing..."
+header "💣" "Testing..."
+if [ "$TYPE" == "resources" ]; then
 	npm test
+else
+	wf test
 fi
 
 header "💇" "Formatting..."
 wf format
 
 # Restore package-lock.json
-git checkout package-lock.json
+if [ "$TYPE" == "resources" ]; then
+	git checkout package-lock.json
+fi
 
 header "✂️" "Squashing..."
 git branch --set-upstream-to=origin/master
@@ -71,17 +106,14 @@ fi
 
 echo
 echo
-echo -e $BOLD"        ."$NOCOLOR
-echo -e $BOLD"       /'"$NOCOLOR
-echo -e $BOLD"      //"$NOCOLOR
-echo -e $BOLD"  .  //"$NOCOLOR
-echo -e $BOLD"  |\//7"$NOCOLOR
-echo -e $BOLD" /' \" \\"$NOCOLOR
-echo -e $BOLD".   "$NOCOLOR$MAGENTA". ."$NOCOLOR"    "$CYAN"Your branch is ready!"$NOCOLOR
-echo -e $BOLD"| (    \\"$NOCOLOR
-echo -e $BOLD"|  '._  '  /"$NOCOLOR
-echo -e $BOLD"/    \'-'"$NOCOLOR
+
+if [ "$TYPE" == "resources" ]; then
+	unicorn
+else
+	nyan
+fi
+
 echo
 echo "Now join the deployment queue here:"
-echo "http://deploy.wayfair.com/v/integrator/join_queue"
+echo $UNDERLINE"http://deploy.wayfair.com/v/integrator/join_queue"$NOCOLOR
 echo
