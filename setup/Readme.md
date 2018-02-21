@@ -75,10 +75,10 @@ Create a script:
 #!/usr/bin/env bash
 
 if  [[ "$1" == /Users/admin/badoo/* ]]; then
-	/usr/local/bin/pstorm "$1"
-	open /Applications/PhpStorm.app  # Focus
+  /usr/local/bin/pstorm "$1"
+  open /Applications/PhpStorm.app  # Focus
 else
-	open "$1"
+  open "$1"
 fi
 ```
 
