@@ -42,6 +42,23 @@ git config user.email "artem.sapegin@example.com"
 git config user.name "Artem Sapegin"
 ```
 
+### How to make Home and End keys behave like on Windows
+
+Create `~/Library/KeyBindings/DefaultKeyBinding.dict`:
+
+```
+{
+  "\UF729"  = moveToBeginningOfParagraph:; // home
+  "\UF72B"  = moveToEndOfParagraph:; // end
+  "$\UF729" = moveToBeginningOfParagraphAndModifySelection:; // shift-home
+  "$\UF72B" = moveToEndOfParagraphAndModifySelection:; // shift-end
+  "^\UF729" = moveToBeginningOfDocument:; // ctrl-home
+  "^\UF72B" = moveToEndOfDocument:; // ctrl-end
+  "^$\UF729" = moveToBeginningOfDocumentAndModifySelection:; // ctrl-shift-home
+  "^$\UF72B" = moveToEndOfDocumentAndModifySelection:; // ctrl-shift-end
+}
+```
+
 ### How to remove US English keyboard layout on macOS
 
 Useful when you use some kind of [typography layout](http://ilyabirman.ru/projects/typography-layout/).
