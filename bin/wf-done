@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-# Prepare a branch for deployment
+# Prepare a branch for deployment and *force-push* to remote
 #
 # Usage:
 #   wf-done
-#   wf-done -f # With force-push
+#   wf-done --no-push
 #
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
@@ -114,7 +114,7 @@ git rebase -i
 header "🔮" "Rebasing..."
 git pull --rebase origin master
 
-if [ "$1" == "-f" ] || [ "$1" == "--force" ]; then
+if [ "$1" != "--no-push" ]; then
 	header "🚀" "Pushing..."
 	git push -f
 fi
