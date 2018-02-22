@@ -58,7 +58,14 @@ function is_dirty() {
 	fi
 }
 
+function cleanup() {
+	git checkout package-lock.json
+}
+
 command -v wf >/dev/null 2>&1 || { echo >&2 "wf is not installed"; exit 1; }
+
+# Cleanup on errors
+trap cleanup EXIT
 
 # Dirty repo?
 if is_dirty; then
@@ -98,7 +105,7 @@ wf format
 
 # Restore package-lock.json
 if [ "$TYPE" == "resources" ]; then
-	git checkout package-lock.json
+	cleanup
 fi
 
 # Commit files changed during formatting
