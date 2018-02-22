@@ -49,10 +49,19 @@ function nyan() {
 	echo -e $NOCOLOR$BOLD$BOLD'""  ""'$NOCOLOR
 }
 
+# Is repository dirty (has uncommitted changes)?
+function is_dirty() {
+	if [ "$(git status --porcelain 2>/dev/null)" ]; then
+		return 0 # Success
+	else
+		return 1
+	fi
+}
+
 command -v wf >/dev/null 2>&1 || { echo >&2 "wf is not installed"; exit 1; }
 
 # Dirty repo?
-if [ "$(git status --porcelain 2>/dev/null)" ]; then
+if is_dirty; then
 	error "Repo is dirty"
 	echo "You nave uncommitted changes, commit them before continue."
 	echo
@@ -90,6 +99,12 @@ wf format
 # Restore package-lock.json
 if [ "$TYPE" == "resources" ]; then
 	git checkout package-lock.json
+fi
+
+# Commit files changed during formatting
+if is_dirty; then
+	git add .
+	git commit -m "Format code"
 fi
 
 header "✂️" "Squashing..."
