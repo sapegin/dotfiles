@@ -62,6 +62,11 @@ function cleanup() {
 	git checkout package-lock.json
 }
 
+# PT ticket ID
+function pt_id() {
+	git symbolic-ref HEAD 2>/dev/null | tr -cd "[:digit:]\n"
+}
+
 command -v wf >/dev/null 2>&1 || { echo >&2 "wf is not installed"; exit 1; }
 
 # Cleanup on errors
@@ -126,7 +131,13 @@ if [ "$1" != "--no-push" ]; then
 	git push -f
 fi
 
+################################################################################
+
+pt="$(pt_id)"
+
 echo
+echo "PT: $pt — "$UNDERLINE"https://admin.wayfair.com/tracker/views/142.php?PrtID=$pt"$NOCOLOR
+echo "MR: scroll up to the git push results — the link is there"
 echo
 
 if [ "$TYPE" == "resources" ]; then
