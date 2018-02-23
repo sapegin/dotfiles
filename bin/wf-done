@@ -120,8 +120,7 @@ if is_dirty; then
 fi
 
 header "✂️" "Squashing..."
-git branch --set-upstream-to=origin/master
-git rebase -i
+git rebase -i master
 
 header "🔮" "Rebasing..."
 git pull --rebase origin master
