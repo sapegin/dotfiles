@@ -3,8 +3,7 @@
 # Prepare a branch for deployment and *force-push* to remote
 #
 # Usage:
-#   wf-done
-#   wf-done --no-push
+#   wf-done [--no-test] [--no-push]
 #
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
@@ -90,28 +89,43 @@ if [ "$diff" != "0" ]; then
 	exit 1
 fi
 
+SKIP_TEST=""
+SKIP_PUSH=""
+while test $# -gt 0
+do
+    case "$1" in
+        --no-test) SKIP_TEST="1"
+            ;;
+        --no-push) SKIP_PUSH="1"
+            ;;
+    esac
+    shift
+done
+
 TYPE="php"
 if [ -f "package.json" ]; then
 	TYPE="resources"
 fi
 
-header "🐶" "Sniffing..."
-wf sniff
+if [ -z "$SKIP_TEST" ]; then
+	header "🐶" "Sniffing..."
+	wf sniff
 
-header "💣" "Testing..."
-if [ "$TYPE" == "resources" ]; then
-	npm run flow check
-	npm test
-else
-	wf test
-fi
+	header "💣" "Testing..."
+	if [ "$TYPE" == "resources" ]; then
+		npm run flow check
+		npm test
+	else
+		wf test
+	fi
 
-header "💇" "Formatting..."
-wf format
+	header "💇" "Formatting..."
+	wf format
 
-# Restore package-lock.json
-if [ "$TYPE" == "resources" ]; then
-	cleanup
+	# Restore package-lock.json
+	if [ "$TYPE" == "resources" ]; then
+		cleanup
+	fi
 fi
 
 # Commit files changed during formatting
@@ -121,24 +135,26 @@ if is_dirty; then
 fi
 
 header "✂️" "Squashing..."
+echo "Waiting for your editor to close the file..."
 git rebase -i master
 
 header "🔮" "Rebasing..."
 git pull --rebase origin master
 
-if [ "$1" != "--no-push" ]; then
+if [ -z "$SKIP_PUSH" ]; then
 	header "🚀" "Pushing..."
 	git push -f
 fi
 
 ################################################################################
 
-pt="$(pt_id)"
+echo
 
-echo
-echo "PT: $pt — "$UNDERLINE"https://admin.wayfair.com/tracker/views/142.php?PrtID=$pt"$NOCOLOR
-echo "MR: scroll up to the git push results — the link is there"
-echo
+pt="$(pt_id)"
+if [ -n "$pt" ]; then
+	echo "PT: $pt — "$UNDERLINE"https://admin.wayfair.com/tracker/views/142.php?PrtID=$pt"$NOCOLOR
+	echo
+fi
 
 if [ "$TYPE" == "resources" ]; then
 	unicorn
