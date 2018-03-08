@@ -58,7 +58,10 @@ function is_dirty() {
 }
 
 function cleanup() {
-	git checkout package-lock.json
+	# Restore package-lock.json
+	if [ -f "package-lock.json" ]; then
+		git checkout package-lock.json >/dev/null 2>&1 || true
+	fi
 }
 
 # PT ticket ID
@@ -122,10 +125,7 @@ if [ -z "$SKIP_TEST" ]; then
 	header "💇" "Formatting..."
 	wf format
 
-	# Restore package-lock.json
-	if [ "$TYPE" == "resources" ]; then
-		cleanup
-	fi
+	cleanup
 fi
 
 # Commit files changed during formatting
