@@ -12,7 +12,7 @@
 # https://github.com/sapegin/dotfiles
 
 ROOT="$HOME/codebase/"
-REPOS="resources php"
+REPOS="resources php templates"
 
 CYAN="$(tput setaf 6)"
 UNDERLINE="$(tput sgr 0 1)"
