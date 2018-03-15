@@ -136,7 +136,7 @@ fi
 
 header "✂️" "Squashing..."
 echo "Waiting for your editor to close the file..."
-git rebase -i
+git rebase --interactive --autosquash origin/master
 
 header "🔮" "Rebasing..."
 git pull --rebase origin master
