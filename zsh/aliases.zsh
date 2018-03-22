@@ -50,6 +50,9 @@ alias replace="replace --exclude='node_modules'"
 # Run npm script without annoying noise
 alias nr="npm run --silent"
 
+# Jest watch
+alias j="npx jest --watch"
+
 # Ban npm if project uses Yarn
 npm() {
 	if [ -f "yarn.lock" ]; then
