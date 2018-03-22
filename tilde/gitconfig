@@ -29,7 +29,7 @@
 	cne = commit --no-edit
 	amend = commit --amend
 	co = checkout
-	d = diff --color-words
+	patch = !git --no-pager diff --no-color
 	s = status -sb
 	cp = cherry-pick
 	# Rebase current branch using a fresh master
