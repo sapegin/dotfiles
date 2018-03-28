@@ -1,7 +1,6 @@
 {
   // Internal
   "editor.fontFamily": "Hack",
-  "editor.fontLigatures": true,
   "editor.fontSize": 15,
   "editor.rulers": [
     80
@@ -14,6 +13,7 @@
   "editor.renderIndentGuides": false,
   "editor.renderWhitespace": "all",
   "editor.autoIndent": true,
+  "editor.hover": false,
   "workbench.editor.showTabs": false,
   "workbench.sideBar.location": "right",
   "workbench.activityBar.visible": false,
