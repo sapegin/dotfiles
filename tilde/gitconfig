@@ -29,9 +29,11 @@
 	cne = commit --no-edit
 	amend = commit --amend
 	co = checkout
-	patch = !git --no-pager diff --no-color
 	s = status -sb
+	d = diff
 	cp = cherry-pick
+	# Sharable diff with disabled diff-so-fancy and +/- marks
+	patch = !git --no-pager diff --no-color
 	# Rebase current branch using a fresh master
 	mmm = !git fetch origin master && git rebase origin/master
 	# Rebase current branch using a fresh develop
