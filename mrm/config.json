@@ -5,11 +5,7 @@
     "github": "sapegin",
     "eslintPreset": "tamia",
     "eslintObsoleteDependencies": ["eslint-plugin-prettier"],
-    "semanticConfig": {
-      "analyzeCommits": "semantic-release-tamia/analyzeCommits",
-      "generateNotes": "semantic-release-tamia/generateNotes",
-      "verifyRelease": "semantic-release-tamia/verifyRelease"
-    },
+    "semanticArgs": "--analyze-commits semantic-release-tamia/analyzeCommits --verify-release semantic-release-tamia/verifyRelease --generate-notes semantic-release-tamia/generateNotes",
     "semanticPeerDependencies": ["semantic-release-tamia"],
     "stylelintExtensions": ".pcss",
     "prettierPattern": "**/*.{js,md}",
