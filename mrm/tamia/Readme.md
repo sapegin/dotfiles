@@ -4,10 +4,10 @@ Powered by [Tâmia](http://tamiadev.github.io/tamia/) and [Fledermaus](https://g
 
 ## Author
 
-* [${name}](${url})
+- [${name}](${url})
 
 ---
 
 ## License
 
-You can use the code (HTML/JS) of this site, but you *can’t* use the design, Stylus/CSS, images and content.
+You can use the code (HTML/JS) of this site, but you _can’t_ use the design, Stylus/CSS, images and content.

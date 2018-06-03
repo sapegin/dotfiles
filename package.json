@@ -8,16 +8,18 @@
     "posttest": "npm run format",
     "format": "prettier --write '**/*.{js,md}'"
   },
+  "engines": {
+    "node": ">=8.9"
+  },
   "dependencies": {
     "chalk": "^2.3.0",
-    "eslint": "^4.13.1",
-    "eslint-config-tamia": "^4.2.3",
-    "eslint-plugin-prettier": "^2.3.1",
+    "eslint": "^4.19.1",
+    "eslint-config-tamia": "^5.0.1",
     "fastmatter": "^1.1.1",
     "glob": "^7.1.2",
     "mkdirp": "~0.5.1",
-    "mrm-core": "^2.6.0",
-    "prettier": "^1.9.2",
+    "mrm-core": "^3.1.1",
+    "prettier": "^1.13.4",
     "proselint": "^0.1.7",
     "textlint": "^10.2.1",
     "textlint-filter-rule-comments": "^1.2.2",
@@ -26,7 +28,7 @@
     "textlint-rule-diacritics": "0.0.2",
     "textlint-rule-no-dead-link": "^4.3.0",
     "textlint-rule-stop-words": "^1.0.3",
-    "textlint-rule-terminology": "^1.1.28",
+    "textlint-rule-terminology": "^1.1.29",
     "textlint-rule-write-good": "^1.6.2",
     "user-home": "^2.0.0"
   }

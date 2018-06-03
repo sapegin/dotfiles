@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-'use strict';
 
 /**
  * HTML color converter
@@ -85,7 +84,7 @@ function rgb2hsl(rgb) {
 	const d = max - min;
 
 	if (d !== 0) {
-		hsl[1] = Math.round(d * 100 / (100 - Math.abs(2 * hsl[2] - 100))) + '%';
+		hsl[1] = Math.round((d * 100) / (100 - Math.abs(2 * hsl[2] - 100))) + '%';
 
 		switch (max) {
 			case rgb[0]:
@@ -96,7 +95,7 @@ function rgb2hsl(rgb) {
 				break;
 			case rgb[2]:
 				hsl[0] = (rgb[0] - rgb[1]) / d + 4;
-			default:
+				break;
 		}
 
 		hsl[0] = Math.round(hsl[0] * 60);

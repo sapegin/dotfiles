@@ -1,8 +1,15 @@
-'use strict';
-
 const fs = require('fs');
 const path = require('path');
-const { MrmError, json, yaml, lines, template, copyFiles, makeDirs, install } = require('mrm-core');
+const {
+	MrmError,
+	json,
+	yaml,
+	lines,
+	template,
+	copyFiles,
+	makeDirs,
+	install,
+} = require('mrm-core');
 
 const dependencies = ['tamia@3.0.0-aplha.4'];
 const devDependencies = [
@@ -146,11 +153,15 @@ module.exports = function(config) {
 			'templates/Base.jsx',
 			'templates/Page.jsx',
 		],
-		{ overwrite: false }
+		{
+			overwrite: false,
+		}
 	);
 
 	// Dependencies
-	install(dependencies, { dev: false });
+	install(dependencies, {
+		dev: false,
+	});
 	install(devDependencies);
 };
 module.exports.description = 'Add Tâmia and Fledermaus';

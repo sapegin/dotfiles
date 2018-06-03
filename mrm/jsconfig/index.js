@@ -1,5 +1,4 @@
 // @ts-check
-'use strict';
 
 const { json } = require('mrm-core');
 

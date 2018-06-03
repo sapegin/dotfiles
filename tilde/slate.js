@@ -1,5 +1,4 @@
 /* global S */
-'use strict';
 
 const fullscreen = S.op('move', {
 	x: 'screenOriginX',

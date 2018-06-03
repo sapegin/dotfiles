@@ -1,6 +1,6 @@
 ## Prerequisites
 
-* [Command Line Tools for Xcode](https://developer.apple.com/downloads)
+- [Command Line Tools for Xcode](https://developer.apple.com/downloads)
 
 ## Scripts
 
@@ -23,7 +23,6 @@ Installs quick look plugins: qlImageSize.
 ### update
 
 Get macOS software updates, update Homebrew, npm, Ruby packages, dotfiles and some other software.
-
 
 ## Tips & Tricks
 
@@ -82,16 +81,16 @@ else
 fi
 ```
 
-Go to iTerm2 preferences → Profiles → Advanced → Semantic History. Choose *Run command* and type: `/Users/admin/bin/iopen "\1"`.
+Go to iTerm2 preferences → Profiles → Advanced → Semantic History. Choose _Run command_ and type: `/Users/admin/bin/iopen "\1"`.
 
 ### Useful iTerm2 triggers
 
-Go to iTerm2 preferences → Profiles → Advanced → Triggers. Click *Edit*.
+Go to iTerm2 preferences → Profiles → Advanced → Triggers. Click _Edit_.
 
-Description | RegExp | Action | Color
------------ | ------ | ------ | -----
-Highlight Git merge conflicts | `CONFLICT \(content\)\:.*` | Highlight Text | Text: `f2ac00`
+| Description                   | RegExp                     | Action         | Color          |
+| ----------------------------- | -------------------------- | -------------- | -------------- |
+| Highlight Git merge conflicts | `CONFLICT \(content\)\:.*` | Highlight Text | Text: `f2ac00` |
 
 ## Misc
 
-* [OSX Python developer guide](https://gist.github.com/stefanfoulis/902296)
+- [OSX Python developer guide](https://gist.github.com/stefanfoulis/902296)
