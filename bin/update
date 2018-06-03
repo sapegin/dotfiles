@@ -29,7 +29,7 @@ echo
 header "Updating Homebrew..."
 sudo -v
 brew update
-brew upgrade --all
+brew upgrade
 brew cleanup
 brew prune
 echo
