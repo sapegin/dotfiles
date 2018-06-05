@@ -141,6 +141,9 @@ git rebase --interactive --autosquash origin/master
 header "🔮" "Rebasing..."
 git pull --rebase origin master
 
+header "✏️" "Editing the commit message..."
+git commit --amend
+
 if [ -z "$SKIP_PUSH" ]; then
 	header "🚀" "Pushing..."
 	git push --force-with-lease
