@@ -7,13 +7,6 @@ const fullscreen = S.op('move', {
 	height: 'screenSizeY',
 });
 
-const middle = S.op('move', {
-	x: 'screenOriginX+screenSizeX/4',
-	y: 'screenOriginY',
-	width: 'screenSizeX/2',
-	height: 'screenSizeY',
-});
-
 const leftHalf = S.op('move', {
 	x: 'screenOriginX',
 	y: 'screenOriginY',
@@ -29,8 +22,7 @@ const rightHalf = S.op('move', {
 });
 
 S.bnda({
-	'f:ctrl;alt': fullscreen,
-	'm:ctrl;alt': middle,
+	'top:cmd;ctrl;alt': fullscreen,
 	'left:cmd;ctrl;alt': leftHalf,
 	'right:cmd;ctrl;alt': rightHalf,
 });
