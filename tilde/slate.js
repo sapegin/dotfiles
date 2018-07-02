@@ -22,7 +22,7 @@ const rightHalf = S.op('move', {
 });
 
 S.bnda({
-	'top:cmd;ctrl;alt': fullscreen,
+	'up:cmd;ctrl;alt': fullscreen,
 	'left:cmd;ctrl;alt': leftHalf,
 	'right:cmd;ctrl;alt': rightHalf,
 });
