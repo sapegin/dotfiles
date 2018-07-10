@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Removes old Git branches
+# Removes old Git branches and does other cleanup
 #
 # Usage:
 #   git-cleanup [--dry-run]
@@ -14,6 +14,12 @@
 # Exit on any failed command
 set -e
 
+CYAN="$(tput setaf 6)"
+UNDERLINE="$(tput sgr 0 1)"
+NOCOLOR="$(tput sgr0)"
+
+function header() { echo -e "\n$UNDERLINE$CYAN$1$NOCOLOR\n"; }
+
 function branches() {
 	git branch -vv | grep 'origin/.*: gone]' | awk '{print $1}'
 }
@@ -23,9 +29,15 @@ if [[ "$1" == "--dry-run" ]]; then
 	exit 1
 fi
 
-# Deletes all stale remote-tracking branches, these branches have already been
+# Delete all unreachable objects from the object database
+header "Deleting unreachable objects..."
+git prune
+
+# Delete all stale remote-tracking branches, these branches have already been
 # removed from the remote repository, but are still locally available in "remotes/".
+header "Deleting stale remote-tracking branches..."
 git remote prune origin
 
 # Delete branches for which remote branches were removed
+header "Deleting branches with no longer existing remote branches..."
 branches | xargs git branch -D
