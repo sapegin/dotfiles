@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+# Removes old Git branches
+#
+# Usage:
+#   git-cleanup [--dry-run]
+#
+# See explanation here: http://erikaybar.name/git-deleting-old-local-branches/
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+
+# Exit on any failed command
+set -e
+
+function branches() {
+	git branch -vv | grep 'origin/.*: gone]' | awk '{print $1}'
+}
+
+if [[ "$1" == "--dry-run" ]]; then
+	branches
+	exit 1
+fi
+
+# Deletes all stale remote-tracking branches, these branches have already been
+# removed from the remote repository, but are still locally available in "remotes/".
+git remote prune origin
+
+# Delete branches for which remote branches were removed
+branches | xargs git branch -D
