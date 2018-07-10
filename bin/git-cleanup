@@ -37,6 +37,7 @@ git prune
 # removed from the remote repository, but are still locally available in "remotes/".
 header "Deleting stale remote-tracking branches..."
 git remote prune origin
+echo "Done."
 
 # Delete branches for which remote branches were removed
 header "Deleting branches with no longer existing remote branches..."
