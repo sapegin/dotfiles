@@ -12,7 +12,6 @@
     "node": ">=8.9"
   },
   "dependencies": {
-    "chalk": "^2.4.1",
     "eslint": "^5.0.1",
     "eslint-config-tamia": "^6.0.0",
     "fastmatter": "^1.1.1",
