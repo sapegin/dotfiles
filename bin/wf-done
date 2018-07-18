@@ -105,10 +105,7 @@ do
     shift
 done
 
-TYPE="php"
-if [ -f "package.json" ]; then
-	TYPE="resources"
-fi
+TYPE=$(basename $(pwd))
 
 if [ -z "$SKIP_TEST" ]; then
 	header "🐶" "Sniffing..."
