@@ -43,6 +43,10 @@
     "*.js.snap": "javascript",
     ".prettierrc": "json"
   },
+  "[markdown]": {
+    "editor.wordWrap": "bounded",
+    "editor.wordWrapColumn": 90
+  },
 
   // Plugins
   "color-highlight.matchWords": false,
