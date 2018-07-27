@@ -66,5 +66,6 @@
     {
       "language": "typescriptreact"
     }
-  ]
+  ],
+  "spellright.notificationClass": "information"
 }
