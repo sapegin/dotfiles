@@ -68,6 +68,9 @@ alias pff="push && shipit"
 # `cd` to Git repo root
 alias gr='git rev-parse 2>/dev/null && cd "./$(git rev-parse --show-cdup)"'
 
+# git clone and cd to a repo directory
+alias git-clone="source git-clone"
+
 # Gist
 alias gist-paste="gist --private --copy --paste --filename"  # gist-paste filename.ext -- create private Gist from the clipboard contents
 alias gist-file="gist --private --copy"  # gist-file filename.ext -- create private Gist from a file
