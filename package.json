@@ -19,6 +19,7 @@
     "mkdirp": "~0.5.1",
     "mrm-core": "^3.1.2",
     "prettier": "^1.13.7",
+    "pretty-bytes-cli": "^2.0.0",
     "proselint": "^0.1.7",
     "textlint": "^10.2.1",
     "textlint-filter-rule-comments": "^1.2.2",
