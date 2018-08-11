@@ -46,10 +46,6 @@
     ".prettierrc": "json"
   },
   "javascript.validate.enable": false,
-  "[markdown]": {
-    "editor.wordWrap": "bounded",
-    "editor.wordWrapColumn": 90
-  },
 
   // Plugins
   "color-highlight.matchWords": false,
