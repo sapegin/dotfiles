@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
 # Compare original and gzipped file size
-# 
+#
 # Usage:
 #   gz <file>
-#
-# Requires:
-# - pretty-bytes-cli - npm i -g pretty-bytes-cli
 #
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
@@ -25,7 +22,8 @@ function usage() {
 	echo
 }
 
-command -v pretty-bytes >/dev/null 2>&1 || { error "pretty-bytes-cli not installed: see comments for instructions."; exit 1; }
+root="$(dirname $(dirname $0))"
+bin="$root/node_modules/.bin"
 
 # Empty arguments
 if [ -z "$1" ]; then
@@ -36,5 +34,5 @@ fi
 origsize=$(wc -c < "$1")
 gzipsize=$(gzip -c "$1" | wc -c)
 ratio=$(echo "$gzipsize * 100/ $origsize" | bc -l)
-printf "Original: $CYAN%s$NOCOLOR\n" "$(pretty-bytes $origsize)"
-printf "Gzipped:  $CYAN%s$NOCOLOR (%2.2f%%)\n" "$(pretty-bytes $gzipsize)" "$ratio"
+printf "Original: $CYAN%s$NOCOLOR\n" "$($bin/pretty-bytes $origsize)"
+printf "Gzipped:  $CYAN%s$NOCOLOR (%2.2f%%)\n" "$($bin/pretty-bytes $gzipsize)" "$ratio"

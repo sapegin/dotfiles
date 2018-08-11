@@ -105,15 +105,9 @@ do
     shift
 done
 
-TYPE="php"
-if [ -f "package.json" ]; then
-	TYPE="resources"
-fi
+TYPE=$(basename $(pwd))
 
 if [ -z "$SKIP_TEST" ]; then
-	header "🐶" "Sniffing..."
-	wf sniff
-
 	header "💣" "Testing..."
 	if [ "$TYPE" == "resources" ]; then
 		npm run flow check
@@ -121,6 +115,9 @@ if [ -z "$SKIP_TEST" ]; then
 	else
 		wf test
 	fi
+
+	header "🐶" "Sniffing..."
+	wf sniff
 
 	header "💇" "Formatting..."
 	wf format
