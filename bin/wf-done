@@ -113,7 +113,7 @@ if [ -z "$SKIP_TEST" ]; then
 		npm run flow check
 		npm test
 	else
-		wf test
+		wf test unit
 	fi
 
 	header "🐶" "Sniffing..."
