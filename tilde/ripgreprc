@@ -12,5 +12,6 @@
 # Custom colors
 --colors=path:fg:cyan
 --colors=path:style:bold
+--colors=path:style:underline
 --colors=line:fg:white
 --colors=match:fg:magenta

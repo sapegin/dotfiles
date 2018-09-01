@@ -22,17 +22,8 @@
 #
 
 if command -v rg >/dev/null 2>&1; then
-	function _g() {
-		# See tilde/ripgreprc for default options
-		rg "$@"
-	}
-
-	if (( "$#" >= 2 )) && [[ ${1:0:1} != "-" ]]; then  # More than 2 arguments and the second is not a flag
-		exts=$(echo $1 | tr '+' '|'); shift
-		_g -G "\.($exts)$" "$@"
-	else
-		_g "$@"
-	fi
+	# See tilde/ripgreprc for default options
+	rg "$@"
 elif command -v ack >/dev/null 2>&1; then
 	ack -ri "$@"
 else
