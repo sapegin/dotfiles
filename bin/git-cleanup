@@ -3,7 +3,7 @@
 # Removes old Git branches and does other cleanup
 #
 # Usage:
-#   git-cleanup [--dry-run]
+#   git-cleanup [--force]
 #
 # See explanation here: http://erikaybar.name/git-deleting-old-local-branches/
 #
@@ -24,7 +24,7 @@ function branches() {
 	git branch -vv | grep 'origin/.*: gone]' | awk '{print $1}'
 }
 
-if [[ "$1" == "--dry-run" ]]; then
+if [[ "$1" != "--force" ]]; then
 	branches
 	exit 1
 fi
