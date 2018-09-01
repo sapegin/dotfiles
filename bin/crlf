@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Find files with Windows line endings (and convert them to Unix in force mode)
-# 
+#
 # Usage:
 #   crlf [file] [--force]
 #
@@ -10,7 +10,7 @@
 # https://github.com/sapegin/dotfiles
 #
 
-local force=
+force=
 
 function _crlf_file() {
 	grep -q $'\x0D' "$1" && echo "$1" && [ $2 ] && dos2unix "$1"
@@ -20,7 +20,7 @@ function _crlf_file() {
 if [ "$1" != "" ] && [ "$1" != "--force" ]; then
 	[ "$2" == "--force" ] && force=1 || force=0
 	_crlf_file $1 $force
-	return
+	exit
 fi
 
 # All files
