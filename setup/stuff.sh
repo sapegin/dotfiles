@@ -36,7 +36,7 @@ curl -sS https://raw.githubusercontent.com/jamiew/git-friendly/master/install.sh
 echo -e "setenv PATH $HOME/dotfiles/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" | sudo tee /etc/launchd.conf
 
 # Everything else
-brew install the_silver_searcher
+brew install ripgrep
 brew install gist
 brew install exiftool
 brew install zsh-syntax-highlighting

@@ -1,25 +1,30 @@
 #!/usr/bin/env bash
 
-# Quick grep: ag, ack or grep
-# 
+# Quick grep: rg (ripgrep), ack or grep
+#
 # Usage:
 #   g match
-#   
-# Usage with ag:
-#   g txt+md match
-#   g -s match
-#   g php -s match
-#   
-#   -s -- case sensitive
+#
+# Usage with rg:
+#   g -w match        # match only word boundaries
+#   g -g '*.js' match # only .js files
+#   g -tjs match      # only .js files
+#   g --type js match # only .js files
+#   g -Tjs match      # not .js files
+#   g fast README.md --replace FAST
+#
+# See more:
+# https://github.com/BurntSushi/ripgrep
 #
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
 # https://github.com/sapegin/dotfiles
 #
 
-if command -v ag >/dev/null 2>&1; then
+if command -v rg >/dev/null 2>&1; then
 	function _g() {
-		ag --ignore-case --color-line-number='0;36' --color-match='0;35;4' --color-path='1;37' "$@"
+		# See tilde/ripgreprc for default options
+		rg "$@"
 	}
 
 	if (( "$#" >= 2 )) && [[ ${1:0:1} != "-" ]]; then  # More than 2 arguments and the second is not a flag

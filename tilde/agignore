@@ -1,8 +1,0 @@
-.git
-.idea
-.unrealsync
-node_modules
-bower_components
-build
-yarn.lock
-package-lock.json

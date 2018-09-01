@@ -1,0 +1,16 @@
+# Ignore case, unless the pattern includes capital letters
+--smart-case
+
+# Include hidden files (good for .eslinrc kind of files)
+--hidden
+
+# Ignore npm/Yarn lock files, etc.
+--glob=!package-lock.json
+--glob=!yarn.lock
+--glob=!.git
+
+# Custom colors
+--colors=path:fg:cyan
+--colors=path:style:bold
+--colors=line:fg:white
+--colors=match:fg:magenta

@@ -44,9 +44,6 @@ done
 # Restart Linux service
 rstrt() { sudo service $@ restart; }
 
-# github.com/harthur/replace
-alias replace="replace --exclude='node_modules'"
-
 # Run npm script without annoying noise
 alias nr="npm run --silent"
 

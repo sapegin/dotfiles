@@ -81,6 +81,9 @@ export HOMEBREW_INSTALL_BADGE='☕'
 # Disable bundle for git-friendly
 export GIT_FRIENDLY_NO_BUNDLE=true
 
+# Ripgrep config file location
+export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
+
 # Oh My Zsh
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
