@@ -1,3 +1,0 @@
-#!/usr/bin/env bash -
-
-curl --silent http://whatthecommit.com/index.txt
