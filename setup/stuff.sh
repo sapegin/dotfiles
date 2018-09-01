@@ -28,7 +28,6 @@ brew install homebrew/dupes/grep
 # Git
 brew install git
 brew install git-extras
-brew install hub
 # git-friendly
 curl -sS https://raw.githubusercontent.com/jamiew/git-friendly/master/install.sh | bash
 
@@ -42,6 +41,7 @@ brew install exiftool
 brew install zsh-syntax-highlighting
 brew install fd
 brew install fzf && $(brew --prefix)/opt/fzf/install
+brew install bat
 
 # Node
 # n, Node version manager
@@ -52,6 +52,7 @@ npm config set loglevel warn
 npm i -g npm-upgrade
 npm i -g diff-so-fancy
 npm i -g trash-cli
+npm i -g tldr
 
 # Python
 brew install python
