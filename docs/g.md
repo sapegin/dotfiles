@@ -22,6 +22,6 @@
 
 `g {{pattern}} {{file_or_dir}}`
 
-- Replace a pattern:
+- Replace a pattern (will only print results, use `wg` to do actual replace):
 
 `g {{pattern}} {{filename}} --replace {{replacement}}`

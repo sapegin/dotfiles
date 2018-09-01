@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+
+# Replace in files
+#
+# Usage: ../docs/wg.md
+#
+# Based on:
+# https://github.com/lydell/dotfiles/blob/master/bin/pre
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+#
+
+# Common stuff
+RED="$(tput setaf 1)"
+CYAN="$(tput setaf 6)"
+UNDERLINE="$(tput sgr 0 1)"
+NOCOLOR="$(tput sgr0)"
+function error() { echo -e "$UNDERLINE$RED$1$NOCOLOR\n"; }
+
+command -v rg >/dev/null 2>&1 || { error "ripgrep not installed: brew install ripgrep"; exit 1; }
+
+seenReplace=''
+
+for arg in "$@"; do
+	if test "$arg" == '--replace' -o "$arg" == '-r'; then
+		seenReplace='true'
+		break
+	fi
+done
+
+if test -z "$seenReplace"; then
+	error 'You should run wg with --replace or -r argument'
+	exit 1
+fi
+
+currentFile=''
+didChange=''
+
+(
+	rg \
+		--context 999999 \
+		--with-filename \
+		--heading \
+		--null \
+		--color never \
+		--no-line-number \
+		--max-columns 0 \
+		"$@"
+	echo -e '\n\0'
+) |
+{
+	while IFS= read -r -d '' part; do
+		if test -n "$currentFile"; then
+			echo "$currentFile"
+			# Write file without last two lines
+			perl -ne 'push(@buf,$_);END{print @buf[0 ... $#buf-2]}' <<< "$part" > "$currentFile"
+			didChange='true'
+		fi
+		currentFile="$(tail -n 1 <<< "$part")"
+	done
+
+	if test -z "$didChange"; then
+		echo "No files were changed"
+		exit 1
+	fi
+}
