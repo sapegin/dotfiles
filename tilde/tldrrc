@@ -1,0 +1,12 @@
+{
+  "themes": {
+    "theme": {
+      "commandName": "bold, underline, cyan",
+      "mainDescription": "",
+      "exampleDescription": "white",
+      "exampleCode": "magenta",
+      "exampleToken": "dim"
+    }
+  },
+  "theme": "theme"
+}
