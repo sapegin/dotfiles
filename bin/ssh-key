@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# Print public SSH key to clipboard. Generate it if necessary
+# Print public SSH key, generate it if necessary
 
-local file="$HOME/.ssh/id_rsa.pub"
+file="$HOME/.ssh/id_rsa.pub"
 if [ ! -f "$file" ]; then
 	ssh-keygen -t rsa
 fi

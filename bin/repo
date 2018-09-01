@@ -15,7 +15,8 @@ const path = require('path');
 
 const PROJECTS_DIR = path.join(process.env.HOME, '_');
 
-const getDirs = d => fs.readdirSync(d).filter(f => fs.statSync(path.join(d, f)).isDirectory());
+const getDirs = d =>
+	fs.readdirSync(d).filter(f => fs.statSync(path.join(d, f)).isDirectory());
 
 const length = r => path.basename(r).length;
 

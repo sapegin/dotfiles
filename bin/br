@@ -2,11 +2,10 @@
 
 # git-friendly: pull after branch change
 #
-# Usage:
-#   br [branch]
-#   br -d [branch]
-#   br -D [branch]
-#   br -
+# Usage: ../docs/br.md
+#
+# See more:
+# https://github.com/jamiew/git-friendly
 #
 # Author: Artem Sapegin, sapegin.me
 # License: MIT

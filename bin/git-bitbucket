@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-# Setup syncronization of the current Git repo with Bitbucket repo of the same name
-# 
+# Setup synchronization of the current Git repo with Bitbucket repo of the same name
+#
 # Usage:
 #   git-bitbucket [repo]
-#   
+#
 
 if [[ -n $BITBUCKET_USER ]]; then
 	echo "\$BITBUCKET_USER is not defined."

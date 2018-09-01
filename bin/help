@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Tldr wrapper to show docs from ~/dotfiles/tldr
+# Tldr wrapper to show docs from ~/dotfiles/docs
 #
 # Usage:
 #   help command
@@ -14,8 +14,7 @@
 #
 
 root="$(dirname $(dirname $0))"
-docs="$root/tldr"
-md="$docs/$1.md"
+md="$root/docs/$1.md"
 
 if [ -f "$md" ]; then
 	tldr --render "$md"
