@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+# Tldr wrapper to show docs from ~/dotfiles/tldr
+#
+# Usage:
+#   help command
+#
+# See more:
+# https://github.com/tldr-pages/tldr-node-client
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+#
+
+root="$(dirname $(dirname $0))"
+docs="$root/tldr"
+md="$docs/$1.md"
+
+if [ -f "$md" ]; then
+	tldr --render "$md"
+else
+	tldr "$@"
+fi

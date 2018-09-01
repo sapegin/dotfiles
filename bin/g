@@ -2,16 +2,7 @@
 
 # Quick grep: rg (ripgrep), ack or grep
 #
-# Usage:
-#   g match
-#
-# Usage with rg:
-#   g -w match        # match only word boundaries
-#   g -g '*.js' match # only .js files
-#   g -tjs match      # only .js files
-#   g --type js match # only .js files
-#   g -Tjs match      # not .js files
-#   g fast README.md --replace FAST
+# Usage: ../tldr/g.md
 #
 # See more:
 # https://github.com/BurntSushi/ripgrep
