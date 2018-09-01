@@ -12,7 +12,7 @@
     "node": ">=8.9"
   },
   "dependencies": {
-    "eslint": "^5.3.0",
+    "eslint": "^5.5.0",
     "eslint-config-tamia": "^6.0.1",
     "fastmatter": "^1.1.1",
     "glob": "^7.1.2",
