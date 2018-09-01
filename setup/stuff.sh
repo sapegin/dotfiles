@@ -42,6 +42,7 @@ brew install zsh-syntax-highlighting
 brew install fd
 brew install fzf && $(brew --prefix)/opt/fzf/install
 brew install bat
+brew install proselint
 
 # Node
 # n, Node version manager
@@ -53,10 +54,6 @@ npm i -g npm-upgrade
 npm i -g diff-so-fancy
 npm i -g trash-cli
 npm i -g tldr
-
-# Python
-brew install python
-pip install proselint
 
 # Remove outdated versions from the cellar
 brew cleanup
