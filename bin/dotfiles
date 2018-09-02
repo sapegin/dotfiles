@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# Update dotfiles
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+
+prev_dir=$(pwd)
+cd "$HOME/dotfiles" > /dev/null 2>&1
+git pull && ./sync.py && source "$HOME/fish/fish.config"
+cd "$prev_dir" /dev/null 2>&1
+nyan

@@ -1,11 +1,7 @@
-*.cache
-sublime/User/Package Control.last-run
-sublime/User/Package Control.system-ca-bundle
-sublime/User/Tomorrow (SL).tmTheme.chback
-sublime/User/Color Highlighter/
-sublime/User/Package Control.merged-ca-bundle
-sublime/User/Package Control.user-ca-bundle
+vscode/User/workspaceStorage/
+fish/fishd.*
 node_modules/
+*.cache
 .DS_Store
 Thumbs.db
 .idea/

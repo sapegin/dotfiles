@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+# Empty the Trash on all mounted volumes and the main HDD
+# Also, clear Apple’s System Logs to improve shell startup speed
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+
+sudo rm -rfv /Volumes/*/.Trashes
+sudo rm -rfv $HOME/.Trash
+sudo rm -rfv /private/var/log/asl/*.asl
