@@ -14,7 +14,7 @@ set fish_color_match f0f --background=ff0
 set fish_color_normal normal
 set fish_color_operator cyan
 set fish_color_param white
-set fish_color_quote ff0
+set fish_color_quote magenta
 set fish_color_redirection normal
 set fish_color_search_match magenta
 set fish_color_status ff0
