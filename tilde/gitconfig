@@ -34,10 +34,8 @@
 	cp = cherry-pick
 	# Sharable diff with disabled diff-so-fancy and +/- marks
 	patch = !git --no-pager diff --no-color
-	# Rebase current branch using a fresh master
-	mmm = !git fetch origin master && git rebase origin/master
-	# Rebase current branch using a fresh develop
-	ddd = !git fetch origin develop && git rebase origin/develop
+	# Merge fresh master into the current branch
+	mmm = !git fetch origin master && git merge origin/master --no-editor
 	# Compact and readable log
 	l = log --graph --pretty=format:'%C(magenta)%h%C(blue)%d%Creset %s %C(blue bold)- %an, %ar%Creset'
 	# Log with list of changed files for each commit

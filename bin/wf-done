@@ -132,8 +132,8 @@ if is_dirty; then
 fi
 
 header "🔮" "Merging master..."
-git fetch
-git merge --no-edit
+git fetch origin master
+git merge origin/master --no-editor
 
 if [ -z "$SKIP_PUSH" ]; then
 	header "🚀" "Pushing..."
