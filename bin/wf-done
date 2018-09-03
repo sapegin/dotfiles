@@ -131,30 +131,18 @@ if is_dirty; then
 	git commit -m "Format code"
 fi
 
-header "✂️" "Squashing..."
-echo "Waiting for your editor to close the file..."
-git rebase --interactive --autosquash origin/master
-
-header "🔮" "Rebasing..."
-git pull --rebase origin master
-
-header "✏️" "Editing the commit message..."
-git commit --amend
+header "🔮" "Merging master..."
+git fetch
+git merge --no-edit
 
 if [ -z "$SKIP_PUSH" ]; then
 	header "🚀" "Pushing..."
-	git push --force-with-lease
+	git push
 fi
 
 ################################################################################
 
 echo
-
-pt="$(pt_id)"
-if [ -n "$pt" ]; then
-	echo "PT: $pt — "$UNDERLINE"https://admin.wayfair.com/tracker/views/142.php?PrtID=$pt"$NOCOLOR
-	echo
-fi
 
 if [ "$TYPE" == "resources" ]; then
 	unicorn
@@ -165,4 +153,6 @@ fi
 echo
 echo "Now join the deployment queue here:"
 echo $UNDERLINE"http://deploy.wayfair.com/v/integrator/join_queue"$NOCOLOR
+echo
+echo "Don’t forget to edit your commit message when deploying!"
 echo
