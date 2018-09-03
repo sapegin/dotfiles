@@ -1,6 +1,6 @@
 # Prepend $PATH
 function _prepend_path
-    set -g fish_user_paths $argv $fish_user_paths
+    set -g fish_user_paths $fish_user_paths $argv
 end
 
 # Construct $PATH
