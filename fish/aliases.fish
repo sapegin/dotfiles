@@ -39,9 +39,6 @@ alias j="npx jest --watch"
 # `cd` to Git repo root
 alias gr='git rev-parse 2>/dev/null; and cd "./(git rev-parse --show-cdup)"'
 
-# git clone and cd to a repo directory
-alias git-clone="source git-clone"
-
 # Gist
 # gist-paste filename.ext -- create private Gist from the clipboard contents
 alias gist-paste="gist --private --copy --paste --filename"
