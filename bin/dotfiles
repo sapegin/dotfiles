@@ -6,8 +6,11 @@
 # License: MIT
 # https://github.com/sapegin/dotfiles
 
-prev_dir=$(pwd)
+# Exit on any failed command
+set -e
+
 cd "$HOME/dotfiles" > /dev/null 2>&1
-git pull && ./sync.py && source "$HOME/fish/fish.config"
-cd "$prev_dir" /dev/null 2>&1
+git pull
+./sync.py
+source ./fish/config.fish
 nyan
