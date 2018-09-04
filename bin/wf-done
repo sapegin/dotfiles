@@ -133,7 +133,7 @@ fi
 
 header "🔮" "Merging master..."
 git fetch origin master
-git merge origin/master --no-editor
+git merge origin/master --no-edit
 
 if [ -z "$SKIP_PUSH" ]; then
 	header "🚀" "Pushing..."
