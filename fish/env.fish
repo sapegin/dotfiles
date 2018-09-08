@@ -21,6 +21,9 @@ set -gx GIT_FRIENDLY_NO_BUNDLE true
 # Ripgrep config file location
 set -gx RIPGREP_CONFIG_PATH ~/.ripgreprc
 
+# Bat: https://github.com/sharkdp/bat
+set -gx BAT_THEME DarkNeon
+
 # Fzf: https://github.com/junegunn/fzf
 # Use fd (https://github.com/sharkdp/fd) to respect .gitignore
 set -gx FZF_DEFAULT_COMMAND 'fd --type f'
