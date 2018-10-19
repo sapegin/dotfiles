@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+# Create private Gist from the clipboard contents
+#
+# Usage:
+#   gist-paste <file>
+#
+# Requires:
+# - gist - brew install gist
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+#
+
+# Common stuff
+RED="$(tput setaf 1)"
+UNDERLINE="$(tput sgr 0 1)"
+NOCOLOR="$(tput sgr0)"
+
+function error() { echo -e "$UNDERLINE$RED$1$NOCOLOR\n"; }
+
+function usage() {
+	echo "Usage:"
+	echo "  `basename $0` <file>"
+	echo
+}
+
+command -v gist >/dev/null 2>&1 || { error "gist not installed: brew install gist"; exit 1; }
+
+# Empty arguments
+if [ -z "$1" ]; then
+	usage
+	exit 1
+fi
+
+gist --private --copy --paste --filename $@
