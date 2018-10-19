@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+# Pager for git diff with diff-so-fancy and pagination
+# https://github.com/so-fancy/diff-so-fancy
+#
+# Add this to ~/.gitconfig:
+#   [core]
+#	    pager = git-pager
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+#
+
+~/dotfiles/node_modules/diff-so-fancy/diff-so-fancy | less --chop-long-lines --quit-if-one-screen --no-init --tabs=1,5 -R

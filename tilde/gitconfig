@@ -9,7 +9,7 @@
 
 [core]
 	editor = code --wait
-	pager = diff-so-fancy | less --chop-long-lines --quit-if-one-screen --no-init --tabs=1,5 -R
+	pager = git-pager
 	autocrlf = false
 	safecrlf = false
 	mergeoptions = --no-edit
