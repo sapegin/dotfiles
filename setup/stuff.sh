@@ -52,7 +52,6 @@ npm config set loglevel warn
 # Npm
 npm i -g npm-upgrade
 npm i -g diff-so-fancy
-npm i -g trash-cli
 npm i -g tldr
 
 # Remove outdated versions from the cellar

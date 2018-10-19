@@ -12,5 +12,5 @@ set -e
 cd "$HOME/dotfiles" > /dev/null 2>&1
 git pull
 ./sync.py
-source ./fish/config.fish
+source ~/.zshrc
 nyan

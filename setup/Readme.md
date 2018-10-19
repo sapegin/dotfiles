@@ -10,7 +10,7 @@ Installs Homebrew, Git, [git-extras](https://github.com/tj/git-extras), [git-fri
 
 ### zsh
 
-Installs zsh and Oh My Zsh, registers zsh as the default shell.
+Installs zsh, registers zsh as the default shell.
 
 ### osx
 

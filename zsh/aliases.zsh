@@ -1,49 +1,35 @@
 # Enable aliases to be sudo’ed
 alias sudo="sudo "
 
+# Navigation
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+alias -- -="cd -"
+
+# Shortcuts
+alias ls="ls --color"
+alias -- +x="chmod +x"
 alias o="open"
 alias oo="open ."
 alias e="$EDITOR"
+
+# GitHub Desktop
 alias gh="github"
-alias rm="trash"
-alias cat="bat"
-alias x+="chmod +x"
-alias -- +x="chmod +x"
+
+# ForkLift
 alias k="open -a ForkLift"
 alias kk="open -a ForkLift ."
 
-# Trim new lines and copy to clipboard
-alias c="tr -d '\n' | pbcopy"
+# Bat: https://github.com/sharkdp/bat
+command -v bat >/dev/null 2>&1 && alias cat="bat --style=numbers,changes"
 
-# cd into whatever is the forefront Finder window
-cdf() { cd "`osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)'`"; }
-
-# Update dotfiles
-alias dotfiles="pushd "$HOME/dotfiles" > /dev/null 2>&1; git pull && ./sync.py && source "$HOME/.zshrc"; popd > /dev/null 2>&1; nyan"
-
-# Magic Project Opener
-repo() { cd "$("$HOME/dotfiles/bin/repo" $1)"; }
-
-# Empty the Trash on all mounted volumes and the main HDD
-# Also, clear Apple’s System Logs to improve shell startup speed
-alias emptytrash="sudo rm -rfv /Volumes/*/.Trashes; sudo rm -rfv $HOME/.Trash; sudo rm -rfv /private/var/log/asl/*.asl"
-
-# Convert line endings to UNIX
-alias dos2unix="perl -pi -e 's/\r\n?/\n/g'"
-
-# My IP
-alias myip="ifconfig | grep 'inet ' | grep -v 127.0.0.1 | awk '{print \$2}'"
+# trash-cli: https://github.com/sindresorhus/trash-cli
+[ -d ~/dotfiles/node_modules/trash-cli ] && alias rm="~/dotfiles/node_modules/trash-cli/cli.js"
 
 # Download file and save it with filename of remote file
 alias get="curl -O -L"
-
-# HTTP requests by @janmoesen
-for method in GET HEAD POST PUT DELETE TRACE OPTIONS; do
-	alias "$method"="lwp-request -m '$method'"
-done
-
-# Restart Linux service
-rstrt() { sudo service $@ restart; }
 
 # Run npm script without annoying noise
 alias nr="npm run --silent"
@@ -51,24 +37,28 @@ alias nr="npm run --silent"
 # Jest watch
 alias j="npx jest --watch"
 
-# Ban npm if project uses Yarn
-npm() {
-	if [ -f "yarn.lock" ]; then
-		echo "$(tput sgr 0 1)$(tput setaf 1)You should use Yarn for this project.$(tput sgr0)"
-		return
-	fi
-	command npm $@
+# Make a directory and cd to it
+take() {
+  mkdir -p $@ && cd ${@:$#}
 }
 
-# Push and deploy using Shipit
-alias pff="push && shipit"
+# cd into whatever is the forefront Finder window
+cdf() {
+  cd "`osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)'`"
+}
 
-# `cd` to Git repo root
-alias gr='git rev-parse 2>/dev/null && cd "./$(git rev-parse --show-cdup)"'
+# Magic Project Opener
+repo() {
+  cd "$(~/dotfiles/bin/repo $1)"
+}
 
 # git clone and cd to a repo directory
-alias git-clone="source git-clone"
-
-# Gist
-alias gist-paste="gist --private --copy --paste --filename"  # gist-paste filename.ext -- create private Gist from the clipboard contents
-alias gist-file="gist --private --copy"  # gist-file filename.ext -- create private Gist from a file
+clone() {
+  git clone --depth=1 "$1" "$2"
+  if [ "$2" ]; then
+    cd "$2"
+  else
+    cd (basename "$1" .git)
+  fi
+  npm install
+}

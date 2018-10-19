@@ -1,5 +1,4 @@
 vscode/User/workspaceStorage/
-fish/fishd.*
 node_modules/
 *.cache
 .DS_Store
