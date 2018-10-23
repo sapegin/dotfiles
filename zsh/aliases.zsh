@@ -58,7 +58,7 @@ clone() {
   if [ "$2" ]; then
     cd "$2"
   else
-    cd (basename "$1" .git)
+    cd $(basename "$1" .git)
   fi
   npm install
 }
