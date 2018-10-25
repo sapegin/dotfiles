@@ -123,7 +123,7 @@
 	margin-bottom: 20px;
 	padding: 0;
 	font-size: 1.8em;
-	background: 0;
+  background: var(--white);
 	color: var(--base);
 }
 
