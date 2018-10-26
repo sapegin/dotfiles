@@ -26,6 +26,18 @@
 	display: none !important;
 }
 
+:root .main_header {
+  background: none;
+}
+
+:root .admin-navset {
+  overflow: visible;
+}
+
+:root #doc3 #bd {
+  width: auto;
+}
+
 /* Buttons */
 :root .btn_tracker_primary,
 :root .btn_tracker_secondary,
@@ -56,6 +68,15 @@
 }
 
 /* Tabs */
+:root .admin-navset .admin-navset-top .tabcontent,
+:root .admin-navset .tabcontent {
+  border-top: 0;
+}
+
+:root .admin-navset .admin-nav li.navparent {
+  z-index: 300; /* On top of sticky header */
+}
+
 :root .admin-navset .admin-nav a,
 :root .admin-navset .admin-nav a:hover,
 :root .admin-navset .admin-nav li.navparent,
@@ -120,15 +141,32 @@
 }
 
 :root #ticketinfo {
-	margin-bottom: 20px;
-	padding: 0;
+	margin: 0 -15px 20px;
+	padding: 8px 15px;
 	font-size: 1.8em;
   background: var(--white);
 	color: var(--base);
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 3px;
+}
+
+:root #ticketinfo #ticketid {
+  /* Hide "|" */
+  background: var(--white);
+  margin-right: -1em;
+  position: relative;
 }
 
 :root #ticketinfo a {
-	color: var(--base);
+  color: var(--base);
+  text-decoration: none;
+}
+
+:root #ticketinfo .uppercase {
+  text-transform: none;
+}
+
+:root #ticketinfo .emphasis {
+  font-weight: normal;
 }
 
 :root #minmaxbuttons {
@@ -233,6 +271,21 @@
 
 :root .js-qagit-pt .js-qagit-url-status {
 	margin-left: 10px;
+}
+
+:root #pg[style],
+:root #ticket-pane[style] {
+  position: static !important;
+  top: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  right: auto !important;
+  width: auto !important;
+  height: auto !important;
+  z-index: 0 !important;
+  display: block !important;
+  visibility: visible !important;
+  overflow: visible !important;
 }
 
 
