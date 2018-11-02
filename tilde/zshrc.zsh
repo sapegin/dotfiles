@@ -18,9 +18,6 @@ setopt hist_reduce_blanks
 # Show command with history expansion to user before running it
 setopt hist_verify
 
-# Autocorrect commands
-setopt correct_all
-
 # Terminal title
 DISABLE_AUTO_TITLE="true"
 function _set_terminal_title() {
