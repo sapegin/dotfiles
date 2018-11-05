@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# Mount card reader
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+
+sudo mount -t msdos /dev/disk2s1 ~/mnt

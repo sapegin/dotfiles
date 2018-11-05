@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# Unmount card reader
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+
+sudo umount ~/mnt
