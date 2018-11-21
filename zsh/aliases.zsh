@@ -52,6 +52,11 @@ repo() {
   cd "$(~/dotfiles/bin/repo $1)"
 }
 
+# Cd to Git repository root folder
+gr() {
+  cd "./$(git rev-parse --show-cdup 2>/dev/null)" 2>/dev/null
+}
+
 # git clone and cd to a repo directory
 clone() {
   git clone --depth=1 $@
