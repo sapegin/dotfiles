@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Unmount card reader
+# Mount card reader
 #
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
 # https://github.com/sapegin/dotfiles
 
-sudo umount ~/mnt
+sudo mount -t msdos /dev/disk2s1 ~/mnt
