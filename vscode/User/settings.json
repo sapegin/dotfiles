@@ -8,6 +8,8 @@
   "editor.roundedSelection": false,
   "editor.wordWrap": "on",
   "editor.autoClosingBrackets": "never",
+  "editor.autoClosingQuotes": "never",
+  "editor.autoSurround": "never",
   "editor.cursorBlinking": "solid",
   "editor.minimap.enabled": false,
   "editor.renderIndentGuides": true,
