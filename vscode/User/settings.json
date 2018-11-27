@@ -7,7 +7,7 @@
   ],
   "editor.roundedSelection": false,
   "editor.wordWrap": "on",
-  "editor.autoClosingBrackets": false,
+  "editor.autoClosingBrackets": "never",
   "editor.cursorBlinking": "solid",
   "editor.minimap.enabled": false,
   "editor.renderIndentGuides": true,
@@ -36,6 +36,7 @@
   "html.format.wrapLineLength": 0,
   "html.suggest.angular1": false,
   "html.suggest.ionic": false,
+  "html.autoClosingTags": false,
   "extensions.autoUpdate": true,
   "files.autoSave": "onWindowChange",
   "files.hotExit": "onExitAndWindowClose",
@@ -46,6 +47,10 @@
     ".prettierrc": "json"
   },
   "javascript.validate.enable": false,
+  "javascript.autoClosingTags": false,
+  "typescript.autoClosingTags": false,
+  "javascript.suggest.autoImports": false,
+
 
   // Plugins
   "color-highlight.matchWords": false,
