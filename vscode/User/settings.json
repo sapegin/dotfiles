@@ -63,15 +63,15 @@
   "[javascriptreact]": {
     "editor.formatOnSave": true
   },
+  "[html]": {
+    "editor.formatOnSave": true
+  },
   "eslint.validate": [
     "javascript",
     "javascriptreact",
-    {
-      "language": "typescript"
-    },
-    {
-      "language": "typescriptreact"
-    }
+    "typescript",
+    "typescriptreact",
+    "html",
   ],
   "spellright.notificationClass": "information",
   "flow.useNPMPackagedFlow": true
