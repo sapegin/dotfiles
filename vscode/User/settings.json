@@ -74,5 +74,8 @@
     "html",
   ],
   "spellright.notificationClass": "information",
-  "flow.useNPMPackagedFlow": true
+  "flow.useNPMPackagedFlow": true,
+  "cSpell.userWords": [
+    "Tamia"
+  ]
 }
