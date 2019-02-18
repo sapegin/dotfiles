@@ -9,3 +9,4 @@ Thumbs.db
 *.sublime-workspace
 *.log
 .eslintcache
+vscode/User/globalStorage/state.vscdb
