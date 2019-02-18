@@ -6,16 +6,16 @@
  * Author: Artem Sapegin, sapegin.me
  * License: MIT
  * https://github.com/sapegin/dotfiles
-*/
+ */
 
 const fs = require('fs');
 const path = require('path');
 const userHome = require('user-home');
 const glob = require('glob');
 
-const DIR = `${userHome}/_/morning.photos/source`;
+const DIR = `${userHome}/_/morning.photos/content`;
 
-const files = glob.sync(`${DIR}/**/*.{md,txt}`);
+const files = glob.sync(`${DIR}/**/*.mdx`);
 
 const query = process.argv[2];
 const regexp = new RegExp(query, 'i');
