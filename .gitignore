@@ -10,3 +10,4 @@ Thumbs.db
 *.log
 .eslintcache
 vscode/User/globalStorage/state.vscdb
+vscode/User/globalStorage/state.vscdb.backup
