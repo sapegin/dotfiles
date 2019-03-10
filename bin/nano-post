@@ -12,11 +12,10 @@
 # https://github.com/sapegin/dotfiles
 #
 
-# Filepath = FILEPATH_PREFIX + language code + FILEPATH_SUFFIX + slug + FILEPATH_EXT
-FILEPATH_PREFIX="$HOME/_/blog.sapegin.me/source/"
+FILEPATH_PREFIX="$HOME/_/blog.sapegin.me/content/"
 FILEPATH_SUFFIX="/all/"
 FILEPATH_EXT=".md"
-DATE_FORMAT="%b %e, %Y"
+DATE_FORMAT="%Y-%m-%d"
 
 # Common stuff
 function error() {
@@ -34,16 +33,12 @@ source_file=$(osascript -e 'tell application "iA Writer" to set filepath to file
 source_name=$(basename "$source_file")
 
 # Language
-lang=$(echo "$source_name" | perl -ne 'm/_(\w\w)\.md$/; print lc $1')
-if [ "$lang" != "en" ] && [ "$lang" != "ru" ]; then
-	lang="en"
-fi
+lang="en"
 
 # Default slug: convert CamelCase or plain text file name to under_score, strip language and extension
 slug=$(
 	echo "$source_name" |
 	perl -pe 's/\.md$//' |          # Remove extension
-	perl -pe 's/_(?:En|Ru)$//' |    # Remove language
 	perl -pe 's/([A-Z])/-\l\1/g' |  # CamelCase to dashes
 	perl -pe 's/ /-/g' |            # Spaces to dashes
 	perl -pe 's/--/-/g' |           # Remove double spaces

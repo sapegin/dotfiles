@@ -9,12 +9,11 @@
 # https://github.com/sapegin/dotfiles
 #
 
-# Filepath = FILEPATH_PREFIX + language code + FILEPATH_SUFFIX + slug + FILEPATH_EXT
-FILEPATH_PREFIX="$HOME/_/morning.photos/source/"
+FILEPATH_PREFIX="$HOME/_/morning.photos/content/"
 FILEPATH_SUFFIX="/blog/"
-FILEPATH_EXT=".md"
+FILEPATH_EXT=".mdx"
 TEMPLATE_FILE="morn-post.tmpl"
-DATE_FORMAT="%b %e, %Y"
+DATE_FORMAT="%Y-%m-%d"
 APP_NAME="Morning.photos"
 
 # Common stuff
@@ -35,18 +34,12 @@ source_name=$(basename "$source_file")
 # Read post title
 title=$(grep -m 1 '#' "$source_file" | sed -e 's^# ^^')
 
-# Language: Russian if name contains cyrillic, English otherwise
-lang="en"
-if echo "$title" | grep "[АаБбВвГгДдЕеЁёЖжЗзИиЙйКкЛлМмНнОоПпРрСсТтУуФфХхЦцЧчШшЩщЪъЫыЬьЭэЮюЯя]" >/dev/null; then
-	lang="ru"
-fi
-
 # Slug: increment latest post’s number
-last=$(find "$FILEPATH_PREFIX$lang$FILEPATH_SUFFIX" -maxdepth 1 -name "*$FILEPATH_EXT" -type f -exec basename {} \; | sed -e s/.md//g | sort -g | tail -1)
+last=$(find "$FILEPATH_PREFIX$FILEPATH_SUFFIX" -maxdepth 1 -name "*$FILEPATH_EXT" -type f -exec basename {} \; | sed -e s/$FILEPATH_EXT//g | sort -g | tail -1)
 slug=$(($last + 1))
 
 # Destination Markdown file path
-dest="$FILEPATH_PREFIX$lang$FILEPATH_SUFFIX$slug$FILEPATH_EXT"
+dest="$FILEPATH_PREFIX$FILEPATH_SUFFIX$slug$FILEPATH_EXT"
 
 # Check dest file existence
 if [ -f "$dest" ]; then
@@ -57,7 +50,7 @@ fi
 date=$(date +"$DATE_FORMAT")
 
 # Copy template and source file to destination folder
-sed -e "s^{title}^$title^" -e "s^{date}^$date^" -e "s^{lang}^$lang^" "$HOME/dotfiles/bin/$TEMPLATE_FILE" > "$dest"
+sed -e "s^{title}^$title^" -e "s^{date}^$date^" "$HOME/dotfiles/bin/$TEMPLATE_FILE" > "$dest"
 cat "$source_file" | perl -0pe 's/#.*\n//' >> "$dest"
 
 # Open the file in the editor ($EDITOR isn’t available in Alfred)
