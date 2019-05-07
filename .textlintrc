@@ -11,7 +11,12 @@
             "tooWordy": false,
             "weasel": false
         },
-        "no-dead-link": true
+        "no-dead-link": {
+          "ignoreRedirects": true,
+          "ignore": [
+            "mailto:*"
+          ]
+        }
     },
 	"filters": {
         "comments": true
