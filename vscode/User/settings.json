@@ -18,7 +18,7 @@
   "workbench.editor.showTabs": false,
   "workbench.sideBar.location": "right",
   "workbench.activityBar.visible": false,
-  "workbench.statusBar.visible": true,
+  "workbench.statusBar.visible": false,
   "workbench.commandPalette.preserveInput": false,
   "workbench.colorTheme": "Squirrelsong Light",
   "workbench.colorCustomizations": {
