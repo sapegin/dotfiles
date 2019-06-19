@@ -53,3 +53,7 @@ _fzf_compgen_dir() {
 
 # Load extra (private) settings
 [ -f ~/.zshlocal ] && source ~/.zshlocal
+
+# Set Spaceship ZSH as a prompt
+autoload -U promptinit; promptinit
+prompt spaceship

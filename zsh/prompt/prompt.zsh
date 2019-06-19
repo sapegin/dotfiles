@@ -24,7 +24,3 @@ SPACESHIP_PROMPT_PREFIXES_SHOW=false
 SPACESHIP_CHAR_SYMBOL="❯"
 SPACESHIP_CHAR_SUFFIX=" "
 SPACESHIP_DIR_COLOR="white"
-
-# Set Spaceship ZSH as a prompt
-autoload -U promptinit; promptinit
-prompt spaceship
