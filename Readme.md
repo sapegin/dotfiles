@@ -1,6 +1,6 @@
 # Artem Sapegin’s dotfiles
 
-![iTerm2](http://wow.sapegin.me/1r1B0f1M1q2W/squirrelsong.png)
+![iTerm2](https://github.com/sapegin/squirrelsong/raw/master/squirrelsong_terminal.png)
 
 ## Features
 
