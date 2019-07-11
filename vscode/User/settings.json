@@ -36,6 +36,7 @@
   "window.titleBarStyle": "native",
   "window.zoomLevel": 0,
   "explorer.openEditors.visible": 0,
+  "breadcrumbs.enabled": false,
   "html.format.wrapLineLength": 0,
   "html.autoClosingTags": false,
   "extensions.autoUpdate": true,
@@ -51,7 +52,6 @@
   "javascript.autoClosingTags": false,
   "typescript.autoClosingTags": false,
   "javascript.suggest.autoImports": false,
-
 
   // Plugins
   "color-highlight.matchWords": false,
