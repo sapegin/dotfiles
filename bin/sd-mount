@@ -2,8 +2,13 @@
 
 # Mount card reader
 #
+# USAGE:
+#   sd-mount # Mounts /dev/disk2s1
+#   sd-mount disk3s1 # Mounts /dev/disk3s1
+#
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
 # https://github.com/sapegin/dotfiles
 
-sudo mount -t msdos /dev/disk3s1 ~/mnt
+device=${1:-disk2s1}
+sudo mount -t msdos /dev/${device} ~/mnt
