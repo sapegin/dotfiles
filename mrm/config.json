@@ -12,7 +12,6 @@
     "prettierOptions": {
       "singleQuote": true,
       "trailingComma": "es5",
-      "arrowParens": "always",
       "useTabs": true
     },
     "aliases": {
