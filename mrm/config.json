@@ -1,7 +1,7 @@
 {
     "name": "Artem Sapegin",
     "email": "artem@sapegin.ru",
-    "url": "http://sapegin.me",
+    "url": "https://sapegin.me",
     "github": "sapegin",
     "eslintPreset": "tamia",
     "eslintObsoleteDependencies": ["eslint-plugin-prettier"],
