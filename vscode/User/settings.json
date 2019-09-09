@@ -13,7 +13,7 @@
   "editor.cursorBlinking": "solid",
   "editor.minimap.enabled": false,
   "editor.renderIndentGuides": true,
-  "editor.renderWhitespace": "all",
+  "editor.renderWhitespace": "selection",
   "editor.autoIndent": true,
   "editor.lineNumbers": "off",
   "workbench.editor.showTabs": false,
