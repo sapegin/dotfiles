@@ -81,7 +81,14 @@
   "spellright.notificationClass": "information",
   "flow.useNPMPackagedFlow": true,
   "cSpell.userWords": [
-    "Tamia"
+    "Artem",
+    "Sapegin",
+    "Wayfair",
+    "flexbox",
+    "frontmatter",
+    "lightbox",
+    "prefetch",
+    "tamia"
   ],
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
