@@ -35,6 +35,7 @@
   "window.restoreWindows": "all",
   "window.titleBarStyle": "native",
   "window.zoomLevel": 0,
+  "explorer.confirmDragAndDrop": false,
   "explorer.openEditors.visible": 0,
   "breadcrumbs.enabled": false,
   "html.format.wrapLineLength": 0,
@@ -50,12 +51,35 @@
   },
   "javascript.validate.enable": false,
   "javascript.autoClosingTags": false,
-  "typescript.autoClosingTags": false,
   "javascript.suggest.autoImports": false,
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "typescript.autoClosingTags": false,
 
   // Plugins
   "color-highlight.matchWords": false,
   "prettier.requireConfig": true,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "html",
+  ],
+  "spellright.notificationClass": "information",
+  "spellright.groupDictionaries": false,
+  "flow.useNPMPackagedFlow": true,
+  "cSpell.userWords": [
+    "Artem",
+    "Sapegin",
+    "Wayfair",
+    "flexbox",
+    "frontmatter",
+    "lightbox",
+    "prefetch",
+    "tamia"
+  ],
+
+  // File types
   "[javascript]": {
     "editor.formatOnSave": true
   },
@@ -71,25 +95,6 @@
   "[html]": {
     "editor.formatOnSave": true
   },
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact",
-    "html",
-  ],
-  "spellright.notificationClass": "information",
-  "flow.useNPMPackagedFlow": true,
-  "cSpell.userWords": [
-    "Artem",
-    "Sapegin",
-    "Wayfair",
-    "flexbox",
-    "frontmatter",
-    "lightbox",
-    "prefetch",
-    "tamia"
-  ],
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
