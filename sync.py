@@ -11,12 +11,6 @@ import glob
 import shutil
 
 SOURCE_DIR = '~/dotfiles/tilde'
-EXCLUDE = []
-NO_DOT_PREFIX = []
-PRESERVE_EXTENSION = [
-	'slate.js'
-]
-
 
 def force_remove(path):
 	if os.path.isdir(path) and not os.path.islink(path):
@@ -24,22 +18,15 @@ def force_remove(path):
 	else:
 		os.unlink(path)
 
-
 def is_link_to(link, dest):
 	is_link = os.path.islink(link)
 	is_link = is_link and os.readlink(link).rstrip('/') == dest.rstrip('/')
 	return is_link
 
-
 def main():
 	os.chdir(os.path.expanduser(SOURCE_DIR))
-	for filename in [file for file in glob.glob('*') if file not in EXCLUDE]:
-		dotfile = filename
-		if filename not in NO_DOT_PREFIX:
-			dotfile = '.' + dotfile
-		if filename not in PRESERVE_EXTENSION:
-			dotfile = os.path.splitext(dotfile)[0]
-		dotfile = os.path.join(os.path.expanduser('~'), dotfile)
+	for filename in [file for file in glob.glob('.*')]:
+		dotfile = os.path.join(os.path.expanduser('~'), filename)
 		source = os.path.join(SOURCE_DIR, filename).replace('~', '.')
 
 		# Check that we aren't overwriting anything
