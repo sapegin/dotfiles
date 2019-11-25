@@ -72,6 +72,7 @@
     "Artem",
     "Sapegin",
     "Wayfair",
+    "filepath",
     "flexbox",
     "frontmatter",
     "lightbox",
@@ -97,5 +98,10 @@
   },
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  "spellright.language": [],
+  "spellright.documentTypes": [
+    "latex",
+    "plaintext"
+  ]
 }
