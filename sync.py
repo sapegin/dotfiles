@@ -11,6 +11,7 @@ import glob
 import shutil
 
 SOURCE_DIR = '~/dotfiles/tilde'
+IGNORE = ['.DS_Store']
 
 def force_remove(path):
 	if os.path.isdir(path) and not os.path.islink(path):
@@ -25,7 +26,7 @@ def is_link_to(link, dest):
 
 def main():
 	os.chdir(os.path.expanduser(SOURCE_DIR))
-	for filename in [file for file in glob.glob('.*')]:
+	for filename in [file for file in glob.glob('.*') if file not in IGNORE]:
 		dotfile = os.path.join(os.path.expanduser('~'), filename)
 		source = os.path.join(SOURCE_DIR, filename).replace('~', '.')
 
