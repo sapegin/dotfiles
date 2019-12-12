@@ -21,7 +21,7 @@ Run “Install 'code' command in PATH” from the command palette (View → Comm
 - [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
 - [Markdown Shortcuts](https://marketplace.visualstudio.com/items?itemName=mdickin.markdown-shortcuts)
 - [Prettier - JavaScript formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
-- [SpellChecker](https://marketplace.visualstudio.com/items?itemName=swyphcosmo.spellchecker)
+- [Spell Right](https://marketplace.visualstudio.com/items?itemName=ban.spellright)
 - [Squirrelsong Light Theme](https://marketplace.visualstudio.com/items?itemName=sapegin.Theme-SquirrelsongLight)
 - [Unique Lines](https://marketplace.visualstudio.com/items?itemName=bibhasdn.unique-lines)
 
