@@ -24,21 +24,23 @@
 
 Prerequisites:
 
-1.  [Install Xcode Command Line Tools](http://railsapps.github.io/xcode-command-line-tools.html).
-1.  [Generate SSH key](https://help.github.com/articles/generating-ssh-keys/).
-1.  [Install Homebrew](http://brew.sh/).
+1. [Install Xcode Command Line Tools](http://railsapps.github.io/xcode-command-line-tools.html).
+2. [Generate SSH key](https://help.github.com/articles/generating-ssh-keys/).
+3. [Install Homebrew](http://brew.sh/).
 
 Then run these commands in the terminal:
 
 ```
 brew install git
+brew install n
+n lts
 git clone git@github.com:sapegin/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 ./sync.py
-cd ~/dotfiles/setup
+npm install
 ```
 
-Now you can run scripts like `osx.sh` or `server.sh` to install other stuff.
+Now you can run scripts like `setup/zsh.sh` or `setup/osx.sh` to install other stuff.
 
 ## Updating
 

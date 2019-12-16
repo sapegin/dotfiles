@@ -323,7 +323,7 @@ defaults write com.apple.dock no-glass -bool true
 defaults write com.apple.dock autohide -bool true
 
 # Set 1 second delay when showing and hiding the Dock (to discourage using the Dock)
-defaults write com.apple.dock autohide-delay -float 1 
+defaults write com.apple.dock autohide-delay -float 1
 
 # Remove the animation when hiding/showing the Dock
 defaults write com.apple.dock autohide-time-modifier -float 0
