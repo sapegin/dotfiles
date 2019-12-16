@@ -70,3 +70,7 @@ export GIT_FRIENDLY_NO_COPY_URL_AFTER_PUSH=true
 
 # Ripgrep config file location
 export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
+
+# Disable Gatsby telemetry
+# https://www.gatsbyjs.org/docs/telemetry/
+GATSBY_TELEMETRY_DISABLED=1
