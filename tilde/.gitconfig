@@ -94,10 +94,11 @@
 	newNormal = green bold
 	newHighlight = green bold 22
 
+[user]
+	name = Artem Sapegin
+	email = artem@sapegin.ru
+
 # Include local settings
-# Requires Git 1.7.10
-# git config -f ~/.gitlocal user.email "artem@sapegin.ru"
-# git config -f ~/.gitlocal user.name "Artem Sapegin"
 [include]
 	path = .gitlocal
 
