@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /*
- * Returns list of blog posts and pages in Afred’s Script Filter JSON format.
+ * Returns list of blog posts in Afred’s Script Filter JSON format.
  *
  * Author: Artem Sapegin, sapegin.me
  * License: MIT
@@ -13,16 +13,12 @@ const path = require('path');
 const userHome = require('user-home');
 const glob = require('glob');
 
-const DIR = `${userHome}/_/morning.photos/content`;
+const FILES = `${userHome}/_/blog.sapegin.me/content/all/*.md`;
 
-const files = glob.sync(`${DIR}/**/*.mdx`);
-
-const query = process.argv[2];
-const regexp = new RegExp(query, 'i');
-let items = files
+const items = glob.sync(FILES)
   .map(file => {
     const contents = fs.readFileSync(file, 'utf8');
-    const title = contents.match(/^title: [\x22\x27]?(.*?)[\x22\x27]?$/im);
+    const title = contents.match(/^title: ['"]?(.*?)['"]?$/im);
     const date = contents.match(/^date: (.*?)$/m);
     return {
       title: title ? title[1] : '<***>',
@@ -30,7 +26,6 @@ let items = files
       file,
     };
   })
-  .filter(doc => regexp.test(doc.title))
   .map(doc => ({
     title: doc.title,
     subtitle: doc.date,
@@ -44,12 +39,6 @@ let items = files
     },
   }));
 
-if (!items.length) {
-  items = [{
-    valid: false,
-    title: 'Nothing found. ',
-  }, ];
-}
 console.log(JSON.stringify({
   items
 }));

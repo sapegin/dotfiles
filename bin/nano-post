@@ -2,9 +2,6 @@
 
 # Copies current opened in iA Writer file to my blog’s folder, adds YAML front matter and opens it in Code.
 #
-# Files should be named like this: `SomeName_En.md`, where `En` is file’s language: En or Ru.
-# Or in plain text (`Some Name`): English will be used by default.
-#
 # This script should be used from Alfred workflow.
 #
 # Author: Artem Sapegin, sapegin.me
@@ -32,10 +29,7 @@ function ask() {
 source_file=$(osascript -e 'tell application "iA Writer" to set filepath to file of document 1' -e 'POSIX path of filepath')
 source_name=$(basename "$source_file")
 
-# Language
-lang="en"
-
-# Default slug: convert CamelCase or plain text file name to under_score, strip language and extension
+# Default slug: convert CamelCase or plain text file name to under_score, strip extension
 slug=$(
 	echo "$source_name" |
 	perl -pe 's/\.md$//' |          # Remove extension
@@ -52,7 +46,7 @@ if [ -z "$slug" ]; then
 fi
 
 # Destination Markdown file path
-dest="$FILEPATH_PREFIX$lang$FILEPATH_SUFFIX$slug$FILEPATH_EXT"
+dest="$FILEPATH_PREFIX$FILEPATH_SUFFIX$slug$FILEPATH_EXT"
 
 # Check dest file existence
 if [ -f "$dest" ]; then
@@ -66,7 +60,7 @@ title=$(grep -m 1 '#' "$source_file" | sed -e 's^# ^^')
 date=$(date +"$DATE_FORMAT")
 
 # Copy template and source file to destination folder
-sed -e "s^{title}^$title^" -e "s^{date}^$date^" -e "s^{lang}^$lang^" "$HOME/dotfiles/bin/nano-post.tmpl" > "$dest"
+sed -e "s^{title}^$title^" -e "s^{date}^$date^" "$HOME/dotfiles/bin/nano-post.tmpl" > "$dest"
 cat "$source_file" | perl -0pe 's/#.*\n//' >> "$dest"
 
 # Open the file in the editor ($EDITOR isn’t available in Alfred)
