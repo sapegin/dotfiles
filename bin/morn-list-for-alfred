@@ -15,41 +15,34 @@ const glob = require('glob');
 
 const DIR = `${userHome}/_/morning.photos/content`;
 
-const files = glob.sync(`${DIR}/**/*.mdx`);
+const files = glob.sync(`${DIR}/**/*.md`);
 
-const query = process.argv[2];
-const regexp = new RegExp(query, 'i');
-let items = files
-  .map(file => {
-    const contents = fs.readFileSync(file, 'utf8');
-    const title = contents.match(/^title: [\x22\x27]?(.*?)[\x22\x27]?$/im);
-    const date = contents.match(/^date: (.*?)$/m);
-    return {
-      title: title ? title[1] : '<***>',
-      date: date ? date[1] : path.basename(file),
-      file,
-    };
-  })
-  .filter(doc => regexp.test(doc.title))
-  .map(doc => ({
-    title: doc.title,
-    subtitle: doc.date,
-    uid: doc.file,
-    type: 'file',
-    valid: true,
-    arg: doc.file,
-    icon: {
-      type: 'fileicon',
-      path: doc.file,
-    },
-  }));
+const items = files
+	.map(file => {
+		const contents = fs.readFileSync(file, 'utf8');
+		const title = contents.match(/^title: [\x22\x27]?(.*?)[\x22\x27]?$/im);
+		const date = contents.match(/^date: (.*?)$/m);
+		return {
+			title: title ? title[1] : '<***>',
+			date: date ? date[1] : path.basename(file),
+			file,
+		};
+	})
+	.map(doc => ({
+		title: doc.title,
+		subtitle: doc.date,
+		uid: doc.file,
+		type: 'file',
+		valid: true,
+		arg: doc.file,
+		icon: {
+			type: 'fileicon',
+			path: doc.file,
+		},
+	}));
 
-if (!items.length) {
-  items = [{
-    valid: false,
-    title: 'Nothing found. ',
-  }, ];
-}
-console.log(JSON.stringify({
-  items
-}));
+console.log(
+	JSON.stringify({
+		items,
+	})
+);
