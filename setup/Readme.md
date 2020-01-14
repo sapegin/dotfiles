@@ -100,7 +100,7 @@ Go to iTerm2 preferences → Profiles → Advanced → Triggers. Click _Edit_.
 
 | Description                   | RegExp                     | Action         | Color          |
 | ----------------------------- | -------------------------- | -------------- | -------------- |
-| Highlight Git merge conflicts | `CONFLICT \(content\)\:.*` | Highlight Text | Text: `f2ac00` |
+| Highlight Git merge conflicts | `CONFLICT \([^)]+\)\:.*` | Highlight Text | Text: `f2ac00` |
 
 ## Misc
 
