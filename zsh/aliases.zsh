@@ -59,7 +59,7 @@ gr() {
 
 # git clone and cd to a repo directory
 clone() {
-  git clone --depth=1 $@
+  git clone $@
   if [ "$2" ]; then
     cd "$2"
   else
