@@ -12,7 +12,7 @@
 - zsh install script: [setup/zsh.sh](https://github.com/sapegin/dotfiles/blob/master/setup/zsh.sh).
 - My magic project opener ([bin/repo](https://github.com/sapegin/dotfiles/blob/master/bin/repo)).
 - [zsh aliases](https://github.com/sapegin/dotfiles/blob/master/zsh/aliases.zsh).
-- [Git aliases](https://github.com/sapegin/dotfiles/blob/master/tilde/gitconfig).
+- [Git aliases](https://github.com/sapegin/dotfiles/blob/master/tilde/.gitconfig).
 - [Lots of scripts](https://github.com/sapegin/dotfiles/tree/master/bin).
 - User scripts for browser: [userscripts/](https://github.com/sapegin/dotfiles/tree/master/userscripts).
 - Stop words lists that I use with Marked 2: [dict/](https://github.com/sapegin/dotfiles/tree/master/dict).
