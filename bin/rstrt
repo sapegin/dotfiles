@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-# Restart Linux service
-#
-# Author: Artem Sapegin, sapegin.me
-# License: MIT
-# https://github.com/sapegin/dotfiles
-
-sudo service $@ restart
