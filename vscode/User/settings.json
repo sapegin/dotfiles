@@ -14,7 +14,7 @@
   "editor.minimap.enabled": false,
   "editor.renderIndentGuides": true,
   "editor.renderWhitespace": "selection",
-  "editor.autoIndent": true,
+  "editor.autoIndent": "advanced",
   "editor.lineNumbers": "off",
   "workbench.editor.showTabs": false,
   "workbench.sideBar.location": "right",
@@ -45,16 +45,13 @@
   "files.hotExit": "onExitAndWindowClose",
   "files.defaultLanguage": "markdown",
   "files.associations": {
-    "*.pcss": "css",
     "*.js.snap": "javascript",
     ".prettierrc": "json"
   },
   "javascript.validate.enable": false,
   "javascript.autoClosingTags": false,
-  "javascript.suggest.autoImports": false,
   "javascript.updateImportsOnFileMove.enabled": "always",
   "typescript.autoClosingTags": false,
-
   // Plugins
   "color-highlight.matchWords": false,
   "prettier.requireConfig": true,
@@ -67,7 +64,6 @@
   ],
   "spellright.notificationClass": "information",
   "spellright.groupDictionaries": false,
-  "flow.useNPMPackagedFlow": true,
   "cSpell.userWords": [
     "Artem",
     "Sapegin",
@@ -79,29 +75,42 @@
     "prefetch",
     "tamia"
   ],
-
   // File types
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true
   },
   "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true
   },
   "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true
   },
   "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true
   },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
   "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true
   },
   "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "EditorConfig.EditorConfig",
+    "editor.formatOnSave": true
   },
   "spellright.language": [],
   "spellright.documentTypes": [
     "latex",
     "plaintext"
-  ]
+  ],
+  "editor.formatOnSave": true,
+  "html.format.enable": false,
+  "javascript.format.enable": false,
+  "typescript.format.enable": false
 }
