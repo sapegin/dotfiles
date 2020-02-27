@@ -9,7 +9,7 @@ export N_PREFIX="$HOME/n"
 if [[ -n $SSH_CONNECTION ]]; then
 	export EDITOR='nano'
 else
-	export EDITOR='code'
+	export EDITOR='micro'
 fi
 
 # Make less the default pager, add some options and enable syntax highlight using source-highlight

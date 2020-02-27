@@ -33,6 +33,7 @@ brew install zsh-syntax-highlighting
 brew install fd
 brew install fzf && $(brew --prefix)/opt/fzf/install
 brew install bat
+brew install micro
 brew install proselint
 
 # Node
