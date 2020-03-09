@@ -1,34 +1,35 @@
 {
-  // Internal
-  "editor.fontFamily": "Hack",
-  "editor.fontSize": 15,
-  "editor.rulers": [
-    80
-  ],
-  "editor.roundedSelection": false,
-  "editor.wordWrap": "on",
-  "editor.autoClosingBrackets": "never",
-  "editor.autoClosingQuotes": "never",
-  "editor.autoSurround": "never",
-  "editor.cursorBlinking": "solid",
-  "editor.minimap.enabled": false,
-  "editor.renderIndentGuides": true,
-  "editor.renderWhitespace": "selection",
-  "editor.autoIndent": "advanced",
-  "editor.lineNumbers": "off",
-  "workbench.editor.showTabs": false,
-  "workbench.sideBar.location": "right",
-  "workbench.activityBar.visible": false,
-  "workbench.statusBar.visible": false,
-  "workbench.commandPalette.preserveInput": false,
-  "workbench.colorTheme": "Squirrelsong Light",
-  "workbench.colorCustomizations": {
-    "statusBar.foreground": "#484848",
-    "statusBar.background": "#e5e5e5",
-    "statusBar.noFolderBackground": "#e5e5e5",
+	// Internal
+	"editor.autoClosingBrackets": "never",
+	"editor.autoClosingQuotes": "never",
+	"editor.autoIndent": "advanced",
+	"editor.autoSurround": "never",
+	"editor.cursorBlinking": "solid",
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"editor.fontFamily": "Hack",
+	"editor.fontSize": 15,
+	"editor.formatOnSave": true,
+	"editor.lineNumbers": "off",
+	"editor.minimap.enabled": false,
+	"editor.renderIndentGuides": true,
+	"editor.renderWhitespace": "selection",
+	"editor.roundedSelection": false,
+	"editor.rulers": [80],
+	"editor.suggestSelection": "first",
+	"editor.wordWrap": "on",
+	"workbench.activityBar.visible": false,
+	"workbench.colorTheme": "Squirrelsong Light",
+	"workbench.commandPalette.preserveInput": false,
+	"workbench.editor.showTabs": false,
+	"workbench.sideBar.location": "right",
+	"workbench.statusBar.visible": false,
+	"workbench.colorCustomizations": {
+		"statusBar.foreground": "#484848",
+		"statusBar.background": "#e5e5e5",
+		"statusBar.noFolderBackground": "#e5e5e5",
 		"editorCursor.foreground": "#333333",
-    "editorWhitespace.foreground": "#ffffff44",
-    // Theme test
+		"editorWhitespace.foreground": "#ffffff44",
+		// Theme test
 		"editor.background": "#ffffff",
 		"editor.findRangeHighlightBackground": "#dddddd",
 		"editor.foreground": "#555555",
@@ -48,90 +49,87 @@
 		"editorIndentGuide.background": "#ffffff00",
 		"editorIndentGuide.activeBackground": "#dddddd88",
 		"peekViewEditor.matchHighlightBackground": "#fac894",
-		"peekViewResult.matchHighlightBackground": "#faebaf",
-  },
-  "window.openFilesInNewWindow": "off",
-  "window.openFoldersInNewWindow": "off",
-  "window.restoreWindows": "all",
-  "window.titleBarStyle": "native",
-  "window.zoomLevel": 0,
-  "explorer.confirmDragAndDrop": false,
-  "explorer.openEditors.visible": 0,
-  "breadcrumbs.enabled": false,
-  "html.format.wrapLineLength": 0,
-  "html.autoClosingTags": false,
-  "extensions.autoUpdate": true,
-  "files.autoSave": "onWindowChange",
-  "files.hotExit": "onExitAndWindowClose",
-  "files.defaultLanguage": "markdown",
-  "files.associations": {
-    "*.js.snap": "javascript",
-    ".prettierrc": "json"
-  },
-  "javascript.validate.enable": false,
-  "javascript.autoClosingTags": false,
-  "javascript.updateImportsOnFileMove.enabled": "always",
-  "typescript.autoClosingTags": false,
-  // Plugins
-  "color-highlight.matchWords": false,
-  "prettier.requireConfig": true,
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact",
-    "html",
-  ],
-  "spellright.notificationClass": "information",
-  "spellright.groupDictionaries": false,
-  "cSpell.userWords": [
-    "Artem",
-    "Sapegin",
-    "Wayfair",
-    "filepath",
-    "flexbox",
-    "frontmatter",
-    "lightbox",
-    "prefetch",
-    "tamia"
-  ],
-  // File types
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
-  },
-  "[javascriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
-  },
-  "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
-  },
-  "[typescriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
-  },
-  "[markdown]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": false
-  },
-  "[html]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
-  },
-  "[json]": {
-    "editor.defaultFormatter": "EditorConfig.EditorConfig",
-    "editor.formatOnSave": true
-  },
-  "spellright.language": [],
-  "spellright.documentTypes": [
-    "latex",
-    "plaintext"
-  ],
-  "editor.formatOnSave": true,
-  "html.format.enable": false,
-  "javascript.format.enable": false,
-  "typescript.format.enable": false
+		"peekViewResult.matchHighlightBackground": "#faebaf"
+	},
+	"window.openFilesInNewWindow": "off",
+	"window.openFoldersInNewWindow": "off",
+	"window.restoreWindows": "all",
+	"window.titleBarStyle": "native",
+	"window.zoomLevel": 0,
+	"explorer.confirmDragAndDrop": false,
+	"explorer.openEditors.visible": 0,
+	"breadcrumbs.enabled": false,
+	"extensions.autoUpdate": true,
+	"files.autoSave": "onWindowChange",
+	"files.hotExit": "onExitAndWindowClose",
+	"files.defaultLanguage": "markdown",
+	"files.associations": {
+		"*.js.snap": "javascript",
+		".prettierrc": "json"
+	},
+	"vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+	// Plugins
+	"color-highlight.matchWords": false,
+	"prettier.requireConfig": true,
+	"eslint.validate": [
+		"javascript",
+		"javascriptreact",
+		"typescript",
+		"typescriptreact",
+		"html"
+	],
+	"spellright.notificationClass": "information",
+	"spellright.groupDictionaries": false,
+	"cSpell.userWords": [
+		"Artem",
+		"Sapegin",
+		"Wayfair",
+		"filepath",
+		"flexbox",
+		"frontmatter",
+		"lightbox",
+		"prefetch",
+		"tamia"
+	],
+	"spellright.language": [],
+	"spellright.documentTypes": ["latex", "plaintext"],
+	// File types
+	"javascript.validate.enable": false,
+	"javascript.autoClosingTags": false,
+	"javascript.format.enable": false,
+	"javascript.updateImportsOnFileMove.enabled": "always",
+	"typescript.autoClosingTags": false,
+	"typescript.format.enable": false,
+	"typescript.updateImportsOnFileMove.enabled": "always",
+	"html.format.wrapLineLength": 0,
+	"html.autoClosingTags": false,
+	"html.format.enable": false,
+	"[javascript]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.formatOnSave": true
+	},
+	"[javascriptreact]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.formatOnSave": true
+	},
+	"[typescript]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.formatOnSave": true
+	},
+	"[typescriptreact]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.formatOnSave": true
+	},
+	"[markdown]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.formatOnSave": false
+	},
+	"[html]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.formatOnSave": true
+	},
+	"[json]": {
+		"editor.defaultFormatter": "EditorConfig.EditorConfig",
+		"editor.formatOnSave": true
+	}
 }
