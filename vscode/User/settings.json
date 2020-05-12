@@ -6,7 +6,7 @@
 	"editor.autoSurround": "never",
 	"editor.cursorBlinking": "solid",
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
-	"editor.fontFamily": "Hack",
+	"editor.fontFamily": "MonoLisa",
 	"editor.fontSize": 15,
 	"editor.formatOnSave": true,
 	"editor.lineNumbers": "off",
