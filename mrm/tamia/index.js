@@ -22,13 +22,13 @@ const devDependencies = [
 	'tamia-build',
 ];
 
-const requireTask = task => {
+const requireTask = (task) => {
 	throw new MrmError(`Run ${task} task first:
 
 mrm ${task}`);
 };
 
-module.exports = function(config) {
+module.exports = function (config) {
 	// Require EditorConfig
 	if (!fs.existsSync('.editorconfig')) {
 		requireTask('eslint');
@@ -102,9 +102,7 @@ module.exports = function(config) {
 		.save();
 
 	// .eslintignore
-	lines('.eslintignore')
-		.add('build/')
-		.save();
+	lines('.eslintignore').add('build/').save();
 
 	// .gitignore
 	lines('.gitignore')
