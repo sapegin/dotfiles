@@ -93,6 +93,7 @@
 	],
 	"spellright.language": [],
 	"spellright.documentTypes": ["latex", "plaintext"],
+
 	// File types
 	"javascript.validate.enable": false,
 	"javascript.autoClosingTags": false,
