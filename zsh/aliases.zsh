@@ -65,5 +65,9 @@ clone() {
   else
     cd $(basename "$1" .git)
   fi
-  npm install
+  if [[ -r "./yarn.lock" ]]; then
+    yarn
+  elif [[ -r "./package-lock.json" ]]; then
+    npm install
+  fi
 }
