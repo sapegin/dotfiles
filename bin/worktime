@@ -1,0 +1,34 @@
+#!/usr/bin/env node
+
+// Calculate summary of a work log.
+//
+// Each line of the log should be formatted like this:
+// Any kind of description H:MM
+//
+// Usage: pbpaste | worktime
+//
+// Author: Artem Sapegin, sapegin.me
+// License: MIT
+// https://github.com/sapegin/dotfiles
+
+const fs = require('fs');
+
+const timeToMinutes = (time) => {
+	const [h, m] = time.split(':').map(Number);
+	return h * 60 + m;
+};
+const minutesToTimes = (minutes) => {
+	const h = Math.floor(minutes / 60);
+	const m = minutes % 60;
+	return `${h}:${m.toString().padStart(2, '0')}`;
+};
+
+const input = fs.readFileSync(0).toString(); // STDIN_FILENO = 0
+const times = input
+	.split('\n')
+	.filter(Boolean)
+	.map((line) => line.split(' ').pop());
+const minutes = times.map(timeToMinutes);
+const totalMinutes = minutes.reduce((summ, value) => summ + value, 0);
+
+console.log(minutesToTimes(totalMinutes));
