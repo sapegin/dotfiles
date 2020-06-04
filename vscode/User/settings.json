@@ -57,6 +57,7 @@
 	"window.restoreWindows": "all",
 	"window.titleBarStyle": "native",
 	"window.zoomLevel": 0,
+	"zenMode.centerLayout": false,
 	"explorer.confirmDragAndDrop": false,
 	"explorer.openEditors.visible": 0,
 	"breadcrumbs.enabled": false,
