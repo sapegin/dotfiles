@@ -15,6 +15,7 @@
 	"editor.renderWhitespace": "selection",
 	"editor.roundedSelection": false,
 	"editor.rulers": [80],
+	"editor.snippetSuggestions": "none",
 	"editor.suggestSelection": "first",
 	"editor.wordWrap": "on",
 	"workbench.activityBar.visible": false,
