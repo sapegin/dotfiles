@@ -24,6 +24,7 @@
 	"workbench.editor.showTabs": false,
 	"workbench.sideBar.location": "right",
 	"workbench.statusBar.visible": false,
+	"workbench.startupEditor": "newUntitledFile",
 	"workbench.colorCustomizations": {
 		"statusBar.foreground": "#484848",
 		"statusBar.background": "#e5e5e5",
@@ -58,6 +59,7 @@
 	"window.titleBarStyle": "native",
 	"window.zoomLevel": 0,
 	"zenMode.centerLayout": false,
+	"screencastMode.onlyKeyboardShortcuts": true,
 	"explorer.confirmDragAndDrop": false,
 	"explorer.openEditors.visible": 0,
 	"breadcrumbs.enabled": false,
@@ -70,6 +72,7 @@
 		".prettierrc": "json"
 	},
 	"vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+
 	// Plugins
 	"color-highlight.matchWords": false,
 	"prettier.requireConfig": true,
@@ -93,6 +96,7 @@
 		"prefetch",
 		"tamia"
 	],
+	"spellright.configurationScope": "user",
 	"spellright.language": [],
 	"spellright.documentTypes": ["latex", "plaintext"],
 
