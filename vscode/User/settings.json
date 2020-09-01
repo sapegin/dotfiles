@@ -99,6 +99,12 @@
 	"spellright.configurationScope": "user",
 	"spellright.language": [],
 	"spellright.documentTypes": ["latex", "plaintext"],
+	"grammarly.diagnostics": {
+		"[markdown]": {
+		    "ignore": ["inlineCode", "code"]
+  		}
+	},
+
 
 	// File types
 	"javascript.validate.enable": false,
