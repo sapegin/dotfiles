@@ -3,7 +3,7 @@
 // Magic project opener: opens repository using fuzzy search.
 //
 // Should be used via Bash alias like this:
-//   function proj { cd "$("$HOME/dotfiles/bin/repo" $1)"; }
+//   function repo { cd "$("$HOME/dotfiles/bin/repo" $1)"; }
 //
 // Author: Artem Sapegin, sapegin.me
 // License: MIT
@@ -15,10 +15,8 @@ const path = require('path');
 
 const PROJECTS_DIR = path.join(process.env.HOME, '_');
 
-const getDirs = d =>
-	fs.readdirSync(d).filter(f => fs.statSync(path.join(d, f)).isDirectory());
-
-const length = r => path.basename(r).length;
+const getDirs = (d) =>
+	fs.readdirSync(d).filter((f) => fs.statSync(path.join(d, f)).isDirectory());
 
 const args = process.argv.splice(2);
 if (args.length !== 1) {
@@ -32,15 +30,15 @@ if (repo) {
 }
 
 function find(repos, name) {
-	// Fuzzy search
+	// Fuzzy search but require the first letter to match
 	const nameRegexp = new RegExp(
-		name
+		`^${name
 			.replace(/[^a-z0-9]/gi, '')
 			.split('')
-			.join('.*'),
+			.join('.*')}`,
 		'i'
 	);
-	repos = repos.filter(r => nameRegexp.test(r));
+	repos = repos.filter((r) => nameRegexp.test(r));
 
 	// Found?
 	if (!repos.length) {
@@ -48,8 +46,8 @@ function find(repos, name) {
 		process.exit(1);
 	}
 
-	// Order by repo name length
-	repos.sort((a, b) => length(a) > length(b));
+	// Order by repo name length, shortest names first
+	repos.sort((a, b) => (a.length > b.length ? 1 : -1));
 
 	// Return the most probable result
 	return repos[0];
