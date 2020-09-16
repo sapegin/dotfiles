@@ -3,7 +3,6 @@ source ~/dotfiles/zsh/path.zsh
 source ~/dotfiles/zsh/aliases.zsh
 source ~/dotfiles/zsh/completions.zsh
 source ~/dotfiles/zsh/key-bindings.zsh
-source ~/dotfiles/zsh/prompt/prompt.zsh
 
 # Do not overwrite files when redirecting using ">". Note that you can still override this with ">|"
 set -o noclobber
@@ -54,6 +53,7 @@ _fzf_compgen_dir() {
 # Load extra (private) settings
 [ -f ~/.zshlocal ] && source ~/.zshlocal
 
-# Set Spaceship ZSH as a prompt
-autoload -U promptinit; promptinit
-prompt spaceship
+# Starship prompt
+export STARSHIP_CONFIG=~/.starship.toml
+eval "$(starship init zsh)"
+

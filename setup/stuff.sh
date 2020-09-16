@@ -21,6 +21,7 @@ brew install tree
 # Git
 brew install git
 brew install git-extras
+
 # git-friendly
 curl -sS https://raw.githubusercontent.com/jamiew/git-friendly/master/install.sh | bash
 
@@ -28,13 +29,14 @@ curl -sS https://raw.githubusercontent.com/jamiew/git-friendly/master/install.sh
 echo -e "setenv PATH $HOME/dotfiles/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" | sudo tee /etc/launchd.conf
 
 # Everything else
-brew install ripgrep
-brew install zsh-syntax-highlighting
+brew install bat
 brew install fd
 brew install fzf && $(brew --prefix)/opt/fzf/install
-brew install bat
 brew install micro
 brew install proselint
+brew install ripgrep
+brew install starship
+brew install zsh-syntax-highlighting
 
 # Node
 # n, Node version manager

@@ -23,7 +23,6 @@
     "prettier": "^2.0.5",
     "pretty-bytes-cli": "^2.0.0",
     "proselint": "^0.1.7",
-    "spaceship-prompt": "^3.11.2",
     "textlint": "^11.7.6",
     "textlint-filter-rule-comments": "^1.2.2",
     "textlint-rule-apostrophe": "^2.0.0",
