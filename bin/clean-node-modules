@@ -1,0 +1,128 @@
+#!/usr/bin/env node
+
+// Removes all node_modules folders inside the home directory older than 30 days
+//
+// Author: Artem Sapegin, sapegin.me
+// License: MIT
+// https://github.com/sapegin/dotfiles
+//
+
+const path = require('path');
+const { execSync } = require('child_process');
+const fs = require('fs-extra');
+const userHome = require('user-home');
+const differenceInDays = require('date-fns/differenceInDays');
+
+const MAX_DAYS = 30;
+const IGNORE = [
+	`${userHome}/.config`,
+	`${userHome}/.npm`,
+	`${userHome}/.vscode`,
+	`${userHome}/dotfiles`,
+	`${userHome}/Library`,
+	`${userHome}/n`,
+];
+
+const sizes = [];
+
+function getFolderSize(folderPath) {
+	return parseInt(
+		execSync(`du -ksc "${folderPath}" | sort -h -r`)
+			.toString()
+			.split('\t')
+			.shift()
+	);
+}
+
+function getFolderAgeInDays(stats) {
+	return differenceInDays(new Date(), stats.mtimeMs);
+}
+
+function formatSize(kilobytes) {
+	const gigabytes = kilobytes / 1024 / 1024;
+	if (gigabytes >= 1) {
+		return `${gigabytes.toFixed(2)} GB`;
+	}
+
+	const megabytes = kilobytes / 1024;
+	if (megabytes >= 1) {
+		return `${megabytes.toFixed(2)} MB`;
+	}
+
+	return `${kilobytes} KB`;
+}
+
+function summ(items) {
+	return items.reduce((total, item) => total + item, 0);
+}
+
+async function safeStat(filepath) {
+	try {
+		return await fs.stat(filepath);
+	} catch (err) {
+		if (err.code === 'ENOENT') {
+			return {
+				isDirectory: () => false,
+			};
+		}
+		throw err;
+	}
+}
+
+async function safeReaddir(folderPath) {
+	try {
+		return await fs.readdir(folderPath);
+	} catch (err) {
+		if (err.code === 'EPERM') {
+			return [];
+		}
+		throw err;
+	}
+}
+
+async function removeFolder(folderPath) {
+	const size = getFolderSize(folderPath);
+	sizes.push(size);
+
+	console.log(`Removing ${folderPath} (${formatSize(size)})`);
+	await fs.remove(folderPath);
+
+	// rimraf(folderPath, (err) => {
+	// 	if (err) {
+	// 		console.log(`Cannot remove folder: ${folderPath}`);
+	// 	} else {
+	// 		console.log(`Removing ${folderPath}`);
+	// 	}
+	// });
+}
+
+async function removeNodeModules(folderPath) {
+	const stats = await safeStat(folderPath);
+	if (!stats.isDirectory() || IGNORE.includes(folderPath)) {
+		return;
+	}
+
+	const name = path.basename(folderPath);
+	if (name === 'node_modules') {
+		if (getFolderAgeInDays(stats) > MAX_DAYS) {
+			removeFolder(folderPath);
+		}
+	} else {
+		const folders = await safeReaddir(folderPath);
+		await Promise.all(
+			folders.map((folder) => removeNodeModules(path.join(folderPath, folder)))
+		);
+	}
+}
+
+async function main() {
+	await removeNodeModules(userHome);
+
+	const totalSize = summ(sizes);
+	console.log();
+	console.log(
+		`Removed ${sizes.length} folders, total of ${formatSize(totalSize)} cleared`
+	);
+}
+
+main();

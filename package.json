@@ -12,6 +12,7 @@
     "node": ">=8.9"
   },
   "dependencies": {
+    "date-fns": "^2.16.1",
     "diff-so-fancy": "^1.3.0",
     "eslint": "^7.9.0",
     "eslint-config-tamia": "^7.2.5",
