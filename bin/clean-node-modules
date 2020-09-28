@@ -86,14 +86,6 @@ async function removeFolder(folderPath) {
 
 	console.log(`Removing ${folderPath} (${formatSize(size)})`);
 	await fs.remove(folderPath);
-
-	// rimraf(folderPath, (err) => {
-	// 	if (err) {
-	// 		console.log(`Cannot remove folder: ${folderPath}`);
-	// 	} else {
-	// 		console.log(`Removing ${folderPath}`);
-	// 	}
-	// });
 }
 
 async function removeNodeModules(folderPath) {
