@@ -1,0 +1,15 @@
+#!/usr/bin/env zsh
+
+# Runs a given command in each immediate subdirectory
+#
+# Usage:
+#   insubs <my command>
+#
+# Based on: https://stackoverflow.com/a/41575863/1973105
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+
+export THE_COMMAND=$@
+find . -type d -maxdepth 1 -mindepth 1 -print0 | xargs -0 -I{} zsh -c 'cd "{}" && echo "\033[36;1;4m{}\033[0m\n" && echo "$('$THE_COMMAND')" && echo -e'
