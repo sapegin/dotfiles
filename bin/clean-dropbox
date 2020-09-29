@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 # Prints/removes conflicted copies inside Dropbox folder.
-# 
+#
 # Usage:
-#   cleandropbox [--remove]
+#   clean-dropbox [--remove]
 #
 # Based on https://coderwall.com/p/tzjorw
 #
