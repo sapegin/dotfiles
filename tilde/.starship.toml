@@ -1,15 +1,14 @@
-prompt_order = [
-    "username",
-    "hostname",
-    "directory",
-    "custom.git_simple",
-    "git_state",
-    "line_break",
-    "character",
-]
+format = """\
+  $username\
+  $hostname\
+  $directory\
+  $custom\
+  $git_state\
+  $line_break\
+  $character\
+  """
 
 [directory]
-prefix = ""
 style = "bold white"
 
 [custom.git_simple]
