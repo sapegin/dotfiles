@@ -5,7 +5,7 @@
 ## Features
 
 - Custom color scheme for iTerm and Terminal.app: [Squirrelsong](https://github.com/sapegin/dotfiles/tree/master/color).
-- Custom zsh theme with Git status, etc: [Squirrelbook](https://github.com/sapegin/dotfiles/blob/master/zsh/themes/squirrelbook.zsh-theme).
+- [Custom zsh theme](https://github.com/sapegin/dotfiles/blob/master/tilde/.starship.toml) with Git status, etc. using Starship.
 - Dotfiles synchronization: [sync.py](https://github.com/sapegin/dotfiles/blob/master/sync.py).
 - Sensible macOS defaults: [setup/osx.sh](https://github.com/sapegin/dotfiles/blob/master/setup/osx.sh).
 - Visual Studio Code settings synchronization: [vscode](https://github.com/sapegin/dotfiles/tree/master/vscode).
@@ -15,7 +15,6 @@
 - [Git aliases](https://github.com/sapegin/dotfiles/blob/master/tilde/.gitconfig).
 - [Lots of scripts](https://github.com/sapegin/dotfiles/tree/master/bin).
 - User scripts for browser: [userscripts/](https://github.com/sapegin/dotfiles/tree/master/userscripts).
-- Stop words lists that I use with Marked 2: [dict/](https://github.com/sapegin/dotfiles/tree/master/dict).
 - [macOS apps I use](https://github.com/sapegin/dotfiles/wiki/OS-X-Apps).
 
 ## Installation
