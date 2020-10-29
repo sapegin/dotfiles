@@ -14,9 +14,10 @@ alias -- +x="chmod +x"
 alias o="open"
 alias oo="open ."
 alias e="$EDITOR"
+alias cc="code ."
 
 # GitHub Desktop
-alias gh="github"
+alias gh="github ."
 
 # ForkLift
 alias k="open -a ForkLift"
