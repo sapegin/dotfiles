@@ -64,6 +64,7 @@
 	"explorer.openEditors.visible": 0,
 	"breadcrumbs.enabled": false,
 	"extensions.autoUpdate": true,
+	"extensions.ignoreRecommendations": true,
 	"files.autoSave": "onWindowChange",
 	"files.hotExit": "onExitAndWindowClose",
 	"files.defaultLanguage": "markdown",
@@ -101,10 +102,9 @@
 	"spellright.documentTypes": ["latex", "plaintext"],
 	"grammarly.diagnostics": {
 		"[markdown]": {
-		    "ignore": ["inlineCode", "code"]
-  		}
+			"ignore": ["inlineCode", "code"]
+		}
 	},
-
 
 	// File types
 	"javascript.validate.enable": false,
