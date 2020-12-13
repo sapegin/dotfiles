@@ -8,6 +8,7 @@
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"editor.fontFamily": "MonoLisa",
 	"editor.fontSize": 15,
+	"editor.fontLigatures": "'calt' on, 'liga' off",
 	"editor.formatOnSave": true,
 	"editor.lineNumbers": "off",
 	"editor.minimap.enabled": false,
