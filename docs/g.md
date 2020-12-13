@@ -18,6 +18,10 @@
 
 `g -w {{pattern}}`
 
+- Case-sensitive search:
+
+`g -s {{pattern}}`
+
 - Search for a pattern only in a file or directory:
 
 `g {{pattern}} {{file_or_dir}}`
