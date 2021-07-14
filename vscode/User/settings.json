@@ -58,7 +58,6 @@
 	"window.openFoldersInNewWindow": "off",
 	"window.restoreWindows": "all",
 	"window.titleBarStyle": "native",
-	"window.zoomLevel": 0,
 	"zenMode.centerLayout": false,
 	"screencastMode.onlyKeyboardShortcuts": true,
 	"explorer.confirmDragAndDrop": false,
