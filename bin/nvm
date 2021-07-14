@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+RED="$(tput setaf 1)"
+CYAN="$(tput setaf 6)"
+UNDERLINE="$(tput sgr 0 1)"
+NOCOLOR="$(tput sgr0)"
+function error() { echo -e "$UNDERLINE$RED$1$NOCOLOR\n"; }
+
+error "Run fnm instead"
