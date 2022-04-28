@@ -11,3 +11,5 @@ Thumbs.db
 .eslintcache
 vscode/User/globalStorage/state.vscdb
 vscode/User/globalStorage/state.vscdb.backup
+vscode/User/globalStorage/vscode.json-language-features/json-schema-cache/
+vscode/User/History/
