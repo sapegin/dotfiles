@@ -1,25 +1,27 @@
 {
   // Internal
+  "editor.acceptSuggestionOnCommitCharacter": false,
   "editor.autoClosingBrackets": "never",
   "editor.autoClosingQuotes": "never",
   "editor.autoIndent": "advanced",
   "editor.autoSurround": "never",
+  "editor.bracketPairColorization.enabled": false,
   "editor.cursorBlinking": "solid",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.fontFamily": "MonoLisa",
-  "editor.fontSize": 15,
   "editor.fontLigatures": "'calt' on, 'liga' off",
+  "editor.fontSize": 15,
   "editor.formatOnSave": true,
+  "editor.guides.indentation": true,
   "editor.lineNumbers": "off",
   "editor.minimap.enabled": false,
-  "editor.renderIndentGuides": true,
   "editor.renderWhitespace": "selection",
   "editor.roundedSelection": false,
   "editor.rulers": [80],
   "editor.snippetSuggestions": "none",
   "editor.suggestSelection": "first",
   "editor.wordWrap": "on",
-  "editor.acceptSuggestionOnCommitCharacter": false,
+  "telemetry.telemetryLevel": "off",
   "workbench.activityBar.visible": false,
   "workbench.colorTheme": "Squirrelsong Light",
   "workbench.commandPalette.preserveInput": false,
@@ -64,6 +66,7 @@
   "zenMode.centerLayout": false,
   "screencastMode.onlyKeyboardShortcuts": true,
   "explorer.confirmDragAndDrop": false,
+  "explorer.confirmDelete": false,
   "explorer.openEditors.visible": 0,
   "breadcrumbs.enabled": false,
   "extensions.autoUpdate": true,
@@ -91,11 +94,6 @@
   "spellright.configurationScope": "user",
   "spellright.language": [],
   "spellright.documentTypes": ["latex", "plaintext"],
-  "grammarly.diagnostics": {
-    "[markdown]": {
-      "ignore": ["inlineCode", "code"]
-    }
-  },
 
   // File types
   "javascript.validate.enable": false,
@@ -109,6 +107,7 @@
   "typescript.preferences.importModuleSpecifier": "relative",
   "html.format.wrapLineLength": 0,
   "html.format.enable": false,
+  "html.autoCreateQuotes": false,
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true
@@ -137,7 +136,6 @@
     "editor.defaultFormatter": "EditorConfig.EditorConfig",
     "editor.formatOnSave": true
   },
-  "explorer.confirmDelete": false,
   "color-highlight.sass.includePaths": [],
   "emmet.excludeLanguages": [
     "markdown",
@@ -146,9 +144,7 @@
     "typescript",
     "typescriptreact"
   ],
-  "telemetry.telemetryLevel": "off",
   "vscode-home-assistant.hostUrl": "http://192.168.1.115:8123",
   "vscode-home-assistant.longLivedAccessToken": "ZG1QOoNnsD1Deq2R7USGCf_uPWHbwJIGv7JBoj_JrLU",
-  "vscode-home-assistant.ignoreCertificates": true,
-  "html.autoCreateQuotes": false
+  "vscode-home-assistant.ignoreCertificates": true
 }
