@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+# Mount card reader
+#
+# USAGE:
+#   sd-mount # Mounts /dev/disk2s1
+#   sd-mount disk3s1 # Mounts /dev/disk3s1
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+
+device=${1:-disk2s1}
+mkdir -p ~/mnt2/${device}
+sudo mount -t msdos /dev/${device} ~/mnt2/${device}
