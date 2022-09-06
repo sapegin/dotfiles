@@ -149,5 +149,12 @@
   "[json]": {
     "editor.defaultFormatter": "EditorConfig.EditorConfig",
     "editor.formatOnSave": true
-  }
+  },
+  "[csharp]": {
+    "editor.defaultFormatter": "csharpier.csharpier-vscode"
+  },
+  "csharp.referencesCodeLens.enabled": false,
+  "csharp.format.enable": true,
+  "omnisharp.useEditorFormattingSettings": false,
+  "editor.formatOnPaste": true
 }
