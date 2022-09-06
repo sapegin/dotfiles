@@ -15,7 +15,7 @@ header "Updating dotfiles..."
 pushd "$HOME/dotfiles"
 git pull
 ./sync.py
-source "$HOME/.bashrc"
+source "$HOME/.zshrc"
 popd
 echo
 
@@ -41,10 +41,10 @@ npm update -g
 echo
 
 # Ruby gems
-header "Updating Ruby gems..."
-sudo -v
-sudo gem update
-echo
+# header "Updating Ruby gems..."
+# sudo -v
+# sudo gem update
+# echo
 
 # git-friendly
 header "Updating git-friendly..."
