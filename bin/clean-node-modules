@@ -20,6 +20,8 @@ const IGNORE = [
 	`${userHome}/.vscode`,
 	`${userHome}/dotfiles`,
 	`${userHome}/Library`,
+	`${userHome}/Documents/Library`,
+	`${userHome}/Movies`,
 	`${userHome}/n`,
 ];
 
