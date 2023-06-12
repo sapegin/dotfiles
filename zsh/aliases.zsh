@@ -26,8 +26,11 @@ alias kk="open -a ForkLift ."
 # Bat: https://github.com/sharkdp/bat
 command -v bat >/dev/null 2>&1 && alias cat="bat --style=numbers,changes"
 
-# trash-cli: https://github.com/sindresorhus/trash-cli
-[ -d ~/dotfiles/node_modules/trash-cli ] && alias rm="~/dotfiles/node_modules/trash-cli/cli.js"
+# Exa: https://the.exa.website
+command -v exa >/dev/null 2>&1 && alias ls="exa"
+
+# trash: https://github.com/sindresorhus/macos-trash
+command -v trash >/dev/null 2>&1 && alias rm="trash"
 
 # Download file and save it with filename of remote file
 alias get="curl -O -L"

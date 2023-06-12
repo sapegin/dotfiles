@@ -23,7 +23,7 @@ brew install git
 brew install git-extras
 
 # git-friendly
-curl -sS https://raw.githubusercontent.com/jamiew/git-friendly/master/install.sh | bash
+brew install git-friendly/git-friendly/git-friendly
 
 # Extend global $PATH
 echo -e "setenv PATH $HOME/dotfiles/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" | sudo tee /etc/launchd.conf
@@ -32,10 +32,12 @@ echo -e "setenv PATH $HOME/dotfiles/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/
 brew install bat
 brew install fd
 brew install fzf && $(brew --prefix)/opt/fzf/install
+brew install macos-trash
 brew install micro
 brew install proselint
 brew install ripgrep
 brew install starship
+brew install tldr
 brew install zsh-syntax-highlighting
 
 # Node
@@ -45,7 +47,6 @@ npm config set loglevel warn
 
 # Npm
 npm i -g npm-upgrade
-npm i -g tldr
 
 # Remove outdated versions from the cellar
 brew cleanup
