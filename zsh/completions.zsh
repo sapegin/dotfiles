@@ -1,6 +1,8 @@
+# Load default completions
+autoload -Uz compinit
+
 # Caching autocompletion
 # https://blog.callstack.io/supercharge-your-terminal-with-zsh-8b369d689770
-autoload -Uz compinit
 if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
   compinit -i
 else
@@ -28,9 +30,6 @@ zstyle ':completion:*' matcher-list 'm:{a-zA-Z-_}={A-Za-z_-}' 'r:|=*' 'l:|=* r:|
 # Use caching so that commands like apt and dpkg complete are useable
 zstyle ':completion::complete:*' use-cache 1
 zstyle ':completion::complete:*' cache-path $ZSH_CACHE_DIR
-
-# Load default completions
-autoload -Uz compinit && compinit
 
 # Custom completions for Git scripts
 
