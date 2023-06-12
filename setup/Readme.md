@@ -6,7 +6,7 @@
 
 ### stuff
 
-Installs Homebrew, Git, [git-extras](https://github.com/tj/git-extras), [git-friendly](https://github.com/jamiew/git-friendly), Node, configures Apache, PHP, MySQL, etc.
+Installs Homebrew, Git, [git-friendly](https://github.com/jamiew/git-friendly), Node.js, etc.
 
 ### zsh
 

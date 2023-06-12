@@ -29,7 +29,25 @@ zstyle ':completion:*' matcher-list 'm:{a-zA-Z-_}={A-Za-z_-}' 'r:|=*' 'l:|=* r:|
 zstyle ':completion::complete:*' use-cache 1
 zstyle ':completion::complete:*' cache-path $ZSH_CACHE_DIR
 
-# Autocompletion for git-friendly
-fpath=($(brew --prefix)/share/zsh/functions $fpath)
-autoload -Uz _git && _git
+# Load default completions
+autoload -Uz compinit && compinit
+
+# Custom completions for Git scripts
+
+__git_command_successful () {
+    if (( ${#pipestatus:#0} > 0 )); then
+        _message 'not a git repository'
+        return 1
+    fi
+    return 0
+}
+
+__git_branch_names() {
+    local expl
+    declare -a branch_names
+    branch_names=(${${(f)"$(_call_program branchrefs git for-each-ref --format='"%(refname)"' refs/heads 2>/dev/null)"}#refs/heads/})
+    __git_command_successful || return
+    _wanted branch-names expl branch-name compadd $* - $branch_names
+}
+
 compdef __git_branch_names branch br
