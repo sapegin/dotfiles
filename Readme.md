@@ -1,4 +1,4 @@
-# Artem Sapegin’s dotfiles
+# Artem Sapegin’s dotfiles 🐿️
 
 ![iTerm2](https://github.com/sapegin/squirrelsong/raw/master/dark/squirrelsong_terminal.png)
 
