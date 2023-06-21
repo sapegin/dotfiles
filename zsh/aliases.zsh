@@ -35,12 +35,6 @@ command -v trash >/dev/null 2>&1 && alias rm="trash"
 # Download file and save it with filename of remote file
 alias get="curl -O -L"
 
-# Run npm script without annoying noise
-alias nr="npm run --silent"
-
-# Jest watch
-alias j="npx jest --watch"
-
 # Make a directory and cd to it
 take() {
   mkdir -p $@ && cd ${@:$#}
