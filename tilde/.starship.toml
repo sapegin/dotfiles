@@ -7,12 +7,13 @@ format = """\
   $line_break\
   $character\
   """
-command_timeout = 2000
 
 [directory]
 style = "bold white"
 
 [custom.git_simple]
 command = "starship-git-simple"
-when = "true"
+require_repo = true
+when = true
+ignore_timeout = true
 style = ""
