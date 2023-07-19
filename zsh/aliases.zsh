@@ -27,7 +27,7 @@ alias kk="open -a ForkLift ."
 command -v bat >/dev/null 2>&1 && alias cat="bat --style=numbers,changes"
 
 # Exa: https://the.exa.website
-command -v exa >/dev/null 2>&1 && alias ls="exa"
+command -v exa >/dev/null 2>&1 && alias ls="exa -a --no-user --no-time"
 
 # trash: https://github.com/sindresorhus/macos-trash
 command -v trash >/dev/null 2>&1 && alias rm="trash"
