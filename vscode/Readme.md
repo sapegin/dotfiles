@@ -11,19 +11,9 @@ ln -s ~/dotfiles/vscode/User ~/Library/Application\ Support/Code/User
 
 Run “Install 'code' command in PATH” from the command palette (View → Command Palette) to make Code available from the command line.
 
-## Installed plugins
+## Install plugins
 
-- [Beautify](https://marketplace.visualstudio.com/items?itemName=HookyQR.beautify)
-- [change-case](https://marketplace.visualstudio.com/items?itemName=zhengxiaoyao0716.intelligence-change-case)
-- [Color Highlight](https://marketplace.visualstudio.com/items?itemName=naumovs.color-highlight)
-- [Contextual Duplicate](https://marketplace.visualstudio.com/items?itemName=lafe.contextualduplicate)
-- [EditorConfig for VS Code](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)
-- [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
-- [Markdown Shortcuts](https://marketplace.visualstudio.com/items?itemName=mdickin.markdown-shortcuts)
-- [Prettier - JavaScript formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
-- [Spell Right](https://marketplace.visualstudio.com/items?itemName=ban.spellright)
-- [Squirrelsong Light Theme](https://marketplace.visualstudio.com/items?itemName=sapegin.Theme-SquirrelsongLight)
-- [Unique Lines](https://marketplace.visualstudio.com/items?itemName=bibhasdn.unique-lines)
+See [setup/vscode.sh](../setup/vscode.sh).
 
 ## Missing features
 
