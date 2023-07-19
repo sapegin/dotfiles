@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+# Initializes Git repository.
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+#
 # Based on https://github.com/tj/git-extras/blob/master/bin/git-setup
 
 COMMIT_MESSAGE='Initial commit'
