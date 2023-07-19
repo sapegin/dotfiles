@@ -57,7 +57,7 @@ export LS_COLORS='no=00:fi=00:di=01;34:ln=00;36:pi=40;33:so=01;35:do=01;35:bd=40
 export GREP_COLOR='1;33'
 
 # Bat: https://github.com/sharkdp/bat
-export BAT_THEME="DarkNeon"
+export BAT_THEME="Coldark-Dark"
 
 # Homebrew install badge: beer sucks, coffee rules
 export HOMEBREW_INSTALL_BADGE='☕'
