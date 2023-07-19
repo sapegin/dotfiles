@@ -9,7 +9,7 @@
 
 [core]
 	editor = micro
-	pager = git-pager
+	pager = delta
 	autocrlf = false
 	safecrlf = false
 	mergeoptions = --no-edit
@@ -32,7 +32,7 @@
 	s = status -sb
 	d = diff
 	cp = cherry-pick
-	# Sharable diff with disabled diff-so-fancy and +/- marks
+	# Sharable diff with disabled syntax highlighting and +/- marks
 	patch = !git --no-pager diff --no-color
 	# Merge fresh master into the current branch
 	mmm = !git fetch origin master && git merge origin/master --no-edit
@@ -72,27 +72,22 @@
 [url "git@github.com:sapegin/"]
 	insteadOf = "git://github.com/sapegin/"
 
-# Kaleidoscope
-[difftool "Kaleidoscope"]
-	cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
-[diff]
-	tool = Kaleidoscope
-[difftool]
-	prompt = false
-[mergetool "Kaleidoscope"]
-	cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
-	trustExitCode = true
-[mergetool]
-	prompt = false
+# git-delta
+[interactive]
+	diffFilter = delta --color-only
+[add.interactive]
+	useBuiltin = false
+[delta]
+	navigate = true
+	light = false
 [merge]
-	tool = Kaleidoscope
+	conflictstyle = diff3
+[diff]
+	colorMoved = default
 
-# https://github.com/so-fancy/diff-so-fancy
-[color "diff-highlight"]
-	oldNormal = red bold
-	oldHighlight = red bold 52
-	newNormal = green bold
-	newHighlight = green bold 22
+# Default values for new repositories
+[init]
+	defaultBranch = main
 
 [user]
 	name = Artem Sapegin
@@ -116,5 +111,3 @@
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
-[init]
-	defaultBranch = main

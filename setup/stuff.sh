@@ -37,6 +37,8 @@ brew install proselint
 brew install ripgrep
 brew install starship
 brew install tldr
+brew install git-delta
+brew install bat-extras
 brew install zsh-syntax-highlighting
 
 # Node

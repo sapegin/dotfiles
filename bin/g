@@ -12,7 +12,10 @@
 # https://github.com/sapegin/dotfiles
 #
 
-if command -v rg >/dev/null 2>&1; then
+if command -v batgrep >/dev/null 2>&1; then
+	# https://github.com/eth-p/bat-extras/blob/master/doc/batgrep.md
+	batgrep "$@"
+elif command -v rg >/dev/null 2>&1; then
 	# See tilde/ripgreprc for default options
 	rg "$@"
 elif command -v ack >/dev/null 2>&1; then
