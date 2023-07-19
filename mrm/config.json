@@ -12,9 +12,8 @@
       "useTabs": true
     },
     "aliases": {
-        "node": ["package", "editorconfig", "gitignore", "eslint", "prettier", "lint-staged", "jsconfig"],
-        "oss": ["package", "license", "readme", "contributing", "editorconfig", "gitignore", "eslint", "prettier", "lint-staged", "jsconfig"],
-        "site": ["package", "editorconfig", "gitignore", "eslint", "stylelint", "tamia"],
+        "node": ["package", "editorconfig", "gitignore", "eslint", "prettier", "lint-staged"],
+        "oss": ["package", "license", "readme", "contributing", "editorconfig", "gitignore", "eslint", "prettier", "lint-staged"],
         "sync": ["license", "editorconfig", "gitignore", "eslint", "prettier", "lint-staged"]
     }
 }
