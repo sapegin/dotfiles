@@ -1,5 +1,9 @@
 # Dotfiles
 
+- Find in history:
+
+`Ctrl+R`
+
 - Navigate to a parent directory:
 
 `.
@@ -70,6 +74,52 @@
 
 ***
 
-- Get macOS software updates, update Homebrew, npm, Ruby packages, dotfiles and some other software.
+- Change Git branch and pull:
+
+`br {{branch}}`
+
+- Remove conflicted copies from Dropbox:
+
+`clean-dropbox {{--remove}}`
+
+- Remove all node_modules folders inside the home directory older than 30 days:
+
+`clean-node-modules`
+
+- Empty trash on all mounted volumes:
+
+`clean-trash`
+
+- Convert Windows line endings to Unix:
+
+`crlf {{file}} {{--force}}`
+
+- Update dotfiles:
+
+`dotfiles`
+
+- Quick grep:
+
+`g`
+
+- Remove old Git branches and do other cleanup:
+
+`git-cleanup`
+
+- Initialize Git repository:
+
+`git-setup`
+
+- Show my commits since yesterday or since last Friday:
+
+`git-standup`
+
+- Get macOS software updates, update Homebrew, npm, Ruby packages, dotfiles, etc:
 
 `update`
+
+***
+
+- Open fuzzy file finder:
+
+`fzf`
