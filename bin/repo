@@ -13,21 +13,20 @@
 const fs = require('fs');
 const path = require('path');
 
-const PROJECTS_DIR = path.join(process.env.HOME, '_');
+const PERSONAL_PROJECTS_DIR = path.join(process.env.HOME, '_');
+const WORK_PROJECTS_DIR = path.join(process.env.HOME, 'omio');
 
 const getDirs = (d) =>
 	fs.readdirSync(d).filter((f) => fs.statSync(path.join(d, f)).isDirectory());
 
-const args = process.argv.splice(2);
-if (args.length !== 1) {
-	console.log('Usage: repo <name>');
-	process.exit(1);
-}
+const tryRepo = (dir, query) => {
+	const repo = find(getDirs(dir), query);
 
-const repo = find(getDirs(PROJECTS_DIR), args[0]);
-if (repo) {
-	console.log(path.join(PROJECTS_DIR, repo));
-}
+	if (repo) {
+		console.log(path.join(dir, repo));
+		process.exit(0);
+	}
+};
 
 function find(repos, name) {
 	// Fuzzy search but require the first letter to match
@@ -40,15 +39,20 @@ function find(repos, name) {
 	);
 	repos = repos.filter((r) => nameRegexp.test(r));
 
-	// Found?
-	if (!repos.length) {
-		console.log('Repository not found');
-		process.exit(1);
-	}
-
 	// Order by repo name length, shortest names first
 	repos.sort((a, b) => (a.length > b.length ? 1 : -1));
 
 	// Return the most probable result
-	return repos[0];
+	return repos?.[0];
 }
+
+const args = process.argv.splice(2);
+if (args.length !== 1) {
+	console.log('Usage: repo <name>');
+	process.exit(1);
+}
+
+tryRepo(PERSONAL_PROJECTS_DIR, args[0]);
+tryRepo(WORK_PROJECTS_DIR, args[0]);
+
+console.log('Repository not found');
