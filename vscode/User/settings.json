@@ -168,4 +168,9 @@
 	},
 	"javascript.preferences.jsxAttributeCompletionStyle": "none",
 	"typescript.preferences.jsxAttributeCompletionStyle": "none",
+	"terminal.integrated.env.osx": {
+		"FIG_NEW_SESSION": "1"
+	},
+	"editor.accessibilitySupport": "off",
+	"git.openRepositoryInParentFolders": "always",
 }
