@@ -2,6 +2,12 @@
 
 # Installs Git, git-friendly, Node.js, and many other command line tools
 
+# Common stuff
+RED="$(tput setaf 1)"
+UNDERLINE="$(tput sgr 0 1)"
+NOCOLOR="$(tput sgr0)"
+function error() { echo -e "$UNDERLINE$RED$1$NOCOLOR\n"; }
+
 # Check that Homebrew is installed
 command -v brew >/dev/null 2>&1 || { error "Homebrew not installed: https://brew.sh/"; exit 1; }
 
@@ -46,6 +52,7 @@ brew install starship
 brew install git-delta
 brew install bat-extras
 brew install tree
+brew install webp
 brew install zsh-syntax-highlighting
 
 # Remove outdated versions from the cellar
