@@ -10,11 +10,13 @@ brew install --cask alfred
 brew install --cask bartender
 brew install --cask colorsnapper
 brew install --cask dash
+brew install --cask devtoys
 brew install --cask dropbox
 brew install --cask firefox
 brew install --cask fluor
 brew install --cask forklift
 brew install --cask github # GitHub Desktop
+brew install --cask iterm2
 brew install --cask kap
 brew install --cask kindle
 brew install --cask messenger
