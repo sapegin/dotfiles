@@ -9,8 +9,8 @@
 # https://github.com/sapegin/dotfiles
 #
 
-FILEPATH_PREFIX="$HOME/_/blog.sapegin.me/content/"
-FILEPATH_SUFFIX="/all/"
+FILEPATH_PREFIX="$HOME/_/sapegin.me/src/content/"
+FILEPATH_SUFFIX="/blog/"
 FILEPATH_EXT=".md"
 DATE_FORMAT="%Y-%m-%d"
 
