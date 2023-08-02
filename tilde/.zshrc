@@ -1,3 +1,6 @@
+# Fig pre block. Keep at the top of this file.
+[[ -f "$HOME/.fig/shell/zshrc.pre.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.pre.zsh"
+
 source ~/dotfiles/zsh/env.zsh
 source ~/dotfiles/zsh/path.zsh
 source ~/dotfiles/zsh/aliases.zsh
@@ -57,3 +60,5 @@ _fzf_compgen_dir() {
 export STARSHIP_CONFIG=~/.starship.toml
 eval "$(starship init zsh)"
 
+# Fig post block. Keep at the bottom of this file.
+[[ -f "$HOME/.fig/shell/zshrc.post.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.post.zsh"

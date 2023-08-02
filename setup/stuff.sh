@@ -36,6 +36,7 @@ npm install -g tldr
 # Everything else
 brew install bat
 brew install fd
+brew install fig
 brew install fzf && $(brew --prefix)/opt/fzf/install
 brew install macos-trash
 brew install micro
