@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+
+# Convert a given file, or all JPEG files in a directory, to WEBP format
+#
+# Usage:
+#   towebp [file]
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+#
+
+# Common stuff
+RED="$(tput setaf 1)"
+GREEN="$(tput setaf 2)"
+CYAN="$(tput setaf 6)"
+BOLD="$(tput bold)"
+UNDERLINE="$(tput sgr 0 1)"
+NOCOLOR="$(tput sgr0)"
+function error() { echo -e "$UNDERLINE$RED$1$NOCOLOR\n"; }
+
+command -v cwebp >/dev/null 2>&1 || { error "Webp not installed: brew install webp"; exit 1; }
+
+root="$(dirname $(dirname $0))"
+bin="$root/node_modules/.bin"
+
+function convert_file() {
+  filename=$(basename "$1")
+  directory=$(dirname "$1")
+  extension="${filename##*.}"
+  filename_without_extension="${filename%.*}"
+
+  webp_file="${filename_without_extension}.webp"
+
+  preset="photo"
+  if [ "$extension" == "png" ]; then
+    preset="text"
+  fi
+
+  # Convert to WEBP
+  cwebp -q 85 -preset "$preset" -quiet "$1" -o "$directory/$webp_file"
+
+  original_size=$(wc -c < "$1")
+  webp_size=$(wc -c < "$webp_file")
+  ratio=$(echo "$webp_size * 100/ $original_size" | bc -l)
+
+  is_smaller=false
+  if test "$original_size" -gt "$webp_size"; then
+    is_smaller=true
+  fi
+
+  color=$RED
+  if [ "$is_smaller" == "true" ]; then
+    color=$GREEN
+  fi
+
+  if [ "$is_smaller" == "false" ]; then
+    # Delete WEBP file if it's larger than the original
+    rm "$webp_file"
+  fi
+
+  printf "$BOLD$1$NOCOLOR: %s → $CYAN%s$NOCOLOR $color(%2.2f%%)$NOCOLOR\n" "$($bin/pretty-bytes $original_size)" "$($bin/pretty-bytes $webp_size)" "$ratio"
+}
+
+# Single file
+if [ "$1" != "" ]; then
+  convert_file "$1" "$2"
+  exit
+fi
+
+# JPEG files
+for file in *.jpg; do
+  if [ -f "$file" ]; then
+    convert_file "$file"
+  fi
+done
+
+# PNG files
+for file in *.png; do
+  if [ -f "$file" ]; then
+    convert_file "$file"
+  fi
+done
