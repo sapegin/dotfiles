@@ -24,7 +24,7 @@ alias k="open -a ForkLift"
 alias kk="open -a ForkLift ."
 
 # Bat: https://github.com/sharkdp/bat
-command -v bat >/dev/null 2>&1 && alias cat="bat --style=numbers,changes"
+command -v bat >/dev/null 2>&1 && alias cat="bat --style=plain"
 
 # Exa: https://the.exa.website
 command -v exa >/dev/null 2>&1 && alias ls="exa -a --no-user --no-time"
