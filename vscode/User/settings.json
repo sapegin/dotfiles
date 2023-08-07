@@ -164,6 +164,9 @@
 		},
 		"typescript:S4123": {
 			"level": "off"
+		},
+		"javascript:S4138": {
+			"level": "off"
 		}
 	},
 	"javascript.preferences.jsxAttributeCompletionStyle": "none",
