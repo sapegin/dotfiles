@@ -39,7 +39,6 @@ brew install n
 
 # Npm packages
 npm install -g npm-upgrade
-npm install -g tldr
 
 # fzf, fuzzy finder
 brew install fzf
@@ -56,6 +55,7 @@ brew install micro
 brew install proselint
 brew install ripgrep
 brew install starship
+brew install tldr
 brew install tree
 brew install webp
 brew install zsh-syntax-highlighting
