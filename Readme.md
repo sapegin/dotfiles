@@ -37,6 +37,7 @@ setup/apps.sh
 setup/vscode.sh
 npm install
 dotfiles
+setup/postintall.sh
 ```
 
 Now you can run scripts like `setup/zsh.sh` or `setup/osx.sh` to install other stuff.

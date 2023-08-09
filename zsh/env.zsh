@@ -50,7 +50,7 @@ export LESS_TERMCAP_ue="\e'[0m'"           # end underline
 export LESS_TERMCAP_us="\e'[04;38;5;146m'" # begin underline
 
 # Bat: https://github.com/sharkdp/bat
-export BAT_THEME="Coldark-Dark"
+export BAT_THEME="Squirrelsong Dark"
 
 # Homebrew install badge: beer sucks, coffee rules
 export HOMEBREW_INSTALL_BADGE='☕'
