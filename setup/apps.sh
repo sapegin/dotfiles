@@ -36,6 +36,5 @@ brew install --cask rectangle
 brew install --cask shottr
 brew install --cask slack
 brew install --cask telegram
-brew install --cask visual-studio-code
 brew install --cask whatsapp
 brew install --cask zoom
