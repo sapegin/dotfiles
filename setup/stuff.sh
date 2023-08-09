@@ -14,6 +14,9 @@ command -v brew >/dev/null 2>&1 || { error "Homebrew not installed: https://brew
 # Ask for the administrator password upfront
 sudo -v
 
+# Extend global $PATH
+echo -e "setenv PATH $HOME/dotfiles/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" | sudo tee /etc/launchd.conf
+
 # Install XCode command line tools, and accept its license
 xcode-select --install
 xcodebuild -license
@@ -27,30 +30,32 @@ brew install git
 # git-friendly
 brew install git-friendly/git-friendly/git-friendly
 
-# Extend global $PATH
-echo -e "setenv PATH $HOME/dotfiles/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" | sudo tee /etc/launchd.conf
-
-# Node
-# n, Node version manager
-brew install n
+# Node.js, fallback version
+brew install node
 npm config set loglevel warn
+
+# n, Node.js version manager
+brew install n
 
 # Npm packages
 npm install -g npm-upgrade
 npm install -g tldr
 
+# fzf, fuzzy finder
+brew install fzf
+$(brew --prefix)/opt/fzf/install
+
 # Everything else
 brew install bat
+brew install bat-extras
 brew install fd
 brew install fig
-brew install fzf && $(brew --prefix)/opt/fzf/install
+brew install git-delta
 brew install macos-trash
 brew install micro
 brew install proselint
 brew install ripgrep
 brew install starship
-brew install git-delta
-brew install bat-extras
 brew install tree
 brew install webp
 brew install zsh-syntax-highlighting
