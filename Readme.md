@@ -6,7 +6,7 @@
 
 - Custom color scheme for iTerm and Terminal.app: [Squirrelsong](https://github.com/sapegin/dotfiles/tree/master/color).
 - [Custom zsh theme](https://github.com/sapegin/dotfiles/blob/master/tilde/.starship.toml) with Git status, etc. using Starship.
-- Dotfiles synchronization: [sync.py](https://github.com/sapegin/dotfiles/blob/master/sync.py).
+- [Dotfiles synchronization](https://github.com/sapegin/dotfiles/blob/master/bin/lib/sync-dotfiles).
 - Sensible macOS defaults: [setup/osx.sh](https://github.com/sapegin/dotfiles/blob/master/setup/osx.sh).
 - Visual Studio Code settings synchronization: [vscode](https://github.com/sapegin/dotfiles/tree/master/vscode).
 - zsh install script: [setup/zsh.sh](https://github.com/sapegin/dotfiles/blob/master/setup/zsh.sh).
@@ -23,20 +23,20 @@
 
 Prerequisites:
 
-1. [Install Xcode Command Line Tools](http://railsapps.github.io/xcode-command-line-tools.html).
-2. [Generate SSH key](https://help.github.com/articles/generating-ssh-keys/).
-3. [Install Homebrew](http://brew.sh/).
+1. [Generate SSH key](https://help.github.com/articles/generating-ssh-keys/).
+2. [Install Homebrew](http://brew.sh/).
 
 Then run these commands in the terminal:
 
 ```
-brew install git
-brew install n
-n lts
 git clone git@github.com:sapegin/dotfiles.git ~/dotfiles
 cd ~/dotfiles
-./sync.py
+setup/zsh.sh
+setup/stuff.sh
+setup/apps.sh
+setup/vscode.sh
 npm install
+dotfiles
 ```
 
 Now you can run scripts like `setup/zsh.sh` or `setup/osx.sh` to install other stuff.
@@ -46,10 +46,6 @@ Now you can run scripts like `setup/zsh.sh` or `setup/osx.sh` to install other s
 ```bash
 dotfiles
 ```
-
-## Notes
-
-You can use any file extensions in `tilde/` to invoke proper syntax highlighting in code editor.
 
 ## Further customization
 

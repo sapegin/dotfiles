@@ -22,6 +22,7 @@
     "mrm-core": "^7.1.0",
     "prettier": "^2.7.1",
     "pretty-bytes-cli": "^3.0.0",
+    "prompts": "^2.4.2",
     "proselint": "^0.1.7",
     "textlint": "^12.2.1",
     "textlint-filter-rule-comments": "^1.2.2",

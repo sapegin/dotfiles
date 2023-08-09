@@ -11,12 +11,7 @@ sudo -v
 echo
 
 # Dotfiles
-header "Updating dotfiles..."
-pushd "$HOME/dotfiles"
-git pull
-./sync.py
-source "$HOME/.zshrc"
-popd
+dotfiles
 echo
 
 # macOS
@@ -26,17 +21,15 @@ sudo softwareupdate -i -a
 echo
 
 # Homebrew
-header "Updating Homebrew..."
+header "Updating Homebrew packages..."
 sudo -v
 brew update
-brew upgrade
 brew cleanup
 brew prune
 echo
 
 # npm
-header "Updating npm..."
-npm install -g npm@latest
+header "Updating npm modules..."
 npm update -g
 echo
 
@@ -45,12 +38,6 @@ echo
 # sudo -v
 # sudo gem update
 # echo
-
-# git-friendly
-header "Updating git-friendly..."
-sudo -v
-sudo bash < <( curl https://raw.githubusercontent.com/jamiew/git-friendly/master/install.sh)
-echo
 
 # Nyan cat! Yay!
 nyan

@@ -10,9 +10,11 @@
 set -e
 
 cd "$HOME/dotfiles" > /dev/null 2>&1
+echo "Pulling changes from GitHub..."
 git pull
-./sync.py
 echo
-echo "Open a new terminal for the changes to take effect."
+bin/lib/sync-dotfiles
+echo
+echo "🦆 Open a new terminal for the changes to take effect."
 echo
 nyan
