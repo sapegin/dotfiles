@@ -21,8 +21,6 @@ else
   md="$root/docs/Readme.md"
 fi
 
-echo $md
-
 if [ -f "$md" ]; then
 	tldr --render "$md"
 else
