@@ -1,0 +1,21 @@
+{
+  "author": {
+    "name": "Artem Sapegin",
+    "twitter": "@iamsapegin",
+    "github": "sapegin"
+  },
+  "version": "1.0",
+  "theme": {
+    "backgroundColor": "#443527",
+    "textColor": "#97846f",
+    "matchBackgroundColor": "#685442",
+    "selection": {
+      "textColor": "#f3ebd4",
+      "backgroundColor": "#443527"
+    },
+    "description": {
+      "textColor": "#97846f",
+      "borderColor": "#97846f"
+    }
+  }
+}

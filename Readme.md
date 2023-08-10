@@ -4,7 +4,7 @@
 
 ## Features
 
-- Custom color scheme for iTerm and Terminal.app: [Squirrelsong](https://github.com/sapegin/dotfiles/tree/master/color).
+- Custom color scheme: [Squirrelsong](https://github.com/sapegin/dotfiles/tree/master/colors).
 - [Custom zsh theme](https://github.com/sapegin/dotfiles/blob/master/tilde/.starship.toml) with Git status, etc. using Starship.
 - [Dotfiles synchronization](https://github.com/sapegin/dotfiles/blob/master/bin/lib/sync-dotfiles).
 - Sensible macOS defaults: [setup/osx.sh](https://github.com/sapegin/dotfiles/blob/master/setup/osx.sh).
@@ -37,10 +37,16 @@ setup/apps.sh
 setup/vscode.sh
 npm install
 dotfiles
-setup/postintall.sh
 ```
 
-Now you can run scripts like `setup/zsh.sh` or `setup/osx.sh` to install other stuff.
+3. [Install color themes](./colors/Readme.md).
+4. [Install MonoLisa font](https://www.monolisa.dev/).
+5. [Install other stuff](./setup/Readme.md)
+
+## Further customization
+
+- Add any zsh profile customizations to `~/.zshlocal`.
+- Add your git username/email/etc. to `~/.gitlocal`.
 
 ## Updating
 
@@ -48,20 +54,16 @@ Now you can run scripts like `setup/zsh.sh` or `setup/osx.sh` to install other s
 dotfiles
 ```
 
-## Further customization
-
-- Add any zsh profile customizations to `~/.zshlocal`.
-- Add your git username/email/etc. to `~/.gitlocal`.
-
 ## Resources
 
 - [GitHub ❤ ~/](http://dotfiles.github.io/)
 - [Mathias’s dotfiles](https://github.com/mathiasbynens/dotfiles)
 - [Jan Moesen’s dotfiles](https://github.com/janmoesen/tilde)
-- [Nicolas Gallagher’s dotfiles](https://github.com/necolas/dotfiles)
 - [Zach Holman’s dotfiles](https://github.com/holman/dotfiles)
 - [Yet Another Dotfile Repo](https://github.com/skwp/dotfiles)
 - [Jacob Gillespie’s dotfiles](https://github.com/jacobwgillespie/dotfiles)
+- [OSX Python developer guide](https://gist.github.com/stefanfoulis/902296)
+- [Nicolas Gallagher’s dotfiles](https://github.com/necolas/dotfiles)
 
 ---
 

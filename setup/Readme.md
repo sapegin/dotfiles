@@ -1,7 +1,3 @@
-## Prerequisites
-
-- [Command Line Tools for Xcode](https://developer.apple.com/downloads)
-
 ## Scripts
 
 ### adobe-settings
@@ -90,6 +86,3 @@ Go to iTerm2 preferences → Profiles → Advanced → Triggers. Click _Edit_.
 | --- | --- | --- | --- |
 | Highlight Git merge conflicts | `CONFLICT \([^)]+\)\:.*` | Highlight Text | Text: `f2ac00` |
 
-## Misc
-
-- [OSX Python developer guide](https://gist.github.com/stefanfoulis/902296)
