@@ -72,8 +72,6 @@
 		"typescript",
 		"typescriptreact"
 	],
-	"vscode-home-assistant.hostUrl": "http://192.168.1.115:8123",
-	"vscode-home-assistant.ignoreCertificates": true,
 	"spellright.notificationClass": "information",
 	"spellright.groupDictionaries": false,
 	"spellright.configurationScope": "user",
