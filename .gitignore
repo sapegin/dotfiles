@@ -8,9 +8,6 @@ Thumbs.db
 *.sublime-workspace
 *.log
 .eslintcache
-vscode/User/workspaceStorage/
 vscode/User/History/
-vscode/User/globalStorage/state.vscdb
-vscode/User/globalStorage/state.vscdb.backup
-vscode/User/globalStorage/storage.json
-vscode/User/globalStorage/vscode.json-language-features/json-schema-cache/
+vscode/User/globalStorage/
+vscode/User/workspaceStorage/
