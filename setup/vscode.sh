@@ -26,10 +26,13 @@ code --install-extension dbaeumer.vscode-eslint
 code --install-extension EditorConfig.EditorConfig
 code --install-extension esbenp.prettier-vscode
 code --install-extension fabiospampinato.vscode-highlight
+code --install-extension formulahendry.auto-rename-tag
+code --install-extension GraphQL.vscode-graphql-syntax
 code --install-extension lafe.contextualduplicate
 code --install-extension mdickin.markdown-shortcuts
 code --install-extension naumovs.color-highlight
 code --install-extension sapegin.Theme-SquirrelsongLight
 code --install-extension SonarSource.sonarlint-vscode
+code --install-extension styled-components.vscode-styled-components
 code --install-extension zhengxiaoyao0716.intelligence-change-case
 code --install-extension znck.grammarly
