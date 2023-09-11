@@ -36,6 +36,7 @@
 	"window.openFoldersInNewWindow": "off",
 	"window.restoreWindows": "all",
 	"window.titleBarStyle": "native",
+	"window.title": "${activeEditorShort}",
 	"zenMode.centerLayout": false,
 	"screencastMode.onlyKeyboardShortcuts": true,
 	"explorer.confirmDragAndDrop": false,
