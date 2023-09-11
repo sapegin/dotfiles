@@ -29,5 +29,29 @@
                                 "key": "f2",
                                 "command": "-editor.action.rename",
                                 "when": "editorHasRenameProvider && editorTextFocus && !editorReadonly"
+                            },
+                            {
+                                "key": "cmd+t",
+                                "command": "-workbench.action.showAllSymbols"
+                            },
+                            {
+                                "key": "alt+enter",
+                                "command": "editor.action.quickFix",
+                                "when": "editorHasCodeActionsProvider && textInputFocus && !editorReadonly"
+                            },
+                            {
+                                "key": "cmd+.",
+                                "command": "-editor.action.quickFix",
+                                "when": "editorHasCodeActionsProvider && textInputFocus && !editorReadonly"
+                            },
+                            {
+                                "key": "cmd+t",
+                                "command": "editor.action.refactor",
+                                "when": "editorHasCodeActionsProvider && textInputFocus && !editorReadonly"
+                            },
+                            {
+                                "key": "ctrl+shift+r",
+                                "command": "-editor.action.refactor",
+                                "when": "editorHasCodeActionsProvider && textInputFocus && !editorReadonly"
                             }
                         ]
