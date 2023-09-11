@@ -23,6 +23,7 @@ code --install-extension be5invis.vscode-custom-css
 code --install-extension bibhasdn.unique-lines
 code --install-extension bungcip.better-toml
 code --install-extension csharpier.csharpier-vscode
+code --install-extension Catppuccin.catppuccin-vsc-icons
 code --install-extension dbaeumer.vscode-eslint
 code --install-extension EditorConfig.EditorConfig
 code --install-extension esbenp.prettier-vscode

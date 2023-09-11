@@ -33,6 +33,7 @@
 	"workbench.commandPalette.preserveInput": false,
 	"workbench.editor.showTabs": false,
 	"workbench.fontAliasing": "auto",
+	"workbench.iconTheme": "catppuccin-latte",
 	"workbench.sideBar.location": "right",
 	"workbench.statusBar.visible": false,
 	"workbench.startupEditor": "newUntitledFile",
