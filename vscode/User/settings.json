@@ -60,6 +60,7 @@
 	},
 
 	// Plugins
+	"git.openRepositoryInParentFolders": "always",
 	"color-highlight.matchWords": false,
 	"color-highlight.sass.includePaths": [],
 	"prettier.requireConfig": true,
@@ -102,6 +103,18 @@
 			]
 		}
 	},
+	"sonarlint.disableTelemetry": true,
+	"sonarlint.rules": {
+		"typescript:S6544": {
+			"level": "off"
+		},
+		"typescript:S4123": {
+			"level": "off"
+		},
+		"javascript:S4138": {
+			"level": "off"
+		}
+	},
 
 	// File types
 	"javascript.validate.enable": false,
@@ -109,6 +122,8 @@
 	"javascript.format.enable": false,
 	"javascript.updateImportsOnFileMove.enabled": "always",
 	"javascript.preferences.importModuleSpecifier": "relative",
+	"javascript.preferences.jsxAttributeCompletionStyle": "none",
+	"typescript.preferences.jsxAttributeCompletionStyle": "none",
 	"typescript.autoClosingTags": false,
 	"typescript.format.enable": false,
 	"typescript.updateImportsOnFileMove.enabled": "always",
@@ -144,30 +159,8 @@
 		"editor.defaultFormatter": "EditorConfig.EditorConfig",
 		"editor.formatOnSave": true
 	},
-	"[csharp]": {
-		"editor.defaultFormatter": "csharpier.csharpier-vscode"
-	},
-	"csharp.referencesCodeLens.enabled": false,
-	"csharp.format.enable": true,
-	"omnisharp.useEditorFormattingSettings": false,
-	"editor.formatOnPaste": true,
-	"sonarlint.disableTelemetry": true,
-	"sonarlint.rules": {
-		"typescript:S6544": {
-			"level": "off"
-		},
-		"typescript:S4123": {
-			"level": "off"
-		},
-		"javascript:S4138": {
-			"level": "off"
-		}
-	},
-	"javascript.preferences.jsxAttributeCompletionStyle": "none",
-	"typescript.preferences.jsxAttributeCompletionStyle": "none",
-	"terminal.integrated.env.osx": {
-		"FIG_NEW_SESSION": "1"
-	},
-	"editor.accessibilitySupport": "off",
-	"git.openRepositoryInParentFolders": "always",
+	"[astro]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.formatOnSave": true
+	}
 }
