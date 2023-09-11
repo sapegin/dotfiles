@@ -25,6 +25,7 @@ code --install-extension csharpier.csharpier-vscode
 code --install-extension dbaeumer.vscode-eslint
 code --install-extension EditorConfig.EditorConfig
 code --install-extension esbenp.prettier-vscode
+code --install-extension fabiospampinato.vscode-highlight
 code --install-extension lafe.contextualduplicate
 code --install-extension mdickin.markdown-shortcuts
 code --install-extension ms-dotnettools.csharp

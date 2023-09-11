@@ -80,6 +80,22 @@
 	"vscode_custom_css.imports": [
 		"file:///Users/artim.sapegin/dotfiles/vscode/ui.css"
 	],
+	"donations.disablePrompt": true,
+	"highlight.regexes": {
+		"((?:<!-- *)?(?:#|// @|//|./\\*+|<!--|--|\\* @|{!|{{!--|{{!) *(?:TODO|FIXME|FIX|BUG|UGLY|DEBUG|HACK|XXX)(?:\\s*\\([^)]+\\))?:?)((?!\\w)(?: *-->| *\\*/| *!}| *--}}| *}}|(?= *(?:[^:]//|/\\*+|<!--|@|--|{!|{{!--|{{!))|(?: +[^\\n@]*?)(?= *(?:[^:]//|/\\*+|<!--|@|--(?!>)|{!|{{!--|{{!))|(?: +[^@\\n]+)?))": {
+			"filterFileRegex": ".*(?<!CHANGELOG.md)$",
+			"decorations": [
+				{
+					"overviewRulerColor": "#727075",
+					"color": "#727075",
+					"fontWeight": "bold"
+				},
+				{
+					"color": "#727075"
+				}
+			]
+		}
+	},
 
 	// File types
 	"javascript.validate.enable": false,
