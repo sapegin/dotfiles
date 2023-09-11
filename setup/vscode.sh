@@ -21,8 +21,6 @@ code --install-extension astro-build.astro-vscode
 code --install-extension ban.spellright
 code --install-extension be5invis.vscode-custom-css
 code --install-extension bibhasdn.unique-lines
-code --install-extension bungcip.better-toml
-code --install-extension csharpier.csharpier-vscode
 code --install-extension Catppuccin.catppuccin-vsc-icons
 code --install-extension dbaeumer.vscode-eslint
 code --install-extension EditorConfig.EditorConfig
@@ -30,7 +28,6 @@ code --install-extension esbenp.prettier-vscode
 code --install-extension fabiospampinato.vscode-highlight
 code --install-extension lafe.contextualduplicate
 code --install-extension mdickin.markdown-shortcuts
-code --install-extension ms-dotnettools.csharp
 code --install-extension naumovs.color-highlight
 code --install-extension sapegin.Theme-SquirrelsongLight
 code --install-extension SonarSource.sonarlint-vscode
