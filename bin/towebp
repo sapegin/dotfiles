@@ -41,7 +41,7 @@ function convert_file() {
   cwebp -q 85 -preset "$preset" -quiet "$1" -o "$directory/$webp_file"
 
   original_size=$(wc -c < "$1")
-  webp_size=$(wc -c < "$webp_file")
+  webp_size=$(wc -c < "$directory/$webp_file")
   ratio=$(echo "$webp_size * 100/ $original_size" | bc -l)
 
   is_smaller=false
