@@ -52,6 +52,7 @@ brew install fig
 brew install git-delta
 brew install macos-trash
 brew install micro
+brew install midnight-commander
 brew install proselint
 brew install ripgrep
 brew install starship
