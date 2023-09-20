@@ -13,7 +13,6 @@
 # https://github.com/sapegin/dotfiles
 #
 
-
 # Batgrep doesn't support replacing so we fall back to Ripgrep
 should_replace=false
 for arg in "$@"; do
