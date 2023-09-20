@@ -102,6 +102,10 @@
 
 `dotfiles`
 
+- Find file by name (or regexp):
+
+`fd {{file}}`
+
 - Quick grep:
 
 `g`
