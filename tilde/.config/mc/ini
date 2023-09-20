@@ -138,6 +138,11 @@ quick_search_mode=0
 select_flags=6
 simple_swap=false
 
+[terminal:xterm-256color]
+f1=\\eOP
+insert=
+delete=^d
+
 [Panelize]
 Find *.orig after patching=find . -name \\*.orig -print
 Find rejects after patching=find . -name \\*.rej -print
