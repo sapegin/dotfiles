@@ -36,7 +36,7 @@ command -v trash >/dev/null 2>&1 && alias rm="trash"
 command -v neofetch >/dev/null 2>&1 && alias neofetch="neofetch --source $HOME/.config/neofetch/nyancat.ascii"
 
 # Midnight Commander
-command -v mc >/dev/null 2>&1 && command -v code >/dev/null 2>&1 && alias mc="EDITOR=code mc"
+command -v mc >/dev/null 2>&1 && command -v code >/dev/null 2>&1 && alias mc="EDITOR=code mc --nosubshell"
 
 # Download file and save it with filename of remote file
 alias get="curl -O -L"
