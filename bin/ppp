@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# Copy full file path of a given file in the current directory to clipboard
+#
+# Usage:
+#   ppp <file.ext>
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+#
+
+readlink -f "$1" | pbcopy

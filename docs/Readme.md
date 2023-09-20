@@ -72,6 +72,10 @@
 
 `repo {{name}}`
 
+- Copy full path of a given file to clipboard:
+
+`ppp {{file}}`
+
 ***
 
 - Change Git branch and pull:
