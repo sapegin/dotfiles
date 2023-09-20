@@ -8,3 +8,11 @@
 --glob=!package-lock.json
 --glob=!yarn.lock
 --glob=!.git
+
+# Color theme
+--colors=line:fg:white
+--colors=path:fg:blue
+--colors=path:style:bold
+--colors=match:fg:black
+--colors=match:bg:yellow
+--colors=match:style:nobold
