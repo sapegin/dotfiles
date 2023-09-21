@@ -43,7 +43,7 @@ SAVEHIST=$HISTSIZE
 # Use fd (https://github.com/sharkdp/fd) to respect .gitignore
 export FZF_DEFAULT_COMMAND='fd --type f'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_DEFAULT_OPTS="--color bg:-1,bg+:-1,fg:-1,fg+:#feffff,hl:#993f84,hl+:#d256b5,info:#676767,prompt:#676767,pointer:#676767"
+export FZF_DEFAULT_OPTS="--color bg:-1,bg+:-1,fg:-1,fg+:#9e8a74,hl:#d8a851,hl+:#e2c54c,info:#6b503c,prompt:#6b503c,pointer:#6b503c"
 # Use fd to respect .gitignore and exclude .git directory
 _fzf_compgen_path() {
   fd --hidden --exclude ".git" . "$1"
