@@ -131,6 +131,7 @@
 	"typescript.preferences.importModuleSpecifier": "relative",
 	"html.format.wrapLineLength": 0,
 	"html.format.enable": false,
+	"html.autoClosingTags": false,
 	"html.autoCreateQuotes": false,
 	"[javascript]": {
 		"editor.defaultFormatter": "esbenp.prettier-vscode",
