@@ -56,7 +56,7 @@ function convert_file() {
 
   if [ "$is_smaller" == "false" ]; then
     # Delete WEBP file if it's larger than the original
-    rm "$webp_file"
+    rm "$directory/$webp_file"
   fi
 
   printf "$BOLD$1$NOCOLOR: %s → $CYAN%s$NOCOLOR $color(%2.2f%%)$NOCOLOR\n" "$($bin/pretty-bytes $original_size)" "$($bin/pretty-bytes $webp_size)" "$ratio"
