@@ -81,7 +81,7 @@
 	navigate = true
 	light = false
 [merge]
-	conflictstyle = diff3
+	conflictstyle = merge
 [diff]
 	colorMoved = default
 
