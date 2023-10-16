@@ -1,16 +1,6 @@
-# Squirrelsong color scheme
+# Squirrelsong color theme
 
-[Squirrelsong](https://github.com/sapegin/squirrelsong) is my custom color scheme that I use everywhere: ligth and dark.
-
-## Visual Studio Code
-
-![Squirrelsong light in Visual Studio Code](https://user-images.githubusercontent.com/70067/76961997-b08a2400-691e-11ea-97b4-000b2d8bdde5.png)
-
-**Note:** The theme is included in the [config file](https://github.com/sapegin/dotfiles/blob/master/vscode/User/settings.json).
-
-## JetBrains
-
-[Download](https://github.com/sapegin/squirrelsong/tree/master/light/JetBrains) and follow installation instructions.
+[Squirrelsong](https://sapegin.me/squirrelsong/) is my custom color theme that I use everywhere: ligth and dark.
 
 ## Bat
 
@@ -24,7 +14,6 @@ bat cache --build
 
 **Note:** The theme is included in [the Zsh config](https://github.com/sapegin/dotfiles/blob/master/zsh/env.zsh).
 
-
 ## Fig
 
 ![Squirrelsong Dark in Fig](https://github-production-user-asset-6210df.s3.amazonaws.com/70067/259700757-afdbf65a-7c93-4d7e-8b3e-ea6fbd210bc7.png)
@@ -35,3 +24,22 @@ fig theme squirrelsong-dark
 ```
 
 [More info in the Fig themes docs](https://github.com/withfig/themes)
+
+## Visual Studio Code
+
+![Squirrelsong light in Visual Studio Code](https://github.com/sapegin/squirrelsong/raw/master/light/VSCode/SquirrelsongLight/screenshot.png)
+
+[Download from Marketplace](https://marketplace.visualstudio.com/items?itemName=sapegin.Theme-SquirrelsongLight)
+
+**Note:** The theme is included in the [config file](https://github.com/sapegin/dotfiles/blob/master/vscode/User/settings.json).
+
+## JetBrains
+
+![Squirrelsong light in WebStorm](https://github.com/sapegin/squirrelsong/raw/master/light/JetBrains/squirrelsong-light/screenshot.png)
+
+[Download from Marketplace](https://plugins.jetbrains.com/plugin/22568-squirrelsong-light-theme)
+
+## iTerm2
+
+![Squirrelsong light in WebStorm](https://github.com/sapegin/squirrelsong/raw/master/light/JetBrains/squirrelsong-light/screenshot.png)
+
