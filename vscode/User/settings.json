@@ -159,7 +159,7 @@
 		"editor.formatOnSave": true
 	},
 	"[json]": {
-		"editor.defaultFormatter": "EditorConfig.EditorConfig",
+		"editor.defaultFormatter": "esbenp.prettier-vscode",
 		"editor.formatOnSave": true
 	},
 	"[astro]": {
