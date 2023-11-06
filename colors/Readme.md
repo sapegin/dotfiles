@@ -14,17 +14,6 @@ bat cache --build
 
 **Note:** The theme is included in [the Zsh config](https://github.com/sapegin/dotfiles/blob/master/zsh/env.zsh).
 
-## Fig
-
-![Squirrelsong Dark in Fig](https://github-production-user-asset-6210df.s3.amazonaws.com/70067/259700757-afdbf65a-7c93-4d7e-8b3e-ea6fbd210bc7.png)
-
-```shell
-ln -s ~/dotfiles/colors/fig/squirrelsong-dark.json "$(fig theme --folder)/squirrelsong-dark.json"
-fig theme squirrelsong-dark
-```
-
-[More info in the Fig themes docs](https://github.com/withfig/themes)
-
 ## Visual Studio Code
 
 ![Squirrelsong light in Visual Studio Code](https://github.com/sapegin/squirrelsong/raw/master/light/VSCode/SquirrelsongLight/screenshot.png)

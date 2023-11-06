@@ -48,7 +48,6 @@ $(brew --prefix)/opt/fzf/install
 brew install bat
 brew install bat-extras
 brew install fd
-brew install fig
 brew install git-delta
 brew install macos-trash
 brew install micro
