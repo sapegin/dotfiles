@@ -28,10 +28,10 @@
 		"source.fixAll.eslint": true
 	},
 	"telemetry.telemetryLevel": "off",
-	"workbench.activityBar.visible": false,
+	"workbench.activityBar.location": "hidden",
 	"workbench.colorTheme": "Squirrelsong Light",
 	"workbench.commandPalette.preserveInput": false,
-	"workbench.editor.showTabs": false,
+	"workbench.editor.showTabs": "single",
 	"workbench.fontAliasing": "auto",
 	"workbench.iconTheme": "catppuccin-latte",
 	"workbench.sideBar.location": "right",
