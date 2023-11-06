@@ -71,7 +71,8 @@
 		"javascriptreact",
 		"typescript",
 		"typescriptreact",
-		"html"
+		"html",
+		"astro"
 	],
 	"emmet.excludeLanguages": [
 		"markdown",
