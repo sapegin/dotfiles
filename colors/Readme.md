@@ -30,5 +30,5 @@ bat cache --build
 
 ## iTerm2
 
-![Squirrelsong light in WebStorm](https://github.com/sapegin/squirrelsong/raw/master/light/JetBrains/squirrelsong-light/screenshot.png)
+![Squirrelsong dark in iTerm2](https://github.com/sapegin/squirrelsong/raw/master/dark/iTerm2/screenshot.png)
 
