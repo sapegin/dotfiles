@@ -19,8 +19,6 @@ brew install --cask dash
 brew install --cask devtoys
 brew install --cask dropbox
 brew install --cask firefox
-brew install --cask fluor
-brew install --cask forklift
 brew install --cask github # GitHub Desktop
 brew install --cask iterm2
 brew install --cask kap
@@ -28,6 +26,7 @@ brew install --cask kindle
 brew install --cask messenger
 brew install --cask microsoft-edge
 brew install --cask mimestream
+brew install --cask nimble-commander
 brew install --cask notion
 brew install --cask numi
 brew install --cask optimage
