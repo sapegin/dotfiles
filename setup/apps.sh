@@ -15,6 +15,7 @@ brew install --cask adobe-creative-cloud
 brew install --cask alfred
 brew install --cask bartender
 brew install --cask colorsnapper
+brew install --cask coteditor
 brew install --cask dash
 brew install --cask devtoys
 brew install --cask dropbox
