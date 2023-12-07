@@ -17,4 +17,4 @@ bin/lib/sync-dotfiles
 echo
 echo "🦆 Open a new terminal for the changes to take effect."
 echo
-nyan
+./nyan
