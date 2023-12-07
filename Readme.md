@@ -36,7 +36,7 @@ setup/stuff.sh
 setup/apps.sh
 setup/vscode.sh
 npm install
-dotfiles
+bin/dotfiles
 ```
 
 3. [Install color themes](./colors/Readme.md).
