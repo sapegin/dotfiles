@@ -34,7 +34,7 @@ HISTSIZE=100000
 SAVEHIST=$HISTSIZE
 
 # Enable zsh-syntax-highlighting: https://github.com/zsh-users/zsh-syntax-highlighting
-[ -f /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+[ -f /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # Enable fzf: https://github.com/junegunn/fzf
 # Use fd (https://github.com/sharkdp/fd) to respect .gitignore
