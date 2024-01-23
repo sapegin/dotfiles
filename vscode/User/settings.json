@@ -16,6 +16,7 @@
 	"editor.formatOnSave": true,
 	"editor.guides.indentation": true,
 	"editor.lineNumbers": "off",
+	"editor.linkedEditing": true,
 	"editor.minimap.enabled": false,
 	"editor.renderWhitespace": "selection",
 	"editor.roundedSelection": false,
