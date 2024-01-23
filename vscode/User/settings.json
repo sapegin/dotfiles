@@ -26,7 +26,7 @@
 	"editor.suggestSelection": "first",
 	"editor.wordWrap": "on",
 	"editor.codeActionsOnSave": {
-		"source.fixAll.eslint": true
+		"source.fixAll.eslint": "explicit"
 	},
 	"telemetry.telemetryLevel": "off",
 	"workbench.activityBar.location": "hidden",
