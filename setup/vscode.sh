@@ -19,7 +19,6 @@ command -v code >/dev/null 2>&1 || { error "Run “Install 'code' command in PAT
 
 code --install-extension astro-build.astro-vscode
 code --install-extension ban.spellright
-code --install-extension be5invis.vscode-custom-css
 code --install-extension bibhasdn.unique-lines
 code --install-extension Catppuccin.catppuccin-vsc-icons
 code --install-extension dbaeumer.vscode-eslint
