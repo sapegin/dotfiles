@@ -114,6 +114,9 @@
 		},
 		"javascript:S4138": {
 			"level": "off"
+		},
+		"typescript:S6759": {
+			"level": "off"
 		}
 	},
 
