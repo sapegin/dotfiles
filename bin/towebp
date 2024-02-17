@@ -49,7 +49,7 @@ function convert_file() {
   webp_size=$(wc -c < "$directory/$webp_file")
   ratio=$(echo "$webp_size * 100/ $original_size" | bc -l)
 
-  # We consider an optimized file smaller only when it's at least 10 KB smaller
+  # We consider an optimized file smaller only when it's at least 20 KB smaller
   is_smaller=false
   difference=$((original_size - webp_size))
   if test "$difference" -gt 20480; then
