@@ -26,6 +26,7 @@ code --install-extension EditorConfig.EditorConfig
 code --install-extension esbenp.prettier-vscode
 code --install-extension fabiospampinato.vscode-highlight
 code --install-extension formulahendry.auto-rename-tag
+code --install-extension github.copilot
 code --install-extension GraphQL.vscode-graphql-syntax
 code --install-extension lafe.contextualduplicate
 code --install-extension mdickin.markdown-shortcuts
