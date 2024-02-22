@@ -8,8 +8,7 @@
 #
 
 function yesterworkday() {
-	if [[ "1" == "$(date +%u)" ]]
-	then
+	if [[ "1" == "$(date +%u)" ]]; then
 		echo "last friday"
 	else
 		echo "yesterday"

@@ -18,7 +18,7 @@ const DIR = `${userHome}/_/morning.photos/content`;
 const files = glob.sync(`${DIR}/**/*.md`);
 
 const items = files
-	.map(file => {
+	.map((file) => {
 		const contents = fs.readFileSync(file, 'utf8');
 		const title = contents.match(/^title: [\x22\x27]?(.*?)[\x22\x27]?$/im);
 		const date = contents.match(/^date: (.*?)$/m);
@@ -28,7 +28,7 @@ const items = files
 			file,
 		};
 	})
-	.map(doc => ({
+	.map((doc) => ({
 		title: doc.title,
 		subtitle: doc.date,
 		uid: doc.file,

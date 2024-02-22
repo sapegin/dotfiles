@@ -31,12 +31,22 @@ source_name=$(basename "$source_file")
 
 # Default slug: convert CamelCase or plain text file name to under_score, strip extension
 slug=$(
-	echo "$source_name" |
-	perl -pe 's/\.md$//' |          # Remove extension
-	perl -pe 's/([A-Z])/-\l\1/g' |  # CamelCase to dashes
-	perl -pe 's/ /-/g' |            # Spaces to dashes
-	perl -pe 's/--/-/g' |           # Remove double spaces
-	perl -pe 's/^-//'               # Remove dash in the beginning
+	echo "$source_name" \
+		|
+		# Remove extension
+		perl -pe 's/\.md$//' \
+		|
+		# CamelCase to dashes
+		perl -pe 's/([A-Z])/-\l\1/g' \
+		|
+		# Spaces to dashes
+		perl -pe 's/ /-/g' \
+		|
+		# Remove double spaces
+		perl -pe 's/--/-/g' \
+		|
+		# Remove dash in the beginning
+		perl -pe 's/^-//'
 )
 
 # Ask user to review the slug

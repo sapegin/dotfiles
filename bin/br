@@ -12,25 +12,25 @@
 # https://github.com/sapegin/dotfiles
 
 if [ "$1" == "-" ] && [ "$1" != "-d" ] && [ "$1" != "-D" ] && [ "$1" != "" ]; then
-  # Try to fetch a remote branch if a local branch does not exists
+	# Try to fetch a remote branch if a local branch does not exists
 	local_branch_exists=$(git branch --no-color | egrep " $1\$")
 	if [ -z "$local_branch_exists" ]; then
-    git fetch origin $1 >/dev/null 2>&1
-  fi
+		git fetch origin $1 > /dev/null 2>&1
+	fi
 fi
 
 if [ "$1" == "-" ]; then
-  # Switch to the previous branch
-  git checkout -
+	# Switch to the previous branch
+	git checkout -
 else
-  # Pass all the arguments to branch
-  branch $@
+	# Pass all the arguments to branch
+	branch $@
 fi
 
 # Pull if a remote branch exists
 branch_name=$(git rev-parse --abbrev-ref HEAD)
 remote_branch_exists=$(git branch -r --no-color | egrep " origin/$branch_name\$")
 if [ -n "$remote_branch_exists" ]; then
-  echo
-  pull
+	echo
+	pull
 fi

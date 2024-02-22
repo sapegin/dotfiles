@@ -31,4 +31,3 @@ bat cache --build
 ## iTerm2
 
 ![Squirrelsong dark in iTerm2](https://github.com/sapegin/squirrelsong/raw/master/dark/iTerm2/screenshot.png)
-

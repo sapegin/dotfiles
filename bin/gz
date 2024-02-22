@@ -18,7 +18,7 @@ function error() { echo -e "$UNDERLINE$RED$1$NOCOLOR\n"; }
 
 function usage() {
 	echo "Usage:"
-	echo "  `basename $0` <file>"
+	echo "  $(basename $0) <file>"
 	echo
 }
 

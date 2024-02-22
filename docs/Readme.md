@@ -6,11 +6,7 @@
 
 - Navigate to a parent directory:
 
-`.
-..
-...
-....
-.....`
+`. .. ... .... .....`
 
 - Navigate to a previous directory:
 
@@ -68,7 +64,7 @@
 
 `get {{url}}`
 
-- Open a project (~/_/*):
+- Open a project (~/\_/\*):
 
 `repo {{name}}`
 
@@ -76,7 +72,7 @@
 
 `ppp {{file}}`
 
-***
+---
 
 - Change Git branch and pull:
 
@@ -126,7 +122,7 @@
 
 `update`
 
-***
+---
 
 - Open fuzzy file finder:
 

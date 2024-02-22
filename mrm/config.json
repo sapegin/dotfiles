@@ -1,19 +1,43 @@
 {
-    "name": "Artem Sapegin",
-    "email": "artem@sapegin.ru",
-    "url": "https://sapegin.me",
-    "github": "sapegin",
-    "eslintPreset": "tamia",
-    "eslintObsoleteDependencies": ["eslint-plugin-prettier"],
-    "prettierPattern": "**/*.{js,md}",
-    "prettierOptions": {
-      "singleQuote": true,
-      "trailingComma": "es5",
-      "useTabs": true
-    },
-    "aliases": {
-        "node": ["package", "editorconfig", "gitignore", "eslint", "prettier", "lint-staged"],
-        "oss": ["package", "license", "readme", "contributing", "editorconfig", "gitignore", "eslint", "prettier", "lint-staged"],
-        "sync": ["license", "editorconfig", "gitignore", "eslint", "prettier", "lint-staged"]
-    }
+  "name": "Artem Sapegin",
+  "email": "artem@sapegin.ru",
+  "url": "https://sapegin.me",
+  "github": "sapegin",
+  "eslintPreset": "tamia",
+  "eslintObsoleteDependencies": ["eslint-plugin-prettier"],
+  "prettierPattern": "**/*.{js,md}",
+  "prettierOptions": {
+    "singleQuote": true,
+    "trailingComma": "es5",
+    "useTabs": true
+  },
+  "aliases": {
+    "node": [
+      "package",
+      "editorconfig",
+      "gitignore",
+      "eslint",
+      "prettier",
+      "lint-staged"
+    ],
+    "oss": [
+      "package",
+      "license",
+      "readme",
+      "contributing",
+      "editorconfig",
+      "gitignore",
+      "eslint",
+      "prettier",
+      "lint-staged"
+    ],
+    "sync": [
+      "license",
+      "editorconfig",
+      "gitignore",
+      "eslint",
+      "prettier",
+      "lint-staged"
+    ]
+  }
 }

@@ -6,12 +6,15 @@
 COMPUTERNAME='Mac'
 LOCALHOSTNAME='mac'
 
-
 # Ask for the administrator password upfront
 sudo -v
 
 # Keep-alive: update existing `sudo` time stamp until `.osx` has finished
-while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+while true; do
+	sudo -n true
+	sleep 60
+	kill -0 "$$" || exit
+done 2> /dev/null &
 
 ###############################################################################
 # General UI/UX                                                               #
@@ -216,7 +219,7 @@ defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 # Finder: hide status bar
 defaults write com.apple.finder ShowStatusBar -bool false
 
-# Finder: show path bar 
+# Finder: show path bar
 defaults write com.apple.finder ShowPathbar -boolean true
 
 # Finder: allow text selection in Quick Look
@@ -277,7 +280,7 @@ defaults write com.apple.finder EmptyTrashSecurely -bool true
 # Enable AirDrop over Ethernet and on unsupported Macs running Lion
 defaults write com.apple.NetworkBrowser BrowseAllInterfaces -bool true
 
-# Finder: disable sounds 
+# Finder: disable sounds
 defaults write com.apple.finder FinderSounds -boolean false
 
 # Show the ~/Library folder
@@ -366,7 +369,7 @@ find ~/Library/Application\ Support/Dock -name "*.db" -maxdepth 1 -delete
 # Misc                                                                        #
 ###############################################################################
 
-# Check spelling as you type 
+# Check spelling as you type
 defaults write -g CheckSpellingWhileTyping -boolean true
 
 # Enable continuous spell checking everywhere (don't know what it means)
@@ -462,7 +465,7 @@ defaults write com.apple.terminal StringEncodings -array 4
 
 # Use a modified version of the Pro theme by default in Terminal.app
 open "$HOME/dotfiles/color/Squirrelsong.terminal"
-sleep 1  # Wait a bit to make sure the theme is loaded
+sleep 1 # Wait a bit to make sure the theme is loaded
 defaults write com.apple.terminal "Default Window Settings" -string "Squirrelsong"
 defaults write com.apple.terminal "Startup Window Settings" -string "Squirrelsong"
 

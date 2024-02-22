@@ -10,7 +10,7 @@
 # https://github.com/sapegin/dotfiles
 #
 
-osascript <<EOT
+osascript << EOT
 	tell app "System Events"
 		display dialog "$1" buttons {"OK"} default button 1 with icon caution with title "$2"
 		return  -- Suppress result

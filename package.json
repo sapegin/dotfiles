@@ -6,25 +6,26 @@
     "lint": "eslint . --cache --fix",
     "test": "npm run lint",
     "posttest": "npm run format",
-    "format": "prettier --loglevel warn --write \"**/*.{js,md}\""
+    "format": "prettier --log-level warn --ignore-unknown --write \"**/*.{js,cjs,md,json,sh}\" \"bin/*\""
   },
   "engines": {
-    "node": ">=8.9"
+    "node": ">=18.14"
   },
   "dependencies": {
     "date-fns": "^2.30.0",
-    "eslint": "^8.53.0",
-    "eslint-config-tamia": "^8.1.2",
+    "eslint": "^8.56.0",
+    "eslint-config-tamia": "^8.1.3",
     "esm": "^3.2.25",
     "fastmatter": "^2.1.1",
     "glob": "^8.0.3",
     "mkdirp": "~1.0.4",
     "mrm-core": "^7.1.22",
-    "prettier": "^3.0.3",
+    "prettier": "^3.2.5",
+    "prettier-plugin-sh": "^0.14.0",
     "pretty-bytes-cli": "^3.0.0",
     "prompts": "^2.4.2",
     "proselint": "^0.1.7",
-    "textlint": "^13.3.3",
+    "textlint": "^14.0.3",
     "textlint-filter-rule-comments": "^1.2.2",
     "textlint-rule-apostrophe": "^2.0.0",
     "textlint-rule-common-misspellings": "^1.0.1",

@@ -19,68 +19,71 @@ UNDERLINE="$(tput sgr 0 1)"
 NOCOLOR="$(tput sgr0)"
 function error() { echo -e "$UNDERLINE$RED$1$NOCOLOR\n"; }
 
-command -v cwebp >/dev/null 2>&1 || { error "Webp not installed: brew install webp"; exit 1; }
+command -v cwebp > /dev/null 2>&1 || {
+	error "Webp not installed: brew install webp"
+	exit 1
+}
 
 root="$(dirname $(dirname $0))"
 bin="$root/node_modules/.bin"
 
 function convert_file() {
-  filename=$(basename "$1")
-  directory=$(dirname "$1")
-  extension="${filename##*.}"
-  filename_without_extension="${filename%.*}"
+	filename=$(basename "$1")
+	directory=$(dirname "$1")
+	extension="${filename##*.}"
+	filename_without_extension="${filename%.*}"
 
-  webp_file="${filename_without_extension}.webp"
+	webp_file="${filename_without_extension}.webp"
 
-  # Skip if WEBP file already exists
-  if [ -f "$directory/$webp_file" ]; then
-    return
-  fi
+	# Skip if WEBP file already exists
+	if [ -f "$directory/$webp_file" ]; then
+		return
+	fi
 
-  preset="photo"
-  if [ "$extension" == "png" ]; then
-    preset="text"
-  fi
+	preset="photo"
+	if [ "$extension" == "png" ]; then
+		preset="text"
+	fi
 
-  # Convert to WEBP
-  cwebp -q 85 -preset "$preset" -quiet "$1" -o "$directory/$webp_file"
+	# Convert to WEBP
+	cwebp -q 85 -preset "$preset" -quiet "$1" -o "$directory/$webp_file"
 
-  original_size=$(wc -c < "$1")
-  webp_size=$(wc -c < "$directory/$webp_file")
-  ratio=$(echo "$webp_size * 100/ $original_size" | bc -l)
+	original_size=$(wc -c < "$1")
+	webp_size=$(wc -c < "$directory/$webp_file")
+	ratio=$(echo "$webp_size * 100/ $original_size" | bc -l)
 
-  # We consider an optimized file smaller only when it's at least 20 KB smaller
-  is_smaller=false
-  difference=$((original_size - webp_size))
-  if test "$difference" -gt 20480; then
-    is_smaller=true
-  fi
+	# We consider an optimized file smaller only when it's at least 20 KB smaller
+	is_smaller=false
+	difference=$((original_size - webp_size))
+	if test "$difference" -gt 20480; then
+		is_smaller=true
+	fi
 
-  if [ "$is_smaller" == "false" ]; then
-    # Delete WEBP file if it's larger than the original
-    rm "$directory/$webp_file"
-    return
-  fi
+	if [ "$is_smaller" == "false" ]; then
+		# Delete WEBP file if it's larger than the original
+		rm "$directory/$webp_file"
+		return
+	fi
 
-  printf "$BOLD$1$NOCOLOR: %s → $CYAN%s$NOCOLOR $GREEN(%2.2f%%, −%s$NOCOLOR)\n" "$($bin/pretty-bytes $original_size)" "$($bin/pretty-bytes $webp_size)" "$ratio" "$($bin/pretty-bytes $difference)"
+	printf "$BOLD$1$NOCOLOR: %s → $CYAN%s$NOCOLOR $GREEN(%2.2f%%, −%s$NOCOLOR)\n" "$($bin/pretty-bytes $original_size)" "$($bin/pretty-bytes $webp_size)" "$ratio" "$($bin/pretty-bytes $difference)"
 }
 
 # Single file
 if [ "$1" != "" ]; then
-  convert_file "$1" "$2"
-  exit
+	convert_file "$1" "$2"
+	exit
 fi
 
 # JPEG files
 for file in *.jpg; do
-  if [ -f "$file" ]; then
-    convert_file "$file"
-  fi
+	if [ -f "$file" ]; then
+		convert_file "$file"
+	fi
 done
 
 # PNG files
 for file in *.png; do
-  if [ -f "$file" ]; then
-    convert_file "$file"
-  fi
+	if [ -f "$file" ]; then
+		convert_file "$file"
+	fi
 done

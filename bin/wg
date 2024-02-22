@@ -18,7 +18,10 @@ UNDERLINE="$(tput sgr 0 1)"
 NOCOLOR="$(tput sgr0)"
 function error() { echo -e "$UNDERLINE$RED$1$NOCOLOR\n"; }
 
-command -v rg >/dev/null 2>&1 || { error "ripgrep not installed: brew install ripgrep"; exit 1; }
+command -v rg > /dev/null 2>&1 || {
+	error "ripgrep not installed: brew install ripgrep"
+	exit 1
+}
 
 seenReplace=''
 
@@ -48,20 +51,20 @@ didChange=''
 		--max-columns 0 \
 		"$@"
 	echo -e '\n\0'
-) |
-{
-	while IFS= read -r -d '' part; do
-		if test -n "$currentFile"; then
-			echo "$currentFile"
-			# Write file without last two lines
-			perl -ne 'push(@buf,$_);END{print @buf[0 ... $#buf-2]}' <<< "$part" > "$currentFile"
-			didChange='true'
-		fi
-		currentFile="$(tail -n 1 <<< "$part")"
-	done
+) \
+	| {
+		while IFS= read -r -d '' part; do
+			if test -n "$currentFile"; then
+				echo "$currentFile"
+				# Write file without last two lines
+				perl -ne 'push(@buf,$_);END{print @buf[0 ... $#buf-2]}' <<< "$part" > "$currentFile"
+				didChange='true'
+			fi
+			currentFile="$(tail -n 1 <<< "$part")"
+		done
 
-	if test -z "$didChange"; then
-		echo "No files were changed"
-		exit 1
-	fi
-}
+		if test -z "$didChange"; then
+			echo "No files were changed"
+			exit 1
+		fi
+	}

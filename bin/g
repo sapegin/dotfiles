@@ -16,18 +16,18 @@
 # Batgrep doesn't support replacing so we fall back to Ripgrep
 should_replace=false
 for arg in "$@"; do
-  if [ "$arg" == "--replace" ] || [ "$arg" == "-r" ]; then
-    should_replace=true
-    break
-  fi
+	if [ "$arg" == "--replace" ] || [ "$arg" == "-r" ]; then
+		should_replace=true
+		break
+	fi
 done
 
-if command -v batgrep >/dev/null 2>&1 && [ "$should_replace" == false ]; then
+if command -v batgrep > /dev/null 2>&1 && [ "$should_replace" == false ]; then
 	batgrep "$@"
-elif command -v rg >/dev/null 2>&1; then
+elif command -v rg > /dev/null 2>&1; then
 	# See tilde/ripgreprc for default options
 	rg "$@"
-elif command -v ack >/dev/null 2>&1; then
+elif command -v ack > /dev/null 2>&1; then
 	ack -ri "$@"
 else
 	grep -ri "$@"

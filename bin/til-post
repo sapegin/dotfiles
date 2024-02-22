@@ -35,6 +35,8 @@ slug=$(
 	perl -pe 's/ /-/g' |            # Spaces to dashes
 	perl -pe 's/--/-/g' |           # Remove double spaces
 	perl -pe 's/^-//'               # Remove dash in the beginning
+		# Remove dash in the beginning
+		perl -pe 's/^-//'
 )
 
 # Ask user to review the slug
@@ -57,8 +59,8 @@ date=$(date +"$DATE_FORMAT")
 # Tags: category by default
 # TODO
 tags=$(
-	echo "$slug" |
-	perl -pe 's/\/[^/]+$//'   # Remove everything after /
+	echo "$slug" \
+		| perl -pe 's/\/[^/]+$//' # Remove everything after /
 )
 
 # Create destination directory if needed
