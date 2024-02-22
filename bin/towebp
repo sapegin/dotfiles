@@ -62,7 +62,7 @@ function convert_file() {
     return
   fi
 
-  printf "$BOLD$1$NOCOLOR: %s → $CYAN%s$NOCOLOR $GREEN(%2.2f%%) −%s$NOCOLOR\n" "$($bin/pretty-bytes $original_size)" "$($bin/pretty-bytes $webp_size)" "$ratio" "$($bin/pretty-bytes $difference)"
+  printf "$BOLD$1$NOCOLOR: %s → $CYAN%s$NOCOLOR $GREEN(%2.2f%%, −%s$NOCOLOR)\n" "$($bin/pretty-bytes $original_size)" "$($bin/pretty-bytes $webp_size)" "$ratio" "$($bin/pretty-bytes $difference)"
 }
 
 # Single file
