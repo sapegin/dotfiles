@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 
-# Quick grep: Batgrep, Ripgrep (rg), ack, or grep
+# Quick grep: Ripgrep (rg), ack, or grep
 #
 # Usage: ../docs/g.md
 #
 # See more:
-# https://github.com/eth-p/bat-extras/blob/master/doc/batgrep.md
 # https://github.com/BurntSushi/ripgrep
 #
 # Author: Artem Sapegin, sapegin.me
@@ -13,20 +12,9 @@
 # https://github.com/sapegin/dotfiles
 #
 
-# Batgrep doesn't support replacing so we fall back to Ripgrep
-should_replace=false
-for arg in "$@"; do
-	if [ "$arg" == "--replace" ] || [ "$arg" == "-r" ]; then
-		should_replace=true
-		break
-	fi
-done
-
-if command -v batgrep > /dev/null 2>&1 && [ "$should_replace" == false ]; then
-	batgrep "$@"
-elif command -v rg > /dev/null 2>&1; then
+if command -v rg > /dev/null 2>&1; then
 	# See tilde/ripgreprc for default options
-	rg "$@"
+	rg --json -C 2 "$@" | delta
 elif command -v ack > /dev/null 2>&1; then
 	ack -ri "$@"
 else

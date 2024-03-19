@@ -4,6 +4,10 @@
 # Include hidden files (good for .eslinrc kind of files)
 --hidden
 
+# Don't let ripgrep vomit really long lines to my terminal, and show a preview.
+--max-columns=150
+--max-columns-preview
+
 # Ignore npm/Yarn lock files, etc.
 --glob=!package-lock.json
 --glob=!yarn.lock

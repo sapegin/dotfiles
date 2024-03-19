@@ -49,7 +49,6 @@ $(brew --prefix)/opt/fzf/install
 
 # Everything else
 brew install bat
-brew install bat-extras
 brew install fd
 brew install git-delta
 brew install lazygit

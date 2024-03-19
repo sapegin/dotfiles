@@ -78,8 +78,15 @@
 [add.interactive]
 	useBuiltin = false
 [delta]
-	navigate = true
+	navigate = false
 	light = false
+	hyperlinks = true
+	hyperlinks-file-link-format = "vscode://file/{path}:{line}"
+	grep-line-number-style = normal dim
+	grep-file-style = blue bold
+	grep-match-line-style = normal "#453327" # gray04
+	grep-match-word-style = black yellow
+	grep-separator-symbol = " "
 [merge]
 	conflictstyle = merge
 [diff]
