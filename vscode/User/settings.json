@@ -24,7 +24,7 @@
 	"editor.roundedSelection": false,
 	"editor.rulers": [80],
 	"editor.semanticHighlighting.enabled": true,
-	"editor.snippetSuggestions": "inline",
+	"editor.snippetSuggestions": "top",
 	"editor.suggestSelection": "first",
 	"editor.wordWrap": "on",
 	"editor.codeActionsOnSave": {
