@@ -40,13 +40,9 @@
 
 `cc`
 
-- Open ForkLift:
+- Open current directory in Nimble Commander:
 
-`k {{file}}`
-
-- Open current directory in ForkLift:
-
-`kk`
+`ff`
 
 - Open current directory in GitHub Desktop:
 

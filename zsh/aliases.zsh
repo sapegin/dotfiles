@@ -19,9 +19,8 @@ alias cc="code ."
 # GitHub Desktop
 alias gh="github ."
 
-# ForkLift
-alias k="open -a ForkLift"
-alias kk="open -a ForkLift ."
+# Nimble Commander
+alias ff="open -a 'Nimble Commander' ."
 
 # Bat: https://github.com/sharkdp/bat
 command -v bat >/dev/null 2>&1 && alias cat="bat --style=plain"
