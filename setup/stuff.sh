@@ -52,6 +52,7 @@ brew install bat
 brew install bat-extras
 brew install fd
 brew install git-delta
+brew install lazygit
 brew install macos-trash
 brew install micro
 brew install midnight-commander

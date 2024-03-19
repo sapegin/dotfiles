@@ -1,0 +1,40 @@
+gui:
+  sidePanelWidth: 0.25
+  expandFocusedSidePanel: true
+  authorColors:
+    'Artem Sapegin': 'red'
+  theme:
+    activeBorderColor:
+      - yellow
+      - bold
+    inactiveBorderColor:
+      - white
+    searchingActiveBorderColor:
+      - cyan
+      - bold
+    optionsTextColor:
+      - white
+    selectedLineBgColor:
+      - magenta
+    selectedRangeBgColor:
+      - magenta
+    cherryPickedCommitBgColor:
+      - cyan
+    cherryPickedCommitFgColor:
+      - blue
+    markedBaseCommitBgColor:
+      - yellow
+    markedBaseCommitFgColor:
+      - blue
+    unstagedChangesColor:
+      - red
+    defaultFgColor:
+      - default
+  showRandomTip: false
+  showCommandLog: false
+git:
+  parseEmoji: true
+os:
+  copyToClipboardCmd: 'pbcopy < {{text}}'
+  editPreset: 'vscode'
+  open: 'open {{filename}}'

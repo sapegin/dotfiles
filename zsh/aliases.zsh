@@ -19,6 +19,9 @@ alias cc="code ."
 # GitHub Desktop
 alias gh="github ."
 
+# Lazygit
+alias lg="lazygit --use-config-dir $HOME/dotfiles/lazygit"
+
 # Nimble Commander
 alias ff="open -a 'Nimble Commander' ."
 
