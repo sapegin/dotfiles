@@ -145,6 +145,6 @@ delete=^d
 
 [Panelize]
 Find *.orig after patching=find . -name \\*.orig -print
-Find rejects after patching=find . -name \\*.rej -print
-Modified git files=git ls-files --modified
 Find SUID and SGID programs=find . \\( \\( -perm -04000 -a -perm /011 \\) -o \\( -perm -02000 -a -perm /01 \\) \\) -print
+Modified git files=git ls-files --modified
+Find rejects after patching=find . -name \\*.rej -print
