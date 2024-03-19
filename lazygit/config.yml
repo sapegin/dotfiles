@@ -15,7 +15,7 @@ gui:
     optionsTextColor:
       - white
     selectedLineBgColor:
-      - magenta
+      - '#503a5c' # Use `purpleLighter` color to make it readable
     selectedRangeBgColor:
       - magenta
     cherryPickedCommitBgColor:
@@ -27,13 +27,19 @@ gui:
     markedBaseCommitFgColor:
       - blue
     unstagedChangesColor:
-      - red
+      - white
     defaultFgColor:
       - default
   showRandomTip: false
   showCommandLog: false
 git:
   parseEmoji: true
+  commit:
+    autoWrapCommitMessage: true
+    autoWrapWidth: 72
+  paging:
+    colorArg: always
+    pager: delta --dark --paging=never
 os:
   copyToClipboardCmd: 'pbcopy < {{text}}'
   editPreset: 'vscode'
