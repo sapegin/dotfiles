@@ -24,7 +24,6 @@ brew install --cask devtoys
 brew install --cask dropbox
 brew install --cask firefox
 brew install --cask github # GitHub Desktop
-brew install --cask iterm2
 brew install --cask kap
 brew install --cask kindle
 brew install --cask messenger
@@ -40,5 +39,6 @@ brew install --cask shottr
 brew install --cask slack
 brew install --cask telegram
 brew install --cask visual-studio-code
+brew install --cask wezterm
 brew install --cask whatsapp
 brew install --cask zoom
