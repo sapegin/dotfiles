@@ -28,6 +28,6 @@ bat cache --build
 
 [Download from Marketplace](https://plugins.jetbrains.com/plugin/22568-squirrelsong-light-theme)
 
-## iTerm2
+## WezTerm
 
-![Squirrelsong dark in iTerm2](https://github.com/sapegin/squirrelsong/raw/master/dark/iTerm2/screenshot.png)
+**Note:** The theme is included in [the WezTerm config](https://github.com/sapegin/dotfiles/blob/master/tilde/.wezterm.lua).
