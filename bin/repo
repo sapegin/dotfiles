@@ -14,7 +14,7 @@ const fs = require('fs');
 const path = require('path');
 
 const PERSONAL_PROJECTS_DIR = path.join(process.env.HOME, '_');
-const WORK_PROJECTS_DIR = path.join(process.env.HOME, 'omio');
+const WORK_PROJECTS_DIR = false;
 
 const getDirs = (d) =>
 	fs.readdirSync(d).filter((f) => fs.statSync(path.join(d, f)).isDirectory());
@@ -53,6 +53,8 @@ if (args.length !== 1) {
 }
 
 tryRepo(PERSONAL_PROJECTS_DIR, args[0]);
-tryRepo(WORK_PROJECTS_DIR, args[0]);
+if (WORK_PROJECTS_DIR) {
+	tryRepo(WORK_PROJECTS_DIR, args[0]);
+}
 
 console.log('Repository not found');
