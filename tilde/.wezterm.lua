@@ -51,7 +51,6 @@ config.colors = {
 		'#dcd5c0',
 	},
 
-	-- TODO: Try fancy tabs
 	tab_bar = {
 		background = '#352a21',
 		active_tab = {
@@ -215,7 +214,7 @@ end
 -- Set tab title to the current working directory
 wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_width)
 	local index = tonumber(tab.tab_index) + 1
-	return string.format(' %s %s ', index, get_current_working_dir(tab))
+	return string.format('  %s•%s  ', index, get_current_working_dir(tab))
 end)
 
 -- Set window title to the current working directory
@@ -235,7 +234,7 @@ wezterm.on('gui-startup', function(cmd)
 		-- Desktop: place on the right half of the screen
 		window:gui_window():set_position(active_screen.width / 2, 0)
 		window:gui_window():set_inner_size(active_screen.width / 2, active_screen.height)
-	end 
+	end
 end)
 
 --- 8< -- 8< ---
