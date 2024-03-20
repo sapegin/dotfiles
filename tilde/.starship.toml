@@ -1,6 +1,4 @@
 format = """\
-  $username\
-  $hostname\
   $directory\
   $custom\
   $git_state\
@@ -10,6 +8,10 @@ format = """\
 
 [directory]
 style = "bold white"
+
+[character]
+success_symbol = '[→](bold green)'
+error_symbol = '[→](bold red)'
 
 [custom.git_simple]
 command = "starship-git-simple"
