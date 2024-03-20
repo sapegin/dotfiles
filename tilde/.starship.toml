@@ -10,8 +10,9 @@ format = """\
 style = "bold white"
 
 [character]
-success_symbol = '[→](bold green)'
-error_symbol = '[→](bold red)'
+# Nerd Fonts nf-fa-angle_right \f105
+success_symbol = '[](bold green)'
+error_symbol = '[](bold red)'
 
 [custom.git_simple]
 command = "starship-git-simple"
