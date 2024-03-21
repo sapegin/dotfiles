@@ -9,7 +9,7 @@ format = """\
 
 [directory]
 style = "bold white"
-repo_root_style	= "bold"
+repo_root_style = "bold"
 read_only = "" # Nerd Fonts nf-fa-lock \uf023
 
 [character]
