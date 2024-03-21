@@ -1,5 +1,6 @@
+# Nerd Fonts nf-seti-coffee \ue61b
 format = """\
-  $directory\
+   $directory\
   $custom\
   $git_state\
   $line_break\
@@ -8,6 +9,8 @@ format = """\
 
 [directory]
 style = "bold white"
+repo_root_style	= "bold"
+read_only = "" # Nerd Fonts nf-fa-lock \uf023
 
 [character]
 # Nerd Fonts nf-fa-angle_right \f105
