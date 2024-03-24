@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
 
 # Print public SSH key, generate it if necessary
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+#
 
-file="$HOME/.ssh/id_rsa.pub"
+file="$HOME/.ssh/id_rsa"
 if [ ! -f "$file" ]; then
-	ssh-keygen -t rsa
+	ssh-keygen -t rsa -f "$file" -q -P ""
 fi
 
 cat "$file"
