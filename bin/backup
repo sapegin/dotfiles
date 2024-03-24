@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+
+# Backup all the things to Synology NAS
+#
+# Usage:
+#   backup
+#
+# Prerequisites:
+# 1. Update rsync:
+#    brew install rsync
+# 2. Install rsyncy:
+#    brew install rsyncy
+# 2. Enable SSH service on Synology NAS:
+#    Control Panel -> Terminal & SNMP -> Terminal -> Enable SSH service
+# 3. Enable rsync service on Synology NAS:
+#    Control Panel -> File Services -> rsync -> Enable rsync service
+# 4. Enable User home on Synology NAS:
+#    Control Panel -> User & Group -> Advanced -> User Home -> Enable user home service
+# 5. Generate SSH key
+#    ssh-key
+# 6. Upload SSH key to Synology NAS:
+#    ssh-copy-id sapegin@Hippopotamus.local
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+#
+
+DEST="sapegin@Hippopotamus.local:/volume1"
+RSYNC_OPTS="--archive --delete --delete-excluded --one-file-system --human-readable --partial -e ssh --exclude '.DS_Store'"
+
+set -e
+
+# Common stuff
+RED="$(tput setaf 1)"
+CYAN="$(tput setaf 6)"
+UNDERLINE="$(tput sgr 0 1)"
+NOCOLOR="$(tput sgr0)"
+function error() { echo -e "$UNDERLINE$RED$1$NOCOLOR\n"; }
+function heading() { echo -e "$UNDERLINE$CYAN$1$NOCOLOR\n"; }
+
+function bk() {
+	heading "Backing up $1..."
+	rsyncy $RSYNC_OPTS "$1" "$DEST/$2"
+}
+
+command -v rsyncy > /dev/null 2>&1 || {
+	echo >&2 "rsyncy is not installed: brew install rsyncy"
+	exit 1
+}
+
+# Bear notes
+bk "$HOME/Library/Group Containers/9K33E3U3T4.net.shinyfrog.bear/" "Stuffses/Backups/Bear"
+
+# iCloud Drive
+bk "$HOME/Library/Mobile Documents/" "Stuffses/Backups/iCloud"
