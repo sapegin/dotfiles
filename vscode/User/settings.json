@@ -91,11 +91,11 @@
 		"typescript",
 		"typescriptreact"
 	],
-	"spellright.notificationClass": "information",
-	"spellright.groupDictionaries": false,
-	"spellright.configurationScope": "user",
-	"spellright.language": [],
-	"spellright.documentTypes": ["latex", "plaintext"],
+	"cSpell.spellCheckDelayMs": 500,
+	"cSpell.userWords": [
+		"Formik",
+		"Tamia"
+	],
 	"donations.disablePrompt": true,
 	"highlight.regexes": {
 		"((?:<!-- *)?(?:#|// @|//|./\\*+|<!--|--|\\* @|{!|{{!--|{{!) *(?:TODO|FIXME|FIX|BUG|UGLY|DEBUG|HACK|XXX)(?:\\s*\\([^)]+\\))?:?)((?!\\w)(?: *-->| *\\*/| *!}| *--}}| *}}|(?= *(?:[^:]//|/\\*+|<!--|@|--|{!|{{!--|{{!))|(?: +[^\\n@]*?)(?= *(?:[^:]//|/\\*+|<!--|@|--(?!>)|{!|{{!--|{{!))|(?: +[^@\\n]+)?))": {
