@@ -14,6 +14,21 @@ bat cache --build
 
 **Note:** The theme is included in [the Zsh config](https://github.com/sapegin/dotfiles/blob/master/zsh/env.zsh).
 
+## Bear
+
+Run this command after each Bear update:
+
+```shell
+sudo command rm "/Applications/Bear.app/Contents/Frameworks/BearCore.framework/Resources/Ayu.theme"
+sudo command cp "$HOME/_/squirrelsong/light/Bear/Squirrelsong Light.theme" "/Applications/Bear.app/Contents/Frameworks/BearCore.framework/Resources/Ayu.theme"
+```
+
+## JetBrains
+
+![Squirrelsong light in WebStorm](https://github.com/sapegin/squirrelsong/raw/master/light/JetBrains/squirrelsong-light/screenshot.png)
+
+[Download from Marketplace](https://plugins.jetbrains.com/plugin/22568-squirrelsong-light-theme)
+
 ## Visual Studio Code
 
 ![Squirrelsong light in Visual Studio Code](https://github.com/sapegin/squirrelsong/raw/master/light/VSCode/SquirrelsongLight/screenshot.png)
@@ -21,12 +36,6 @@ bat cache --build
 [Download from Marketplace](https://marketplace.visualstudio.com/items?itemName=sapegin.Theme-SquirrelsongLight)
 
 **Note:** The theme is included in the [config file](https://github.com/sapegin/dotfiles/blob/master/vscode/User/settings.json).
-
-## JetBrains
-
-![Squirrelsong light in WebStorm](https://github.com/sapegin/squirrelsong/raw/master/light/JetBrains/squirrelsong-light/screenshot.png)
-
-[Download from Marketplace](https://plugins.jetbrains.com/plugin/22568-squirrelsong-light-theme)
 
 ## WezTerm
 
