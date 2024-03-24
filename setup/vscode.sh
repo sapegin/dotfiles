@@ -24,7 +24,6 @@ command -v code > /dev/null 2>&1 || {
 }
 
 code --install-extension astro-build.astro-vscode
-code --install-extension ban.spellright
 code --install-extension bibhasdn.unique-lines
 code --install-extension Catppuccin.catppuccin-vsc-icons
 code --install-extension dbaeumer.vscode-eslint
@@ -32,12 +31,15 @@ code --install-extension EditorConfig.EditorConfig
 code --install-extension esbenp.prettier-vscode
 code --install-extension fabiospampinato.vscode-highlight
 code --install-extension github.copilot
+code --install-extension github.copilot-chat
 code --install-extension GraphQL.vscode-graphql-syntax
 code --install-extension lafe.contextualduplicate
 code --install-extension mdickin.markdown-shortcuts
 code --install-extension naumovs.color-highlight
 code --install-extension sapegin.Theme-SquirrelsongLight
 code --install-extension SonarSource.sonarlint-vscode
+code --install-extension streetsidesoftware.code-spell-checker
 code --install-extension styled-components.vscode-styled-components
+code --install-extension yoavbls.pretty-ts-errors
 code --install-extension zhengxiaoyao0716.intelligence-change-case
 code --install-extension znck.grammarly
