@@ -13,6 +13,7 @@ command -v brew > /dev/null 2>&1 || {
 	exit 1
 }
 
+# Apps
 brew install --cask 1password
 brew install --cask adobe-creative-cloud
 brew install --cask alfred
@@ -42,3 +43,7 @@ brew install --cask visual-studio-code
 brew install --cask wezterm
 brew install --cask whatsapp
 brew install --cask zoom
+
+# Fonts
+brew tap homebrew/cask-fonts
+brew install --cask font-symbols-only-nerd-font
