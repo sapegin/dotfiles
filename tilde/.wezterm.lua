@@ -52,6 +52,7 @@ config.colors = {
 	},
 
 	tab_bar = {
+		-- Retro tab bar
 		background = '#352a21',
 		active_tab = {
 			bg_color = '#574131',
@@ -74,7 +75,17 @@ config.colors = {
 			bg_color = '#453327',
 			fg_color = '#c4a389',
 		},
+		-- Fancy tab bar
+		inactive_tab_edge = '#352a21',
 	}
+}
+
+config.window_frame = {
+	font = wezterm.font { family = font, weight = 'Bold' },
+	font_size = 15,
+	-- Fancy tab bar
+	active_titlebar_bg = '#574131',
+	inactive_titlebar_bg = '#352a21',
 }
 
 -- Hot keys
