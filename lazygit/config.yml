@@ -3,10 +3,10 @@ gui:
   expandFocusedSidePanel: true
   nerdFontsVersion: '3'
   authorColors:
-    'Artem Sapegin': 'red'
+    'Artem Sapegin': 'magenta'
   theme:
     activeBorderColor:
-      - yellow
+      - magenta
       - bold
     inactiveBorderColor:
       - white
