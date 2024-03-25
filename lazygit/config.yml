@@ -1,6 +1,7 @@
 gui:
   sidePanelWidth: 0.25
   expandFocusedSidePanel: true
+  nerdFontsVersion: '3'
   authorColors:
     'Artem Sapegin': 'red'
   theme:
