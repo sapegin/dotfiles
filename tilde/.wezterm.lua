@@ -29,6 +29,8 @@ config.colors = {
 	selection_fg = '#9e8a74',
 	selection_bg = '#564538',
 
+	visual_bell = "#a08ac2",
+
 	ansi = {
 		'#352a21',
 		'#ac493e',
@@ -195,11 +197,18 @@ config.mouse_bindings = {
 	},
   }
 
+-- Visual bell
+config.audible_bell = 'Disabled'
+config.visual_bell = {
+	fade_in_function = "EaseIn",
+	fade_in_duration_ms = 100,
+	fade_out_function = "EaseOut",
+	fade_out_duration_ms = 200,
+}
+
 -- Misc
 config.adjust_window_size_when_changing_font_size = false
-config.audible_bell = 'Disabled'
 config.bold_brightens_ansi_colors = 'No'
-config.color_scheme = 'AdventureTime'
 config.cursor_thickness = 2
 config.default_cursor_style = 'SteadyBar'
 config.default_cwd = wezterm.home_dir
