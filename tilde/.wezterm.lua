@@ -213,6 +213,7 @@ config.cursor_thickness = 2
 config.default_cursor_style = 'SteadyBar'
 config.default_cwd = wezterm.home_dir
 config.font_size = 15
+config.line_height = 1.1
 config.hyperlink_rules = wezterm.default_hyperlink_rules()
 config.inactive_pane_hsb = { saturation = 1.0, brightness = 0.8}
 config.scrollback_lines = 10000
@@ -221,7 +222,8 @@ config.switch_to_last_active_tab_when_closing_tab = true
 config.tab_max_width = 60
 config.use_fancy_tab_bar = false
 config.window_close_confirmation = 'NeverPrompt'
-config.window_padding = { left = 8, right = 8, top = 4, bottom = 4}
+config.window_padding = { left = 8, right = 8, top = 12, bottom = 8}
+config.window_decorations = "INTEGRATED_BUTTONS|RESIZE"
 
 local function get_current_working_dir(tab)
 	local current_dir = tab.active_pane and tab.active_pane.current_working_dir or { file_path = '' }
