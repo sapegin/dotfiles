@@ -148,6 +148,19 @@ config.keys = {
 		action = wezterm.action.SendKey({ key = 'f', mods = 'ALT' }),
 	},
 
+	-- TODO: Select character to the left
+	{
+		key = 'LeftArrow',
+		mods = 'SHIFT',
+		action = wezterm.action.DisableDefaultAssignment,
+	},
+	-- TODO: Select character to the right
+	{
+		key = 'RightArrow',
+		mods = 'SHIFT',
+		action = wezterm.action.DisableDefaultAssignment,
+	},
+
 	-- Go to beginning of line
 	{
 		key = 'LeftArrow',
