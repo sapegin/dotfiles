@@ -1,57 +1,111 @@
 [
-    /*
-     * Internal functions
-     */
-    { "key": "cmd+e",           "command": "workbench.action.quickOpenPreviousEditor" },
-    { "key": "cmd+g",           "command": "workbench.action.gotoLine" },
-    { "key": "cmd+y",           "command": "editor.action.deleteLines",
-                                   "when": "editorTextFocus && !editorReadonly" },
-    { "key": "ctrl+g",          "command": "editor.action.addSelectionToNextFindMatch",
-                                   "when": "editorFocus" },
-    { "key": "alt+down",        "command": "editor.action.insertCursorBelow",
-                                   "when": "editorTextFocus" },
-    /*
-     * Plugins
-     */
-    // Contextual Duplicate
-    { "key": "cmd+d",           "command": "lafe.duplicateCode",
-                                   "when": "editorTextFocus && !editorReadonly" },
-    // Markdown Shortcuts
-    { "key": "cmd+k",           "command": "md-shortcut.toggleLink",
-                                "when": "editorTextFocus && !editorReadonly"
-                            },
-                            {
-                                "key": "shift+f6",
-                                "command": "editor.action.rename",
-                                "when": "editorHasRenameProvider && editorTextFocus && !editorReadonly"
-                            },
-                            {
-                                "key": "f2",
-                                "command": "-editor.action.rename",
-                                "when": "editorHasRenameProvider && editorTextFocus && !editorReadonly"
-                            },
-                            {
-                                "key": "cmd+t",
-                                "command": "-workbench.action.showAllSymbols"
-                            },
-                            {
-                                "key": "alt+enter",
-                                "command": "editor.action.quickFix",
-                                "when": "editorHasCodeActionsProvider && textInputFocus && !editorReadonly"
-                            },
-                            {
-                                "key": "cmd+.",
-                                "command": "-editor.action.quickFix",
-                                "when": "editorHasCodeActionsProvider && textInputFocus && !editorReadonly"
-                            },
-                            {
-                                "key": "cmd+t",
-                                "command": "editor.action.refactor",
-                                "when": "editorHasCodeActionsProvider && textInputFocus && !editorReadonly"
-                            },
-                            {
-                                "key": "ctrl+shift+r",
-                                "command": "-editor.action.refactor",
-                                "when": "editorHasCodeActionsProvider && textInputFocus && !editorReadonly"
-                            }
-                        ]
+  /*
+   * Internal functions
+   */
+  {
+    "key": "cmd+e",
+    "command": "workbench.action.quickOpenPreviousEditor"
+  },
+  {
+    "key": "cmd+g",
+    "command": "workbench.action.gotoLine"
+  },
+  {
+    "key": "cmd+y",
+    "command": "editor.action.deleteLines",
+    "when": "editorTextFocus && !editorReadonly"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "editor.action.addSelectionToNextFindMatch",
+    "when": "editorFocus"
+  },
+  {
+    "key": "alt+down",
+    "command": "editor.action.insertCursorBelow",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "cmd+r",
+    "command": "workbench.action.tasks.runTask",
+    "args": { "type": "npm" }
+  },
+  {
+    "key": "alt+cmd+down",
+    "command": "editor.action.moveLinesDownAction",
+    "when": "editorTextFocus && !editorReadonly"
+  },
+  {
+    "key": "alt+down",
+    "command": "-editor.action.moveLinesDownAction",
+    "when": "editorTextFocus && !editorReadonly"
+  },
+  {
+    "key": "alt+cmd+up",
+    "command": "editor.action.moveLinesUpAction",
+    "when": "editorTextFocus && !editorReadonly"
+  },
+  {
+    "key": "alt+up",
+    "command": "-editor.action.moveLinesUpAction",
+    "when": "editorTextFocus && !editorReadonly"
+  }
+
+  /*
+   * Plugins
+   */
+
+  // Contextual Duplicate
+  {
+    "key": "cmd+d",
+    "command": "lafe.duplicateCode",
+    "when": "editorTextFocus && !editorReadonly"
+  },
+
+  // Markdown Shortcuts
+  {
+    "key": "cmd+k",
+    "command": "md-shortcut.toggleLink",
+    "when": "editorTextFocus && !editorReadonly"
+  },
+  {
+    "key": "shift+f6",
+    "command": "editor.action.rename",
+    "when": "editorHasRenameProvider && editorTextFocus && !editorReadonly"
+  },
+  {
+    "key": "f2",
+    "command": "-editor.action.rename",
+    "when": "editorHasRenameProvider && editorTextFocus && !editorReadonly"
+  },
+  {
+    "key": "cmd+t",
+    "command": "-workbench.action.showAllSymbols"
+  },
+  {
+    "key": "alt+enter",
+    "command": "editor.action.quickFix",
+    "when": "editorHasCodeActionsProvider && textInputFocus && !editorReadonly"
+  },
+  {
+    "key": "cmd+.",
+    "command": "-editor.action.quickFix",
+    "when": "editorHasCodeActionsProvider && textInputFocus && !editorReadonly"
+  },
+  {
+    "key": "cmd+t",
+    "command": "editor.action.refactor",
+    "when": "editorHasCodeActionsProvider && textInputFocus && !editorReadonly"
+  },
+  {
+    "key": "ctrl+shift+r",
+    "command": "-editor.action.refactor",
+    "when": "editorHasCodeActionsProvider && textInputFocus && !editorReadonly"
+  },
+
+  // Advanced New File
+  {
+    "key": "cmd+n",
+    "command": "extension.advancedNewFile"
+  }
+]
