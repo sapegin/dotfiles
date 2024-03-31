@@ -49,7 +49,7 @@
     "key": "alt+up",
     "command": "-editor.action.moveLinesUpAction",
     "when": "editorTextFocus && !editorReadonly"
-  }
+  },
 
   /*
    * Plugins
