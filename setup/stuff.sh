@@ -53,8 +53,6 @@ brew install fd
 brew install git-delta
 brew install lazygit
 brew install macos-trash
-brew install micro
-brew install midnight-commander
 brew install neofetch
 brew install proselint
 brew install ripgrep
