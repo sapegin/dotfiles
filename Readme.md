@@ -24,7 +24,7 @@
 Prerequisites:
 
 1. [Generate SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent).
-2. [Install Homebrew](http://brew.sh/).
+2. [Install Homebrew](http://brew.sh/), and run `eval "$(/opt/homebrew/bin/brew shellenv)"`.
 3. Install Node.js: `brew install node`.
 
 Then run these commands in the terminal:
