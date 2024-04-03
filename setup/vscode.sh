@@ -23,6 +23,10 @@ command -v code > /dev/null 2>&1 || {
 	exit 1
 }
 
+# Enable settings sync from dotfiles
+rm -rf ~/Library/Application\ Support/Code/User
+ln -s ~/dotfiles/vscode/User ~/Library/Application\ Support/Code/User
+
 code --install-extension astro-build.astro-vscode
 code --install-extension bibhasdn.unique-lines
 code --install-extension Catppuccin.catppuccin-vsc-icons
