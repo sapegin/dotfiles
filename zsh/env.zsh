@@ -9,7 +9,7 @@ export N_PREFIX="$HOME/n"
 if [[ -n $SSH_CONNECTION ]]; then
 	export EDITOR='nano'
 else
-	export EDITOR='micro'
+	export EDITOR='cot'
 fi
 
 # Make less the default pager, add some options
@@ -36,7 +36,7 @@ less_options=(
 
 	# Do not complain when we are on a dumb terminal.
 	--dumb
-);
+)
 export LESS="${less_options[*]}"
 export PAGER='less'
 
