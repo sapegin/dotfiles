@@ -50,6 +50,7 @@ $(brew --prefix)/opt/fzf/install
 # Everything else
 brew install bat
 brew install fd
+brew install fnm
 brew install git-delta
 brew install lazygit
 brew install macos-trash

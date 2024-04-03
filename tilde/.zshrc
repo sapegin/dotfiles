@@ -1,5 +1,5 @@
-source ~/dotfiles/zsh/env.zsh
 source ~/dotfiles/zsh/path.zsh
+source ~/dotfiles/zsh/env.zsh
 source ~/dotfiles/zsh/aliases.zsh
 source ~/dotfiles/zsh/completions.zsh
 source ~/dotfiles/zsh/key-bindings.zsh
@@ -43,10 +43,10 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_DEFAULT_OPTS="--color bg:-1,bg+:-1,fg:-1,fg+:#9e8a74,hl:#d8a851,hl+:#e2c54c,info:#6b503c,prompt:#6b503c,pointer:#6b503c"
 # Use fd to respect .gitignore and exclude .git directory
 _fzf_compgen_path() {
-  fd --hidden --exclude ".git" . "$1"
+	fd --hidden --exclude ".git" . "$1"
 }
 _fzf_compgen_dir() {
-  fd --type d --hidden --exclude ".git" . "$1"
+	fd --type d --hidden --exclude ".git" . "$1"
 }
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 

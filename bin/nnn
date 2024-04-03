@@ -10,4 +10,9 @@
 # https://github.com/sapegin/dotfiles
 #
 
+command -v fnm > /dev/null 2>&1 || {
+	echo >&2 "fnm is not installed: brew install fnm"
+	exit 1
+}
+
 fnm use --install-if-missing
