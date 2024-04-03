@@ -27,8 +27,7 @@
   },
   {
     "key": "cmd+r",
-    "command": "workbench.action.tasks.runTask",
-    "args": { "type": "npm" }
+    "command": "workbench.action.tasks.runTask"
   },
   {
     "key": "alt+cmd+down",
