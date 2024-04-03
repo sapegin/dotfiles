@@ -26,7 +26,6 @@ brew install --cask devtoys
 brew install --cask firefox
 brew install --cask github # GitHub Desktop
 brew install --cask kap
-brew install --cask kindle
 # brew install --cask messenger
 brew install --cask microsoft-edge
 brew install --cask mimestream
