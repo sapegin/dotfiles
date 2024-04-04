@@ -24,6 +24,7 @@ brew install --cask devtoys
 brew install --cask firefox
 brew install --cask github # GitHub Desktop
 brew install --cask kap
+brew install --cask keka
 brew install --cask microsoft-edge
 brew install --cask mimestream
 brew install --cask nimble-commander
@@ -44,14 +45,20 @@ brew install --cask font-symbols-only-nerd-font
 
 # Extra apps
 echo ""
-echo "Install more apps if you need them:" 
+echo "Install more apps if you need them:"
 echo "brew install --cask adobe-creative-cloud"
-echo "brew install --cask dropbox"
+echo "brew install --cask charles"
+echo "brew install --cask choosy"
+echo "brew install --cask daisydisk"
+echo "brew install --cask gemini"
+echo "brew install --cask kaleidoscope"
 echo "brew install --cask messenger"
+echo "brew install --cask rapidapi"
+echo "brew install --cask replacicon"
 echo "brew install --cask slack"
 echo "brew install --cask zoom"
 
-# Mac AppStore apps
+# Mac App Store apps
 echo ""
-echo "Install additional apps from Mac AppStore:" 
-echo "https://github.com/sapegin/dotfiles/wiki/OS-X-Apps" 
+echo "Install additional apps from Mac App Store:"
+echo "https://github.com/sapegin/dotfiles/wiki/OS-X-Apps"
