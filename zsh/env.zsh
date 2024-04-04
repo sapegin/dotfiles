@@ -49,6 +49,8 @@ export LS_COLORS='di=34:ln=1;34:so=33:pi=33:ex=1;36:bd=34;46:cd=34;43:su=30;41:s
 
 # Homebrew install badge: beer sucks, coffee rules
 export HOMEBREW_INSTALL_BADGE='☕'
+# Disable telemetry
+export HOMEBREW_NO_ANALYTICS=1
 
 # git-friendly: disable bundle after pull
 export GIT_FRIENDLY_NO_BUNDLE=true
