@@ -49,6 +49,12 @@
     "command": "-editor.action.moveLinesUpAction",
     "when": "editorTextFocus && !editorReadonly"
   },
+  {
+    // Focus on search results when pressing Enter in the search box
+    "key": "enter",
+    "command": "search.focus.nextInputBox",
+    "when": "inSearchEditor && inputBoxFocus || inputBoxFocus && searchViewletVisible"
+  },
 
   /*
    * Plugins
