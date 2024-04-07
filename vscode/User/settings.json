@@ -33,7 +33,7 @@
   "editor.suggestSelection": "first",
   "editor.wordWrap": "on",
   "editor.codeActionsOnSave": {
-    "source.organizeImports": "explicit",
+    "source.organizeImports": "never",
     "source.fixAll.eslint": "explicit"
   },
   "search.smartCase": true,
