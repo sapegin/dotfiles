@@ -145,6 +145,7 @@
   "javascript.preferences.importModuleSpecifier": "relative",
   "javascript.preferences.jsxAttributeCompletionStyle": "none",
   "typescript.preferences.jsxAttributeCompletionStyle": "none",
+  "typescript.preferences.preferTypeOnlyAutoImports": true,
   "typescript.autoClosingTags": false,
   "typescript.format.enable": false,
   "typescript.updateImportsOnFileMove.enabled": "always",
