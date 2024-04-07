@@ -103,7 +103,14 @@
     "typescriptreact"
   ],
   "cSpell.spellCheckDelayMs": 500,
-  "cSpell.userWords": ["Artem", "Formik", "Sapegin", "Squirrelsong", "Tamia"],
+  "cSpell.userWords": [
+    "Artem",
+    "Formik",
+    "Hygraph",
+    "Sapegin",
+    "Squirrelsong",
+    "Tamia"
+  ],
   "donations.disablePrompt": true,
   "highlight.regexes": {
     "((?:<!-- *)?(?:#|// @|//|./\\*+|<!--|--|\\* @|{!|{{!--|{{!) *(?:TODO|FIXME|FIX|BUG|UGLY|DEBUG|HACK|XXX)(?:\\s*\\([^)]+\\))?:?)((?!\\w)(?: *-->| *\\*/| *!}| *--}}| *}}|(?= *(?:[^:]//|/\\*+|<!--|@|--|{!|{{!--|{{!))|(?: +[^\\n@]*?)(?= *(?:[^:]//|/\\*+|<!--|@|--(?!>)|{!|{{!--|{{!))|(?: +[^@\\n]+)?))": {
