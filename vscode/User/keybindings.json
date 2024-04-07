@@ -16,8 +16,18 @@
     "when": "editorTextFocus && !editorReadonly"
   },
   {
+    "key": "cmd+d",
+    "command": "editor.action.duplicateSelection",
+    "when": "editorTextFocus && !editorReadonly"
+  },
+  {
     "key": "ctrl+g",
     "command": "editor.action.addSelectionToNextFindMatch",
+    "when": "editorFocus"
+  },
+  {
+    "key": "ctrl+alt+g",
+    "command": "editor.action.selectHighlights",
     "when": "editorFocus"
   },
   {
@@ -47,30 +57,6 @@
   {
     "key": "alt+up",
     "command": "-editor.action.moveLinesUpAction",
-    "when": "editorTextFocus && !editorReadonly"
-  },
-  {
-    // Focus on search results when pressing Enter in the search box
-    "key": "enter",
-    "command": "search.focus.nextInputBox",
-    "when": "inSearchEditor && inputBoxFocus || inputBoxFocus && searchViewletVisible"
-  },
-
-  /*
-   * Plugins
-   */
-
-  // Contextual Duplicate
-  {
-    "key": "cmd+d",
-    "command": "lafe.duplicateCode",
-    "when": "editorTextFocus && !editorReadonly"
-  },
-
-  // Markdown Shortcuts
-  {
-    "key": "cmd+k",
-    "command": "md-shortcut.toggleLink",
     "when": "editorTextFocus && !editorReadonly"
   },
   {
@@ -106,6 +92,23 @@
     "key": "ctrl+shift+r",
     "command": "-editor.action.refactor",
     "when": "editorHasCodeActionsProvider && textInputFocus && !editorReadonly"
+  },
+  {
+    // Focus on search results when pressing Enter in the search box
+    "key": "enter",
+    "command": "search.focus.nextInputBox",
+    "when": "inSearchEditor && inputBoxFocus || inputBoxFocus && searchViewletVisible"
+  },
+
+  /*
+   * Plugins
+   */
+
+  // Markdown Shortcuts
+  {
+    "key": "cmd+k",
+    "command": "md-shortcut.toggleLink",
+    "when": "editorTextFocus && !editorReadonly"
   },
 
   // Advanced New File
