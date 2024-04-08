@@ -10,8 +10,8 @@
  * https://github.com/sapegin/dotfiles
  */
 
-const fs = require('fs');
-const userHome = require('user-home');
+import fs from 'fs';
+import userHome from 'user-home';
 
 const bundleId = process.argv[2];
 

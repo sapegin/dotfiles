@@ -8,10 +8,10 @@
  * https://github.com/sapegin/dotfiles
  */
 
-const fs = require('fs');
-const path = require('path');
-const userHome = require('user-home');
-const glob = require('glob');
+import fs from 'fs';
+import path from 'path';
+import userHome from 'user-home';
+import glob from 'glob';
 
 const folders = [glob.sync(`${userHome}/_/*/`), `${userHome}/dotfiles/`].flat();
 
