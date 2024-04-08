@@ -46,8 +46,9 @@ bin/dotfiles
 
 ## Further customization
 
-- Add any zsh profile customizations to `~/.zshlocal`.
-- Add your git username/email/etc. to `~/.gitlocal`.
+- Add any Zsh profile customizations to `~/.zshlocal`.
+- [Add your Git username/email/etc.](./setup#separate-git-identity-for-work-repositories) to `~/.gitlocal`.
+- Add your environment variables to `~/.env`.
 
 ## Updating
 
