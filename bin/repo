@@ -5,22 +5,30 @@
 // Should be used via Bash alias like this:
 //   function repo { cd "$("$HOME/dotfiles/bin/repo" $1)"; }
 //
+// Optional environmental variables:
+//   WORK_PROJECTS_DIR="~/unicorn"
+//
 // Author: Artem Sapegin, sapegin.me
 // License: MIT
 // https://github.com/sapegin/dotfiles
 //
 
-const fs = require('fs');
-const path = require('path');
+import path from 'path';
+import fs from 'fs';
+import untildify from 'untildify';
+import dotenv from 'dotenv';
 
-const PERSONAL_PROJECTS_DIR = path.join(process.env.HOME, '_');
-const WORK_PROJECTS_DIR = false;
+dotenv.config({ path: untildify('~/.env') });
+
+const PERSONAL_PROJECTS_DIR = '~/_';
+const WORK_PROJECTS_DIR = process.env.WORK_PROJECTS_DIR;
+const EXTRA_PROJECTS = ['~', ['dotfiles']];
 
 const getDirs = (d) =>
 	fs.readdirSync(d).filter((f) => fs.statSync(path.join(d, f)).isDirectory());
 
-const tryRepo = (dir, query) => {
-	const repo = find(getDirs(dir), query);
+const tryRepo = (dir, query, dirs) => {
+	const repo = find(dirs ?? getDirs(dir), query);
 
 	if (repo) {
 		console.log(path.join(dir, repo));
@@ -52,9 +60,19 @@ if (args.length !== 1) {
 	process.exit(1);
 }
 
-tryRepo(PERSONAL_PROJECTS_DIR, args[0]);
+// Personal projects
+tryRepo(untildify(PERSONAL_PROJECTS_DIR), args[0]);
+
+// Work projects
 if (WORK_PROJECTS_DIR) {
-	tryRepo(WORK_PROJECTS_DIR, args[0]);
+	tryRepo(untildify(WORK_PROJECTS_DIR), args[0]);
 }
+
+// Extra projects
+tryRepo(
+	untildify(EXTRA_PROJECTS[0]),
+	args[0],
+	EXTRA_PROJECTS[1].map(untildify)
+);
 
 console.log('Repository not found');
