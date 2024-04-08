@@ -32,6 +32,7 @@ code --install-extension bibhasdn.unique-lines
 code --install-extension Catppuccin.catppuccin-vsc-icons
 code --install-extension dbaeumer.vscode-eslint
 code --install-extension deerawan.vscode-dash
+code --install-extension eamodio.gitlens
 code --install-extension EditorConfig.EditorConfig
 code --install-extension esbenp.prettier-vscode
 code --install-extension fabiospampinato.vscode-highlight
