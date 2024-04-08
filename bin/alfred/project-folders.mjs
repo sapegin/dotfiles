@@ -10,7 +10,6 @@
 
 import fs from 'fs';
 import path from 'path';
-import userHome from 'user-home';
 import untildify from 'untildify';
 import dotenv from 'dotenv';
 import glob from 'glob';
