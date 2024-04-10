@@ -29,7 +29,7 @@ config.colors = {
 	selection_fg = '#9e8a74',
 	selection_bg = '#564538',
 
-	visual_bell = "#a08ac2",
+	visual_bell = "#db7666",
 
 	ansi = {
 		'#352a21',
@@ -213,10 +213,11 @@ config.mouse_bindings = {
 -- Visual bell
 config.audible_bell = 'Disabled'
 config.visual_bell = {
+	target = "CursorColor",
 	fade_in_function = "EaseIn",
-	fade_in_duration_ms = 100,
+	fade_in_duration_ms = 150,
 	fade_out_function = "EaseOut",
-	fade_out_duration_ms = 200,
+	fade_out_duration_ms = 300,
 }
 
 -- Misc
