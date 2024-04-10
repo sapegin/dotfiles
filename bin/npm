@@ -33,15 +33,15 @@ file_exists() {
 # pnpm
 if file_exists 'pnpm-lock.yaml'; then
 	error "You need to use pnpm with this project:"
-	print_command "pnpm $@"
+	print_command "pnpm $*"
 	exit 1
 fi
 
 # Yarn
 if file_exists 'yarn.lock'; then
 	error "You need to use Yarn with this project."
-	print_command "yarn $@"
+	print_command "yarn $*"
 fi
 
 # npm
-npm "$@"
+npm "$*"
