@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+# Runs npm only when the project is using npm,
+# otherwise suggests to run pnpm or Yarn instead.
+#
+# Usage:
+#   npm i
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+#
+
+# Common stuff
+RED="$(tput setaf 1)"
+CYAN="$(tput setaf 6)"
+UNDERLINE="$(tput sgr 0 1)"
+NOCOLOR="$(tput sgr0)"
+function error() { echo -e "$UNDERLINE$RED$1$NOCOLOR\n"; }
+function print_command() { echo -e "$CYAN$1$NOCOLOR\n"; }
+
+# Repo directory
+base_dir=$(git rev-parse --show-cdup)
+
+# Test whether a file exists
+file_exists() {
+	if [[ -r "./$base_dir$1" ]]; then
+		return 0
+	fi
+	return 1
+}
+
+# pnpm
+if file_exists 'pnpm-lock.yaml'; then
+	error "You need to use pnpm with this project:"
+	print_command "pnpm $@"
+	exit 1
+fi
+
+# Yarn
+if file_exists 'yarn.lock'; then
+	error "You need to use Yarn with this project."
+	print_command "yarn $@"
+fi
+
+# npm
+npm "$@"
