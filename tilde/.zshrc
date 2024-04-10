@@ -1,5 +1,5 @@
-source ~/dotfiles/zsh/path.zsh
 source ~/dotfiles/zsh/env.zsh
+source ~/dotfiles/zsh/path.zsh
 source ~/dotfiles/zsh/aliases.zsh
 source ~/dotfiles/zsh/completions.zsh
 source ~/dotfiles/zsh/key-bindings.zsh
