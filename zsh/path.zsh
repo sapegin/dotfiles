@@ -5,14 +5,11 @@ function _prepend_path() {
 	fi
 }
 
-# Construct $PATH
-# 1. Default paths
-# 2. ./node_modules/.bin - shorcut to run locally installed Node bins
-# 3. Custom bin folder for n, Ruby, Homebrew, dotfiles, etc.
-PATH='/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:./node_modules/.bin'
+# Extend $PATH
 [ -d /usr/local/bin ] && _prepend_path "/usr/local/bin"
 [ -d /usr/local/opt/ruby/bin ] && _prepend_path "/usr/local/opt/ruby/bin"
 [ -d /opt/homebrew/bin ] && _prepend_path "/opt/homebrew/bin"
 [ -d ~/dotfiles/bin ] && _prepend_path "$HOME/dotfiles/bin"
 [ -d ~/bin ] && _prepend_path "$HOME/bin"
+_prepend_path "./node_modules/.bin" # Run locally installed Node.js binaries directly
 export PATH
