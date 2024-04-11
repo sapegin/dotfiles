@@ -55,6 +55,9 @@
 	# Cancel local commits in the branch: git fuck master
 	fuck = "!f() { git reset --hard origin/$1; }; f"
 
+[pull]
+  rebase = true
+
 [push]
 	# When pushing code, always push only your current branch to a branch of the same name
 	default = current
