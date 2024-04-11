@@ -99,6 +99,12 @@
     "command": "search.focus.nextInputBox",
     "when": "inSearchEditor && inputBoxFocus || inputBoxFocus && searchViewletVisible"
   },
+  {
+    // Close search panel when pressing Escape in the search box
+    "key": "escape",
+    "command": "workbench.action.closePanel",
+    "when": "inSearchEditor && inputBoxFocus || inputBoxFocus && searchViewletVisible"
+  },
 
   /*
    * Plugins
