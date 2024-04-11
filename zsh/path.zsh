@@ -6,10 +6,21 @@ function _prepend_path() {
 }
 
 # Extend $PATH
-[ -d /usr/local/bin ] && _prepend_path "/usr/local/bin"
-[ -d /usr/local/opt/ruby/bin ] && _prepend_path "/usr/local/opt/ruby/bin"
+
+# Homebrew binaries
 [ -d /opt/homebrew/bin ] && _prepend_path "/opt/homebrew/bin"
+
+# fnm, Node version manager (https://github.com/Schniz/fnm)
+# This extends the $PATH, and should have priority over Homebrew but not over Dotfiles
+eval "$(/opt/homebrew/bin/fnm env)"
+
+# Dotfiles binaries
 [ -d ~/dotfiles/bin ] && _prepend_path "$HOME/dotfiles/bin"
+
+# User binaries
 [ -d ~/bin ] && _prepend_path "$HOME/bin"
-_prepend_path "./node_modules/.bin" # Run locally installed Node.js binaries directly
+
+# Run locally installed Node.js binaries directly
+_prepend_path "./node_modules/.bin"
+
 export PATH
