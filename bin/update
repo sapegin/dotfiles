@@ -25,7 +25,6 @@ header "Updating Homebrew packages..."
 sudo -v
 brew update
 brew cleanup
-brew prune
 echo
 
 # npm
