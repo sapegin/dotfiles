@@ -41,6 +41,10 @@ git:
   paging:
     colorArg: always
     pager: delta --dark --paging=never
+  commitPrefixes:
+    dg_stage_web:
+      pattern: '^(\w*)\/dgapp*-(\d*).*$'
+      replace: '$1: DGAPP-$2 - '
 os:
   copyToClipboardCmd: 'pbcopy < {{text}}'
   editPreset: 'vscode'
