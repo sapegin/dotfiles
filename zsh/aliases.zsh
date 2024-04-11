@@ -26,54 +26,57 @@ alias lg="lazygit --use-config-dir $HOME/dotfiles/lazygit"
 alias ff="open -a 'Nimble Commander' ."
 
 # Bat: https://github.com/sharkdp/bat
-command -v bat >/dev/null 2>&1 && alias cat="bat --style=plain"
+command -v bat > /dev/null 2>&1 && alias cat="bat --style=plain"
 
 # Exa: https://the.exa.website
-command -v exa >/dev/null 2>&1 && alias ls="exa -a --no-user --no-time"
+command -v exa > /dev/null 2>&1 && alias ls="exa -a --no-user --no-time"
 
 # trash: https://github.com/sindresorhus/macos-trash
-command -v trash >/dev/null 2>&1 && alias rm="trash"
+command -v trash > /dev/null 2>&1 && alias rm="trash"
 
 # neofetch: https://github.com/dylanaraps/neofetch
-command -v neofetch >/dev/null 2>&1 && alias neofetch="neofetch --source $HOME/.config/neofetch/nyancat.ascii"
+command -v neofetch > /dev/null 2>&1 && alias neofetch="neofetch --source $HOME/.config/neofetch/nyancat.ascii"
 
 # Midnight Commander
-command -v mc >/dev/null 2>&1 && command -v code >/dev/null 2>&1 && alias mc="EDITOR=code mc --nosubshell"
+command -v mc > /dev/null 2>&1 && command -v code > /dev/null 2>&1 && alias mc="EDITOR=code mc --nosubshell"
 
 # Download file and save it with filename of remote file
 alias get="curl -O -L"
 
+# npm
+alias npm="$HOME/bin/npm-wrapper"
+
 # Make a directory and cd to it
 take() {
-  mkdir -p $@ && cd ${@:$#}
+	mkdir -p $@ && cd ${@:$#}
 }
 
 # cd into whatever is the forefront Finder window
 cdf() {
-  cd "`osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)'`"
+	cd "$(osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)')"
 }
 
 # Magic Project Opener
 repo() {
-  cd "$(~/dotfiles/bin/repo $1)"
+	cd "$(~/dotfiles/bin/repo $1)"
 }
 
 # Cd to Git repository root folder
 gr() {
-  cd "./$(git rev-parse --show-cdup 2>/dev/null)" 2>/dev/null
+	cd "./$(git rev-parse --show-cdup 2> /dev/null)" 2> /dev/null
 }
 
 # git clone and cd to a repo directory
 clone() {
-  git clone $@
-  if [ "$2" ]; then
-    cd "$2"
-  else
-    cd $(basename "$1" .git)
-  fi
-  if [[ -r "./yarn.lock" ]]; then
-    yarn
-  elif [[ -r "./package-lock.json" ]]; then
-    npm install
-  fi
+	git clone $@
+	if [ "$2" ]; then
+		cd "$2"
+	else
+		cd $(basename "$1" .git)
+	fi
+	if [[ -r "./yarn.lock" ]]; then
+		yarn
+	elif [[ -r "./package-lock.json" ]]; then
+		npm install
+	fi
 }
