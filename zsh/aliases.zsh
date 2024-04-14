@@ -43,9 +43,6 @@ command -v mc > /dev/null 2>&1 && command -v code > /dev/null 2>&1 && alias mc="
 # Download file and save it with filename of remote file
 alias get="curl -O -L"
 
-# npm
-alias npm="npm-wrapper"
-
 # Make a directory and cd to it
 take() {
 	mkdir -p $@ && cd ${@:$#}
