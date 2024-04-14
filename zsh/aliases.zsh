@@ -44,7 +44,7 @@ command -v mc > /dev/null 2>&1 && command -v code > /dev/null 2>&1 && alias mc="
 alias get="curl -O -L"
 
 # npm
-alias npm="$HOME/bin/npm-wrapper"
+alias npm="npm-wrapper"
 
 # Make a directory and cd to it
 take() {
