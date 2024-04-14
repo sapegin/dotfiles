@@ -44,5 +44,4 @@ if file_exists 'yarn.lock'; then
 fi
 
 # npm
-echo "npm $*"
 command npm "$*"
