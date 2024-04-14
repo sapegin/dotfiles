@@ -140,6 +140,9 @@
     },
     "typescript:S6759": {
       "level": "off"
+    },
+    "typescript:S6582": {
+      "level": "off"
     }
   },
   "github.copilot.editor.enableAutoCompletions": false,
