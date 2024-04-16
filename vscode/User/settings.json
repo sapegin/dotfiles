@@ -103,11 +103,13 @@
     "typescriptreact"
   ],
   "cSpell.spellCheckDelayMs": 500,
+  "cSpell.enableFiletypes": ["shellscript"],
   "cSpell.userWords": [
     "Artem",
     "Formik",
     "Hygraph",
     "Sapegin",
+    "Signup",
     "Squirrelsong",
     "Tamia"
   ],
