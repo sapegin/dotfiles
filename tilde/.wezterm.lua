@@ -5,13 +5,21 @@ local config = wezterm.config_builder()
 
 -- Fonts
 local font = 'MonoLisa'
-config.font = wezterm.font(font, { weight = 'Regular', italic = false })
+config.font = wezterm.font_with_fallback({
+	{ family = font, weight = 'Regular', italic = false },
+  { family = 'Apple Color Emoji' },
+  { family = 'Symbols Nerd Font Mono', scale = 1 },
+})
 config.font_rules = {
 	{
 		intensity = 'Bold',
-		font = wezterm.font(font, { italic = false, weight = 'Bold' }),
-	},
+		font = wezterm.font_with_fallback({
+			{ family = font, weight = 'Regular', italic = false, weight = 'Bold' },
+			{ family = 'Apple Color Emoji' },
+			{ family = 'Symbols Nerd Font Mono', scale = 1 },
+		}),
   }
+}
 
 -- Disable font ligatures
 config.harfbuzz_features = { 'calt=1', 'clig=0', 'liga=0', 'zero', 'ss01' }
