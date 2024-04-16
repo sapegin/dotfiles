@@ -1,5 +1,3 @@
-# Visual Studio Code
-
 ## Navigation and search
 
 * **Cmd+E:** open recent files
