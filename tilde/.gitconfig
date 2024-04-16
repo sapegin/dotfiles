@@ -61,6 +61,8 @@
 [push]
 	# When pushing code, always push only your current branch to a branch of the same name
 	default = current
+  # Automatically set up upstream tracking
+	autoSetupRemote = true
 
 [fetch]
 	# Automatically prune deleted branches from your local copy when you fetch (or pull)
