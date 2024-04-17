@@ -96,7 +96,7 @@
   {
     // Focus on search results when pressing Enter in the search box
     "key": "enter",
-    "command": "search.focus.nextInputBox",
+    "command": "search.action.focusNextSearchResult",
     "when": "inSearchEditor && inputBoxFocus || inputBoxFocus && searchViewletVisible"
   },
   {
