@@ -1,0 +1,48 @@
+/* Hide very annoying animated audio indicator inside tabs */
+/* TODO: Replace it with a static icon */
+.tab-audio {
+	display: none;
+}
+
+/* Hide very annoying file number loading indicator */
+.pageload-ticker {
+	display: none;
+}
+
+/* Less contrast colors for the omibox items */
+.OmniDropdown {
+	--colorHighlightBg: #e9e9ef;
+	--colorHighlightFg: #4b4a4d;
+	--colorBgDarker: #d9d7dc;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+/* More whitespace for omni dropdown item, also show label "inline" with the
+   URL, not in a separate column */
+.OmniLinkItem {
+	--item-height: 32px;
+	display: flex;
+	padding: 8px 9px;
+	gap: 0;
+}
+.OmniLinkItem-Favicon {
+	margin-right: 4px;
+}
+.OmniLinkItem-Details {
+	color: #727075;
+}
+.OmniLinkItem-Details::before {
+	content: '  —  ';
+}
+.OmniLinkItem-EraseButton {
+	margin-left: auto;
+}
+
+/* More prominent omni labels color */
+.OmniDropdown-Label {
+	color: #727075;
+	opacity: 1;
+	font-weight: bold;
+}
