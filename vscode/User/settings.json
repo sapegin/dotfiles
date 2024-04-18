@@ -77,6 +77,11 @@
     "*.js.snap": "javascript",
     ".prettierrc": "json"
   },
+  "files.exclude": {
+    "**/package-lock.json": true,
+    "**/pnpm-lock.yaml": true,
+    "**/yarn.lock": true
+  },
   "task.problemMatchers.neverPrompt": {
     "npm": true
   },
