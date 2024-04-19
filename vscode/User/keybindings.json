@@ -100,10 +100,16 @@
     "when": "inSearchEditor && inputBoxFocus || inputBoxFocus && searchViewletVisible"
   },
   {
-    // Close panel when pressing Escape
+    // Close panel when pressing Escape in the editor
     "key": "escape",
     "command": "workbench.action.closePanel",
-    "when": "inSearchEditor || inputBoxFocus && searchViewletVisible || editorTextFocus"
+    "when": "panelVisible && textInputFocus"
+  },
+  {
+    // Close panel when pressing Escape inside the search panel
+    "key": "escape",
+    "command": "workbench.action.closePanel",
+    "when": "panelFocus || terminalFocus"
   },
 
   /*

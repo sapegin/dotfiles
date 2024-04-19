@@ -39,6 +39,9 @@
   "search.smartCase": true,
   "security.promptForLocalFileProtocolHandling": false,
   "telemetry.telemetryLevel": "off",
+  "terminal.integrated.commandsToSkipShell": [
+    "workbench.action.closePanel"
+  ],
   "workbench.activityBar.location": "hidden",
   "workbench.colorTheme": "Squirrelsong Light",
   "workbench.commandPalette.preserveInput": false,
