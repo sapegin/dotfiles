@@ -13,7 +13,6 @@
   "editor.fontFamily": "MonoLisa, \"Symbols Nerd Font Mono\"",
   "editor.fontLigatures": "'calt' on, 'liga' off",
   "editor.fontSize": 16,
-  "editor.formatOnPaste": true,
   "editor.formatOnSave": true,
   "editor.gotoLocation.multipleReferences": "goto",
   "editor.gotoLocation.multipleDefinitions": "goto",
