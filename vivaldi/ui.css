@@ -46,3 +46,8 @@
 	opacity: 1;
 	font-weight: bold;
 }
+
+/* Less distracting "permission denied" icon in the address bar */
+.permission-denied circle {
+	fill: #9c9a9d;
+}
