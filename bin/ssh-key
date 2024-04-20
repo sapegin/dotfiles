@@ -12,4 +12,4 @@ if [ ! -f "$file" ]; then
 	ssh-keygen -t rsa -f "$file" -q -P ""
 fi
 
-cat "$file"
+cat "$file.pub"
