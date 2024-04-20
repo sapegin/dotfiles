@@ -3,7 +3,7 @@
 // Magic project opener: opens repository using fuzzy search.
 //
 // Should be used via Bash alias like this:
-//   function repo { cd "$("$HOME/dotfiles/bin/repo" $1)"; }
+//   function j { cd "$("$HOME/dotfiles/bin/j" $1)"; }
 //
 // Optional environmental variables:
 //   WORK_PROJECTS_DIR="~/unicorn"
@@ -56,7 +56,7 @@ function find(repos, name) {
 
 const args = process.argv.splice(2);
 if (args.length !== 1) {
-	console.log('Usage: repo <name>');
+	console.log('Usage: j <name>');
 	process.exit(1);
 }
 

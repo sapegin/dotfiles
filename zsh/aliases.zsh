@@ -54,8 +54,8 @@ cdf() {
 }
 
 # Magic Project Opener
-repo() {
-	cd "$(~/dotfiles/bin/repo $1)"
+j() {
+	cd "$(~/dotfiles/bin/j $1)"
 }
 
 # Cd to Git repository root folder
