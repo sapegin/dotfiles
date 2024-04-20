@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-# Copies current opened in iA Writer file to my blog’s folder, adds YAML front matter and opens it in Code.
+# Copies current opened in iA Writer file to my blog’s folder, adds YAML
+# frontmatter and opens it in VS Code.
 #
 # This script should be used from Alfred workflow.
 #
@@ -9,18 +10,19 @@
 # https://github.com/sapegin/dotfiles
 #
 
-FILEPATH_PREFIX="$HOME/_/sapegin.me/src/content/"
+BLOG_DIR="$HOME/_/sapegin.me/"
+FILEPATH_PREFIX="$BLOG_DIR/src/content/"
 FILEPATH_SUFFIX="/blog/"
 FILEPATH_EXT=".md"
 DATE_FORMAT="%Y-%m-%d"
 
 # Common stuff
 function error() {
-	dlg-error "$1" "Nano"
+	$HOME/dotfiles/bin/dlg-error "$1" "Blog"
 	exit 1
 }
 function ask() {
-	dlg-prompt "$1" "$2" "Nano"
+	$HOME/dotfiles/bin/dlg-prompt "$1" "$2" "Blog"
 }
 
 # TODO: Check whether file has a name
@@ -70,8 +72,8 @@ title=$(grep -m 1 '#' "$source_file" | sed -e 's^# ^^')
 date=$(date +"$DATE_FORMAT")
 
 # Copy template and source file to destination folder
-sed -e "s^{title}^$title^" -e "s^{date}^$date^" "$HOME/dotfiles/bin/nano-post.tmpl" > "$dest"
+sed -e "s^{title}^$title^" -e "s^{date}^$date^" "$(dirname $0)/blog-post-new.tmpl" > "$dest"
 cat "$source_file" | perl -0pe 's/#.*\n//' >> "$dest"
 
 # Open the file in the editor ($EDITOR isn’t available in Alfred)
-code "$dest"
+code "$BLOG_DIR" "$dest"

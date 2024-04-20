@@ -1,26 +1,25 @@
 #!/usr/bin/env node
 
 /*
- * Returns list of blog posts and pages in Afred’s Script Filter JSON format.
+ * Returns list of blog posts in Afred’s Script Filter JSON format.
  *
  * Author: Artem Sapegin, sapegin.me
  * License: MIT
  * https://github.com/sapegin/dotfiles
  */
 
-const fs = require('fs');
-const path = require('path');
-const userHome = require('user-home');
-const glob = require('glob');
+import fs from 'fs';
+import path from 'path';
+import untildify from 'untildify';
+import glob from 'glob';
 
-const DIR = `${userHome}/_/morning.photos/content`;
+const FILES = untildify(`~/_/sapegin.me/src/content/blog/*.md`);
 
-const files = glob.sync(`${DIR}/**/*.md`);
-
-const items = files
+const items = glob
+	.sync(FILES)
 	.map((file) => {
 		const contents = fs.readFileSync(file, 'utf8');
-		const title = contents.match(/^title: [\x22\x27]?(.*?)[\x22\x27]?$/im);
+		const title = contents.match(/^title: ['"]?(.*?)['"]?$/im);
 		const date = contents.match(/^date: (.*?)$/m);
 		return {
 			title: title ? title[1] : '<***>',
