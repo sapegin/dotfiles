@@ -8,12 +8,12 @@
  * https://github.com/sapegin/dotfiles
  */
 
-const fs = require('fs');
-const path = require('path');
-const userHome = require('user-home');
-const glob = require('glob');
+import fs from 'fs';
+import path from 'path';
+import untildify from 'untildify';
+import glob from 'glob';
 
-const FILES = `${userHome}/_/til/*/*.md`;
+const FILES = untildify(`~/_/til/*/*.md`);
 
 const items = glob
 	.sync(FILES)

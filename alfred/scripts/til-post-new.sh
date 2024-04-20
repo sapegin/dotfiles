@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-# Creates a new file in TIL folder, adds a comment with the date and tags, and opens it in Code.
+# Creates a new file in TIL folder, adds a comment with the date and tags,
+# and opens it in VS Code.
 #
 # This script should be used from Alfred workflow.
 #
@@ -9,17 +10,17 @@
 # https://github.com/sapegin/dotfiles
 #
 
-FILEPATH_PREFIX="$HOME/_/til/"
+PROJECT_DIR="$HOME/_/til/"
 FILEPATH_EXT=".md"
 DATE_FORMAT="%Y-%m-%d"
 
 # Common stuff
 function error() {
-	dlg-error "$1" "TIL"
+	$HOME/dotfiles/bin/dlg-error "$1" "TIL"
 	exit 1
 }
 function ask() {
-	dlg-prompt "$1" "$2" "TIL"
+	$HOME/dotfiles/bin/dlg-prompt "$1" "$2" "TIL"
 }
 
 # Ask user to enter the title
@@ -52,7 +53,7 @@ if [ -z "$slug" ]; then
 fi
 
 # Destination Markdown file path
-dest="$FILEPATH_PREFIX$slug$FILEPATH_EXT"
+dest="$PROJECT_DIR$slug$FILEPATH_EXT"
 
 # Check dest file existence
 if [ -f "$dest" ]; then
@@ -63,7 +64,6 @@ fi
 date=$(date +"$DATE_FORMAT")
 
 # Tags: category by default
-# TODO
 tags=$(
 	echo "$slug" \
 		| perl -pe 's/\/[^/]+$//' # Remove everything after /
@@ -73,7 +73,7 @@ tags=$(
 mkdir -p $(dirname $(echo $dest))
 
 # Copy template to destination folder
-sed -e "s^{date}^$date^" -e "s^{tags}^$tags^" -e "s^{title}^$title^" "$HOME/dotfiles/bin/til-post.tmpl" > "$dest"
+sed -e "s^{date}^$date^" -e "s^{tags}^$tags^" -e "s^{title}^$title^" "$(dirname $0)/til-post-new.tmpl" > "$dest"
 
 # Open the file in the editor ($EDITOR isn’t available in Alfred)
-code "$dest"
+code "$PROJECT_DIR" "$dest"
