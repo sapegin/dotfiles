@@ -10,7 +10,7 @@
     "format": "prettier --log-level warn --ignore-unknown --write \"**/*.{js,cjs,md,json,sh}\" \"bin/*\""
   },
   "engines": {
-    "node": ">=18.14"
+    "node": ">=20"
   },
   "dependencies": {
     "date-fns": "^2.30.0",
