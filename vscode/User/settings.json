@@ -28,7 +28,7 @@
   "editor.roundedSelection": false,
   "editor.rulers": [80],
   "editor.semanticHighlighting.enabled": true,
-  "editor.snippetSuggestions": "top",
+  "editor.snippetSuggestions": "bottom",
   "editor.suggestSelection": "first",
   "editor.wordWrap": "on",
   "editor.codeActionsOnSave": {
@@ -38,9 +38,7 @@
   "search.smartCase": true,
   "security.promptForLocalFileProtocolHandling": false,
   "telemetry.telemetryLevel": "off",
-  "terminal.integrated.commandsToSkipShell": [
-    "workbench.action.closePanel"
-  ],
+  "terminal.integrated.commandsToSkipShell": ["workbench.action.closePanel"],
   "terminal.integrated.cursorStyle": "line",
   "terminal.integrated.cursorStyleInactive": "line",
   "terminal.integrated.cursorWidth": 2,
@@ -123,6 +121,9 @@
   "cSpell.enableFiletypes": ["shellscript"],
   "cSpell.userWords": [
     "Artem",
+    "autofix",
+    "autofixable",
+    "autofixed",
     "Formik",
     "Hygraph",
     "Sapegin",
