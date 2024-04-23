@@ -123,6 +123,11 @@
     "command": "workbench.action.closePanel",
     "when": "terminalFocus"
   },
+  {
+    "key": "cmd+space",
+    "command": "git.stage",
+    "when": "workbench.scm.active"
+  },
 
   /*
    * Plugins
