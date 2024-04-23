@@ -42,10 +42,10 @@ code --install-extension GraphQL.vscode-graphql-syntax
 code --install-extension mdickin.markdown-shortcuts
 code --install-extension naumovs.color-highlight
 code --install-extension patbenatar.advanced-new-file
-code --install-extension sapegin.Theme-SquirrelsongLight
+code --install-extension sapegin.emoji-console-log
+code --install-extension sapegin.theme-squirrelsonglight
 code --install-extension SonarSource.sonarlint-vscode
 code --install-extension streetsidesoftware.code-spell-checker
-code --install-extension styled-components.vscode-styled-components
 code --install-extension yoavbls.pretty-ts-errors
 code --install-extension zhengxiaoyao0716.intelligence-change-case
-code --install-extension znck.grammarly
+code --install-extension ziyasal.vscode-open-in-github
