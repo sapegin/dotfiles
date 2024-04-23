@@ -41,6 +41,15 @@
   "terminal.integrated.commandsToSkipShell": [
     "workbench.action.closePanel"
   ],
+  "terminal.integrated.cursorStyle": "line",
+  "terminal.integrated.cursorStyleInactive": "line",
+  "terminal.integrated.cursorWidth": 2,
+  "terminal.integrated.drawBoldTextInBrightColors": false,
+  "terminal.integrated.fontSize": 14,
+  "terminal.integrated.minimumContrastRatio": 1,
+  "terminal.integrated.shellIntegration.decorationsEnabled": "never",
+  "terminal.integrated.tabs.enableAnimation": false,
+  "terminal.integrated.tabStopWidth": 2,
   "workbench.activityBar.location": "hidden",
   "workbench.colorTheme": "Squirrelsong Light",
   "workbench.commandPalette.preserveInput": false,
