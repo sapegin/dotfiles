@@ -100,6 +100,11 @@
     "when": "inSearchEditor && inputBoxFocus || inputBoxFocus && searchViewletVisible"
   },
   {
+    "key": "cmd+alt+j",
+    "command": "workbench.action.toggleMaximizedPanel",
+    "when": "panelVisible"
+  },
+  {
     // Close panel when pressing Escape in the editor
     "key": "escape",
     "command": "workbench.action.closePanel",
