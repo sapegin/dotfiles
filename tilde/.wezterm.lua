@@ -271,7 +271,8 @@ wezterm.on('gui-startup', function(cmd)
 	local active_screen = wezterm.gui.screens()["active"]
 	local _, _, window = wezterm.mux.spawn_window(cmd or {})
 
-	if active_screen.width < 2560 then
+	-- MacBook Pro 14" 2023
+	if active_screen.width <= 3024 then
 		-- Laptop: open full screen
 		window:gui_window():maximize()
 	else
