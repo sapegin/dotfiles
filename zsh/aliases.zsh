@@ -23,7 +23,7 @@ alias gh="github ."
 alias lg="lazygit --use-config-dir $HOME/dotfiles/lazygit"
 
 # Nimble Commander
-alias ff="open -a 'Nimble Commander' ."
+alias nn="open -a 'Nimble Commander' ."
 
 # Bat: https://github.com/sharkdp/bat
 command -v bat > /dev/null 2>&1 && alias cat="bat --style=plain"
