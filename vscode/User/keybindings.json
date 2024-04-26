@@ -105,6 +105,32 @@
     "when": "panelVisible"
   },
   {
+    "comment": "Open Source control pane",
+    "key": "cmd+shift+g",
+    "command": "workbench.scm.focus",
+    "when": "workbench.scm.active"
+  },
+  {
+    "key": "ctrl+shift+g",
+    "command": "-workbench.view.scm",
+    "when": "workbench.scm.active"
+  },
+  {
+    "key": "alt+cmd+enter",
+    "command": "git.sync",
+    "when": "workbench.scm.visible"
+  },
+  {
+    "key": "cmd+k alt+cmd+s",
+    "command": "-git.stageSelectedRanges",
+    "when": "isInDiffEditor && !operationInProgress"
+  },
+  {
+    "comment": "Stage currently open file",
+    "key": "ctrl+s",
+    "command": "git.stage"
+  },
+  {
     // Close panel when pressing Escape in the editor
     "key": "escape",
     "command": "workbench.action.closePanel",
@@ -132,6 +158,17 @@
     "key": "cmd+space",
     "command": "git.stage",
     "when": "workbench.scm.active"
+  },
+  {
+    "comment": "Go Forward (Ctrl++) -- to better match Go Back (Ctrl+-)",
+    "key": "ctrl+=",
+    "command": "workbench.action.navigateForward",
+    "when": "canNavigateForward"
+  },
+  {
+    "key": "ctrl+shift+-",
+    "command": "-workbench.action.navigateForward",
+    "when": "canNavigateForward"
   },
 
   /*
