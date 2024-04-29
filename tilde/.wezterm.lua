@@ -101,6 +101,8 @@ config.window_frame = {
 }
 
 -- Command Palette
+config.command_palette_rows = 7
+config.command_palette_font_size = 15
 config.command_palette_bg_color = "#44382D"
 config.command_palette_fg_color = "#c4a389"
 
@@ -220,6 +222,23 @@ config.keys = {
 		mods = 'OPT',
 		action = wezterm.action.DisableDefaultAssignment,
 	},
+
+	-- Rename tab title
+	{
+		key = 'R',
+		mods = 'CMD|SHIFT',
+		action = act.PromptInputLine {
+			description = 'Enter new name for tab',
+			action = wezterm.action_callback(function(window, _, line)
+				-- line will be `nil` if they hit escape without entering anything
+				-- An empty string if they just hit enter
+				-- Or the actual line of text they wrote
+				if line then
+					window:active_tab():set_title(line)
+				end
+			end),
+		},
+	},
 }
 
 -- Mouse
@@ -277,10 +296,18 @@ local function get_current_working_dir(tab)
 	or string.gsub(current_dir.file_path, '(.*[/\\])(.*)', '%2')
 end
 
--- Set tab title to the current working directory
+-- Set tab title to the one that was set via `tab:set_title()`
+-- or fall back to the current working directory as a title
 wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_width)
 	local index = tonumber(tab.tab_index) + 1
-	return string.format('  %s•%s  ', index, get_current_working_dir(tab))
+	local custom_title = tab.tab_title
+	local title = get_current_working_dir(tab)
+
+	if custom_title and #custom_title > 0 then
+		title = custom_title
+	end
+
+	return string.format('  %s•%s  ', index, title)
 end)
 
 -- Set window title to the current working directory
