@@ -37,6 +37,8 @@ config.colors = {
 	selection_fg = '#9e8a74',
 	selection_bg = '#564538',
 
+	split = '#4C3E32',
+
 	visual_bell = "#db7666",
 
 	ansi = {
@@ -97,6 +99,10 @@ config.window_frame = {
 	active_titlebar_bg = '#574131',
 	inactive_titlebar_bg = '#352a21',
 }
+
+-- Command Palette
+config.command_palette_bg_color = "#44382D"
+config.command_palette_fg_color = "#c4a389"
 
 -- Hot keys
 config.keys = {
