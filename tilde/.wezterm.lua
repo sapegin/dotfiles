@@ -227,7 +227,7 @@ config.keys = {
 	{
 		key = 'R',
 		mods = 'CMD|SHIFT',
-		action = act.PromptInputLine {
+		action = wezterm.action.PromptInputLine {
 			description = 'Enter new name for tab',
 			action = wezterm.action_callback(function(window, _, line)
 				-- line will be `nil` if they hit escape without entering anything
