@@ -98,6 +98,10 @@ config.window_frame = {
 	inactive_titlebar_bg = '#352a21',
 }
 
+-- Command Palette
+config.command_palette_rows = 7
+config.command_palette_font_size = 15
+
 -- Hot keys
 config.keys = {
 	-- Make Page up/down work
