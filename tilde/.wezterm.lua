@@ -198,6 +198,22 @@ config.keys = {
 		action = wezterm.action.Search({ CaseInSensitiveString = '' }),
 	},
 
+	-- Open WezTerm config file quickly
+  {
+		key = ',',
+		mods = 'CMD',
+		action = act.SpawnCommandInNewTab {
+			cwd = os.getenv('WEZTERM_CONFIG_DIR'),
+			set_environment_variables = {
+				TERM = 'screen-256color',
+			},
+			args = {
+				'/Applications/CotEditor.app/Contents/MacOS/CotEditor',
+				os.getenv('WEZTERM_CONFIG_FILE'),
+			},
+		},
+	},
+
 	-- Disable some default hotkeys
 	{
 		key = 'Enter',
