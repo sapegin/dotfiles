@@ -202,7 +202,7 @@ config.keys = {
   {
 		key = ',',
 		mods = 'CMD',
-		action = act.SpawnCommandInNewTab {
+		action = wezterm.action.SpawnCommandInNewTab {
 			cwd = os.getenv('WEZTERM_CONFIG_DIR'),
 			set_environment_variables = {
 				TERM = 'screen-256color',
