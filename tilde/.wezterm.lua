@@ -37,6 +37,8 @@ config.colors = {
 	selection_fg = '#9e8a74',
 	selection_bg = '#564538',
 
+	split = '#4C3E32',
+
 	visual_bell = "#db7666",
 
 	ansi = {
@@ -101,6 +103,8 @@ config.window_frame = {
 -- Command Palette
 config.command_palette_rows = 7
 config.command_palette_font_size = 15
+config.command_palette_bg_color = "#44382D"
+config.command_palette_fg_color = "#c4a389"
 
 -- Hot keys
 config.keys = {
@@ -194,6 +198,22 @@ config.keys = {
 		key = 'f',
 		mods = 'CMD',
 		action = wezterm.action.Search({ CaseInSensitiveString = '' }),
+	},
+
+	-- Open WezTerm config file quickly
+  {
+		key = ',',
+		mods = 'CMD',
+		action = wezterm.action.SpawnCommandInNewTab {
+			cwd = os.getenv('WEZTERM_CONFIG_DIR'),
+			set_environment_variables = {
+				TERM = 'screen-256color',
+			},
+			args = {
+				'/Applications/CotEditor.app/Contents/MacOS/CotEditor',
+				os.getenv('WEZTERM_CONFIG_FILE'),
+			},
+		},
 	},
 
 	-- Disable some default hotkeys

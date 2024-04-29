@@ -10,7 +10,7 @@
 - Sensible macOS defaults: [setup/osx.sh](https://github.com/sapegin/dotfiles/blob/master/setup/osx.sh).
 - Visual Studio Code settings synchronization: [vscode](https://github.com/sapegin/dotfiles/tree/master/vscode).
 - zsh install script: [setup/zsh.sh](https://github.com/sapegin/dotfiles/blob/master/setup/zsh.sh).
-- My magic project opener ([bin/repo](https://github.com/sapegin/dotfiles/blob/master/bin/repo)).
+- My magic project opener ([bin/j](https://github.com/sapegin/dotfiles/blob/master/bin/j)).
 - [zsh aliases](https://github.com/sapegin/dotfiles/blob/master/zsh/aliases.zsh).
 - [Git aliases](https://github.com/sapegin/dotfiles/blob/master/tilde/.gitconfig).
 - [Lots of scripts](https://github.com/sapegin/dotfiles/tree/master/bin).
