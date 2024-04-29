@@ -37,9 +37,6 @@ brew install git-friendly/git-friendly/git-friendly
 brew install node
 npm config set loglevel warn
 
-# n, Node.js version manager
-brew install n
-
 # Npm packages
 npm install -g npm-upgrade
 
