@@ -9,10 +9,10 @@
 // https://github.com/sapegin/dotfiles
 //
 
-const fs = require('fs-extra');
-const glob = require('glob');
-const userHome = require('user-home');
-const prompts = require('prompts');
+import fs from 'fs-extra';
+import glob from 'glob';
+import userHome from 'user-home';
+import prompts from 'prompts';
 
 const TILDE_DIR = `${userHome}/dotfiles/tilde`;
 const IGNORE = ['.config', '.local', '.DS_Store'];

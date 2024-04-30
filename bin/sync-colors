@@ -1,0 +1,50 @@
+#!/usr/bin/env node
+
+/**
+ * Get themes from the Squirrelsong repo
+ *
+ * This scripts syncs color themes for:
+ * [x] Bat
+ * [x] WezTerm
+ *
+ * To sync Bear theme, run `sync-colors-bear`
+ *
+ * Author: Artem Sapegin, sapegin.me
+ * License: MIT
+ * https://github.com/sapegin/dotfiles
+ */
+
+import fs from 'fs-extra';
+import { execSync } from 'child_process';
+import untildify from 'untildify';
+
+const REPO_TAR_GZ =
+	'https://codeload.github.com/sapegin/squirrelsong/tar.gz/master';
+
+const SOURCE_DIR = untildify('~/dotfiles/squirrelsong-master');
+const DEST_DIR = untildify('~/dotfiles/tilde');
+
+console.log('Downloading themes...');
+
+execSync(`curl "${REPO_TAR_GZ}" | tar xz`);
+
+console.log();
+console.log('Installing Bat theme...');
+
+fs.copyFileSync(
+	`${SOURCE_DIR}/dark/Sublime Text/Squirrelsong Dark/Squirrelsong Dark.tmTheme`,
+	`${DEST_DIR}/.config/bat/themes/Squirrelsong Dark.tmTheme`
+);
+
+execSync(`bat cache --build`);
+
+console.log();
+console.log('Installing WezTerm theme...');
+
+fs.copyFileSync(
+	`${SOURCE_DIR}/dark/WezTerm/squirrelsong-dark.lua`,
+	`${DEST_DIR}/tilde/.config/wezterm/squirrelsong-dark.lua`
+);
+
+console.log();
+console.log('🦜 Now run `dotfiles` to sync all the config files');

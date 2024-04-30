@@ -12,7 +12,7 @@ bat cache --build
 
 [More info in the Bat docs](https://github.com/sharkdp/bat#adding-new-themes)
 
-**Note:** The theme is included in [the Zsh config](https://github.com/sapegin/dotfiles/blob/master/zsh/env.zsh).
+**Note:** The theme is included in [the Zsh config](../zsh/env.zsh).
 
 ## Bear
 
@@ -35,8 +35,8 @@ sudo command cp "$HOME/_/squirrelsong/light/Bear/Squirrelsong Light.theme" "/App
 
 [Download from Marketplace](https://marketplace.visualstudio.com/items?itemName=sapegin.Theme-SquirrelsongLight)
 
-**Note:** The theme is included in the [config file](https://github.com/sapegin/dotfiles/blob/master/vscode/User/settings.json).
+**Note:** The theme is included in the [config file](../vscode/User/settings.json).
 
 ## WezTerm
 
-**Note:** The theme is included in [the WezTerm config](https://github.com/sapegin/dotfiles/blob/master/tilde/.wezterm.lua).
+**Note:** The theme is included in [the WezTerm config](../tilde/.wezterm.lua).
