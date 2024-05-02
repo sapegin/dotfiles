@@ -43,7 +43,7 @@ console.log('Installing WezTerm theme...');
 
 fs.copyFileSync(
 	`${SOURCE_DIR}/dark/WezTerm/squirrelsong-dark.lua`,
-	`${DEST_DIR}/tilde/.config/wezterm/squirrelsong-dark.lua`
+	`${DEST_DIR}/.config/wezterm/squirrelsong-dark.lua`
 );
 
 console.log();
