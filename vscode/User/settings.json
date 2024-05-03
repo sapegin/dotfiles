@@ -36,10 +36,15 @@
     "terminalOverviewRuler.findMatchForeground": "#0f0",
     "terminalStickyScroll.background": "#00f",
     "terminalStickyScrollHover.background": "#0ff"
+    // GitLens
+    "gitlens.gutterUncommittedForegroundColor": "#e87da4",
+    "gitlens.gutterForegroundColor": "#78737d",
+    "gitlens.gutterBackgroundColor": "#ffffff00"
   },
 
   // Internal
   "breadcrumbs.filePath": "off",
+  "diffEditor.experimental.showMoves": true,
   "editor.acceptSuggestionOnCommitCharacter": false,
   "editor.accessibilitySupport": "off",
   "editor.autoClosingBrackets": "never",
@@ -49,9 +54,11 @@
   "editor.bracketPairColorization.enabled": false,
   "editor.cursorBlinking": "solid",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.foldingImportsByDefault": true,
   "editor.fontFamily": "MonoLisa, \"Symbols Nerd Font Mono\"",
   "editor.fontLigatures": "'calt' on, 'liga' off",
   "editor.fontSize": 16,
+  "editor.lineHeight": 1.5,
   "editor.formatOnSave": true,
   "editor.gotoLocation.multipleReferences": "goto",
   "editor.gotoLocation.multipleDefinitions": "goto",
@@ -74,7 +81,22 @@
     "source.organizeImports": "never",
     "source.fixAll.eslint": "explicit"
   },
-  "search.smartCase": true,
+  "git.closeDiffOnOperation": true,
+  "git.confirmSync": false,
+  "git.enableSmartCommit": true,
+  "outline.problems.badges": false,
+  "problems.autoReveal": false,
+  "search.decorations.badges": false,
+  "search.seedOnFocus": true,
+  "search.useParentIgnoreFiles": true,
+  "scm.diffDecorationsGutterPattern": {
+    "modified": false
+  },
+  "scm.diffDecorationsIgnoreTrimWhitespace": "true",
+  "scm.inputFontFamily": "editor",
+  "scm.inputFontSize": 16,
+  "scm.inputMaxLineCount": 20,
+  "scm.inputMinLineCount": 4,
   "security.promptForLocalFileProtocolHandling": false,
   "telemetry.telemetryLevel": "off",
   "terminal.integrated.commandsToSkipShell": ["workbench.action.closePanel"],
@@ -82,7 +104,9 @@
   "terminal.integrated.cursorStyleInactive": "line",
   "terminal.integrated.cursorWidth": 2,
   "terminal.integrated.drawBoldTextInBrightColors": false,
+  "terminal.integrated.enablePersistentSessions": false,
   "terminal.integrated.fontSize": 14,
+  "terminal.integrated.hideOnStartup": "always",
   "terminal.integrated.minimumContrastRatio": 1,
   "terminal.integrated.shellIntegration.decorationsEnabled": "never",
   "terminal.integrated.tabs.enableAnimation": false,
@@ -90,6 +114,10 @@
   "workbench.activityBar.location": "hidden",
   "workbench.colorTheme": "Squirrelsong Light",
   "workbench.commandPalette.preserveInput": false,
+  "workbench.editor.customLabels.enabled": true,
+  "workbench.editor.customLabels.patterns": {
+    "**/index.*": "${dirname}/${filename}.${extname}"
+  },
   "workbench.editor.editorActionsLocation": "hidden",
   "workbench.editor.empty.hint": "hidden",
   "workbench.editor.showTabs": "none",
@@ -140,7 +168,11 @@
   "color-highlight.matchWords": false,
   "color-highlight.sass.includePaths": [],
   "prettier.requireConfig": true,
+  "eslint.rules.customizations": [
+    { "rule": "*", "fixable": true, "severity": "info" }
+  ],
   "eslint.run": "onSave",
+  "eslint.useESLintClass": true,
   "eslint.validate": [
     "javascript",
     "javascriptreact",
@@ -159,16 +191,27 @@
   "cSpell.spellCheckDelayMs": 500,
   "cSpell.enableFiletypes": ["shellscript"],
   "cSpell.userWords": [
+    "antipattern",
+    "antipatterns",
     "Artem",
     "autofix",
     "autofixable",
     "autofixed",
+    "autofixing",
+    "customizability",
+    "cyclomatic",
+    "discoverability",
     "Formik",
+    "greppable",
     "Hygraph",
+    "okayish",
+    "overpolice",
+    "refactorings",
     "Sapegin",
     "Signup",
     "Squirrelsong",
-    "Tamia"
+    "Tamia",
+    "trackpad"
   ],
   "donations.disablePrompt": true,
   "highlight.regexes": {
@@ -176,12 +219,12 @@
       "filterFileRegex": ".*(?<!CHANGELOG.md)$",
       "decorations": [
         {
-          "overviewRulerColor": "#727075",
-          "color": "#727075",
+          "overviewRulerColor": "#78737d",
+          "color": "#78737d",
           "fontWeight": "bold"
         },
         {
-          "color": "#727075"
+          "color": "#78737d"
         }
       ]
     }
@@ -205,22 +248,39 @@
     },
     "typescript:S3776": {
       "level": "off"
+    },
+    "typescript:S3735": {
+      "level": "off"
+    },
+    "typescript:S1135": {
+      "level": "off"
+    },
+    "typescript:S6598": {
+      "level": "off"
+    },
+    "typescript:S6564": {
+      "level": "off"
+    },
+    "typescript:S6509": {
+      "level": "off"
     }
   },
   "github.copilot.editor.enableAutoCompletions": false,
   "gitlens.blame.avatars": false,
   "gitlens.blame.dateFormat": "YYYY-MM-DD",
-  "gitlens.blame.fontSize": 12,
-  "gitlens.blame.format": "${agoOrDate|12} ${authorNotYou|8}",
+  "gitlens.blame.fontSize": 13,
+  "gitlens.blame.fontWeight": "bold",
+  "gitlens.blame.format": "${agoOrDateShort|4?} ${authorNotYou|14-}",
   "gitlens.blame.highlight.enabled": false,
   "gitlens.blame.highlight.locations": ["gutter"],
   "gitlens.blame.ignoreWhitespace": true,
+  "gitlens.blame.compact": true,
   "gitlens.codeLens.enabled": false,
   "gitlens.currentLine.enabled": false,
   "gitlens.heatmap.ageThreshold": 90,
-  "gitlens.heatmap.coldColor": "#acbeef",
+  "gitlens.heatmap.coldColor": "#f7f6f9",
   "gitlens.heatmap.fadeLines": true,
-  "gitlens.heatmap.hotColor": "#f8892c",
+  "gitlens.heatmap.hotColor": "#e87da4",
   "gitlens.hovers.annotations.over": "annotation",
   "gitlens.hovers.currentLine.enabled": false,
   "gitlens.hovers.currentLine.over": "line",
@@ -277,5 +337,10 @@
   "[astro]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true
+  },
+  "[scminput]": {
+    "editor.rulers": [72],
+    "editor.wordWrap": "wordWrapColumn",
+    "editor.wordWrapColumn": 72
   }
 }
