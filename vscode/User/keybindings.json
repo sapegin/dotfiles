@@ -175,13 +175,6 @@
    * Plugins
    */
 
-  // Markdown Shortcuts
-  {
-    "key": "cmd+k",
-    "command": "md-shortcut.toggleLink",
-    "when": "editorTextFocus && !editorReadonly"
-  },
-
   // Advanced New File
   {
     "key": "cmd+n",

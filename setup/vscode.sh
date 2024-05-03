@@ -39,7 +39,6 @@ code --install-extension fabiospampinato.vscode-highlight
 code --install-extension github.copilot
 code --install-extension github.copilot-chat
 code --install-extension GraphQL.vscode-graphql-syntax
-code --install-extension mdickin.markdown-shortcuts
 code --install-extension naumovs.color-highlight
 code --install-extension patbenatar.advanced-new-file
 code --install-extension sapegin.emoji-console-log
