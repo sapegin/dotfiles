@@ -28,7 +28,6 @@ rm -rf ~/Library/Application\ Support/Code/User
 ln -s ~/dotfiles/vscode/User ~/Library/Application\ Support/Code/User
 
 code --install-extension astro-build.astro-vscode
-code --install-extension bibhasdn.unique-lines
 code --install-extension Catppuccin.catppuccin-vsc-icons
 code --install-extension dbaeumer.vscode-eslint
 code --install-extension deerawan.vscode-dash
@@ -46,5 +45,3 @@ code --install-extension sapegin.theme-squirrelsonglight
 code --install-extension SonarSource.sonarlint-vscode
 code --install-extension streetsidesoftware.code-spell-checker
 code --install-extension yoavbls.pretty-ts-errors
-code --install-extension zhengxiaoyao0716.intelligence-change-case
-code --install-extension ziyasal.vscode-open-in-github
