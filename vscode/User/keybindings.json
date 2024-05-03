@@ -131,6 +131,16 @@
     "command": "git.stage"
   },
   {
+    "key": "shift+cmd+c",
+    "command": "git.viewChanges"
+  },
+  {
+    "key": "shift+cmd+c",
+    "command": "-workbench.action.terminal.openNativeConsole",
+    "when": "!terminalFocus"
+  },
+
+  {
     // Close panel when pressing Escape in the editor
     "key": "escape",
     "command": "workbench.action.closePanel",
