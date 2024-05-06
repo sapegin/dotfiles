@@ -141,25 +141,25 @@
   },
 
   {
-    // Close panel when pressing Escape in the editor
+    "comment": "Close panel when pressing Escape in the editor",
     "key": "escape",
     "command": "workbench.action.closePanel",
-    "when": "panelVisible && textInputFocus"
+    "when": "panelVisible && textInputFocus && !suggestWidgetVisible"
   },
   {
-    "comment": "Closes panel when pressing Escape inside the Search panel",
+    "comment": "Close panel when pressing Escape inside the Search panel",
     "key": "escape",
     "command": "workbench.action.closePanel",
     "when": "activePanel == 'workbench.view.search' && panelFocus"
   },
   {
-    "comment": "Closes panel when pressing Escape inside the Problems panel",
+    "comment": "Close panel when pressing Escape inside the Problems panel",
     "key": "escape",
     "command": "workbench.action.closePanel",
     "when": "activePanel == 'workbench.panel.markers' && panelFocus"
   },
   {
-    "comment": "Closes panel when pressing Escape inside the Integrated Terminal panel",
+    "comment": "Close panel when pressing Escape inside the Integrated Terminal panel",
     "key": "escape",
     "command": "workbench.action.closePanel",
     "when": "terminalFocus"
