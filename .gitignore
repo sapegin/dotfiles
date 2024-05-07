@@ -3,14 +3,13 @@ node_modules/
 .DS_Store
 Thumbs.db
 .idea/
-.vscode/
 *.sublime-project
 *.sublime-workspace
 *.log
 .eslintcache
-vscode/User/History/
-vscode/User/globalStorage/
-vscode/User/workspaceStorage/
+vscode/**/History/
+vscode/**/globalStorage/
+vscode/**/workspaceStorage/
 tilde/.local/share/mc/history
 tilde/.local/share/mc/filepos
 tilde/.config/mc/panels.ini
