@@ -83,6 +83,21 @@
   "editor.snippetSuggestions": "bottom",
   "editor.suggestSelection": "first",
   "editor.wordWrap": "on",
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false,
+  "explorer.decorations.badges": false,
+  "explorer.decorations.colors": false,
+  "explorer.fileNesting.enabled": true,
+  "explorer.openEditors.visible": 1,
+  "extensions.autoUpdate": "onlyEnabledExtensions",
+  "extensions.ignoreRecommendations": true,
+  "files.associations": {
+    "*.js.snap": "javascript",
+    ".prettierrc": "json"
+  },
+  "files.autoSave": "onWindowChange",
+  "files.defaultLanguage": "markdown",
+  "files.hotExit": "onExitAndWindowClose",
   "git.closeDiffOnOperation": true,
   "git.confirmSync": false,
   "git.enableSmartCommit": true,
@@ -99,7 +114,15 @@
   "scm.inputFontSize": 16,
   "scm.inputMaxLineCount": 20,
   "scm.inputMinLineCount": 4,
+  "search.exclude": {
+    "**/package-lock.json": true,
+    "**/pnpm-lock.yaml": true,
+    "**/yarn.lock": true
+  },
   "security.promptForLocalFileProtocolHandling": false,
+  "task.problemMatchers.neverPrompt": {
+    "npm": true
+  },
   "telemetry.telemetryLevel": "off",
   "terminal.integrated.commandsToSkipShell": ["workbench.action.closePanel"],
   "terminal.integrated.cursorStyle": "line",
@@ -129,6 +152,7 @@
   "workbench.editor.customLabels.patterns": {
     "**/index.*": "${dirname}/${filename}.${extname}"
   },
+  "workbench.editor.decorations.badges": false,
   "workbench.editor.editorActionsLocation": "hidden",
   "workbench.editor.empty.hint": "hidden",
   "workbench.editor.showTabs": "none",
@@ -145,27 +169,6 @@
   "workbench.tree.indent": 12,
   "zenMode.centerLayout": false,
   "zenMode.hideLineNumbers": true,
-  "explorer.confirmDragAndDrop": false,
-  "explorer.confirmDelete": false,
-  "explorer.openEditors.visible": 1,
-  "explorer.fileNesting.enabled": true,
-  "extensions.autoUpdate": "onlyEnabledExtensions",
-  "extensions.ignoreRecommendations": true,
-  "files.autoSave": "onWindowChange",
-  "files.hotExit": "onExitAndWindowClose",
-  "files.defaultLanguage": "markdown",
-  "files.associations": {
-    "*.js.snap": "javascript",
-    ".prettierrc": "json"
-  },
-  "files.exclude": {
-    "**/package-lock.json": true,
-    "**/pnpm-lock.yaml": true,
-    "**/yarn.lock": true
-  },
-  "task.problemMatchers.neverPrompt": {
-    "npm": true
-  },
 
   // Plugins
   "git.openRepositoryInParentFolders": "always",
@@ -275,15 +278,12 @@
     },
     "typescript:S6509": {
       "level": "off"
+    },
+    "typescript:S2004": {
+      "level": "off"
     }
   },
   "github.copilot.editor.enableAutoCompletions": false,
-  "gitlens.autolinks": [
-    {
-      "prefix": "DGAPP-",
-      "url": "https://evenlyio.atlassian.net/browse/DGAPP-<num>"
-    }
-  ],
   "gitlens.blame.avatars": false,
   "gitlens.blame.dateFormat": "YYYY-MM-DD",
   "gitlens.blame.fontSize": 13,
