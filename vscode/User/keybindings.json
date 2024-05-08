@@ -26,11 +26,6 @@
     "when": "editorFocus"
   },
   {
-    "key": "ctrl+alt+g",
-    "command": "editor.action.selectHighlights",
-    "when": "editorFocus"
-  },
-  {
     "key": "alt+down",
     "command": "editor.action.insertCursorBelow",
     "when": "editorTextFocus"

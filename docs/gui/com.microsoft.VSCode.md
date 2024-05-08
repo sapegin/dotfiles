@@ -23,12 +23,12 @@
 * **Cmd+Alt+↑:** move current line up
 * **Cmd+Alt+↓:** move current line down
 * **Ctrl+G:** add next matching selection
-* **Ctrl+Alt+G:** select all occurrences of current selection
 * **Alt+↓:** add cursor below
 
 ## Refactoring
 
 * **Shift+F6:** rename symbol
+* **Cmd+F2:** change all occurrences
 * **Alt+Enter:** quick fix
 * **Cmd+T:** refactor
 * **Cmd+I:** Open inline Copilot
