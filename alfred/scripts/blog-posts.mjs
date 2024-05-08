@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /*
- * Returns list of blog posts in Afred’s Script Filter JSON format.
+ * Returns list of blog posts in Alfred’s Script Filter JSON format.
  *
  * Author: Artem Sapegin, sapegin.me
  * License: MIT

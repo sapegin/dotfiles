@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /*
- * Returns a list of TIL posts in the Afred’s Script Filter JSON format.
+ * Returns a list of TIL posts in the Alfred’s Script Filter JSON format.
  *
  * Author: Artem Sapegin, sapegin.me
  * License: MIT
