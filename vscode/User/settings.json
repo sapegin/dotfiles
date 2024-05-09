@@ -37,9 +37,12 @@
     "terminalStickyScroll.background": "#352a21",
     "terminalStickyScrollHover.background": "#352a21",
 
-    // Hide warnings and infos from overview ruler (scroll bar)
-    "editorOverviewRuler.warningForeground": "#ffffff00",
+    // Hide warnings and other distractions from overview ruler (scroll bar)
+    "editorOverviewRuler.bracketMatchForeground": "#ffffff00",
     "editorOverviewRuler.infoForeground": "#ffffff00",
+    "editorOverviewRuler.warningForeground": "#ffffff00",
+    "editorOverviewRuler.wordHighlightForeground": "#ffffff00",
+    "editorOverviewRuler.wordHighlightTextForeground": "#ffffff00",
 
     // GitLens
     "gitlens.gutterUncommittedForegroundColor": "#e87da4",
