@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-# Convert a given file, or all JPEG files in a directory, to WEBP format
+# Convert a given file, or all JPEG/PNG files in a directory, to AVIF or WebP
+# formats. Keeps converted files only when they are at least 10 KB smaller
+# than originals
 #
 # Usage:
 #   towebp [file]
@@ -27,50 +29,79 @@ command -v cwebp > /dev/null 2>&1 || {
 root="$(dirname $(dirname $0))"
 bin="$root/node_modules/.bin"
 
+function print_result() {
+	filename=$1
+	original_size=$2
+	optimized_size=$3
+	difference=$4
+	ratio=$(echo "$optimized_size * 100/ $original_size" | bc -l)
+	printf "$BOLD$filename$NOCOLOR: %s → $CYAN%s$NOCOLOR $GREEN(%2.2f%%, −%s$NOCOLOR)\n" "$($bin/pretty-bytes $original_size)" "$($bin/pretty-bytes $optimized_size)" "$ratio" "$($bin/pretty-bytes $difference)"
+}
+
 function convert_file() {
 	filename=$(basename "$1")
 	directory=$(dirname "$1")
 	extension="${filename##*.}"
 	filename_without_extension="${filename%.*}"
 
+	avif_file="${filename_without_extension}.avif"
 	webp_file="${filename_without_extension}.webp"
 
-	# Skip if WEBP file already exists
-	if [ -f "$directory/$webp_file" ]; then
+	# Skip if optimized file already exists
+	if [ -f "$directory/$avif_file" ] || [ -f "$directory/$webp_file" ]; then
 		return
 	fi
+
+	original_size=$(wc -c < "$1")
+	is_smaller=false
 
 	preset="photo"
 	if [ "$extension" == "png" ]; then
 		preset="text"
 	fi
 
-	# Convert to WEBP
-	cwebp -q 85 -preset "$preset" -quiet "$1" -o "$directory/$webp_file"
+	# Convert to AVIF
+	$bin/avif --quality 50 --effort 8 --input="$1" --output="$directory"
 
-	original_size=$(wc -c < "$1")
-	webp_size=$(wc -c < "$directory/$webp_file")
-	ratio=$(echo "$webp_size * 100/ $original_size" | bc -l)
+	avif_size=$(wc -c < "$directory/$avif_file")
 
 	# We consider an optimized file smaller only when it's at least 20 KB smaller
-	is_smaller=false
-	difference=$((original_size - webp_size))
-	if test "$difference" -gt 20480; then
+	difference=$((original_size - avif_size))
+	if test "$difference" -gt 10240; then
 		is_smaller=true
 	fi
 
-	if [ "$is_smaller" == "false" ]; then
-		# Delete WEBP file if it's larger than the original
-		rm "$directory/$webp_file"
+	if [ "$is_smaller" == "true" ]; then
+		print_result "$directory/$avif_file" $original_size $avif_size $difference
 		return
 	fi
 
-	printf "$BOLD$1$NOCOLOR: %s → $CYAN%s$NOCOLOR $GREEN(%2.2f%%, −%s$NOCOLOR)\n" "$($bin/pretty-bytes $original_size)" "$($bin/pretty-bytes $webp_size)" "$ratio" "$($bin/pretty-bytes $difference)"
+	# Delete AVIF file if it's larger than the original
+	rm "$directory/$avif_file"
+
+	# Convert to WebP
+	cwebp -q 85 -preset "$preset" -quiet "$1" -o "$directory/$webp_file"
+
+	webp_size=$(wc -c < "$directory/$webp_file")
+
+	# We consider an optimized file smaller only when it's at least 20 KB smaller
+	difference=$((original_size - webp_size))
+	if test "$difference" -gt 10240; then
+		is_smaller=true
+	fi
+
+	if [ "$is_smaller" == "true" ]; then
+		print_result "$directory/$webp_file" $original_size $webp_size $difference
+		return
+	fi
+
+	# Delete WebP file if it's larger than the original
+	rm "$directory/$webp_file"
 }
 
 # Single file
 if [ "$1" != "" ]; then
-	convert_file "$1" "$2"
+	convert_file "$1"
 	exit
 fi
 
