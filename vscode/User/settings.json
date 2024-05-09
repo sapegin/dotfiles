@@ -16,7 +16,7 @@
     "terminal.ansiMagenta": "#7f61b3",
     "terminal.ansiRed": "#bc5248",
     "terminal.ansiWhite": "#c4a389",
-    "terminal.ansiYellow": "#e2c54c",
+    "terminal.ansiYellow": "#ceb250",
     "terminal.background": "#352a21",
     "terminal.border": "#574131",
     "terminal.findMatchBackground": "#ca5a8366",
@@ -36,6 +36,10 @@
     "terminalOverviewRuler.findMatchForeground": "#ca5a83",
     "terminalStickyScroll.background": "#352a21",
     "terminalStickyScrollHover.background": "#352a21",
+
+    // Hide warnings and infos from overview ruler (scroll bar)
+    "editorOverviewRuler.warningForeground": "#ffffff00",
+    "editorOverviewRuler.infoForeground": "#ffffff00",
 
     // GitLens
     "gitlens.gutterUncommittedForegroundColor": "#e87da4",
@@ -60,6 +64,7 @@
   },
   "editor.cursorBlinking": "solid",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.find.addExtraSpaceOnTop": false,
   "editor.foldingImportsByDefault": true,
   "editor.fontFamily": "MonoLisa, \"Symbols Nerd Font Mono\"",
   "editor.fontLigatures": "'calt' on, 'liga' off",
@@ -71,16 +76,19 @@
   "editor.gotoLocation.multipleReferences": "goto",
   "editor.gotoLocation.multipleTypeDefinitions": "goto",
   "editor.guides.indentation": true,
+  "editor.hideCursorInOverviewRuler": true,
   "editor.inlineSuggest.suppressSuggestions": true,
   "editor.lineHeight": 1.6,
   "editor.lineNumbers": "off",
   "editor.linkedEditing": true,
   "editor.minimap.enabled": false,
+  "editor.overviewRulerBorder": false,
   "editor.renderWhitespace": "selection",
   "editor.roundedSelection": false,
   "editor.rulers": [80],
   "editor.semanticHighlighting.enabled": true,
   "editor.snippetSuggestions": "bottom",
+  "editor.stickyScroll.maxLineCount": 4,
   "editor.suggestSelection": "first",
   "editor.wordWrap": "on",
   "explorer.confirmDelete": false,
@@ -103,9 +111,11 @@
   "git.enableSmartCommit": true,
   "outline.problems.badges": false,
   "problems.autoReveal": false,
+  "problems.decorations.enabled": false,
   "search.decorations.badges": false,
   "search.seedOnFocus": true,
   "search.useParentIgnoreFiles": true,
+  "scm.diffDecorations": "gutter",
   "scm.diffDecorationsGutterPattern": {
     "modified": false
   },
@@ -172,6 +182,7 @@
 
   // Plugins
   "git.openRepositoryInParentFolders": "always",
+  "color-highlight.markRuler": false,
   "color-highlight.matchWords": false,
   "color-highlight.sass.includePaths": [],
   "prettier.requireConfig": true,
@@ -304,6 +315,7 @@
   "gitlens.hovers.currentLine.over": "line",
   "gitlens.keymap": "none",
   "gitlens.statusBar.enabled": false,
+  "typos.diagnosticSeverity": "Information",
 
   // File types
   "javascript.autoClosingTags": false,
