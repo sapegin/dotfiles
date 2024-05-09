@@ -5,7 +5,7 @@
 # than originals
 #
 # Usage:
-#   towebp [file]
+#   towebp [file] [--force]
 #
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
@@ -71,7 +71,7 @@ function convert_file() {
 		is_smaller=true
 	fi
 
-	if [ "$is_smaller" == "true" ]; then
+	if [ "$is_smaller" == "true" ] || [ "$2" == "--force" ]; then
 		print_result "$directory/$avif_file" $original_size $avif_size $difference
 		return
 	fi
@@ -101,20 +101,20 @@ function convert_file() {
 
 # Single file
 if [ "$1" != "" ]; then
-	convert_file "$1"
+	convert_file "$1" "$2"
 	exit
 fi
 
 # JPEG files
 for file in *.jpg; do
 	if [ -f "$file" ]; then
-		convert_file "$file"
+		convert_file "$file" "$2"
 	fi
 done
 
 # PNG files
 for file in *.png; do
 	if [ -f "$file" ]; then
-		convert_file "$file"
+		convert_file "$file" "$2"
 	fi
 done
