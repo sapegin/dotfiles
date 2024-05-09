@@ -297,6 +297,12 @@
     },
     "typescript:S2004": {
       "level": "off"
+    },
+    "javascript:S1135": {
+      "level": "off"
+    },
+    "javascript:S2004": {
+      "level": "off"
     }
   },
   "github.copilot.editor.enableAutoCompletions": false,
