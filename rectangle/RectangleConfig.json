@@ -2,7 +2,7 @@
   "bundleId" : "com.knollsoft.Rectangle",
   "defaults" : {
     "allowAnyShortcut" : {
-      "bool" : false
+      "bool" : true
     },
     "almostMaximizeHeight" : {
       "float" : 0
@@ -95,7 +95,7 @@
       "int" : 0
     },
     "landscapeSnapAreas" : {
-      "string" : "[]"
+
     },
     "launchOnLogin" : {
       "bool" : true
@@ -191,7 +191,7 @@
       "int" : 1
     },
     "SUEnableAutomaticChecks" : {
-      "bool" : true
+      "bool" : false
     },
     "systemWideMouseDown" : {
       "int" : 0
