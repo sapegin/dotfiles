@@ -14,7 +14,7 @@
     "terminal.ansiCyan": "#4f9593",
     "terminal.ansiGreen": "#558240",
     "terminal.ansiMagenta": "#7f61b3",
-    "terminal.ansiRed": "#bc5248",
+    "terminal.ansiRed": "#d67e76",
     "terminal.ansiWhite": "#c4a389",
     "terminal.ansiYellow": "#ceb250",
     "terminal.background": "#352a21",
@@ -108,6 +108,12 @@
   },
   "files.autoSave": "onWindowChange",
   "files.defaultLanguage": "markdown",
+  "files.exclude": {
+    "node_modules": true,
+    "**/package-lock.json": true,
+    "**/pnpm-lock.yaml": true,
+    "**/yarn.lock": true
+  },
   "files.hotExit": "onExitAndWindowClose",
   "git.closeDiffOnOperation": true,
   "git.confirmSync": false,
@@ -152,12 +158,12 @@
   "terminal.integrated.tabs.showActions": "never",
   "terminal.integrated.tabStopWidth": 2,
   "window.commandCenter": false,
-  "window.customTitleBarVisibility": "never",
   "window.openFilesInNewWindow": "off",
   "window.openFoldersInNewWindow": "off",
   "window.restoreWindows": "all",
   "window.title": "${activeEditorShort}",
   "window.titleBarStyle": "custom",
+  "window.zoomLevel": 0.3,
   "workbench.activityBar.location": "hidden",
   "workbench.colorTheme": "Squirrelsong Light",
   "workbench.commandPalette.preserveInput": false,
@@ -176,7 +182,7 @@
   "workbench.reduceMotion": "on",
   "workbench.settings.enableNaturalLanguageSearch": false,
   "workbench.sideBar.location": "right",
-  "workbench.startupEditor": "newUntitledFile",
+  "workbench.startupEditor": "none",
   "workbench.statusBar.visible": false,
   "workbench.tips.enabled": false,
   "workbench.tree.indent": 12,
@@ -245,21 +251,6 @@
     "trackpad"
   ],
   "donations.disablePrompt": true,
-  "highlight.regexes": {
-    "((?:<!-- *)?(?:#|// @|//|./\\*+|<!--|--|\\* @|{!|{{!--|{{!) *(?:TODO|FIXME|FIX|BUG|UGLY|DEBUG|HACK|XXX)(?:\\s*\\([^)]+\\))?:?)((?!\\w)(?: *-->| *\\*/| *!}| *--}}| *}}|(?= *(?:[^:]//|/\\*+|<!--|@|--|{!|{{!--|{{!))|(?: +[^\\n@]*?)(?= *(?:[^:]//|/\\*+|<!--|@|--(?!>)|{!|{{!--|{{!))|(?: +[^@\\n]+)?))": {
-      "filterFileRegex": ".*(?<!CHANGELOG.md)$",
-      "decorations": [
-        {
-          "overviewRulerColor": "#78737d",
-          "color": "#78737d",
-          "fontWeight": "bold"
-        },
-        {
-          "color": "#78737d"
-        }
-      ]
-    }
-  },
   "sonarlint.disableTelemetry": true,
   "sonarlint.rules": {
     "typescript:S6544": {
@@ -303,9 +294,19 @@
     },
     "javascript:S2004": {
       "level": "off"
+    },
+    "javascript:S1134": {
+      "level": "off"
+    },
+    "typescript:S1134": {
+      "level": "off"
+    },
+    "Web:S1135": {
+      "level": "off"
     }
   },
   "github.copilot.editor.enableAutoCompletions": false,
+  "githubPullRequests.defaultMergeMethod": "squash",
   "gitlens.blame.avatars": false,
   "gitlens.blame.dateFormat": "YYYY-MM-DD",
   "gitlens.blame.fontSize": 13,
