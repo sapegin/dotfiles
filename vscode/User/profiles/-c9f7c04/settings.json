@@ -1,3 +1,7 @@
 {
-  "workbench.colorTheme": "Squirrelsong Light"
+  "workbench.colorTheme": "Squirrelsong Light",
+  "git.openRepositoryInParentFolders": "always",
+  "editor.fontSize": 16,
+  "editor.fontFamily": "MonoLisa",
+  "workbench.sideBar.location": "right"
 }
