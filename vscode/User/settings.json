@@ -66,12 +66,14 @@
     "source.organizeImports": "never",
     "source.fixAll.eslint": "explicit"
   },
+  "editor.cursorStyle": "line",
+  "editor.cursorWidth": 2,
   "editor.cursorBlinking": "solid",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.find.addExtraSpaceOnTop": false,
   "editor.foldingImportsByDefault": true,
   "editor.fontFamily": "MonoLisa, \"Symbols Nerd Font Mono\"",
-  "editor.fontLigatures": "'calt' on, 'liga' off",
+  "editor.fontLigatures": "'calt' on, 'liga' off", // Enable contextual alternative but disable ligatures
   "editor.fontSize": 16,
   "editor.formatOnSave": true,
   "editor.gotoLocation.multipleDeclarations": "goto",
@@ -87,6 +89,7 @@
   "editor.linkedEditing": true,
   "editor.minimap.enabled": false,
   "editor.overviewRulerBorder": false,
+  "editor.quickSuggestions": { "strings": "on" },
   "editor.renderWhitespace": "selection",
   "editor.roundedSelection": false,
   "editor.rulers": [80],
@@ -129,9 +132,7 @@
   "search.seedOnFocus": true,
   "search.useParentIgnoreFiles": true,
   "scm.diffDecorations": "gutter",
-  "scm.diffDecorationsGutterPattern": {
-    "modified": false
-  },
+  "scm.diffDecorationsGutterPattern": { "modified": false },
   "scm.diffDecorationsIgnoreTrimWhitespace": "true",
   "scm.inputFontFamily": "editor",
   "scm.inputFontSize": 16,
@@ -143,9 +144,7 @@
     "**/yarn.lock": true
   },
   "security.promptForLocalFileProtocolHandling": false,
-  "task.problemMatchers.neverPrompt": {
-    "npm": true
-  },
+  "task.problemMatchers.neverPrompt": { "npm": true },
   "telemetry.telemetryLevel": "off",
   "terminal.integrated.commandsToSkipShell": ["workbench.action.closePanel"],
   "terminal.integrated.cursorStyle": "line",
@@ -215,9 +214,7 @@
   "emmet.excludeLanguages": [
     "markdown",
     "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact"
+    "typescript"
   ],
   "cSpell.spellCheckDelayMs": 500,
   "cSpell.enableFiletypes": ["shellscript"],
@@ -248,6 +245,7 @@
     "refactorings",
     "Sapegin",
     "shortcutting",
+    "signin",
     "signup",
     "Squirrelsong",
     "Tamia",
@@ -331,6 +329,7 @@
   "gitlens.hovers.currentLine.over": "line",
   "gitlens.keymap": "none",
   "gitlens.statusBar.enabled": false,
+  "tailwindCSS.emmetCompletions": false,
   "typos.diagnosticSeverity": "Information",
 
   // File types
