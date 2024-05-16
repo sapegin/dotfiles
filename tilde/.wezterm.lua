@@ -7,7 +7,6 @@ local config = wezterm.config_builder()
 local font = 'MonoLisa'
 config.font = wezterm.font_with_fallback({
 	{ family = font, weight = 'Regular', italic = false },
-  { family = 'Apple Color Emoji' },
   { family = 'Symbols Nerd Font Mono', scale = 1 },
 })
 config.font_rules = {
@@ -15,7 +14,6 @@ config.font_rules = {
 		intensity = 'Bold',
 		font = wezterm.font_with_fallback({
 			{ family = font, weight = 'Regular', italic = false, weight = 'Bold' },
-			{ family = 'Apple Color Emoji' },
 			{ family = 'Symbols Nerd Font Mono', scale = 1 },
 		}),
   }
