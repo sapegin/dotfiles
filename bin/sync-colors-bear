@@ -6,6 +6,8 @@
 # License: MIT
 # https://github.com/sapegin/dotfiles
 
+sudo -v
+
 sudo command rm "/Applications/Bear.app/Contents/Frameworks/BearCore.framework/Resources/Ayu.theme"
 sudo command cp "squirrelsong-master/light/Bear/Squirrelsong Light.theme" "/Applications/Bear.app/Contents/Frameworks/BearCore.framework/Resources/Ayu.theme"
 
