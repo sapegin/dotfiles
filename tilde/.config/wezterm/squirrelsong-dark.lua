@@ -1,3 +1,4 @@
+-- Squirrelsong Dark Theme
 -- https://sapegin.me/squirrelsong/
 return {
 	foreground = '#9e8a74',
