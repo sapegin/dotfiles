@@ -200,15 +200,6 @@
     "when": "canNavigateForward"
   },
 
-  /*
-   * Plugins
-   */
-
-  // Advanced New File
-  {
-    "key": "cmd+n",
-    "command": "extension.advancedNewFile"
-  },
   {
     "key": "cmd+space",
     "command": "editor.action.triggerSuggest",
@@ -218,5 +209,15 @@
     "key": "ctrl+space",
     "command": "-editor.action.triggerSuggest",
     "when": "editorHasCompletionItemProvider && textInputFocus && !editorReadonly && !suggestWidgetVisible"
+  },
+
+  /*
+   * Plugins
+   */
+
+  // New File Now
+  {
+    "key": "cmd+n",
+    "command": "newFileNow.createNewFile"
   }
 ]
