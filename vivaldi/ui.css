@@ -9,14 +9,17 @@
 	display: none;
 }
 
-/* Less contrast colors for the omibox items */
+/* Less contrast colors for the omnibox items */
 .OmniDropdown {
+	--colorFgFadedMore: #8c8792;
 	--colorHighlightBg: #e9e9ef;
 	--colorHighlightFg: #4b4a4d;
 	--colorBgDarker: #d9d7dc;
 	display: flex;
 	flex-direction: column;
 	gap: 8px;
+	padding: 4px 0;
+	box-shadow: 0 2px 20px rgba(0, 0, 0, 0.15);
 }
 
 /* More whitespace for omni dropdown item, also show label "inline" with the
@@ -26,6 +29,14 @@
 	display: flex;
 	padding: 8px 9px;
 	gap: 0;
+	border-left: 3px solid transparent;
+	border-radius: 0;
+}
+.OmniLinkItem--Highlighted {
+	border-color: #9c9a9d;
+}
+.OmniLinkItem:not(.OmniLinkItem--Highlighted):hover {
+	border-color: var(--colorBgDarker);
 }
 .OmniLinkItem-Favicon {
 	margin-right: 4px;
@@ -50,4 +61,9 @@
 /* Less distracting "permission denied" icon in the address bar */
 .permission-denied circle {
 	fill: #9c9a9d;
+}
+
+/* Disable dimming overlay when using find in page */
+.find-in-page-wrapper:has(.find-in-page) + .row-wrapper .webpage > webview {
+	filter: unset !important;
 }
