@@ -54,6 +54,8 @@
 	abort = rebase --abort
 	# Cancel local commits in the branch: git fuck master
 	fuck = "!f() { git reset --hard origin/$1; }; f"
+  # Remove all changes, including untracked files
+  nuke = "clean -f -d"
 
 [pull]
   rebase = true
