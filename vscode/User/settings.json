@@ -49,6 +49,7 @@
   "editor.gotoLocation.multipleReferences": "goto",
   "editor.gotoLocation.multipleTypeDefinitions": "goto",
   "editor.guides.indentation": true,
+  "editor.guides.highlightActiveIndentation": true,
   "editor.hideCursorInOverviewRuler": true,
   "editor.inlayHints.padding": true,
   "editor.inlineSuggest.suppressSuggestions": true,
@@ -87,7 +88,8 @@
   "files.autoSave": "onWindowChange",
   "files.defaultLanguage": "markdown",
   "files.exclude": {
-    "node_modules": true,
+    // Show node_modules but don't show anything inside
+    "**/node_modules/**/*": true,
     "**/package-lock.json": true,
     "**/pnpm-lock.yaml": true,
     "**/yarn.lock": true
@@ -110,6 +112,7 @@
   "scm.inputMaxLineCount": 20,
   "scm.inputMinLineCount": 4,
   "search.exclude": {
+    "**/node_modules": true,
     "**/package-lock.json": true,
     "**/pnpm-lock.yaml": true,
     "**/yarn.lock": true
@@ -201,6 +204,7 @@
     "customizability",
     "cyclomatic",
     "discoverability",
+    "Flexbox",
     "Formik",
     "greppability",
     "greppable",
@@ -302,12 +306,75 @@
   "gitlens.statusBar.enabled": false,
   "tailwindCSS.emmetCompletions": false,
   "typos.diagnosticSeverity": "Information",
+  "settings.cycle": [
+    {
+      "id": "zenModeSupreme",
+      "overrideWorkspaceSettings": false,
+      "values": [
+        {
+          "editor.fontSize": 17,
+          "editor.lineHeight": 1.6,
+          "editor.rulers": [80],
+          "scm.diffDecorations": "gutter",
+          "workbench.colorCustomizations": {
+            "editor.background": "#fdfdfe",
+            "editor.foreground": "#78737d",
+            "titleBar.activeBackground": "#fdfdfe",
+            "titleBar.inactiveBackground": "#fdfdfe",
+
+            // Hide warnings and other distractions from overview ruler (scroll bar)
+            "editorOverviewRuler.bracketMatchForeground": "#ffffff00",
+            "editorOverviewRuler.infoForeground": "#ffffff00",
+            "editorOverviewRuler.warningForeground": "#ffffff00",
+            "editorOverviewRuler.wordHighlightForeground": "#ffffff00",
+            "editorOverviewRuler.wordHighlightTextForeground": "#ffffff00",
+
+            // Hide vertical borders in zen/centered mode
+            "editorGroup.border": "#ffffff00",
+
+            // GitLens
+            "gitlens.gutterUncommittedForegroundColor": "#e87da4",
+            "gitlens.gutterForegroundColor": "#78737d",
+            "gitlens.gutterBackgroundColor": "#fdfdfe00"
+          }
+        },
+        {
+          "editor.fontSize": 22,
+          "editor.lineHeight": 2,
+          "editor.rulers": [],
+          "scm.diffDecorations": "never",
+          "workbench.colorCustomizations": {
+            "editor.background": "#f7f6f9",
+            "editor.foreground": "#4c4b4e",
+            "titleBar.activeBackground": "#f7f6f9",
+            "titleBar.inactiveBackground": "#f7f6f9",
+
+            // Hide warnings and other distractions from overview ruler (scroll bar)
+            "editorOverviewRuler.bracketMatchForeground": "#ffffff00",
+            "editorOverviewRuler.infoForeground": "#ffffff00",
+            "editorOverviewRuler.warningForeground": "#ffffff00",
+            "editorOverviewRuler.wordHighlightForeground": "#ffffff00",
+            "editorOverviewRuler.wordHighlightTextForeground": "#ffffff00",
+
+            // Hide vertical borders in zen/centered mode
+            "editorGroup.border": "#ffffff00",
+
+            // GitLens
+            "gitlens.gutterUncommittedForegroundColor": "#e87da4",
+            "gitlens.gutterForegroundColor": "#78737d",
+            "gitlens.gutterBackgroundColor": "#fdfdfe00"
+          }
+        }
+      ]
+    }
+  ],
 
   // File types
   "javascript.autoClosingTags": false,
   "javascript.format.enable": false,
   "javascript.preferences.importModuleSpecifier": "relative",
   "javascript.preferences.jsxAttributeCompletionStyle": "none",
+  "javascript.preferGoToSourceDefinition": true,
   "javascript.updateImportsOnFileMove.enabled": "always",
   "javascript.validate.enable": false,
   "typescript.autoClosingTags": false,
@@ -316,6 +383,7 @@
   "typescript.preferences.importModuleSpecifier": "relative",
   "typescript.preferences.jsxAttributeCompletionStyle": "none",
   "typescript.preferences.preferTypeOnlyAutoImports": true,
+  "typescript.preferGoToSourceDefinition": true,
   "typescript.updateImportsOnFileMove.enabled": "always",
   "html.format.wrapLineLength": 0,
   "html.format.enable": false,

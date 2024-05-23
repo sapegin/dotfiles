@@ -219,5 +219,21 @@
   {
     "key": "cmd+n",
     "command": "newFileNow.createNewFile"
+  },
+
+  // Setting Cycler
+  {
+    "key": "f10",
+    "command": "settings.cycle.zenModeSupreme"
+  },
+  {
+    "key": "f10",
+    "command": "-extension.node-debug.startWithStopOnEntry",
+    "when": "!inDebugMode && debugConfigurationType == 'node' || !inDebugMode && debugConfigurationType == 'pwa-extensionHost' || !inDebugMode && debugConfigurationType == 'pwa-node'"
+  },
+  {
+    "key": "f10",
+    "command": "-workbench.action.debug.stepOver",
+    "when": "debugState == 'stopped'"
   }
 ]
