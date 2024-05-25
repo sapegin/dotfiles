@@ -1,0 +1,57 @@
+#!/usr/bin/env node
+
+// Generate VS Code profile settings file based on the default profile and
+// profileGenerator property. The profile must exist already.
+//
+// Config example:
+// {
+//   "profileGenerator": [
+//   {
+//     "id": "5865fa26", // Profile folder name in vscode/User/profiles
+//     "name": "Zen Mode Supreme",
+//     "values": {
+//       "editor.fontSize": 22,
+//     }
+//   }
+//  ]
+// }
+//
+// Author: Artem Sapegin, sapegin.me
+// License: MIT
+// https://github.com/sapegin/dotfiles
+//
+
+import path from 'path';
+import fs from 'fs-extra';
+import stripJsonComments from 'strip-json-comments';
+import _ from 'lodash';
+
+const CONFIG_DIR = path.join(import.meta.dirname, '/../vscode/User');
+const PROFILES_DIR = `${CONFIG_DIR}/profiles`;
+const CONFIG_FILE = `${CONFIG_DIR}/settings.json`;
+
+function readJsonFile(file) {
+	return JSON.parse(stripJsonComments(fs.readFileSync(file, 'utf8')));
+}
+
+function writeJsonFile(file, json) {
+	return fs.writeFileSync(file, JSON.stringify(json, null, '  '));
+}
+
+console.log();
+console.log('[VSCODE] Generating profiles... 🌗');
+
+const defaultConfig = readJsonFile(CONFIG_FILE);
+
+for (const { id, name, values } of defaultConfig.profileGenerator) {
+	console.log();
+	console.log(`[VSCODE] Generating ${name} profile...`);
+
+	const profileConfig = _.merge(defaultConfig, values);
+	delete profileConfig.profileGenerator;
+
+	writeJsonFile(`${PROFILES_DIR}/${id}/settings.json`, profileConfig);
+}
+
+console.log();
+console.log('[VSCODE] Done 🦜');

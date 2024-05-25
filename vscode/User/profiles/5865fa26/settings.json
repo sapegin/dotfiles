@@ -1,22 +1,19 @@
 {
   "workbench.colorCustomizations": {
-    // Hide warnings and other distractions from overview ruler (scroll bar)
     "editorOverviewRuler.bracketMatchForeground": "#ffffff00",
     "editorOverviewRuler.infoForeground": "#ffffff00",
     "editorOverviewRuler.warningForeground": "#ffffff00",
     "editorOverviewRuler.wordHighlightForeground": "#ffffff00",
     "editorOverviewRuler.wordHighlightTextForeground": "#ffffff00",
-
-    // Hide vertical borders in zen/centered mode
     "editorGroup.border": "#ffffff00",
-
-    // GitLens
     "gitlens.gutterUncommittedForegroundColor": "#e87da4",
     "gitlens.gutterForegroundColor": "#78737d",
-    "gitlens.gutterBackgroundColor": "#fdfdfe00"
+    "gitlens.gutterBackgroundColor": "#fdfdfe00",
+    "editor.background": "#f7f6f9",
+    "editor.foreground": "#4c4b4e",
+    "titleBar.activeBackground": "#f7f6f9",
+    "titleBar.inactiveBackground": "#f7f6f9"
   },
-
-  // Internal
   "breadcrumbs.enabled": false,
   "breadcrumbs.filePath": "off",
   "catppuccin-icons.hidesExplorerArrows": true,
@@ -42,8 +39,8 @@
   "editor.find.addExtraSpaceOnTop": false,
   "editor.foldingImportsByDefault": true,
   "editor.fontFamily": "MonoLisa, \"Symbols Nerd Font Mono\"",
-  "editor.fontLigatures": "'calt' on, 'liga' off", // Enable contextual alternative but disable ligatures
-  "editor.fontSize": 17,
+  "editor.fontLigatures": "'calt' on, 'liga' off",
+  "editor.fontSize": 22,
   "editor.formatOnSave": true,
   "editor.glyphMargin": false,
   "editor.gotoLocation.multipleDeclarations": "goto",
@@ -56,22 +53,26 @@
   "editor.hideCursorInOverviewRuler": true,
   "editor.inlayHints.padding": true,
   "editor.inlineSuggest.suppressSuggestions": true,
-  "editor.lineDecorationsWidth": 32, // Undocumented left padding
-  "editor.lineHeight": 1.6,
+  "editor.lineDecorationsWidth": 32,
+  "editor.lineHeight": 2,
   "editor.lineNumbers": "off",
   "editor.linkedEditing": true,
   "editor.minimap.enabled": false,
   "editor.occurrencesHighlight": "off",
   "editor.overviewRulerBorder": false,
-  "editor.quickSuggestions": { "strings": "on" },
+  "editor.quickSuggestions": {
+    "strings": "on"
+  },
   "editor.renderLineHighlight": "none",
   "editor.renderWhitespace": "selection",
   "editor.roundedSelection": false,
-  "editor.rulers": [80],
+  "editor.rulers": [
+    80
+  ],
   "editor.semanticHighlighting.enabled": true,
   "editor.showFoldingControls": "never",
   "editor.snippetSuggestions": "bottom",
-  "editor.stickyScroll.enabled": true,
+  "editor.stickyScroll.enabled": false,
   "editor.stickyScroll.maxLineCount": 3,
   "editor.suggestSelection": "first",
   "editor.unfoldOnClickAfterEndOfLine": true,
@@ -92,7 +93,6 @@
   "files.autoSave": "onWindowChange",
   "files.defaultLanguage": "markdown",
   "files.exclude": {
-    // Show node_modules but don't show anything inside
     "**/node_modules/**/*": true,
     "**/package-lock.json": true,
     "**/pnpm-lock.yaml": true,
@@ -108,8 +108,10 @@
   "search.decorations.badges": false,
   "search.seedOnFocus": true,
   "search.useParentIgnoreFiles": true,
-  "scm.diffDecorations": "gutter",
-  "scm.diffDecorationsGutterPattern": { "modified": false },
+  "scm.diffDecorations": "never",
+  "scm.diffDecorationsGutterPattern": {
+    "modified": false
+  },
   "scm.diffDecorationsIgnoreTrimWhitespace": "true",
   "scm.inputFontFamily": "editor",
   "scm.inputFontSize": 16,
@@ -122,9 +124,13 @@
     "**/yarn.lock": true
   },
   "security.promptForLocalFileProtocolHandling": false,
-  "task.problemMatchers.neverPrompt": { "npm": true },
+  "task.problemMatchers.neverPrompt": {
+    "npm": true
+  },
   "telemetry.telemetryLevel": "off",
-  "terminal.integrated.commandsToSkipShell": ["workbench.action.closePanel"],
+  "terminal.integrated.commandsToSkipShell": [
+    "workbench.action.closePanel"
+  ],
   "terminal.integrated.cursorStyle": "line",
   "terminal.integrated.cursorStyleInactive": "line",
   "terminal.integrated.cursorWidth": 2,
@@ -170,15 +176,17 @@
   "zenMode.centerLayout": true,
   "zenMode.fullScreen": false,
   "zenMode.showTabs": "none",
-
-  // Plugins
   "git.openRepositoryInParentFolders": "always",
   "color-highlight.markRuler": false,
   "color-highlight.matchWords": false,
   "color-highlight.sass.includePaths": [],
   "prettier.requireConfig": true,
   "eslint.rules.customizations": [
-    { "rule": "*", "fixable": true, "severity": "info" }
+    {
+      "rule": "*",
+      "fixable": true,
+      "severity": "info"
+    }
   ],
   "eslint.run": "onSave",
   "eslint.useESLintClass": true,
@@ -190,9 +198,15 @@
     "html",
     "astro"
   ],
-  "emmet.excludeLanguages": ["markdown", "javascript", "typescript"],
+  "emmet.excludeLanguages": [
+    "markdown",
+    "javascript",
+    "typescript"
+  ],
   "cSpell.spellCheckDelayMs": 500,
-  "cSpell.enableFiletypes": ["shellscript"],
+  "cSpell.enableFiletypes": [
+    "shellscript"
+  ],
   "cSpell.userWords": [
     "ADHD",
     "antipattern",
@@ -295,7 +309,9 @@
   "gitlens.blame.fontWeight": "bold",
   "gitlens.blame.format": "${agoOrDateShort|4?} ${authorNotYou|14-}",
   "gitlens.blame.highlight.enabled": false,
-  "gitlens.blame.highlight.locations": ["gutter"],
+  "gitlens.blame.highlight.locations": [
+    "gutter"
+  ],
   "gitlens.blame.ignoreWhitespace": true,
   "gitlens.blame.compact": true,
   "gitlens.codeLens.enabled": false,
@@ -311,27 +327,6 @@
   "gitlens.statusBar.enabled": false,
   "tailwindCSS.emmetCompletions": false,
   "typos.diagnosticSeverity": "Information",
-  "profileGenerator": [
-    {
-      "id": "5865fa26",
-      "name": "Zen Mode Supreme",
-      "values": {
-        "editor.fontSize": 22,
-        "editor.lineHeight": 2,
-        "editor.rulers": [],
-        "editor.stickyScroll.enabled": false,
-        "scm.diffDecorations": "never",
-        "workbench.colorCustomizations": {
-          "editor.background": "#f7f6f9",
-          "editor.foreground": "#4c4b4e",
-          "titleBar.activeBackground": "#f7f6f9",
-          "titleBar.inactiveBackground": "#f7f6f9"
-        }
-      }
-    }
-  ],
-
-  // File types
   "javascript.autoClosingTags": false,
   "javascript.format.enable": false,
   "javascript.preferences.importModuleSpecifier": "relative",
@@ -384,7 +379,9 @@
     "editor.formatOnSave": true
   },
   "[scminput]": {
-    "editor.rulers": [72],
+    "editor.rulers": [
+      72
+    ],
     "editor.wordWrap": "wordWrapColumn",
     "editor.wordWrapColumn": 72
   }

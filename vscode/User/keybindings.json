@@ -210,21 +210,29 @@
     "command": "-editor.action.triggerSuggest",
     "when": "editorHasCompletionItemProvider && textInputFocus && !editorReadonly && !suggestWidgetVisible"
   },
-
-  /*
-   * Plugins
-   */
-
-  // New File Now
+  // Not sure I need it together with Cmd+B, though it could be nice to open Explorer
+  // every time, and not just whatever was last in the sidebar
   {
-    "key": "cmd+n",
-    "command": "newFileNow.createNewFile"
+    "comment": "Focus on Explorer",
+    "key": "shift+cmd+\\",
+    "command": "workbench.files.action.focusFilesExplorer"
   },
-
-  // Setting Cycler
   {
+    "comment": "Don't autocomplete on Enter, just on Tab: more ways to get rid of the autocomplete when you don't need it",
+    "key": "enter",
+    "command": "-acceptSelectedSuggestion",
+    "when": "acceptSuggestionOnEnter && suggestWidgetHasFocusedSuggestion && suggestWidgetVisible && suggestionMakesTextEdit && textInputFocus"
+  },
+  {
+    "comment": "Don't autocomplete on Enter in terminal, just on Tab: more ways to get rid of the autocomplete when you don't need it",
+    "key": "enter",
+    "command": "-workbench.action.terminal.acceptSelectedSuggestion",
+    "when": "terminalFocus && terminalHasBeenCreated && terminalIsOpen && terminalSuggestWidgetVisible || terminalFocus && terminalIsOpen && terminalProcessSupported && terminalSuggestWidgetVisible"
+  },
+  {
+    "comment": "Show list of profiles",
     "key": "f10",
-    "command": "settings.cycle.zenModeSupreme"
+    "command": "workbench.profiles.actions.switchProfile"
   },
   {
     "key": "f10",
@@ -235,5 +243,15 @@
     "key": "f10",
     "command": "-workbench.action.debug.stepOver",
     "when": "debugState == 'stopped'"
+  },
+
+  /*
+   * Plugins
+   */
+
+  // New File Now
+  {
+    "key": "cmd+n",
+    "command": "newFileNow.createNewFile"
   }
 ]
