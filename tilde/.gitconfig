@@ -36,6 +36,7 @@
 	patch = !git --no-pager diff --no-color
 	# Merge fresh master into the current branch
 	mmm = !git fetch origin master && git merge origin/master --no-edit
+	mmn = !git fetch origin main && git merge origin/main --no-edit
 	# Compact and readable log
 	l = log --graph --pretty=format:'%C(magenta)%h%C(blue)%d%Creset %s %C(blue bold)- %an, %ar%Creset'
 	# Log with list of changed files for each commit
