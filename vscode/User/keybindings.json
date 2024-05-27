@@ -1,7 +1,4 @@
 [
-  /*
-   * Internal functions
-   */
   {
     "key": "cmd+e",
     "command": "workbench.action.quickOpenPreviousEditor"
@@ -210,13 +207,6 @@
     "command": "-editor.action.triggerSuggest",
     "when": "editorHasCompletionItemProvider && textInputFocus && !editorReadonly && !suggestWidgetVisible"
   },
-  // Not sure I need it together with Cmd+B, though it could be nice to open Explorer
-  // every time, and not just whatever was last in the sidebar
-  {
-    "comment": "Focus on Explorer",
-    "key": "shift+cmd+\\",
-    "command": "workbench.files.action.focusFilesExplorer"
-  },
   {
     "comment": "Don't autocomplete on Enter, just on Tab: more ways to get rid of the autocomplete when you don't need it",
     "key": "enter",
@@ -244,14 +234,35 @@
     "command": "-workbench.action.debug.stepOver",
     "when": "debugState == 'stopped'"
   },
-
-  /*
-   * Plugins
-   */
-
-  // New File Now
   {
     "key": "cmd+n",
     "command": "newFileNow.createNewFile"
+  },
+  {
+    "key": "cmd+p",
+    "command": "-workbench.action.quickOpen"
+  },
+  {
+    "key": "cmd+p",
+    "command": "workbench.action.showCommands"
+  },
+  {
+    "key": "shift+cmd+p",
+    "command": "-workbench.action.showCommands"
+  },
+  {
+    "comment": "Format and save (to make autosave save files without formatting)",
+    "key": "cmd+s",
+    "command": "runCommands", 
+    "args": {
+      "commands": [
+        "editor.action.format",
+        "workbench.action.files.save"
+      ]
+    }
+  },
+  {
+    "key": "cmd+s",
+    "command": "-workbench.action.files.save"
   }
 ]

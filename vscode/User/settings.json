@@ -44,7 +44,7 @@
   "editor.fontFamily": "MonoLisa, \"Symbols Nerd Font Mono\"",
   "editor.fontLigatures": "'calt' on, 'liga' off", // Enable contextual alternative but disable ligatures
   "editor.fontSize": 17,
-  "editor.formatOnSave": true,
+  "editor.formatOnSave": false,
   "editor.glyphMargin": false,
   "editor.gotoLocation.multipleDeclarations": "goto",
   "editor.gotoLocation.multipleDefinitions": "goto",
@@ -90,6 +90,7 @@
     ".prettierrc": "json"
   },
   "files.autoSave": "onWindowChange",
+  "files.autoSaveWhenNoErrors": true,
   "files.defaultLanguage": "markdown",
   "files.exclude": {
     // Show node_modules but don't show anything inside
@@ -233,60 +234,6 @@
     "trackpad"
   ],
   "donations.disablePrompt": true,
-  "sonarlint.disableTelemetry": true,
-  "sonarlint.rules": {
-    "typescript:S6544": {
-      "level": "off"
-    },
-    "typescript:S4123": {
-      "level": "off"
-    },
-    "javascript:S4138": {
-      "level": "off"
-    },
-    "typescript:S6759": {
-      "level": "off"
-    },
-    "typescript:S6582": {
-      "level": "off"
-    },
-    "typescript:S3776": {
-      "level": "off"
-    },
-    "typescript:S3735": {
-      "level": "off"
-    },
-    "typescript:S1135": {
-      "level": "off"
-    },
-    "typescript:S6598": {
-      "level": "off"
-    },
-    "typescript:S6564": {
-      "level": "off"
-    },
-    "typescript:S6509": {
-      "level": "off"
-    },
-    "typescript:S2004": {
-      "level": "off"
-    },
-    "javascript:S1135": {
-      "level": "off"
-    },
-    "javascript:S2004": {
-      "level": "off"
-    },
-    "javascript:S1134": {
-      "level": "off"
-    },
-    "typescript:S1134": {
-      "level": "off"
-    },
-    "Web:S1135": {
-      "level": "off"
-    }
-  },
   "github.copilot.editor.enableAutoCompletions": false,
   "githubPullRequests.defaultMergeMethod": "squash",
   "gitlens.blame.avatars": false,
@@ -353,35 +300,27 @@
   "html.autoCreateQuotes": false,
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
   },
   "[javascriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
   },
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
   },
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
   },
   "[markdown]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": false
   },
   "[html]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
   },
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
   },
   "[astro]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
+    "editor.defaultFormatter": "esbenp.prettier-vscode",    
   },
   "[scminput]": {
     "editor.rulers": [72],
