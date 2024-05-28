@@ -18,14 +18,22 @@ import fs from 'fs';
 import untildify from 'untildify';
 import dotenv from 'dotenv';
 
-dotenv.config({ path: untildify('~/.env') });
+const HOME = path.dirname(path.dirname(import.meta.dirname));
 
-const PERSONAL_PROJECTS_DIR = '~/_';
-const WORK_PROJECTS_DIR = process.env.WORK_PROJECTS_DIR;
-const EXTRA_PROJECTS = ['~', ['dotfiles']];
+dotenv.config({ path: `${HOME}/.env` });
+
+const PERSONAL_PROJECTS_DIR = `${HOME}/_`;
+const WORK_PROJECTS_DIR = untildify(process.env.WORK_PROJECTS_DIR);
+const EXTRA_PROJECTS = [HOME, ['dotfiles']];
 const CLOUD_PROJECTS = [
-	'Apple iCloud Docs',
-	'~/Library/Mobile Documents/com~apple~CloudDocs',
+	{
+		label: 'Apple iCloud Docs',
+		dir: `${HOME}/Library/Mobile Documents/com~apple~CloudDocs`,
+	},
+	{
+		label: 'Cloud Writings',
+		dir: `${HOME}/Library/Mobile Documents/com~apple~CloudDocs/Writings`,
+	},
 ];
 
 const getDirs = (d) =>
@@ -40,13 +48,15 @@ const tryRepo = (dir, query, dirs) => {
 	}
 };
 
-const tryCloud = (label, dir, query) => {
+const tryCloud = (projects, query) => {
 	// Fuzzy search, don't require the first letter to match
 	const nameRegexp = new RegExp(`${fuzzyfy(query)}`, 'i');
 
-	if (nameRegexp.test(label)) {
-		console.log(dir);
-		process.exit(0);
+	for (const { label, dir } of projects) {
+		if (nameRegexp.test(label)) {
+			console.log(dir);
+			process.exit(0);
+		}
 	}
 };
 
@@ -79,17 +89,17 @@ if (args.length !== 1) {
 const query = args[0];
 
 // Cloud projects
-tryCloud(CLOUD_PROJECTS[0], untildify(CLOUD_PROJECTS[1]), query);
+tryCloud(CLOUD_PROJECTS, query);
 
 // Personal projects
-tryRepo(untildify(PERSONAL_PROJECTS_DIR), query);
+tryRepo(PERSONAL_PROJECTS_DIR, query);
 
 // Work projects
 if (WORK_PROJECTS_DIR) {
-	tryRepo(untildify(WORK_PROJECTS_DIR), query);
+	tryRepo(WORK_PROJECTS_DIR, query);
 }
 
 // Extra projects
-tryRepo(untildify(EXTRA_PROJECTS[0]), query, EXTRA_PROJECTS[1].map(untildify));
+tryRepo(EXTRA_PROJECTS[0], query, EXTRA_PROJECTS[1]);
 
 console.log('Repository not found');
