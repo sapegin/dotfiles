@@ -27,6 +27,10 @@ const folders = [
 
 	// Extra projects
 	untildify(`~/dotfiles/`),
+
+	// Cloud folders
+	untildify(`~/Library/Mobile Documents/com~apple~CloudDocs`),
+	untildify(`~/Library/Mobile Documents/com~apple~CloudDocs/Writings`),
 ].flat();
 
 const items = folders
