@@ -5,6 +5,9 @@
 # Usage:
 #   nnn
 #
+# To change the default version:
+#   fnm default 20
+#
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
 # https://github.com/sapegin/dotfiles
