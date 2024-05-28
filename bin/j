@@ -23,6 +23,10 @@ dotenv.config({ path: untildify('~/.env') });
 const PERSONAL_PROJECTS_DIR = '~/_';
 const WORK_PROJECTS_DIR = process.env.WORK_PROJECTS_DIR;
 const EXTRA_PROJECTS = ['~', ['dotfiles']];
+const CLOUD_PROJECTS = [
+	'Apple iCloud Docs',
+	'~/Library/Mobile Documents/com~apple~CloudDocs',
+];
 
 const getDirs = (d) =>
 	fs.readdirSync(d).filter((f) => fs.statSync(path.join(d, f)).isDirectory());
@@ -36,15 +40,27 @@ const tryRepo = (dir, query, dirs) => {
 	}
 };
 
+const tryCloud = (label, dir, query) => {
+	// Fuzzy search, don't require the first letter to match
+	const nameRegexp = new RegExp(`${fuzzyfy(query)}`, 'i');
+
+	if (nameRegexp.test(label)) {
+		console.log(dir);
+		process.exit(0);
+	}
+};
+
+function fuzzyfy(name) {
+	return name
+		.replace(/[^a-z0-9]/gi, '')
+		.split('')
+		.join('.*');
+}
+
+// TODO: Don't require fist letter to match but give such repos larger weight
 function find(repos, name) {
 	// Fuzzy search but require the first letter to match
-	const nameRegexp = new RegExp(
-		`^${name
-			.replace(/[^a-z0-9]/gi, '')
-			.split('')
-			.join('.*')}`,
-		'i'
-	);
+	const nameRegexp = new RegExp(`^${fuzzyfy(name)}`, 'i');
 	repos = repos.filter((r) => nameRegexp.test(r));
 
 	// Order by repo name length, shortest names first
@@ -60,19 +76,20 @@ if (args.length !== 1) {
 	process.exit(1);
 }
 
+const query = args[0];
+
+// Cloud projects
+tryCloud(CLOUD_PROJECTS[0], untildify(CLOUD_PROJECTS[1]), query);
+
 // Personal projects
-tryRepo(untildify(PERSONAL_PROJECTS_DIR), args[0]);
+tryRepo(untildify(PERSONAL_PROJECTS_DIR), query);
 
 // Work projects
 if (WORK_PROJECTS_DIR) {
-	tryRepo(untildify(WORK_PROJECTS_DIR), args[0]);
+	tryRepo(untildify(WORK_PROJECTS_DIR), query);
 }
 
 // Extra projects
-tryRepo(
-	untildify(EXTRA_PROJECTS[0]),
-	args[0],
-	EXTRA_PROJECTS[1].map(untildify)
-);
+tryRepo(untildify(EXTRA_PROJECTS[0]), query, EXTRA_PROJECTS[1].map(untildify));
 
 console.log('Repository not found');
