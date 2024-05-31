@@ -59,6 +59,7 @@
   nuke = "clean -f -d"
 
 [pull]
+  # Don't rebase on pulling: annoying, especially in VS Code
   rebase = false
 
 [push]
