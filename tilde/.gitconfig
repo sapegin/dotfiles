@@ -59,7 +59,7 @@
   nuke = "clean -f -d"
 
 [pull]
-  rebase = true
+  rebase = false
 
 [push]
 	# When pushing code, always push only your current branch to a branch of the same name
