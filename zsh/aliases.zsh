@@ -34,9 +34,6 @@ command -v exa > /dev/null 2>&1 && alias ls="exa -a --no-user --no-time"
 # trash: https://github.com/sindresorhus/macos-trash
 command -v trash > /dev/null 2>&1 && alias rm="trash"
 
-# neofetch: https://github.com/dylanaraps/neofetch
-command -v neofetch > /dev/null 2>&1 && alias neofetch="neofetch --source $HOME/.config/neofetch/nyancat.ascii"
-
 # Midnight Commander
 command -v mc > /dev/null 2>&1 && command -v code > /dev/null 2>&1 && alias mc="EDITOR=code mc --nosubshell"
 
