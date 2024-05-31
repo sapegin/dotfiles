@@ -32,6 +32,16 @@
     "command": "workbench.action.tasks.runTask"
   },
   {
+    "key": "cmd+alt+r",
+    "command": "workbench.action.tasks.restartTask",
+    "when": "taskRunning"
+  },
+  {
+    "key": "cmd+alt+r",
+    "command": "-toggleFindRegex",
+    "when": "editorFocus"
+  },
+  {
     "key": "alt+cmd+down",
     "command": "editor.action.moveLinesDownAction",
     "when": "editorTextFocus && !editorReadonly"
@@ -92,7 +102,7 @@
     "when": "panelVisible"
   },
   {
-    "comment": "Open Source control pane",
+  "comment": "Open Source control pane",
     "key": "cmd+shift+g",
     "command": "workbench.scm.focus",
     "when": "workbench.scm.active"
@@ -264,5 +274,20 @@
   {
     "key": "cmd+s",
     "command": "-workbench.action.files.save"
+  },
+  {
+    "key": "cmd+shift+o",
+    "command": "workbench.action.quickOpen",
+    "args": "@:"
+  },
+  {
+    "key": "cmd+shift+o",
+    "command": "-editor.action.accessibleViewGoToSymbol",
+    "when": "accessibilityHelpIsShown && accessibleViewGoToSymbolSupported || accessibleViewGoToSymbolSupported && accessibleViewIsShown"
+  },
+  {
+    "key": "cmd+shift+o",
+    "command": "-workbench.action.gotoSymbol",
+    "when": "!accessibilityHelpIsShown && !accessibleViewIsShown"
   }
 ]
