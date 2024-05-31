@@ -1,0 +1,87 @@
+# Taps
+tap "git-friendly/git-friendly"
+tap "homebrew/bundle"
+tap "homebrew/cask-fonts"
+
+# TODO: Add eza
+# TODO: Add eza
+
+# CLI tools
+brew "bat" # `cat` replacement
+brew "fd" # `find` replacement
+brew "fnm" # Node.js version manager
+brew "fzf" # Fuzzy finder
+brew "git"
+brew "git-delta" # Diff pager for `git` and `grep` output
+brew "lazygit" # Git client
+brew "macos-trash" # `rm` replacement with MacOS trash support
+brew "neofetch"
+brew "node" # Fallback Node.js version
+brew "ripgrep" # `grep` replacement
+brew "starship" # Prompt manager
+brew "tldr" # `man` replacement
+brew "tree"
+brew "typos-cli"
+brew "zsh"
+brew "zsh-syntax-highlighting"
+brew "git-friendly/git-friendly/git-friendly"
+
+# GUI apps
+cask "1password"
+cask "adobe-creative-cloud"
+cask "alfred"
+cask "bartender"
+cask "bruno"
+cask "colorsnapper"
+cask "coteditor"
+cask "dash"
+cask "devtoys"
+cask "firefox"
+cask "github"
+cask "kap"
+cask "keka"
+cask "mimestream"
+cask "nimble-commander"
+cask "notion"
+cask "numi"
+cask "optimage"
+cask "polypane"
+cask "quitter"
+cask "replacicon"
+cask "shottr"
+cask "telegram"
+cask "visual-studio-code"
+cask "vivaldi"
+cask "wezterm"
+cask "whatsapp"
+
+# Fonts
+cask "font-symbols-only-nerd-font"
+
+# Visual Stuidio code extensions
+vscode "amodio.toggle-excluded-files"
+vscode "astro-build.astro-vscode"
+vscode "catppuccin.catppuccin-vsc-icons"
+vscode "dbaeumer.vscode-eslint"
+vscode "deerawan.vscode-dash"
+vscode "dominicvonk.auto-toggle-sidebar"
+vscode "eamodio.gitlens"
+vscode "editorconfig.editorconfig"
+vscode "esbenp.prettier-vscode"
+vscode "github.vscode-pull-request-github"
+vscode "jkjustjoshing.vscode-text-pastry"
+vscode "mdickin.markdown-shortcuts"
+vscode "meganrogge.template-string-converter"
+vscode "naumovs.color-highlight"
+vscode "robole.file-bunny"
+vscode "sapegin.emoji-console-log"
+vscode "sapegin.new-file-now"
+vscode "sapegin.theme-squirrelsonglight"
+vscode "sapegin.todo-tomorrow"
+vscode "sburg.vscode-javascript-booster"
+vscode "sleistner.vscode-fileutils"
+vscode "stkb.rewrap"
+vscode "streetsidesoftware.code-spell-checker"
+vscode "tekumara.typos-vscode"
+vscode "yoavbls.pretty-ts-errors"
+vscode "ypresto.vscode-intelli-refactor"
