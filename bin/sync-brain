@@ -1,0 +1,125 @@
+#!/usr/bin/env node
+
+/**
+ * Generates Dash docset with:
+ * [ ] Washing code book
+ * [ ] Blog
+ *
+ * Author: Artem Sapegin, sapegin.me
+ * License: MIT
+ * https://github.com/sapegin/dotfiles
+ */
+
+/*
+// Index each file by its page title
+const name = $("title").text();
+const type = document.querySelector('meta[name="type"]').getAttribute('content');
+dashDoc.addEntry({ name, type });
+dashDoc.addEntry({ name, type });
+
+// Indexing each section
+const shouldIndexSubsections = document.querySelector('meta[name="subsections"]').getAttribute('content');
+if (shouldIndexSubsections === 'yes') {
+    document.querySelectorAll('h2').forEach(function(heading) {
+        const title = heading.textContent;
+        const hash = title.replace(/\W/g, '');
+        heading.setAttribute('id', hash);
+        dashDoc.addEntry({name: title, type: 'Section', hash});
+    });
+}
+*/
+
+import path from 'path';
+import fs from 'fs-extra';
+import { execSync } from 'child_process';
+import glob from 'glob';
+import { remark } from 'remark';
+import remarkHtml from 'remark-html';
+
+// TODO: How to add an icon? Raccoon!
+// TODO: TEMPLATE!!!
+
+// TODO: Copy image
+// TODO: Fix links
+// TODO: Fix images
+
+const HOME = path.dirname(path.dirname(import.meta.dirname));
+
+const BOOK_REPO_TAR_GZ =
+	'https://codeload.github.com/sapegin/washingcode-book/tar.gz/master';
+
+const BOOK_SOURCE_DIR = `${HOME}/dotfiles/washingcode-book-master`;
+const DEST_DIR = `${HOME}/dotfiles/brain`;
+
+function read(file) {
+	return fs.readFileSync(file, 'utf8');
+}
+
+function write(file, text) {
+	return fs.writeFileSync(file, text);
+}
+
+function getTitle(text) {
+	return text.match(/#\s+([^\n]+)/m)?.[1] ?? '';
+}
+
+function wrapHtml(body, { title, type, subsections }) {
+	return `<!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <title>${title}</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <meta name="type" content="${type}">
+      <meta name="subsections" content="${subsections ? 'yes' : 'no'}">
+      <link rel="stylesheet" href="../styles/styles.css">
+    </head>
+    <body>
+      ${body}
+    </body>
+  </html>
+  `;
+}
+
+// TODO: Shiki
+function markdownToHtml(md, { type, subsections }) {
+	// Create Remark processor
+	const processor = remark();
+	processor.use(remarkHtml, { entities: 'escape' });
+	return wrapHtml(processor.processSync(md).value, {
+		title: getTitle(md),
+		type,
+		subsections,
+	});
+}
+
+// TODO: Filter, for example skip header and footer files of the book
+function addMarkdownFolder(dir, { destDir, type, subsections = false }) {
+	const files = glob.sync(`${dir}/**/*.md`);
+	fs.ensureDir(`${DEST_DIR}/${destDir}`);
+
+	for (const file of files) {
+		console.log('👉🏼', file);
+		const md = read(file);
+		const html = markdownToHtml(md, { type, subsections });
+		const filename = path.parse(file).name;
+		write(`${DEST_DIR}/${destDir}/${filename}.html`, html);
+	}
+}
+
+console.log('Downloading the book...');
+
+fs.rmSync(BOOK_SOURCE_DIR, { recursive: true, force: true });
+execSync(`curl "${BOOK_REPO_TAR_GZ}" | tar xz -C $HOME/dotfiles`);
+
+console.log();
+console.log('Generating the book files...');
+
+addMarkdownFolder(`${BOOK_SOURCE_DIR}/manuscript`, {
+	destDir: 'book',
+	type: 'Book',
+	subsections: true,
+});
+
+console.log();
+console.log('🦜 Now update the docset in Dash');
