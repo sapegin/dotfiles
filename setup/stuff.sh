@@ -51,7 +51,6 @@ brew install fnm
 brew install git-delta
 brew install lazygit
 brew install macos-trash
-brew install neofetch
 brew install proselint
 brew install ripgrep
 brew install starship

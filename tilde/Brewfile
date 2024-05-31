@@ -4,10 +4,10 @@ tap "homebrew/bundle"
 tap "homebrew/cask-fonts"
 
 # TODO: Add eza
-# TODO: Add fastfetch
 
 # CLI tools
 brew "bat" # `cat` replacement
+brew "fastfetch"
 brew "fd" # `find` replacement
 brew "fnm" # Node.js version manager
 brew "fzf" # Fuzzy finder
@@ -15,7 +15,6 @@ brew "git"
 brew "git-delta" # Diff pager for `git` and `grep` output
 brew "lazygit" # Git client
 brew "macos-trash" # `rm` replacement with MacOS trash support
-brew "neofetch"
 brew "node" # Fallback Node.js version
 brew "ripgrep" # `grep` replacement
 brew "starship" # Prompt manager
