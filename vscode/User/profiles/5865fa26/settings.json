@@ -40,7 +40,7 @@
   "editor.foldingImportsByDefault": true,
   "editor.fontFamily": "MonoLisa, \"Symbols Nerd Font Mono\"",
   "editor.fontLigatures": "'calt' on, 'liga' off",
-  "editor.fontSize": 22,
+  "editor.fontSize": 21,
   "editor.formatOnSave": true,
   "editor.glyphMargin": false,
   "editor.gotoLocation.multipleDeclarations": "goto",
