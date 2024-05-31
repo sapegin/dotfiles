@@ -103,7 +103,10 @@
   "git.closeDiffOnOperation": true,
   "git.confirmSync": false,
   "git.enableSmartCommit": true,
+  "git.mergeEditor": true,
+  "merge-conflict.autoNavigateNextConflict.enabled": true,
   "outline.problems.badges": false,
+  "outline.showVariables": false,
   "problems.autoReveal": false,
   "problems.decorations.enabled": false,
   "search.decorations.badges": false,
@@ -125,7 +128,14 @@
   "security.promptForLocalFileProtocolHandling": false,
   "task.problemMatchers.neverPrompt": { "npm": true },
   "telemetry.telemetryLevel": "off",
+  // Run tasks in interactive shell, otherwise some things (like pnpm installed
+  // using corepack) aren't working
+  "terminal.integrated.automationProfile.osx": {
+    "path": "/opt/homebrew/bin/zsh",
+    "args": ["-i"]
+  },
   "terminal.integrated.commandsToSkipShell": ["workbench.action.closePanel"],
+  "terminal.integrated.copyOnSelection": true,
   "terminal.integrated.cursorStyle": "line",
   "terminal.integrated.cursorStyleInactive": "line",
   "terminal.integrated.cursorWidth": 2,
@@ -236,6 +246,7 @@
   "donations.disablePrompt": true,
   "github.copilot.editor.enableAutoCompletions": false,
   "githubPullRequests.defaultMergeMethod": "squash",
+  "githubPullRequests.pullPullRequestBranchBeforeCheckout": "pullAndMergeBase",
   "gitlens.blame.avatars": false,
   "gitlens.blame.dateFormat": "YYYY-MM-DD",
   "gitlens.blame.fontSize": 13,
@@ -263,7 +274,7 @@
       "id": "5865fa26",
       "name": "Zen Mode Supreme",
       "values": {
-        "editor.fontSize": 22,
+        "editor.fontSize": 21,
         "editor.lineHeight": 2,
         "editor.rulers": [],
         "editor.stickyScroll.enabled": false,
@@ -294,33 +305,34 @@
   "typescript.preferences.preferTypeOnlyAutoImports": true,
   "typescript.preferGoToSourceDefinition": true,
   "typescript.updateImportsOnFileMove.enabled": "always",
+  "typescript.workspaceSymbols.scope": "currentProject",
   "html.format.wrapLineLength": 0,
   "html.format.enable": false,
   "html.autoClosingTags": false,
   "html.autoCreateQuotes": false,
   "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[javascriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[typescriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[markdown]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[html]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[astro]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",    
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[scminput]": {
     "editor.rulers": [72],
