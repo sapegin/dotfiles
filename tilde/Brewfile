@@ -4,7 +4,7 @@ tap "homebrew/bundle"
 tap "homebrew/cask-fonts"
 
 # TODO: Add eza
-# TODO: Add eza
+# TODO: Add fastfetch
 
 # CLI tools
 brew "bat" # `cat` replacement
