@@ -56,7 +56,7 @@
 	# Cancel local commits in the branch: git fuck master
 	fuck = "!f() { git reset --hard origin/$1; }; f"
   # Remove all changes, including untracked files
-  nuke = "clean -f -d"
+  nuke = !git reset --hard && git clean -f -d
 
 [pull]
   # Don't rebase on pulling: annoying, especially in VS Code
