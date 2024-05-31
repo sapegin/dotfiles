@@ -27,10 +27,122 @@
 	<dict>
 		<key>installed</key>
 		<dict>
-			<key>Sapegin.me</key>
+			<key>Brain</key>
 			<dict>
 				<key>date</key>
 				<date>2024-05-23T05:18:39Z</date>
+				<key>entry</key>
+				<dict>
+					<key>docsetGeneratorSettings</key>
+					<dict>
+						<key>allowFilters</key>
+						<string></string>
+						<key>basicIndexEnabled</key>
+						<true/>
+						<key>cssToInject</key>
+						<string></string>
+						<key>denyFilters</key>
+						<string></string>
+						<key>docsetKeyword</key>
+						<string>me</string>
+						<key>docsetName</key>
+						<string>Brain</string>
+						<key>extraInfoPlist</key>
+						<string>me</string>
+						<key>isFromLocalFolder</key>
+						<true/>
+						<key>isFromWebsite</key>
+						<false/>
+						<key>javaScriptIndexEnabled</key>
+						<false/>
+						<key>javaScriptUsedToIndex</key>
+						<string>
+// Index each file by its page title
+const name = $("title").text();
+const type = document.querySelector('meta[name="type"]').getAttribute('content');
+dashDoc.addEntry({ name, type });
+
+// Indexing each section
+document.querySelectorAll('h2').forEach(function(heading) {
+    const title = heading.textContent;
+    const hash = title.replace(/\W/g, '');
+    heading.setAttribute('id', hash);
+    dashDoc.addEntry({name: title, type: 'Section', hash});
+});</string>
+						<key>localFolderPath</key>
+						<string>/Users/sapegia/_/dotfiles/brain</string>
+					</dict>
+					<key>name</key>
+					<string>Brain</string>
+					<key>platform</key>
+					<string>Other</string>
+					<key>uniqueIdentifier</key>
+					<string>sapegin.me</string>
+				</dict>
+			</dict>
+			<key>sapegin.me</key>
+			<dict>
+				<key>date</key>
+				<date>2024-05-31T06:59:03Z</date>
+				<key>entry</key>
+				<dict>
+					<key>docsetGeneratorSettings</key>
+					<dict>
+						<key>allowFilters</key>
+						<string></string>
+						<key>basicIndexEnabled</key>
+						<false/>
+						<key>cssToInject</key>
+						<string></string>
+						<key>denyFilters</key>
+						<string></string>
+						<key>docsetKeyword</key>
+						<string>me</string>
+						<key>docsetName</key>
+						<string>Brain</string>
+						<key>extraInfoPlist</key>
+						<string></string>
+						<key>isFromLocalFolder</key>
+						<true/>
+						<key>isFromWebsite</key>
+						<false/>
+						<key>javaScriptIndexEnabled</key>
+						<true/>
+						<key>javaScriptUsedToIndex</key>
+						<string>// Index each file by its page title
+const name = $("title").text();
+const type = document.querySelector('meta[name="type"]').getAttribute('content');
+dashDoc.addEntry({ name, type });
+dashDoc.addEntry({ name, type });
+
+// Indexing each section
+const shouldIndexSubsectins = document.querySelector('meta[name="subsections"]').getAttribute('content');
+if (shouldIndexSubsectins === 'yes') {
+    document.querySelectorAll('h2').forEach(function(heading) {
+        const title = heading.textContent;
+        const hash = title.replace(/\W/g, '');
+        heading.setAttribute('id', hash);
+        dashDoc.addEntry({name: title, type: 'Section', hash});
+    });
+}</string>
+						<key>localFolderPath</key>
+						<string>/Users/sapegia/dotfiles/brain</string>
+					</dict>
+					<key>name</key>
+					<string>Brain</string>
+					<key>platform</key>
+					<string>Other</string>
+					<key>uniqueIdentifier</key>
+					<string>sapegin.me</string>
+				</dict>
+			</dict>
+		</dict>
+		<key>uninstalled</key>
+		<dict>
+			<key>Sapegin.me</key>
+			<dict>
+				<key>date</key>
+				<date>2024-05-31T05:12:25Z</date>
 				<key>entry</key>
 				<dict>
 					<key>docsetGeneratorSettings</key>
@@ -83,8 +195,6 @@ $("h1").each(function() {
 				</dict>
 			</dict>
 		</dict>
-		<key>uninstalled</key>
-		<dict/>
 	</dict>
 	<key>DHGitHubRepo</key>
 	<dict>
