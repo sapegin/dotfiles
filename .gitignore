@@ -10,11 +10,8 @@ Thumbs.db
 vscode/**/History/
 vscode/**/globalStorage/
 vscode/**/workspaceStorage/
-tilde/.local/share/mc/history
-tilde/.local/share/mc/filepos
-tilde/.config/mc/panels.ini
+tilde/Brewfile.lock.json
 lazygit/state.yml
-squirrelsong-master/
 washingcode-book-master/
 brain/book/
 brain/blog/

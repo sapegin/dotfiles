@@ -7,7 +7,7 @@ tap "homebrew/cask-fonts"
 
 # CLI tools
 brew "bat" # `cat` replacement
-brew "fastfetch"
+brew "fastfetch" # Displays pretty system info
 brew "fd" # `find` replacement
 brew "fnm" # Node.js version manager
 brew "fzf" # Fuzzy finder
@@ -17,41 +17,42 @@ brew "lazygit" # Git client
 brew "macos-trash" # `rm` replacement with MacOS trash support
 brew "node" # Fallback Node.js version
 brew "ripgrep" # `grep` replacement
+brew "rsyncy" # `rsync` replacement
 brew "starship" # Prompt manager
 brew "tldr" # `man` replacement
-brew "tree"
-brew "typos-cli"
-brew "zsh"
+brew "tree" # Print directory tree
+brew "typos-cli" # Fix typos
+brew "zsh" # Shell
 brew "zsh-syntax-highlighting"
-brew "git-friendly/git-friendly/git-friendly"
+brew "git-friendly/git-friendly/git-friendly" # Better Git commands
 
 # GUI apps
-cask "1password"
+cask "1password" # Password manager
 cask "adobe-creative-cloud"
-cask "alfred"
-cask "bartender"
-cask "bruno"
-cask "colorsnapper"
-cask "coteditor"
-cask "dash"
-cask "devtoys"
+cask "alfred" # App launcher
+cask "bartender" # Hides menu bar icons
+cask "bruno" # GraphQL API client
+cask "colorsnapper" # Color picker
+cask "coteditor" # Simple code/text editor
+cask "dash" # Documentation reader
+cask "devtoys" # Collection of developer tools
 cask "firefox"
-cask "github"
-cask "kap"
-cask "keka"
-cask "mimestream"
-cask "nimble-commander"
+cask "github" # GitHub Desktop
+cask "kap" # Video screen recording
+cask "keka" # Archive reader
+cask "mimestream" # Gmail client
+cask "nimble-commander" # File manager
 cask "notion"
-cask "numi"
-cask "optimage"
-cask "polypane"
-cask "quitter"
-cask "replacicon"
-cask "shottr"
+cask "numi" # Calculator
+cask "optimage" # Image optimization
+cask "polypane" # Responsive design and accessibility testing
+cask "quitter" # Quit apps after certain time
+cask "replacicon" # Custom app icons
+cask "shottr" # Screenshots
 cask "telegram"
 cask "visual-studio-code"
 cask "vivaldi"
-cask "wezterm"
+cask "wezterm" # Terminal emulator
 cask "whatsapp"
 
 # Fonts
@@ -84,3 +85,19 @@ vscode "streetsidesoftware.code-spell-checker"
 vscode "tekumara.typos-vscode"
 vscode "yoavbls.pretty-ts-errors"
 vscode "ypresto.vscode-intelli-refactor"
+
+# TODO: Find a way to print this _after_ the installation, not before
+puts "☕️ Install more apps if you need them:"
+puts "brew install --cask charles"
+puts "brew install --cask choosy"
+puts "brew install --cask daisydisk"
+puts "brew install --cask gemini"
+puts "brew install --cask messenger"
+puts "brew install --cask rapidapi"
+puts "brew install --cask slack"
+puts "brew install --cask zoom"
+puts ""
+puts "🍏 Install additional apps from Mac App Store:"
+puts "https://github.com/sapegin/dotfiles/wiki/OS-X-Apps"
+puts ""
+puts ""

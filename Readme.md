@@ -24,25 +24,29 @@
 Prerequisites:
 
 1. [Generate SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent).
-2. [Install Homebrew](http://brew.sh/), and run `eval "$(/opt/homebrew/bin/brew shellenv)"`.
-3. Install Node.js: `brew install node`.
+2. [Install Homebrew](http://brew.sh/).
 
-Then run these commands in the terminal:
+3. Clone dotfiles:
 
-```
-git clone git@github.com:sapegin/dotfiles.git ~/dotfiles
-cd ~/dotfiles
-setup/zsh.sh
-setup/stuff.sh
-setup/apps.sh
-setup/vscode.sh
-npm install
-bin/dotfiles
+```shell
+git clone git@github.com:sapegin/dotfiles.git ~/dotfiles && cd ~/dotfiles
 ```
 
-3. [Install color themes](./colors/Readme.md).
-4. [Install MonoLisa font](https://www.monolisa.dev/).
-5. [Install other stuff](./setup/Readme.md)
+3. Install dependencies from Brewfile:
+
+```shell
+brew bundle install --file tilde/Brewfile
+```
+
+4. Run setup script:
+
+```shell
+setup/setup.sh
+```
+
+5. [Install color themes](./colors/Readme.md).
+6. [Install MonoLisa font](https://www.monolisa.dev/).
+7. [Install other stuff](./setup/Readme.md)
 
 ## Further customization
 
