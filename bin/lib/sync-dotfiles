@@ -9,11 +9,12 @@
 // https://github.com/sapegin/dotfiles
 //
 
+import path from 'path';
 import fs from 'fs-extra';
 import glob from 'glob';
 import prompts from 'prompts';
 
-const HOME = path.dirname(path.dirname(import.meta.dirname));
+const HOME = path.dirname(path.dirname(path.dirname(import.meta.dirname)));
 const TILDE_DIR = `${HOME}/dotfiles/tilde`;
 const IGNORE = ['.config', '.local', '.DS_Store'];
 
@@ -45,7 +46,7 @@ async function confirmAction(message) {
 async function syncDotfiles() {
 	process.chdir(TILDE_DIR);
 	const files = [
-		...glob.sync('.*'),
+		...glob.sync('*'),
 		...glob.sync('.config/*'),
 		...glob.sync('.local/share/*'),
 	];
