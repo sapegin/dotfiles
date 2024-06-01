@@ -28,8 +28,8 @@ alias nn="open -a 'Nimble Commander' ."
 # Bat: https://github.com/sharkdp/bat
 command -v bat > /dev/null 2>&1 && alias cat="bat --style=plain"
 
-# Exa: https://the.exa.website
-command -v exa > /dev/null 2>&1 && alias ls="exa -a --no-user --no-time"
+# Eza:https://github.com/eza-community/eza
+command -v eza > /dev/null 2>&1 && alias ls="eza -a --no-user --no-time --hyperlink --icons=auto"
 
 # trash: https://github.com/sindresorhus/macos-trash
 command -v trash > /dev/null 2>&1 && alias rm="trash"

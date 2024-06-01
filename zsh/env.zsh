@@ -41,7 +41,7 @@ export PAGER='less'
 export BAT_THEME="Squirrelsong Dark"
 
 # LS colors: https://the.exa.website/docs/colour-themes
-# Used by: exa, fd
+# Used by: eza, fd
 export LS_COLORS='di=34:ln=1;34:so=33:pi=33:ex=1;36:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43'
 
 # Homebrew install badge: beer sucks, coffee rules

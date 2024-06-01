@@ -3,10 +3,9 @@ tap "git-friendly/git-friendly"
 tap "homebrew/bundle"
 tap "homebrew/cask-fonts"
 
-# TODO: Add eza
-
 # CLI tools
 brew "bat" # `cat` replacement
+brew "eza" # `ls` replacement
 brew "fastfetch" # Displays pretty system info
 brew "fd" # `find` replacement
 brew "fnm" # Node.js version manager
