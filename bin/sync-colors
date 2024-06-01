@@ -49,7 +49,7 @@ async function install(from, toDir) {
 console.log('🌈 Installing Bat theme...');
 
 await install(
-	'/dark/Sublime Text/Squirrelsong Dark/Squirrelsong Dark.tmTheme',
+	'dark/Sublime Text/Squirrelsong Dark/Squirrelsong Dark.tmTheme',
 	'.config/bat/themes'
 );
 execSync(`bat cache --build`);
