@@ -61,6 +61,10 @@ echo
 echo "🐿️ Syncing dotfiles..."
 $HOME/dotfiles/bin/lib/sync-dotfiles
 
+# Sync color schemes
+echo "🦄 Syncing color schemes..."
+$HOME/dotfiles/bin/sync-colors
+
 echo
 echo "🦆 All done! Now, open a new terminal for the changes to take effect."
 
