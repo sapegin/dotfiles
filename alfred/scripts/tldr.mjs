@@ -10,6 +10,7 @@
  * https://github.com/sapegin/dotfiles
  */
 
+import path from 'path';
 import fs from 'fs';
 
 const HOME = path.dirname(path.dirname(import.meta.dirname));

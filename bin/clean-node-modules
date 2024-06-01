@@ -7,10 +7,10 @@
 // https://github.com/sapegin/dotfiles
 //
 
-const path = require('path');
-const { execSync } = require('child_process');
-const fs = require('fs-extra');
-const differenceInDays = require('date-fns/differenceInDays');
+import path from 'path';
+import { execSync } from 'child_process';
+import fs from 'fs-extra';
+import differenceInDays from 'date-fns/differenceInDays';
 
 const HOME = path.dirname(path.dirname(import.meta.dirname));
 
