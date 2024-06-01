@@ -1,6 +1,6 @@
 # Artem Sapegin’s dotfiles 🐿️
 
-![iTerm2](https://github.com/sapegin/squirrelsong/raw/master/dark/iTerm2/screenshot.png)
+![WezTerm](https://github.com/sapegin/squirrelsong/raw/master/dark/WezTerm/screenshot.png)
 
 ## Features
 
@@ -9,12 +9,13 @@
 - [Dotfiles synchronization](https://github.com/sapegin/dotfiles/blob/master/bin/lib/sync-dotfiles).
 - Sensible macOS defaults: [setup/osx.sh](https://github.com/sapegin/dotfiles/blob/master/setup/osx.sh).
 - Visual Studio Code settings synchronization: [vscode](https://github.com/sapegin/dotfiles/tree/master/vscode).
-- zsh install script: [setup/zsh.sh](https://github.com/sapegin/dotfiles/blob/master/setup/zsh.sh).
 - My magic project opener ([bin/j](https://github.com/sapegin/dotfiles/blob/master/bin/j)).
 - [zsh aliases](https://github.com/sapegin/dotfiles/blob/master/zsh/aliases.zsh).
 - [Git aliases](https://github.com/sapegin/dotfiles/blob/master/tilde/.gitconfig).
 - [Lots of scripts](https://github.com/sapegin/dotfiles/tree/master/bin).
-- User scripts for browser: [userscripts/](https://github.com/sapegin/dotfiles/tree/master/userscripts).
+- [Vivaldi custom styles](https://github.com/sapegin/dotfiles/tree/master/vivaldi).
+- [Brewfile](https://github.com/sapegin/dotfiles/tree/master/tilde/Brewfile)
+- Configs for lots of apps.
 - [macOS apps I use](https://github.com/sapegin/dotfiles/wiki/OS-X-Apps).
 
 ## Installation
@@ -24,29 +25,21 @@
 Prerequisites:
 
 1. [Generate SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent).
-2. [Install Homebrew](http://brew.sh/).
 
-3. Clone dotfiles:
+2. Clone dotfiles:
 
 ```shell
 git clone git@github.com:sapegin/dotfiles.git ~/dotfiles && cd ~/dotfiles
 ```
 
-3. Install dependencies from Brewfile:
-
-```shell
-brew bundle install --file tilde/Brewfile
-```
-
-4. Run setup script:
+2. Run setup script:
 
 ```shell
 setup/setup.sh
 ```
 
-5. [Install color themes](./colors/Readme.md).
-6. [Install MonoLisa font](https://www.monolisa.dev/).
-7. [Install other stuff](./setup/Readme.md)
+3. [Install Squirrelsong color theme](https://sapegin.me/squirrelsong/)
+4. [Install MonoLisa font](https://www.monolisa.dev/)
 
 ## Further customization
 
@@ -64,6 +57,7 @@ dotfiles
 
 - [GitHub ❤ ~/](http://dotfiles.github.io/)
 - [Mathias’s dotfiles](https://github.com/mathiasbynens/dotfiles)
+- [Nick Khan’s dotfiles](https://github.com/nicksp/dotfiles)
 - [Jan Moesen’s dotfiles](https://github.com/janmoesen/tilde)
 - [Zach Holman’s dotfiles](https://github.com/holman/dotfiles)
 - [Yet Another Dotfile Repo](https://github.com/skwp/dotfiles)

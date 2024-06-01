@@ -1,29 +1,36 @@
 #!/bin/bash
 
-# Configures Zsh, some global settings, XCode command line tools, Node.js, and some other command line tools
+# Sets up the a new computer:
+# - installs Homebrew, Zsh, all the software;
+# - configures XCode command line tools, Node.js, etc.
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
 
-# Common stuff
-RED="$(tput setaf 1)"
-UNDERLINE="$(tput sgr 0 1)"
-NOCOLOR="$(tput sgr0)"
-function error() { echo -e "$UNDERLINE$RED$1$NOCOLOR\n"; }
-
-# Check that Homebrew is installed
-command -v brew > /dev/null 2>&1 || {
-	error "Homebrew not installed: https://brew.sh/"
-	exit 1
-}
+# Exit on any failed command
+set -e
 
 # Ask for the administrator password upfront
 sudo -v
 
+# Install Homebrew
+if ! command -v brew > /dev/null 2>&1; then
+	echo "🫖 Installing Homebrew..."
+	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+
+# Install dependencies
+echo "☕️ Installing Homebrew dependencies..."
+brew bundle install --file tilde/Brewfile
+
 # Set Zsh as default shell
+echo "🐚 Setting up Zsh as default shell..."
 zsh_path=$(which zsh)
 if ! grep -Fxq "$zsh_path" /etc/shells; then
-	echo "🐚 Setting up Zsh as the default shell..."
 	sudo bash -c "echo $zsh_path >> /etc/shells"
-	chsh -s "$zsh_path" $USER
 fi
+chsh -s "$zsh_path" $USER
 
 # Extend global $PATH
 if ! grep -Fq "$HOME/dotfiles" /etc/launchd.conf; then
@@ -53,7 +60,7 @@ npm install
 echo
 
 # fzf, fuzzy finder
-echo "🌁 Configuring FZF..."
+echo "🌁 Configuring fzf..."
 $(brew --prefix)/opt/fzf/install
 echo
 

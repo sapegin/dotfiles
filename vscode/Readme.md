@@ -2,6 +2,9 @@
 
 ## Enable synchronization
 
+> [!INFO]
+> This is already included with the setup script.
+
 ```shell
 rm -rf ~/Library/Application\ Support/Code/User
 ln -s ~/dotfiles/vscode/User ~/Library/Application\ Support/Code/User
