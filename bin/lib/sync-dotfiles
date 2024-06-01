@@ -11,10 +11,10 @@
 
 import fs from 'fs-extra';
 import glob from 'glob';
-import userHome from 'user-home';
 import prompts from 'prompts';
 
-const TILDE_DIR = `${userHome}/dotfiles/tilde`;
+const HOME = path.dirname(path.dirname(import.meta.dirname));
+const TILDE_DIR = `${HOME}/dotfiles/tilde`;
 const IGNORE = ['.config', '.local', '.DS_Store'];
 
 function isSymlinkTo(link, dest) {
@@ -51,7 +51,7 @@ async function syncDotfiles() {
 	];
 
 	for (const sourcePath of files) {
-		const destPath = `${userHome}/${sourcePath}`;
+		const destPath = `${HOME}/${sourcePath}`;
 
 		if (IGNORE.includes(sourcePath)) {
 			continue;

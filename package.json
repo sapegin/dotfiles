@@ -41,7 +41,6 @@
     "textlint-rule-terminology": "^4.0.1",
     "textlint-rule-write-good": "^2.0.0",
     "trash-cli": "^5.0.0",
-    "untildify": "^5.0.0",
-    "user-home": "^2.0.0"
+    "untildify": "^5.0.0"
   }
 }

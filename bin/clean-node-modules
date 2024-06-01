@@ -10,19 +10,19 @@
 const path = require('path');
 const { execSync } = require('child_process');
 const fs = require('fs-extra');
-const userHome = require('user-home');
 const differenceInDays = require('date-fns/differenceInDays');
+
+const HOME = path.dirname(path.dirname(import.meta.dirname));
 
 const MAX_DAYS = 30;
 const IGNORE = [
-	`${userHome}/.config`,
-	`${userHome}/.npm`,
-	`${userHome}/.vscode`,
-	`${userHome}/dotfiles`,
-	`${userHome}/Library`,
-	`${userHome}/Documents/Library`,
-	`${userHome}/Movies`,
-	`${userHome}/n`,
+	`${HOME}/.config`,
+	`${HOME}/.npm`,
+	`${HOME}/.vscode`,
+	`${HOME}/dotfiles`,
+	`${HOME}/Library`,
+	`${HOME}/Documents/Library`,
+	`${HOME}/Movies`,
 ];
 
 const sizes = [];
@@ -110,7 +110,7 @@ async function removeNodeModules(folderPath) {
 }
 
 async function main() {
-	await removeNodeModules(userHome);
+	await removeNodeModules(HOME);
 
 	const totalSize = summ(sizes);
 	console.log();

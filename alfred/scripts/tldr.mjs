@@ -11,13 +11,14 @@
  */
 
 import fs from 'fs';
-import userHome from 'user-home';
+
+const HOME = path.dirname(path.dirname(import.meta.dirname));
 
 const bundleId = process.argv[2];
 
 try {
 	const markdown = fs.readFileSync(
-		`${userHome}/dotfiles/docs/gui/${bundleId}.md`,
+		`${HOME}/dotfiles/docs/gui/${bundleId}.md`,
 		'utf8'
 	);
 	console.log(
