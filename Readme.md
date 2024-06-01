@@ -20,7 +20,8 @@
 
 ## Installation
 
-(Fork this repository if you want to use my dotfiles.)
+> [!WARNING]
+> Fork this repository if you want to use my dotfiles.)
 
 Prerequisites:
 
@@ -32,14 +33,16 @@ Prerequisites:
 git clone git@github.com:sapegin/dotfiles.git ~/dotfiles && cd ~/dotfiles
 ```
 
-2. Run setup script:
+3. Run setup script:
 
 ```shell
 setup/setup.sh
 ```
 
-3. [Install Squirrelsong color theme](https://sapegin.me/squirrelsong/)
-4. [Install MonoLisa font](https://www.monolisa.dev/)
+## Extras
+
+- [Install additional Squirrelsong color theme](https://sapegin.me/squirrelsong/)
+- [Install MonoLisa font](https://www.monolisa.dev/)
 
 ## Further customization
 
