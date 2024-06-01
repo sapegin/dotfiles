@@ -31,6 +31,8 @@
     "remark-html": "^16.0.1",
     "shiki": "^1.6.1",
     "strip-json-comments": "^5.0.1",
+    "tempy": "^3.1.0",
+    "terminal-link": "^3.0.0",
     "textlint": "^14.0.3",
     "textlint-filter-rule-comments": "^1.2.2",
     "textlint-rule-apostrophe": "^2.0.0",

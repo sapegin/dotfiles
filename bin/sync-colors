@@ -6,8 +6,7 @@
  * This scripts syncs color themes for:
  * [x] Bat
  * [x] WezTerm
- *
- * To sync Bear theme, run `sync-colors-bear`
+ * [x] Bear
  *
  * Author: Artem Sapegin, sapegin.me
  * License: MIT
@@ -18,6 +17,8 @@ import path from 'path';
 import fs from 'fs-extra';
 import { execSync } from 'child_process';
 import ky from 'ky';
+import terminalLink from 'terminal-link';
+import { temporaryFileTask } from 'tempy';
 
 const HOME = path.dirname(path.dirname(import.meta.dirname));
 
@@ -61,5 +62,29 @@ console.log('🌈 Installing WezTerm theme...');
 
 await install('dark/WezTerm/squirrelsong-dark.toml', '.config/wezterm/colors');
 
+/**
+ * Bear
+ */
+
+console.log('🌈 Installing Bear theme...');
+
+const bearTheme = await download('light/Bear/Squirrelsong Light.theme');
+const bearThemesDir = `/Applications/Bear.app/Contents/Frameworks/BearCore.framework/Resources`;
+await temporaryFileTask((tempFile) => {
+	fs.writeFileSync(tempFile, bearTheme);
+	execSync(
+		`sudo -- sh -c 'command rm "${bearThemesDir}/Ayu.theme" > /dev/null 2>&1; command cp "${tempFile}" "${bearThemesDir}/Ayu.theme"'`
+	);
+});
+console.log('💡 Now choose Ayu theme in Bear settings');
+
+// --- 8< -- 8< ---
+
 console.log();
-console.log('🦜 Now run `dotfiles` to sync all the config files');
+console.log('🦜 Install all the remaining themes at:');
+console.log(
+	terminalLink(
+		'https://sapegin.me/squirrelsong/',
+		'https://sapegin.me/squirrelsong/#download'
+	)
+);
