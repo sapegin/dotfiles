@@ -62,7 +62,7 @@ echo "🐿️ Syncing dotfiles..."
 $HOME/dotfiles/bin/lib/sync-dotfiles
 
 # Sync color schemes
-echo "🦄 Syncing color schemes..."
+echo "🦄 Syncing color themes..."
 $HOME/dotfiles/bin/sync-colors
 
 echo
