@@ -23,8 +23,7 @@ config.font_rules = {
 config.harfbuzz_features = { 'calt=1', 'clig=0', 'liga=0', 'zero', 'ss01' }
 
 -- Colors
-local colors = require 'squirrelsong-dark'
-config.colors = colors
+config.color_scheme = 'Squirrelsong Dark'
 
 config.window_frame = {
 	font = wezterm.font { family = font, weight = 'Bold' },

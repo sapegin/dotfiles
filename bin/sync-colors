@@ -14,37 +14,52 @@
  * https://github.com/sapegin/dotfiles
  */
 
+import path from 'path';
 import fs from 'fs-extra';
 import { execSync } from 'child_process';
-import untildify from 'untildify';
+import ky from 'ky';
 
-const REPO_TAR_GZ =
-	'https://codeload.github.com/sapegin/squirrelsong/tar.gz/master';
+const HOME = path.dirname(path.dirname(import.meta.dirname));
 
-const SOURCE_DIR = untildify('~/dotfiles/squirrelsong-master');
-const DEST_DIR = untildify('~/dotfiles/tilde');
+const REPO_ROOT =
+	'https://raw.githubusercontent.com/sapegin/squirrelsong/master';
+const DEST_DIR = `${HOME}/dotfiles/tilde`;
 
-console.log('Downloading themes...');
+function download(filepath) {
+	return ky.get(`${REPO_ROOT}/${encodeURI(filepath)}`).text();
+}
 
-execSync(`curl "${REPO_TAR_GZ}" | tar xz`);
+function write(file, text) {
+	const fullPath = path.join(DEST_DIR, file);
+	fs.ensureDir(path.dirname(fullPath));
+	return fs.writeFileSync(fullPath, text);
+}
 
-console.log();
-console.log('Installing Bat theme...');
+async function install(from, toDir) {
+	const theme = await download(from);
+	const filename = path.basename(from);
+	write(path.join(toDir, filename), theme);
+}
 
-fs.copyFileSync(
-	`${SOURCE_DIR}/dark/Sublime Text/Squirrelsong Dark/Squirrelsong Dark.tmTheme`,
-	`${DEST_DIR}/.config/bat/themes/Squirrelsong Dark.tmTheme`
+/**
+ * Bat: https://github.com/sharkdp/bat?tab=readme-ov-file#adding-new-themes
+ */
+
+console.log('🌈 Installing Bat theme...');
+
+await install(
+	'/dark/Sublime Text/Squirrelsong Dark/Squirrelsong Dark.tmTheme',
+	'.config/bat/themes'
 );
-
 execSync(`bat cache --build`);
 
-console.log();
-console.log('Installing WezTerm theme...');
+/**
+ * WezTerm
+ */
 
-fs.copyFileSync(
-	`${SOURCE_DIR}/dark/WezTerm/squirrelsong-dark.lua`,
-	`${DEST_DIR}/.config/wezterm/squirrelsong-dark.lua`
-);
+console.log('🌈 Installing WezTerm theme...');
+
+await install('dark/WezTerm/squirrelsong-dark.toml', '.config/wezterm/colors');
 
 console.log();
 console.log('🦜 Now run `dotfiles` to sync all the config files');
