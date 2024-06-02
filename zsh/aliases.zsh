@@ -29,8 +29,11 @@ alias nn="open -a 'Nimble Commander' ."
 command -v bat > /dev/null 2>&1 && alias cat="bat --style=plain"
 
 # Eza: https://github.com/eza-community/eza
-command -v eza > /dev/null 2>&1 && alias ls="eza -a --no-user --no-time --hyperlink --icons=auto"
-command -v eza > /dev/null 2>&1 && alias tree="eza -a --no-user --no-time --hyperlink --icons=auto --tree"
+command -v eza > /dev/null 2>&1 && alias ls="eza -a --no-user --hyperlink --no-quotes --group-directories-first --icons=auto --color-scale=age"
+command -v eza > /dev/null 2>&1 && alias tree="ls --tree"
+
+# Fd: https://github.com/sharkdp/fd
+command -v fd > /dev/null 2>&1 && alias find="fd"
 
 # trash: https://github.com/sindresorhus/macos-trash
 command -v trash > /dev/null 2>&1 && alias rm="trash"

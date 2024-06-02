@@ -2,17 +2,17 @@
 # https://sapegin.me/squirrelsong/
 
 [colors]
-foreground = '#9e8a74'
+foreground = '#ad9c8b'
 background = '#352a21'
 
-cursor_bg = '#9e8a74'
+cursor_bg = '#ad9c8b'
 cursor_fg = '#352a21'
-cursor_border = '#9e8a74'
+cursor_border = '#ad9c8b'
 
-selection_fg = '#9e8a74'
-selection_bg = '#564538'
+selection_fg = '#ad9c8b'
+selection_bg = '#574131'
 
-split = '#4C3E32'
+split = '#453327'
 
 visual_bell = "#db7666"
 
@@ -24,7 +24,7 @@ ansi = [
   '#5d99cb',
   '#7f61b3',
   '#4f9593',
-  '#c4a389',
+  '#cfbaa5',
 ]
 
 brights = [
@@ -35,8 +35,36 @@ brights = [
   '#64a1d3',
   '#a08ac2',
   '#adccc5',
-  '#dcd5c0',
+  '#edd5be',
 ]
+
+# Redefine the grayscale palette for 256-color mode
+# Hue: 30, saturation: 20
+[colors.indexed]
+232 = "#080706"
+233 = "#12100e"
+234 = "#1c1916"
+235 = "#26221f"
+236 = "#302c27"
+237 = "#3b352f"
+238 = "#453e37"
+239 = "#4f473f"
+240 = "#595047"
+241 = "#61574e"
+242 = "#6b6056"
+243 = "#756a5e"
+244 = "#807366"
+245 = "#8a7c6e"
+246 = "#948576"
+247 = "#9e8e7e"
+248 = "#a89787"
+249 = "#b3a18f"
+250 = "#bdaa97"
+251 = "#c7b39f"
+252 = "#d1bca7"
+253 = "#d9c3ad"
+254 = "#e3ccb6"
+255 = "#edd5be"
 
 [colors.tab_bar]
 # Retro tab bar
@@ -46,24 +74,24 @@ inactive_tab_edge = '#352a21'
 
 [colors.tab_bar.active_tab]
 bg_color = '#574131'
-fg_color = '#c4a389'
+fg_color = '#cfbaa5'
 intensity = 'Bold'
 
 [colors.tab_bar.inactive_tab]
 bg_color = '#352a21'
-fg_color = '#9e8a74'
+fg_color = '#ad9c8b'
 
 [colors.tab_bar.inactive_tab_hover]
 bg_color = '#453327'
-fg_color = '#c4a389'
+fg_color = '#ad9c8b'
 
 [colors.tab_bar.new_tab]
 bg_color = '#352a21'
-fg_color = '#9e8a74'
+fg_color = '#ad9c8b'
 
 [colors.tab_bar.new_tab_hover]
 bg_color = '#453327'
-fg_color = '#c4a389'
+fg_color = '#ad9c8b'
 
 [metadata]
 aliases = []
