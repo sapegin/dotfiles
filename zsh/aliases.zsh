@@ -68,6 +68,8 @@ clone() {
 	fi
 	if [[ -r "./yarn.lock" ]]; then
 		yarn
+	elif [[ -r "./pnpm-lock.yaml" ]]; then
+		pnpm install
 	elif [[ -r "./package-lock.json" ]]; then
 		npm install
 	fi
