@@ -1,5 +1,5 @@
 [cache]
-dir = "~/Library/Caches/tlrc"
+dir = ".tlrc"
 mirror = "https://github.com/tldr-pages/tldr/releases/latest/download"
 auto_update = true
 max_age = 336

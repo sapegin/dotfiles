@@ -1,0 +1,59 @@
+#!/usr/bin/env node
+
+// Creates a temporary Markdown file for tldr with docs for a script in the
+// bin folder, file is generated based on a code comment
+//
+// Author: Artem Sapegin, sapegin.me
+// License: MIT
+// https://github.com/sapegin/dotfiles
+//
+
+import path from 'path';
+import fs from 'fs';
+import { temporaryFile } from 'tempy';
+
+const HOME = path.dirname(path.dirname(import.meta.dirname));
+
+const BIN_DIR = `${HOME}/bin`;
+const DOCS_DIR = `${HOME}/docs`;
+
+const query = process.argv[2];
+
+function read(file) {
+	return fs.readFileSync(file, 'utf8');
+}
+
+function getDocs(source, name) {
+	const commentRaw = source.match(/((?:\/\/\s+[^\n]+\n)+)/m);
+	if (commentRaw === null) {
+		return '';
+	}
+
+	const comment = commentRaw[1].replace(/(^|\n)\/\/\s*/gm, '\n');
+
+	const [docs] = comment.split('---');
+
+	return `# ${name}\n\n> ${docs.trim()}`;
+}
+
+// Check for Markdown file
+const mdFilePath = `${DOCS_DIR}/${query}.md`;
+if (fs.existsSync(mdFilePath)) {
+	console.log(mdFilePath);
+	process.exit(0);
+}
+
+// Check for a script
+const binFilePath = `${BIN_DIR}/${query}`;
+if (fs.existsSync(binFilePath)) {
+	const source = read(binFilePath);
+	const docs = getDocs(source, query);
+
+	if (docs) {
+		const tempMdFile = temporaryFile();
+		fs.writeFileSync(tempMdFile, docs);
+		console.log(tempMdFile);
+	}
+
+	process.exit(0);
+}

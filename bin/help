@@ -18,13 +18,15 @@ root="$(dirname $(dirname $0))"
 config="$root/tilde/.tlrc.toml"
 
 if [[ "$1" != "" ]]; then
-	md="$root/docs/$1.md"
+	md="$($root/bin/lib/get-tldr-md $1)"
 else
 	md="$root/docs/Readme.md"
 fi
 
-if [ -f "$md" ]; then
+if [ "$md" != "" ]; then
+	echo "tldr --config \"$config\" --render \"$md\""
 	tldr --config "$config" --render "$md"
 else
+	echo "tldr --config \"$config\" \"$@\""
 	tldr --config "$config" "$@"
 fi
