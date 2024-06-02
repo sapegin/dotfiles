@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-# Tldr wrapper to show docs from ~/dotfiles/docs
+# Tldr/tlrc wrapper to show docs from ~/dotfiles/docs
+# https://github.com/tldr-pages/tlrc
 #
 # Usage:
 #   help command
@@ -14,6 +15,7 @@
 #
 
 root="$(dirname $(dirname $0))"
+config="$root/tilde/.tlrc.toml"
 
 if [[ "$1" != "" ]]; then
 	md="$root/docs/$1.md"
@@ -22,7 +24,7 @@ else
 fi
 
 if [ -f "$md" ]; then
-	tldr --render "$md"
+	tldr --config "$config" --render "$md"
 else
-	tldr "$@"
+	tldr --config "$config" "$@"
 fi

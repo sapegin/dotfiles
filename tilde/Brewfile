@@ -18,7 +18,7 @@ brew "node" # Fallback Node.js version
 brew "ripgrep" # `grep` replacement
 brew "rsyncy" # `rsync` replacement
 brew "starship" # Prompt manager
-brew "tldr" # `man` replacement
+brew "tlrc" # `man` replacement
 brew "typos-cli" # Fix typos
 brew "zsh" # Shell
 brew "zsh-syntax-highlighting"
