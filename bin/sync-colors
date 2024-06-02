@@ -7,6 +7,7 @@
  * [x] Bat
  * [x] WezTerm
  * [x] Bear
+ * [x] Peek
  *
  * Author: Artem Sapegin, sapegin.me
  * License: MIT
@@ -31,7 +32,7 @@ function download(filepath) {
 }
 
 function write(file, text) {
-	const fullPath = path.join(DEST_DIR, file);
+	const fullPath = file.startsWith('/') ? file : path.join(DEST_DIR, file);
 	fs.ensureDir(path.dirname(fullPath));
 	return fs.writeFileSync(fullPath, text);
 }
@@ -63,6 +64,18 @@ console.log('🌈 Installing WezTerm theme...');
 await install('dark/WezTerm/squirrelsong-dark.toml', '.config/wezterm/colors');
 
 /**
+ * Peek
+ */
+
+console.log('🌈 Installing Peek theme...');
+
+const peekTheme = await download('light/Peek/custom.css');
+write(
+	`${HOME}/Library/Group Containers/9V456WSURS.com.bigzlabs.peekgroup/Library/Application Support/Styles/custom.css`,
+	peekTheme
+);
+
+/**
  * Bear
  */
 
@@ -71,7 +84,7 @@ console.log('🌈 Installing Bear theme...');
 const bearTheme = await download('light/Bear/Squirrelsong Light.theme');
 const bearThemesDir = `/Applications/Bear.app/Contents/Frameworks/BearCore.framework/Resources`;
 await temporaryFileTask((tempFile) => {
-	fs.writeFileSync(tempFile, bearTheme);
+	write(tempFile, bearTheme);
 	execSync(
 		`sudo -- sh -c 'command rm "${bearThemesDir}/Ayu.theme" > /dev/null 2>&1; command cp "${tempFile}" "${bearThemesDir}/Ayu.theme"'`
 	);
