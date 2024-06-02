@@ -39,7 +39,7 @@ function convert_file() {
 	avif_file="${filename_without_extension}.avif"
 
 	# Skip if optimized file already exists
-	if [ -f "$directory/$avif_file" ]; then
+	if [ -f "$directory/$avif_file" ] && [ "$2" != "--force"]; then
 		return
 	fi
 
