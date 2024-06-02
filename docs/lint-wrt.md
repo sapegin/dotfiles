@@ -1,6 +1,6 @@
 # lint-wrt
 
-> Run Textlint, Proselint and Prettier on a text or Markdown file or files
+> Run Textlint and Prettier on a text or Markdown file or files
 
 - Lint text:
 

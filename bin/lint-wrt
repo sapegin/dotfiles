@@ -1,20 +1,12 @@
 #!/usr/bin/env bash
 
 #
-# Runs Textlint, Proselint and Prettier
-#
-# Requires:
-# - Proselint - http://proselint.com/
+# Runs Textlint and Prettier
 #
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
 # https://github.com/sapegin/dotfiles
 #
-
-command -v proselint > /dev/null 2>&1 || {
-	echo >&2 "proselint is not installed: brew install proselint"
-	exit 1
-}
 
 root="$(dirname $(dirname $0))"
 bin="$root/node_modules/.bin"
@@ -25,10 +17,6 @@ shift
 echo
 echo "Running Textlint..."
 $bin/textlint --config $root/.textlintrc $@ "$source_file"
-
-echo
-echo "Running Proselint..."
-$bin/proselintjs "$source_file"
 
 echo
 echo "Running Prettier..."

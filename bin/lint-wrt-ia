@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 #
-# Runs Textlint, Proselint and Prettier on topmost opened in iA Writer file
+# Runs Textlint and Prettier on topmost opened in iA Writer file
 #
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
