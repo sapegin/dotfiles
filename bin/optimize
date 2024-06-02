@@ -1,14 +1,11 @@
 #!/usr/bin/env bash
 
-# Convert a given file, or all JPEG/PNG files in a directory, to AVIF or WebP
-# formats. Keeps converted files only when they are at least 10 KB smaller
-# than originals
+# Convert a given file, or all JPEG/PNG files in a directory, to AVIF format.
+# Keeps converted files only when they are at least 10 KB smaller than originals
 #
-# Usage:
-#   towebp [file] [--force]
+# Usage: optimize [file] [--force]
 #
-# Author: Artem Sapegin, sapegin.me
-# License: MIT
+# Author: Artem Sapegin, sapegin.me License: MIT
 # https://github.com/sapegin/dotfiles
 #
 
@@ -20,11 +17,6 @@ BOLD="$(tput bold)"
 UNDERLINE="$(tput sgr 0 1)"
 NOCOLOR="$(tput sgr0)"
 function error() { echo -e "$UNDERLINE$RED$1$NOCOLOR\n"; }
-
-command -v cwebp > /dev/null 2>&1 || {
-	error "Webp not installed: brew install webp"
-	exit 1
-}
 
 root="$(dirname $(dirname $0))"
 bin="$root/node_modules/.bin"
@@ -45,10 +37,9 @@ function convert_file() {
 	filename_without_extension="${filename%.*}"
 
 	avif_file="${filename_without_extension}.avif"
-	webp_file="${filename_without_extension}.webp"
 
 	# Skip if optimized file already exists
-	if [ -f "$directory/$avif_file" ] || [ -f "$directory/$webp_file" ]; then
+	if [ -f "$directory/$avif_file" ]; then
 		return
 	fi
 
@@ -78,25 +69,6 @@ function convert_file() {
 
 	# Delete AVIF file if it's larger than the original
 	rm "$directory/$avif_file"
-
-	# Convert to WebP
-	cwebp -q 85 -preset "$preset" -quiet "$1" -o "$directory/$webp_file"
-
-	webp_size=$(wc -c < "$directory/$webp_file")
-
-	# We consider an optimized file smaller only when it's at least 20 KB smaller
-	difference=$((original_size - webp_size))
-	if test "$difference" -gt 10240; then
-		is_smaller=true
-	fi
-
-	if [ "$is_smaller" == "true" ]; then
-		print_result "$directory/$webp_file" $original_size $webp_size $difference
-		return
-	fi
-
-	# Delete WebP file if it's larger than the original
-	rm "$directory/$webp_file"
 }
 
 # Single file
