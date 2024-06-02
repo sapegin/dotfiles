@@ -24,12 +24,12 @@ function read(file) {
 }
 
 function getDocs(source, name) {
-	const commentRaw = source.match(/((?:\/\/\s+[^\n]+\n)+)/m);
+	const commentRaw = source.match(/((?:(?:\/\/|#)\s+[^\n]+\n)+)/m);
 	if (commentRaw === null) {
 		return '';
 	}
 
-	const comment = commentRaw[1].replace(/(^|\n)\/\/\s*/gm, '\n');
+	const comment = commentRaw[1].replace(/(^|\n)(?:\/\/|#)\s*/gm, '\n');
 
 	const [docs] = comment.split('---');
 
