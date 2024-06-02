@@ -116,6 +116,6 @@ echo "rev:   $(tput rev)Inverted$NOCOLOR"
 echo "invis: Invisible"
 echo
 echo "Examples:"
-echo "\$(tput setaf 3)\$(tput setab 4) $(tput setaf 3)$(tput setab 4)yellow on blue, bold$NOCOLOR \$(tput sgr0)"
+echo "\$(tput setaf 3)\$(tput setab 4) $(tput setaf 3)$(tput setab 4)yellow on blue$NOCOLOR       \$(tput sgr0)"
 echo "\$(tput setaf 153)              $(tput setaf 153)256-color foreground$NOCOLOR \$(tput sgr0)"
 echo "\$(tput setab 128)              $(tput setab 128)256-color background$NOCOLOR \$(tput sgr0)"
