@@ -1,0 +1,121 @@
+#!/bin/bash
+
+# Prints 16 and 256 color palettes
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+
+# Common stuff
+RED="$(tput setaf 1)"
+CYAN="$(tput setaf 6)"
+UNDERLINE="$(tput sgr 0 1)"
+NOCOLOR="$(tput sgr0)"
+function heading() { echo -e "$UNDERLINE$CYAN$1$NOCOLOR"; }
+
+text="gYw"
+
+heading "16-color palette"
+
+echo -e "\n                40m   41m   42m   43m   44m   45m   46m   47m"
+
+for FGs in '    m' '   1m' '  30m' '1;30m' '  31m' '1;31m' '  32m' \
+	'1;32m' '  33m' '1;33m' '  34m' '1;34m' '  35m' '1;35m' \
+	'  36m' '1;36m' '  37m' '1;37m'; do
+	FG=${FGs// /}
+	echo -en " $FGs \033[$FG  ${text}  "
+	for BG in 40m 41m 42m 43m 44m 45m 46m 47m; do
+		echo -en "$EINS \033[$FG\033[${BG} ${text} \033[0m"
+	done
+	echo
+done
+
+echo
+echo
+heading "256-color palette"
+echo
+
+# Represent the 16 base colors in the 256-color palette
+for row in {0..15}; do
+	# Represent the 16 shades of each base color
+	for col in {0..15}; do
+		color=$((row * 16 + col))
+		color_code=$(printf "%03d" $color)
+
+		echo -en "\033[48;5;${color}m\033[1m $color_code \033[0m\033[38;5;${color}m\033[0m"
+	done
+	echo
+done
+
+echo
+echo
+heading "Escape sequences"
+echo
+echo "Foreground:  Background:"
+echo -e "30  Black    40: On black"
+echo -e "31  \033[31mRed\033[m      41: \033[41mOn red\033[0m"
+echo -e "32  \033[32mGreen\033[m    42: \033[42mOn green\033[m"
+echo -e "33  \033[33mYellow\033[m   43: \033[43mOn yellow\033[m"
+echo -e "34  \033[34mBlue\033[m     44: \033[44mOn blue\033[m"
+echo -e "35  \033[35mMagenta\033[m  45: \033[45mOn magenta\033[m"
+echo -e "36  \033[36mTeal\033[m     46: \033[46mOn teal\033[m"
+echo -e "37  \033[37mWhite\033[m    47: \033[47mOn white\033[m"
+echo -e "90  \033[90mDark gray\033[m"
+echo -e "91  \033[91mBright red\033[m"
+echo -e "92  \033[92mBright green\033[m"
+echo -e "93  \033[93mBright yellow\033[m"
+echo -e "94  \033[94mBright blue\033[m"
+echo -e "95  \033[95mBright magenta\033[m"
+echo -e "96  \033[96mBright cyan\033[m"
+echo -e "97  \033[97mBright white\033[m"
+echo
+echo "Effects:"
+echo -e "1: \033[1mBold\033[0m"
+echo -e "2: \033[2mDimmed\033[0m"
+echo -e "3: \033[3mItalic\033[0m"
+echo -e "4: \033[4mUnderline\033[0m"
+echo -e "5: \033[5mBlinking\033[0m"
+echo -e "6: \033[6mBlinking fast\033[0m"
+echo -e "7: \033[7mInverted\033[0m"
+echo -e "8: Invisible"
+echo
+echo "Examples:"
+echo -e "\\\033\[33;44;1m  \033[33;44;1myellow on blue, bold\033[0m \\\033\[0m"
+echo -e "\\\033\[38;5;219m \033[38;5;219m256-color foreground\033[0m \\\033\[0m"
+echo -e "\\\033\[48;5;61m  \033[48;5;61m256-color background\033[0m \\\033\[0m"
+
+echo
+echo
+heading "Tput commands"
+echo
+echo "Foreground:  Background:"
+echo "setaf 0   Black    40: On black"
+echo "setaf 1   $(tput setaf 1)Red$NOCOLOR      setab 1: $(tput setab 1)On red$NOCOLOR"
+echo "setaf 2   $(tput setaf 2)Green$NOCOLOR    setab 2: $(tput setab 2)On green$NOCOLOR"
+echo "setaf 3   $(tput setaf 3)Yellow$NOCOLOR   setab 3: $(tput setab 3)On yellow$NOCOLOR"
+echo "setaf 4   $(tput setaf 4)Blue$NOCOLOR     setab 4: $(tput setab 4)On blue$NOCOLOR"
+echo "setaf 5   $(tput setaf 5)Magenta$NOCOLOR  setab 5: $(tput setab 5)On magenta$NOCOLOR"
+echo "setaf 6   $(tput setaf 6)Teal$NOCOLOR     setab 6: $(tput setab 6)On teal$NOCOLOR"
+echo "setaf 7   $(tput setaf 7)White$NOCOLOR    setab 7: $(tput setab 7)On white$NOCOLOR"
+echo "setaf 8   $(tput setaf 8)Dark gray$NOCOLOR"
+echo "setaf 9   $(tput setaf 9)Bright red$NOCOLOR"
+echo "setaf 10  $(tput setaf 10)Bright green$NOCOLOR"
+echo "setaf 11  $(tput setaf 11)Bright yellow$NOCOLOR"
+echo "setaf 12  $(tput setaf 12)Bright blue$NOCOLOR"
+echo "setaf 13  $(tput setaf 13)Bright magenta$NOCOLOR"
+echo "setaf 14  $(tput setaf 14)Bright cyan$NOCOLOR"
+echo "setaf 15  $(tput setaf 15)Bright white$NOCOLOR"
+echo
+echo "Effects:"
+echo "bold:  $(tput bold)Bold$NOCOLOR"
+echo "dim:   $(tput dim)Dim$NOCOLOR"
+echo "sitm:  $(tput sitm)Italic$NOCOLOR"
+echo "smul:  $(tput smul)Underline$NOCOLOR"
+echo "blink: $(tput blink)Blinking$NOCOLOR"
+echo "rev:   $(tput rev)Inverted$NOCOLOR"
+echo "invis: Invisible"
+echo
+echo "Examples:"
+echo "\$(tput setaf 3)\$(tput setab 4) $(tput setaf 3)$(tput setab 4)yellow on blue, bold$NOCOLOR \$(tput sgr0)"
+echo "\$(tput setaf 153)              $(tput setaf 153)256-color foreground$NOCOLOR \$(tput sgr0)"
+echo "\$(tput setab 128)              $(tput setab 128)256-color background$NOCOLOR \$(tput sgr0)"
