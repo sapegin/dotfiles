@@ -35,9 +35,6 @@ command -v eza > /dev/null 2>&1 && alias tree="eza -a --no-user --no-time --hype
 # trash: https://github.com/sindresorhus/macos-trash
 command -v trash > /dev/null 2>&1 && alias rm="trash"
 
-# Midnight Commander
-command -v mc > /dev/null 2>&1 && command -v code > /dev/null 2>&1 && alias mc="EDITOR=code mc --nosubshell"
-
 # Download file and save it with filename of remote file
 alias get="curl -O -L"
 
