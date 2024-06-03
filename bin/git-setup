@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-# Initializes Git repository.
+# Initializes Git repository: creates a repository and commits all files.
 #
+# ---
+# Based on https://github.com/tj/git-extras/blob/master/bin/git-setup
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
 # https://github.com/sapegin/dotfiles
-#
-# Based on https://github.com/tj/git-extras/blob/master/bin/git-setup
 
 COMMIT_MESSAGE='Initial commit'
 

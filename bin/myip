@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
-# Print my IP
+# Prints my IP.
 #
+# ---
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
 # https://github.com/sapegin/dotfiles

@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# Prints 16 and 256 color palettes
+# Prints 16 and 256 color palettes.
 #
+# ---
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
 # https://github.com/sapegin/dotfiles

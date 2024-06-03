@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
 
-#
 # Simplified Git branch and status
 # Based on https://github.com/denysdovhan/spaceship-prompt/
-#
 
-GIT_SIMPLE_CLEAN_SYMBOL="" # Nerd Fonts nf-oct-sun \uf522
-GIT_SIMPLE_DIRTY_SYMBOL="" # Nerd Fonts nf-fa-umbrella \uf0e9
+GIT_SIMPLE_CLEAN_SYMBOL=""         # Nerd Fonts nf-oct-sun \uf522
+GIT_SIMPLE_DIRTY_SYMBOL=""         # Nerd Fonts nf-fa-umbrella \uf0e9
 GIT_SIMPLE_CLEAN_COLOR="\033[32;1m" # Bold green
 GIT_SIMPLE_DIRTY_COLOR="\033[31;1m" # Bold red
 GIT_SIMPLE_RESET_COLOR="\033[0m"

@@ -1,11 +1,15 @@
 #!/usr/bin/env bash
 
-# Shows my commits since yesterday or since last Friday.
+# Shows my Git commits since yesterday or since last Friday.
 #
+# - Show commits:
+#
+# `git-standup`
+#
+# ---
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
 # https://github.com/sapegin/dotfiles
-#
 
 function yesterworkday() {
 	if [[ "1" == "$(date +%u)" ]]; then

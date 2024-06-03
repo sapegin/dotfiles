@@ -2,13 +2,14 @@
 
 # Shows GUI prompt.
 #
-# Usage:
-#   dlg-prompt <text> [default answer] [title]
+# - Show a prompt dialog:
 #
+# `dlg-prompt {{text}} {{default answer}} {{title}}
+#
+# ---
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
 # https://github.com/sapegin/dotfiles
-#
 
 osascript << EOT
 	tell app "System Events"

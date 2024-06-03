@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
-// Magic project opener: opens a directory using fuzzy search. Looks at `~/\_/`, work projects, and several iCloud Drive folders. Note: the first letter of the query should match, the rest is fuzzy-matched.
+// Magic project opener: `cd` to a folder using fuzzy search. Looks at `~/\_/`, work projects, and several iCloud Drive folders.
+// > Note: the first letter of the query should match, the rest is fuzzy-matched.
 //
-// - Cd to a project directory:
+// - Navigate to a project directory:
 //
 // `j {{partial_name}}`
 //
@@ -11,9 +12,8 @@
 // - `WORK_PROJECTS_DIR="~/unicorn"`: specify an additional folder to look in.
 //
 // ---
-//
-// NOTE: Should be used via Bash alias like this: function j { cd
-//   "$("$HOME/dotfiles/bin/j" $1)"; }
+// NOTE: Should be used via Bash alias like this:
+// function j { cd "$("$HOME/dotfiles/bin/j" $1)"; }
 //
 // Author: Artem Sapegin, sapegin.me
 // License: MIT

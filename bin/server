@@ -1,10 +1,19 @@
 #!/usr/bin/env bash
 
-# Start an HTTP server from a directory, optionally specifying the port (default: 8000)
+# Starts an HTTP server at the current folder.
 #
-# Usage:
-#   server [port]
+# - Start a server with the default port (8000):
 #
+# `server`
+#
+# - Start a server with a specified port:
+#
+# `server {{port}}`
+#
+# ---
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
 
 port="${1:-8000}"
 myip=$(ifconfig | grep "inet " | grep -v 127.0.0.1 | awk '{print $2}')

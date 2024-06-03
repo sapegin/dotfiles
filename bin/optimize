@@ -1,23 +1,22 @@
 #!/usr/bin/env bash
 
-# Convert a given file, or all JPEG/PNG files in a directory, to AVIF format. Keeps converted files only when they are at least 10 KB smaller than originals
+# Converts JPEG/PNG files to AVIF format. Keeps converted files only when they are at least 10 KB smaller than originals.
 #
-# - Optimize all image in current folder:
+# - Optimize all images in current folder:
 #
 # `optimize`
 #
 # - Optimize a specific image:
 #
-# `optimize {{public/images/pizza.jpg}}`
+# `optimize {{file.jpg}}`
 #
 # - Force-optimize an image (will overwrite if already optimized and save the file even if the difference is less than 10 KB):
 #
-# `optimize {{public/images/pizza.jpg}} {{--force}}`
+# `optimize {{file.png}} --force`
 #
 # ---
 # Author: Artem Sapegin, sapegin.me License: MIT
 # https://github.com/sapegin/dotfiles
-#
 
 # Common stuff
 RED="$(tput setaf 1)"

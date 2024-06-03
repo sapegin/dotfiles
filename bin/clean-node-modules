@@ -1,11 +1,15 @@
 #!/usr/bin/env node
 
-// Removes all node_modules folders inside the home directory older than 30 days
+// Removes all `node_modules` folders inside the home directory older than 30 days.
 //
+// - Remove old `node_modules` folders:
+//
+// `clean-node-modules`
+//
+// ---
 // Author: Artem Sapegin, sapegin.me
 // License: MIT
 // https://github.com/sapegin/dotfiles
-//
 
 import path from 'path';
 import { execSync } from 'child_process';

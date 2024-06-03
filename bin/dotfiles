@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
-# Update dotfiles
+# Updates dotfiles.
 #
+# ---
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
 # https://github.com/sapegin/dotfiles

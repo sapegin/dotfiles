@@ -1,12 +1,13 @@
 #!/usr/bin/env zsh
 
-# Runs a given command in each immediate subdirectory
+# Runs a given command in each immediate subdirectory.
 #
-# Usage:
-#   insubs <my command>
+# - Run command:
 #
+# `insubs {{command}}`
+#
+# ---
 # Based on: https://stackoverflow.com/a/41575863/1973105
-#
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
 # https://github.com/sapegin/dotfiles

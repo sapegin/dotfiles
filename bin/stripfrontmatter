@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 
-// Replaces frontmatter with Markdown heading tag
+// Replaces frontmatter with Markdown heading tag.
 //
-// USAGE:
-//   stripfrontmatter '*.md'
+// Replace frontmatter:
 //
+// `stripfrontmatter {{pattern}}`
+// `stripfrontmatter '*.md'`
+//
+// ---
 // Author: Artem Sapegin, sapegin.me
 // License: MIT
 // https://github.com/sapegin/dotfiles
-//
 
 const fs = require('fs');
 const fastmatter = require('fastmatter');

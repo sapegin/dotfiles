@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 
-# Backup all the things to Synology NAS
+# Backs up all the things to the Synology NAS.
 #
-# Usage:
-#   backup
+# - Run the backup:
 #
+# `backup`
+#
+# ---
 # Prerequisites:
 # 1. Update rsync:
 #    brew install rsync
@@ -24,7 +26,6 @@
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
 # https://github.com/sapegin/dotfiles
-#
 
 DEST="sapegin@Hippopotamus.local:/volume1"
 RSYNC_OPTS="--archive --delete --delete-excluded --one-file-system --human-readable --partial -e ssh --exclude '.DS_Store'"

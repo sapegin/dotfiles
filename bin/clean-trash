@@ -1,14 +1,12 @@
 #!/usr/bin/env bash
 
-# Empty the Trash on all mounted volumes
-# Also, clear Apple’s System Logs to improve shell startup speed
-#
-# This isn’t very useful anymore since emptying the main hard drive trash
-# (~/.Trash) doesn’t work on El Capitan, and there’s no good alternative
+# Empties the trash on all mounted volumes.
+# > Also, clears Apple’s system logs to improve shell startup speed.
 #
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
 # https://github.com/sapegin/dotfiles
 
-sudo rm -rfv /Volumes/*/.Trashes
-sudo rm -rfv /private/var/log/asl/*.asl
+sudo command rm -rf ~/.Trash/*
+sudo command rm -rfv /Volumes/*/.Trashes
+sudo command rm -rfv /private/var/log/asl/*.asl

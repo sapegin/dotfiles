@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 
-# Compare original and gzipped file size
+# Compares original and gzipped file sizes.
 #
-# Usage:
-#   gz <file>
+# - Compare sizes:
 #
+# `gz {{file}}`
+#
+# ---
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
 # https://github.com/sapegin/dotfiles

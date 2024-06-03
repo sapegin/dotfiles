@@ -1,14 +1,13 @@
 #!/usr/bin/env node
 
-/**
- * Generates Dash docset with:
- * [ ] Washing code book
- * [ ] Blog
- *
- * Author: Artem Sapegin, sapegin.me
- * License: MIT
- * https://github.com/sapegin/dotfiles
- */
+// Generates Dash docset with:
+// > [ ] Washing code book
+// > [ ] Blog
+//
+// ---
+// Author: Artem Sapegin, sapegin.me
+// License: MIT
+// https://github.com/sapegin/dotfiles
 
 /*
 // Index each file by its page title

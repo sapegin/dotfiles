@@ -2,13 +2,14 @@
 
 # Shows GUI error message.
 #
-# Usage:
-#   dlg-prompt <text> [title]
+# - Show a dialog:
 #
+# `dlg-prompt {{text}} {{title}}`
+#
+# ---
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
 # https://github.com/sapegin/dotfiles
-#
 
 osascript << EOT
 	tell app "System Events"

@@ -1,18 +1,15 @@
 #!/usr/bin/env node
 
-/**
- * Get themes from the Squirrelsong repo
- *
- * This scripts syncs color themes for:
- * [x] Bat
- * [x] WezTerm
- * [x] Bear
- * [x] Peek
- *
- * Author: Artem Sapegin, sapegin.me
- * License: MIT
- * https://github.com/sapegin/dotfiles
- */
+// Gets themes from the Squirrelsong repo:
+// > [x] Bat
+// > [x] WezTerm
+// > [x] Bear
+// > [x] Peek
+//
+// ---
+// Author: Artem Sapegin, sapegin.me
+// License: MIT
+// https://github.com/sapegin/dotfiles
 
 import path from 'path';
 import fs from 'fs-extra';

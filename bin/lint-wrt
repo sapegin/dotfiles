@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
 
+# Runs Textlint and Prettier on a text or Markdown file or files.
 #
-# Runs Textlint and Prettier
+# - Lint text:
 #
+# `lint-wrt {{file_or_glob}}`
+#
+# ---
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
 # https://github.com/sapegin/dotfiles
-#
 
 root="$(dirname $(dirname $0))"
 bin="$root/node_modules/.bin"

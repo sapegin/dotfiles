@@ -1,6 +1,15 @@
 #!/bin/bash
 
-# Get macOS software updates, update Homebrew, npm, Ruby packages, dotfiles and some other software
+# Gets macOS software updates, updates Homebrew, npm packages, dotfiles, and some other software.
+#
+# - Run updates:
+#
+# `update`
+#
+# ---
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
 
 function header() {
 	echo -e "$(tput sgr 0 1)$(tput setaf 6)$1$(tput sgr0)"
@@ -31,12 +40,6 @@ echo
 header "Updating npm modules..."
 npm update -g
 echo
-
-# Ruby gems
-# header "Updating Ruby gems..."
-# sudo -v
-# sudo gem update
-# echo
 
 # Nyan cat! Yay!
 nyan

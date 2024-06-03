@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 
-// Calculate summary of a work log.
+// Calculate summary of a work log. Each line of the log should be formatted like this:
+// > `Any kind of description H:MM`
 //
-// Each line of the log should be formatted like this:
-// Any kind of description H:MM
+// Calculate summary from clipboard:
 //
-// Usage: pbpaste | worktime
+// `pbpaste | worktime`
 //
+// ---
 // Author: Artem Sapegin, sapegin.me
 // License: MIT
 // https://github.com/sapegin/dotfiles

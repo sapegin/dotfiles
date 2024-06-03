@@ -1,12 +1,16 @@
 #!/usr/bin/env bash
 
-# Removes old Git branches and does other cleanup
+# Removes old Git branches and dos other cleanup.
 #
-# Usage:
-#   git-cleanup [--force]
+# - Dry run (print branches to remove, don’t actually remove them):
 #
-# See explanation here: http://erikaybar.name/git-deleting-old-local-branches/
+# `git-cleanup`
 #
+# - Run cleanup:
+#
+# `git-cleanup --force`
+#
+# ---
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
 # https://github.com/sapegin/dotfiles

@@ -1,14 +1,13 @@
 #!/usr/bin/env bash
 
-# Tldr/tlrc wrapper to show docs from ~/dotfiles/docs
-# https://github.com/tldr-pages/tlrc
+# Tldr/tlrc wrapper to show docs from `~/dotfiles/docs` or `~/dotfiles/bin`.
+# > More information: <https://github.com/tldr-pages/tlrc>
 #
-# Usage:
-#   help command
+# - Show docs:
 #
-# See more:
-# https://github.com/tldr-pages/tldr-node-client
+# `help {{command}}`
 #
+# ---
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
 # https://github.com/sapegin/dotfiles
@@ -24,9 +23,7 @@ else
 fi
 
 if [ "$md" != "" ]; then
-	echo "tldr --config \"$config\" --render \"$md\""
 	tldr --config "$config" --render "$md"
 else
-	echo "tldr --config \"$config\" \"$@\""
 	tldr --config "$config" "$@"
 fi

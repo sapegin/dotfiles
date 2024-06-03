@@ -1,7 +1,16 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Human readable password generator.
+#
+# - Generate a password:
+#
+# `passphrase`
+#
+# ---
 # Based on https://github.com/Version2beta/passphrase
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
 
 NAMES_DICT = "/usr/share/dict/propernames"
 DICT = "/usr/share/dict/words"
@@ -13,4 +22,4 @@ words = random.sample(list(open(DICT)), 2)
 phrase = name[0].rstrip().lower()
 for word in words:
 	phrase = phrase + word.rstrip().lower()
-print phrase
+print(phrase)

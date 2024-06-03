@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-# Print nyan cat
+# Prints nyan cat.
+#
+# ---
 # https://github.com/steckel/Git-Nyan-Graph/blob/master/nyan.sh
 # If you want big animated version: `telnet miku.acm.uiuc.edu`
 

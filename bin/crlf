@@ -1,14 +1,23 @@
 #!/usr/bin/env bash
 
-# Find files with Windows line endings (and convert them to Unix in force mode)
+# Converts Windows line endings to Unix.
 #
-# Usage:
-#   crlf [file] [--force]
+# - Dry run (print files to convert, don’t actually convert them):
 #
+# `crlf`
+#
+# - Convert files:
+#
+# `crlf --force`
+#
+# - Convert one file:
+#
+# `crlf {{filepath}} --force`
+#
+# ---
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
 # https://github.com/sapegin/dotfiles
-#
 
 force=
 

@@ -1,16 +1,22 @@
 #!/usr/bin/env bash
 
-# Replace in files
+# Replace in files. Uses ripgrep to find files, so all ripgrep arguments work. Use `g` command for dry-run, and then replace it with `wg`.
 #
-# Usage: ../docs/wg.md
+# - Replace a pattern in a file:
 #
+# `wg {{pattern}} {{filename}} --replace {{replacement}}`
+#
+# - Replace a pattern in all files:
+#
+# `wg {{pattern}} --replace {{replacement}}`
+#
+# ---
 # Based on:
 # https://github.com/lydell/dotfiles/blob/master/bin/pre
 #
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
 # https://github.com/sapegin/dotfiles
-#
 
 # Common stuff
 RED="$(tput setaf 1)"

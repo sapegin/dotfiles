@@ -1,11 +1,15 @@
 #!/usr/bin/env bash
 
-# Print public SSH key, generate it if necessary
+# Prints public SSH key, generates it if necessary.
 #
+# - Print a key:
+#
+# `ssh-key`
+#
+# ---
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
 # https://github.com/sapegin/dotfiles
-#
 
 file="$HOME/.ssh/id_rsa"
 if [ ! -f "$file" ]; then

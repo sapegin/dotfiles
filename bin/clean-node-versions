@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
 
-# Removes all installed Node.js version to clean up disk space.
-# Run nnn again to install a Node.js version required in the project's .nvmrc
+# Removes all Node.js versions, installed by `fnm`, to clean up disk space.
+# > Run `nnn` again to install a Node.js version required in the project’s `.nvmrc`.
 #
-# Usage:
-#   nnn-cleanup
+# - Remove old Node.js versions:
 #
+# `clean-node-versions`
+#
+# ---
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
 # https://github.com/sapegin/dotfiles
-#
 
 echo "Removing all installed Node.js versions..."
 

@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
 
-# Mount card reader
+# Mounts card reader.
 #
-# USAGE:
-#   sd-mount # Mounts /dev/disk2s1
-#   sd-mount disk3s1 # Mounts /dev/disk3s1
+# - Mount `/dev/disk2s1`:
 #
+# `sd-mount`
+#
+# - Mounts `/dev/disk3s1`:
+#
+# `sd-mount disk3s1`
+#
+# ---
 # Author: Artem Sapegin, sapegin.me
 # License: MIT
 # https://github.com/sapegin/dotfiles
