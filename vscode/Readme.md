@@ -2,7 +2,7 @@
 
 ## Enable synchronization
 
-> [!INFO]
+> [!NOTE]
 > This is already included with the setup script.
 
 ```shell
