@@ -13,6 +13,8 @@
 # https://github.com/sapegin/dotfiles
 #
 
+cd "$(dirname $0)/.."
+
 root="$(dirname $(dirname $0))"
 config="$root/tilde/.tlrc.toml"
 
