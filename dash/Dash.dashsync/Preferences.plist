@@ -287,7 +287,7 @@ $("h1").each(function() {
 			<key>Tailwind_CSS</key>
 			<dict>
 				<key>date</key>
-				<date>2024-04-08T08:50:08Z</date>
+				<date>2024-06-09T08:02:43Z</date>
 				<key>entry</key>
 				<dict>
 					<key>aliases</key>
@@ -322,8 +322,12 @@ $("h1").each(function() {
 		<dict>
 			<key>~/Library/Application Support/Dash/DocSets/JavaScript/JavaScript.docset</key>
 			<string>js:</string>
+			<key>~/Library/Application Support/Dash/DocSets/Lo-Dash/Lo-Dash.docset</key>
+			<string>_:</string>
 			<key>~/Library/Application Support/Dash/DocSets/NodeJS/NodeJS.docset</key>
 			<string>node:</string>
+			<key>~/Library/Application Support/Dash/DocSets/TypeScript/TypeScript.docset</key>
+			<string>ts:</string>
 			<key>~/Library/Application Support/Dash/User Contributed/Tailwind CSS/Tailwind_CSS.docset</key>
 			<string>tail:</string>
 		</dict>
@@ -361,6 +365,11 @@ $("h1").each(function() {
 			<dict>
 				<key>date</key>
 				<date>2024-04-08T08:49:46Z</date>
+			</dict>
+			<key>http://kapeli.com/feeds/TypeScript.xml</key>
+			<dict>
+				<key>date</key>
+				<date>2024-06-08T06:32:49Z</date>
 			</dict>
 		</dict>
 		<key>uninstalled</key>
