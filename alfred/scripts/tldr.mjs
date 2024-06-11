@@ -18,10 +18,7 @@ const HOME = path.dirname(path.dirname(import.meta.dirname));
 const bundleId = process.argv[2];
 
 try {
-	const markdown = fs.readFileSync(
-		`${HOME}/dotfiles/docs/gui/${bundleId}.md`,
-		'utf8'
-	);
+	const markdown = fs.readFileSync(`${HOME}/docs/gui/${bundleId}.md`, 'utf8');
 	console.log(
 		JSON.stringify({
 			response: markdown,
