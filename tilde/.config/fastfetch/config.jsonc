@@ -30,6 +30,12 @@
 			"format": "https://sapegin.me/squirrelsong/",
 		},
 		{
+			"type": "custom",
+			"key": "Font",
+			"keyColor": "yellow",
+			"format": "MonoLisa",
+		},
+		{
 			"type": "os",
 			"format": "{2} {10} {8}",
 		},
