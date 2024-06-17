@@ -31,12 +31,14 @@ sudo command cp "$HOME/_/squirrelsong/light/Bear/Squirrelsong Light.theme" "/App
 
 ## Visual Studio Code
 
-![Squirrelsong light in Visual Studio Code](https://github.com/sapegin/squirrelsong/raw/master/light/VSCode/SquirrelsongLight/screenshot.png)
+![Squirrelsong light in Visual Studio Code](https://raw.githubusercontent.com/sapegin/squirrelsong/master/light/VSCode/SquirrelsongLight/screenshots/screenshot.jpg)
 
 [Download from Marketplace](https://marketplace.visualstudio.com/items?itemName=sapegin.Theme-SquirrelsongLight)
 
 **Note:** The theme is included in the [config file](../vscode/User/settings.json).
 
 ## WezTerm
+
+![Squirrelsong dark in WezTerm](https://github.com/sapegin/squirrelsong/raw/master/dark/WezTerm/screenshot.jpg)
 
 **Note:** The theme is included in [the WezTerm config](../tilde/.wezterm.lua).
