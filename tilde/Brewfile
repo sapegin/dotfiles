@@ -30,6 +30,7 @@ cask "adobe-creative-cloud"
 cask "alfred" # App launcher
 cask "bartender" # Hides menu bar icons
 cask "bruno" # GraphQL API client
+cask "cleanshot" # Screenshots
 cask "colorsnapper" # Color picker
 cask "coteditor" # Simple code/text editor
 cask "dash" # Documentation reader
@@ -46,7 +47,6 @@ cask "optimage" # Image optimization
 cask "polypane" # Responsive design and accessibility testing
 cask "quitter" # Quit apps after certain time
 cask "replacicon" # Custom app icons
-cask "shottr" # Screenshots
 cask "telegram"
 cask "visual-studio-code"
 cask "vivaldi"
