@@ -218,6 +218,7 @@
     "copypasting",
     "customizability",
     "cyclomatic",
+    "deburr",
     "discoverability",
     "dotfiles",
     "Flexbox",
@@ -335,6 +336,9 @@
   },
   "[astro]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[latex]": {
+    "editor.defaultFormatter": "mathematic.vscode-latex"
   },
   "[scminput]": {
     "editor.rulers": [72],

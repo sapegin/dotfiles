@@ -41,7 +41,7 @@
   "editor.fontFamily": "MonoLisa, \"Symbols Nerd Font Mono\"",
   "editor.fontLigatures": "'calt' on, 'liga' off",
   "editor.fontSize": 21,
-  "editor.formatOnSave": true,
+  "editor.formatOnSave": false,
   "editor.glyphMargin": false,
   "editor.gotoLocation.multipleDeclarations": "goto",
   "editor.gotoLocation.multipleDefinitions": "goto",
@@ -91,6 +91,7 @@
     ".prettierrc": "json"
   },
   "files.autoSave": "onWindowChange",
+  "files.autoSaveWhenNoErrors": true,
   "files.defaultLanguage": "markdown",
   "files.exclude": {
     "**/node_modules/**/*": true,
@@ -102,7 +103,10 @@
   "git.closeDiffOnOperation": true,
   "git.confirmSync": false,
   "git.enableSmartCommit": true,
+  "git.mergeEditor": true,
+  "merge-conflict.autoNavigateNextConflict.enabled": true,
   "outline.problems.badges": false,
+  "outline.showVariables": false,
   "problems.autoReveal": false,
   "problems.decorations.enabled": false,
   "search.decorations.badges": false,
@@ -128,9 +132,16 @@
     "npm": true
   },
   "telemetry.telemetryLevel": "off",
+  "terminal.integrated.automationProfile.osx": {
+    "path": "/opt/homebrew/bin/zsh",
+    "args": [
+      "-i"
+    ]
+  },
   "terminal.integrated.commandsToSkipShell": [
     "workbench.action.closePanel"
   ],
+  "terminal.integrated.copyOnSelection": true,
   "terminal.integrated.cursorStyle": "line",
   "terminal.integrated.cursorStyleInactive": "line",
   "terminal.integrated.cursorWidth": 2,
@@ -221,6 +232,7 @@
     "copypasting",
     "customizability",
     "cyclomatic",
+    "deburr",
     "discoverability",
     "dotfiles",
     "Flexbox",
@@ -235,6 +247,7 @@
     "okayish",
     "oneliner",
     "overpolice",
+    "Photoshop",
     "preorder",
     "refactorings",
     "Sapegin",
@@ -243,66 +256,14 @@
     "signup",
     "Squirrelsong",
     "Tamia",
+    "Textlint",
     "todos",
     "trackpad"
   ],
   "donations.disablePrompt": true,
-  "sonarlint.disableTelemetry": true,
-  "sonarlint.rules": {
-    "typescript:S6544": {
-      "level": "off"
-    },
-    "typescript:S4123": {
-      "level": "off"
-    },
-    "javascript:S4138": {
-      "level": "off"
-    },
-    "typescript:S6759": {
-      "level": "off"
-    },
-    "typescript:S6582": {
-      "level": "off"
-    },
-    "typescript:S3776": {
-      "level": "off"
-    },
-    "typescript:S3735": {
-      "level": "off"
-    },
-    "typescript:S1135": {
-      "level": "off"
-    },
-    "typescript:S6598": {
-      "level": "off"
-    },
-    "typescript:S6564": {
-      "level": "off"
-    },
-    "typescript:S6509": {
-      "level": "off"
-    },
-    "typescript:S2004": {
-      "level": "off"
-    },
-    "javascript:S1135": {
-      "level": "off"
-    },
-    "javascript:S2004": {
-      "level": "off"
-    },
-    "javascript:S1134": {
-      "level": "off"
-    },
-    "typescript:S1134": {
-      "level": "off"
-    },
-    "Web:S1135": {
-      "level": "off"
-    }
-  },
   "github.copilot.editor.enableAutoCompletions": false,
   "githubPullRequests.defaultMergeMethod": "squash",
+  "githubPullRequests.pullPullRequestBranchBeforeCheckout": "pullAndMergeBase",
   "gitlens.blame.avatars": false,
   "gitlens.blame.dateFormat": "YYYY-MM-DD",
   "gitlens.blame.fontSize": 13,
@@ -342,41 +303,37 @@
   "typescript.preferences.preferTypeOnlyAutoImports": true,
   "typescript.preferGoToSourceDefinition": true,
   "typescript.updateImportsOnFileMove.enabled": "always",
+  "typescript.workspaceSymbols.scope": "currentProject",
   "html.format.wrapLineLength": 0,
   "html.format.enable": false,
   "html.autoClosingTags": false,
   "html.autoCreateQuotes": false,
   "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[javascriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[typescriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[markdown]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": false
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[html]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[astro]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[latex]": {
+    "editor.defaultFormatter": "mathematic.vscode-latex"
   },
   "[scminput]": {
     "editor.rulers": [
