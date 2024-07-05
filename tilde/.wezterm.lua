@@ -85,10 +85,7 @@ config.keys = {
 	{
 		key = 'LeftArrow',
 		mods = 'OPT',
-		action = wezterm.action.SendKey({
-		key = 'b',
-		mods = 'ALT',
-		}),
+		action = wezterm.action.SendKey({ key = 'b', mods = 'ALT' }),
 	},
 	-- Jump word to the right
 	{
@@ -124,6 +121,13 @@ config.keys = {
 		key = 'RightArrow',
 		mods = 'CMD',
 		action = wezterm.action.SendKey({ key = 'e', mods = 'CTRL' }),
+	},
+	-- Delete line to the left of the cursor
+	-- TODO: It actually deletes the whole line, but it's close enough
+	{
+		key = 'Backspace',
+		mods = 'CMD',
+		action = wezterm.action.SendKey({ key = 'u', mods = 'CTRL' }),
 	},
 
 	-- Case-insensitive search
