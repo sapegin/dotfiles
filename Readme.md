@@ -1,6 +1,6 @@
 # Artem Sapegin’s dotfiles 🐿️
 
-![WezTerm](https://github.com/sapegin/squirrelsong/raw/master/dark/WezTerm/screenshot.jpg)
+![WezTerm](https://github.com/sapegin/squirrelsong/raw/master/themes/WezTerm/screenshot-dark.jpg)
 
 ## Features
 

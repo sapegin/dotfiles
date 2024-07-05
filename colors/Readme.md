@@ -20,18 +20,18 @@ Run this command after each Bear update:
 
 ```shell
 sudo command rm "/Applications/Bear.app/Contents/Frameworks/BearCore.framework/Resources/Ayu.theme"
-sudo command cp "$HOME/_/squirrelsong/light/Bear/Squirrelsong Light.theme" "/Applications/Bear.app/Contents/Frameworks/BearCore.framework/Resources/Ayu.theme"
+sudo command cp "$HOME/_/squirrelsong/themes/Bear/Squirrelsong Light.theme" "/Applications/Bear.app/Contents/Frameworks/BearCore.framework/Resources/Ayu.theme"
 ```
 
 ## JetBrains
 
-![Squirrelsong light in WebStorm](https://github.com/sapegin/squirrelsong/raw/master/light/JetBrains/squirrelsong-light/screenshot.png)
+![Squirrelsong light in WebStorm](https://github.com/sapegin/squirrelsong/raw/master/themes/JetBrains/squirrelsong-light/screenshot.png)
 
 [Download from Marketplace](https://plugins.jetbrains.com/plugin/22568-squirrelsong-light-theme)
 
 ## Visual Studio Code
 
-![Squirrelsong light in Visual Studio Code](https://raw.githubusercontent.com/sapegin/squirrelsong/master/light/VSCode/SquirrelsongLight/screenshots/screenshot.jpg)
+![Squirrelsong light in Visual Studio Code](https://raw.githubusercontent.com/sapegin/squirrelsong/master/themes/VSCode/SquirrelsongLight/screenshots/screenshot.jpg)
 
 [Download from Marketplace](https://marketplace.visualstudio.com/items?itemName=sapegin.Theme-SquirrelsongLight)
 
@@ -39,6 +39,6 @@ sudo command cp "$HOME/_/squirrelsong/light/Bear/Squirrelsong Light.theme" "/App
 
 ## WezTerm
 
-![Squirrelsong dark in WezTerm](https://github.com/sapegin/squirrelsong/raw/master/dark/WezTerm/screenshot.jpg)
+![Squirrelsong dark in WezTerm](https://github.com/sapegin/squirrelsong/raw/master/themes/WezTerm/screenshot-dark.jpg)
 
 **Note:** The theme is included in [the WezTerm config](../tilde/.wezterm.lua).

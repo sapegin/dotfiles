@@ -47,7 +47,7 @@ async function install(from, toDir) {
 console.log('🌈 Installing Bat theme...');
 
 await install(
-	'dark/Sublime Text/Squirrelsong Dark/Squirrelsong Dark.tmTheme',
+	'themes/Sublime Text/Squirrelsong Dark/Squirrelsong Dark.tmTheme',
 	'.config/bat/themes'
 );
 execSync(`bat cache --build`);
@@ -58,7 +58,7 @@ execSync(`bat cache --build`);
 
 console.log('🌈 Installing WezTerm theme...');
 
-await install('dark/WezTerm/squirrelsong-dark.toml', '.config/wezterm/colors');
+await install('themes/WezTerm/squirrelsong-dark.toml', '.config/wezterm/colors');
 
 /**
  * Peek
@@ -66,7 +66,7 @@ await install('dark/WezTerm/squirrelsong-dark.toml', '.config/wezterm/colors');
 
 console.log('🌈 Installing Peek theme...');
 
-const peekTheme = await download('light/Peek/custom.css');
+const peekTheme = await download('themes/Peek/custom.css');
 write(
 	`${HOME}/Library/Group Containers/9V456WSURS.com.bigzlabs.peekgroup/Library/Application Support/Styles/custom.css`,
 	peekTheme
@@ -78,7 +78,7 @@ write(
 
 console.log('🌈 Installing Bear theme...');
 
-const bearTheme = await download('light/Bear/Squirrelsong Light.theme');
+const bearTheme = await download('themes/Bear/Squirrelsong Light.theme');
 const bearThemesDir = `/Applications/Bear.app/Contents/Frameworks/BearCore.framework/Resources`;
 await temporaryFileTask((tempFile) => {
 	write(tempFile, bearTheme);
