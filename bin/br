@@ -27,26 +27,65 @@
 # License: MIT
 # https://github.com/sapegin/dotfiles
 
+# Common stuff
+RED="$(tput setaf 1)"
+UNDERLINE="$(tput sgr 0 1)"
+NOCOLOR="$(tput sgr0)"
+function error() { echo -e "$UNDERLINE$RED$1$NOCOLOR"; }
+
+function has_local_branch() {
+	local name="$1"
+	if git show-ref --quiet "refs/heads/$name"; then
+		return 0
+	else
+		return 1
+	fi
+}
+
+function has_remote_branch() {
+	local name="$1"
+	if git ls-remote --exit-code --heads origin "$name" &> /dev/null; then
+		return 0
+	else
+		return 1
+	fi
+}
+# Attempt to use master branch in repository where main is used
+if [ "$1" == "master" ]; then
+	if has_local_branch "main"; then
+		git switch main
+		echo "This repository uses main branch, not master"
+		exit 0
+	fi
+fi
+
+# Attempt to use main branch in repository where master is used
+if [ "$1" == "main" ]; then
+	if has_local_branch "master"; then
+		git switch master
+		echo "This repository uses master branch, not main"
+		exit 0
+	fi
+fi
+
 if [ "$1" == "-" ] && [ "$1" != "-d" ] && [ "$1" != "-D" ] && [ "$1" != "" ]; then
 	# Try to fetch a remote branch if a local branch does not exists
-	local_branch_exists=$(git branch --no-color | egrep " $1\$")
-	if [ -z "$local_branch_exists" ]; then
-		git fetch origin $1 > /dev/null 2>&1
+	if ! has_local_branch "$1"; then
+		git fetch origin "$1" > /dev/null 2>&1
 	fi
 fi
 
 if [ "$1" == "-" ]; then
 	# Switch to the previous branch
-	git checkout -
+	git switch -
 else
 	# Pass all the arguments to branch
 	branch $@
 fi
 
 # Pull if a remote branch exists
-branch_name=$(git rev-parse --abbrev-ref HEAD)
-remote_branch_exists=$(git branch -r --no-color | egrep " origin/$branch_name\$")
-if [ -n "$remote_branch_exists" ]; then
+name=$(git rev-parse --abbrev-ref HEAD)
+if has_remote_branch "$name"; then
 	echo
 	pull
 fi
