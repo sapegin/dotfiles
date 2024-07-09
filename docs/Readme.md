@@ -4,11 +4,11 @@
 
 `Ctrl+R`
 
-- Navigate to a parent directory:
+- Navigate to a parent folder:
 
 `. .. ... .... .....`
 
-- Navigate to a previous directory:
+- Navigate to a previous folder:
 
 `--`
 
@@ -28,7 +28,7 @@
 
 `o {{file}}`
 
-- Open current directory in Finder:
+- Open current folder in Finder:
 
 `oo`
 
@@ -36,21 +36,21 @@
 
 `e {{file}}`
 
-- Open current directory in Visual Studio Code:
+- Open current folder in Visual Studio Code:
 
 `cc`
 
-- Open current directory in Nimble Commander:
+- Open current folder in Nimble Commander:
 
 `ff`
 
-- Open current directory in GitHub Desktop:
+- Open current folder in GitHub Desktop:
 
 `gh`
 
-- Make a direcotry and navigate to it:
+- Make a folder and navigate to it:
 
-`take {{directory}}`
+`take {{folder}}`
 
 - Make a file executable:
 
@@ -68,8 +68,6 @@
 
 `ppp {{file}}`
 
----
-
 - Change Git branch and pull:
 
 `br {{branch}}`
@@ -78,7 +76,7 @@
 
 `clean-dropbox {{--remove}}`
 
-- Remove all node_modules folders inside the home directory older than 30 days:
+- Remove all node_modules folders inside the home folder older than 30 days:
 
 `clean-node-modules`
 
@@ -117,8 +115,6 @@
 - Get macOS software updates, update Homebrew, npm, Ruby packages, dotfiles, etc:
 
 `update`
-
----
 
 - Open fuzzy file finder:
 
