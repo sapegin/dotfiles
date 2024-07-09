@@ -5,6 +5,7 @@
 // > [x] WezTerm
 // > [x] Bear
 // > [x] Peek
+// > [x] Fzf
 //
 // ---
 // Author: Artem Sapegin, sapegin.me
@@ -20,12 +21,18 @@ import { temporaryFileTask } from 'tempy';
 
 const HOME = path.dirname(path.dirname(import.meta.dirname));
 
+const SKIP_SUDO = false;
+
 const REPO_ROOT =
 	'https://raw.githubusercontent.com/sapegin/squirrelsong/master';
 const DEST_DIR = `${HOME}/dotfiles/tilde`;
 
 function download(filepath) {
 	return ky.get(`${REPO_ROOT}/${encodeURI(filepath)}`).text();
+}
+
+function read(filepath) {
+	return fs.readFileSync(filepath, 'utf8');
 }
 
 function write(file, text) {
@@ -58,7 +65,10 @@ execSync(`bat cache --build`);
 
 console.log('🌈 Installing WezTerm theme...');
 
-await install('themes/WezTerm/squirrelsong-dark.toml', '.config/wezterm/colors');
+await install(
+	'themes/WezTerm/squirrelsong-dark.toml',
+	'.config/wezterm/colors'
+);
 
 /**
  * Peek
@@ -76,17 +86,35 @@ write(
  * Bear
  */
 
-console.log('🌈 Installing Bear theme...');
+if (SKIP_SUDO === false) {
+	console.log('🌈 Installing Bear theme...');
 
-const bearTheme = await download('themes/Bear/Squirrelsong Light.theme');
-const bearThemesDir = `/Applications/Bear.app/Contents/Frameworks/BearCore.framework/Resources`;
-await temporaryFileTask((tempFile) => {
-	write(tempFile, bearTheme);
-	execSync(
-		`sudo -- sh -c 'command rm "${bearThemesDir}/Ayu.theme" > /dev/null 2>&1; command cp "${tempFile}" "${bearThemesDir}/Ayu.theme"'`
-	);
-});
-console.log('💡 Now choose Ayu theme in Bear settings');
+	const bearTheme = await download('themes/Bear/Squirrelsong Light.theme');
+	const bearThemesDir = `/Applications/Bear.app/Contents/Frameworks/BearCore.framework/Resources`;
+	await temporaryFileTask((tempFile) => {
+		write(tempFile, bearTheme);
+		execSync(
+			`sudo -- sh -c 'command rm "${bearThemesDir}/Ayu.theme" > /dev/null 2>&1; command cp "${tempFile}" "${bearThemesDir}/Ayu.theme"'`
+		);
+	});
+	console.log('💡 Now choose Ayu theme in Bear settings');
+}
+
+/**
+ * Fzf
+ */
+
+console.log('🌈 Installing fzf theme...');
+
+const fzfThemeRegExp = /FZF_DEFAULT_OPTS=["'][^'"]+["']/;
+const fzfThemeReadme = await download('themes/Fzf/Readme.md');
+const zshRcFile = `${HOME}/dotfiles/tilde/.zshrc`;
+const fzfThemeTheme = fzfThemeReadme.match(fzfThemeRegExp)[0] ?? '';
+const zshRc = read(zshRcFile);
+const zshRcUpdated = zshRc.replace(fzfThemeRegExp, fzfThemeTheme);
+write(zshRcFile, zshRcUpdated);
+
+console.log('💡 Reopen your terminal to take effect');
 
 // --- 8< -- 8< ---
 

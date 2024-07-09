@@ -40,7 +40,7 @@ SAVEHIST=$HISTSIZE
 # Use fd (https://github.com/sharkdp/fd) to respect .gitignore
 export FZF_DEFAULT_COMMAND='fd --type f'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_DEFAULT_OPTS="--color bg:-1,bg+:-1,fg:-1,fg+:#9e8a74,hl:#d8a851,hl+:#e2c54c,info:#6b503c,prompt:#6b503c,pointer:#6b503c"
+export FZF_DEFAULT_OPTS="--color bg:-1,bg+:-1,fg:-1,fg+:#ad9c8b,hl:#d8a851,hl+:#ceb250,info:#6b503c,prompt:#6b503c,pointer:#6b503c,marker:#7f61b3,spinner:#6b503c,header:#ad9c8b"
 # Use fd to respect .gitignore and exclude .git directory
 _fzf_compgen_path() {
 	fd --hidden --exclude ".git" . "$1"
@@ -48,7 +48,9 @@ _fzf_compgen_path() {
 _fzf_compgen_dir() {
 	fd --type d --hidden --exclude ".git" . "$1"
 }
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# Init fzf
+source <(fzf --zsh)
 
 # Load extra (private) settings
 [ -f ~/.zshlocal ] && source ~/.zshlocal
