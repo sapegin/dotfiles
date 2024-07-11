@@ -169,6 +169,7 @@
   "workbench.editor.empty.hint": "hidden",
   "workbench.editor.showTabs": "none",
   "workbench.enableExperiments": false,
+  "workbench.experimental.enableNewProfilesUI": true,
   "workbench.fontAliasing": "auto",
   "workbench.iconTheme": "catppuccin-latte",
   "workbench.layoutControl.enabled": false,
