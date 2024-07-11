@@ -17,6 +17,7 @@
   },
 
   // Internal
+  "accessibility.underlineLinks": true,
   "breadcrumbs.enabled": false,
   "breadcrumbs.filePath": "off",
   "catppuccin-icons.hidesExplorerArrows": true,
