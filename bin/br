@@ -10,11 +10,11 @@
 #
 # `br -`
 #
-# - Delete a local branch:
+# - Delete a local fully merged branch:
 #
 # `br -d {{branch}}`
 #
-# - Delete a remote branch:
+# - Delete a local not fully merged branch:
 #
 # `br -D {{branch}}`
 #
@@ -33,6 +33,7 @@ UNDERLINE="$(tput sgr 0 1)"
 NOCOLOR="$(tput sgr0)"
 function error() { echo -e "$UNDERLINE$RED$1$NOCOLOR"; }
 
+# Check whether a local branch exists
 function has_local_branch() {
 	local name="$1"
 	if git show-ref --quiet "refs/heads/$name"; then
@@ -42,50 +43,92 @@ function has_local_branch() {
 	fi
 }
 
+# Check whether a remote branch exists
 function has_remote_branch() {
 	local name="$1"
-	if git ls-remote --exit-code --heads origin "$name" &> /dev/null; then
+	if git ls-remote --exit-code --heads "$remote" "$name" &> /dev/null; then
 		return 0
 	else
 		return 1
 	fi
 }
+
+# Pull if has remote
+function try_pull() {
+	if has_remote_branch "$branch"; then
+		echo "Pull"
+		pull
+	fi
+}
+
 # Attempt to use master branch in repository where main is used
-if [ "$1" == "master" ]; then
+if [ "$branch" == "master" ]; then
 	if has_local_branch "main"; then
 		git switch main
 		echo "This repository uses main branch, not master"
+		try_pull
 		exit 0
 	fi
 fi
 
 # Attempt to use main branch in repository where master is used
-if [ "$1" == "main" ]; then
+if [ "$branch" == "main" ]; then
 	if has_local_branch "master"; then
 		git switch master
 		echo "This repository uses master branch, not main"
+		try_pull
 		exit 0
 	fi
 fi
 
-if [ "$1" == "-" ] && [ "$1" != "-d" ] && [ "$1" != "-D" ] && [ "$1" != "" ]; then
-	# Try to fetch a remote branch if a local branch does not exists
-	if ! has_local_branch "$1"; then
-		git fetch origin "$1" > /dev/null 2>&1
-	fi
+remote="origin"
+branch="$1"
+delete=
+if [ "$1" == "-d" ] || [ "$1" == "-D" ]; then
+	delete="$1"
+	branch="$2"
 fi
 
-if [ "$1" == "-" ]; then
-	# Switch to the previous branch
+# Switch to the previous branch
+if [ "$branch" == "-" ]; then
 	git switch -
-else
-	# Pass all the arguments to branch
-	branch $@
+	branch=$(git rev-parse --abbrev-ref HEAD)
+	try_pull
+	exit 0
 fi
 
-# Pull if a remote branch exists
-name=$(git rev-parse --abbrev-ref HEAD)
-if has_remote_branch "$name"; then
-	echo
-	pull
+# Delete branch
+if [ "$delete" ]; then
+	echo "💀 Removing local branch $branch..."
+	git branch $delete "$branch"
+	exit 0
+fi
+
+if has_local_branch "$branch"; then
+	# Local branch already exists, switching
+	echo "👓 Switching to existing local branch $branch..."
+	git switch "$branch"
+	if has_remote_branch "$branch"; then
+		# Fix tracking if needed
+		tracking=$(git branch -vv | grep "*" | awk '{ print $4 }')
+		if [[ ! "$tracking" =~ "$remote" ]]; then
+			echo "⚙️ Your local branch is not tracking the corresponding remote branch, fixing..."
+			git branch --set-upstream-to "$branch" "$remote/$branch"
+		fi
+
+		# Pull
+		pull
+	fi
+else
+	# No local branch
+	if has_remote_branch "$branch"; then
+		# Remote branch exists, fetching and switching
+		echo "🛸 Fetching remote branch $branch..."
+		git fetch "$remote" "$branch"
+		git switch "$branch" --track "$remote/$branch"
+	else
+		# No remote branch, creating a new branch
+		echo "🪴 Creating new local branch $branch..."
+		git checkout -b "$branch"
+	fi
 fi
