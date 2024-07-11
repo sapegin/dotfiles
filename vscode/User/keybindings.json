@@ -102,7 +102,7 @@
     "when": "panelVisible"
   },
   {
-  "comment": "Open Source control pane",
+    "comment": "Open Source control pane",
     "key": "cmd+shift+g",
     "command": "workbench.scm.focus",
     "when": "workbench.scm.active"
@@ -263,12 +263,9 @@
   {
     "comment": "Format and save (to make autosave save files without formatting)",
     "key": "cmd+s",
-    "command": "runCommands", 
+    "command": "runCommands",
     "args": {
-      "commands": [
-        "editor.action.format",
-        "workbench.action.files.save"
-      ]
+      "commands": ["editor.action.format", "workbench.action.files.save"]
     }
   },
   {
@@ -289,6 +286,10 @@
     "key": "cmd+shift+o",
     "command": "-workbench.action.gotoSymbol",
     "when": "!accessibilityHelpIsShown && !accessibleViewIsShown"
+  },
+  {
+    "key": "cmd+shift+alt+o",
+    "command": "workbench.action.showAllSymbols"
   },
   {
     "key": "shift+alt+down",
