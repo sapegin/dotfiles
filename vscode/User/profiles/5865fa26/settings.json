@@ -14,6 +14,7 @@
     "titleBar.activeBackground": "#f7f6f9",
     "titleBar.inactiveBackground": "#f7f6f9"
   },
+  "accessibility.underlineLinks": true,
   "breadcrumbs.enabled": false,
   "breadcrumbs.filePath": "off",
   "catppuccin-icons.hidesExplorerArrows": true,
@@ -30,7 +31,7 @@
   "editor.bracketPairColorization.enabled": false,
   "editor.codeActionsOnSave": {
     "source.organizeImports": "never",
-    "source.fixAll.eslint": "explicit"
+    "source.fixAll": "explicit"
   },
   "editor.cursorStyle": "line",
   "editor.cursorWidth": 2,
@@ -174,6 +175,7 @@
   "workbench.editor.empty.hint": "hidden",
   "workbench.editor.showTabs": "none",
   "workbench.enableExperiments": false,
+  "workbench.experimental.enableNewProfilesUI": true,
   "workbench.fontAliasing": "auto",
   "workbench.iconTheme": "catppuccin-latte",
   "workbench.layoutControl.enabled": false,
