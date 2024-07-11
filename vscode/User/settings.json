@@ -33,7 +33,7 @@
   "editor.bracketPairColorization.enabled": false,
   "editor.codeActionsOnSave": {
     "source.organizeImports": "never",
-    "source.fixAll.eslint": "explicit"
+    "source.fixAll": "explicit"
   },
   "editor.cursorStyle": "line",
   "editor.cursorWidth": 2,
