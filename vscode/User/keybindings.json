@@ -28,8 +28,16 @@
     "when": "editorTextFocus"
   },
   {
+    "comment": "Open Run Task menu",
     "key": "cmd+r",
-    "command": "workbench.action.tasks.runTask"
+    "command": "workbench.action.tasks.runTask",
+    "when": "!scmRepository"
+  },
+  {
+    "comment": "Create a new Pull Request on GitHub",
+    "key": "cmd+r",
+    "command": "pr.create",
+    "when": "scmRepository"
   },
   {
     "key": "cmd+alt+r",
@@ -113,9 +121,9 @@
     "when": "workbench.scm.active"
   },
   {
-    "key": "alt+cmd+enter",
+    "key": "cmd+p",
     "command": "git.sync",
-    "when": "workbench.scm.visible"
+    "when": "scmRepository"
   },
   {
     "key": "cmd+k alt+cmd+s",
@@ -254,7 +262,12 @@
   },
   {
     "key": "cmd+p",
-    "command": "workbench.action.showCommands"
+    "command": "workbench.action.showCommands",
+    "when": "!scmRepository"
+  },
+  {
+    "key": "f1",
+    "command": "-workbench.action.showCommands"
   },
   {
     "key": "shift+cmd+p",
