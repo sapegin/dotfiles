@@ -286,23 +286,22 @@
     "command": "-workbench.action.files.save"
   },
   {
-    "key": "cmd+shift+o",
-    "command": "workbench.action.quickOpen",
-    "args": "@:"
+    "comment": "Show list of symbols in the current file",
+    "key": "cmd+o",
+    "command": "workbench.action.gotoSymbol"
   },
   {
+    "comment": "Show list of symbols in the workspace",
     "key": "cmd+shift+o",
-    "command": "-editor.action.accessibleViewGoToSymbol",
-    "when": "accessibilityHelpIsShown && accessibleViewGoToSymbolSupported || accessibleViewGoToSymbolSupported && accessibleViewIsShown"
-  },
-  {
-    "key": "cmd+shift+o",
-    "command": "-workbench.action.gotoSymbol",
-    "when": "!accessibilityHelpIsShown && !accessibleViewIsShown"
-  },
-  {
-    "key": "cmd+shift+alt+o",
     "command": "workbench.action.showAllSymbols"
+  },
+  {
+    "key": "cmd+shift+o",
+    "command": "-editor.action.accessibleViewGoToSymbol"
+  },
+  {
+    "key": "cmd+shift+o",
+    "command": "-workbench.action.gotoSymbol"
   },
   {
     "key": "shift+alt+down",
