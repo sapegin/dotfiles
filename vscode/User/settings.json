@@ -36,14 +36,20 @@
     "source.organizeImports": "never",
     "source.fixAll": "explicit"
   },
+  "editor.copyWithSyntaxHighlighting": false,
   "editor.cursorStyle": "line",
   "editor.cursorWidth": 2,
   "editor.cursorBlinking": "solid",
+  // Always use indentation from EditorConfig/Prettier instead of file own indentation
+  "editor.detectIndentation": false,
+  // Don't copy a line to clipboard when nothing is selected
   "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.emptySelectionClipboard": false,
   "editor.find.addExtraSpaceOnTop": false,
   "editor.foldingImportsByDefault": true,
   "editor.fontFamily": "MonoLisa, \"Symbols Nerd Font Mono\"",
-  "editor.fontLigatures": "'calt' on, 'liga' off", // Enable contextual alternative but disable ligatures
+  // Enable contextual alternative but disable ligatures
+  "editor.fontLigatures": "'calt' on, 'liga' off",
   "editor.fontSize": 17,
   "editor.formatOnSave": false,
   "editor.glyphMargin": false,
@@ -151,6 +157,7 @@
   "terminal.integrated.tabs.showActions": "never",
   "terminal.integrated.tabStopWidth": 2,
   "window.commandCenter": false,
+  "window.newWindowDimensions": "inherit",
   "window.openFilesInNewWindow": "off",
   "window.openFoldersInNewWindow": "off",
   "window.restoreWindows": "all",
