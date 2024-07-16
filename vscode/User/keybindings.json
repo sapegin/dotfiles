@@ -2,15 +2,25 @@
   /**
    * UI panels
    */
-  // Cmd+B: toggle sidebar (default)
   {
-    "comment": "Toggle the panEl",
-    "key": "cmd+e",
+    "comment": "Toggle the left sidebar",
+    "key": "cmd+1",
+    "command": "workbench.action.toggleAuxiliaryBar"
+  },
+  {
+    "comment": "Toggle the right sidebar",
+    "key": "cmd+2",
+    "command": "workbench.action.toggleSidebarVisibility"
+  },
+  {
+    "comment": "Toggle the bottom panel",
+    "key": "cmd+3",
     "command": "workbench.action.togglePanel"
   },
   {
-    "comment": "Maximize/minimize the panEl",
-    "key": "shift+cmd+e",
+    // TODO: This is hard to press
+    "comment": "Maximize/minimize the panel",
+    "key": "cmd+alt+3",
     "command": "workbench.action.toggleMaximizedPanel",
     "when": "panelVisible"
   },
@@ -252,14 +262,14 @@
     "comment": "Create a new pull Request",
     "key": "cmd+r",
     "command": "pr.create",
-    "when": "scmRepository"
+    "when": "focusedView == workbench.scm"
   },
   {
     // Matches GitHub Desktop push command
     "comment": "Sync changes with the remote",
     "key": "cmd+p",
     "command": "git.sync",
-    "when": "scmRepository"
+    "when": "focusedView == workbench.scm"
   },
   {
     "comment": "View all Changes",
@@ -299,7 +309,7 @@
     "comment": "Replace in current file",
     "key": "cmd+r",
     "command": "editor.action.startFindReplaceAction",
-    "when": "editorFocus || editorIsOpen"
+    "when": "editorFocus"
   },
   {
     "comment": "Replace in files",
@@ -751,5 +761,61 @@
   {
     "key": "cmd+k cmd+n",
     "command": "-git.unstageSelectedRanges"
+  },
+  {
+    "key": "cmd+1",
+    "command": "-workbench.action.focusFirstEditorGroup"
+  },
+  {
+    "key": "cmd+2",
+    "command": "-workbench.action.focusSecondEditorGroup"
+  },
+  {
+    "key": "cmd+3",
+    "command": "-workbench.action.focusThirdEditorGroup"
+  },
+  {
+    "key": "cmd+4",
+    "command": "-workbench.action.focusFourthEditorGroup"
+  },
+  {
+    "key": "cmd+5",
+    "command": "-workbench.action.focusFifthEditorGroup"
+  },
+  {
+    "key": "cmd+6",
+    "command": "-workbench.action.focusSixthEditorGroup"
+  },
+  {
+    "key": "cmd+7",
+    "command": "-workbench.action.focusSeventhEditorGroup"
+  },
+  {
+    "key": "cmd+8",
+    "command": "-workbench.action.focusEighthEditorGroup"
+  },
+  {
+    "key": "cmd+9",
+    "command": "-workbench.action.lastEditorInGroup"
+  },
+  {
+    "key": "ctrl+cmd+9",
+    "command": "-workbench.action.moveEditorToLastGroup"
+  },
+  {
+    "key": "cmd+0",
+    "command": "-workbench.action.focusSideBar"
+  },
+  {
+    "key": "alt+cmd+b",
+    "command": "-workbench.action.toggleAuxiliaryBar"
+  },
+  {
+    "key": "cmd+b",
+    "command": "-workbench.action.toggleSidebarVisibility"
+  },
+  {
+    "key": "cmd+k cmd+m",
+    "command": "-workbench.action.toggleMaximizeEditorGroup"
   }
 ]
