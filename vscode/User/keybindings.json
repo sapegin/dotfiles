@@ -265,6 +265,16 @@
   },
 
   /**
+   * Markdown
+   */
+  {
+    "comment": "Open Markdown preview",
+    "key": "cmd+k cmd+m",
+    "command": "markdown.showPreview",
+    "when": "!notebookEditorFocused && editorLangId == 'markdown'"
+  },
+
+  /**
    * Git
    */
   {
@@ -827,5 +837,14 @@
   {
     "key": "cmd+k cmd+m",
     "command": "-workbench.action.toggleMaximizeEditorGroup"
+  },
+  {
+    "key": "cmd+k v",
+    "command": "-markdown.showPreviewToSide",
+    "when": "!notebookEditorFocused && editorLangId == 'markdown'"
+  },
+  {
+    "key": "shift+cmd+v",
+    "command": "-markdown.showPreview"
   }
 ]
