@@ -255,6 +255,16 @@
   },
 
   /**
+   * Terminal
+   */
+  {
+    "comment": "Kills the current terminal tab",
+    "key": "cmd+w",
+    "command": "workbench.action.terminal.kill",
+    "when": "terminalFocus"
+  },
+
+  /**
    * Git
    */
   {
