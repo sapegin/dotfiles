@@ -149,6 +149,7 @@
   "terminal.integrated.drawBoldTextInBrightColors": false,
   "terminal.integrated.enablePersistentSessions": false,
   "terminal.integrated.fontSize": 14,
+  "terminal.integrated.lineHeight": 1.1,
   "terminal.integrated.hideOnStartup": "always",
   "terminal.integrated.minimumContrastRatio": 1,
   "terminal.integrated.shellIntegration.decorationsEnabled": "never",
