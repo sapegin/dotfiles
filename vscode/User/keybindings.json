@@ -1,179 +1,57 @@
 [
+  /**
+   * UI panels
+   */
+  // Cmd+B: toggle sidebar (default)
   {
+    "comment": "Toggle the panEl",
     "key": "cmd+e",
-    "command": "workbench.action.quickOpenPreviousEditor"
+    "command": "workbench.action.togglePanel"
   },
   {
-    "key": "cmd+g",
-    "command": "workbench.action.gotoLine"
-  },
-  {
-    "key": "cmd+y",
-    "command": "editor.action.deleteLines",
-    "when": "editorTextFocus && !editorReadonly"
-  },
-  {
-    "key": "cmd+d",
-    "command": "editor.action.duplicateSelection",
-    "when": "editorTextFocus && !editorReadonly"
-  },
-  {
-    "key": "ctrl+g",
-    "command": "editor.action.addSelectionToNextFindMatch",
-    "when": "editorFocus"
-  },
-  {
-    "key": "alt+down",
-    "command": "editor.action.insertCursorBelow",
-    "when": "editorTextFocus"
-  },
-  {
-    "comment": "Open Run Task menu",
-    "key": "cmd+r",
-    "command": "workbench.action.tasks.runTask",
-    "when": "!scmRepository"
-  },
-  {
-    "comment": "Create a new Pull Request on GitHub",
-    "key": "cmd+r",
-    "command": "pr.create",
-    "when": "scmRepository"
-  },
-  {
-    "key": "cmd+alt+r",
-    "command": "workbench.action.tasks.restartTask",
-    "when": "taskRunning"
-  },
-  {
-    "key": "cmd+alt+r",
-    "command": "-toggleFindRegex",
-    "when": "editorFocus"
-  },
-  {
-    "key": "alt+cmd+down",
-    "command": "editor.action.moveLinesDownAction",
-    "when": "editorTextFocus && !editorReadonly"
-  },
-  {
-    "key": "alt+down",
-    "command": "-editor.action.moveLinesDownAction",
-    "when": "editorTextFocus && !editorReadonly"
-  },
-  {
-    "key": "alt+cmd+up",
-    "command": "editor.action.moveLinesUpAction",
-    "when": "editorTextFocus && !editorReadonly"
-  },
-  {
-    "key": "alt+up",
-    "command": "-editor.action.moveLinesUpAction",
-    "when": "editorTextFocus && !editorReadonly"
-  },
-  {
-    "key": "shift+f6",
-    "command": "editor.action.rename",
-    "when": "editorHasRenameProvider && editorTextFocus && !editorReadonly"
-  },
-  {
-    "key": "f2",
-    "command": "-editor.action.rename",
-    "when": "editorHasRenameProvider && editorTextFocus && !editorReadonly"
-  },
-  {
-    "key": "cmd+t",
-    "command": "-workbench.action.showAllSymbols"
-  },
-  {
-    "key": "alt+enter",
-    "command": "editor.action.quickFix",
-    "when": "editorHasCodeActionsProvider && textInputFocus && !editorReadonly"
-  },
-  {
-    "key": "cmd+.",
-    "command": "-editor.action.quickFix",
-    "when": "editorHasCodeActionsProvider && textInputFocus && !editorReadonly"
-  },
-  {
-    "key": "ctrl+shift+r",
-    "command": "-editor.action.refactor",
-    "when": "editorHasCodeActionsProvider && textInputFocus && !editorReadonly"
-  },
-  {
-    // Focus on search results when pressing Enter in the search box
-    "key": "enter",
-    "command": "search.action.focusNextSearchResult",
-    "when": "inSearchEditor && inputBoxFocus || inputBoxFocus && searchViewletVisible"
-  },
-  {
-    "key": "cmd+alt+j",
+    "comment": "Maximize/minimize the panEl",
+    "key": "shift+cmd+e",
     "command": "workbench.action.toggleMaximizedPanel",
     "when": "panelVisible"
   },
   {
-    "comment": "Open Source control pane",
-    "key": "cmd+shift+g",
-    "command": "workbench.scm.focus",
-    "when": "workbench.scm.active"
+    "comment": "Toggle Explorer in the sidebar",
+    "key": "cmd+k cmd+e",
+    "command": "workbench.view.explorer"
   },
   {
-    "key": "ctrl+shift+g",
-    "command": "-workbench.view.scm",
-    "when": "workbench.scm.active"
+    "comment": "Open eXtensions in the sidebar",
+    "key": "cmd+k cmd+x",
+    "command": "workbench.view.extensions",
+    "when": "viewContainer.workbench.view.extensions.enabled"
   },
   {
-    "key": "cmd+p",
-    "command": "git.sync",
-    "when": "scmRepository"
-  },
-  {
-    "key": "cmd+k alt+cmd+s",
-    "command": "-git.stageSelectedRanges",
-    "when": "isInDiffEditor && !operationInProgress"
-  },
-  {
-    "comment": "Stage currently open file",
-    "key": "ctrl+s",
-    "command": "git.stage"
-  },
-  {
-    "key": "shift+cmd+c",
-    "command": "git.viewChanges"
-  },
-  {
-    "key": "shift+cmd+c",
-    "command": "-workbench.action.terminal.openNativeConsole",
-    "when": "!terminalFocus"
-  },
-  {
-    "key": "ctrl+right",
-    "command": "editor.unfold",
-    "when": "editorTextFocus && foldingEnabled"
-  },
-  {
-    "key": "alt+cmd+]",
-    "command": "-editor.unfold",
-    "when": "editorTextFocus && foldingEnabled"
-  },
-  {
-    "key": "ctrl+left",
-    "command": "editor.fold",
-    "when": "editorTextFocus && foldingEnabled"
-  },
-  {
-    "key": "alt+cmd+[",
-    "command": "-editor.fold",
-    "when": "editorTextFocus && foldingEnabled"
-  },
-  {
-    "comment": "Open list of GitHub pull requests in sidebar",
-    "key": "shift+cmd+h",
+    "comment": "Open list of pull Requests in sidebar",
+    "key": "cmd+k cmd+r",
     "command": "pr:github.focus"
   },
   {
-    "key": "shift+cmd+h",
-    "command": "-workbench.action.replaceInFiles"
+    "comment": "Toggle Terminal",
+    "key": "cmd+t",
+    "command": "workbench.action.terminal.toggleTerminal"
   },
-
+  {
+    "comment": "Open source control (Git) pane",
+    "key": "cmd+k cmd+g",
+    "command": "workbench.view.scm",
+    "when": "workbench.scm.active"
+  },
+  {
+    "comment": "Toggle Status bar",
+    "key": "cmd+k cmd+s",
+    "command": "workbench.action.toggleStatusbarVisibility"
+  },
+  {
+    "comment": "Close sidebar when pressing Escape in the editor",
+    "key": "escape",
+    "command": "workbench.action.closeSidebar",
+    "when": "sideBarVisible && textInputFocus && !suggestWidgetVisible"
+  },
   {
     "comment": "Close panel when pressing Escape in the editor",
     "key": "escape",
@@ -198,73 +76,332 @@
     "command": "workbench.action.closePanel",
     "when": "terminalFocus"
   },
+
+  /**
+   * Quick open
+   */
   {
-    "key": "cmd+space",
-    "command": "git.stage",
-    "when": "workbench.scm.active"
+    // Also, press cmd+enter to open a file in a split editor
+    "comment": "Open recent files",
+    "key": "cmd+o",
+    "command": "workbench.action.quickOpenPreviousEditor"
   },
   {
-    "comment": "Go Forward (Ctrl++) -- to better match Go Back (Ctrl+-)",
+    "comment": "Show list of sYmbols in the current file",
+    "key": "cmd+y",
+    "command": "workbench.action.gotoSymbol"
+  },
+  {
+    "comment": "Show list of sYmbols in the workspace",
+    "key": "cmd+shift+y",
+    "command": "workbench.action.showAllSymbols"
+  },
+  {
+    "comment": "Open command Palette",
+    "key": "cmd+p",
+    "command": "workbench.action.showCommands",
+    "when": "!scmRepository"
+  },
+  {
+    "comment": "Open run Task menu",
+    "key": "cmd+k cmd+t",
+    "command": "workbench.action.tasks.runTask",
+    "when": "!scmRepository"
+  },
+
+  /**
+   * Code editing and navigation
+   */
+  {
+    "comment": "Focus on the Editor",
+    "key": "alt+escape",
+    "command": "workbench.action.focusActiveEditorGroup"
+  },
+  {
+    "comment": "Format and Save (to make autosave save files without formatting)",
+    "key": "cmd+s",
+    "command": "runCommands",
+    "args": {
+      "commands": ["editor.action.format", "workbench.action.files.save"]
+    }
+  },
+  {
+    "comment": "Go to line",
+    "key": "cmd+g",
+    "command": "workbench.action.gotoLine"
+  },
+  {
+    "comment": "Delete current or selected lines",
+    "key": "cmd+d",
+    "command": "editor.action.deleteLines",
+    "when": "editorTextFocus && !editorReadonly"
+  },
+  {
+    "comment": "Duplicate current or selected Lines",
+    "key": "cmd+l",
+    "command": "editor.action.duplicateSelection",
+    "when": "editorTextFocus && !editorReadonly"
+  },
+  {
+    "comment": "Join selected lines",
+    "key": "cmd+j",
+    "command": "editor.action.joinLines",
+    "when": "editorTextFocus && !editorReadonly"
+  },
+  {
+    // Matches cmd+f2 (change all occurrences)
+    // Also selects the word around the cursor
+    "comment": "Select next occurrence",
+    "key": "f2",
+    "command": "editor.action.addSelectionToNextFindMatch",
+    "when": "editorFocus"
+  },
+  {
+    // Skips the current selected occurrence
+    "comment": "Move selection to the next occurrence",
+    "command": "editor.action.moveSelectionToNextFindMatch",
+    "key": "alt+f2",
+    "when": "editorFocus && editorHasMultipleSelections"
+  },
+  {
+    "comment": "Insert cursor below",
+    "key": "alt+down",
+    "command": "editor.action.insertCursorBelow",
+    "when": "editorTextFocus"
+  },
+  {
+    "comment": "Add cursors to the end of selected lines",
+    "key": "alt+right",
+    "command": "editor.action.insertCursorAtEndOfEachLineSelected",
+    "when": "editorTextFocus"
+  },
+  {
+    "comment": "Move current or selected lines down",
+    "key": "alt+shift+down",
+    "command": "editor.action.moveLinesDownAction",
+    "when": "editorTextFocus && !editorReadonly"
+  },
+  {
+    "comment": "Move current or selected lines up",
+    "key": "alt+shift+up",
+    "command": "editor.action.moveLinesUpAction",
+    "when": "editorTextFocus && !editorReadonly"
+  },
+  {
+    "comment": "Rename the current symbol",
+    "key": "shift+f6",
+    "command": "editor.action.rename",
+    "when": "editorHasRenameProvider && editorTextFocus && !editorReadonly"
+  },
+  {
+    "comment": "Open quick fix menu",
+    "key": "alt+enter",
+    "command": "editor.action.quickFix",
+    "when": "editorHasCodeActionsProvider && textInputFocus && !editorReadonly"
+  },
+  {
+    "comment": "Unfold",
+    "key": "ctrl+right",
+    "command": "editor.unfold",
+    "when": "editorTextFocus && foldingEnabled"
+  },
+  {
+    "comment": "Fold",
+    "key": "ctrl+left",
+    "command": "editor.fold",
+    "when": "editorTextFocus && foldingEnabled"
+  },
+  {
+    // Matches Go back (Ctrl+-)
+    "comment": "Go forward",
     "key": "ctrl+=",
     "command": "workbench.action.navigateForward",
     "when": "canNavigateForward"
   },
   {
-    "key": "ctrl+shift+-",
-    "command": "-workbench.action.navigateForward",
-    "when": "canNavigateForward"
-  },
-
-  {
+    "comment": "Open autocompletion menu",
     "key": "cmd+space",
     "command": "editor.action.triggerSuggest",
     "when": "editorHasCompletionItemProvider && textInputFocus && !editorReadonly && !suggestWidgetVisible"
   },
   {
-    "key": "ctrl+space",
-    "command": "-editor.action.triggerSuggest",
-    "when": "editorHasCompletionItemProvider && textInputFocus && !editorReadonly && !suggestWidgetVisible"
+    "comment": "Got to definition",
+    "key": "cmd+enter",
+    "command": "editor.action.revealDefinition",
+    "when": "editorHasDefinitionProvider && editorTextFocus"
   },
   {
-    "comment": "Don't autocomplete on Enter, just on Tab: more ways to get rid of the autocomplete when you don't need it",
+    "comment": "Find all references",
+    "key": "cmd+alt+enter",
+    "command": "references-view.findReferences",
+    "when": "editorHasReferenceProvider"
+  },
+  {
+    // Matches cmd+/ to add an inline comment
+    "comment": "Block comment selection",
+    "key": "cmd+alt+/",
+    "command": "editor.action.blockComment",
+    "when": "editorTextFocus && !editorReadonly"
+  },
+
+  /**
+   * Git
+   */
+  {
+    // Matches GitHub Desktop create pull request command
+    "comment": "Create a new pull Request",
+    "key": "cmd+r",
+    "command": "pr.create",
+    "when": "scmRepository"
+  },
+  {
+    // Matches GitHub Desktop push command
+    "comment": "Sync changes with the remote",
+    "key": "cmd+p",
+    "command": "git.sync",
+    "when": "scmRepository"
+  },
+  {
+    "comment": "View all Changes",
+    "key": "shift+cmd+c",
+    "command": "git.viewChanges"
+  },
+  {
+    // TODO: Can it be just space to match GitHub Desktop and LazyGit?
+    "comment": "Stage selected file in the source control list",
+    "key": "cmd+space",
+    "command": "git.stage",
+    "when": "workbench.scm.active"
+  },
+
+  /**
+   * Tasks and debugger
+   */
+  {
+    "comment": "Restarts a currently running task",
+    "key": "cmd+alt+r",
+    "command": "workbench.action.tasks.restartTask",
+    "when": "taskRunning"
+  },
+  {
+    "comment": "Run without debugging",
+    "key": "f5",
+    "command": "workbench.action.debug.run",
+    "when": "debuggersAvailable && debugState != 'initializing'"
+  },
+
+  /**
+   * Search
+   */
+  // cmd+f: find in current file (default)
+  // cmd+shift+f: find in files (default)
+  {
+    "comment": "Replace in current file",
+    "key": "cmd+r",
+    "command": "editor.action.startFindReplaceAction",
+    "when": "editorFocus || editorIsOpen"
+  },
+  {
+    "comment": "Replace in files",
+    "key": "cmd+shift+r",
+    "command": "workbench.action.replaceInFiles"
+  },
+  {
+    "comment": "Focus on search results when pressing Enter in the search box",
     "key": "enter",
-    "command": "-acceptSelectedSuggestion",
-    "when": "acceptSuggestionOnEnter && suggestWidgetHasFocusedSuggestion && suggestWidgetVisible && suggestionMakesTextEdit && textInputFocus"
+    "command": "search.action.focusNextSearchResult",
+    "when": "inSearchEditor && inputBoxFocus || inputBoxFocus && searchViewletVisible"
+  },
+
+  /**
+   * File explorer
+   */
+  {
+    // Matches macOS Finder
+    "comment": "Create a New file",
+    "key": "cmd+n",
+    "command": "explorer.newFile",
+    "when": "explorerViewletVisible && filesExplorerFocus && !inputFocus"
   },
   {
-    "comment": "Don't autocomplete on Enter in terminal, just on Tab: more ways to get rid of the autocomplete when you don't need it",
-    "key": "enter",
-    "command": "-workbench.action.terminal.acceptSelectedSuggestion",
-    "when": "terminalFocus && terminalHasBeenCreated && terminalIsOpen && terminalSuggestWidgetVisible || terminalFocus && terminalIsOpen && terminalProcessSupported && terminalSuggestWidgetVisible"
+    // Matches macOS Finder
+    "comment": "Create a New folder",
+    "key": "shift+cmd+n",
+    "command": "explorer.newFolder",
+    "when": "explorerViewletVisible && filesExplorerFocus && !inputFocus"
+  },
+
+  /**
+   * Emmet
+   */
+  {
+    "comment": "Select the Inner contents of a tag",
+    "key": "cmd+m cmd+i",
+    "command": "editor.emmet.action.balanceIn",
+    "when": "editorTextFocus"
   },
   {
-    "comment": "Show list of profiles",
-    "key": "f10",
+    "comment": "Select the Outer contents of a tag",
+    "key": "cmd+m cmd+o",
+    "command": "editor.emmet.action.balanceOut",
+    "when": "editorTextFocus"
+  },
+  {
+    "comment": "Wrap with emmet abbreviation",
+    "key": "cmd+m cmd+w",
+    "command": "editor.emmet.action.wrapWithAbbreviation",
+    "when": "editorTextFocus"
+  },
+  {
+    "comment": "Remove the tag but keep the contents",
+    "key": "cmd+m cmd+backspace",
+    "command": "editor.emmet.action.removeTag",
+    "when": "editorTextFocus"
+  },
+
+  /**
+   * Settings (preferences)
+   */
+  {
+    "comment": "Open user settings (UI)",
+    "key": "cmd+;",
+    "command": "workbench.action.openGlobalSettings"
+  },
+  {
+    "comment": "Open user settings (JSON)",
+    "key": "shift+cmd+;",
+    "command": "workbench.action.openSettingsJson"
+  },
+  {
+    "comment": "Open user keybindings (UI)",
+    "key": "alt+cmd+;",
+    "command": "workbench.action.openGlobalKeybindings"
+  },
+  {
+    "comment": "Open user keybindings (JSON)",
+    "key": "shift+alt+cmd+;",
+    "command": "workbench.action.openGlobalKeybindingsFile"
+  },
+
+  /**
+   * Misc.
+   */
+  {
+    "comment": "Switch current Profile",
+    "key": "cmd+k cmd+p",
     "command": "workbench.profiles.actions.switchProfile"
   },
   {
-    "key": "f10",
-    "command": "-extension.node-debug.startWithStopOnEntry",
-    "when": "!inDebugMode && debugConfigurationType == 'node' || !inDebugMode && debugConfigurationType == 'pwa-extensionHost' || !inDebugMode && debugConfigurationType == 'pwa-node'"
-  },
-  {
-    "key": "f10",
-    "command": "-workbench.action.debug.stepOver",
-    "when": "debugState == 'stopped'"
-  },
-  {
+    // New File Now extension
+    "comment": "Create a New file",
     "key": "cmd+n",
-    "command": "newFileNow.createNewFile"
+    "command": "newFileNow.createNewFile",
+    "when": "editorTextFocus"
   },
-  {
-    "key": "cmd+p",
-    "command": "-workbench.action.quickOpen"
-  },
-  {
-    "key": "cmd+p",
-    "command": "workbench.action.showCommands",
-    "when": "!scmRepository"
-  },
+
+  /**
+   * Disable default hotkeys
+   */
   {
     "key": "f1",
     "command": "-workbench.action.showCommands"
@@ -274,26 +411,40 @@
     "command": "-workbench.action.showCommands"
   },
   {
-    "comment": "Format and save (to make autosave save files without formatting)",
-    "key": "cmd+s",
-    "command": "runCommands",
-    "args": {
-      "commands": ["editor.action.format", "workbench.action.files.save"]
-    }
+    "key": "cmd+p",
+    "command": "-workbench.action.quickOpen"
+  },
+  {
+    "key": "ctrl+shift+-",
+    "command": "-workbench.action.navigateForward"
+  },
+  {
+    "key": "ctrl+shift+g",
+    "command": "-workbench.view.scm"
+  },
+  {
+    "key": "cmd+alt+r",
+    "command": "-toggleFindRegex"
+  },
+  {
+    "key": "alt+down",
+    "command": "-editor.action.moveLinesDownAction"
+  },
+  {
+    "key": "alt+up",
+    "command": "-editor.action.moveLinesUpAction"
+  },
+  {
+    "key": "f2",
+    "command": "-editor.action.rename"
+  },
+  {
+    "key": "cmd+t",
+    "command": "-workbench.action.showAllSymbols"
   },
   {
     "key": "cmd+s",
     "command": "-workbench.action.files.save"
-  },
-  {
-    "comment": "Show list of symbols in the current file",
-    "key": "cmd+o",
-    "command": "workbench.action.gotoSymbol"
-  },
-  {
-    "comment": "Show list of symbols in the workspace",
-    "key": "cmd+shift+o",
-    "command": "workbench.action.showAllSymbols"
   },
   {
     "key": "cmd+shift+o",
@@ -305,12 +456,300 @@
   },
   {
     "key": "shift+alt+down",
-    "command": "-editor.action.copyLinesDownAction",
-    "when": "editorTextFocus && !editorReadonly"
+    "command": "-editor.action.copyLinesDownAction"
   },
   {
     "key": "shift+alt+up",
-    "command": "-editor.action.copyLinesUpAction",
-    "when": "editorTextFocus && !editorReadonly"
+    "command": "-editor.action.copyLinesUpAction"
+  },
+  {
+    "key": "f10",
+    "command": "-extension.node-debug.startWithStopOnEntry"
+  },
+  {
+    "key": "f10",
+    "command": "-workbench.action.debug.stepOver"
+  },
+  {
+    // Don't autocomplete on Enter, just on Tab: more ways to get rid of the autocomplete when you don't need it
+    "key": "enter",
+    "command": "-acceptSelectedSuggestion"
+  },
+  {
+    // Don't autocomplete on Enter in terminal, just on Tab: more ways to get rid of the autocomplete when you don't need it
+    "key": "enter",
+    "command": "-workbench.action.terminal.acceptSelectedSuggestion"
+  },
+  {
+    "key": "cmd+.",
+    "command": "-editor.action.quickFix"
+  },
+  {
+    "key": "ctrl+shift+r",
+    "command": "-editor.action.refactor"
+  },
+  {
+    "key": "cmd+k cmd+t",
+    "command": "-workbench.action.selectTheme"
+  },
+  {
+    "key": "shift+cmd+t",
+    "command": "-workbench.action.reopenClosedEditor"
+  },
+  {
+    "key": "alt+cmd+t",
+    "command": "-workbench.action.closeOtherEditors"
+  },
+  {
+    "key": "cmd+u",
+    "command": "-cursorUndo"
+  },
+  {
+    "key": "cmd+k cmd+u",
+    "command": "-editor.action.removeCommentLine"
+  },
+  {
+    "key": "cmd+k u",
+    "command": "-workbench.action.closeUnmodifiedEditors"
+  },
+  {
+    "key": "shift+cmd+u",
+    "command": "-workbench.action.output.toggleOutput"
+  },
+  {
+    "key": "cmd+k alt+cmd+s",
+    "command": "-git.stageSelectedRanges"
+  },
+  {
+    "key": "shift+cmd+c",
+    "command": "-workbench.action.terminal.openNativeConsole"
+  },
+  {
+    "key": "alt+cmd+]",
+    "command": "-editor.unfold"
+  },
+  {
+    "key": "alt+cmd+[",
+    "command": "-editor.fold"
+  },
+  {
+    "key": "shift+cmd+h",
+    "command": "-workbench.action.replaceInFiles"
+  },
+  {
+    "key": "ctrl+space",
+    "command": "-editor.action.triggerSuggest"
+  },
+  {
+    "key": "cmd+l",
+    "command": "-expandLineSelection"
+  },
+  {
+    "key": "cmd+d",
+    "command": "-editor.action.addSelectionToNextFindMatch"
+  },
+  {
+    "key": "cmd+j",
+    "command": "-workbench.action.togglePanel"
+  },
+  {
+    "key": "ctrl+j",
+    "command": "-editor.action.joinLines"
+  },
+  {
+    "key": "alt+f2",
+    "command": "-editor.action.accessibleView"
+  },
+  {
+    "key": "shift+alt+i",
+    "command": "-editor.action.insertCursorAtEndOfEachLineSelected"
+  },
+  {
+    "key": "cmd+k cmd+s",
+    "command": "-workbench.action.openGlobalKeybindings"
+  },
+  {
+    "key": "alt+cmd+f",
+    "command": "-editor.action.startFindReplaceAction"
+  },
+  {
+    "key": "shift+cmd+enter",
+    "command": "-editor.action.insertLineBefore"
+  },
+  {
+    "key": "cmd+enter",
+    "command": "-editor.action.insertLineAfter"
+  },
+  {
+    "key": "cmd+f12",
+    "command": "-editor.action.revealDefinition"
+  },
+  {
+    "key": "f12",
+    "command": "-editor.action.revealDefinition"
+  },
+  {
+    "key": "shift+alt+f12",
+    "command": "-references-view.findReferences"
+  },
+  {
+    "key": "alt+cmd+enter",
+    "command": "-workbench.action.terminal.chat.insertCommand"
+  },
+  {
+    "key": "alt+cmd+enter",
+    "command": "-workbench.action.terminal.chat.insertFirstCommand"
+  },
+  {
+    "key": "alt+cmd+up",
+    "command": "-editor.action.insertCursorAbove"
+  },
+  {
+    "key": "ctrl+alt+cmd+n",
+    "command": "-welcome.showNewFileEntries"
+  },
+  {
+    "key": "shift+alt+a",
+    "command": "-editor.action.blockComment"
+  },
+  {
+    "key": "ctrl+shift+right",
+    "command": "-editor.action.smartSelect.expand"
+  },
+  {
+    "key": "ctrl+shift+cmd+right",
+    "command": "-editor.action.smartSelect.expand"
+  },
+  {
+    "key": "ctrl+shift+left",
+    "command": "-editor.action.smartSelect.shrink"
+  },
+  {
+    "key": "ctrl+shift+cmd+left",
+    "command": "-editor.action.smartSelect.shrink"
+  },
+  {
+    "key": "shift+cmd+l",
+    "command": "-editor.action.selectHighlights"
+  },
+  {
+    "key": "cmd+k cmd+0",
+    "command": "-editor.foldAll"
+  },
+  {
+    "key": "alt+cmd+0",
+    "command": "-workbench.action.toggleEditorGroupLayout"
+  },
+  {
+    "key": "shift+cmd+d",
+    "command": "-workbench.view.debug"
+  },
+  {
+    "key": "shift+cmd+m",
+    "command": "-workbench.actions.view.problems"
+  },
+  {
+    "key": "cmd+f12",
+    "command": "-editor.action.goToImplementation"
+  },
+  {
+    "key": "shift+f12",
+    "command": "-editor.action.goToReferences"
+  },
+  {
+    "key": "shift+cmd+\\",
+    "command": "-editor.action.jumpToBracket"
+  },
+  {
+    "key": "alt+f8",
+    "command": "-editor.action.marker.next"
+  },
+  {
+    "key": "f8",
+    "command": "-editor.action.marker.nextInFiles"
+  },
+  {
+    "key": "shift+alt+f8",
+    "command": "-editor.action.marker.prev"
+  },
+  {
+    "key": "shift+f8",
+    "command": "-editor.action.marker.prevInFiles"
+  },
+  {
+    "key": "alt+f5",
+    "command": "-workbench.action.compareEditor.nextChange"
+  },
+  {
+    "key": "alt+f5",
+    "command": "-workbench.action.editor.nextChange"
+  },
+  {
+    "key": "f7",
+    "command": "-inlineChat.moveToNextHunk"
+  },
+  {
+    "key": "alt+f3",
+    "command": "-editor.action.dirtydiff.next"
+  },
+  {
+    "key": "shift+alt+f5",
+    "command": "-workbench.action.compareEditor.previousChange"
+  },
+  {
+    "key": "shift+alt+f5",
+    "command": "-workbench.action.editor.previousChange"
+  },
+  {
+    "key": "shift+f7",
+    "command": "-inlineChat.moveToPreviousHunk"
+  },
+  {
+    "key": "shift+alt+f3",
+    "command": "-editor.action.dirtydiff.previous"
+  },
+  {
+    "key": "shift+cmd+b",
+    "command": "-workbench.action.tasks.build"
+  },
+  {
+    "key": "ctrl+f5",
+    "command": "-workbench.action.debug.run"
+  },
+  {
+    "key": "shift+cmd+f5",
+    "command": "-workbench.action.debug.restart"
+  },
+  {
+    "key": "shift+f5",
+    "command": "-workbench.action.debug.disconnect"
+  },
+  {
+    "key": "f5",
+    "command": "-workbench.action.debug.continue"
+  },
+  {
+    "key": "f5",
+    "command": "-workbench.action.debug.start"
+  },
+  {
+    "key": "cmd+f5",
+    "command": "-debug.openView"
+  },
+  {
+    "key": "f5",
+    "command": "-debug.openView"
+  },
+  {
+    "key": "cmd+e",
+    "command": "-actions.findWithSelection"
+  },
+  {
+    "key": "shift+cmd+x",
+    "command": "-workbench.view.extensions"
+  },
+  {
+    "key": "cmd+k cmd+n",
+    "command": "-git.unstageSelectedRanges"
   }
 ]

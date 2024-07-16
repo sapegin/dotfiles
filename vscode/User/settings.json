@@ -197,6 +197,7 @@
   "color-highlight.matchWords": false,
   "color-highlight.sass.includePaths": [],
   "prettier.requireConfig": true,
+  "prettier.useEditorConfig": false,
   "eslint.rules.customizations": [
     { "rule": "*", "fixable": true, "severity": "info" }
   ],
