@@ -141,14 +141,16 @@
     "command": "workbench.action.gotoLine"
   },
   {
-    "comment": "Delete current or selected lines",
-    "key": "cmd+d",
+    // Convenient to have on the left side of the keyboard so I can use cursor
+    // keys or a trackpad with the right hand
+    "comment": "DeletE current or selected lines",
+    "key": "cmd+e",
     "command": "editor.action.deleteLines",
     "when": "editorTextFocus && !editorReadonly"
   },
   {
-    "comment": "Duplicate current or selected Lines",
-    "key": "cmd+l",
+    "comment": "Duplicate current line or selection",
+    "key": "cmd+d",
     "command": "editor.action.duplicateSelection",
     "when": "editorTextFocus && !editorReadonly"
   },
@@ -342,22 +344,22 @@
     "command": "search.action.focusNextSearchResult",
     "when": "inSearchEditor && inputBoxFocus || inputBoxFocus && searchViewletVisible"
   },
-    {
+  {
     "key": "ctrl+1",
     "command": "toggleSearchCaseSensitive",
     "when": "searchViewletFocus && !fileMatchOrFolderMatchFocus"
   },
-    {
+  {
     "key": "ctrl+1",
     "command": "toggleSearchEditorCaseSensitive",
     "when": "inSearchEditor && searchInputBoxFocus"
   },
-    {
+  {
     "key": "ctrl+1",
     "command": "toggleFindCaseSensitive",
     "when": "findInputFocussed"
   },
-    {
+  {
     "key": "ctrl+1",
     "command": "workbench.action.terminal.toggleFindCaseSensitive",
     "when": "terminalFindVisible && terminalHasBeenCreated || terminalFindVisible && terminalProcessSupported"
@@ -367,7 +369,7 @@
     "command": "toggleSearchEditorWholeWord",
     "when": "inSearchEditor && searchInputBoxFocus"
   },
-    {
+  {
     "key": "ctrl+2",
     "command": "workbench.action.terminal.toggleFindWholeWord",
     "when": "terminalFindVisible && terminalHasBeenCreated || terminalFindVisible && terminalProcessSupported"
@@ -387,7 +389,7 @@
     "command": "toggleSearchEditorRegex",
     "when": "inSearchEditor && searchInputBoxFocus"
   },
-    {
+  {
     "key": "ctrl+3",
     "command": "workbench.action.terminal.toggleFindRegex",
     "when": "terminalFindVisible && terminalHasBeenCreated || terminalFindVisible && terminalProcessSupported"
@@ -997,5 +999,35 @@
   {
     "key": "alt+cmd+r",
     "command": "-toggleSearchRegex"
+  },
+  {
+    "key": "cmd+enter",
+    "command": "-editor.action.replaceAll",
+    "when": "editorFocus && findWidgetVisible && replaceInputFocussed"
+  },
+  {
+    "key": "cmd+enter",
+    "command": "editor.action.replaceAll",
+    "when": "editorFocus && findWidgetVisible"
+  },
+  {
+    "key": "alt+cmd+enter",
+    "command": "-editor.action.replaceAll",
+    "when": "editorFocus && findWidgetVisible"
+  },
+  {
+    "key": "cmd+enter",
+    "command": "search.action.replaceAll",
+    "when": "replaceActive && searchViewletVisible && !findWidgetVisible"
+  },
+  {
+    "key": "alt+cmd+enter",
+    "command": "-search.action.replaceAll",
+    "when": "replaceActive && searchViewletVisible && !findWidgetVisible"
+  },
+  {
+    "key": "cmd+enter",
+    "command": "-search.action.openInEditor",
+    "when": "hasSearchResult && searchViewletFocus"
   }
 ]
