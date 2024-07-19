@@ -125,7 +125,8 @@ else
 		# Remote branch exists, fetching and switching
 		echo "🛸 Fetching remote branch $branch..."
 		git fetch "$remote" "$branch"
-		git switch "$branch" --track "$remote/$branch"
+		echo
+		git switch -c "$branch" --track "$remote/$branch"
 	else
 		# No remote branch, creating a new branch
 		echo "🪴 Creating new local branch $branch..."
