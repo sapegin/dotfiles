@@ -77,7 +77,6 @@ vscode "sapegin.mini-markdown"
 vscode "sleistner.vscode-fileutils"
 vscode "stkb.rewrap"
 vscode "streetsidesoftware.code-spell-checker"
-vscode "tekumara.typos-vscode"
 
 # TODO: Find a way to print this _after_ the installation, not before
 puts "☕️ Install more apps if you need them:"

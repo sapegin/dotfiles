@@ -142,13 +142,15 @@
   },
   {
     // Convenient to have on the left side of the keyboard so I can use cursor
-    // keys or a trackpad with the right hand
+    // keys or a trackpad with the right hand, also cmd+e and cmd+d (duplicate line)
+    // are one below the other, which makes them an easy to remember combo
     "comment": "DeletE current or selected lines",
     "key": "cmd+e",
     "command": "editor.action.deleteLines",
     "when": "editorTextFocus && !editorReadonly"
   },
   {
+    // See comment on the previous key: cmd+e
     "comment": "Duplicate current line or selection",
     "key": "cmd+d",
     "command": "editor.action.duplicateSelection",
