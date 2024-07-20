@@ -20,7 +20,7 @@
 
 ## Installation
 
-> [!WARNING]
+> [!WARNING]  
 > Fork this repository if you want to use my dotfiles.)
 
 Prerequisites:

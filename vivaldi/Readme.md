@@ -6,7 +6,7 @@
 2. Enable **Allow for using CSS modifications**
 3. Open **Appearance** section in settings
 4. Choose the `~/dotfiles/vivaldi` folder
-6. Restart Vivaldi
+5. Restart Vivaldi
 
 ## Debugging
 
