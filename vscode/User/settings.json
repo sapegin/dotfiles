@@ -243,6 +243,7 @@
     "neurodiverse",
     "okayish",
     "oneliner",
+    "outdent",
     "overpolice",
     "Photoshop",
     "preorder",
@@ -256,7 +257,7 @@
     "Textlint",
     "todos",
     "trackpad"
-  ],
+],
   "donations.disablePrompt": true,
   "github.copilot.editor.enableAutoCompletions": false,
   "githubPullRequests.defaultMergeMethod": "squash",
