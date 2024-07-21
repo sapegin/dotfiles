@@ -46,7 +46,7 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.emptySelectionClipboard": false,
   "editor.find.addExtraSpaceOnTop": false,
-  "editor.foldingImportsByDefault": true,
+  "editor.folding": false,
   "editor.fontFamily": "MonoLisa, \"Symbols Nerd Font Mono\"",
   // Enable contextual alternative but disable ligatures
   "editor.fontLigatures": "'calt' on, 'liga' off",
@@ -257,7 +257,7 @@
     "Textlint",
     "todos",
     "trackpad"
-],
+  ],
   "donations.disablePrompt": true,
   "github.copilot.editor.enableAutoCompletions": false,
   "githubPullRequests.defaultMergeMethod": "squash",
