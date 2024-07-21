@@ -19,18 +19,17 @@
 	preloadindex = true
 
 [alias]
-	# Simple shortcuts
+	# Add (stage) file
 	a = add
+  # Unadd (unstage) file
 	ua = reset HEAD
-	c = commit
-	ca = commit -a
-	cm = commit -m
-	cam = commit -am
-	cne = commit --no-edit
-	amend = commit --amend
+  # Checkout
 	co = checkout
+  # Status
 	s = status -sb
+  # Diff
 	d = diff
+  # Cherry pick
 	cp = cherry-pick
 	# Sharable diff with disabled syntax highlighting and +/- marks
 	patch = !git --no-pager diff --no-color
