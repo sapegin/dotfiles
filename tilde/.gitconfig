@@ -56,6 +56,8 @@
 	fuck = "!f() { git reset --hard origin/$1; }; f"
   # Remove all changes, including untracked files
   nuke = !git reset --hard && git clean -f -d
+  # Add all modified files to the latest commit
+  append = commit -a --amend --no-edit
 
 [pull]
   # Don't rebase on pulling: annoying, especially in VS Code
