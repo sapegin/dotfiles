@@ -187,7 +187,7 @@
     "comment": "Add cursors to the end of selected lines",
     "key": "alt+right",
     "command": "editor.action.insertCursorAtEndOfEachLineSelected",
-    "when": "editorTextFocus && !editorReadonly && editorHasSelection"
+    "when": "editorTextFocus && editorHasSelection"
   },
   {
     "comment": "Move current or selected lines down",
