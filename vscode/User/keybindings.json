@@ -347,6 +347,18 @@
     "when": "inSearchEditor && inputBoxFocus || inputBoxFocus && searchViewletVisible"
   },
   {
+    "comment": "Replace all in the current file",
+    "key": "cmd+enter",
+    "command": "editor.action.replaceAll",
+    "when": "editorFocus && findWidgetVisible"
+  },
+  {
+    "comment": "Replace all in files",
+    "key": "cmd+enter",
+    "command": "search.action.replaceAll",
+    "when": "replaceActive && searchViewletVisible && !findWidgetVisible"
+  },
+  {
     "key": "ctrl+1",
     "command": "toggleSearchCaseSensitive",
     "when": "searchViewletFocus && !fileMatchOrFolderMatchFocus"
@@ -1004,32 +1016,42 @@
   },
   {
     "key": "cmd+enter",
-    "command": "-editor.action.replaceAll",
-    "when": "editorFocus && findWidgetVisible && replaceInputFocussed"
-  },
-  {
-    "key": "cmd+enter",
-    "command": "editor.action.replaceAll",
-    "when": "editorFocus && findWidgetVisible"
+    "command": "-editor.action.replaceAll"
   },
   {
     "key": "alt+cmd+enter",
-    "command": "-editor.action.replaceAll",
-    "when": "editorFocus && findWidgetVisible"
-  },
-  {
-    "key": "cmd+enter",
-    "command": "search.action.replaceAll",
-    "when": "replaceActive && searchViewletVisible && !findWidgetVisible"
+    "command": "-editor.action.replaceAll"
   },
   {
     "key": "alt+cmd+enter",
-    "command": "-search.action.replaceAll",
-    "when": "replaceActive && searchViewletVisible && !findWidgetVisible"
+    "command": "-search.action.replaceAll"
   },
   {
     "key": "cmd+enter",
-    "command": "-search.action.openInEditor",
-    "when": "hasSearchResult && searchViewletFocus"
+    "command": "-search.action.openInEditor"
+  },
+  {
+    "key": "f4",
+    "command": "-references-view.next"
+  },
+  {
+    "key": "shift+f4",
+    "command": "-references-view.prev"
+  },
+  {
+    "key": "f4",
+    "command": "-goToNextReference"
+  },
+  {
+    "key": "shift+f4",
+    "command": "-goToPreviousReference"
+  },
+  {
+    "key": "cmd+f3",
+    "command": "-editor.action.nextSelectionMatchFindAction"
+  },
+  {
+    "key": "shift+cmd+f3",
+    "command": "-editor.action.previousSelectionMatchFindAction"
   }
 ]
