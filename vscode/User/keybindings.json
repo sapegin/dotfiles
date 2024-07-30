@@ -41,9 +41,16 @@
     "command": "pr:github.focus"
   },
   {
-    "comment": "Toggle Terminal",
+    "comment": "Switch to the first Terminal",
     "key": "cmd+t",
-    "command": "workbench.action.terminal.toggleTerminal"
+    "command": "workbench.action.terminal.focusAtIndex1",
+    "when": "!terminalFocus"
+  },
+  {
+    "comment": "Switch to the next Terminal",
+    "key": "cmd+t",
+    "command": "workbench.action.terminal.focusNext",
+    "when": "terminalFocus && terminalHasBeenCreated && !terminalEditorFocus || terminalFocus && terminalProcessSupported && !terminalEditorFocus"
   },
   {
     "comment": "Open source control (Git) pane",
@@ -1053,5 +1060,9 @@
   {
     "key": "shift+cmd+f3",
     "command": "-editor.action.previousSelectionMatchFindAction"
-  }
+},
+{
+    "key": "shift+cmd+]",
+    "command": "-workbench.action.terminal.focusNext"
+}
 ]
