@@ -25,6 +25,7 @@
   "editor.acceptSuggestionOnCommitCharacter": false,
   "editor.accessibilitySupport": "off",
   "editor.autoClosingBrackets": "never",
+  "editor.autoClosingComments": "never",
   "editor.autoClosingQuotes": "never",
   "editor.autoIndent": "advanced",
   "editor.autoSurround": "never",
@@ -33,12 +34,15 @@
     "source.organizeImports": "never",
     "source.fixAll": "explicit"
   },
+  "editor.copyWithSyntaxHighlighting": false,
   "editor.cursorStyle": "line",
   "editor.cursorWidth": 2,
   "editor.cursorBlinking": "solid",
+  "editor.detectIndentation": false,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.emptySelectionClipboard": false,
   "editor.find.addExtraSpaceOnTop": false,
-  "editor.foldingImportsByDefault": true,
+  "editor.folding": false,
   "editor.fontFamily": "MonoLisa, \"Symbols Nerd Font Mono\"",
   "editor.fontLigatures": "'calt' on, 'liga' off",
   "editor.fontSize": 21,
@@ -148,7 +152,8 @@
   "terminal.integrated.cursorWidth": 2,
   "terminal.integrated.drawBoldTextInBrightColors": false,
   "terminal.integrated.enablePersistentSessions": false,
-  "terminal.integrated.fontSize": 14,
+  "terminal.integrated.fontSize": 15,
+  "terminal.integrated.lineHeight": 1.1,
   "terminal.integrated.hideOnStartup": "always",
   "terminal.integrated.minimumContrastRatio": 1,
   "terminal.integrated.shellIntegration.decorationsEnabled": "never",
@@ -157,6 +162,7 @@
   "terminal.integrated.tabs.showActions": "never",
   "terminal.integrated.tabStopWidth": 2,
   "window.commandCenter": false,
+  "window.newWindowDimensions": "inherit",
   "window.openFilesInNewWindow": "off",
   "window.openFoldersInNewWindow": "off",
   "window.restoreWindows": "all",
@@ -183,7 +189,6 @@
   "workbench.settings.enableNaturalLanguageSearch": false,
   "workbench.sideBar.location": "right",
   "workbench.startupEditor": "none",
-  "workbench.statusBar.visible": false,
   "workbench.tips.enabled": false,
   "workbench.tree.indent": 12,
   "zenMode.centerLayout": true,
@@ -194,6 +199,7 @@
   "color-highlight.matchWords": false,
   "color-highlight.sass.includePaths": [],
   "prettier.requireConfig": true,
+  "prettier.useEditorConfig": false,
   "eslint.rules.customizations": [
     {
       "rule": "*",
@@ -248,6 +254,7 @@
     "neurodiverse",
     "okayish",
     "oneliner",
+    "outdent",
     "overpolice",
     "Photoshop",
     "preorder",
@@ -257,6 +264,7 @@
     "signin",
     "signup",
     "Squirrelsong",
+    "tacocat",
     "Tamia",
     "Textlint",
     "todos",
@@ -330,6 +338,9 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[astro]": {

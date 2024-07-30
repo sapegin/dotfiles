@@ -28,6 +28,7 @@
   "editor.acceptSuggestionOnCommitCharacter": false,
   "editor.accessibilitySupport": "off",
   "editor.autoClosingBrackets": "never",
+  "editor.autoClosingComments": "never",
   "editor.autoClosingQuotes": "never",
   "editor.autoIndent": "advanced",
   "editor.autoSurround": "never",
@@ -148,7 +149,7 @@
   "terminal.integrated.cursorWidth": 2,
   "terminal.integrated.drawBoldTextInBrightColors": false,
   "terminal.integrated.enablePersistentSessions": false,
-  "terminal.integrated.fontSize": 14,
+  "terminal.integrated.fontSize": 15,
   "terminal.integrated.lineHeight": 1.1,
   "terminal.integrated.hideOnStartup": "always",
   "terminal.integrated.minimumContrastRatio": 1,
@@ -185,7 +186,6 @@
   "workbench.settings.enableNaturalLanguageSearch": false,
   "workbench.sideBar.location": "right",
   "workbench.startupEditor": "none",
-  "workbench.statusBar.visible": false,
   "workbench.tips.enabled": false,
   "workbench.tree.indent": 12,
   "zenMode.centerLayout": true,
@@ -253,6 +253,7 @@
     "signin",
     "signup",
     "Squirrelsong",
+    "tacocat",
     "Tamia",
     "Textlint",
     "todos",
@@ -345,6 +346,9 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[astro]": {
