@@ -511,6 +511,13 @@
     "command": "newFileNow.createNewFile",
     "when": "editorTextFocus"
   },
+  { 
+    // Dash extension
+    "comment": "Open Help for the current symbol in Dash",
+    "key": "cmd+k cmd+h",
+    "command": "extension.dash.specific",
+    "when": "editorTextFocus"
+  },
 
   /**
    * Disable default hotkeys
@@ -1060,9 +1067,25 @@
   {
     "key": "shift+cmd+f3",
     "command": "-editor.action.previousSelectionMatchFindAction"
-},
-{
-    "key": "shift+cmd+]",
-    "command": "-workbench.action.terminal.focusNext"
-}
+  },
+  {
+      "key": "shift+cmd+]",
+      "command": "-workbench.action.terminal.focusNext"
+  },
+  {
+      "key": "ctrl+h",
+      "command": "-extension.dash.specific"
+  },
+  {
+      "key": "ctrl+shift+h",
+      "command": "-extension.dash.emptySyntax"
+  },
+  {
+      "key": "alt+h",
+      "command": "-extension.dash.customSyntax"
+  },
+  {
+      "key": "ctrl+alt+h",
+      "command": "-extension.dash.all"
+  }
 ]
