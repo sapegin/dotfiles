@@ -10,6 +10,10 @@
     // Hide vertical borders in zen/centered mode
     "editorGroup.border": "#ffffff00",
 
+    // Hide command guide in the terminal (vertical bar that appear on the left
+    // side of the command on hover)
+    "notebook.inactiveFocusedCellBorder": "#0000",
+
     // GitLens
     "gitlens.gutterUncommittedForegroundColor": "#e87da4",
     "gitlens.gutterForegroundColor": "#78737d",
@@ -150,11 +154,13 @@
   "terminal.integrated.drawBoldTextInBrightColors": false,
   "terminal.integrated.enablePersistentSessions": false,
   "terminal.integrated.fontSize": 15,
-  "terminal.integrated.lineHeight": 1.1,
   "terminal.integrated.hideOnStartup": "always",
+  "terminal.integrated.initialHint": false,
+  "terminal.integrated.lineHeight": 1.1,
   "terminal.integrated.minimumContrastRatio": 1,
   "terminal.integrated.shellIntegration.decorationsEnabled": "never",
-  "terminal.integrated.stickyScroll.enabled": true,
+  "terminal.integrated.shellIntegration.showCommandGuide": false,
+  "terminal.integrated.stickyScroll.enabled": false,
   "terminal.integrated.tabs.enableAnimation": false,
   "terminal.integrated.tabs.showActions": "never",
   "terminal.integrated.tabStopWidth": 2,
@@ -186,6 +192,7 @@
   "workbench.settings.enableNaturalLanguageSearch": false,
   "workbench.sideBar.location": "right",
   "workbench.startupEditor": "none",
+  "workbench.statusBar.visible": false,
   "workbench.tips.enabled": false,
   "workbench.tree.indent": 12,
   "zenMode.centerLayout": true,
