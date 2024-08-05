@@ -127,6 +127,7 @@
   "scm.inputFontSize": 16,
   "scm.inputMaxLineCount": 20,
   "scm.inputMinLineCount": 4,
+  "scm.showHistoryGraph": false,
   "search.exclude": {
     "**/node_modules": true,
     "**/package-lock.json": true,
