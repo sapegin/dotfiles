@@ -1,0 +1,82 @@
+#!/usr/bin/env node
+
+// Patches Catppuccin Latte icons for VS Code with Squirrelsong color palette
+// https://github.com/catppuccin/vscode-icons/
+//
+// ---
+// Author: Artem Sapegin, sapegin.me
+// License: MIT
+// https://github.com/sapegin/dotfiles
+
+import path from 'path';
+import fs from 'fs-extra';
+import glob from 'glob';
+
+const PALETTE = {
+	'#04a5e5': '#80a4be',
+	'#179299': '#5f9b8d',
+	'#1e66f5': '#80a4be',
+	'#209fb5': '#5f9b8d',
+	'#40a02b': '#9bae7e',
+	'#4c4f69': '#6b676f',
+	'#7287fd': '#ac9bc5',
+	'#8839ef': '#806f9b',
+	'#8c8fa1': '#9c96a2',
+	'#d20f39': '#c06159',
+	'#dc8a78': '#d67e76',
+	'#dd7878': '#d67e76',
+	'#df8e1d': '#de9e59',
+	'#e64553': '#c06159',
+	'#ea76cb': '#e87da4',
+	'#fe640b': '#e4c158',
+	'#fff': '#fff',
+};
+
+const ALL_COLORS = [...Object.keys(PALETTE), ...Object.values(PALETTE)];
+
+const HOME = path.dirname(path.dirname(import.meta.dirname));
+
+const [extensionRoot] = glob.sync(
+	`${HOME}/.vscode/extensions/catppuccin.catppuccin-vsc-icons-*`
+);
+if (extensionRoot === undefined) {
+	console.error('Catppuccin is not installed');
+	process.exit(1);
+}
+
+console.log();
+console.log('[VSCODE] Updating icons… 👾');
+console.log();
+
+const icons = glob.sync(`${extensionRoot}/dist/latte/icons/*.svg`);
+
+const invalidColors = {};
+
+for (const file of icons) {
+	console.log('👉🏼', path.basename(file));
+
+	const svg = fs.readFileSync(file, 'utf8');
+
+	const nextSvg = svg.replaceAll(/(#[0-9a-f]{3,8})/g, (_, color) => {
+		if (ALL_COLORS.includes(color) === false) {
+			invalidColors[color] = true;
+		}
+
+		return PALETTE[color] ?? color;
+	});
+
+	if (nextSvg.includes('undefined')) {
+		console.error('🪲 Undefined detected', nextSvg);
+	}
+
+	fs.writeFileSync(file, nextSvg);
+}
+
+console.log();
+
+for (const color of Object.keys(invalidColors)) {
+	console.error(`🦜 Unknown color: ${color}`);
+}
+
+console.log();
+console.log('[VSCODE] Done 🦜');
