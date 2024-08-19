@@ -41,6 +41,12 @@
     "command": "pr:github.focus"
   },
   {
+    "comment": "Create a New terminal",
+    "key": "cmd+n",
+    "command": "workbench.action.terminal.new",
+    "when": "terminalFocus"
+  },
+  {
     "comment": "Switch to the first Terminal",
     "key": "cmd+t",
     "command": "workbench.action.terminal.focusAtIndex1",
@@ -511,11 +517,18 @@
     "command": "newFileNow.createNewFile",
     "when": "editorTextFocus"
   },
-  { 
+  {
     // Dash extension
     "comment": "Open Help for the current symbol in Dash",
     "key": "cmd+k cmd+h",
     "command": "extension.dash.specific",
+    "when": "editorTextFocus"
+  },
+  {
+    // Rewrap extension
+    "comment": "ReWrap current comment",
+    "key": "cmd+k cmd+w",
+    "command": "rewrap.rewrapComment",
     "when": "editorTextFocus"
   },
 
@@ -1069,23 +1082,31 @@
     "command": "-editor.action.previousSelectionMatchFindAction"
   },
   {
-      "key": "shift+cmd+]",
-      "command": "-workbench.action.terminal.focusNext"
+    "key": "shift+cmd+]",
+    "command": "-workbench.action.terminal.focusNext"
   },
   {
-      "key": "ctrl+h",
-      "command": "-extension.dash.specific"
+    "key": "ctrl+h",
+    "command": "-extension.dash.specific"
   },
   {
-      "key": "ctrl+shift+h",
-      "command": "-extension.dash.emptySyntax"
+    "key": "ctrl+shift+h",
+    "command": "-extension.dash.emptySyntax"
   },
   {
-      "key": "alt+h",
-      "command": "-extension.dash.customSyntax"
+    "key": "alt+h",
+    "command": "-extension.dash.customSyntax"
   },
   {
-      "key": "ctrl+alt+h",
-      "command": "-extension.dash.all"
+    "key": "ctrl+alt+h",
+    "command": "-extension.dash.all"
+  },
+  {
+    "key": "cmd+k cmd+w",
+    "command": "-workbench.action.closeAllEditors"
+  },
+  {
+    "key": "alt+q",
+    "command": "-rewrap.rewrapComment"
   }
 ]
