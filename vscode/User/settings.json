@@ -12,12 +12,7 @@
 
     // Hide command guide in the terminal (vertical bar that appear on the left
     // side of the command on hover)
-    "notebook.inactiveFocusedCellBorder": "#0000",
-
-    // GitLens
-    "gitlens.gutterUncommittedForegroundColor": "#e87da4",
-    "gitlens.gutterForegroundColor": "#78737d",
-    "gitlens.gutterBackgroundColor": "#fdfdfe00"
+    "notebook.inactiveFocusedCellBorder": "#0000"
   },
 
   // Internal
@@ -190,7 +185,7 @@
   "workbench.editor.showTabs": "none",
   "workbench.enableExperiments": false,
   "workbench.experimental.enableNewProfilesUI": true,
-"workbench.fontAliasing": "auto",
+  "workbench.fontAliasing": "auto",
   "workbench.iconTheme": "catppuccin-latte",
   "workbench.layoutControl.enabled": false,
   "workbench.reduceMotion": "on",
@@ -275,26 +270,6 @@
   "github.copilot.editor.enableAutoCompletions": false,
   "githubPullRequests.defaultMergeMethod": "squash",
   "githubPullRequests.pullPullRequestBranchBeforeCheckout": "pullAndMergeBase",
-  "gitlens.blame.avatars": false,
-  "gitlens.blame.dateFormat": "YYYY-MM-DD",
-  "gitlens.blame.fontSize": 13,
-  "gitlens.blame.fontWeight": "bold",
-  "gitlens.blame.format": "${agoOrDateShort|4?} ${authorNotYou|14-}",
-  "gitlens.blame.highlight.enabled": false,
-  "gitlens.blame.highlight.locations": ["gutter"],
-  "gitlens.blame.ignoreWhitespace": true,
-  "gitlens.blame.compact": true,
-  "gitlens.codeLens.enabled": false,
-  "gitlens.currentLine.enabled": false,
-  "gitlens.heatmap.ageThreshold": 90,
-  "gitlens.heatmap.coldColor": "#f7f6f9",
-  "gitlens.heatmap.fadeLines": true,
-  "gitlens.heatmap.hotColor": "#e87da4",
-  "gitlens.hovers.annotations.over": "annotation",
-  "gitlens.hovers.currentLine.enabled": false,
-  "gitlens.hovers.currentLine.over": "line",
-  "gitlens.keymap": "none",
-  "gitlens.statusBar.enabled": false,
   "tailwindCSS.emmetCompletions": false,
   "typos.diagnosticSeverity": "Information",
   "profileGenerator": [
