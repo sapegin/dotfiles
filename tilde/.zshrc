@@ -1,8 +1,12 @@
+# Load configs
 source ~/dotfiles/zsh/env.zsh
 source ~/dotfiles/zsh/path.zsh
 source ~/dotfiles/zsh/aliases.zsh
 source ~/dotfiles/zsh/completions.zsh
 source ~/dotfiles/zsh/key-bindings.zsh
+
+# Load plugins
+source ~/dotfiles/zsh/plugins/zsh-shift-select.plugin.zsh
 
 # Do not overwrite files when redirecting using ">". Note that you can still override this with ">|"
 set -o noclobber
