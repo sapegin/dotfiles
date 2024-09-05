@@ -97,7 +97,7 @@
     "*.js.snap": "javascript",
     ".prettierrc": "json"
   },
-  "files.autoSave": "onWindowChange",
+  "files.autoSave": "onFocusChange",
   "files.autoSaveWhenNoErrors": true,
   "files.defaultLanguage": "markdown",
   "files.exclude": {
@@ -119,7 +119,7 @@
   "search.decorations.badges": false,
   "search.seedOnFocus": true,
   "search.useParentIgnoreFiles": true,
-  "scm.diffDecorations": "never",
+  "scm.diffDecorations": "none",
   "scm.diffDecorationsGutterPattern": {
     "modified": false
   },
@@ -210,7 +210,7 @@
     {
       "rule": "*",
       "fixable": true,
-      "severity": "info"
+      "severity": "off"
     }
   ],
   "eslint.run": "onSave",
@@ -339,5 +339,6 @@
     ],
     "editor.wordWrap": "wordWrapColumn",
     "editor.wordWrapColumn": 72
-  }
+},
+"color-highlight.markerType": "underline"
 }
