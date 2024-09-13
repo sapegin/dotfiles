@@ -26,7 +26,7 @@ function resizeAppWindow(app, x, y, width, height) {
 	try {
 		app.windows[0].position = [x, y];
 		app.windows[0].size = [width, height];
-	} catch (err) {
+	} catch {
 		// Ignore errors
 	}
 }
@@ -45,8 +45,7 @@ function resizeAll(width, height) {
 
 	console.log('Visible apps:', visibleApps.length);
 
-	for (let index = 0; index < visibleApps.length; index++) {
-		const app = visibleApps[index];
+	for (const app of visibleApps) {
 		const lowCaseName = app.name().toLowerCase();
 		console.log('Trying to resize', lowCaseName);
 
@@ -78,16 +77,20 @@ function run(command) {
 	console.log('Command:', `[${command}]`, typeof command);
 
 	switch (command.toString()) {
-		case 'left':
+		case 'left': {
 			resizeAppWindow(getFrontmostApp(), 0, 0, width / 2, height);
 			break;
-		case 'right':
+		}
+		case 'right': {
 			resizeAppWindow(getFrontmostApp(), width / 2, 0, width / 2, height);
 			break;
-		case 'maximize':
+		}
+		case 'maximize': {
 			resizeAppWindow(getFrontmostApp(), 0, 0, width, height);
 			break;
-		default:
+		}
+		default: {
 			resizeAll(width, height);
+		}
 	}
 }

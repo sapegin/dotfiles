@@ -8,8 +8,8 @@
  * https://github.com/sapegin/dotfiles
  */
 
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 import untildify from 'untildify';
 import glob from 'glob';
 
@@ -19,7 +19,7 @@ const items = glob
 	.sync(FILES)
 	.map((file) => {
 		const contents = fs.readFileSync(file, 'utf8');
-		const title = contents.match(/^title: ['"]?(.*?)['"]?$/im);
+		const title = contents.match(/^title: ["']?(.*?)["']?$/im);
 		const date = contents.match(/^date: (.*?)$/m);
 		return {
 			title: title ? title[1] : '<***>',

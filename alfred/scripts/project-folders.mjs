@@ -8,8 +8,8 @@
  * https://github.com/sapegin/dotfiles
  */
 
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 import untildify from 'untildify';
 import dotenv from 'dotenv';
 import glob from 'glob';
