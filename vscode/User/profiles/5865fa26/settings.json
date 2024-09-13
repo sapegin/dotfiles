@@ -201,6 +201,7 @@
   "zenMode.fullScreen": false,
   "zenMode.showTabs": "none",
   "git.openRepositoryInParentFolders": "always",
+  "color-highlight.markerType": "underline",
   "color-highlight.markRuler": false,
   "color-highlight.matchWords": false,
   "color-highlight.sass.includePaths": [],
@@ -339,6 +340,5 @@
     ],
     "editor.wordWrap": "wordWrapColumn",
     "editor.wordWrapColumn": 72
-},
-"color-highlight.markerType": "underline"
+  }
 }

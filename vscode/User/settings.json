@@ -100,7 +100,7 @@
     "*.js.snap": "javascript",
     ".prettierrc": "json"
   },
-  "files.autoSave": "onWindowChange",
+  "files.autoSave": "onFocusChange",
   "files.autoSaveWhenNoErrors": true,
   "files.defaultLanguage": "markdown",
   "files.exclude": {
@@ -201,13 +201,14 @@
 
   // Plugins
   "git.openRepositoryInParentFolders": "always",
+  "color-highlight.markerType": "underline",
   "color-highlight.markRuler": false,
   "color-highlight.matchWords": false,
   "color-highlight.sass.includePaths": [],
   "prettier.requireConfig": true,
   "prettier.useEditorConfig": false,
   "eslint.rules.customizations": [
-    { "rule": "*", "fixable": true, "severity": "info" }
+    { "rule": "*", "fixable": true, "severity": "off" }
   ],
   "eslint.run": "onSave",
   "eslint.useESLintClass": true,
@@ -281,7 +282,7 @@
         "editor.lineHeight": 2,
         "editor.rulers": [],
         "editor.stickyScroll.enabled": false,
-        "scm.diffDecorations": "never",
+        "scm.diffDecorations": "none",
         "workbench.colorCustomizations": {
           "editor.background": "#f7f6f9",
           "editor.foreground": "#4c4b4e",
