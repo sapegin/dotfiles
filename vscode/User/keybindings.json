@@ -18,9 +18,8 @@
     "command": "workbench.action.togglePanel"
   },
   {
-    // TODO: This is hard to press
-    "comment": "Maximize/minimize the panel",
-    "key": "cmd+alt+3",
+    "comment": "Maximize/minimize the panel (Full screen)",
+    "key": "cmd+k cmd+f",
     "command": "workbench.action.toggleMaximizedPanel",
     "when": "panelVisible"
   },
