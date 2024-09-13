@@ -12,17 +12,17 @@ import fs from 'node:fs';
 import path from 'node:path';
 import untildify from 'untildify';
 import dotenv from 'dotenv';
-import glob from 'glob';
+import { globSync } from 'glob';
 
 dotenv.config({ path: untildify('~/.env') });
 
 const folders = [
 	// Personal projects
-	glob.sync(untildify(`~/_/*/`)),
+	globSync(untildify(`~/_/*/`)),
 
 	// Work projects
 	process.env.WORK_PROJECTS_DIR
-		? glob.sync(untildify(`${process.env.WORK_PROJECTS_DIR}/*/`))
+		? globSync(untildify(`${process.env.WORK_PROJECTS_DIR}/*/`))
 		: [],
 
 	// Extra projects

@@ -10,7 +10,7 @@
 
 import path from 'path';
 import fs from 'fs-extra';
-import glob from 'glob';
+import { globSync } from 'glob';
 
 const PALETTE = {
 	'#04a5e5': '#80a4be',
@@ -36,7 +36,7 @@ const ALL_COLORS = [...Object.keys(PALETTE), ...Object.values(PALETTE)];
 
 const HOME = path.dirname(path.dirname(import.meta.dirname));
 
-const [extensionRoot] = glob.sync(
+const [extensionRoot] = globSync(
 	`${HOME}/.vscode/extensions/catppuccin.catppuccin-vsc-icons-*`
 );
 if (extensionRoot === undefined) {
@@ -48,7 +48,7 @@ console.log();
 console.log('[VSCODE] Updating icons… 👾');
 console.log();
 
-const icons = glob.sync(`${extensionRoot}/dist/latte/icons/*.svg`);
+const icons = globSync(`${extensionRoot}/dist/latte/icons/*.svg`);
 
 const invalidColors = {};
 

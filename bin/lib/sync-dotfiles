@@ -11,7 +11,7 @@
 
 import path from 'path';
 import fs from 'fs-extra';
-import glob from 'glob';
+import { globSync } from 'glob';
 import prompts from 'prompts';
 
 const HOME = path.dirname(path.dirname(path.dirname(import.meta.dirname)));
@@ -58,9 +58,9 @@ async function confirmAction(message) {
 async function syncDotfiles() {
 	process.chdir(TILDE_DIR);
 	const files = [
-		...glob.sync('*'),
-		...glob.sync('.config/*'),
-		...glob.sync('.local/share/*'),
+		...globSync('*'),
+		...globSync('.config/*'),
+		...globSync('.local/share/*'),
 	];
 
 	for (const sourcePath of files) {

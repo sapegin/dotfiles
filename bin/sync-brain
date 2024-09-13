@@ -31,7 +31,7 @@ if (shouldIndexSubsections === 'yes') {
 import path from 'path';
 import fs from 'fs-extra';
 import { execSync } from 'child_process';
-import glob from 'glob';
+import { globSync } from 'glob';
 import { remark } from 'remark';
 import remarkHtml from 'remark-html';
 
@@ -94,7 +94,7 @@ function markdownToHtml(md, { type, subsections }) {
 
 // TODO: Filter, for example skip header and footer files of the book
 function addMarkdownFolder(dir, { destDir, type, subsections = false }) {
-	const files = glob.sync(`${dir}/**/*.md`);
+	const files = globSync(`${dir}/**/*.md`);
 	fs.ensureDir(`${DEST_DIR}/${destDir}`);
 
 	for (const file of files) {

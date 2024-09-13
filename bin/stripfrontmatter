@@ -14,11 +14,11 @@
 
 const fs = require('fs');
 const fastmatter = require('fastmatter');
-const glob = require('glob');
+const { globSync } = require('glob');
 
 const pattern = process.argv[2];
 
-const files = glob.sync(pattern);
+const files = globSync(pattern);
 files.forEach((file) => {
 	console.log(`${file}...`);
 	const contents = fs.readFileSync(file, 'utf8');
