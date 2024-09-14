@@ -1107,10 +1107,9 @@
   {
     "key": "alt+q",
     "command": "-rewrap.rewrapComment"
-},
-{
+  },
+  {
     "key": "alt+cmd+down",
-    "command": "-editor.action.insertCursorBelow",
-    "when": "editorTextFocus"
-}
+    "command": "-editor.action.insertCursorBelow"
+  }
 ]
