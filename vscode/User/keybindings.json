@@ -1,5 +1,13 @@
 [
   /**
+   * Overall approach:
+   * - Cmd+*: to most actively used commands
+   * - Alt+*: work with cursors and selections
+   * - Cmd+K Cmd+*: namespace for less frequently used commands
+   * - Cmd+M Cmd+*: namespace for Emmet commands
+   */
+
+  /**
    * UI panels
    */
   {
@@ -214,6 +222,7 @@
     "when": "editorTextFocus && !editorReadonly"
   },
   {
+    // F6 matches file renaming in file managers
     "comment": "Rename the current symbol",
     "key": "shift+f6",
     "command": "editor.action.rename",
@@ -224,18 +233,6 @@
     "key": "alt+enter",
     "command": "editor.action.quickFix",
     "when": "editorHasCodeActionsProvider && textInputFocus && !editorReadonly"
-  },
-  {
-    "comment": "Unfold",
-    "key": "ctrl+right",
-    "command": "editor.unfold",
-    "when": "editorTextFocus && foldingEnabled"
-  },
-  {
-    "comment": "Fold",
-    "key": "ctrl+left",
-    "command": "editor.fold",
-    "when": "editorTextFocus && foldingEnabled"
   },
   {
     // Matches Go back (Ctrl+-)
