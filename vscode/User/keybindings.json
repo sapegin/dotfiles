@@ -203,13 +203,13 @@
   },
   {
     "comment": "Move current or selected lines down",
-    "key": "alt+shift+down",
+    "key": "cmd+alt+down",
     "command": "editor.action.moveLinesDownAction",
     "when": "editorTextFocus && !editorReadonly"
   },
   {
     "comment": "Move current or selected lines up",
-    "key": "alt+shift+up",
+    "key": "cmd+alt+up",
     "command": "editor.action.moveLinesUpAction",
     "when": "editorTextFocus && !editorReadonly"
   },
@@ -1107,5 +1107,10 @@
   {
     "key": "alt+q",
     "command": "-rewrap.rewrapComment"
-  }
+},
+{
+    "key": "alt+cmd+down",
+    "command": "-editor.action.insertCursorBelow",
+    "when": "editorTextFocus"
+}
 ]
