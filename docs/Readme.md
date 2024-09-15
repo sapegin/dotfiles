@@ -38,7 +38,7 @@
 
 - Open current folder in Visual Studio Code:
 
-`cc`
+`nn`
 
 - Open current folder in Nimble Commander:
 
