@@ -349,6 +349,6 @@
     "editor.rulers": [72],
     "editor.wordWrap": "wordWrapColumn",
     "editor.wordWrapColumn": 72
-},
-"editor.experimentalEditContextEnabled": true
+  },
+  "editor.experimentalEditContextEnabled": true
 }
