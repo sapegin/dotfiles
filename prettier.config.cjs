@@ -16,7 +16,7 @@ module.exports = {
 			},
 		},
 		{
-			files: '*.{json,eslintrc,remarkrc,prettierrc,textlintr}',
+			files: '*.{json,eslintrc,remarkrc,prettierrc}',
 			options: {
 				useTabs: false,
 			},

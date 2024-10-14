@@ -340,5 +340,6 @@
     ],
     "editor.wordWrap": "wordWrapColumn",
     "editor.wordWrapColumn": 72
-  }
+  },
+  "editor.experimentalEditContextEnabled": true
 }
