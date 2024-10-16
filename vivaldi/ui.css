@@ -3,6 +3,13 @@
 .tab-audio {
 	display: none;
 }
+/* Restore the original favicon */
+#browser:not(.alt-tabs)
+	#tabs-container
+	.tab:not(.pinned):not(.tab-small).audio-on
+	.favicon {
+	transform: scale(1);
+}
 
 /* Hide very annoying file number loading indicator */
 .pageload-ticker {
@@ -40,6 +47,9 @@
 }
 .OmniLinkItem-Favicon {
 	margin-right: 4px;
+}
+.OmniLinkItem-DisplayText {
+	margin-right: 8px;
 }
 .OmniLinkItem-Details {
 	color: #727075;
