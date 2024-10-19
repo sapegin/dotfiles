@@ -28,7 +28,6 @@ brew "git-friendly/git-friendly/git-friendly" # Better Git commands
 cask "1password" # Password manager
 cask "adobe-creative-cloud"
 cask "alfred" # App launcher
-cask "bartender" # Hides menu bar icons
 cask "bruno" # GraphQL API client
 cask "cleanshot" # Screenshots
 cask "colorsnapper" # Color picker
@@ -37,6 +36,7 @@ cask "dash" # Documentation reader
 cask "devtoys" # Collection of developer tools
 cask "firefox"
 cask "github" # GitHub Desktop
+cask "jordanbaird-ice" # Hides menu bar icons
 cask "kap" # Video screen recording
 cask "keka" # Archive reader
 cask "mimestream" # Gmail client
