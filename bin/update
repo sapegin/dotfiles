@@ -33,6 +33,7 @@ echo
 header "Updating Homebrew packages..."
 sudo -v
 brew upgrade
+brew upgrade --cask
 brew cleanup
 echo
 
