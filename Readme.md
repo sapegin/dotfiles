@@ -18,6 +18,8 @@
 - Configs for lots of apps.
 - [macOS apps I use](https://github.com/sapegin/dotfiles/wiki/OS-X-Apps).
 
+[![Washing your code. A book on clean code for frontend developers](https://sapegin.me/images/washing-code-github.jpg)](https://sapegin.me/book/)
+
 ## Installation
 
 > [!WARNING]  
