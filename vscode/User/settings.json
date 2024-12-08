@@ -46,6 +46,7 @@
   // Don't copy a line to clipboard when nothing is selected
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.emptySelectionClipboard": false,
+  "editor.experimentalEditContextEnabled": true,
   "editor.find.addExtraSpaceOnTop": false,
   "editor.folding": false,
   "editor.fontFamily": "MonoLisa, \"Symbols Nerd Font Mono\"",
@@ -221,6 +222,7 @@
     "astro"
   ],
   "emmet.excludeLanguages": ["markdown", "javascript", "typescript"],
+  "emmet.showSuggestionsAsSnippets": true,
   "cSpell.spellCheckDelayMs": 500,
   "cSpell.enableFiletypes": ["shellscript"],
   "cSpell.userWords": [
@@ -349,6 +351,5 @@
     "editor.rulers": [72],
     "editor.wordWrap": "wordWrapColumn",
     "editor.wordWrapColumn": 72
-  },
-  "editor.experimentalEditContextEnabled": true
+  }
 }
