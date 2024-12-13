@@ -73,6 +73,9 @@
   "editor.occurrencesHighlight": "off",
   "editor.overviewRulerBorder": false,
   "editor.quickSuggestions": { "strings": "on" },
+  "editor.pasteAs.preferences": [
+    "text.updateImports"
+  ],
   "editor.renderLineHighlight": "none",
   "editor.renderWhitespace": "selection",
   "editor.roundedSelection": false,
