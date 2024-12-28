@@ -1,0 +1,40 @@
+# Squirrelsong Dark Theme for Ghostty
+# https://sapegin.me/squirrelsong/
+
+foreground = #ad9c8b
+background = #352a21
+selection-foreground = #ad9c8b
+selection-background = #574131
+cursor-color = #ad9c8b
+
+# Black
+palette = 0=#352a21
+palette = 8=#6b503c
+
+# Red
+palette = 1=#ac493e
+palette = 9=#ce574a
+
+# Green
+palette = 2=#558240
+palette = 10=#709855
+
+# Yellow
+palette = 3=#ceb250
+palette = 11=#e2c358
+
+# Blue
+palette = 4=#5993c2
+palette = 12=#63a2d6
+
+# Magenta
+palette = 5=#7f61b3
+palette = 13=#ad8fcc
+
+# Cyan
+palette = 6=#4f9593
+palette = 14=#72aaa8
+
+# White
+palette = 7=#cfbaa5
+palette = 15=#edd5be

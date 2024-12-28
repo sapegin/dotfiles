@@ -1,0 +1,24 @@
+font-family = Monolisa
+font-size = 15
+
+# Disable ligatures and configure font features
+font-feature = calt
+font-feature = -clig
+font-feature = -liga
+font-feature = zero
+font-feature = ss01
+
+theme = Squirrelsong Dark
+minimum-contrast = 1.1
+
+# Bar non-blinking cursor
+adjust-cursor-thickness = 2
+cursor-style = bar
+cursor-style-blink = false
+shell-integration-features = no-cursor
+
+window-padding-x = 8
+window-padding-y = 12,8
+
+clipboard-trim-trailing-spaces = true
+copy-on-select = true

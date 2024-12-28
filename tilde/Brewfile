@@ -35,6 +35,7 @@ cask "coteditor" # Simple code/text editor
 cask "dash" # Documentation reader
 cask "devtoys" # Collection of developer tools
 cask "firefox"
+cask "ghostty" # Terminal emulator
 cask "github" # GitHub Desktop
 cask "jordanbaird-ice" # Hides menu bar icons
 cask "kap" # Video screen recording
