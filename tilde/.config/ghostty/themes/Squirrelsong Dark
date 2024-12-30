@@ -38,3 +38,7 @@ palette = 14=#72aaa8
 # White
 palette = 7=#cfbaa5
 palette = 15=#edd5be
+
+# Use Squirrelsong colors for the icon
+macos-icon-ghost-color = #ad8fcc # purple0a
+macos-icon-screen-color = #352a21 # gray03

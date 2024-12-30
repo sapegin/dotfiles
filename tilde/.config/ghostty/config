@@ -10,6 +10,7 @@ font-feature = ss01
 
 theme = Squirrelsong Dark
 minimum-contrast = 1.1
+macos-icon = custom-style
 
 # Bar non-blinking cursor
 adjust-cursor-thickness = 2
