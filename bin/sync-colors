@@ -6,6 +6,7 @@
 // > [x] Bear
 // > [x] Peek
 // > [x] Fzf
+// > [x] Ghostty
 //
 // ---
 // Author: Artem Sapegin, sapegin.me
@@ -69,6 +70,14 @@ await install(
 	'themes/WezTerm/squirrelsong-dark.toml',
 	'.config/wezterm/colors'
 );
+
+/**
+ * Ghostty
+ */
+
+console.log('🌈 Installing Ghostty theme...');
+
+await install('themes/Ghostty/Squirrelsong Dark', '.config/ghostty/themes');
 
 /**
  * Peek
