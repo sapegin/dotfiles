@@ -106,6 +106,16 @@
     "command": "workbench.action.closePanel",
     "when": "terminalFocus"
   },
+  {
+    "comment": "Increase current panel size",
+    "key": "cmd+]",
+    "command": "workbench.action.increaseViewSize"
+  },
+  {
+    "comment": "Decrease current panel size",
+    "key": "cmd+[",
+    "command": "workbench.action.decreaseViewSize"
+  },
 
   /**
    * Quick open
@@ -1108,5 +1118,15 @@
   {
     "key": "alt+cmd+down",
     "command": "-editor.action.insertCursorBelow"
+  },
+  {
+    "key": "cmd+]",
+    "command": "-editor.action.indentLines",
+    "when": "editorTextFocus && !editorReadonly"
+  },
+  {
+    "key": "cmd+[",
+    "command": "-editor.action.outdentLines",
+    "when": "editorTextFocus && !editorReadonly"
   }
 ]
