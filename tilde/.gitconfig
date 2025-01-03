@@ -26,7 +26,7 @@
   # Checkout
 	co = checkout
   # Status
-	s = status --short --branch
+	s = status --short
   # Diff
 	d = diff
   # Cherry pick
