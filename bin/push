@@ -1,0 +1,52 @@
+#!/bin/bash
+#
+# Simplified version of git-friendly push
+# https://github.com/git-friendly/git-friendly
+#
+# Usage: push
+#
+# Send your local branch changes to the remote branch,
+# and copy the relevant GitHub 'compare' URL to your clipboard (Mac/Linux only)
+#
+# Any extra args to this command will be passed through to 'git push',
+# e.g. for doing "push -f"
+#
+
+# Abort if this isn't a git repository
+git rev-parse --is-inside-work-tree > /dev/null || exit $?
+
+# Colors
+color_error="$(tput sgr 0 1)$(tput setaf 1)"
+color_reset="$(tput sgr0)"
+
+# Push & save output
+if [ -z $* ]; then
+	# By default push to 'origin'
+	branch=$(git rev-parse --abbrev-ref HEAD) || exit $?
+	default_remote="origin"
+	remote=$(git config "branch.${branch}.remote" || echo "$default_remote")
+	remote_branch=$( (git config "branch.${branch}.merge" || echo "refs/heads/$branch") | cut -d/ -f3-)
+	args="$remote $remote_branch"
+else
+	args="$*"
+fi
+echo "🚀 Pushing..."
+echo
+push=$(git push --set-upstream $args 2>&1)
+exit_code=$?
+
+# Preserve useful output returned by the remote server
+echo "$push" | grep '^remote:'
+echo
+
+if [ $exit_code != 0 ]; then
+	# Push failed
+	echo -e "${color_error}Ouch, push failed!${color_reset}\n\n$push"
+	exit $exit_code
+elif echo $push | grep "Everything up-to-date" > /dev/null; then
+	# Nothing to push
+	echo "✌️ Git says everything is up-to-date!"
+	exit 0
+fi
+
+exit 0
