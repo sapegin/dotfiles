@@ -29,6 +29,7 @@ cask "1password" # Password manager
 cask "adobe-creative-cloud"
 cask "alfred" # App launcher
 cask "bruno" # GraphQL API client
+cask "choosy" # Browser selector
 cask "cleanshot" # Screenshots
 cask "colorsnapper" # Color picker
 cask "coteditor" # Simple code/text editor
