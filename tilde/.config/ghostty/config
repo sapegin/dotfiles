@@ -22,6 +22,6 @@ window-padding-x = 8
 window-padding-y = 12,8
 
 clipboard-trim-trailing-spaces = true
-copy-on-select = true
+copy-on-select = clipboard
 
 macos-titlebar-style = tabs
