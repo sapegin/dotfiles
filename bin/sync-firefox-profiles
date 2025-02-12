@@ -1,0 +1,51 @@
+#!/usr/bin/env node
+
+// Copies user.js and userChrome.css files to each Firefox (Developer Edition) profile
+//
+// ---
+// Author: Artem Sapegin, sapegin.me
+// License: MIT
+// https://github.com/sapegin/dotfiles
+
+import path from 'path';
+import fs from 'fs-extra';
+import untildify from 'untildify';
+import { globSync } from 'glob';
+
+const PROFILES_DIR = untildify(
+	'~/Library/Application Support/Firefox/Profiles'
+);
+const TEMPLATE_DIR = path.join(import.meta.dirname, '/../firefox');
+
+console.log();
+console.log('[FIREFOX] Updating profiles... 🦊');
+
+const profiles = globSync(path.join(PROFILES_DIR, '*/'));
+
+const templates = globSync(path.join(TEMPLATE_DIR, '**/*.*'), {
+	ignore: '/**/*.md',
+});
+
+for (const profileDirectory of profiles) {
+	console.log();
+	console.log(
+		`[VSCODE] Updating ${path.basename(profileDirectory)} profile...`
+	);
+
+	for (const templateFile of templates) {
+		const relativeTemplateFilepath = templateFile.replace(
+			`${TEMPLATE_DIR}/`,
+			''
+		);
+		const absoluteFilepath = path.join(
+			profileDirectory,
+			relativeTemplateFilepath
+		);
+
+		fs.emptyDirSync(path.dirname(absoluteFilepath));
+		fs.copySync(templateFile, absoluteFilepath);
+	}
+}
+
+console.log();
+console.log('[VSCODE] Done 🦜');

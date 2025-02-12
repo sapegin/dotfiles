@@ -1,0 +1,32 @@
+/* https://www.userchrome.org/how-create-userchrome-css.html */
+/* https://firefox-source-docs.mozilla.org/devtools-user/browser_toolbox/index.html */
+
+/* Change awful blue focus outline color to */
+:root {
+    --toolbar-field-focus-border-color: #78737d !important;
+}
+
+/* Make the playing icon less obtrusive on pinned tabs */
+.tab-icon-overlay {
+  #tabbrowser-tabs[orient="vertical"]:not([expanded]) &:not([crashed]), &[pinned]:not([crashed]) {
+    &:is([soundplaying], [muted], [activemedia-blocked]) {
+        height: 12px !important;
+        width: 12px !important;
+        opacity: 0.4 !important;
+        inset-inline-end: -13px !important;
+        top: -9px !important;
+        background-color: var(--tab-icon-overlay-fill) !important;
+        fill: var(--tab-icon-overlay-stroke) !important;
+    }
+  }
+}
+
+/* Make the protection icon in the address bar grayscale */
+#tracking-protection-icon-container {
+    filter: grayscale() !important;
+}
+
+/* Hide annoying "Extension (Blank Sky New Tab Page)" text on New Tab page */
+label[value="Extension (Blank Sky New Tab Page)"] {
+    display: none !important;
+}
