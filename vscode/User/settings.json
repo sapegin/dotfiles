@@ -113,6 +113,7 @@
     "**/yarn.lock": true
   },
   "files.hotExit": "onExitAndWindowClose",
+  "git.blame.editorDecoration.enabled": false,
   "git.closeDiffOnOperation": true,
   "git.confirmSync": false,
   "git.enableSmartCommit": true,
