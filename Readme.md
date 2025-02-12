@@ -13,7 +13,7 @@
 - [zsh aliases](https://github.com/sapegin/dotfiles/blob/master/zsh/aliases.zsh).
 - [Git aliases](https://github.com/sapegin/dotfiles/blob/master/tilde/.gitconfig).
 - [Lots of scripts](https://github.com/sapegin/dotfiles/tree/master/bin).
-- [Vivaldi custom styles](https://github.com/sapegin/dotfiles/tree/master/vivaldi).
+- [Firefox custom styles](https://github.com/sapegin/dotfiles/tree/master/firefox).
 - [Brewfile](https://github.com/sapegin/dotfiles/tree/master/tilde/Brewfile)
 - Configs for lots of apps.
 - [macOS apps I use](https://github.com/sapegin/dotfiles/wiki/OS-X-Apps).

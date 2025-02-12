@@ -30,6 +30,7 @@ cask "adobe-creative-cloud"
 cask "alfred" # App launcher
 cask "bruno" # GraphQL API client
 cask "choosy" # Browser selector
+cask "chromium"
 cask "cleanshot" # Screenshots
 cask "colorsnapper" # Color picker
 cask "coteditor" # Simple code/text editor
@@ -52,7 +53,6 @@ cask "quitter" # Quit apps after certain time
 cask "replacicon" # Custom app icons
 cask "telegram"
 cask "visual-studio-code"
-cask "vivaldi"
 cask "wezterm" # Terminal emulator
 cask "whatsapp"
 
