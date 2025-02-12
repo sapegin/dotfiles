@@ -73,9 +73,7 @@
   "editor.occurrencesHighlight": "off",
   "editor.overviewRulerBorder": false,
   "editor.quickSuggestions": { "strings": "on" },
-  "editor.pasteAs.preferences": [
-    "text.updateImports"
-  ],
+  "editor.pasteAs.preferences": ["text.updateImports"],
   "editor.renderLineHighlight": "none",
   "editor.renderWhitespace": "selection",
   "editor.roundedSelection": false,
@@ -187,6 +185,10 @@
   "workbench.editor.editorActionsLocation": "hidden",
   "workbench.editor.empty.hint": "hidden",
   "workbench.editor.showTabs": "none",
+  "workbench.editorAssociations": {
+    // Don't open SVG files as preview
+    "*.svg": "default"
+  },
   "workbench.enableExperiments": false,
   "workbench.experimental.enableNewProfilesUI": true,
   "workbench.fontAliasing": "auto",
