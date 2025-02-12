@@ -30,7 +30,7 @@ cask "adobe-creative-cloud"
 cask "alfred" # App launcher
 cask "bruno" # GraphQL API client
 cask "choosy" # Browser selector
-cask "chromium"
+cask "chromium", args: { no_quarantine: true }
 cask "cleanshot" # Screenshots
 cask "colorsnapper" # Color picker
 cask "coteditor" # Simple code/text editor
