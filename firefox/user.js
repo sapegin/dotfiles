@@ -42,6 +42,15 @@ user_pref('widget.non-native-theme.use-theme-accent', true);
 // ??? Disable overscroll animation
 user_pref('apz.overscroll.enabled', false);
 
+/////////////////
+// Development //
+/////////////////
+
+// Enable remote debugging (useful for debugging userChrome.css)
+user_pref('devtools.chrome.enabled', true);
+user_pref('devtools.debugger.remote-enabled', true);
+user_pref('devtools.debugger.prompt-connection', false);
+
 //////////////////////////////
 // Security and performance //
 //////////////////////////////
