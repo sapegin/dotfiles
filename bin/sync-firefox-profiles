@@ -29,7 +29,7 @@ const templates = globSync(path.join(TEMPLATE_DIR, '**/*.*'), {
 for (const profileDirectory of profiles) {
 	console.log();
 	console.log(
-		`[VSCODE] Updating ${path.basename(profileDirectory)} profile...`
+		`[FIREFOX] Syncing ${path.basename(profileDirectory)} profile...`
 	);
 
 	for (const templateFile of templates) {
@@ -42,10 +42,30 @@ for (const profileDirectory of profiles) {
 			relativeTemplateFilepath
 		);
 
-		fs.emptyDirSync(path.dirname(absoluteFilepath));
-		fs.copySync(templateFile, absoluteFilepath);
+		if (fs.existsSync(absoluteFilepath)) {
+			const templateModifiedTime = fs.statSync(templateFile);
+			const userFileModifiedTime = fs.statSync(absoluteFilepath);
+			if (userFileModifiedTime.mtime >= templateModifiedTime.mtime) {
+				// Don nothing if the user file is not older than the template
+				continue;
+			}
+
+			// Overwrite the existing file. Every time user.js is replaced (file
+			// creation time changed), Firefox resets the profile
+			console.log(`[FIREFOX] Updating ${path.basename(absoluteFilepath)}...`);
+			const content = fs.readFileSync(templateFile, 'utf8');
+			// Open file, this also removes the existing file content
+			const file = fs.openSync(absoluteFilepath, 'w');
+			// Append the new version
+			fs.appendFileSync(file, content);
+		} else {
+			// Copy a new file if it doesn't exist
+			console.log(`[FIREFOX] Creating ${path.basename(absoluteFilepath)}...`);
+			fs.emptyDirSync(path.dirname(absoluteFilepath));
+			fs.copySync(templateFile, absoluteFilepath);
+		}
 	}
 }
 
 console.log();
-console.log('[VSCODE] Done 🦜');
+console.log('[FIREFOX] Done 🦜');
