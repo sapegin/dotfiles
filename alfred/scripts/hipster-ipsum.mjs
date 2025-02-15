@@ -178,6 +178,7 @@ const dictionary = [
 	'späti',
 	'TikTok',
 	'MacBook',
+	'Leica',
 ];
 
 /**
