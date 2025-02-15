@@ -1,9 +1,16 @@
-// Based on https://github.com/pbojinov/lorem-hipsum
-// with some words removed, and some added
+/**
+ * A script for Alfred to generate one sentence of Hipster Ipsum.
+ *
+ * Author: Artem Sapegin, sapegin.me
+ * License: MIT
+ * https://github.com/sapegin/dotfiles
+ */
 
 const MIN_WORDS = 10;
 const MAX_WORDS = 15;
 
+// Based on https://github.com/pbojinov/lorem-hipsum
+// with some words removed, and some added
 const dictionary = [
 	'actually',
 	'aesthetic',
