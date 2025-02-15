@@ -1,5 +1,5 @@
 /**
- * A script for Alfred to generate one sentence of Hipster Ipsum.
+ * A script for Alfred to generate one sentence of European Hipster Ipsum.
  *
  * Author: Artem Sapegin, sapegin.me
  * License: MIT
