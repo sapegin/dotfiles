@@ -221,13 +221,13 @@
   },
   {
     "comment": "Move current or selected lines down",
-    "key": "cmd+alt+down",
+    "key": "ctrl+down",
     "command": "editor.action.moveLinesDownAction",
     "when": "editorTextFocus && !editorReadonly"
   },
   {
     "comment": "Move current or selected lines up",
-    "key": "cmd+alt+up",
+    "key": "ctrl+up",
     "command": "editor.action.moveLinesUpAction",
     "when": "editorTextFocus && !editorReadonly"
   },
