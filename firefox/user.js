@@ -18,10 +18,6 @@ user_pref('browser.startup.page', 3);
 // Don't check whether Firefox is a default browser
 // (I use Choosy to switch between browsers)
 user_pref('browser.shell.checkDefaultBrowser', false);
-// Disable websites overriding Firefox's keyboard shortcuts
-// 0 (default) or 1=allow, 2=block
-// Add site exceptions: Ctrl+I>Permissions>Override Keyboard Shortcuts
-user_pref('permissions.default.shortcuts', 2);
 // Allow UI customizations with userChrome.css
 user_pref('toolkit.legacyUserProfileCustomizations.stylesheets', true);
 // Block autoplay in tabs until selected
