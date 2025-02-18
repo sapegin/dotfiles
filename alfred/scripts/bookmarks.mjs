@@ -67,6 +67,9 @@ function parseBookmarks(tree) {
 						arg: `${BOOKMARKS_FILE}:${node.position.start.line}`,
 						subtitle: 'Press Enter to edit the bookmark',
 					},
+					cmd: {
+						subtitle: 'Press Enter to copy the bookmark to clipboard',
+					},
 				},
 			});
 		}
