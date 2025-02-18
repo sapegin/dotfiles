@@ -15,6 +15,8 @@ user_pref('browser.download.alwaysOpenPanel', false);
 user_pref('browser.download.manager.addToRecentDocs', false);
 // Open previous windows and tabs on restart
 user_pref('browser.startup.page', 3);
+// Don't show search suggestions ahead of browsing history in address bar results
+user_pref('browser.urlbar.showSearchSuggestionsFirst', false);
 // Don't check whether Firefox is a default browser
 // (I use Choosy to switch between browsers)
 user_pref('browser.shell.checkDefaultBrowser', false);
