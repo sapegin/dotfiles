@@ -22,6 +22,7 @@
     "glob": "^11.0.0",
     "ky": "^1.7.2",
     "lodash": "^4.17.21",
+    "mdast-util-from-markdown": "^2.0.2",
     "mrm-core": "^7.1.22",
     "prettier": "^3.3.3",
     "prettier-plugin-sh": "^0.14.0",
