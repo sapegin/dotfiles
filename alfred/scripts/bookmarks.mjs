@@ -11,11 +11,11 @@
  * https://github.com/sapegin/dotfiles
  */
 
-import fs from 'fs-extra';
+import fs from 'node:fs';
 import untildify from 'untildify';
 
 const BOOKMARKS_FILE = untildify(
-	`~/Library/Mobile Documents/com~apple~CloudDocs/Documents/Bookmarks.md`
+	`/Users/sapegia/Library/Mobile Documents/com~apple~CloudDocs/Documents/Bookmarks.md`
 );
 
 function formatSection(headings) {
