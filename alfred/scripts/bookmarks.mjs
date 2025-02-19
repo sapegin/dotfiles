@@ -32,8 +32,8 @@ function parseBookmarks(markdown) {
 	const bookmarks = [];
 	let headings = [];
 
-	for (let lineNumber = 0; lineNumber < lines.length; lineNumber++) {
-		const line = lines[lineNumber];
+	for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
+		const line = lines[lineIndex];
 
 		if (line.startsWith('#')) {
 			// It's a heading
@@ -53,9 +53,9 @@ function parseBookmarks(markdown) {
 		} else if (line.startsWith('https://')) {
 			// Each paragraph is one bookmark where the first line is a title, and the
 			// second line is a URL, so we take the line with the URL first
-			const titleLineNumber = lineNumber - 1;
+			const titleLineIndex = lineIndex - 1;
 			const url = line.trim();
-			const title = lines[titleLineNumber];
+			const title = lines[titleLineIndex];
 			const hostname = getHostName(url);
 			const subtitle = `${hostname} • ${formatSection(headings)}`;
 			const match =
@@ -74,7 +74,7 @@ function parseBookmarks(markdown) {
 				mods: {
 					alt: {
 						valid: true,
-						arg: `${BOOKMARKS_FILE}:${titleLineNumber}`,
+						arg: `${BOOKMARKS_FILE}:${titleLineIndex + 1}`,
 						subtitle: 'Press Enter to edit the bookmark',
 					},
 					cmd: {
