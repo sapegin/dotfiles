@@ -88,9 +88,9 @@ function parseBookmarks(markdown) {
 	return bookmarks;
 }
 
-const markdown = fs.readFileSync(BOOKMARKS_FILE, 'utf8');
-const items = parseBookmarks(markdown);
+// --------- 8< --------- 8< --------- 8< ---------
 
+const items = parseBookmarks(fs.readFileSync(BOOKMARKS_FILE, 'utf8'));
 console.log(
 	JSON.stringify({
 		items,
