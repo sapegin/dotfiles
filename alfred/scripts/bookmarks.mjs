@@ -13,7 +13,6 @@
 
 import fs from 'fs-extra';
 import untildify from 'untildify';
-import { fromMarkdown } from 'mdast-util-from-markdown';
 
 const BOOKMARKS_FILE = untildify(
 	`~/Library/Mobile Documents/com~apple~CloudDocs/Documents/Bookmarks.md`
@@ -28,24 +27,35 @@ function getHostName(url) {
 	return match[1] ?? '';
 }
 
-function parseBookmarks(tree) {
+function parseBookmarks(markdown) {
+	const lines = markdown.split('\n');
 	const bookmarks = [];
 	let headings = [];
 
-	for (const node of tree.children) {
-		if (node.type === 'heading') {
-			if (node.depth === 1) {
+	for (let lineNumber = 0; lineNumber < lines.length; lineNumber++) {
+		const line = lines[lineNumber];
+
+		if (line.startsWith('#')) {
+			// It's a heading
+			const [, headingMark, heading] = line.match(/(#+) (.*)/);
+
+			// Calculate the depth (number of # characters)
+			const depth = headingMark.length;
+
+			if (depth === 1) {
 				// Skip the main heading, we know it's "Bookmarks"
 			} else {
 				// Remove the "closed" sections
-				headings = headings.slice(0, node.depth - 2);
+				headings = headings.slice(0, depth - 2);
 				// Add the current section title
-				headings.push(node.children[0].value);
+				headings.push(heading);
 			}
-		} else if (node.type === 'paragraph') {
+		} else if (line.startsWith('https://')) {
 			// Each paragraph is one bookmark where the first line is a title, and the
-			// second line is a URL
-			const [title, url] = node.children[0].value.trim().split('\n');
+			// second line is a URL, so we take the line with the URL first
+			const titleLineNumber = lineNumber - 1;
+			const url = line.trim();
+			const title = lines[titleLineNumber];
 			const hostname = getHostName(url);
 			const subtitle = `${hostname} • ${formatSection(headings)}`;
 			const match =
@@ -64,7 +74,7 @@ function parseBookmarks(tree) {
 				mods: {
 					alt: {
 						valid: true,
-						arg: `${BOOKMARKS_FILE}:${node.position.start.line}`,
+						arg: `${BOOKMARKS_FILE}:${titleLineNumber}`,
 						subtitle: 'Press Enter to edit the bookmark',
 					},
 					cmd: {
@@ -78,11 +88,8 @@ function parseBookmarks(tree) {
 	return bookmarks;
 }
 
-const markdown = fs.readFileSync(BOOKMARKS_FILE);
-
-const tree = fromMarkdown(markdown);
-
-const items = parseBookmarks(tree);
+const markdown = fs.readFileSync(BOOKMARKS_FILE, 'utf8');
+const items = parseBookmarks(markdown);
 
 console.log(
 	JSON.stringify({
