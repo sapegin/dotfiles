@@ -241,6 +241,7 @@
     "autofixable",
     "autofixed",
     "autofixing",
+    "automations",
     "colocation",
     "copypasting",
     "customizability",
@@ -274,7 +275,7 @@
     "Textlint",
     "todos",
     "trackpad"
-  ],
+],
   "donations.disablePrompt": true,
   "github.copilot.editor.enableAutoCompletions": false,
   "githubPullRequests.defaultMergeMethod": "squash",
