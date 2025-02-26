@@ -231,51 +231,14 @@
   "emmet.showSuggestionsAsSnippets": true,
   "cSpell.spellCheckDelayMs": 500,
   "cSpell.enableFiletypes": ["shellscript"],
-  "cSpell.userWords": [
-    "ADHD",
-    "antipattern",
-    "antipatterns",
-    "Artem",
-    "Astro",
-    "autofix",
-    "autofixable",
-    "autofixed",
-    "autofixing",
-    "automations",
-    "colocation",
-    "copypasting",
-    "customizability",
-    "cyclomatic",
-    "deburr",
-    "discoverability",
-    "dotfiles",
-    "Flexbox",
-    "Formik",
-    "greppability",
-    "greppable",
-    "Hygraph",
-    "longstringers",
-    "microlibraries",
-    "microlibrary",
-    "neurodiverse",
-    "okayish",
-    "oneliner",
-    "outdent",
-    "overpolice",
-    "Photoshop",
-    "preorder",
-    "refactorings",
-    "Sapegin",
-    "shortcutting",
-    "signin",
-    "signup",
-    "Squirrelsong",
-    "tacocat",
-    "Tamia",
-    "Textlint",
-    "todos",
-    "trackpad"
-],
+  "cSpell.customDictionaries": {
+    "dotfiles": {
+      "description": "Words I use in various projects",
+      "path": "~/dotfiles/cspell.txt",
+      // "Add Word to User Dictionary" command will add words to this file
+      "addWords": true
+    }
+  },
   "donations.disablePrompt": true,
   "github.copilot.editor.enableAutoCompletions": false,
   "githubPullRequests.defaultMergeMethod": "squash",
@@ -302,7 +265,7 @@
     }
   ],
 
-  // File types
+  // File types: ADHD
   "javascript.autoClosingTags": false,
   "javascript.format.enable": false,
   "javascript.preferences.importModuleSpecifier": "relative",
