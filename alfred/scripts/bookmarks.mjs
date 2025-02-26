@@ -23,7 +23,7 @@ function formatSection(headings) {
 }
 
 function getHostName(url) {
-	const match = url.match(/https?:\/\/(?:www\.)?([\w.-]+)\//);
+	const match = url.match(/https?:\/\/(?:www\.)?([\w.-]+)[/:]/);
 	return match[1] ?? '';
 }
 
@@ -50,7 +50,7 @@ function parseBookmarks(markdown) {
 				// Add the current section title
 				headings.push(heading);
 			}
-		} else if (line.startsWith('https://')) {
+		} else if (line.startsWith('http://') || line.startsWith('https://')) {
 			// Each paragraph is one bookmark where the first line is a title, and the
 			// second line is a URL, so we take the line with the URL first
 			const titleLineIndex = lineIndex - 1;
