@@ -265,7 +265,7 @@
     }
   ],
 
-  // File types: ADHD
+  // File types
   "javascript.autoClosingTags": false,
   "javascript.format.enable": false,
   "javascript.preferences.importModuleSpecifier": "relative",
