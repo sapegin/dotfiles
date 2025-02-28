@@ -35,11 +35,11 @@ user_pref('browser.tabs.closeWindowWithLastTab', false);
 // Set monospace font
 user_pref('font.name.monospace.x-western', 'Monolisa');
 // Search highlight colors
-user_pref('ui.textHighlightBackground', '#fae1ea');
-user_pref('ui.textHighlightForeground', '#4c4b4e');
+user_pref('ui.textSelectAttentionBackground', '#e87da4'); // Squirrelsong Light brightPink
+user_pref('ui.textSelectAttentionForeground', '#fdfdfe'); // Squirrelsong Light white
 // Search highlight all colors
-user_pref('ui.textSelectAttentionBackground', '#e87da4');
-user_pref('ui.textSelectAttentionForeground', '#fdfdfe');
+user_pref('ui.textHighlightBackground', '#fae1ea'); // Squirrelsong Light brightPinkLighter
+user_pref('ui.textHighlightForeground', '#4c4b4e'); // Squirrelsong Light gray04
 
 // ??? Enable using system accent colors
 user_pref('widget.non-native-theme.use-theme-accent', true);
