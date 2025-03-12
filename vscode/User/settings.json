@@ -20,6 +20,7 @@
   "breadcrumbs.enabled": false,
   "breadcrumbs.filePath": "off",
   "catppuccin-icons.hidesExplorerArrows": true,
+  "chat.commandCenter.enabled": false,
   "comments.maxHeight": false,
   "comments.openView": "never",
   "comments.visible": false,
