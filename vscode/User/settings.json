@@ -235,6 +235,7 @@
   ],
   "emmet.excludeLanguages": ["markdown", "javascript", "typescript"],
   "emmet.showSuggestionsAsSnippets": true,
+  "cSpell.blockCheckingWhenLineLengthGreaterThan": 50000,
   "cSpell.spellCheckDelayMs": 500,
   "cSpell.enableFiletypes": ["shellscript"],
   "cSpell.customDictionaries": {
