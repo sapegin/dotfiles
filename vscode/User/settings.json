@@ -164,6 +164,12 @@
   "terminal.integrated.shellIntegration.decorationsEnabled": "never",
   "terminal.integrated.shellIntegration.showCommandGuide": false,
   "terminal.integrated.stickyScroll.enabled": false,
+  "terminal.integrated.suggest.enabled": true,
+  "terminal.integrated.suggest.quickSuggestions": {
+    "commands": "off",
+    "arguments": "on",
+    "unknown": "off"
+  },
   "terminal.integrated.tabs.enableAnimation": false,
   "terminal.integrated.tabs.showActions": "never",
   "terminal.integrated.tabStopWidth": 2,
