@@ -32,6 +32,9 @@ user_pref('browser.warnOnQuit', true);
 user_pref('browser.tabs.warnOnClose', true);
 // Don't close the window when closing the last tab
 user_pref('browser.tabs.closeWindowWithLastTab', false);
+// Allow web apps to override default Firefox hotkeys
+user_pref('permissions.default.shortcuts', 0);
+
 // Set monospace font
 user_pref('font.name.monospace.x-western', 'Monolisa');
 // Search highlight colors
