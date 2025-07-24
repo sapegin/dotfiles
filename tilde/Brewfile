@@ -43,13 +43,13 @@ cask "github" # GitHub Desktop
 cask "jordanbaird-ice" # Hides menu bar icons
 cask "kap" # Video screen recording
 cask "keka" # Archive reader
-cask "mimestream" # Gmail client
 cask "nimble-commander" # File manager
 cask "notion"
 cask "numi" # Calculator
 cask "optimage" # Image optimization
 cask "polypane" # Responsive design and accessibility testing
 cask "quitter" # Quit apps after certain time
+cask "readdle-spark" # Email client
 cask "replacicon" # Custom app icons
 cask "telegram"
 cask "visual-studio-code"
