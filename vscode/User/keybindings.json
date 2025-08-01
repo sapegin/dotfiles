@@ -127,6 +127,12 @@
     "command": "workbench.action.quickOpenPreviousEditor"
   },
   {
+    // L is next to O that opens the list of recent files
+    "comment": "Open previous editor",
+    "key": "cmd+l",
+    "command": "workbench.action.openPreviousRecentlyUsedEditor"
+  },
+  {
     "comment": "Show list of sYmbols in the current file",
     "key": "cmd+y",
     "command": "workbench.action.gotoSymbol"
