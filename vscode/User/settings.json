@@ -22,6 +22,7 @@
   "comments.openView": "never",
   "comments.visible": false,
   "diffEditor.experimental.showMoves": true,
+  "diffEditor.codeLens": true,
   "editor.acceptSuggestionOnCommitCharacter": false,
   "editor.acceptSuggestionOnEnter": "off",
   "editor.accessibilitySupport": "off",
