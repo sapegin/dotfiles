@@ -324,7 +324,7 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[astro]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "astro-build.astro-vscode"
   },
   "[latex]": {
     "editor.defaultFormatter": "mathematic.vscode-latex"
