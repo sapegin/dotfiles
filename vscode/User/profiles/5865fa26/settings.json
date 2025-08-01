@@ -5,7 +5,6 @@
     "editorOverviewRuler.warningForeground": "#ffffff00",
     "editorOverviewRuler.wordHighlightForeground": "#ffffff00",
     "editorOverviewRuler.wordHighlightTextForeground": "#ffffff00",
-    "editorGroup.border": "#ffffff00",
     "notebook.inactiveFocusedCellBorder": "#0000",
     "editor.background": "#f7f6f9",
     "editor.foreground": "#4c4b4e",
@@ -16,10 +15,12 @@
   "breadcrumbs.enabled": false,
   "breadcrumbs.filePath": "off",
   "catppuccin-icons.hidesExplorerArrows": true,
+  "chat.commandCenter.enabled": false,
   "comments.maxHeight": false,
   "comments.openView": "never",
   "comments.visible": false,
   "diffEditor.experimental.showMoves": true,
+  "diffEditor.codeLens": true,
   "editor.acceptSuggestionOnCommitCharacter": false,
   "editor.acceptSuggestionOnEnter": "off",
   "editor.accessibilitySupport": "off",
@@ -40,6 +41,7 @@
   "editor.detectIndentation": false,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.emptySelectionClipboard": false,
+  "editor.experimentalEditContextEnabled": true,
   "editor.find.addExtraSpaceOnTop": false,
   "editor.folding": false,
   "editor.fontFamily": "MonoLisa, \"Symbols Nerd Font Mono\"",
@@ -67,6 +69,9 @@
   "editor.quickSuggestions": {
     "strings": "on"
   },
+  "editor.pasteAs.preferences": [
+    "text.updateImports"
+  ],
   "editor.renderLineHighlight": "none",
   "editor.renderWhitespace": "selection",
   "editor.roundedSelection": false,
@@ -107,6 +112,7 @@
     "**/yarn.lock": true
   },
   "files.hotExit": "onExitAndWindowClose",
+  "git.blame.editorDecoration.enabled": false,
   "git.closeDiffOnOperation": true,
   "git.confirmSync": false,
   "git.enableSmartCommit": true,
@@ -163,6 +169,12 @@
   "terminal.integrated.shellIntegration.decorationsEnabled": "never",
   "terminal.integrated.shellIntegration.showCommandGuide": false,
   "terminal.integrated.stickyScroll.enabled": false,
+  "terminal.integrated.suggest.enabled": true,
+  "terminal.integrated.suggest.quickSuggestions": {
+    "commands": "off",
+    "arguments": "on",
+    "unknown": "off"
+  },
   "terminal.integrated.tabs.enableAnimation": false,
   "terminal.integrated.tabs.showActions": "never",
   "terminal.integrated.tabStopWidth": 2,
@@ -185,6 +197,9 @@
   "workbench.editor.editorActionsLocation": "hidden",
   "workbench.editor.empty.hint": "hidden",
   "workbench.editor.showTabs": "none",
+  "workbench.editorAssociations": {
+    "*.svg": "default"
+  },
   "workbench.enableExperiments": false,
   "workbench.experimental.enableNewProfilesUI": true,
   "workbench.fontAliasing": "auto",
@@ -229,56 +244,27 @@
     "javascript",
     "typescript"
   ],
+  "emmet.showSuggestionsAsSnippets": true,
+  "cSpell.blockCheckingWhenLineLengthGreaterThan": 50000,
   "cSpell.spellCheckDelayMs": 500,
-  "cSpell.enableFiletypes": [
+  "cSpell.enableFileTypes": [
     "shellscript"
   ],
-  "cSpell.userWords": [
-    "ADHD",
-    "antipattern",
-    "antipatterns",
-    "Artem",
-    "Astro",
-    "autofix",
-    "autofixable",
-    "autofixed",
-    "autofixing",
-    "colocation",
-    "copypasting",
-    "customizability",
-    "cyclomatic",
-    "deburr",
-    "discoverability",
-    "dotfiles",
-    "Flexbox",
-    "Formik",
-    "greppability",
-    "greppable",
-    "Hygraph",
-    "longstringers",
-    "microlibraries",
-    "microlibrary",
-    "neurodiverse",
-    "okayish",
-    "oneliner",
-    "outdent",
-    "overpolice",
-    "Photoshop",
-    "preorder",
-    "refactorings",
-    "Sapegin",
-    "shortcutting",
-    "signin",
-    "signup",
-    "Squirrelsong",
-    "tacocat",
-    "Tamia",
-    "Textlint",
-    "todos",
-    "trackpad"
-  ],
+  "cSpell.customDictionaries": {
+    "dotfiles": {
+      "description": "Words I use in various projects",
+      "path": "~/dotfiles/cspell.txt",
+      "addWords": true
+    }
+  },
   "donations.disablePrompt": true,
   "github.copilot.editor.enableAutoCompletions": false,
+  "github.copilot.enable": {
+    "*": false,
+    "plaintext": false,
+    "markdown": false,
+    "scminput": false
+  },
   "githubPullRequests.defaultMergeMethod": "squash",
   "githubPullRequests.pullPullRequestBranchBeforeCheckout": "pullAndMergeBase",
   "tailwindCSS.emmetCompletions": false,
@@ -329,7 +315,7 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[astro]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "astro-build.astro-vscode"
   },
   "[latex]": {
     "editor.defaultFormatter": "mathematic.vscode-latex"
@@ -340,6 +326,5 @@
     ],
     "editor.wordWrap": "wordWrapColumn",
     "editor.wordWrapColumn": 72
-  },
-  "editor.experimentalEditContextEnabled": true
+  }
 }
