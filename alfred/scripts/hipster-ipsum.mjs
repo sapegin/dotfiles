@@ -176,8 +176,8 @@ const dictionary = [
 	'oat milk',
 	'veggies',
 	'keto',
-  'underconsuption',
-  'no buy year',
+	'underconsuption',
+	'no buy year',
 	'flea market',
 	'vintage',
 	'instagrammable',
@@ -226,4 +226,4 @@ function getHipsumSentence(words) {
 // --------- 8< --------- 8< --------- 8< ---------
 
 // Send the results to Alfred
-console.log(getHipsumSentence(dictionary));
+process.stdout.write(getHipsumSentence(dictionary));
