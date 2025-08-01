@@ -83,13 +83,13 @@ await install('themes/Ghostty/Squirrelsong Dark', '.config/ghostty/themes');
  * Peek
  */
 
-console.log('🌈 Installing Peek theme...');
+const peekThemeDir = `${HOME}/Library/Group Containers/9V456WSURS.com.bigzlabs.peekgroup/Library/Application Support/Styles`;
 
-const peekTheme = await download('themes/Peek/custom.css');
-write(
-	`${HOME}/Library/Group Containers/9V456WSURS.com.bigzlabs.peekgroup/Library/Application Support/Styles/custom.css`,
-	peekTheme
-);
+if (fs.existsSync(peekThemeDir)) {
+	console.log('🌈 Installing Peek theme...');
+	const peekTheme = await download('themes/Peek/custom.css');
+	write(path.join(peekThemeDir, 'custom.css'), peekTheme);
+}
 
 /**
  * Bear
