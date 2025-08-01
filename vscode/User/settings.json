@@ -7,9 +7,6 @@
     "editorOverviewRuler.wordHighlightForeground": "#ffffff00",
     "editorOverviewRuler.wordHighlightTextForeground": "#ffffff00",
 
-    // Hide vertical borders in zen/centered mode
-    "editorGroup.border": "#ffffff00",
-
     // Hide command guide in the terminal (vertical bar that appear on the left
     // side of the command on hover)
     "notebook.inactiveFocusedCellBorder": "#0000"
