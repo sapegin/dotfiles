@@ -56,6 +56,7 @@ echo
 echo "🚀 Installing Node.js dependencies..."
 npm config set loglevel warn
 npm install -g npm-upgrade
+npm install -g @anthropic-ai/claude-code
 npm install
 echo
 
