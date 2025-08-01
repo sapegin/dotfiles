@@ -249,6 +249,12 @@
   },
   "donations.disablePrompt": true,
   "github.copilot.editor.enableAutoCompletions": false,
+  "github.copilot.enable": {
+    "*": false,
+    "plaintext": false,
+    "markdown": false,
+    "scminput": false
+  },
   "githubPullRequests.defaultMergeMethod": "squash",
   "githubPullRequests.pullPullRequestBranchBeforeCheckout": "pullAndMergeBase",
   "tailwindCSS.emmetCompletions": false,
