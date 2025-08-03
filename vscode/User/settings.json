@@ -213,6 +213,10 @@
 
   // Plugins
   "git.openRepositoryInParentFolders": "always",
+  "chat.instructionsFilesLocations": {
+    // I don’t know if it works ¯\_(ツ)_/¯
+    "~/dotfiles/ai-rules": true
+  },
   "color-highlight.markerType": "underline",
   "color-highlight.markRuler": false,
   "color-highlight.matchWords": false,
@@ -253,6 +257,13 @@
     "markdown": false,
     "scminput": false
   },
+  "github.copilot.chat.commitMessageGeneration.instructions": [
+    { "file": "~/dotfiles/ai-rules/commit.instructions.md" }
+  ],
+  "github.copilot.chat.reviewSelection.enabled": true,
+  "github.copilot.chat.reviewSelection.instructions": [
+    { "file": "~/dotfiles/ai-rules/javascript.instructions.md" }
+  ],
   "githubPullRequests.defaultMergeMethod": "squash",
   "githubPullRequests.pullPullRequestBranchBeforeCheckout": "pullAndMergeBase",
   "tailwindCSS.emmetCompletions": false,
