@@ -266,6 +266,15 @@
   ],
   "githubPullRequests.defaultMergeMethod": "squash",
   "githubPullRequests.pullPullRequestBranchBeforeCheckout": "pullAndMergeBase",
+  "kilo-code.allowedCommands": [
+    "npm test",
+    "npm install",
+    "tsc",
+    "git log",
+    "git diff",
+    "git show"
+  ],
+  "kilo-code.deniedCommands": [],
   "tailwindCSS.emmetCompletions": false,
   "typos.diagnosticSeverity": "Information",
   "profileGenerator": [
