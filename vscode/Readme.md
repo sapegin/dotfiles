@@ -14,6 +14,10 @@ ln -s ~/dotfiles/vscode/User ~/Library/Application\ Support/Code/User
 
 Run “Install 'code' command in PATH” from the command palette (View → Command Palette) to make Code available from the command line.
 
-## Install plugins
+## Install extensions
 
-See [setup/vscode.sh](../setup/vscode.sh).
+```bash
+brew bundle install --file tilde/Brewfile
+```
+
+See [Brewfile](../tilde/Brewfile) for a list of extensions.
