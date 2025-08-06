@@ -14,6 +14,9 @@ _prepend_path "/opt/homebrew/bin"
 # This extends the $PATH, and should have priority over Homebrew but not over Dotfiles
 eval "$(/opt/homebrew/bin/fnm env)"
 
+# Unversioned symlinks for Homebrew’s python, python-config, pip etc. binaries
+_prepend_path "$(brew --prefix python)/libexec/bin"
+
 # Dotfiles binaries
 _prepend_path "$HOME/dotfiles/bin/lib"
 _prepend_path "$HOME/dotfiles/bin"
