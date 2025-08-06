@@ -10,6 +10,7 @@ brew "fastfetch" # Displays pretty system info
 brew "fd" # `find` replacement
 brew "fnm" # Node.js version manager
 brew "fzf" # Fuzzy finder
+brew "gh" # GitHub command-line tool
 brew "git"
 brew "git-delta" # Diff pager for `git` and `grep` output
 brew "lazygit" # Git client
@@ -38,7 +39,6 @@ cask "dash" # Documentation reader
 cask "devtoys" # Collection of developer tools
 cask "firefox"
 cask "firefox@developer-edition"
-cask "gh" # GitHub command-line tool
 cask "ghostty" # Terminal emulator
 cask "github" # GitHub Desktop
 cask "jordanbaird-ice" # Hides menu bar icons
