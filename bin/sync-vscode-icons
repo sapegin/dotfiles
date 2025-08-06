@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
-// Patches Catppuccin Latte icons for VS Code with Squirrelsong color palette
+// Patches Catppuccin Latte icons for VS Code and Cursor with Squirrelsong color
+// palette
 // https://github.com/catppuccin/vscode-icons/
 //
 // ---
-// Author: Artem Sapegin, sapegin.me
-// License: MIT
+// Author: Artem Sapegin, sapegin.me License: MIT
 // https://github.com/sapegin/dotfiles
 
 import path from 'path';
@@ -37,47 +37,55 @@ const ALL_COLORS = [...Object.keys(PALETTE), ...Object.values(PALETTE)];
 
 const HOME = path.dirname(path.dirname(import.meta.dirname));
 
-const [extensionRoot] = globSync(
-	`${HOME}/.vscode/extensions/catppuccin.catppuccin-vsc-icons-*`
-);
-if (extensionRoot === undefined) {
-	console.error('Catppuccin is not installed');
-	process.exit(1);
+function syncIcons(root) {
+	console.log(`[VSCODE] Updating icons in ${root}...`);
+
+	const [extensionRoot] = globSync(
+		`${HOME}/${root}/extensions/catppuccin.catppuccin-vsc-icons-*`
+	);
+	if (extensionRoot === undefined) {
+		console.log('         Catppuccin is not installed, skipping');
+		console.log();
+		return;
+	}
+
+	const icons = globSync(`${extensionRoot}/dist/latte/icons/*.svg`);
+
+	const invalidColors = {};
+
+	for (const file of icons) {
+		console.log('👉🏼', path.basename(file));
+
+		const svg = fs.readFileSync(file, 'utf8');
+
+		const nextSvg = svg.replaceAll(/(#[0-9a-f]{3,8})/g, (_, color) => {
+			if (ALL_COLORS.includes(color) === false) {
+				invalidColors[color] = true;
+			}
+
+			return PALETTE[color] ?? color;
+		});
+
+		if (nextSvg.includes('undefined')) {
+			console.error('🪲 Undefined detected', nextSvg);
+		}
+
+		fs.writeFileSync(file, nextSvg);
+	}
+
+	console.log();
+
+	for (const color of Object.keys(invalidColors)) {
+		console.error(`🦜 Unknown color: ${color}`);
+	}
 }
 
 console.log();
 console.log('[VSCODE] Updating icons… 👾');
 console.log();
 
-const icons = globSync(`${extensionRoot}/dist/latte/icons/*.svg`);
-
-const invalidColors = {};
-
-for (const file of icons) {
-	console.log('👉🏼', path.basename(file));
-
-	const svg = fs.readFileSync(file, 'utf8');
-
-	const nextSvg = svg.replaceAll(/(#[0-9a-f]{3,8})/g, (_, color) => {
-		if (ALL_COLORS.includes(color) === false) {
-			invalidColors[color] = true;
-		}
-
-		return PALETTE[color] ?? color;
-	});
-
-	if (nextSvg.includes('undefined')) {
-		console.error('🪲 Undefined detected', nextSvg);
-	}
-
-	fs.writeFileSync(file, nextSvg);
-}
-
-console.log();
-
-for (const color of Object.keys(invalidColors)) {
-	console.error(`🦜 Unknown color: ${color}`);
-}
+syncIcons('.vscode');
+syncIcons('.cursor');
 
 console.log();
 console.log('[VSCODE] Done 🦜');
