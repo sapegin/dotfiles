@@ -14,6 +14,22 @@ ln -s ~/dotfiles/vscode/User ~/Library/Application\ Support/Code/User
 
 Run “Install 'code' command in PATH” from the command palette (View → Command Palette) to make Code available from the command line.
 
+## Dim Catppuccin Latte icons theme icons colors
+
+Patches [Catppuccin](https://github.com/catppuccin/vscode-icons/) Latte icons for VS Code with [Squirrelsong](../colors/Readme.md) color palette.
+
+```shell
+sync-vscode-icons
+```
+
+## Sync main settings with additional profiles
+
+Generates Zen Mode Supreme profile.
+
+```shell
+sync-vscode-profiles
+```
+
 ## Install extensions
 
 ```bash
