@@ -8,7 +8,7 @@
 - [Custom zsh theme](https://github.com/sapegin/dotfiles/blob/master/tilde/.starship.toml) with Git status, etc. using Starship.
 - [Dotfiles synchronization](https://github.com/sapegin/dotfiles/blob/master/bin/lib/sync-dotfiles).
 - Sensible macOS defaults: [setup/osx.sh](https://github.com/sapegin/dotfiles/blob/master/setup/osx.sh).
-- Visual Studio Code settings synchronization: [vscode](https://github.com/sapegin/dotfiles/tree/master/vscode).
+- Visual Studio Code and Cursor settings synchronization: [vscode](https://github.com/sapegin/dotfiles/tree/master/vscode) and [cursor](https://github.com/sapegin/dotfiles/tree/master/cursor).
 - My magic project opener ([bin/j](https://github.com/sapegin/dotfiles/blob/master/bin/j)).
 - [zsh aliases](https://github.com/sapegin/dotfiles/blob/master/zsh/aliases.zsh).
 - [Git aliases](https://github.com/sapegin/dotfiles/blob/master/tilde/.gitconfig).

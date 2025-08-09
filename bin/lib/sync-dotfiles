@@ -24,6 +24,11 @@ const SPECIALS = [
 		destination: `${HOME}/Library/Application Support/Code/User`,
 	},
 	{
+		// Cursor
+		source: `${HOME}/dotfiles/vscode/Cursor`,
+		destination: `${HOME}/Library/Application Support/Cursor/User`,
+	},
+	{
 		// Photoshop
 		source: `${HOME}/Library/Mobile Documents/com~apple~CloudDocs/Apps/Adobe Photoshop 2024 Settings`,
 		destination: `${HOME}/Library/Preferences/Adobe Photoshop 2024 Settings`,

@@ -3,7 +3,7 @@
 ## Enable synchronization
 
 > [!NOTE]  
-> This is already included with the setup script.
+> This is already included with the `dotfiles` command
 
 ```shell
 rm -rf ~/Library/Application\ Support/Code/User
@@ -16,7 +16,7 @@ Run “Install 'code' command in PATH” from the command palette (View → Comm
 
 ## Dim Catppuccin Latte icons theme icons colors
 
-Patches [Catppuccin](https://github.com/catppuccin/vscode-icons/) Latte icons for VS Code with [Squirrelsong](../colors/Readme.md) color palette.
+Patches [Catppuccin](https://github.com/catppuccin/vscode-icons/) Latte icons with [Squirrelsong](../colors/Readme.md) color palette.
 
 ```shell
 sync-vscode-icons

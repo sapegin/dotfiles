@@ -11,6 +11,9 @@ Thumbs.db
 vscode/**/History/
 vscode/**/globalStorage/
 vscode/**/workspaceStorage/
+cursor/**/History/
+cursor/**/globalStorage/
+cursor/**/workspaceStorage/
 tilde/Brewfile.lock.json
 lazygit/state.yml
 washingcode-book-master/
