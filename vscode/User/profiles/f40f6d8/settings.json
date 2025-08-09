@@ -216,6 +216,9 @@
   "zenMode.fullScreen": false,
   "zenMode.showTabs": "none",
   "git.openRepositoryInParentFolders": "always",
+  "chat.instructionsFilesLocations": {
+    "~/dotfiles/ai-rules": true
+  },
   "color-highlight.markerType": "underline",
   "color-highlight.markRuler": false,
   "color-highlight.matchWords": false,
@@ -265,8 +268,28 @@
     "markdown": false,
     "scminput": false
   },
+  "github.copilot.chat.commitMessageGeneration.instructions": [
+    {
+      "file": "~/dotfiles/ai-rules/commit.instructions.md"
+    }
+  ],
+  "github.copilot.chat.reviewSelection.enabled": true,
+  "github.copilot.chat.reviewSelection.instructions": [
+    {
+      "file": "~/dotfiles/ai-rules/javascript.instructions.md"
+    }
+  ],
   "githubPullRequests.defaultMergeMethod": "squash",
   "githubPullRequests.pullPullRequestBranchBeforeCheckout": "pullAndMergeBase",
+  "kilo-code.allowedCommands": [
+    "npm test",
+    "npm install",
+    "tsc",
+    "git log",
+    "git diff",
+    "git show"
+  ],
+  "kilo-code.deniedCommands": [],
   "tailwindCSS.emmetCompletions": false,
   "typos.diagnosticSeverity": "Information",
   "javascript.autoClosingTags": false,
