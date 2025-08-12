@@ -128,15 +128,10 @@
    */
   {
     // Also, press cmd+enter to open a file in a split editor
+    // Press ctrl+tab to switch between two recent editors
     "comment": "Open recent files",
     "key": "cmd+o",
     "command": "workbench.action.quickOpenPreviousEditor"
-  },
-  {
-    // L is next to O that opens the list of recent files
-    "comment": "Open previous editor",
-    "key": "cmd+l",
-    "command": "workbench.action.openPreviousRecentlyUsedEditor"
   },
   {
     "comment": "Show list of sYmbols in the current file",
