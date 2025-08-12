@@ -26,10 +26,16 @@
     "command": "workbench.action.togglePanel"
   },
   {
+    "comment": "Maximize/minimize the left sidebar",
+    "key": "cmd+k cmd+f",
+    "command": "workbench.action.toggleMaximizedAuxiliaryBar",
+    "when": "auxiliaryBarFocus"
+  },
+  {
     "comment": "Maximize/minimize the panel (Full screen)",
     "key": "cmd+k cmd+f",
     "command": "workbench.action.toggleMaximizedPanel",
-    "when": "panelVisible"
+    "when": "panelFocus"
   },
   {
     "comment": "Toggle Explorer in the sidebar",
