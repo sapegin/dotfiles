@@ -23,7 +23,7 @@
 # ejm97      " "  " "
 #
 # Nyan raccoon graphics:
-# -_-_<(((((((((,------,
+# -_-_<( ( ( ( (,------,
 # -_-_-_-_-_-_-(    /\_/\
 # -_-_-_-_-_-_-_|__( @  @)
 # -_-_-_-_-_-_-""  "" \/
@@ -38,7 +38,7 @@ NOCOLOR="$(tput sgr0)"
 
 echo
 echo -en $RED'-_-_'
-echo -e $NOCOLOR$BOLD$WHITE'<(((((((((,------,'$NOCOLOR
+echo -e $NOCOLOR$BOLD$WHITE'<( ( ( ( (,------,'$NOCOLOR
 echo -en $YELLOW$WHIT'_-_-_-_-_-_-_'
 echo -e $NOCOLOR$BOLD$WHITE'(    /\_/\'$NOCOLOR
 echo -en $GREEN'-_-_-_-_-_-_-_'
