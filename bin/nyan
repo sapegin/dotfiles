@@ -1,10 +1,32 @@
 #!/usr/bin/env bash
 
-# Prints nyan cat.
+# Prints nyan raccoon.
 #
 # ---
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+
+# Original nyan cat graphics:
 # https://github.com/steckel/Git-Nyan-Graph/blob/master/nyan.sh
-# If you want big animated version: `telnet miku.acm.uiuc.edu`
+# -_-_-_-_-_-_-_,------,
+# _-_-_-_-_-_-_-|   /\_/\
+# -_-_-_-_-_-_-~|__( ^ .^)
+# -_-_-_-_-_-_-""  ""
+#
+# Raccoon inspiration:
+# https://ascii.co.uk/art/racoon
+#                  /\_/\
+# <((((((((((_----_(@ @)
+#            (      \ /
+#            /|/-\|\ V
+# ejm97      " "  " "
+#
+# Nyan raccoon graphics:
+# -_-_<( ( ( ( (,------,
+# -_-_-_-_-_-_-(    /\_/\
+# -_-_-_-_-_-_-_|__( @  @)
+# -_-_-_-_-_-_-""  "" \/
 
 RED="$(tput setaf 1)"
 GREEN="$(tput setaf 2)"
@@ -15,12 +37,12 @@ BOLD="$(tput bold)"
 NOCOLOR="$(tput sgr0)"
 
 echo
-echo -en $RED'-_-_-_-_-_-_-_'
-echo -e $NOCOLOR$BOLD$WHITE',------,'$NOCOLOR
-echo -en $YELLOW$WHIT'_-_-_-_-_-_-_-'
-echo -e $NOCOLOR$BOLD$WHITE'|   /\_/\\'$NOCOLOR
-echo -en $GREEN'-_-_-_-_-_-_-'
-echo -e $NOCOLOR$BOLD$WHITE'~|__( ^ .^)'$NOCOLOR
-echo -en $CYAN'-_-_-_-_-_-_-'
-echo -e $NOCOLOR$BOLD$WHITE'""  ""'$NOCOLOR
+echo -en $RED'-_-_'
+echo -e $NOCOLOR$BOLD$WHITE'<( ( ( ( (,------,'$NOCOLOR
+echo -en $YELLOW$WHIT'_-_-_-_-_-_-_'
+echo -e $NOCOLOR$BOLD$WHITE'(    /\_/\'$NOCOLOR
+echo -en $GREEN'-_-_-_-_-_-_-_'
+echo -e $NOCOLOR$BOLD$WHITE'|__( @  @)'$NOCOLOR
+echo -en $CYAN'_-_-_-_-_-_-_'
+echo -e $NOCOLOR$BOLD$WHITE'""  "" \/'$NOCOLOR
 echo
