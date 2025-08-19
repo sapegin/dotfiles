@@ -1,6 +1,7 @@
 ADHD
 antipattern
 antipatterns
+aphantasia
 Artem
 Astro
 autofix
