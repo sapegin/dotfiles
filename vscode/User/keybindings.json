@@ -1135,5 +1135,10 @@
     "key": "cmd+[",
     "command": "-editor.action.outdentLines",
     "when": "editorTextFocus && !editorReadonly"
+  },
+  {
+    "key": "cmd+i",
+    "command": "-kilo-code.ghost.promptCodeSuggestion",
+    "when": "editorTextFocus && kilocode.ghost.enableQuickInlineTaskKeybinding && !editorTabMovesFocus && !github.copilot.completions.enabled && !inSnippetMode"
   }
 ]
