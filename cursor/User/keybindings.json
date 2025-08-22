@@ -531,10 +531,10 @@
     "when": "editorTextFocus"
   },
   {
-    // Rewrap extension
+    // Grim Wrapper extension
     "comment": "ReWrap current comment",
     "key": "cmd+k cmd+w",
-    "command": "rewrap.rewrapComment",
+    "command": "grimWrapper.wrapText",
     "when": "editorTextFocus"
   },
 
