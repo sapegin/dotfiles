@@ -82,6 +82,8 @@ vscode "sapegin.theme-squirrelsonglight"
 vscode "sapegin.todo-tomorrow"
 vscode "sleistner.vscode-fileutils"
 vscode "streetsidesoftware.code-spell-checker"
+vscode "tekumara.typos-vscode"
+vscode "uooobarry.githubdesktop-open"
 
 # TODO: Find a way to print this _after_ the installation, not before
 puts "☕️ Install more apps if you need them:"
