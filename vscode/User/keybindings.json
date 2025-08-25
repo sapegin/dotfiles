@@ -150,8 +150,9 @@
     "when": "!scmRepository"
   },
   {
-    "comment": "Open run Task menu",
-    "key": "cmd+k cmd+t",
+    // Also, it's near Cmd+P and easy to press
+    "comment": "Open run task menU",
+    "key": "cmd+u",
     "command": "workbench.action.tasks.runTask",
     "when": "!scmRepository"
   },
