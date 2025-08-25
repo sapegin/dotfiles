@@ -143,8 +143,9 @@
     "when": "!scmRepository"
   },
   {
-    "comment": "Open run Task menu",
-    "key": "cmd+k cmd+t",
+    // Also, it's near Cmd+P and easy to press
+    "comment": "Open run task menU",
+    "key": "cmd+u",
     "command": "workbench.action.tasks.runTask",
     "when": "!scmRepository"
   },
@@ -1128,14 +1129,14 @@
     "key": "cmd+[",
     "command": "-editor.action.outdentLines",
     "when": "editorTextFocus && !editorReadonly"
-},
-{
+  },
+  {
     "key": "shift+cmd+i",
     "command": "-composer.newAgentChat"
-},
-{
+  },
+  {
     "key": "shift+cmd+i",
     "command": "-workbench.panel.chatEditing",
     "when": "workbench.panel.chat.view.edits.active"
-}
+  }
 ]
