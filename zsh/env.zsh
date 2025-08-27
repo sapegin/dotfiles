@@ -72,11 +72,5 @@ export HOMEBREW_INSTALL_BADGE='☕'
 # Disable telemetry
 export HOMEBREW_NO_ANALYTICS=1
 
-# git-friendly: disable bundle after pull
-export GIT_FRIENDLY_NO_BUNDLE=true
-
-# git-friendly: disable URL copying after push
-export GIT_FRIENDLY_NO_COPY_URL_AFTER_PUSH=true
-
 # Ripgrep config file location
 export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"

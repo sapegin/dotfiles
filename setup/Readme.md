@@ -6,9 +6,9 @@ Sane OSX defaults. Based on [~/.osx](https://github.com/mathiasbynens/dotfiles/b
 
 ### setup
 
-Installs Homebrew, Git, [git-friendly](https://github.com/jamiew/git-friendly), Node.js, etc.
+Installs Homebrew, Git, Node.js, etc.
 
-## Tips & Tricks
+## Tips & tricks
 
 ### Separate Git identity for work repositories
 

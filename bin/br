@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Changes Git branch and pulls remote changes (based on git-friendly’s pull command).
+# Changes Git branch and pulls remote changes.
 #
 # - Switch to or create a branch:
 #
@@ -20,7 +20,7 @@
 #
 # ---
 #
-# See more:
+# Based on git-friendly:
 # https://github.com/jamiew/git-friendly
 #
 # Author: Artem Sapegin, sapegin.me

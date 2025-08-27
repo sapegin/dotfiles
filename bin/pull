@@ -1,0 +1,133 @@
+#!/bin/bash
+
+# Pulls remote changes using rebase and tries to rebundle,
+# safely stashing and re-applying your local changes, if any.
+#
+# - Pull remote changes:
+#
+# `pull`
+#
+# ---
+#
+# Based on git-friendly:
+# https://github.com/jamiew/git-friendly
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+
+# Abort if this isn't a Git repository
+git rev-parse --is-inside-work-tree > /dev/null || exit $?
+
+# Colors
+color_error="$(tput sgr 0 1)$(tput setaf 1)"
+color_reset="$(tput sgr0)"
+
+# Current working dir and repo base dir
+current_dir="$(pwd)"
+base_dir=$(git rev-parse --show-cdup)
+
+# Pop any stashed changes
+unstash() {
+	if [[ ! "$stash" =~ "No local changes to save" ]]; then
+		echo
+		echo "🍯 Popping stash..."
+		git stash pop
+	fi
+}
+
+# Pop any stashed changes and exit
+rollback() {
+	echo
+	echo "${color_error}Something went wrong, rolling back${color_reset}"
+	unstash
+	exit $1
+}
+
+# Test whether a command exists
+# $1 - cmd to test
+cmd_exists() {
+	if which $1 > /dev/null 2>&1; then
+		return 0
+	fi
+	return 1
+}
+
+# Test whether a file exists
+# $1 - file to test
+file_exists() {
+	if [[ -r "./$base_dir$1" ]]; then
+		return 0
+	fi
+	return 1
+}
+
+# Go to directory of changed file
+# $1 - filename
+change_dir() {
+	file=$(git diff-tree -r --name-only --no-commit-id ORIG_HEAD HEAD | grep "$1")
+	if [[ -e "./$base_dir$file" ]]; then
+		cd $(dirname "./$base_dir$file")
+		return 0
+	fi
+	return 1
+}
+
+# Go back to
+reset_dir() {
+	cd "$current_dir"
+}
+
+# Test whether a file has changed
+# $1 - filename
+has_changed() {
+	# store changed files for install check (
+	# ORIG_HEAD is last value of HEAD before pull
+	changed_files="$(git diff-tree -r --name-only --no-commit-id ORIG_HEAD HEAD 2> /dev/null)"
+	if $(echo "$changed_files" | grep --quiet "$1"); then
+		return 0
+	fi
+	return 1
+}
+
+branch=$(git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/') || exit $?
+default_remote="origin"
+remote=$(git config "branch.${branch}.remote" || echo "$default_remote")
+remote_branch=$( (git config "branch.${branch}.merge" || echo "refs/heads/$branch") | cut -d/ -f3-)
+
+# Stash any local changes, including untracked files
+stash=$(git stash --include-untracked)
+
+# Pull, using rebase if configured
+echo "🚀 Fetching from $remote..."
+git pull --rebase --recurse-submodules --jobs=10 $remote $remote_branch || rollback $?
+
+# Pop any stashed changes
+unstash
+
+# Remove old, stale branches
+git remote prune $remote > /dev/null 2>&1 &
+
+# Install Node.js packages with pnpm
+if file_exists 'pnpm-lock.yaml' && (has_changed 'pnpm-lock.yaml' || has_changed 'package.json') && [ $yarned -eq 0 ]; then
+	change_dir 'pnpm-lock.yaml' || change_dir 'package.json'
+	if cmd_exists 'pnpm'; then
+		echo
+		echo '⚔ Installing packages with pnpm...'
+		pnpm install
+		yarned=1
+	fi
+	reset_dir
+fi
+
+# Install Node.js packages with npm
+if cmd_exists 'npm' && has_changed 'package.json' && [ $yarned -eq 0 ]; then
+	echo
+	echo '⚔ Installing packages with npm...'
+	change_dir 'package.json'
+	npm install
+	reset_dir
+fi
+
+echo "🦄 Done"
+exit 0

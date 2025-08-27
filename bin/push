@@ -1,18 +1,23 @@
 #!/bin/bash
-#
-# Simplified version of git-friendly push
-# https://github.com/git-friendly/git-friendly
-#
-# Usage: push
-#
-# Send your local branch changes to the remote branch,
-# and copy the relevant GitHub 'compare' URL to your clipboard (Mac/Linux only)
-#
-# Any extra args to this command will be passed through to 'git push',
-# e.g. for doing "push -f"
-#
 
-# Abort if this isn't a git repository
+# Send your local branch changes to the remote branch. Any extra arguments to
+# this command will be passed through to `git push`, for example for doing `push
+# -f`.
+#
+# - Push local changes to the remote:
+#
+# `push`
+#
+# ---
+#
+# Based on git-friendly:
+# https://github.com/jamiew/git-friendly
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+
+# Abort if this isn't a Git repository
 git rev-parse --is-inside-work-tree > /dev/null || exit $?
 
 # Colors

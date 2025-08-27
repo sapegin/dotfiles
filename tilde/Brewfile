@@ -1,5 +1,4 @@
 # Taps
-tap "git-friendly/git-friendly"
 tap "homebrew/bundle"
 tap "homebrew/cask-fonts"
 
@@ -23,7 +22,6 @@ brew "tlrc" # `man` replacement
 brew "typos-cli" # Fix typos
 brew "zsh" # Shell
 brew "zsh-syntax-highlighting"
-brew "git-friendly/git-friendly/git-friendly" # Better Git commands
 
 # GUI apps
 cask "1password" # Password manager

@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# Stashes all changes (including untracked), or runs `git stash` will all
+# arguments.
+#
+# - Stash all changes:
+#
+# `stash`
+#
+# ---
+#
+# Based on git-friendly:
+# https://github.com/jamiew/git-friendly
+#
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+
+# Abort if this isn't a git repository
+git rev-parse --is-inside-work-tree > /dev/null || exit $?
+
+# If ran without arguments, stall all files, including untracked
+if [ -z "$1" ]; then
+	echo "🐿️ Stashing changes..."
+	git stash --include-untracked
+	exit 0
+fi
+
+# Otherwise pass all arguments to git stash
+git stash "$@"
