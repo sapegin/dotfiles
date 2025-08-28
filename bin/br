@@ -99,20 +99,20 @@ fi
 
 # Delete branch
 if [ "$delete" ]; then
-	echo "💀 Removing local branch $branch..."
+	echo "💀 Removing local branch $branch""…"
 	git branch $delete "$branch"
 	exit 0
 fi
 
 if has_local_branch "$branch"; then
 	# Local branch already exists, switching
-	echo "👓 Switching to existing local branch $branch..."
+	echo "👓 Switching to existing local branch $branch""…"
 	git switch "$branch"
 	if has_remote_branch "$branch"; then
 		# Fix tracking if needed
 		tracking=$(git branch -vv | grep "*" | awk '{ print $4 }')
 		if [[ ! "$tracking" =~ "$remote" ]]; then
-			echo "⚙️ Your local branch is not tracking the corresponding remote branch, fixing..."
+			echo "⚙️ Your local branch is not tracking the corresponding remote branch, fixing…"
 			git branch --set-upstream-to "$branch" "$remote/$branch"
 		fi
 
@@ -123,13 +123,13 @@ else
 	# No local branch
 	if has_remote_branch "$branch"; then
 		# Remote branch exists, fetching and switching
-		echo "🛸 Fetching remote branch $branch..."
+		echo "🛸 Fetching remote branch $branch""…"
 		git fetch "$remote" "$branch"
 		echo
 		git switch -c "$branch" --track "$remote/$branch"
 	else
 		# No remote branch, creating a new branch
-		echo "🪴 Creating new local branch $branch..."
+		echo "🪴 Creating new local branch $branch""…"
 		git checkout -b "$branch"
 	fi
 fi

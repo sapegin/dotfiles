@@ -21,7 +21,7 @@ git rev-parse --is-inside-work-tree > /dev/null || exit $?
 
 # If ran without arguments, stall all files, including untracked
 if [ -z "$1" ]; then
-	echo "🐿️ Stashing changes..."
+	echo "🐿️ Stashing changes…"
 	git stash --include-untracked
 	exit 0
 fi

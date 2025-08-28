@@ -24,13 +24,13 @@ dotfiles
 echo
 
 # macOS
-header "Updating macOS..."
+header "Updating macOS…"
 sudo -v
 sudo softwareupdate -i -a
 echo
 
 # Homebrew
-header "Updating Homebrew packages..."
+header "Updating Homebrew packages…"
 sudo -v
 brew upgrade
 brew upgrade --cask
@@ -38,7 +38,7 @@ brew cleanup
 echo
 
 # npm
-header "Updating npm modules..."
+header "Updating npm modules…"
 npm update -g
 echo
 

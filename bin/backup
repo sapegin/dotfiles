@@ -41,7 +41,7 @@ function error() { echo -e "$UNDERLINE$RED$1$NOCOLOR\n"; }
 function heading() { echo -e "$UNDERLINE$CYAN$1$NOCOLOR\n"; }
 
 function bk() {
-	heading "Backing up $1..."
+	heading "Backing up $1""…"
 	rsyncy $RSYNC_OPTS "$1" "$DEST/$2"
 }
 

@@ -12,6 +12,6 @@
 # License: MIT
 # https://github.com/sapegin/dotfiles
 
-echo "Removing all installed Node.js versions..."
+echo "Removing all installed Node.js versions…"
 
 rm -rf ~/.fnm/node-versions

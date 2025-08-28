@@ -38,7 +38,7 @@ const ALL_COLORS = [...Object.keys(PALETTE), ...Object.values(PALETTE)];
 const HOME = path.dirname(path.dirname(import.meta.dirname));
 
 function syncIcons(root) {
-	console.log(`[VSCODE] Updating icons in ${root}...`);
+	console.log(`[VSCODE] Updating icons in ${root}…`);
 
 	const [extensionRoot] = globSync(
 		`${HOME}/${root}/extensions/catppuccin.catppuccin-vsc-icons-*`

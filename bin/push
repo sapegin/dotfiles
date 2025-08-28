@@ -35,7 +35,7 @@ if [ -z $* ]; then
 else
 	args="$*"
 fi
-echo "🚀 Pushing..."
+echo "🚀 Pushing…"
 echo
 push=$(git push --set-upstream $args 2>&1)
 exit_code=$?

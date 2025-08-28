@@ -31,7 +31,7 @@ base_dir=$(git rev-parse --show-cdup)
 unstash() {
 	if [[ ! "$stash" =~ "No local changes to save" ]]; then
 		echo
-		echo "🍯 Popping stash..."
+		echo "🍯 Popping stash…"
 		git stash pop
 	fi
 }
@@ -99,7 +99,7 @@ remote_branch=$( (git config "branch.${branch}.merge" || echo "refs/heads/$branc
 stash=$(git stash --include-untracked)
 
 # Pull, using rebase if configured
-echo "🚀 Fetching from $remote..."
+echo "🚀 Fetching from $remote""…"
 git pull --rebase --recurse-submodules --jobs=10 $remote $remote_branch || rollback $?
 
 # Pop any stashed changes
@@ -108,26 +108,27 @@ unstash
 # Remove old, stale branches
 git remote prune $remote > /dev/null 2>&1 &
 
+npm_installed=0
+
 # Install Node.js packages with pnpm
-if file_exists 'pnpm-lock.yaml' && (has_changed 'pnpm-lock.yaml' || has_changed 'package.json') && [ $yarned -eq 0 ]; then
+if cmd_exists 'pnpm' && file_exists 'pnpm-lock.yaml' && (has_changed 'pnpm-lock.yaml' || has_changed 'package.json') && [ $npm_installed -eq 0 ]; then
+	echo
+	echo '⚔ Installing packages with pnpm…'
 	change_dir 'pnpm-lock.yaml' || change_dir 'package.json'
-	if cmd_exists 'pnpm'; then
-		echo
-		echo '⚔ Installing packages with pnpm...'
-		pnpm install
-		yarned=1
-	fi
+	pnpm install
+	npm_installed=1
 	reset_dir
 fi
 
 # Install Node.js packages with npm
-if cmd_exists 'npm' && has_changed 'package.json' && [ $yarned -eq 0 ]; then
+if cmd_exists 'npm' && has_changed 'package.json' && [ $npm_installed -eq 0 ]; then
 	echo
-	echo '⚔ Installing packages with npm...'
+	echo '⚔ Installing packages with npm…'
 	change_dir 'package.json'
 	npm install
 	reset_dir
 fi
 
+echo
 echo "🦄 Done"
 exit 0
