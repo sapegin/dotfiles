@@ -108,20 +108,20 @@ unstash
 # Remove old, stale branches
 git remote prune $remote > /dev/null 2>&1 &
 
+npm_installed=0
+
 # Install Node.js packages with pnpm
-if file_exists 'pnpm-lock.yaml' && (has_changed 'pnpm-lock.yaml' || has_changed 'package.json') && [ $yarned -eq 0 ]; then
+if cmd_exists 'pnpm' && file_exists 'pnpm-lock.yaml' && (has_changed 'pnpm-lock.yaml' || has_changed 'package.json') && [ $npm_installed -eq 0 ]; then
+	echo
+	echo '⚔ Installing packages with pnpm...'
 	change_dir 'pnpm-lock.yaml' || change_dir 'package.json'
-	if cmd_exists 'pnpm'; then
-		echo
-		echo '⚔ Installing packages with pnpm...'
-		pnpm install
-		yarned=1
-	fi
+	pnpm install
+	npm_installed=1
 	reset_dir
 fi
 
 # Install Node.js packages with npm
-if cmd_exists 'npm' && has_changed 'package.json' && [ $yarned -eq 0 ]; then
+if cmd_exists 'npm' && has_changed 'package.json' && [ $npm_installed -eq 0 ]; then
 	echo
 	echo '⚔ Installing packages with npm...'
 	change_dir 'package.json'
@@ -129,5 +129,6 @@ if cmd_exists 'npm' && has_changed 'package.json' && [ $yarned -eq 0 ]; then
 	reset_dir
 fi
 
+echo
 echo "🦄 Done"
 exit 0
