@@ -271,6 +271,8 @@
   ],
   "githubPullRequests.defaultMergeMethod": "squash",
   "githubPullRequests.pullPullRequestBranchBeforeCheckout": "pullAndMergeBase",
+  // Disable insanely annoying hints "Cmd+I to continue with Copilot"
+  "inlineChat.lineNaturalLanguageHint": false,
   "kilo-code.allowedCommands": [
     "npm test",
     "npm install",
