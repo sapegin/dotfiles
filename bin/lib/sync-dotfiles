@@ -87,7 +87,7 @@ async function syncDotfiles() {
 				`File already exists: ${destPath}. Overwrite?`
 			);
 			if (shouldOverwrite === false) {
-				console.log('Skipping...');
+				console.log('Skipping…');
 				continue;
 			}
 
@@ -121,7 +121,7 @@ async function syncSpecials() {
 				`File already exists: ${destination}. Overwrite?`
 			);
 			if (shouldOverwrite === false) {
-				console.log('Skipping...');
+				console.log('Skipping…');
 				continue;
 			}
 
@@ -137,7 +137,7 @@ async function syncSpecials() {
 }
 
 async function main() {
-	console.log('Syncing dotfiles...');
+	console.log('Syncing dotfiles…');
 	await syncDotfiles();
 	await syncSpecials();
 	console.log('Done.');

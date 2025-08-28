@@ -20,7 +20,7 @@ const pattern = process.argv[2];
 
 const files = globSync(pattern);
 files.forEach((file) => {
-	console.log(`${file}...`);
+	console.log(`${file}…`);
 	const contents = fs.readFileSync(file, 'utf8');
 	const frontmatter = fastmatter(contents);
 	fs.writeFileSync(

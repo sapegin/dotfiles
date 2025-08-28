@@ -106,13 +106,13 @@ function addMarkdownFolder(dir, { destDir, type, subsections = false }) {
 	}
 }
 
-console.log('Downloading the book...');
+console.log('Downloading the book…');
 
 fs.removeSync(BOOK_SOURCE_DIR, { recursive: true, force: true });
 execSync(`curl "${BOOK_REPO_TAR_GZ}" | tar xz -C $HOME/dotfiles`);
 
 console.log();
-console.log('Generating the book files...');
+console.log('Generating the book files…');
 
 addMarkdownFolder(`${BOOK_SOURCE_DIR}/manuscript`, {
 	destDir: 'book',

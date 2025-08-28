@@ -11,7 +11,7 @@
 set -e
 
 cd "$HOME/dotfiles" > /dev/null 2>&1
-echo "Pulling changes from GitHub..."
+echo "Pulling changes from GitHub…"
 git pull
 echo
 bin/lib/sync-dotfiles

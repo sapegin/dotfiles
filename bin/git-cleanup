@@ -34,15 +34,15 @@ if [[ "$1" != "--force" ]]; then
 fi
 
 # Delete all unreachable objects from the object database
-header "Deleting unreachable objects..."
+header "Deleting unreachable objects…"
 git prune
 
 # Delete all stale remote-tracking branches, these branches have already been
 # removed from the remote repository, but are still locally available in "remotes/".
-header "Deleting stale remote-tracking branches..."
+header "Deleting stale remote-tracking branches…"
 git remote prune origin
 echo "Done."
 
 # Delete branches for which remote branches were removed
-header "Deleting branches with no longer existing remote branches..."
+header "Deleting branches with no longer existing remote branches…"
 branches | xargs git branch -D

@@ -52,7 +52,7 @@ async function install(from, toDir) {
  * Bat: https://github.com/sharkdp/bat?tab=readme-ov-file#adding-new-themes
  */
 
-console.log('🌈 Installing Bat theme...');
+console.log('🌈 Installing Bat theme…');
 
 await install(
 	'themes/Sublime Text/Squirrelsong Dark/Squirrelsong Dark.tmTheme',
@@ -64,7 +64,7 @@ execSync(`bat cache --build`);
  * WezTerm
  */
 
-console.log('🌈 Installing WezTerm theme...');
+console.log('🌈 Installing WezTerm theme…');
 
 await install(
 	'themes/WezTerm/squirrelsong-dark.toml',
@@ -75,7 +75,7 @@ await install(
  * Ghostty
  */
 
-console.log('🌈 Installing Ghostty theme...');
+console.log('🌈 Installing Ghostty theme…');
 
 await install('themes/Ghostty/Squirrelsong Dark', '.config/ghostty/themes');
 
@@ -86,7 +86,7 @@ await install('themes/Ghostty/Squirrelsong Dark', '.config/ghostty/themes');
 const peekThemeDir = `${HOME}/Library/Group Containers/9V456WSURS.com.bigzlabs.peekgroup/Library/Application Support/Styles`;
 
 if (fs.existsSync(peekThemeDir)) {
-	console.log('🌈 Installing Peek theme...');
+	console.log('🌈 Installing Peek theme…');
 	const peekTheme = await download('themes/Peek/custom.css');
 	write(path.join(peekThemeDir, 'custom.css'), peekTheme);
 }
@@ -96,7 +96,7 @@ if (fs.existsSync(peekThemeDir)) {
  */
 
 if (SKIP_SUDO === false) {
-	console.log('🌈 Installing Bear theme...');
+	console.log('🌈 Installing Bear theme…');
 
 	const bearTheme = await download('themes/Bear/Squirrelsong Light.theme');
 	const bearThemesDir = `/Applications/Bear.app/Contents/Frameworks/BearCore.framework/Resources`;
@@ -113,7 +113,7 @@ if (SKIP_SUDO === false) {
  * Fzf
  */
 
-console.log('🌈 Installing fzf theme...');
+console.log('🌈 Installing fzf theme…');
 
 const fzfThemeRegExp = /FZF_DEFAULT_OPTS=["'][^'"]+["']/;
 const fzfThemeReadme = await download('themes/Fzf/Readme.md');

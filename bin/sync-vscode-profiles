@@ -39,13 +39,13 @@ function writeJsonFile(file, json) {
 }
 
 console.log();
-console.log('[VSCODE] Generating profiles... 🌗');
+console.log('[VSCODE] Generating profiles… 🌗');
 
 const defaultConfig = readJsonFile(CONFIG_FILE);
 
 for (const { id, name, values } of defaultConfig.profileGenerator) {
 	console.log();
-	console.log(`[VSCODE] Generating ${name} profile...`);
+	console.log(`[VSCODE] Generating ${name} profile…`);
 
 	const profileConfig = _.merge(defaultConfig, values);
 	delete profileConfig.profileGenerator;
