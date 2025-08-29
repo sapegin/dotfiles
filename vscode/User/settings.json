@@ -16,8 +16,6 @@
   "accessibility.underlineLinks": true,
   "breadcrumbs.enabled": false,
   "breadcrumbs.filePath": "off",
-  "catppuccin-icons.hidesExplorerArrows": true,
-  "chat.commandCenter.enabled": false,
   "comments.maxHeight": false,
   "comments.openView": "never",
   "comments.visible": false,
@@ -117,6 +115,7 @@
   "git.confirmSync": false,
   "git.enableSmartCommit": true,
   "git.mergeEditor": true,
+  "git.openRepositoryInParentFolders": "always",
   "merge-conflict.autoNavigateNextConflict.enabled": true,
   "outline.problems.badges": false,
   "outline.showVariables": false,
@@ -180,7 +179,7 @@
   "window.title": "${activeEditorShort}",
   "window.titleBarStyle": "custom",
   "window.zoomLevel": 0.15,
-  "workbench.activityBar.location": "hidden",
+  "workbench.activityBar.location": "bottom",
   "workbench.colorTheme": "Squirrelsong Light (Dark Terminal)",
   "workbench.commandPalette.preserveInput": false,
   "workbench.editor.customLabels.enabled": true,
@@ -212,7 +211,8 @@
   "zenMode.showTabs": "none",
 
   // Plugins
-  "git.openRepositoryInParentFolders": "always",
+  "catppuccin-icons.hidesExplorerArrows": true,
+  "chat.commandCenter.enabled": false,
   "chat.instructionsFilesLocations": {
     // I don’t know if it works ¯\_(ツ)_/¯
     "~/dotfiles/ai-rules": true
