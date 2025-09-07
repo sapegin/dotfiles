@@ -217,7 +217,7 @@
   "chat.commandCenter.enabled": false,
   "chat.instructionsFilesLocations": {
     // I don’t know if it works ¯\_(ツ)_/¯
-    "~/dotfiles/ai-rules": true
+    "~/dotfiles/ai-rules/rules": true
   },
   "color-highlight.markerType": "underline",
   "color-highlight.markRuler": false,
@@ -265,11 +265,11 @@
     "scminput": false
   },
   "github.copilot.chat.commitMessageGeneration.instructions": [
-    { "file": "~/dotfiles/ai-rules/commit.instructions.md" }
+    { "file": "~/dotfiles/ai-rules/Commits.md" }
   ],
   "github.copilot.chat.reviewSelection.enabled": true,
   "github.copilot.chat.reviewSelection.instructions": [
-    { "file": "~/dotfiles/ai-rules/javascript.instructions.md" }
+    { "file": "~/dotfiles/ai-rules/rules/javascript.instructions.md" }
   ],
   "githubPullRequests.defaultMergeMethod": "squash",
   "githubPullRequests.pullPullRequestBranchBeforeCheckout": "pullAndMergeBase",

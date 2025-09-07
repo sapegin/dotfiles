@@ -16,7 +16,7 @@ import prompts from 'prompts';
 
 const HOME = path.dirname(path.dirname(path.dirname(import.meta.dirname)));
 const TILDE_DIR = `${HOME}/dotfiles/tilde`;
-const IGNORE = ['.config', '.local', '.DS_Store', 'Brewfile.lock.json'];
+const IGNORE = ['.DS_Store', 'Brewfile.lock.json'];
 const SPECIALS = [
 	{
 		// Visual Studio Code
@@ -27,6 +27,11 @@ const SPECIALS = [
 		// Cursor
 		source: `${HOME}/dotfiles/vscode/Cursor`,
 		destination: `${HOME}/Library/Application Support/Cursor/User`,
+	},
+	{
+		// Kilo Code rules
+		source: `${HOME}/dotfiles/ai-rules/rules`,
+		destination: `${HOME}/.kilocode/rules`,
 	},
 	{
 		// Photoshop
@@ -63,9 +68,12 @@ async function confirmAction(message) {
 async function syncDotfiles() {
 	process.chdir(TILDE_DIR);
 	const files = [
-		...globSync('*'),
+		// Sync all files in tilde/ folder
+		...globSync('*', { dot: true, nodir: true }),
+		// Sync additional config _folders_ in .config/ folder
 		...globSync('.config/*'),
-		...globSync('.local/share/*'),
+		// Sync additional Cursor config files (but don't overwrite other files)
+		...globSync('.cursor/**/*', { dot: true, nodir: true }),
 	];
 
 	for (const sourcePath of files) {
