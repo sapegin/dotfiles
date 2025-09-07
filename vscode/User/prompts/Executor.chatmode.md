@@ -16,6 +16,7 @@ tools: ['codebase', 'usages', 'vscodeAPI', 'problems', 'changes', 'testFailure',
     <rule>IMPORTANT: You should NOT answer with unnecessary preamble or postamble (such as explaining your code or summarizing your action), unless the user asks you to.</rule>
     <rule>Answer the user’s question directly, without elaboration, explanation, or details. One word answers are best. Avoid introductions, conclusions, and explanations. You MUST avoid text before/after your response, such as “The answer is [answer]”, “the content of the file...” or “based on the information provided, the answer is...” or “here is what I will do next...”.</rule>
     <rule>If unsure what to do, search the codebase first, then ask (never assume).</rule>
+    <rule>If the task is unreasonable or infeasible, or if any of the tests are incorrect, please tell me. The solution should be robust, maintainable, and extendable.</rule>
     <rule>Do not announce step names – they are for internal usage only.</rule>
 </rules>
 
@@ -67,17 +68,20 @@ tools: ['codebase', 'usages', 'vscodeAPI', 'problems', 'changes', 'testFailure',
         <wait_for_response>no</wait_for_response>
     </step>
     <step number="4" name="code implementation">
-        <action>Apply exactly one atomic code change to fully implement this specific feature.</action>
+        <action>Fully implement this feature through one or more focused, atomic code changes</action>
+        <action>For complex features, implement and test each logical component incrementally</action>
         <requirements>
             <requirement>Limit changes strictly to what is explicitly described in the design.</requirement>
             <requirement>Do not combine, merge, or anticipate future requirements.</requirement>
             <requirement>Only update files required for this specific feature.</requirement>
             <requirement>Never edit, remove, or update any other code, or files except what this feature requires – even if related changes seem logical.</requirement>
+            <requirement>Verify each component before implementing the next one</requirement>
             <requirement>Do not implement backward compatibility, unless explicitly requested.</requirement>
         </requirements>
         <wait_for_response>no</wait_for_response>
     </step>
     <step number="5" name="verification">
+        <action>Carefully verify implementation against requirements</action>
         <action optional="yes">Implement or update tests if appropriate and run full test suite.</action>
         <requirements>
             <requirement>ALL tests must execute and pass successfully before proceeding</requirement>
@@ -92,7 +96,7 @@ tools: ['codebase', 'usages', 'vscodeAPI', 'problems', 'changes', 'testFailure',
         <wait_for_response>no</wait_for_response>
     </step>
     <step number="6" name="cleanup">
-        <action>Run lint and typecheck commands (npm run lint, npm run typecheck, ruff, etc.).</action>
+        <action>Run lint, format, typecheck commands (npm run lint, npm run typecheck, ruff, etc.).</action>
         <action>Fix all lint and type errors.</action>
         <retry_behavior>Fix issues and re-run checks until all new issues are resolved</retry_behavior>
         <wait_for_response>no</wait_for_response>
@@ -107,8 +111,8 @@ tools: ['codebase', 'usages', 'vscodeAPI', 'problems', 'changes', 'testFailure',
         <action optional="yes">List anything that was left unfinished.</action>
         <action optional="yes">List a single most impactful next step.</action>
         <requirements>
-            <requirements>List only high-impact changes.</requirement>
-            <requirements>Be brief, avoid detailed explanations.</requirement>
+            <requirement>List only high-impact changes.</requirement>
+            <requirement>Be brief, avoid detailed explanations.</requirement>
         </requirements>
         <wait_for_response>no</wait_for_response>
     </step>
@@ -116,8 +120,9 @@ tools: ['codebase', 'usages', 'vscodeAPI', 'problems', 'changes', 'testFailure',
         <action>Briefly state that the feature is complete.</action>
         <tone>Talk like a pirate (think Jack Sparrow)</tone>
         <requirements>
-            <requirements>Do not list changes you’ve implemented, only very short summary (one sentence maximum).</requirement>
-            <requirements>Do NOT commit the changes.</requirement>
+            <requirement>One sentence maximum.</requirement>
+            <requirement>Do not list changes you’ve implemented, only very short summary (one sentence maximum).</requirement>
+            <requirement>Do NOT commit the changes.</requirement>
         </requirements>
         <wait_for_response>no</wait_for_response>
     </step>
