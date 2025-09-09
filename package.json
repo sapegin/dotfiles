@@ -10,21 +10,21 @@
     "format": "prettier --log-level warn --ignore-unknown --write \"**/*.{js,cjs,md,json,sh}\" \"bin/*\""
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "dependencies": {
     "avif": "^0.5.3",
     "date-fns": "^4.1.0",
-    "dotenv": "^16.4.5",
-    "eslint": "^9.12.0",
-    "eslint-config-tamia": "^9.1.23",
+    "dotenv": "^17.2.2",
+    "eslint": "^9.35.0",
+    "eslint-config-tamia": "^9.2.3",
     "fastmatter": "^2.1.1",
     "glob": "^11.0.0",
     "ky": "^1.7.2",
     "lodash": "^4.17.21",
     "mrm-core": "^7.1.22",
-    "prettier": "^3.3.3",
-    "prettier-plugin-sh": "^0.14.0",
+    "prettier": "^3.6.2",
+    "prettier-plugin-sh": "^0.18.0",
     "pretty-bytes-cli": "^3.0.0",
     "prompts": "^2.4.2",
     "remark": "^15.0.1",
