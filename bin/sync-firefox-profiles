@@ -9,8 +9,10 @@
 
 import path from 'path';
 import fs from 'fs-extra';
-import untildify from 'untildify';
+import os from 'node:os';
 import { globSync } from 'glob';
+
+const untildify = (x) => x.replace(/^~/, os.homedir());
 
 const PROFILES_DIR = untildify(
 	'~/Library/Application Support/Firefox/Profiles'

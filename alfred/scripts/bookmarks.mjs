@@ -12,7 +12,9 @@
  */
 
 import fs from 'node:fs';
-import untildify from 'untildify';
+import os from 'node:os';
+
+const untildify = (x) => x.replace(/^~/, os.homedir());
 
 const BOOKMARKS_FILE = untildify(
 	`/Users/sapegia/Library/Mobile Documents/com~apple~CloudDocs/Documents/Bookmarks.md`
