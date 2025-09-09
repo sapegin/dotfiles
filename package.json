@@ -22,7 +22,6 @@
     "glob": "^11.0.0",
     "ky": "^1.7.2",
     "lodash": "^4.17.21",
-    "mrm-core": "^7.1.22",
     "prettier": "^3.6.2",
     "prettier-plugin-sh": "^0.18.0",
     "pretty-bytes-cli": "^3.0.0",
