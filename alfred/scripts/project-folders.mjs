@@ -8,21 +8,23 @@
  * https://github.com/sapegin/dotfiles
  */
 
+import os from 'node:os';
 import fs from 'node:fs';
 import path from 'node:path';
-import untildify from 'untildify';
-import dotenv from 'dotenv';
+import { parseEnv } from 'node:util';
 import { globSync } from 'glob';
 
-dotenv.config({ path: untildify('~/.env'), quiet: true });
+const untildify = (x) => x.replace(/^~/, os.homedir());
+
+const env = parseEnv(fs.readFileSync(`${os.homedir()}/.env`, 'utf8'));
 
 const folders = [
 	// Personal projects
 	globSync(untildify(`~/_/*/`)),
 
 	// Work projects
-	process.env.WORK_PROJECTS_DIR
-		? globSync(untildify(`${process.env.WORK_PROJECTS_DIR}/*/`))
+	env.WORK_PROJECTS_DIR
+		? globSync(untildify(`${env.WORK_PROJECTS_DIR}/*/`))
 		: [],
 
 	// Extra projects
