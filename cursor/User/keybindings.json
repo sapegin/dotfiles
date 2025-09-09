@@ -302,13 +302,6 @@
    * Git
    */
   {
-    // Matches GitHub Desktop create pull request command
-    "comment": "Create a new pull Request",
-    "key": "cmd+r",
-    "command": "pr.create",
-    "when": "focusedView == workbench.scm"
-  },
-  {
     // Matches GitHub Desktop push command
     "comment": "Sync changes with the remote",
     "key": "cmd+p",
