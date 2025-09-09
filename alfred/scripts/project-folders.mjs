@@ -14,7 +14,7 @@ import untildify from 'untildify';
 import dotenv from 'dotenv';
 import { globSync } from 'glob';
 
-dotenv.config({ path: untildify('~/.env') });
+dotenv.config({ path: untildify('~/.env'), quiet: true });
 
 const folders = [
 	// Personal projects

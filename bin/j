@@ -26,7 +26,7 @@ import dotenv from 'dotenv';
 
 const HOME = path.dirname(path.dirname(import.meta.dirname));
 
-dotenv.config({ path: `${HOME}/.env` });
+dotenv.config({ path: `${HOME}/.env` }, quiet: true);
 
 const PERSONAL_PROJECTS_DIR = `${HOME}/_`;
 const WORK_PROJECTS_DIR = untildify(process.env.WORK_PROJECTS_DIR);
