@@ -37,12 +37,6 @@ sudo command cp "$HOME/_/squirrelsong/themes/Bear/Squirrelsong Light.theme" "/Ap
 
 **Note:** The theme is included in the [config file](../vscode/User/settings.json).
 
-## WezTerm
-
-![Squirrelsong dark in WezTerm](https://github.com/sapegin/squirrelsong/raw/master/themes/WezTerm/screenshot-dark.jpg)
-
-**Note:** The theme is included in [the WezTerm config](../tilde/.wezterm.lua).
-
 ## Ghostty
 
 ![Squirrelsong dark in Ghostty](https://github.com/sapegin/squirrelsong/raw/master/themes/Ghostty/screenshot-dark.jpg)

@@ -2,7 +2,6 @@
 
 // Gets themes from the Squirrelsong repo:
 // > [x] Bat
-// > [x] WezTerm
 // > [x] Bear
 // > [x] Peek
 // > [x] Fzf
@@ -59,17 +58,6 @@ await install(
 	'.config/bat/themes'
 );
 execSync(`bat cache --build`);
-
-/**
- * WezTerm
- */
-
-console.log('🌈 Installing WezTerm theme…');
-
-await install(
-	'themes/WezTerm/squirrelsong-dark.toml',
-	'.config/wezterm/colors'
-);
 
 /**
  * Ghostty

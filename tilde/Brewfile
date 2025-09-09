@@ -52,7 +52,6 @@ cask "readdle-spark" # Email client
 cask "replacicon" # Custom app icons
 cask "telegram"
 cask "visual-studio-code"
-cask "wezterm" # Terminal emulator
 cask "whatsapp"
 
 # Fonts
