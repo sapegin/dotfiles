@@ -28,9 +28,7 @@ const templates = globSync(path.join(TEMPLATE_DIR, '**/*.*'), {
 
 for (const profileDirectory of profiles) {
 	console.log();
-	console.log(
-		`[FIREFOX] Syncing ${path.basename(profileDirectory)} profile…`
-	);
+	console.log(`[FIREFOX] Syncing ${path.basename(profileDirectory)} profile…`);
 
 	for (const templateFile of templates) {
 		const relativeTemplateFilepath = templateFile.replace(

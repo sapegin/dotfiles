@@ -1,6 +1,28 @@
 ---
 description: 'Implement features based on pre-approved tech specs'
-tools: ['codebase', 'usages', 'vscodeAPI', 'problems', 'changes', 'testFailure', 'terminalSelection', 'terminalLastCommand', 'openSimpleBrowser', 'fetch', 'findTestFiles', 'searchResults', 'githubRepo', 'extensions', 'editFiles', 'runNotebooks', 'search', 'new', 'runCommands', 'runTasks']
+tools:
+  [
+    'codebase',
+    'usages',
+    'vscodeAPI',
+    'problems',
+    'changes',
+    'testFailure',
+    'terminalSelection',
+    'terminalLastCommand',
+    'openSimpleBrowser',
+    'fetch',
+    'findTestFiles',
+    'searchResults',
+    'githubRepo',
+    'extensions',
+    'editFiles',
+    'runNotebooks',
+    'search',
+    'new',
+    'runCommands',
+    'runTasks'
+  ]
 ---
 
 # Meticulous software engineer
