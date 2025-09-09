@@ -19,26 +19,26 @@
 // License: MIT
 // https://github.com/sapegin/dotfiles
 
-import path from 'path';
-import fs from 'fs';
-import untildify from 'untildify';
-import dotenv from 'dotenv';
+import path from 'node:path';
+import fs from 'node:fs';
+import os from 'node:os';
+import { parseEnv } from 'util';
 
-const HOME = path.dirname(path.dirname(import.meta.dirname));
+const untildify = (x) => x.replace(/^~/, os.homedir());
 
-dotenv.config({ path: `${HOME}/.env` }, quiet: true);
+const env = parseEnv(fs.readFileSync(untildify(`~/.env`), 'utf8'));
 
-const PERSONAL_PROJECTS_DIR = `${HOME}/_`;
-const WORK_PROJECTS_DIR = untildify(process.env.WORK_PROJECTS_DIR);
-const EXTRA_PROJECTS = [HOME, ['dotfiles']];
+const PERSONAL_PROJECTS_DIR = untildify(`~/_`);
+const WORK_PROJECTS_DIR = untildify(env.WORK_PROJECTS_DIR);
+const EXTRA_PROJECTS = [os.homedir(), ['dotfiles']];
 const CLOUD_PROJECTS = [
 	{
 		label: 'Apple iCloud Docs',
-		dir: `${HOME}/Library/Mobile Documents/com~apple~CloudDocs`,
+		dir: untildify(`~/Library/Mobile Documents/com~apple~CloudDocs`),
 	},
 	{
 		label: 'Cloud Writings',
-		dir: `${HOME}/Library/Mobile Documents/com~apple~CloudDocs/Writings`,
+		dir: untildify(`~/Library/Mobile Documents/com~apple~CloudDocs/Writings`),
 	},
 ];
 

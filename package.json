@@ -15,7 +15,6 @@
   "dependencies": {
     "avif": "^0.5.3",
     "date-fns": "^4.1.0",
-    "dotenv": "^17.2.2",
     "eslint": "^9.35.0",
     "eslint-config-tamia": "^9.2.3",
     "fastmatter": "^2.1.1",
