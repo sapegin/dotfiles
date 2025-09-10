@@ -17,7 +17,6 @@ import fs from 'node:fs';
 import os from 'node:os';
 import { execSync } from 'node:child_process';
 import ky from 'ky';
-import { temporaryFileTask } from 'tempy';
 
 const HOME = os.homedir();
 
@@ -88,12 +87,13 @@ if (SKIP_SUDO === false) {
 
 	const bearTheme = await download('themes/Bear/Squirrelsong Light.theme');
 	const bearThemesDir = `/Applications/Bear.app/Contents/Frameworks/BearCore.framework/Resources`;
-	await temporaryFileTask((tempFile) => {
-		write(tempFile, bearTheme);
-		execSync(
-			`sudo -- sh -c 'command rm "${bearThemesDir}/Ayu.theme" > /dev/null 2>&1; command cp "${tempFile}" "${bearThemesDir}/Ayu.theme"'`
-		);
-	});
+	const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotfiles-'));
+	const tempFile = path.join(tempDir, 'theme');
+	write(tempFile, bearTheme);
+	execSync(
+		`sudo -- sh -c 'command rm "${bearThemesDir}/Ayu.theme" > /dev/null 2>&1; command cp "${tempFile}" "${bearThemesDir}/Ayu.theme"'`
+	);
+	fs.rmSync(tempDir, { recursive: true, force: true });
 	console.log('💡 Now choose Ayu theme in Bear settings');
 }
 

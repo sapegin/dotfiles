@@ -11,14 +11,11 @@
 import path from 'node:path';
 import fs from 'node:fs';
 import os from 'node:os';
-import { temporaryFile } from 'tempy';
 
-const HOME = os.homedir();
+const BIN_DIR = `${os.homedir()}/dotfiles/bin`;
+const DOCS_DIR = `${os.homedir()}/dotfiles/docs`;
 
-const BIN_DIR = `${HOME}/bin`;
-const DOCS_DIR = `${HOME}/docs`;
-
-const query = process.argv[2];
+export const query = process.argv[2];
 
 function read(file) {
 	return fs.readFileSync(file, 'utf8');
@@ -51,8 +48,10 @@ if (fs.existsSync(binFilePath)) {
 	const docs = getDocs(source, query);
 
 	if (docs) {
-		const tempMdFile = temporaryFile();
+		const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotfiles-'));
+		const tempMdFile = path.join(tempDir, `${query}.md`);
 		fs.writeFileSync(tempMdFile, docs);
+
 		console.log(tempMdFile);
 	}
 
