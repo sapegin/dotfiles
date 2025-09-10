@@ -12,11 +12,8 @@ import fs from 'fs-extra';
 import os from 'node:os';
 import { globSync } from 'glob';
 
-const untildify = (x) => x.replace(/^~/, os.homedir());
+const PROFILES_DIR = `${os.homedir()}/Library/Application Support/Firefox/Profiles`;
 
-const PROFILES_DIR = untildify(
-	'~/Library/Application Support/Firefox/Profiles'
-);
 const TEMPLATE_DIR = path.join(import.meta.dirname, '/../firefox');
 
 console.log();

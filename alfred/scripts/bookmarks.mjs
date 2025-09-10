@@ -14,11 +14,7 @@
 import fs from 'node:fs';
 import os from 'node:os';
 
-const untildify = (x) => x.replace(/^~/, os.homedir());
-
-const BOOKMARKS_FILE = untildify(
-	`/Users/sapegia/Library/Mobile Documents/com~apple~CloudDocs/Documents/Bookmarks.md`
-);
+const BOOKMARKS_FILE = `${os.homedir()}/Library/Mobile Documents/com~apple~CloudDocs/Documents/Bookmarks.md`;
 
 function formatSection(headings) {
 	return headings.join(' → ');
