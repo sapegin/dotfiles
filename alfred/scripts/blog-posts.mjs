@@ -10,13 +10,12 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import untildify from 'untildify';
-import glob from 'glob';
+import os from 'node:os';
+import { globSync } from 'glob';
 
-const FILES = untildify(`~/_/sapegin.me/src/content/blog/*.md`);
+const FILES = `${os.homedir()}/_/sapegin.me/src/content/blog/*.md`;
 
-const items = glob
-	.sync(FILES)
+const items = globSync(FILES)
 	.map((file) => {
 		const contents = fs.readFileSync(file, 'utf8');
 		const title = contents.match(/^title: ["']?(.*?)["']?$/im);
