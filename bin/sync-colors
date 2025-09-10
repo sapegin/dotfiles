@@ -14,11 +14,12 @@
 
 import path from 'node:path';
 import fs from 'node:fs';
+import os from 'node:os';
 import { execSync } from 'node:child_process';
 import ky from 'ky';
 import { temporaryFileTask } from 'tempy';
 
-const HOME = path.dirname(path.dirname(import.meta.dirname));
+const HOME = os.homedir();
 
 const SKIP_SUDO = false;
 

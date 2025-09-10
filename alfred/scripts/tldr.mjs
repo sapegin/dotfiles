@@ -10,10 +10,10 @@
  * https://github.com/sapegin/dotfiles
  */
 
-import path from 'node:path';
 import fs from 'node:fs';
+import os from 'node:os';
 
-const HOME = path.dirname(path.dirname(import.meta.dirname));
+const HOME = os.homedir();
 
 const bundleId = process.argv[2];
 

@@ -28,9 +28,10 @@ if (shouldIndexSubsections === 'yes') {
 }
 */
 
-import path from 'path';
-import fs from 'fs';
-import { execSync } from 'child_process';
+import path from 'node:path';
+import os from 'node:os';
+import fs from 'node:fs';
+import { execSync } from 'node:child_process';
 import { globSync } from 'glob';
 import { remark } from 'remark';
 import remarkHtml from 'remark-html';
@@ -42,7 +43,7 @@ import remarkHtml from 'remark-html';
 // TODO: Fix links
 // TODO: Fix images
 
-const HOME = path.dirname(path.dirname(import.meta.dirname));
+const HOME = os.homedir();
 
 const BOOK_REPO_TAR_GZ =
 	'https://codeload.github.com/sapegin/washingcode-book/tar.gz/master';

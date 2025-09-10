@@ -8,11 +8,12 @@
 // https://github.com/sapegin/dotfiles
 //
 
-import path from 'path';
-import fs from 'fs';
+import path from 'node:path';
+import fs from 'node:fs';
+import os from 'node:os';
 import { temporaryFile } from 'tempy';
 
-const HOME = path.dirname(path.dirname(import.meta.dirname));
+const HOME = os.homedir();
 
 const BIN_DIR = `${HOME}/bin`;
 const DOCS_DIR = `${HOME}/docs`;
