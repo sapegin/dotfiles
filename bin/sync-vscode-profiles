@@ -21,10 +21,29 @@
 // License: MIT
 // https://github.com/sapegin/dotfiles
 
-import path from 'path';
-import fs from 'fs-extra';
+import path from 'node:path';
+import fs from 'node:fs';
 import stripJsonComments from 'strip-json-comments';
-import _ from 'lodash';
+
+function deepMerge(target, source) {
+	const result = { ...target };
+
+	for (const key in source) {
+		if (source.hasOwnProperty(key)) {
+			if (
+				source[key] &&
+				typeof source[key] === 'object' &&
+				Array.isArray(source[key]) === false
+			) {
+				result[key] = deepMerge(result[key] ?? {}, source[key]);
+			} else {
+				result[key] = source[key];
+			}
+		}
+	}
+
+	return result;
+}
 
 const CONFIG_DIR = path.join(import.meta.dirname, '/../vscode/User');
 const PROFILES_DIR = `${CONFIG_DIR}/profiles`;
@@ -47,7 +66,7 @@ for (const { id, name, values } of defaultConfig.profileGenerator) {
 	console.log();
 	console.log(`[VSCODE] Generating ${name} profile…`);
 
-	const profileConfig = _.merge(defaultConfig, values);
+	const profileConfig = deepMerge(defaultConfig, values);
 	delete profileConfig.profileGenerator;
 
 	writeJsonFile(`${PROFILES_DIR}/${id}/settings.json`, profileConfig);

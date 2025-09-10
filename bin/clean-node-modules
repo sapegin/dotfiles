@@ -11,18 +11,19 @@
 // License: MIT
 // https://github.com/sapegin/dotfiles
 
-import path from 'path';
-import { execSync } from 'child_process';
-import fs from 'fs-extra';
-import differenceInDays from 'date-fns/differenceInDays';
+import path from 'node:path';
+import { execSync } from 'node:child_process';
+import fs from 'node:fs/promises';
+import os from 'node:os';
 
-const HOME = path.dirname(path.dirname(import.meta.dirname));
+const HOME = os.homedir();
 
 const MAX_DAYS = 30;
 const IGNORE = [
 	`${HOME}/.config`,
 	`${HOME}/.npm`,
 	`${HOME}/.vscode`,
+	`${HOME}/.cursor`,
 	`${HOME}/dotfiles`,
 	`${HOME}/Library`,
 	`${HOME}/Documents/Library`,
@@ -30,6 +31,11 @@ const IGNORE = [
 ];
 
 const sizes = [];
+
+function differenceInDays(timestamp1, timestamp2) {
+	const msPerDay = 24 * 60 * 60 * 1000;
+	return Math.floor(Math.abs(timestamp1 - timestamp2) / msPerDay);
+}
 
 function getFolderSize(folderPath) {
 	return parseInt(
@@ -41,9 +47,10 @@ function getFolderSize(folderPath) {
 }
 
 function getFolderAgeInDays(stats) {
-	return differenceInDays(new Date(), stats.mtimeMs);
+	return differenceInDays(new Date().getTime(), stats.mtimeMs);
 }
 
+// TODO: Use pretty-bytes?
 function formatSize(kilobytes) {
 	const gigabytes = kilobytes / 1024 / 1024;
 	if (gigabytes >= 1) {
@@ -91,7 +98,7 @@ async function removeFolder(folderPath) {
 	sizes.push(size);
 
 	console.log(`Removing ${folderPath} (${formatSize(size)})`);
-	await fs.remove(folderPath);
+	await fs.rm(folderPath, { recursive: true, force: true });
 }
 
 async function removeNodeModules(folderPath) {

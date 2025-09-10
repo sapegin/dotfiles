@@ -12,9 +12,9 @@
 // License: MIT
 // https://github.com/sapegin/dotfiles
 
-import path from 'path';
-import fs from 'fs-extra';
-import { execSync } from 'child_process';
+import path from 'node:path';
+import fs from 'node:fs';
+import { execSync } from 'node:child_process';
 import ky from 'ky';
 import terminalLink from 'terminal-link';
 import { temporaryFileTask } from 'tempy';
@@ -37,7 +37,7 @@ function read(filepath) {
 
 function write(file, text) {
 	const fullPath = file.startsWith('/') ? file : path.join(DEST_DIR, file);
-	fs.ensureDir(path.dirname(fullPath));
+	fs.mkdirSync(path.dirname(fullPath), { recursive: true });
 	return fs.writeFileSync(fullPath, text);
 }
 
@@ -117,9 +117,4 @@ console.log('💡 Reopen your terminal to take effect');
 
 console.log();
 console.log('🦜 Install all the remaining themes at:');
-console.log(
-	terminalLink(
-		'https://sapegin.me/squirrelsong/',
-		'https://sapegin.me/squirrelsong/#download'
-	)
-);
+console.log('https://sapegin.me/squirrelsong/#download');

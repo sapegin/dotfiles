@@ -7,8 +7,8 @@
 // License: MIT
 // https://github.com/sapegin/dotfiles
 
-import path from 'path';
-import fs from 'fs-extra';
+import path from 'node:path';
+import fs from 'node:fs';
 import os from 'node:os';
 import { globSync } from 'glob';
 
@@ -58,7 +58,7 @@ for (const profileDirectory of profiles) {
 		} else {
 			// Copy a new file if it doesn't exist
 			console.log(`[FIREFOX] Creating ${path.basename(absoluteFilepath)}…`);
-			fs.emptyDirSync(path.dirname(absoluteFilepath));
+			fs.mkdirSync(path.dirname(absoluteFilepath), { recursive: true });
 			fs.copySync(templateFile, absoluteFilepath);
 		}
 	}

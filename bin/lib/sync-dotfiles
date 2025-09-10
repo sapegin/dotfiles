@@ -9,12 +9,13 @@
 // https://github.com/sapegin/dotfiles
 //
 
-import path from 'path';
-import fs from 'fs-extra';
+import os from 'node:os';
+import path from 'node:path';
+import fs from 'node:fs';
 import { globSync } from 'glob';
 import prompts from 'prompts';
 
-const HOME = path.dirname(path.dirname(path.dirname(import.meta.dirname)));
+const HOME = os.homedir();
 const TILDE_DIR = `${HOME}/dotfiles/tilde`;
 const IGNORE = ['.DS_Store', 'Brewfile.lock.json'];
 const SPECIALS = [
@@ -104,7 +105,7 @@ async function syncDotfiles() {
 		}
 
 		// Create a symlink
-		fs.ensureSymlinkSync(sourcePath, destPath);
+		fs.symlinkSync(sourcePath, destPath);
 
 		console.log('🦐', sourcePath, '→', destPath);
 	}
@@ -138,7 +139,7 @@ async function syncSpecials() {
 		}
 
 		// Create a symlink
-		fs.ensureSymlinkSync(source, destination);
+		fs.symlinkSync(source, destination);
 
 		console.log('🦐', source, '→', destination);
 	}
