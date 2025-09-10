@@ -16,7 +16,6 @@ import path from 'node:path';
 import fs from 'node:fs';
 import { execSync } from 'node:child_process';
 import ky from 'ky';
-import terminalLink from 'terminal-link';
 import { temporaryFileTask } from 'tempy';
 
 const HOME = path.dirname(path.dirname(import.meta.dirname));
