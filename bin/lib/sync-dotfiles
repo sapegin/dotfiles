@@ -12,9 +12,10 @@
 import os from 'node:os';
 import path from 'node:path';
 import fs from 'node:fs';
+import readline from 'node:readline';
 import { globSync } from 'glob';
-import prompts from 'prompts';
 
+const QUESTION_MARK = '\x1b[33m?\x1b[0m';
 const HOME = os.homedir();
 const TILDE_DIR = `${HOME}/dotfiles/tilde`;
 const IGNORE = ['.DS_Store', 'Brewfile.lock.json'];
@@ -51,19 +52,18 @@ function isSymlinkTo(link, dest) {
 }
 
 async function confirmAction(message) {
-	const answer = await prompts({
-		type: 'confirm',
-		name: 'value',
-		message,
-		initial: false,
+	const interface = readline.createInterface({
+		input: process.stdin,
+		output: process.stdout,
 	});
 
-	// User pressed Cmd+C?
-	if (answer.value === undefined) {
-		process.exit(1);
-	}
-
-	return answer.value;
+	return new Promise((resolve) => {
+		interface.question(`${QUESTION_MARK} ${message} (y/N): `, (answer) => {
+			interface.close();
+			const response = answer.toLowerCase().trim();
+			resolve(response === 'y' || response === 'yes');
+		});
+	});
 }
 
 async function syncDotfiles() {
@@ -77,10 +77,11 @@ async function syncDotfiles() {
 		...globSync('.cursor/**/*', { dot: true, nodir: true }),
 	];
 
-	for (const sourcePath of files) {
-		const destPath = `${HOME}/${sourcePath}`;
+	for (const sourceFile of files) {
+		const sourcePath = `${TILDE_DIR}/${sourceFile}`;
+		const destPath = `${HOME}/${sourceFile}`;
 
-		if (IGNORE.includes(sourcePath)) {
+		if (IGNORE.includes(sourceFile)) {
 			continue;
 		}
 
@@ -101,13 +102,13 @@ async function syncDotfiles() {
 			}
 
 			// Remove
-			fs.removeSync(destPath);
+			fs.rmSync(destPath);
 		}
 
 		// Create a symlink
 		fs.symlinkSync(sourcePath, destPath);
 
-		console.log('🦐', sourcePath, '→', destPath);
+		console.log('🦐', destPath, '→', sourcePath);
 	}
 }
 
@@ -151,5 +152,7 @@ async function main() {
 	await syncSpecials();
 	console.log('Done.');
 }
+
+// --------- 8< --------- 8< --------- 8< ---------
 
 main();
