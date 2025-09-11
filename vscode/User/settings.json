@@ -215,6 +215,8 @@
   // Plugins
   "catppuccin-icons.hidesExplorerArrows": true,
   "chat.commandCenter.enabled": false,
+  "chat.editor.fontSize": 15,
+  "chat.fontSize": 15,
   "chat.instructionsFilesLocations": {
     // I don’t know if it works ¯\_(ツ)_/¯
     "~/dotfiles/ai-rules/rules": true
