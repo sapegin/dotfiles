@@ -13,12 +13,12 @@
 import fs from 'node:fs';
 import os from 'node:os';
 
-const HOME = os.homedir();
+const DOCS_ROOT = `${os.homedir()}/dotfiles/docs/gui/`;
 
 const bundleId = process.argv[2];
 
 try {
-	const markdown = fs.readFileSync(`${HOME}/docs/gui/${bundleId}.md`, 'utf8');
+	const markdown = fs.readFileSync(`${DOCS_ROOT}/${bundleId}.md`, 'utf8');
 	console.log(
 		JSON.stringify({
 			response: markdown,
