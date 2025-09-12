@@ -100,13 +100,10 @@ stash=$(git stash --include-untracked)
 
 # Pull, using rebase if configured
 echo "🚀 Fetching from $remote""…"
-git pull --rebase --recurse-submodules --jobs=10 $remote $remote_branch || rollback $?
+git pull --rebase --prune --recurse-submodules --jobs=10 $remote $remote_branch || rollback $?
 
 # Pop any stashed changes
 unstash
-
-# Remove old, stale branches
-git remote prune $remote > /dev/null 2>&1 &
 
 npm_installed=0
 
