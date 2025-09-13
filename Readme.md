@@ -1,4 +1,4 @@
-# Artem Sapegin’s dotfiles 🐿️
+# Artem Sapegin’s dotfiles 🦝
 
 ![Ghostty](https://github.com/sapegin/squirrelsong/raw/master/themes/Ghostty/screenshot-dark.jpg)
 
