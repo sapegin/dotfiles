@@ -14,7 +14,6 @@
   "dependencies": {
     "avif": "^0.5.3",
     "glob": "^11.0.0",
-    "ky": "^1.7.2",
     "pretty-bytes-cli": "^3.0.0",
     "remark": "^15.0.1",
     "remark-html": "^16.0.1",

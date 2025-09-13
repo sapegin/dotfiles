@@ -16,7 +16,6 @@ import path from 'node:path';
 import fs from 'node:fs';
 import os from 'node:os';
 import { execSync } from 'node:child_process';
-import ky from 'ky';
 
 const HOME = os.homedir();
 
@@ -26,8 +25,15 @@ const REPO_ROOT =
 	'https://raw.githubusercontent.com/sapegin/squirrelsong/master';
 const DEST_DIR = `${HOME}/dotfiles/tilde`;
 
-function download(filepath) {
-	return ky.get(`${REPO_ROOT}/${encodeURI(filepath)}`).text();
+async function download(filepath) {
+	const url = `${REPO_ROOT}/${encodeURI(filepath)}`;
+	const res = await fetch(url);
+	if (res.ok === false) {
+		console.error(`Cannot download ${url}`);
+		console.error(`${res.status}: ${res.statusText}`);
+		process.exit(1);
+	}
+	return res.text();
 }
 
 function read(filepath) {
