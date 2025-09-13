@@ -36,6 +36,7 @@ import { globSync } from 'glob';
 import { remark } from 'remark';
 import remarkHtml from 'remark-html';
 
+// TODO: What `subsection` does?!
 // TODO: How to add an icon? Raccoon!
 // TODO: TEMPLATE!!!
 
@@ -94,11 +95,18 @@ function markdownToHtml(md, { type, subsections }) {
 }
 
 // TODO: Filter, for example skip header and footer files of the book
-function addMarkdownFolder(dir, { destDir, type, subsections = false }) {
+function addMarkdownFolder(
+	dir,
+	{ destDir, type, subsections = false, filter = () => true }
+) {
 	const files = globSync(`${dir}/**/*.md`);
 	fs.mkdirSync(`${DEST_DIR}/${destDir}`, { recursive: true, force: true });
 
 	for (const file of files) {
+		if (filter(file) === false) {
+			continue;
+		}
+
 		console.log('👉🏼', file);
 		const md = read(file);
 		const html = markdownToHtml(md, { type, subsections });
@@ -119,6 +127,8 @@ addMarkdownFolder(`${BOOK_SOURCE_DIR}/manuscript`, {
 	destDir: 'book',
 	type: 'Book',
 	subsections: true,
+	filter: (x) =>
+		x.includes('Header') === false && x.includes('Footer') === false,
 });
 
 console.log();
