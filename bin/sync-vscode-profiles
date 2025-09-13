@@ -23,7 +23,16 @@
 
 import path from 'node:path';
 import fs from 'node:fs';
-import stripJsonComments from 'strip-json-comments';
+
+function stripJsonComments(json) {
+	return (
+		json
+			// Remove /* */ comments
+			.replace(/\/\*[\s\S]*?\*\//g, '')
+			// Remove // comments
+			.replace(/\/\/.*$/gm, '')
+	);
+}
 
 function deepMerge(target, source) {
 	const result = { ...target };
