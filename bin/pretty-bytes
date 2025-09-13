@@ -1,0 +1,34 @@
+#!/usr/bin/env node
+
+// Prints human-readable file size. Input in bytes.
+//
+// - Show size:
+//
+// `pretty-bytes 923023`
+//
+// ---
+// Author: Artem Sapegin, sapegin.me
+// License: MIT
+// https://github.com/sapegin/dotfiles
+
+const bytes = parseInt(process.argv[2], 10);
+
+const gigabytes = bytes / 1024 / 1024 / 1024;
+if (gigabytes >= 1) {
+	console.log(`${gigabytes.toFixed(1)} GB`);
+	process.exit();
+}
+
+const megabytes = bytes / 1024 / 1024;
+if (megabytes >= 1) {
+	console.log(`${megabytes.toFixed(1)} MB`);
+	process.exit();
+}
+
+const kilobytes = bytes / 1024;
+if (kilobytes >= 1) {
+	console.log(`${kilobytes.toFixed(1)} KB`);
+	process.exit();
+}
+
+console.log(`${bytes}`);

@@ -50,7 +50,6 @@ function getFolderAgeInDays(stats) {
 	return differenceInDays(new Date().getTime(), stats.mtimeMs);
 }
 
-// TODO: Use pretty-bytes?
 function formatSize(kilobytes) {
 	const gigabytes = kilobytes / 1024 / 1024;
 	if (gigabytes >= 1) {

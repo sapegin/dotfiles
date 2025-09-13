@@ -36,7 +36,7 @@ function print_result() {
 	optimized_size=$3
 	difference=$4
 	ratio=$(echo "$optimized_size * 100/ $original_size" | bc -l)
-	printf "$BOLD$filename$NOCOLOR: %s → $CYAN%s$NOCOLOR $GREEN(%2.2f%%, −%s$NOCOLOR)\n" "$($bin/pretty-bytes $original_size)" "$($bin/pretty-bytes $optimized_size)" "$ratio" "$($bin/pretty-bytes $difference)"
+	printf "$BOLD$filename$NOCOLOR: %s → $CYAN%s$NOCOLOR $GREEN(%2.2f%%, −%s$NOCOLOR)\n" "$(pretty-bytes $original_size)" "$(pretty-bytes $optimized_size)" "$ratio" "$(pretty-bytes $difference)"
 }
 
 function convert_file() {
