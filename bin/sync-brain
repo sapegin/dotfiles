@@ -55,12 +55,7 @@ import { unified } from 'unified';
 // TODO: How to add an icon? Raccoon!
 // TODO: TEMPLATE!!!
 // TODO: Empty the folder before generation to get rid of deleted files
-
-// TODO: Remove IDs: {#no-loops}
-// TODO: Copy images
-// TODO: Fix links
-// TODO: Fix images
-// TODO: Fix Tips
+// TODO: Get rid of 020, 040...
 
 const HOME = os.homedir();
 
@@ -69,6 +64,14 @@ const BOOK_REPO_TAR_GZ =
 
 const BOOK_SOURCE_DIR = `${HOME}/dotfiles/washingcode-book-master`;
 const DEST_DIR = `${HOME}/dotfiles/brain`;
+const SITE_URL = 'https://sapegin.me/';
+
+const TIPS = {
+	I: 'Info',
+	W: 'Warning',
+	E: 'Error',
+	T: 'Tip',
+};
 
 function read(file) {
 	return fs.readFileSync(file, 'utf8');
@@ -80,6 +83,45 @@ function write(file, text) {
 
 function getTitle(text) {
 	return text.match(/#\s+([^\n]+)/m)?.[1] ?? '';
+}
+
+function stripIds(contents) {
+	return contents.replaceAll(/\n?{#[^\n]+}\n$/gm, '');
+}
+
+// /blog/foo → https://sapegin.me/blog/foo
+function updateLinksAbsolute(contents) {
+	return contents.replaceAll('](/', `](${SITE_URL}/`);
+}
+
+// images/ → https://sapegin.me/images/blog/book/
+function updateImagesAbsolute(contents) {
+	return contents.replaceAll('](images/', `](${SITE_URL}/images/blog/book/`);
+}
+
+function stripInternalLinks(contents) {
+	return contents.replaceAll(/\[(.*?)]\(#(.*?)\)/g, (_match, title) => {
+		return title;
+	});
+}
+
+function updateTips(contents) {
+	const keysMask = Object.keys(TIPS).join('');
+	return (
+		contents
+			// Replace paragraph breaks inside tips with double <br>
+			.replaceAll(
+				new RegExp(`\\s*([${keysMask}])>\\s*([${keysMask}])>\\s*`, 'gm'),
+				'<br><br>'
+			)
+			// Replace the first tip marker in a block with a text marker (**Info:**)
+			.replaceAll(
+				new RegExp(`\\n([${keysMask}])> `, 'gm'),
+				(_match, marker) => {
+					return `\n**${TIPS[marker]}:** `;
+				}
+			)
+	);
 }
 
 function wrapHtml(body, { title, type, subsections }) {
@@ -98,6 +140,12 @@ function wrapHtml(body, { title, type, subsections }) {
     </body>
   </html>
   `;
+}
+
+function prepareMarkdown(md) {
+	return updateImagesAbsolute(
+		updateLinksAbsolute(updateTips(stripInternalLinks(stripIds(md))))
+	);
 }
 
 async function markdownToHtml(
@@ -142,7 +190,8 @@ async function addMarkdownFolder(
 
 		console.log('👉🏼', file);
 		const md = read(file);
-		const html = await markdownToHtml(md, { type, subsections });
+		const cleanMd = prepareMarkdown(md);
+		const html = await markdownToHtml(cleanMd, { type, subsections });
 		const filename = path.parse(file).name;
 		write(`${DEST_DIR}/${destDir}/${filename}.html`, html);
 	}
@@ -150,8 +199,8 @@ async function addMarkdownFolder(
 
 console.log('📖 Downloading the book…');
 
-fs.rmSync(BOOK_SOURCE_DIR, { recursive: true, force: true });
-execSync(`curl "${BOOK_REPO_TAR_GZ}" | tar xz -C $HOME/dotfiles`);
+// fs.rmSync(BOOK_SOURCE_DIR, { recursive: true, force: true });
+// execSync(`curl "${BOOK_REPO_TAR_GZ}" | tar xz -C $HOME/dotfiles`);
 
 console.log();
 console.log('📖 Generating the book files…');
