@@ -1,3 +1,198 @@
 body {
-	font-size: 20px;
+	font-family:
+		ui-sans-serif,
+		system-ui,
+		-apple-system,
+		BlinkMacSystemFont,
+		'Segoe UI',
+		Roboto,
+		'Helvetica Neue',
+		Arial,
+		'Noto Sans',
+		sans-serif,
+		'Apple Color Emoji',
+		'Segoe UI Emoji',
+		'Segoe UI Symbol',
+		'Noto Color Emoji';
+	line-height: 1.5;
+	font-size: 1.2rem;
+	color: #3a3d40;
+}
+
+:is(
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6,
+	ul,
+	ol,
+	dl,
+	dd,
+	p,
+	pre,
+	table,
+	blockquote,
+	form,
+	iframe,
+	img,
+	hr,
+	address
+) {
+	margin-bottom: 1rem;
+}
+
+/* Links */
+a {
+	color: #577290;
+	text-decoration: underline;
+}
+a:hover {
+	color: #be4b83;
+	cursor: pointer;
+}
+
+/* Blockquotes */
+blockquote {
+	margin-inline: 2rem;
+	font-size: 0.5rem;
+}
+blockquote p {
+	margin-bottom: 0.5rem;
+}
+cite {
+	font-style: italic;
+}
+
+hr {
+	border: 0;
+	background: #3a3d40;
+}
+
+/* Responsive images and full bleed images */
+:is(p > img, p > a > img, figure > img, figure > a > img) {
+	height: auto;
+	max-width: 100%;
+	margin-inline: auto;
+	margin-block: 2rem;
+}
+
+/* Tables */
+table {
+	font-size: 0.5rem;
+	border-collapse: collapse;
+	width: 100%;
+}
+thead {
+	text-align: left;
+	border-bottom: 2px solid #3a3d40;
+}
+:is(td, th) {
+	text-align: left;
+	border-bottom: 1px solid #3a3d40;
+	padding: 0.5rem;
+}
+td {
+	vertical-align: top;
+}
+:is(th:first-child, td:first-child) {
+	padding-left: 0;
+}
+:is(th:last-child, td:last-child) {
+	padding-right: 0;
+}
+:is(tr:last-child th, tr:last-child td) {
+	border: 0;
+}
+
+/* Headings */
+:is(h1, h2, h3, h4, h5, h6) {
+	margin-top: 2rem;
+	line-height: 1.1;
+	text-wrap: balance;
+}
+h1 {
+	font-size: 2.4rem;
+}
+h2 {
+	font-size: 2rem;
+}
+h3 {
+	font-size: 1.7rem;
+}
+h4 {
+	font-size: 1rem;
+	line-height: 1.5;
+	font-weight: bold;
+}
+h5 {
+	font-size: 1rem;
+	line-height: 1.5;
+	font-style: italic;
+}
+h6 {
+	font-size: 1rem;
+	line-height: 1.5;
+}
+
+/* Collapse margin between headings and before first heading */
+:is(
+	h1 + h2,
+	h2 + h3,
+	h3 + h4,
+	h4 + h5,
+	h5 + h6,
+	h1:first-child,
+	h2:first-child,
+	h3:first-child,
+	h4:first-child,
+	h5:first-child,
+	h6:first-child
+) {
+	margin-top: 0;
+}
+
+/* Unordered list with dashes (—) as bullets and basic ordered list */
+ul {
+	padding-left: 0;
+}
+ol {
+	list-style: decimal;
+}
+li {
+	padding-left: 1rem;
+}
+:is(li > ul, li > ol) {
+	margin-bottom: 0;
+}
+:is(ul > ul, ul > ol) {
+	margin-left: 1rem;
+}
+ul > li {
+	position: relative;
+	padding-left: 1rem;
+	margin-left: 0;
+}
+ul > li::before {
+	content: '–';
+	position: absolute;
+	left: 0;
+}
+
+/* Code */
+:is(h1, h2, h3, h4, h5, h6, p, li, table) :is(code, kbd) {
+	font-family: inherit;
+	font-style: italic;
+	font-feature-settings: normal;
+	font-variation-settings: normal;
+	hyphens: none;
+}
+:is(h1, h2, h3, h4, h5, h6, p, li, table) a :is(code, kbd) {
+	font-style: inherit;
+}
+
+/* Don 't leak the margin after the last element outside of the component */
+*:last-child {
+	margin-bottom: 0;
 }
