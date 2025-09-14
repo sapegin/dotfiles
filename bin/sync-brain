@@ -33,9 +33,14 @@ import os from 'node:os';
 import fs from 'node:fs';
 import { execSync } from 'node:child_process';
 import { globSync } from 'glob';
-import { remark } from 'remark';
-import remarkHtml from 'remark-html';
+import remarkParse from 'remark-parse';
+import remarkRehype from 'remark-rehype';
+import rehypeStringify from 'rehype-stringify';
+import rehypeShiki from '@shikijs/rehype';
+import { unified } from 'unified';
 
+// TODO: Add Squirrelsong themes
+// TODO: Remove IDs: {#no-loops}
 // TODO: What `subsection` does?!
 // TODO: How to add an icon? Raccoon!
 // TODO: TEMPLATE!!!
@@ -82,20 +87,27 @@ function wrapHtml(body, { title, type, subsections }) {
   `;
 }
 
-// TODO: Shiki
-function markdownToHtml(md, { type, subsections }) {
-	// Create Remark processor
-	const processor = remark();
-	processor.use(remarkHtml, { entities: 'escape' });
-	return wrapHtml(processor.processSync(md).value, {
+async function markdownToHtml(md, { type, subsections }) {
+	const html = await unified()
+		.use(remarkParse)
+		.use(remarkRehype)
+		.use(rehypeShiki, {
+			themes: {
+				light: 'vitesse-light',
+				dark: 'vitesse-dark',
+			},
+		})
+		.use(rehypeStringify)
+		.process(md);
+
+	return wrapHtml(html, {
 		title: getTitle(md),
 		type,
 		subsections,
 	});
 }
 
-// TODO: Filter, for example skip header and footer files of the book
-function addMarkdownFolder(
+async function addMarkdownFolder(
 	dir,
 	{ destDir, type, subsections = false, filter = () => true }
 ) {
@@ -109,21 +121,21 @@ function addMarkdownFolder(
 
 		console.log('👉🏼', file);
 		const md = read(file);
-		const html = markdownToHtml(md, { type, subsections });
+		const html = await markdownToHtml(md, { type, subsections });
 		const filename = path.parse(file).name;
 		write(`${DEST_DIR}/${destDir}/${filename}.html`, html);
 	}
 }
 
-console.log('Downloading the book…');
+console.log('📖 Downloading the book…');
 
 fs.rmSync(BOOK_SOURCE_DIR, { recursive: true, force: true });
 execSync(`curl "${BOOK_REPO_TAR_GZ}" | tar xz -C $HOME/dotfiles`);
 
 console.log();
-console.log('Generating the book files…');
+console.log('📖 Generating the book files…');
 
-addMarkdownFolder(`${BOOK_SOURCE_DIR}/manuscript`, {
+await addMarkdownFolder(`${BOOK_SOURCE_DIR}/manuscript`, {
 	destDir: 'book',
 	type: 'Book',
 	subsections: true,
