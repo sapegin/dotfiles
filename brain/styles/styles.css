@@ -171,16 +171,32 @@ li {
 }
 ul > li {
 	position: relative;
-	padding-left: 1rem;
+	padding-left: 1.4rem;
 	margin-left: 0;
 }
 ul > li::before {
-	content: '–';
+	content: '—';
 	position: absolute;
 	left: 0;
 }
 
 /* Code */
+pre {
+	display: block;
+	overflow: visible;
+	line-height: 1.3;
+	font-size: 0.9rem;
+	font-family: MonoLisa, monospace;
+	white-space: pre-wrap;
+	tab-size: 4;
+	text-size-adjust: none;
+}
+pre code {
+	display: block;
+	font-size: inherit;
+	font-style: inherit;
+	color: inherit;
+}
 :is(h1, h2, h3, h4, h5, h6, p, li, table) :is(code, kbd) {
 	font-family: inherit;
 	font-style: italic;
@@ -192,7 +208,7 @@ ul > li::before {
 	font-style: inherit;
 }
 
-/* Don 't leak the margin after the last element outside of the component */
+/* Don't leak the margin after the last element outside of the component */
 *:last-child {
 	margin-bottom: 0;
 }
