@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
 // Generates Dash docset with:
-// > [ ] Washing code book
-// > [ ] Blog
+// - [x] Washing code book
+// - [ ] Blog
+// - [ ] Writing drafts
 //
 // ---
 // Author: Artem Sapegin, sapegin.me
@@ -10,10 +11,19 @@
 // https://github.com/sapegin/dotfiles
 
 /*
+Dash docset configuration
+
+1. Open Settings → Downloads → Docset Generator
+2. Create a new docset
+3. Local documentation files
+4. Folder: ~/dotfiles/brain
+5. Name: Brain, keyword: me
+6. Custom index
+7. Copy the code below:
+
 // Index each file by its page title
 const name = $("title").text();
 const type = document.querySelector('meta[name="type"]').getAttribute('content');
-dashDoc.addEntry({ name, type });
 dashDoc.addEntry({ name, type });
 
 // Indexing each section
@@ -26,6 +36,8 @@ if (shouldIndexSubsections === 'yes') {
         dashDoc.addEntry({name: title, type: 'Section', hash});
     });
 }
+
+8. CSS: Skip for now
 */
 
 import path from 'node:path';
@@ -40,14 +52,15 @@ import rehypeShiki from '@shikijs/rehype';
 import { unified } from 'unified';
 
 // TODO: Add Squirrelsong themes
-// TODO: Remove IDs: {#no-loops}
-// TODO: What `subsection` does?!
 // TODO: How to add an icon? Raccoon!
 // TODO: TEMPLATE!!!
+// TODO: Empty the folder before generation to get rid of deleted files
 
-// TODO: Copy image
+// TODO: Remove IDs: {#no-loops}
+// TODO: Copy images
 // TODO: Fix links
 // TODO: Fix images
+// TODO: Fix Tips
 
 const HOME = os.homedir();
 
@@ -87,7 +100,15 @@ function wrapHtml(body, { title, type, subsections }) {
   `;
 }
 
-async function markdownToHtml(md, { type, subsections }) {
+async function markdownToHtml(
+	md,
+	{
+		// https://kapeli.com/docsets#supportedentrytypes
+		type,
+		// Index subsections as separate documentation entries
+		subsections,
+	}
+) {
 	const html = await unified()
 		.use(remarkParse)
 		.use(remarkRehype)
@@ -137,11 +158,14 @@ console.log('📖 Generating the book files…');
 
 await addMarkdownFolder(`${BOOK_SOURCE_DIR}/manuscript`, {
 	destDir: 'book',
-	type: 'Book',
+	type: 'Guide',
 	subsections: true,
 	filter: (x) =>
 		x.includes('Header') === false && x.includes('Footer') === false,
 });
 
 console.log();
-console.log('🦜 Now update the docset in Dash');
+console.log('🦜 Now update the docset in Dash:');
+console.log(
+	'Go to Settings → Downloads → Docset Generator and run Update Docset'
+);
