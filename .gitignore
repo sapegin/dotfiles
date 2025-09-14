@@ -20,6 +20,7 @@ cursor/**/workspaceStorage/
 tilde/Brewfile.lock.json
 lazygit/state.yml
 washingcode-book-master/
+sapegin.me-master/
 brain/book/
 brain/blog/
 colors/shiki/SquirrelsongLight.color-theme.json

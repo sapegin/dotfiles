@@ -2,7 +2,7 @@
 
 // Generates Dash docset with:
 // - [x] Washing code book
-// - [ ] Blog
+// - [x] Blog
 // - [ ] Writing drafts
 //
 // ---
@@ -55,15 +55,17 @@ import { createHighlighterCore } from 'shiki/core';
 import { createOnigurumaEngine } from 'shiki/engine/oniguruma';
 
 // TODO: How to add an icon? Raccoon!
-// TODO: Empty the folder before generation to get rid of deleted files
 // TODO: Get rid of 020, 040...
 
 const HOME = os.homedir();
 
 const BOOK_REPO_TAR_GZ =
 	'https://codeload.github.com/sapegin/washingcode-book/tar.gz/master';
+const BLOG_REPO_TAR_GZ =
+	'https://codeload.github.com/sapegin/sapegin.me/tar.gz/master';
 
 const BOOK_SOURCE_DIR = `${HOME}/dotfiles/washingcode-book-master`;
+const BLOG_SOURCE_DIR = `${HOME}/dotfiles/sapegin.me-master`;
 const DEST_DIR = `${HOME}/dotfiles/brain`;
 const SITE_URL = 'https://sapegin.me/';
 
@@ -106,6 +108,14 @@ function write(file, text) {
 
 function getTitle(text) {
 	return text.match(/#\s+([^\n]+)/m)?.[1] ?? '';
+}
+
+function replaceFrontMatter(text) {
+	return text.replace(/^---\n([\s\S]*?)\n---\n/, (match, frontmatter) => {
+		const titleMatch = frontmatter.match(/^title:\s*['"]?([^'"'\n]+)['"]?$/m);
+		const title = titleMatch ? titleMatch[1] : '';
+		return title ? `# ${title}\n\n` : '';
+	});
 }
 
 function stripIds(contents) {
@@ -167,7 +177,9 @@ function wrapHtml(body, { title, type, subsections }) {
 
 function prepareMarkdown(md) {
 	return updateImagesAbsolute(
-		updateLinksAbsolute(updateTips(stripInternalLinks(stripIds(md))))
+		updateLinksAbsolute(
+			updateTips(stripInternalLinks(stripIds(replaceFrontMatter(md))))
+		)
 	);
 }
 
@@ -201,7 +213,9 @@ async function addMarkdownFolder(
 	{ destDir, type, subsections = false, filter = () => true }
 ) {
 	const files = globSync(`${dir}/**/*.md`);
-	fs.mkdirSync(`${DEST_DIR}/${destDir}`, { recursive: true, force: true });
+	const destDirFull = `${DEST_DIR}/${destDir}`;
+	fs.rmSync(destDirFull, { recursive: true, force: true });
+	fs.mkdirSync(destDirFull, { recursive: true, force: true });
 
 	for (const file of files) {
 		if (filter(file) === false) {
@@ -213,7 +227,7 @@ async function addMarkdownFolder(
 		const cleanMd = prepareMarkdown(md);
 		const html = await markdownToHtml(cleanMd, { type, subsections });
 		const filename = path.parse(file).name;
-		write(`${DEST_DIR}/${destDir}/${filename}.html`, html);
+		write(`${destDirFull}/${filename}.html`, html);
 	}
 }
 
@@ -231,6 +245,20 @@ await addMarkdownFolder(`${BOOK_SOURCE_DIR}/manuscript`, {
 	subsections: true,
 	filter: (x) =>
 		x.includes('Header') === false && x.includes('Footer') === false,
+});
+
+console.log('👨🏻‍💻 Downloading the blog…');
+
+fs.rmSync(BLOG_SOURCE_DIR, { recursive: true, force: true });
+execSync(`curl "${BLOG_REPO_TAR_GZ}" | tar xz -C $HOME/dotfiles`);
+
+console.log();
+console.log('👨🏻‍💻 Generating the blog files…');
+
+await addMarkdownFolder(`${BLOG_SOURCE_DIR}/src/content/blog`, {
+	destDir: 'blog',
+	type: 'Guide',
+	filter: (x) => x.includes('hello-world') === false,
 });
 
 console.log();
