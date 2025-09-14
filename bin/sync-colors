@@ -20,7 +20,7 @@ import { execSync } from 'node:child_process';
 
 const HOME = os.homedir();
 
-const SKIP_SUDO = true;
+const SKIP_SUDO = false;
 
 const REPO_ROOT =
 	'https://raw.githubusercontent.com/sapegin/squirrelsong/master';
