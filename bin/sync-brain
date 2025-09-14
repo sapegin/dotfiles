@@ -50,10 +50,11 @@ import remarkRehype from 'remark-rehype';
 import rehypeStringify from 'rehype-stringify';
 import rehypeShiki from '@shikijs/rehype';
 import { unified } from 'unified';
+import rehypeShikiFromHighlighter from '@shikijs/rehype/core';
+import { createHighlighterCore } from 'shiki/core';
+import { createOnigurumaEngine } from 'shiki/engine/oniguruma';
 
-// TODO: Add Squirrelsong themes
 // TODO: How to add an icon? Raccoon!
-// TODO: TEMPLATE!!!
 // TODO: Empty the folder before generation to get rid of deleted files
 // TODO: Get rid of 020, 040...
 
@@ -72,6 +73,28 @@ const TIPS = {
 	E: 'Error',
 	T: 'Tip',
 };
+
+const highlighter = await createHighlighterCore({
+	themes: [
+		import('../colors/shiki/SquirrelsongLight.color-theme.json', {
+			with: { type: 'json' },
+		}),
+	],
+	langs: [
+		import('@shikijs/langs/css'),
+		import('@shikijs/langs/html'),
+		import('@shikijs/langs/javascript'),
+		import('@shikijs/langs/json'),
+		import('@shikijs/langs/jsx'),
+		import('@shikijs/langs/markdown'),
+		import('@shikijs/langs/pascal'),
+		import('@shikijs/langs/php'),
+		import('@shikijs/langs/python'),
+		import('@shikijs/langs/tsx'),
+		import('@shikijs/langs/typescript'),
+	],
+	engine: createOnigurumaEngine(() => import('shiki/wasm')),
+});
 
 function read(file) {
 	return fs.readFileSync(file, 'utf8');
@@ -160,11 +183,8 @@ async function markdownToHtml(
 	const html = await unified()
 		.use(remarkParse)
 		.use(remarkRehype)
-		.use(rehypeShiki, {
-			themes: {
-				light: 'vitesse-light',
-				dark: 'vitesse-dark',
-			},
+		.use(rehypeShikiFromHighlighter, highlighter, {
+			theme: 'Squirrelsong Light',
 		})
 		.use(rehypeStringify)
 		.process(md);

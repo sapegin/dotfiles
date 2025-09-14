@@ -6,6 +6,7 @@
 // > [x] Peek
 // > [x] Fzf
 // > [x] Ghostty
+// > [x] dotfiles/brain
 //
 // ---
 // Author: Artem Sapegin, sapegin.me
@@ -19,11 +20,21 @@ import { execSync } from 'node:child_process';
 
 const HOME = os.homedir();
 
-const SKIP_SUDO = false;
+const SKIP_SUDO = true;
 
 const REPO_ROOT =
 	'https://raw.githubusercontent.com/sapegin/squirrelsong/master';
 const DEST_DIR = `${HOME}/dotfiles/tilde`;
+
+function stripJsonComments(json) {
+	return (
+		json
+			// Remove /* */ comments
+			.replace(/\/\*[\s\S]*?\*\//g, '')
+			// Remove // comments
+			.replace(/\/\/.*$/gm, '')
+	);
+}
 
 async function download(filepath) {
 	const url = `${REPO_ROOT}/${encodeURI(filepath)}`;
@@ -100,7 +111,7 @@ if (SKIP_SUDO === false) {
 		`sudo -- sh -c 'command rm "${bearThemesDir}/Ayu.theme" > /dev/null 2>&1; command cp "${tempFile}" "${bearThemesDir}/Ayu.theme"'`
 	);
 	fs.rmSync(tempDir, { recursive: true, force: true });
-	console.log('💡 Now choose Ayu theme in Bear settings');
+	console.log('   💡 Now choose Ayu theme in Bear settings');
 }
 
 /**
@@ -117,7 +128,24 @@ const zshRc = read(zshRcFile);
 const zshRcUpdated = zshRc.replace(fzfThemeRegExp, fzfThemeTheme);
 write(zshRcFile, zshRcUpdated);
 
-console.log('💡 Reopen your terminal to take effect');
+console.log('   💡 Reopen your terminal to take effect');
+
+/**
+ * dotfiles/brain
+ */
+
+const brainThemeDir = `${HOME}/dotfiles/colors/shiki`;
+
+console.log('🌈 Installing dotfiles/brain theme…');
+const brainTheme = stripJsonComments(
+	await download(
+		'themes/VSCode/SquirrelsongLight/SquirrelsongLight.color-theme.json'
+	)
+);
+write(
+	path.join(brainThemeDir, 'SquirrelsongLight.color-theme.json'),
+	brainTheme
+);
 
 // --- 8< -- 8< ---
 
