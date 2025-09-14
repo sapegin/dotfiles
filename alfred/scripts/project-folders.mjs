@@ -16,7 +16,10 @@ import { globSync } from 'glob';
 
 const untildify = (x) => x.replace(/^~/, os.homedir());
 
-const env = parseEnv(fs.readFileSync(untildify(`~/.env`), 'utf8'));
+const envFile = untildify(`~/.env`);
+const env = fs.existsSync(envFile)
+	? parseEnv(fs.readFileSync(envFile, 'utf8'))
+	: {};
 
 const folders = [
 	// Personal projects
