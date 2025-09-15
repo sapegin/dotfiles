@@ -215,14 +215,14 @@ async function addMarkdownFolder(
 	const files = globSync(`${dir}/**/*.md`);
 	const destDirFull = `${DEST_DIR}/${destDir}`;
 	fs.rmSync(destDirFull, { recursive: true, force: true });
-	fs.mkdirSync(destDirFull, { recursive: true, force: true });
+	fs.mkdirSync(destDirFull, { recursive: true });
 
 	for (const file of files) {
 		if (filter(file) === false) {
 			continue;
 		}
 
-		console.log('👉🏼', file);
+		console.log('👉🏼', path.relative(dir, file));
 		const md = read(file);
 		const cleanMd = prepareMarkdown(md);
 		const html = await markdownToHtml(cleanMd, { type, subsections });
@@ -233,8 +233,8 @@ async function addMarkdownFolder(
 
 console.log('📖 Downloading the book…');
 
-// fs.rmSync(BOOK_SOURCE_DIR, { recursive: true, force: true });
-// execSync(`curl "${BOOK_REPO_TAR_GZ}" | tar xz -C $HOME/dotfiles`);
+fs.rmSync(BOOK_SOURCE_DIR, { recursive: true, force: true });
+execSync(`curl "${BOOK_REPO_TAR_GZ}" | tar xz -C $HOME/dotfiles`);
 
 console.log();
 console.log('📖 Generating the book files…');
