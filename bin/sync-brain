@@ -60,15 +60,29 @@ import { createOnigurumaEngine } from 'shiki/engine/oniguruma';
 // TODO: How to add an icon? Raccoon!
 // TODO: Get rid of 020, 040...
 
+const untildify = (x) => x.replace(/^~/, os.homedir());
+
+const SOURCES = [
+	{
+		repo: 'https://codeload.github.com/sapegin/washingcode-book/tar.gz/master',
+		repoDir: '~/dotfiles/washingcode-book-master',
+		from: `~/dotfiles/washingcode-book-master/manuscript`,
+		to: 'book',
+		subsections: true,
+		filter: (x) =>
+			x.includes('Header') === false && x.includes('Footer') === false,
+	},
+	{
+		repo: 'https://codeload.github.com/sapegin/sapegin.me/tar.gz/master',
+		repoDir: '~/dotfiles/sapegin.me-master',
+		from: `~/dotfiles/sapegin.me-master/src/content/blog`,
+		to: 'blog',
+		filter: (x) => x.includes('hello-world') === false,
+	},
+];
+
 const HOME = os.homedir();
 
-const BOOK_REPO_TAR_GZ =
-	'https://codeload.github.com/sapegin/washingcode-book/tar.gz/master';
-const BLOG_REPO_TAR_GZ =
-	'https://codeload.github.com/sapegin/sapegin.me/tar.gz/master';
-
-const BOOK_SOURCE_DIR = `${HOME}/dotfiles/washingcode-book-master`;
-const BLOG_SOURCE_DIR = `${HOME}/dotfiles/sapegin.me-master`;
 const DEST_DIR = `${HOME}/dotfiles/brain`;
 const SITE_URL = 'https://sapegin.me/';
 
@@ -234,37 +248,27 @@ async function addMarkdownFolder(
 	}
 }
 
-console.log('📖 Downloading the book…');
+// --------- 8< --------- 8< --------- 8< ---------
 
-fs.rmSync(BOOK_SOURCE_DIR, { recursive: true, force: true });
-execSync(`curl "${BOOK_REPO_TAR_GZ}" | tar xz -C $HOME/dotfiles`);
+for (const { repo, repoDir, from, to, subsections, filter } of SOURCES) {
+	if (repo) {
+		console.log(`📖 Downloading ${to}…`);
+		fs.rmSync(untildify(repoDir), { recursive: true, force: true });
+		execSync(`curl "${repo}" | tar xz -C $HOME/dotfiles`);
+		console.log();
+	}
 
-console.log();
-console.log('📖 Generating the book files…');
+	console.log(`📖 Generating ${to} files…`);
 
-await addMarkdownFolder(`${BOOK_SOURCE_DIR}/manuscript`, {
-	destDir: 'book',
-	type: 'Guide',
-	subsections: true,
-	filter: (x) =>
-		x.includes('Header') === false && x.includes('Footer') === false,
-});
+	await addMarkdownFolder(untildify(from), {
+		destDir: to,
+		type: 'Guide',
+		subsections,
+		filter,
+	});
+	console.log();
+}
 
-console.log('👨🏻‍💻 Downloading the blog…');
-
-fs.rmSync(BLOG_SOURCE_DIR, { recursive: true, force: true });
-execSync(`curl "${BLOG_REPO_TAR_GZ}" | tar xz -C $HOME/dotfiles`);
-
-console.log();
-console.log('👨🏻‍💻 Generating the blog files…');
-
-await addMarkdownFolder(`${BLOG_SOURCE_DIR}/src/content/blog`, {
-	destDir: 'blog',
-	type: 'Guide',
-	filter: (x) => x.includes('hello-world') === false,
-});
-
-console.log();
 console.log('🦜 Now update the docset in Dash:');
 console.log(
 	'Go to Settings → Downloads → Docset Generator and run Update Docset'
