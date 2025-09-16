@@ -82,9 +82,7 @@ const SOURCES = [
 	},
 ];
 
-const HOME = os.homedir();
-
-const DEST_DIR = `${HOME}/dotfiles/brain`;
+const DEST_DIR = `~/dotfiles/brain`;
 const SITE_URL = 'https://sapegin.me/';
 
 const TIPS = {
@@ -231,9 +229,8 @@ async function addMarkdownFolder(
 	{ destDir, type, subsections = false, filter = () => true }
 ) {
 	const files = globSync(`${dir}/**/*.md`);
-	const destDirFull = `${DEST_DIR}/${destDir}`;
-	fs.rmSync(destDirFull, { recursive: true, force: true });
-	fs.mkdirSync(destDirFull, { recursive: true });
+	fs.rmSync(destDir, { recursive: true, force: true });
+	fs.mkdirSync(destDir, { recursive: true });
 
 	for (const file of files) {
 		if (filter(file) === false) {
@@ -245,7 +242,7 @@ async function addMarkdownFolder(
 		const cleanMd = prepareMarkdown(md);
 		const html = await markdownToHtml(cleanMd, { type, subsections });
 		const filename = path.parse(file).name;
-		write(`${destDirFull}/${filename}.html`, html);
+		write(`${destDir}/${filename}.html`, html);
 	}
 }
 
@@ -262,7 +259,7 @@ for (const { repo, repoDir, from, to, subsections, filter } of SOURCES) {
 	console.log(`📖 Generating ${to} files…`);
 
 	await addMarkdownFolder(untildify(from), {
-		destDir: to,
+		destDir: untildify(`${DEST_DIR}/${to}`),
 		type: 'Guide',
 		subsections,
 		filter,
