@@ -18,3 +18,4 @@
 - [Kilo Code custom modes](https://kilocode.ai/docs/features/custom-modes)
 - [Kilo Code custom rules](https://kilocode.ai/docs/advanced-usage/custom-rules)
 - [Copilot prompt files](https://code.visualstudio.com/docs/copilot/customization/prompt-files)
+- [Claude Code Action](https://github.com/anthropics/claude-code-action)
