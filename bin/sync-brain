@@ -59,6 +59,7 @@ import { createOnigurumaEngine } from 'shiki/engine/oniguruma';
 // TODO: https://kapeli.com/docsets
 // TODO: How to add an icon? Raccoon!
 // TODO: Get rid of 020, 040...
+// TODO: Ignore book chapters from the blog
 
 const untildify = (x) => x.replace(/^~/, os.homedir());
 
