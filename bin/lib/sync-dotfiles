@@ -36,6 +36,11 @@ const SPECIALS = [
 		destination: `${HOME}/.kilocode/rules`,
 	},
 	{
+		// Kilo Code commands
+		source: `${HOME}/dotfiles/ai-rules/commands`,
+		destination: `${HOME}/.kilocode/workflows`,
+	},
+	{
 		// Photoshop
 		source: `${HOME}/Library/Mobile Documents/com~apple~CloudDocs/Apps/Adobe Photoshop 2024 Settings`,
 		destination: `${HOME}/Library/Preferences/Adobe Photoshop 2024 Settings`,
