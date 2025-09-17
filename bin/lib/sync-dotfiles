@@ -41,6 +41,13 @@ const SPECIALS = [
 		destination: `${HOME}/.kilocode/workflows`,
 	},
 	{
+		// Cursor commands.
+		// Need to be copied, doesn't work with symlinks
+		source: `${HOME}/dotfiles/ai-rules/commands/review.prompt.md`,
+		destination: `${HOME}/.cursor/commands/review.md`,
+		copy: true,
+	},
+	{
 		// Photoshop
 		source: `${HOME}/Library/Mobile Documents/com~apple~CloudDocs/Apps/Adobe Photoshop 2024 Settings`,
 		destination: `${HOME}/Library/Preferences/Adobe Photoshop 2024 Settings`,
@@ -111,6 +118,7 @@ async function syncDotfiles() {
 		}
 
 		// Create a symlink
+		fs.mkdirSync(path.dirname(destPath), { recursive: true });
 		fs.symlinkSync(sourcePath, destPath);
 
 		console.log('🦐', destPath, '→', sourcePath);
@@ -118,7 +126,7 @@ async function syncDotfiles() {
 }
 
 async function syncSpecials() {
-	for (const { source, destination } of SPECIALS) {
+	for (const { source, destination, copy } of SPECIALS) {
 		// Check if the source exists
 		if (fs.existsSync(source) === false) {
 			continue;
@@ -126,9 +134,20 @@ async function syncSpecials() {
 
 		// Check that we aren't overwriting anything
 		if (fs.existsSync(destination)) {
-			// Already a symlink to dotfiles?
-			if (isSymlinkTo(destination, source)) {
-				continue;
+			if (copy) {
+				// Already identical to the source file?
+				if (
+					fs.lstatSync(destination).isFile() &&
+					fs.readFileSync(source, 'utf8') ===
+						fs.readFileSync(destination, 'utf8')
+				) {
+					continue;
+				}
+			} else {
+				// Already a symlink to dotfiles?
+				if (isSymlinkTo(destination, source)) {
+					continue;
+				}
 			}
 
 			// Should overwrite?
@@ -141,11 +160,19 @@ async function syncSpecials() {
 			}
 
 			// Remove
-			fs.removeSync(destination, { recursive: true, force: true });
+			fs.rmSync(destination, { recursive: true, force: true });
 		}
 
-		// Create a symlink
-		fs.symlinkSync(source, destination);
+		// Create a folder if needed
+		fs.mkdirSync(path.dirname(destination), { recursive: true });
+
+		if (copy) {
+			// Copy the file
+			fs.copyFileSync(source, destination);
+		} else {
+			// Create a symlink
+			fs.symlinkSync(source, destination);
+		}
 
 		console.log('🦐', source, '→', destination);
 	}
