@@ -22,8 +22,7 @@
 import path from 'node:path';
 import fs from 'node:fs';
 import os from 'node:os';
-import { parseEnv } from 'util';
-import fs from 'node:fs';
+import { parseEnv } from 'node:util';
 
 const untildify = (x) => x.replace(/^~/, os.homedir());
 
