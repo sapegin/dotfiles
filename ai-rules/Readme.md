@@ -3,12 +3,8 @@
 | App | Global config | Custom modes | Commands | User rules | MCP servers |
 | --- | --- | --- | --- | --- | --- |
 | Copilot | ? | automated | automated | automated | automated |
-| Cursor | ? | [instructions](https://github.com/sapegin/two-step-ai-coding-modes/tree/main?tab=readme-ov-file#cursor-custom-modes) | unsupported¹ | [instructions](https://github.com/sapegin/washingcode-book/blob/master/ai/Readme.md#cursor) | automated |
+| Cursor | ? | [instructions](https://github.com/sapegin/two-step-ai-coding-modes/tree/main?tab=readme-ov-file#cursor-custom-modes) | automated | [instructions](https://github.com/sapegin/washingcode-book/blob/master/ai/Readme.md#cursor) | automated |
 | Kilo Code | ? | automated | automated | automated | automated |
-
-# Notes
-
-1. Cursor only supports per-project commands: copy the files from [commands](./commands) folder to `.cursor/commands/`.
 
 # References
 
