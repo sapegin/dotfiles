@@ -3,9 +3,9 @@
 // Generates Dash docset with:
 // - [x] Washing code book
 // - [x] Blog
-// - [ ] Writing drafts
-// - [ ] Vitest cheat sheet
-// - [ ] Markdown files from iCloud/Articles
+// - [x] Writing drafts
+// - [x] Markdown files from iCloud/Articles
+// - [ ] https://nano.sapegin.ru/
 //
 // ---
 // Author: Artem Sapegin, sapegin.me
@@ -58,13 +58,15 @@ import { createOnigurumaEngine } from 'shiki/engine/oniguruma';
 
 // TODO: https://kapeli.com/docsets
 // TODO: How to add an icon? Raccoon!
-// TODO: Get rid of 020, 040...
-// TODO: Ignore book chapters from the blog
+// TODO: Support internal links (#foo) that works
+// TODO: Support Markdown notes ([!NOTE])
+// TODO: Support nested ul/ul
 
 const untildify = (x) => x.replace(/^~/, os.homedir());
 
 const SOURCES = [
 	{
+		// Washing your code book
 		repo: 'https://codeload.github.com/sapegin/washingcode-book/tar.gz/master',
 		repoDir: '~/dotfiles/washingcode-book-master',
 		from: `~/dotfiles/washingcode-book-master/manuscript`,
@@ -74,11 +76,25 @@ const SOURCES = [
 			x.includes('Header') === false && x.includes('Footer') === false,
 	},
 	{
+		// My blog
 		repo: 'https://codeload.github.com/sapegin/sapegin.me/tar.gz/master',
 		repoDir: '~/dotfiles/sapegin.me-master',
 		from: `~/dotfiles/sapegin.me-master/src/content/blog`,
 		to: 'blog',
-		filter: (x) => x.includes('hello-world') === false,
+		filter: (filename, contents) =>
+			filename.includes('hello-world') === false &&
+			// Skip book chapters to avoid duplication
+			contents.includes(`title: 'Washing your code: `) === false,
+	},
+	{
+		// My unfinished writings
+		from: `~/Library/Mobile Documents/com~apple~CloudDocs/Writings`,
+		to: 'drafts',
+	},
+	{
+		// Extra Markdown files
+		from: `~/Library/Mobile Documents/com~apple~CloudDocs/Articles`,
+		to: 'articles',
 	},
 ];
 
@@ -120,6 +136,18 @@ function read(file) {
 
 function write(file, text) {
 	return fs.writeFileSync(file, text);
+}
+
+function slugify(filename) {
+	// Remove leading numbers: `010-something` → `something`
+	const withoutNumbers = filename.replace(/^\d+[-_ ]*/, '');
+	// Convert to kebab-case
+	return withoutNumbers
+		.replace(/[^a-z0-9]+/gi, '-')
+		.replace(/([A-Z])/g, '-$1')
+		.replace(/--+/g, '-')
+		.replace(/^-+|-+$/g, '')
+		.toLowerCase();
 }
 
 function getTitle(text) {
@@ -228,20 +256,21 @@ async function addMarkdownFolder(
 	dir,
 	{ destDir, type, subsections = false, filter = () => true }
 ) {
-	const files = globSync(`${dir}/**/*.md`);
+	const files = globSync(`${dir}/*.md`);
 	fs.rmSync(destDir, { recursive: true, force: true });
 	fs.mkdirSync(destDir, { recursive: true });
 
 	for (const file of files) {
-		if (filter(file) === false) {
+		const md = read(file);
+		if (filter(file, md) === false) {
 			continue;
 		}
 
 		console.log('👉🏼', path.relative(dir, file));
-		const md = read(file);
+
 		const cleanMd = prepareMarkdown(md);
 		const html = await markdownToHtml(cleanMd, { type, subsections });
-		const filename = path.parse(file).name;
+		const filename = slugify(path.parse(file).name);
 		write(`${destDir}/${filename}.html`, html);
 	}
 }
