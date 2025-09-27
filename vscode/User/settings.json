@@ -221,6 +221,12 @@
     // I don’t know if it works ¯\_(ツ)_/¯
     "~/dotfiles/ai-rules/rules": true
   },
+  "chat.tools.terminal.autoApprove": {
+    "npm run typecheck": true,
+    "npm run dev": true,
+    "npm run lint": true,
+    "npm run test": true
+  },
   "color-highlight.markerType": "underline",
   "color-highlight.markRuler": false,
   "color-highlight.matchWords": false,
