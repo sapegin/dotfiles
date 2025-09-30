@@ -39,8 +39,9 @@ signin
 signup
 Squirrelsong
 tacocat
-Tamia
+tamia
 Tâmia
 Textlint
+themable
 todos
 trackpad
