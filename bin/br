@@ -113,7 +113,7 @@ if has_local_branch "$branch"; then
 		tracking=$(git branch -vv | grep "*" | awk '{ print $4 }')
 		if [[ ! "$tracking" =~ "$remote" ]]; then
 			echo "⚙️ Your local branch is not tracking the corresponding remote branch, fixing…"
-			git branch --set-upstream-to "$branch" "$remote/$branch"
+			git branch --set-upstream-to "$remote/$branch" "$branch"
 		fi
 
 		# Pull
