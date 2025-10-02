@@ -82,6 +82,10 @@ execSync(`bat cache --build`);
 console.log('🌈 Installing Ghostty theme…');
 
 await install('themes/Ghostty/Squirrelsong Dark', '.config/ghostty/themes');
+await install(
+	'themes/Ghostty/Squirrelsong Dark Deep Purple',
+	'.config/ghostty/themes'
+);
 
 /**
  * Peek
