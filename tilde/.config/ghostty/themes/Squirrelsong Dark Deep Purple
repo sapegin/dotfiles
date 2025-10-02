@@ -1,11 +1,11 @@
 # Squirrelsong Dark Deep Purple Theme for Ghostty
 # https://sapegin.me/squirrelsong/
 
-foreground = #ad8fcc
+foreground = #ae95c7
 background = #271e38
-selection-foreground = #ad8fcc
+selection-foreground = #ae95c7
 selection-background = #3f3259
-cursor-color = #ad8fcc
+cursor-color = #ae95c7
 
 # Black
 palette = 0=#36294d
@@ -36,9 +36,9 @@ palette = 6=#4f9593
 palette = 14=#72aaa8
 
 # White
-palette = 7=#caaee8
-palette = 15=#ecd9ff
+palette = 7=#c9b1e3
+palette = 15=#ead9fa
 
 # Use Squirrelsong colors for the icon
-macos-icon-ghost-color = #ad8fcc
+macos-icon-ghost-color = #ae95c7
 macos-icon-screen-color = #57427a

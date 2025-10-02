@@ -70,7 +70,7 @@ async function install(from, toDir) {
 console.log('🌈 Installing Bat theme…');
 
 await install(
-	'themes/Sublime Text/Squirrelsong Dark/Squirrelsong Dark.tmTheme',
+	'themes/Sublime Text/Squirrelsong Dark Deep Purple/Squirrelsong Dark Deep Purple.tmTheme',
 	'.config/bat/themes'
 );
 execSync(`bat cache --build`);
@@ -100,34 +100,15 @@ if (fs.existsSync(peekThemeDir)) {
 }
 
 /**
- * Bear
- */
-
-if (SKIP_SUDO === false) {
-	console.log('🌈 Installing Bear theme…');
-
-	const bearTheme = await download('themes/Bear/Squirrelsong Light.theme');
-	const bearThemesDir = `/Applications/Bear.app/Contents/Frameworks/BearCore.framework/Resources`;
-	const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotfiles-'));
-	const tempFile = path.join(tempDir, 'theme');
-	write(tempFile, bearTheme);
-	execSync(
-		`sudo -- sh -c 'command rm "${bearThemesDir}/Ayu.theme" > /dev/null 2>&1; command cp "${tempFile}" "${bearThemesDir}/Ayu.theme"'`
-	);
-	fs.rmSync(tempDir, { recursive: true, force: true });
-	console.log('   💡 Now choose Ayu theme in Bear settings');
-}
-
-/**
  * Fzf
  */
 
 console.log('🌈 Installing fzf theme…');
 
-const fzfThemeRegExp = /FZF_DEFAULT_OPTS=["'][^'"]+["']/;
+const fzfThemeRegExp = /FZF_DEFAULT_OPTS=["'][^'"]+["']/g;
 const fzfThemeReadme = await download('themes/Fzf/Readme.md');
 const zshRcFile = `${HOME}/dotfiles/tilde/.zshrc`;
-const fzfThemeTheme = fzfThemeReadme.match(fzfThemeRegExp)[0] ?? '';
+const fzfThemeTheme = fzfThemeReadme.match(fzfThemeRegExp).at(-1) ?? '';
 const zshRc = read(zshRcFile);
 const zshRcUpdated = zshRc.replace(fzfThemeRegExp, fzfThemeTheme);
 write(zshRcFile, zshRcUpdated);
@@ -150,6 +131,25 @@ write(
 	path.join(brainThemeDir, 'SquirrelsongLight.color-theme.json'),
 	brainTheme
 );
+
+/**
+ * Bear
+ */
+
+if (SKIP_SUDO === false) {
+	console.log('🌈 Installing Bear theme…');
+
+	const bearTheme = await download('themes/Bear/Squirrelsong Light.theme');
+	const bearThemesDir = `/Applications/Bear.app/Contents/Frameworks/BearCore.framework/Resources`;
+	const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotfiles-'));
+	const tempFile = path.join(tempDir, 'theme');
+	write(tempFile, bearTheme);
+	execSync(
+		`sudo -- sh -c 'command rm "${bearThemesDir}/Ayu.theme" > /dev/null 2>&1; command cp "${tempFile}" "${bearThemesDir}/Ayu.theme"'`
+	);
+	fs.rmSync(tempDir, { recursive: true, force: true });
+	console.log('   💡 Now choose Ayu theme in Bear settings');
+}
 
 // --- 8< -- 8< ---
 

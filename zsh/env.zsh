@@ -38,7 +38,7 @@ export LESS="${less_options[*]}"
 export PAGER='less'
 
 # Bat: https://github.com/sharkdp/bat
-export BAT_THEME="Squirrelsong Dark"
+export BAT_THEME="Squirrelsong Dark Deep Purple"
 
 # LS colors
 # Used by: fd
