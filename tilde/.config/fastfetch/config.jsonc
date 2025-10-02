@@ -45,7 +45,6 @@
 			"format": "{5}",
 		},
 		"uptime",
-		"weather",
 		"break",
 		"colors",
 	],
