@@ -94,7 +94,7 @@
 	hyperlinks-file-link-format = "vscode://file/{path}:{line}"
 	grep-line-number-style = normal dim
 	grep-file-style = blue bold
-	grep-match-line-style = normal "#453327" # gray04
+	grep-match-line-style = normal "#453461" # Squirrelsong Dark purple04
 	grep-match-word-style = black yellow
 	grep-separator-symbol = " "
 [merge]
@@ -114,7 +114,7 @@
 [include]
 	path = .gitlocal
 
-# Some random bullshit that always appers at the end of the config file
+# Some random bullshit that always appears at the end of the config file
 [filter "media"]
 	required = true
 	clean = git media clean %f
