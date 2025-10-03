@@ -1,3 +1,11 @@
+:root {
+	/* Color palette is mostly based on sapegin.me */
+	--color-text: #3a3d40;
+	--color-background: #fff;
+	--color-link: #577290;
+	--color-accent: #be4b83;
+}
+
 body {
 	padding: 1rem;
 	font-family:
@@ -17,7 +25,8 @@ body {
 		'Noto Color Emoji';
 	line-height: 1.5;
 	font-size: 1.2rem;
-	color: #3a3d40;
+	background-color: var(--color-background);
+	color: var(--color-text);
 }
 
 :is(
@@ -46,11 +55,11 @@ body {
 
 /* Links */
 a {
-	color: #577290;
+	color: var(--color-link);
 	text-decoration: underline;
 }
 a:hover {
-	color: #be4b83;
+	color: var(--color-accent);
 	cursor: pointer;
 }
 
@@ -68,7 +77,7 @@ cite {
 
 hr {
 	border: 0;
-	background: #3a3d40;
+	background: var(--color-text);
 }
 
 /* Responsive images and full bleed images */
@@ -87,11 +96,11 @@ table {
 }
 thead {
 	text-align: left;
-	border-bottom: 2px solid #3a3d40;
+	border-bottom: 2px solid var(--color-text);
 }
 :is(td, th) {
 	text-align: left;
-	border-bottom: 1px solid #3a3d40;
+	border-bottom: 1px solid var(--color-text);
 	padding: 0.5rem;
 }
 td {
