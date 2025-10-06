@@ -19,6 +19,7 @@ discoverability
 dotfiles
 Flexbox
 Formik
+grayscale
 greppability
 greppable
 Hygraph

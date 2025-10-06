@@ -225,8 +225,9 @@
     "npm run typecheck": true,
     "npm run dev": true,
     "npm run lint": true,
-    "npm run test": true
-  },
+    "npm run test": true,
+    "npm start": true
+},
   "color-highlight.markerType": "underline",
   "color-highlight.markRuler": false,
   "color-highlight.matchWords": false,
