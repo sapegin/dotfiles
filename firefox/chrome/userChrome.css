@@ -1,32 +1,52 @@
 /* https://www.userchrome.org/how-create-userchrome-css.html */
 /* https://firefox-source-docs.mozilla.org/devtools-user/browser_toolbox/index.html */
 
-/* Change awful blue focus outline color to */
 :root {
-    --toolbar-field-focus-border-color: #78737d !important;
+	--gray060: #4c4b4e;
+	--gray080: #6b676f;
+	--gray090: #78737d;
+	--gray100: #8c8792;
+	--gray110: #9c96a2;
+	--gray180: #fdfdfe;
+	--gray140: #c9c4cf;
+	--gray150: #dbd7e0;
+	--gray160: #e8e5eb;
+
+	/* UI */
+	--color-accent-primary-active: var(--gray090) !important;
+	--color-accent-primary-hover: var(--gray100) !important;
+	--color-accent-primary: var(--gray110) !important;
+	--in-content-button-background: var(--gray160) !important;
+	--in-content-button-background-hover: var(--gray150) !important;
+	--in-content-page-color: var(--gray060) !important;
+	--in-content-primary-button-text-color: var(--gray180) !important;
+	--in-content-text-color: var(--gray090) !important;
+	--text-color-deemphasized: var(--gray090) !important;
+	--toolbar-field-focus-border-color: var(--gray090) !important;
 }
 
 /* Make the playing icon less obtrusive on pinned tabs */
 .tab-icon-overlay {
-  #tabbrowser-tabs[orient="vertical"]:not([expanded]) &:not([crashed]), &[pinned]:not([crashed]) {
-    &:is([soundplaying], [muted], [activemedia-blocked]) {
-        height: 12px !important;
-        width: 12px !important;
-        opacity: 0.4 !important;
-        inset-inline-end: -13px !important;
-        top: -9px !important;
-        background-color: var(--tab-icon-overlay-fill) !important;
-        fill: var(--tab-icon-overlay-stroke) !important;
-    }
-  }
+	#tabbrowser-tabs[orient='vertical']:not([expanded]) &:not([crashed]),
+	&[pinned]:not([crashed]) {
+		&:is([soundplaying], [muted], [activemedia-blocked]) {
+			height: 12px !important;
+			width: 12px !important;
+			opacity: 0.4 !important;
+			inset-inline-end: -13px !important;
+			top: -9px !important;
+			background-color: var(--tab-icon-overlay-fill) !important;
+			fill: var(--tab-icon-overlay-stroke) !important;
+		}
+	}
 }
 
 /* Make the protection icon in the address bar grayscale */
 #tracking-protection-icon-container {
-    filter: grayscale() !important;
+	filter: grayscale() !important;
 }
 
 /* Hide annoying "Extension (Blank Sky New Tab Page)" text on New Tab page */
-label[value="Extension (Blank Sky New Tab Page)"] {
-    display: none !important;
+label[value='Extension (Blank Sky New Tab Page)'] {
+	display: none !important;
 }
