@@ -2,6 +2,7 @@
 /* https://firefox-source-docs.mozilla.org/devtools-user/browser_toolbox/index.html */
 
 :root {
+	/* Squirrelsong Light colors: https://sapegin.me/squirrelsong/spec/ */
 	--gray060: #4c4b4e;
 	--gray080: #6b676f;
 	--gray090: #78737d;
@@ -11,18 +12,86 @@
 	--gray140: #c9c4cf;
 	--gray150: #dbd7e0;
 	--gray160: #e8e5eb;
+	--blue: #80a4be;
+	--blueContrast: #527b98;
 
-	/* UI */
-	--color-accent-primary-active: var(--gray090) !important;
-	--color-accent-primary-hover: var(--gray100) !important;
-	--color-accent-primary: var(--gray110) !important;
-	--in-content-button-background: var(--gray160) !important;
-	--in-content-button-background-hover: var(--gray150) !important;
-	--in-content-page-color: var(--gray060) !important;
+	--titleForeground: var(--gray060);
+	--textForeground: var(--gray090);
+	--activeForeground: var(--gray060);
+	--linkForeground: var(--blueContrast);
+	--linkHoverForeground: var(--blue);
+	--buttonForeground: var(--gray180);
+	--buttonBackground: var(--gray100);
+	--buttonHoverBackground: var(--gray090);
+	--buttonDisabledBackground: var(--gray150);
+	--secondaryButtonForeground: var(--gray080);
+	--secondaryButtonBackground: var(--gray160);
+	--secondaryButtonHoverBackground: var(--gray150);
+	--hoverBackground: var(--gray160);
+	--focusBorder: var(--gray090);
+	--accent: var(--gray060);
+
+	/* Links */
+	--link-color: var(--linkForeground) !important;
+	--link-color-hover: var(--linkHoverForeground) !important;
+	--link-color-active: var(--linkHoverForeground) !important;
+
+	/* Primary buttons, checkboxes, etc. */
+	--color-accent-primary: var(--buttonBackground) !important;
+	--color-accent-primary-active: var(--buttonHoverBackground) !important;
+	--color-accent-primary-hover: var(--buttonHoverBackground) !important;
+	--in-content-primary-button-background: var(--buttonBackground) !important;
+	--in-content-primary-button-background-hover: var(
+		--buttonHoverBackground
+	) !important;
+	--in-content-primary-button-text-color: var(--buttonForeground) !important;
+	--button-text-color-primary: var(--buttonForeground) !important;
+	--button-background-color-primary: var(--buttonBackground) !important;
+	--button-background-color-primary-hover: var(
+		--buttonHoverBackground
+	) !important;
+	--button-background-color-primary-active: var(
+		--buttonHoverBackground
+	) !important;
+	--button-background-color-primary-disabled: var(
+		--buttonDisabledBackground
+	) !important;
+
+	/* Various UI elements */
+	--in-content-button-background: var(--secondaryButtonBackground) !important;
+	--in-content-button-background-hover: var(
+		--secondaryButtonHoverBackground
+	) !important;
+	--in-content-page-color: var(--textForeground) !important;
 	--in-content-primary-button-text-color: var(--gray180) !important;
-	--in-content-text-color: var(--gray090) !important;
-	--text-color-deemphasized: var(--gray090) !important;
-	--toolbar-field-focus-border-color: var(--gray090) !important;
+	--in-content-text-color: var(--textForeground) !important;
+	--text-color-deemphasized: var(--textForeground) !important;
+
+	/* Secondary buttons */
+	--button-text-color: var(--secondaryButtonForeground) !important;
+	--button-background-color: var(--secondaryButtonBackground) !important;
+	--button-background-color-hover: var(
+		--secondaryButtonHoverBackground
+	) !important;
+	--button-background-color-active: var(
+		--secondaryButtonHoverBackground
+	) !important;
+
+	/* Focus outlines */
+	--focus-outline-color: var(--focusBorder) !important;
+	--toolbar-field-focus-border-color: var(--focusBorder) !important;
+
+	/* Omnibar */
+	--urlbar-box-text-color: var(--textForeground) !important;
+	--urlbarView-hover-background: var(--hoverBackground) !important;
+
+	/* Zoom level indicator in omnibar */
+	--urlbar-box-bgcolor: var(--secondaryButtonBackground) !important;
+	--urlbar-box-hover-bgcolor: var(--hoverBackground) !important;
+	--urlbar-box-focus-bgcolor: var(--hoverBackground) !important;
+
+	/* Dot when Firefox has an update */
+	--attention-dot-color: var(--accent) !important;
 }
 
 /* Make the playing icon less obtrusive on pinned tabs */
