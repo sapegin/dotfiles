@@ -59,7 +59,7 @@ for (const profileDirectory of profiles) {
 			// Copy a new file if it doesn't exist
 			console.log(`[FIREFOX] Creating ${path.basename(absoluteFilepath)}…`);
 			fs.mkdirSync(path.dirname(absoluteFilepath), { recursive: true });
-			fs.copySync(templateFile, absoluteFilepath);
+			fs.cpSync(templateFile, absoluteFilepath);
 		}
 	}
 }
