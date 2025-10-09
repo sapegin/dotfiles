@@ -204,9 +204,10 @@
   "zenMode.showTabs": "none",
 
   // Cursor specific options
-  "cursor.composer.textSizeScale": 1.15,
   "cursor.chat.terminalShowHoverHint": false,
   "cursor.composer.shouldAllowCustomModes": true,
+  "cursor.composer.textSizeScale": 1.15,
+  "cursor.enable_agent_window_setting": false,
 
   // Plugins
   "git.autofetch": true,
