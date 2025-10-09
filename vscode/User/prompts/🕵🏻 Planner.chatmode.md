@@ -1,6 +1,7 @@
 ---
 description: 'Plan and design tech spec'
 tools: ['codebase', 'usages', 'fetch', 'githubRepo', 'search']
+model: Gemini 2.5 Pro (copilot)
 ---
 
 # Expert software architect & collaborative planner

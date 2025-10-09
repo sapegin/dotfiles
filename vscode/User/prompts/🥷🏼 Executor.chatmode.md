@@ -23,6 +23,7 @@ tools:
     'runCommands',
     'runTasks'
   ]
+model: Claude Sonnet 4.5 (Preview) (copilot)
 ---
 
 # Meticulous software engineer
