@@ -1,0 +1,37 @@
+@-moz-document url-prefix("about:reader") {
+	body {
+		/* Squirrelsong Light colors: https://sapegin.me/squirrelsong/spec/ */
+		--gray060: #4c4b4e;
+		--gray180: #fdfdfe;
+		--darkGray080: #9e8e7e;
+		--darkGray140: #5b4839;
+		--blue: #80a4be;
+		--blueContrast: #527b98;
+
+		/* Custom colors */
+		--sepiaBackground: #f6f2ef;
+		--sepiaHoverBackground: #ebe4dc;
+		--sepiaHoverBorder: #b0a59d;
+
+		--light-theme-foreground: var(--gray060) !important;
+		--light-theme-background: var(--gray180) !important;
+		--dark-theme-foreground: var(--gray180) !important;
+		--dark-theme-background: var(--gray060) !important;
+		--primary-color: var(--blue) !important;
+	}
+
+	body.sepia {
+		--main-background: var(--sepiaBackground) !important;
+		--main-foreground: var(--darkGray140) !important;
+		--toolbar-border: var(--sepiaHoverBorder) !important;
+		--toolbar-button-background-hover: var(--sepiaHoverBackground) !important;
+		--toolbar-button-background-active: var(--sepiaHoverBackground) !important;
+		--icon-fill: var(--main-foreground) !important;
+		--icon-disabled-fill: var(--darkGray080) !important;
+	}
+
+	.domain {
+		/* Use text color for underline instead of black */
+		text-decoration: underline !important;
+	}
+}

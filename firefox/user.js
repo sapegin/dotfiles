@@ -35,7 +35,9 @@ user_pref('browser.tabs.closeWindowWithLastTab', false);
 // Allow web apps to override default Firefox hotkeys
 user_pref('permissions.default.shortcuts', 0);
 
-// Set monospace font
+// Set default fonts
+user_pref('font.name.default.x-western', 'system-ui');
+user_pref('font.name.serif.x-western', 'Charter');
 user_pref('font.name.monospace.x-western', 'Monolisa');
 // Search highlight colors
 user_pref('ui.textSelectAttentionBackground', '#e87da4'); // Squirrelsong Light brightPink
