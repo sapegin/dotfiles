@@ -226,7 +226,9 @@
     "npm run dev": true,
     "npm run lint": true,
     "npm run test": true,
-    "npm start": true
+    "npm start": true,
+    "npm test": true,
+    "npm install": true
 },
   "color-highlight.markerType": "underline",
   "color-highlight.markRuler": false,
