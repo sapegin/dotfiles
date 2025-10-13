@@ -1,8 +1,10 @@
+/* Squirrelsong Light colors: https://sapegin.me/squirrelsong/spec/ */
+
 /* Firefox reader mode styles */
 @-moz-document url-prefix("about:reader") {
 	body {
-		/* Squirrelsong Light colors: https://sapegin.me/squirrelsong/spec/ */
 		--gray060: #4c4b4e;
+		--gray170: #f7f6f9;
 		--gray180: #fdfdfe;
 		--blue: #80a4be;
 		--blueContrast: #527b98;
@@ -34,5 +36,28 @@
 	.domain {
 		/* Use text color for underline instead of black */
 		text-decoration: underline !important;
+	}
+}
+
+/*
+uBlock origin error pages:
+- "moz-extension://a7bf810e-ecb9-4c69-8123-00aac8bb4f90/document-blocked.html?
+*/
+@-moz-document url-prefix("moz-extension") {
+	:root {
+		--gray060: #4c4b4e;
+		--gray150: #dbd7e0;
+		--gray160: #e8e5eb;
+		--gray170: #f7f6f9;
+		--blue: #80a4be;
+		--blueContrast: #527b98;
+
+		--ink-1: var(--gray060) !important;
+		--ink-2: var(--gray060) !important;
+		--surface-1: var(--gray170) !important;
+		--surface-2: var(--gray160) !important;
+		--accent-surface-1: var(--blueContrast) !important;
+		--link-ink: var(--blueContrast) !important;
+		--link-hover-ink: var(--blue) !important;
 	}
 }
