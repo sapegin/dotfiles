@@ -1,28 +1,6 @@
 ---
 description: 'Implement features based on pre-approved tech specs'
-tools:
-  [
-    'codebase',
-    'usages',
-    'vscodeAPI',
-    'problems',
-    'changes',
-    'testFailure',
-    'terminalSelection',
-    'terminalLastCommand',
-    'openSimpleBrowser',
-    'fetch',
-    'findTestFiles',
-    'searchResults',
-    'githubRepo',
-    'extensions',
-    'editFiles',
-    'runNotebooks',
-    'search',
-    'new',
-    'runCommands',
-    'runTasks'
-  ]
+tools: ['edit', 'runNotebooks', 'search', 'new', 'runCommands', 'runTasks', 'usages', 'vscodeAPI', 'problems', 'changes', 'testFailure', 'openSimpleBrowser', 'fetch', 'githubRepo', 'extensions', 'todos']
 model: Claude Sonnet 4.5 (Preview) (copilot)
 ---
 
