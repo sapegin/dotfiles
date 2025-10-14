@@ -228,7 +228,10 @@
     "npm run test": true,
     "npm start": true,
     "npm test": true,
-    "npm install": true
+    "npm install": true,
+    "npm run format": true,
+    "npm t": true,
+    "npm run build": true
 },
   "color-highlight.markerType": "underline",
   "color-highlight.markRuler": false,
