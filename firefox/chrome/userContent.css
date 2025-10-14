@@ -37,6 +37,12 @@
 		/* Use text color for underline instead of black */
 		text-decoration: underline !important;
 	}
+
+	hr {
+		background-color: var(--sepiaHoverBorder);
+		height: 1px;
+		border: 0;
+	}
 }
 
 /*
