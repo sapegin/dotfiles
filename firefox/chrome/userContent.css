@@ -2,13 +2,7 @@
 
 /* Firefox reader mode styles */
 @-moz-document url-prefix("about:reader") {
-	body {
-		--gray060: #4c4b4e;
-		--gray170: #f7f6f9;
-		--gray180: #fdfdfe;
-		--blue: #80a4be;
-		--blueContrast: #527b98;
-
+	body.sepia {
 		/* Custom colors */
 		--sepiaForeground: #5b4839;
 		--sepiaBackground: #f6f2ef;
@@ -16,14 +10,7 @@
 		--sepiaHoverBorder: #b0a59d;
 		--sepiaDisabled: #9e8e7e;
 
-		--light-theme-foreground: var(--gray060) !important;
-		--light-theme-background: var(--gray180) !important;
-		--dark-theme-foreground: var(--gray180) !important;
-		--dark-theme-background: var(--gray060) !important;
-		--primary-color: var(--blue) !important;
-	}
-
-	body.sepia {
+		--primary-color: var(--sepiaForeground) !important;
 		--main-background: var(--sepiaBackground) !important;
 		--main-foreground: var(--sepiaForeground) !important;
 		--toolbar-border: var(--sepiaHoverBorder) !important;
