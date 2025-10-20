@@ -46,7 +46,7 @@ echo
 
 if [ $exit_code != 0 ]; then
 	# Push failed
-	echo -e "${color_error}Ouch, push failed!${color_reset}\n\n$push"
+	echo -e "${color_error}Alas! The push has met with unforeseen resistance!${color_reset}\n\n$push"
 	exit $exit_code
 elif echo $push | grep "Everything up-to-date" > /dev/null; then
 	# Nothing to push
