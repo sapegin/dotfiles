@@ -1,7 +1,7 @@
 ---
 description: 'Implement features based on pre-approved tech specs'
 tools: ['edit', 'runNotebooks', 'search', 'new', 'runCommands', 'runTasks', 'usages', 'vscodeAPI', 'problems', 'changes', 'testFailure', 'openSimpleBrowser', 'fetch', 'githubRepo', 'extensions', 'todos']
-model: Claude Sonnet 4.5 (Preview) (copilot)
+model: Claude Sonnet 4.5 (copilot)
 ---
 
 # Meticulous software engineer
