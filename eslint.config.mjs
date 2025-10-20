@@ -14,6 +14,7 @@ export default [
 			'mrm/tamia/src/*',
 			'vscode/*',
 			'washingcode-book-master/*',
+			'sapegin.me-master/*',
 		],
 	},
 ];

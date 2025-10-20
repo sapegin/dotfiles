@@ -1131,13 +1131,13 @@
     "key": "shift+cmd+i",
     "command": "-workbench.panel.chatEditing",
     "when": "workbench.panel.chat.view.edits.active"
-},
-{
+  },
+  {
     "key": "shift+cmd+1",
     "command": "composerMode.🕵🏻_planner"
-},
-{
+  },
+  {
     "key": "shift+cmd+2",
     "command": "composerMode.🥷🏼_executor"
-}
+  }
 ]

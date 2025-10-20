@@ -22,8 +22,8 @@
     "unified": "^11.0.5"
   },
   "devDependencies": {
-    "eslint": "^9.35.0",
-    "eslint-config-tamia": "^9.2.3",
+    "eslint": "^9.38.0",
+    "eslint-config-tamia": "^9.6.2",
     "prettier": "^3.6.2",
     "prettier-plugin-sh": "^0.18.0"
   }

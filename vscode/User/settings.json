@@ -232,7 +232,7 @@
     "npm run format": true,
     "npm t": true,
     "npm run build": true
-},
+  },
   "color-highlight.markerType": "underline",
   "color-highlight.markRuler": false,
   "color-highlight.matchWords": false,
