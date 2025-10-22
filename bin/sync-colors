@@ -1,17 +1,27 @@
 #!/usr/bin/env node
 
-// Gets themes from the Squirrelsong repo:
-// > [x] Bat
-// > [x] Bear
-// > [x] Peek
-// > [x] Fzf
-// > [x] Ghostty
-// > [x] dotfiles/brain
+// Gets themes from the Squirrelsong repo or a local repository clone.
+//
+// - Sync colors from GitHub:
+//
+// `sync-colors`
+//
+// - Sync colors from a local folder:
+//
+// `sync-colors local`
 //
 // ---
 // Author: Artem Sapegin, sapegin.me
 // License: MIT
 // https://github.com/sapegin/dotfiles
+
+// Supports themes for the following apps:
+// - [x] Bat
+// - [x] Bear
+// - [x] Peek
+// - [x] Fzf
+// - [x] Ghostty
+// - [x] dotfiles/brain
 
 import path from 'node:path';
 import fs from 'node:fs';
@@ -22,8 +32,11 @@ const HOME = os.homedir();
 
 const SKIP_SUDO = false;
 
+const IS_LOCAL = process.argv.includes('local');
+
 const REPO_ROOT =
 	'https://raw.githubusercontent.com/sapegin/squirrelsong/master';
+const LOCAL_ROOT = `${HOME}/_/squirrelsong`;
 const DEST_DIR = `${HOME}/dotfiles/tilde`;
 
 function stripJsonComments(json) {
@@ -37,14 +50,19 @@ function stripJsonComments(json) {
 }
 
 async function download(filepath) {
-	const url = `${REPO_ROOT}/${encodeURI(filepath)}`;
-	const res = await fetch(url);
-	if (res.ok === false) {
-		console.error(`Cannot download ${url}`);
-		console.error(`${res.status}: ${res.statusText}`);
-		process.exit(1);
+	if (IS_LOCAL) {
+		const fullPath = path.join(LOCAL_ROOT, filepath);
+		return fs.readFileSync(fullPath, 'utf8');
+	} else {
+		const url = `${REPO_ROOT}/${encodeURI(filepath)}`;
+		const res = await fetch(url);
+		if (res.ok === false) {
+			console.error(`Cannot download ${url}`);
+			console.error(`${res.status}: ${res.statusText}`);
+			process.exit(1);
+		}
+		return res.text();
 	}
-	return res.text();
 }
 
 function read(filepath) {
