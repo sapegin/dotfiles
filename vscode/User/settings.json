@@ -45,6 +45,8 @@
   "editor.emptySelectionClipboard": false,
   "editor.experimentalEditContextEnabled": true,
   "editor.find.addExtraSpaceOnTop": false,
+  // Don't use words under cursor to seed find, only selection
+  "editor.find.seedSearchStringFromSelection": "selection",
   "editor.folding": false,
   "editor.fontFamily": "MonoLisa, \"Symbols Nerd Font Mono\"",
   // Enable contextual alternative but disable ligatures
