@@ -60,9 +60,9 @@
     "when": "terminalFocus"
   },
   {
-    "comment": "Switch to the first Terminal",
+    "comment": "Switch to the last used Terminal",
     "key": "cmd+t",
-    "command": "workbench.action.terminal.focusAtIndex1",
+    "command": "workbench.action.terminal.focus",
     "when": "!terminalFocus"
   },
   {
@@ -326,6 +326,40 @@
     "key": "cmd+space",
     "command": "git.stage",
     "when": "workbench.scm.active"
+  },
+  {
+    // Uses my custom pull script
+    "comment": "Git puLl",
+    "key": "cmd+k cmd+l",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        "workbench.action.terminal.new",
+        {
+          "command": "workbench.action.terminal.sendSequence",
+          "args": {
+            "text": "pull\u000D"
+          }
+        }
+      ]
+    }
+  },
+  {
+    // Uses my custom push script
+    "comment": "Git pUsh",
+    "key": "cmd+k cmd+u",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        "workbench.action.terminal.new",
+        {
+          "command": "workbench.action.terminal.sendSequence",
+          "args": {
+            "text": "push\u000D"
+          }
+        }
+      ]
+    }
   },
 
   /**
