@@ -47,7 +47,14 @@ SAVEHIST=$HISTSIZE
 export FZF_DEFAULT_COMMAND='fd --type f'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 # Squirrelsong Dark Deep Purple theme colors
-export FZF_DEFAULT_OPTS="--color bg:-1,bg+:-1,fg:-1,fg+:#ae95c7,hl:#d8a851,hl+:#ceb250,info:#6c5492,prompt:#6c5492,pointer:#6c5492,marker:#7f61b3,spinner:#6c5492,header:#ae95c7"
+export FZF_DEFAULT_OPTS='
+  --color=fg:-1,fg+:#bea3d9,bg:-1,bg+:#bea3d9
+  --color=hl:#ca5a83,hl+:#97576f,info:#6c5492,marker:#ceb250
+  --color=prompt:#6c5492,spinner:#bea3d9,pointer:#bea3d9,header:#e9d6fa
+  --color=border:#644e88,label:#bea3d9,query:#e9d6fa,disabled:#6c5492
+  --border="rounded" --border-label="" --preview-window="border-rounded" --prompt="> "
+  --marker=">" --pointer="▪︎" --separator="─" --scrollbar="│"
+  --info="right"'
 # Use fd to respect .gitignore and exclude .git directory
 _fzf_compgen_path() {
 	fd --hidden --exclude ".git" . "$1"

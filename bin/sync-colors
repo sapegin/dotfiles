@@ -126,7 +126,7 @@ console.log('🌈 Installing fzf theme…');
 const fzfThemeRegExp = /FZF_DEFAULT_OPTS=["'][^'"]+["']/g;
 const fzfThemeReadme = await download('themes/Fzf/Readme.md');
 const zshRcFile = `${HOME}/dotfiles/tilde/.zshrc`;
-const fzfThemeTheme = fzfThemeReadme.match(fzfThemeRegExp).at(-1) ?? '';
+const fzfThemeTheme = fzfThemeReadme.match(fzfThemeRegExp)[1] ?? '';
 const zshRc = read(zshRcFile);
 const zshRcUpdated = zshRc.replace(fzfThemeRegExp, fzfThemeTheme);
 write(zshRcFile, zshRcUpdated);

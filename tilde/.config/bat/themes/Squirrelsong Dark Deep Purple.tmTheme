@@ -77,9 +77,9 @@
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>Property</string>
+			<string>Property/attribute</string>
 			<key>scope</key>
-			<string>meta.property.object, meta.mapping.key, meta.mapping.key.json, support.type.property-name</string>
+			<string>meta.property.object, meta.mapping.key, meta.mapping.key.json, support.type.property-name, entity.other.attribute-name</string>
 			<key>settings</key>
 			<dict>
 				<key>foreground</key>
@@ -214,19 +214,6 @@
 			<dict>
 				<key>foreground</key>
 				<string>#7f61b3</string>
-				<key>fontStyle</key>
-				<string></string>
-			</dict>
-		</dict>
-		<dict>
-			<key>name</key>
-			<string>Tag attribute</string>
-			<key>scope</key>
-			<string>entity.other.attribute-name</string>
-			<key>settings</key>
-			<dict>
-				<key>foreground</key>
-				<string>#5993c2</string>
 				<key>fontStyle</key>
 				<string></string>
 			</dict>
