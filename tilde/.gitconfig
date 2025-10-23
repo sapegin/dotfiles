@@ -100,20 +100,21 @@
 	insteadOf = "git://github.com/sapegin/"
 
 # git-delta
+[pager]
+  diff = delta
+  show = delta
+  reflog = delta
+  show = delta
 [interactive]
 	diffFilter = delta --color-only
 [add.interactive]
 	useBuiltin = false
 [delta]
+  features = squirrelsong-dark-dp
 	navigate = false
 	light = false
 	hyperlinks = true
 	hyperlinks-file-link-format = "vscode://file/{path}:{line}"
-	grep-line-number-style = normal black
-	grep-file-style = blue bold
-	grep-match-line-style = normal white
-	grep-match-word-style = black "#482a47" # Squirrelsong Dark brightPinkDimer
-	grep-separator-symbol = " "
 [merge]
 	conflictstyle = merge
 [diff]
@@ -129,6 +130,7 @@
 
 # Include local settings
 [include]
+  path = ~/dotfiles/colors/themes.gitconfig
 	path = .gitlocal
 
 # Some random bullshit that always appears at the end of the config file

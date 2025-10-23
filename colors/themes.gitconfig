@@ -1,0 +1,32 @@
+[delta "squirrelsong-dark-dp"]
+    # Squirrelsong Dark Deep Purple theme
+    # https://sapegin.me/squirrelsong/
+    dark = true
+    commit-decoration-style = ul ol
+    file-decoration-style = black overline
+    file-added-label = [●]
+    file-copied-label = [C]
+    file-modified-label = [+]
+    file-removed-label = [⛌]
+    file-renamed-label = [→]
+    file-style = blue bold
+    hunk-header-style = bold
+    line-numbers = true
+    line-numbers-left-format = "{nm:>1}┊"
+    line-numbers-left-style = black
+    line-numbers-minus-style = red bold
+    line-numbers-plus-style = green bold
+    line-numbers-right-format = " {np:>1}┊"
+    line-numbers-right-style = black
+    line-numbers-zero-style = black
+    minus-emph-style = normal "#703A2F" # redDim
+    minus-style = normal "#552F25" # redDimer
+    plus-emph-style = syntax bold "#44603B" # greenDim
+    plus-style = syntax "#37442C" # greenDimer
+    whitespace-error-style = red reverse
+    zero-style = syntax
+    blame-format = "{author:<18} ({commit:>7}) ┊{timestamp:^16}┊ "
+    grep-line-number-style = normal black
+    grep-file-style = black
+  	grep-match-word-style = white "#482a47" # Squirrelsong Dark brightPinkDimer
+  	grep-separator-symbol = " "
