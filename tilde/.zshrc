@@ -14,6 +14,8 @@ set -o noclobber
 # Enable extended glob
 setopt extendedglob
 
+setopt interactive_comments
+
 # Remove older duplicate entries from history
 setopt hist_ignore_all_dups
 # Remove superfluous blanks from history items
@@ -38,9 +40,6 @@ precmd_functions+=(_set_terminal_title)
 HISTFILE=$HOME/.zsh_history
 HISTSIZE=100000
 SAVEHIST=$HISTSIZE
-
-# Enable zsh-syntax-highlighting: https://github.com/zsh-users/zsh-syntax-highlighting
-[ -f /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # Enable fzf: https://github.com/junegunn/fzf
 # Use fd (https://github.com/sharkdp/fd) to respect .gitignore
@@ -72,3 +71,31 @@ source <(fzf --zsh)
 # Starship prompt
 export STARSHIP_CONFIG=~/.starship.toml
 eval "$(starship init zsh)"
+
+# Enable zsh-syntax-highlighting: https://github.com/zsh-users/zsh-syntax-highlighting
+# Custom colors
+typeset -A ZSH_HIGHLIGHT_STYLES
+ZSH_HIGHLIGHT_STYLES[reserved-word]='fg=magenta,bold'
+ZSH_HIGHLIGHT_STYLES[function]='fg=cyan,bold'
+ZSH_HIGHLIGHT_STYLES[command]='fg=cyan,bold'
+ZSH_HIGHLIGHT_STYLES[alias]='fg=cyan,bold'
+ZSH_HIGHLIGHT_STYLES[builtin]='fg=cyan,bold'
+ZSH_HIGHLIGHT_STYLES[commandseparator]='fg=cyan,bold'
+ZSH_HIGHLIGHT_STYLES[redirection]='fg=cyan,bold'
+ZSH_HIGHLIGHT_STYLES[globbing]='fg=magenta,bold'
+ZSH_HIGHLIGHT_STYLES[back-quoted-argument]='fg=green'
+ZSH_HIGHLIGHT_STYLES[single-quoted-argument]='fg=green'
+ZSH_HIGHLIGHT_STYLES[double-quoted-argument]='fg=green'
+ZSH_HIGHLIGHT_STYLES[dollar-quoted-argument]='fg=green'
+ZSH_HIGHLIGHT_STYLES[single-hyphen-option]='fg=magenta'
+ZSH_HIGHLIGHT_STYLES[double-hyphen-option]='fg=magenta'
+ZSH_HIGHLIGHT_STYLES[arithmetic-expansion]='fg=yellow'
+ZSH_HIGHLIGHT_STYLES[dollar-double-quoted-argument]='fg=blue'
+ZSH_HIGHLIGHT_STYLES[back-double-quoted-argument]='fg=green,bold'
+ZSH_HIGHLIGHT_STYLES[back-dollar-quoted-argument]='fg=green,bold'
+ZSH_HIGHLIGHT_STYLES[assign]='fg=blue'
+ZSH_HIGHLIGHT_STYLES[comment]='fg=black'
+# Load zsh-syntax-highlighting
+if [ -f /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
+  source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
