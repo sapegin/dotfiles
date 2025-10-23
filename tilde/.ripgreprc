@@ -13,11 +13,15 @@
 --glob=!yarn.lock
 --glob=!.git
 
+# Hide : after line numbers
+--field-match-separator=
+
 # Color theme
---colors=line:fg:white
 --colors=path:fg:blue
 --colors=path:style:bold
+--colors=line:none
+--colors=line:fg:black
 --colors=match:fg:white
 # Squirrelsong Dark brightPinkDimer
 --colors=match:bg:72,42,71
---colors=match:style:nobold
+--colors=match:style:bold
