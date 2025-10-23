@@ -113,6 +113,12 @@
     "when": "terminalFocus"
   },
   {
+    "comment": "Close left-side panel when pressing Escape",
+    "key": "escape",
+    "command": "workbench.action.closeAuxiliaryBar",
+    "when": "auxiliaryBarFocus"
+  },
+  {
     "comment": "Increase current panel size",
     "key": "cmd+]",
     "command": "workbench.action.increaseViewSize"
