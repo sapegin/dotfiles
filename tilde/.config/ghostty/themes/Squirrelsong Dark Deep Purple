@@ -8,8 +8,8 @@ selection-background = #4c3c6b
 cursor-color = #bea3d9
 
 # Black
-palette = 0=#36294d
-palette = 8=#6c5492
+palette = 0=#644e88
+palette = 8=#7254a6
 
 # Red
 palette = 1=#ac493e
