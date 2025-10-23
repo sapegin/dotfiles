@@ -17,6 +17,7 @@
 --colors=line:fg:white
 --colors=path:fg:blue
 --colors=path:style:bold
---colors=match:fg:black
---colors=match:bg:yellow
+--colors=match:fg:white
+# Squirrelsong Dark brightPinkDimer
+--colors=match:bg:72,42,71
 --colors=match:style:nobold
