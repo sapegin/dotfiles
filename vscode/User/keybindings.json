@@ -83,40 +83,35 @@
     "command": "workbench.action.toggleStatusbarVisibility"
   },
   {
-    "comment": "Close sidebar when pressing Escape in the editor",
-    "key": "escape",
-    "command": "workbench.action.closeSidebar",
-    "when": "sideBarVisible && textInputFocus && !suggestWidgetVisible"
-  },
-  {
-    "comment": "Close panel when pressing Escape in the editor",
-    "key": "escape",
-    "command": "workbench.action.closePanel",
-    "when": "panelVisible && textInputFocus && !suggestWidgetVisible"
-  },
-  {
-    "comment": "Close panel when pressing Escape inside the Search panel",
-    "key": "escape",
-    "command": "workbench.action.closePanel",
-    "when": "activePanel == 'workbench.view.search' && panelFocus"
-  },
-  {
-    "comment": "Close panel when pressing Escape inside the Problems panel",
-    "key": "escape",
-    "command": "workbench.action.closePanel",
-    "when": "activePanel == 'workbench.panel.markers' && panelFocus"
-  },
-  {
-    "comment": "Close panel when pressing Escape inside the Integrated Terminal panel",
-    "key": "escape",
-    "command": "workbench.action.closePanel",
-    "when": "terminalFocus"
-  },
-  {
-    "comment": "Close left-side panel when pressing Escape",
+    "comment": "Close left sidebar when pressing Escape",
     "key": "escape",
     "command": "workbench.action.closeAuxiliaryBar",
     "when": "auxiliaryBarFocus"
+  },
+  {
+    "comment": "Close sidebar when pressing Escape",
+    "key": "escape",
+    "command": "workbench.action.closeSidebar",
+    "when": "sideBarFocus"
+  },
+  {
+    "comment": "Close bottom panel when pressing Escape",
+    "key": "escape",
+    "command": "workbench.action.closePanel",
+    "when": "panelFocus"
+  },
+  {
+    "comment": "Close all sidebars and panels when pressing Escape in the editor",
+    "key": "escape",
+    "command": "runCommands",
+    "args": {
+      "commands": [
+        "workbench.action.closeAuxiliaryBar",
+        "workbench.action.closeSidebar",
+        "workbench.action.closePanel"
+      ]
+    },
+    "when": "(auxiliaryBarVisible || sideBarVisible || panelVisible) && textInputFocus && !suggestWidgetVisible && !inlineChatVisible"
   },
   {
     "comment": "Increase current panel size",
