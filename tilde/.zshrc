@@ -76,10 +76,10 @@ eval "$(starship init zsh)"
 # Custom colors
 typeset -A ZSH_HIGHLIGHT_STYLES
 ZSH_HIGHLIGHT_STYLES[reserved-word]='fg=magenta,bold'
-ZSH_HIGHLIGHT_STYLES[function]='fg=cyan,bold'
-ZSH_HIGHLIGHT_STYLES[command]='fg=cyan,bold'
-ZSH_HIGHLIGHT_STYLES[alias]='fg=cyan,bold'
-ZSH_HIGHLIGHT_STYLES[builtin]='fg=cyan,bold'
+ZSH_HIGHLIGHT_STYLES[function]='fg=blue,bold'
+ZSH_HIGHLIGHT_STYLES[command]='fg=blue,bold'
+ZSH_HIGHLIGHT_STYLES[alias]='fg=blue,bold'
+ZSH_HIGHLIGHT_STYLES[builtin]='fg=blue,bold'
 ZSH_HIGHLIGHT_STYLES[commandseparator]='fg=cyan,bold'
 ZSH_HIGHLIGHT_STYLES[redirection]='fg=cyan,bold'
 ZSH_HIGHLIGHT_STYLES[globbing]='fg=magenta,bold'
