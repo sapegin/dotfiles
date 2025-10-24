@@ -54,3 +54,109 @@ uBlock origin error pages:
 		--link-hover-ink: var(--blue) !important;
 	}
 }
+
+@-moz-document url-prefix("https://github.com/")
+{
+	:root {
+		/* High contrast Squirrelsong Light theme */
+		--sqrl-gray060: #4c4b4e;
+		--sqrl-gray090: #78737d;
+		--sqrl-gray180: #fdfdfe;
+		--sqrl-magentaContrast: #806f9b;
+		--sqrl-red: #ac493e;
+		--sqrl-redContrast: #c06159;
+		--sqrl-redDimer: #f3dcda88;
+		--sqrl-greenContrast: #667e44;
+		--sqrl-greenDimer: #e7ebe088;
+		--sqrl-blueContrast: #527b98;
+		--sqrl-blueDimer: #dfe8ef88;
+		--sqrl-yellowDimer: #f7f0de;
+
+		--fontStack-monospace:
+			MonoLisa, 'Monaspace Neon', ui-monospace, SFMono-Regular, SF Mono, Menlo,
+			Consolas, Liberation Mono, monospace !important;
+
+		--color-prettylights-syntax-brackethighlighter-angle: var(
+			--sqrl-gray090
+		) !important;
+		--color-prettylights-syntax-brackethighlighter-unmatched: var(
+			--sqrl-red
+		) !important;
+		--color-prettylights-syntax-carriage-return-bg: var(--sqrl-red) !important;
+		--color-prettylights-syntax-carriage-return-text: var(
+			--sqrl-gray180
+		) !important;
+		--color-prettylights-syntax-comment: var(--sqrl-gray090) !important;
+		--color-prettylights-syntax-constant: var(--sqrl-blueContrast) !important;
+		--color-prettylights-syntax-constant-other-reference-link: var(
+			--sqrl-blueContrast
+		) !important;
+		--color-prettylights-syntax-entity: var(--sqrl-blueContrast) !important;
+		--color-prettylights-syntax-entity-tag: var(
+			--sqrl-magentaContrast
+		) !important;
+		--color-prettylights-syntax-invalid-illegal-bg: var(--sqrl-red) !important;
+		--color-prettylights-syntax-invalid-illegal-text: var(
+			--sqrl-gray180
+		) !important;
+		--color-prettylights-syntax-keyword: var(--sqrl-magentaContrast) !important;
+		--color-prettylights-syntax-markup-changed-bg: var(
+			--sqrl-blueDimer
+		) !important;
+		--color-prettylights-syntax-markup-changed-text: var(
+			--sqrl-blueContrast
+		) !important;
+		--color-prettylights-syntax-markup-deleted-bg: var(
+			--sqrl-redDimer
+		) !important;
+		--color-prettylights-syntax-markup-deleted-text: var(
+			--sqrl-redContrast
+		) !important;
+		--color-prettylights-syntax-markup-heading: var(
+			--sqrl-blueContrast
+		) !important;
+		--color-prettylights-syntax-markup-ignored-bg: var(
+			--sqrl-blueContrast
+		) !important;
+		--color-prettylights-syntax-markup-ignored-text: var(
+			--sqrl-gray090
+		) !important;
+		--color-prettylights-syntax-markup-inserted-bg: var(
+			--sqrl-greenDimer
+		) !important;
+		--color-prettylights-syntax-markup-inserted-text: var(
+			--sqrl-greenContrast
+		) !important;
+		--color-prettylights-syntax-markup-list: var(--sqrl-gray060) !important;
+		--color-prettylights-syntax-meta-diff-range: var(--sqrl-gray090) !important;
+		--color-prettylights-syntax-string: var(--sqrl-greenContrast) !important;
+		--color-prettylights-syntax-string-regexp: var(
+			--sqrl-greenContrast
+		) !important;
+		--color-prettylights-syntax-sublimelinter-gutter-mark: var(
+			--sqrl-gray090
+		) !important;
+		--color-prettylights-syntax-variable: var(--sqrl-blueContrast) !important;
+
+		--diffBlob-additionNum-bgColor: var(--sqrl-greenDimer) !important;
+		--diffBlob-additionWord-bgColor: var(--sqrl-greenDimer) !important;
+		--diffBlob-additionLine-bgColor: var(--sqrl-greenDimer) !important;
+		--diffBlob-deletionNum-bgColor: var(--sqrl-redDimer) !important;
+		--diffBlob-deletionWord-bgColor: var(--sqrl-redDimer) !important;
+		--diffBlob-deletionLine-bgColor: var(--sqrl-redDimer) !important;
+		--diffBlob-hunkNum-bgColor-rest: var(--sqrl-blueDimer) !important;
+
+		--bgColor-attention-muted: var(--sqrl-yellowDimer) !important;
+		--bgColor-accent-muted: var(--sqrl-blueDimer) !important;
+	}
+
+	@layer primer-css-base {
+		code {
+			font-size: 14px !important;
+		}
+	}
+
+	.diff-line-number {
+		color: var(--sqrl-gray090) !important;
+	}
+}
