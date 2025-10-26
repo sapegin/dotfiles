@@ -9,7 +9,7 @@
 
     // Hide command guide in the terminal (vertical bar that appear on the left
     // side of the command on hover)
-    "notebook.inactiveFocusedCellBorder": "#0000"
+    "notebook.inactiveFocusedCellBorder": "#ffffff00"
   },
 
   // Internal

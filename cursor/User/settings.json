@@ -6,7 +6,7 @@
     "editorOverviewRuler.wordHighlightForeground": "#ffffff00",
     "editorOverviewRuler.wordHighlightTextForeground": "#ffffff00",
     "editorGroup.border": "#ffffff00",
-    "notebook.inactiveFocusedCellBorder": "#0000"
+    "notebook.inactiveFocusedCellBorder": "#ffffff00"
   },
   "accessibility.underlineLinks": true,
   "breadcrumbs.enabled": false,
