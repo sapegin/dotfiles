@@ -3,6 +3,8 @@
 /* Firefox reader mode styles */
 @-moz-document url-prefix("about:reader") {
 	body.sepia {
+		--selectionBackground: #f8e7a0;
+
 		/* Custom colors */
 		--sepiaForeground: #5b4839;
 		--sepiaBackground: #f6f2ef;
@@ -18,6 +20,7 @@
 		--toolbar-button-background-active: var(--sepiaHoverBackground) !important;
 		--icon-fill: var(--sepiaForeground) !important;
 		--icon-disabled-fill: var(--sepiaDisabled) !important;
+		--selected-background: var(--selectionBackground) !important;
 	}
 
 	.domain {
