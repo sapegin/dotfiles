@@ -72,12 +72,6 @@
     "when": "terminalFocus && terminalHasBeenCreated && !terminalEditorFocus || terminalFocus && terminalProcessSupported && !terminalEditorFocus"
   },
   {
-    "comment": "Open source control (Git) pane",
-    "key": "cmd+k cmd+g",
-    "command": "workbench.view.scm",
-    "when": "workbench.scm.active"
-  },
-  {
     "comment": "Toggle Status bar",
     "key": "cmd+k cmd+s",
     "command": "workbench.action.toggleStatusbarVisibility"
@@ -176,7 +170,7 @@
   },
   {
     "comment": "Go to line",
-    "key": "cmd+g",
+    "key": "cmd+k cmd+g",
     "command": "workbench.action.gotoLine"
   },
   {
@@ -310,16 +304,17 @@
    * Git
    */
   {
+    "comment": "Open source control (Git) pane",
+    "key": "cmd+g cmd+g",
+    "command": "workbench.view.scm",
+    "when": "workbench.scm.active"
+  },
+  {
     // Matches GitHub Desktop push command
     "comment": "Sync changes with the remote",
     "key": "cmd+p",
     "command": "git.sync",
     "when": "focusedView == workbench.scm"
-  },
-  {
-    "comment": "View all Changes",
-    "key": "shift+cmd+c",
-    "command": "git.viewChanges"
   },
   {
     // TODO: Can it be just space to match GitHub Desktop and LazyGit?
@@ -329,9 +324,14 @@
     "when": "workbench.scm.active"
   },
   {
+    "comment": "View all Changes",
+    "key": "cmd+g cmd+c",
+    "command": "git.viewChanges"
+  },
+  {
     // Uses my custom pull script
-    "comment": "Git puLl",
-    "key": "cmd+k cmd+l",
+    "comment": "Git Pull",
+    "key": "cmd+g cmd+p",
     "command": "runCommands",
     "args": {
       "commands": [
@@ -348,7 +348,7 @@
   {
     // Uses my custom push script
     "comment": "Git pUsh",
-    "key": "cmd+k cmd+u",
+    "key": "cmd+g cmd+u",
     "command": "runCommands",
     "args": {
       "commands": [
