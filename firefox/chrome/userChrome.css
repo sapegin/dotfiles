@@ -92,6 +92,10 @@
 
 	/* Dot when Firefox has an update */
 	--attention-dot-color: var(--accent) !important;
+
+	/* Sane border radii */
+	--border-radius-medium: 4px !important;
+	--border-radius-large: 8px !important;
 }
 
 /* Make the playing icon less obtrusive on pinned tabs */
