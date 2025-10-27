@@ -68,12 +68,17 @@ uBlock origin error pages:
 		--sqrl-magentaContrast: #806f9b;
 		--sqrl-red: #ac493e;
 		--sqrl-redContrast: #c06159;
-		--sqrl-redDimer: #f3dcda88;
+		--sqrl-redDim: #e5aba888;
+		--sqrl-redDimer: #f2dbda88;
 		--sqrl-greenContrast: #667e44;
-		--sqrl-greenDimer: #e7ebe088;
+		--sqrl-greenDim: #cbd9c188;
+		--sqrl-greenDimer: #e2ebdf88;
+		--sqrl-blue: #80a4be;
 		--sqrl-blueContrast: #527b98;
+		--sqrl-blueDim: #bfd1de88;
 		--sqrl-blueDimer: #dfe8ef88;
-		--sqrl-yellowDimer: #f7f0de;
+		--sqrl-yellowDim: #e8d8a5;
+		--sqrl-yellowDimer: #f7f0da;
 
 		--fontStack-monospace:
 			MonoLisa, 'Monaspace Neon', ui-monospace, SFMono-Regular, SF Mono, Menlo,
@@ -142,15 +147,19 @@ uBlock origin error pages:
 		--color-prettylights-syntax-variable: var(--sqrl-blueContrast) !important;
 
 		--diffBlob-additionNum-bgColor: var(--sqrl-greenDimer) !important;
-		--diffBlob-additionWord-bgColor: var(--sqrl-greenDimer) !important;
+		--diffBlob-additionWord-bgColor: var(--sqrl-greenDim) !important;
 		--diffBlob-additionLine-bgColor: var(--sqrl-greenDimer) !important;
 		--diffBlob-deletionNum-bgColor: var(--sqrl-redDimer) !important;
-		--diffBlob-deletionWord-bgColor: var(--sqrl-redDimer) !important;
+		--diffBlob-deletionWord-bgColor: var(--sqrl-redDim) !important;
 		--diffBlob-deletionLine-bgColor: var(--sqrl-redDimer) !important;
 		--diffBlob-hunkNum-bgColor-rest: var(--sqrl-blueDimer) !important;
 
-		--bgColor-attention-muted: var(--sqrl-yellowDimer) !important;
-		--bgColor-accent-muted: var(--sqrl-blueDimer) !important;
+		--bgColor-attention-muted: var(--sqrl-yellowDim) !important;
+		--bgColor-accent-muted: var(--sqrl-blueDim) !important;
+
+		--borderColor-accent-muted: var(--sqrl-blue) !important;
+
+		--fgColor-accent: var(--sqrl-blueContrast) !important;
 	}
 
 	@layer primer-css-base {
