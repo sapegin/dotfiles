@@ -154,7 +154,7 @@ uBlock origin error pages:
 		--diffBlob-deletionLine-bgColor: var(--sqrl-redDimer) !important;
 		--diffBlob-hunkNum-bgColor-rest: var(--sqrl-blueDimer) !important;
 
-		--bgColor-attention-muted: var(--sqrl-yellowDim) !important;
+		--bgColor-attention-muted: var(--sqrl-yellowDimer) !important;
 		--bgColor-accent-muted: var(--sqrl-blueDim) !important;
 
 		--borderColor-accent-muted: var(--sqrl-blue) !important;
@@ -164,7 +164,7 @@ uBlock origin error pages:
 
 	@layer primer-css-base {
 		code {
-			font-size: 14px !important;
+			font-size: 16px !important;
 		}
 	}
 
