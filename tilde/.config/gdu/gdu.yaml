@@ -1,0 +1,14 @@
+style:
+  selected-row:
+    text-color: black
+    background-color: yellow
+  footer:
+    text-color: white
+    background-color: black
+    number-color: white
+  header:
+    text-color: white
+    background-color: black
+  result-row:
+    number-color: white
+    directory-color: blue
