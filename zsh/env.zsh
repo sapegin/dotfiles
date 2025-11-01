@@ -71,6 +71,8 @@ export EZA_COLORS
 export HOMEBREW_INSTALL_BADGE='☕'
 # Disable telemetry
 export HOMEBREW_NO_ANALYTICS=1
+# Disable hints
+export HOMEBREW_NO_ENV_HINTS=1
 
 # Ripgrep config file location
 export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
