@@ -10,7 +10,8 @@ brew "fd" # `find` replacement
 brew "fnm" # Node.js version manager
 brew "fzf" # Fuzzy finder
 brew "gh" # GitHub command-line tool
-brew "git"
+brew "gdu" # Disk usage analyzer
+brew "git" # The Git
 brew "git-delta" # Diff pager for `git` and `grep` output
 brew "lazygit" # Git client
 brew "macos-trash" # `rm` replacement with MacOS trash support
@@ -21,7 +22,7 @@ brew "starship" # Prompt manager
 brew "tlrc" # `man` replacement
 brew "typos-cli" # Fix typos
 brew "zsh" # Shell
-brew "zsh-syntax-highlighting"
+brew "zsh-syntax-highlighting" # Syntax highlighting for zsh
 
 # GUI apps
 cask "1password" # Password manager
@@ -34,7 +35,6 @@ cask "cleanshot" # Screenshots
 cask "colorsnapper" # Color picker
 cask "coteditor" # Simple code/text editor
 cask "dash" # Documentation reader
-cask "devtoys" # Collection of developer tools
 cask "firefox"
 cask "firefox@developer-edition"
 cask "ghostty" # Terminal emulator
@@ -48,7 +48,6 @@ cask "numi" # Calculator
 cask "optimage" # Image optimization
 cask "polypane" # Responsive design and accessibility testing
 cask "quitter" # Quit apps after certain time
-cask "readdle-spark" # Email client
 cask "replacicon" # Custom app icons
 cask "telegram"
 cask "visual-studio-code"
@@ -57,7 +56,7 @@ cask "whatsapp"
 # Fonts
 cask "font-symbols-only-nerd-font"
 
-# Visual Stuidio code extensions
+# Visual Studio Code extensions
 vscode "astro-build.astro-vscode"
 vscode "catppuccin.catppuccin-vsc-icons"
 vscode "dbaeumer.vscode-eslint"
