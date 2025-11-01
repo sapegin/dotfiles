@@ -44,6 +44,7 @@ Squirrelsong
 tacocat
 tamia
 Tâmia
+Tauri
 Textlint
 themable
 todos
