@@ -180,6 +180,7 @@ const dictionary = [
 	'no buy year',
 	'flea market',
 	'vintage',
+  'cottagecore',
 	'instagrammable',
 	'späti',
 	'TikTok',
