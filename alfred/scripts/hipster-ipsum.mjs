@@ -185,6 +185,7 @@ const dictionary = [
 	'TikTok',
 	'MacBook',
 	'Leica',
+  'the Barn',
 ];
 
 /**
