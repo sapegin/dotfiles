@@ -1,3 +1,6 @@
+# Zoxide config: https://github.com/ajeetdsouza/zoxide
+# Generated with `zoxide init --cmd cd zsh`
+
 # shellcheck shell=bash
 
 # =============================================================================
