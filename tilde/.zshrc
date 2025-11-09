@@ -4,6 +4,7 @@ source ~/dotfiles/zsh/path.zsh
 source ~/dotfiles/zsh/aliases.zsh
 source ~/dotfiles/zsh/completions.zsh
 source ~/dotfiles/zsh/key-bindings.zsh
+source ~/dotfiles/zsh/zoxide.zsh
 
 # Load plugins
 source ~/dotfiles/zsh/plugins/zsh-shift-select.plugin.zsh
