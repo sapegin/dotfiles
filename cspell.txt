@@ -24,6 +24,7 @@ grayscale
 greppability
 greppable
 Hygraph
+keymap
 longstringers
 microlibraries
 microlibrary
@@ -49,3 +50,4 @@ Textlint
 themable
 todos
 trackpad
+unlisten
