@@ -123,3 +123,8 @@
 label[value='Extension (Blank Sky New Tab Page)'] {
 	display: none !important;
 }
+
+/* Make the search icon less distracting */
+#urlbar-searchmode-switcher .searchmode-switcher-icon {
+	filter: contrast(150%) grayscale(100%) opacity(50%) !important;
+}
