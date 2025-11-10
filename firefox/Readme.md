@@ -6,8 +6,8 @@ Copy `user.js` and `chrome/` folder to [Firefox profile folder](https://support.
 
 ## Extensions and themes
 
-- [1Password](https://addons.mozilla.org/firefox/addon/1password-x-password-manager/)
 - [Blank Sky New Tab Page](https://addons.mozilla.org/firefox/addon/blank-sky-new-tab-page/)
+- [iCloud Passwords](https://addons.mozilla.org/en-US/firefox/addon/icloud-passwords/)
 - [LanguageTool](https://addons.mozilla.org/en-US/firefox/addon/languagetool/)
 - [Squirrelsong Light theme](https://addons.mozilla.org/firefox/addon/squirrelsong-light/)
 - [uBlock Origin](https://addons.mozilla.org/firefox/addon/ublock-origin/)
