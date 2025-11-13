@@ -1,0 +1,252 @@
+/* https://docs.obsidian.md/Reference/CSS+variables/CSS+variables */
+
+body {
+  /* Custom variables */
+  --sqrl-heading-weight: 500;
+  --sqrl-font-base: "Bear Sans UI", system-ui, sans-serif;
+  --sqrl-font-heading: "Bear Sans UI Heading", system-ui, sans-serif;
+  --sqrl-font-mono: Monolisa, monospace;
+
+  /* Obsidian theme variables */
+  --radius-s: 4px;
+  --radius-m: 6px;
+  --radius-l: 8px;
+  --radius-xl: 12px;
+  --input-radius: 4px;
+  --button-radius: 6px;
+  --tab-radius-active: 4px;
+  --checkbox-radius: 4px;
+  --toggle-radius: 16px;
+  --toggle-thumb-radius: 16px;
+  --slider-thumb-radius: 12px;
+  --modal-radius: 12px;
+
+  --font-text-theme: var(--sqrl-font-base);
+  --font-monospace-theme: var(--sqrl-font-mono);
+
+  --cursor: pointer;
+  --cursor-link: pointer;
+
+}
+
+.theme-light {
+  --sqrl-gray180: #fdfdfe;
+  --sqrl-gray170: #f7f6f9;
+  --sqrl-gray160: #e8e5eb;
+  --sqrl-gray150: #dbd7e0;
+  --sqrl-gray140: #c9c4cf;
+  --sqrl-gray130: #b8b1be;
+  --sqrl-gray120: #a8a1af;
+  --sqrl-gray110: #9c96a2;
+  --sqrl-gray100: #8c8792;
+  --sqrl-gray090: #78737d;
+  --sqrl-gray080: #6b676f;
+  --sqrl-gray070: #5c595f;
+  --sqrl-gray060: #4c4b4e;
+  --sqrl-red: #d67e76;
+  --sqrl-redContrast: #c06159;
+  --sqrl-orange: #de9e59;
+  --sqrl-orangeContrast: #bf8240;
+  --sqrl-yellow: #e4c158;
+  --sqrl-green: #9bae7e;
+  --sqrl-greenContrast: #667e44;
+  --sqrl-teal: #5f9b8d;
+  --sqrl-blue: #80a4be;
+  --sqrl-blueContrast: #527b98;
+  --sqrl-magenta: #ac9bc5;
+  --sqrl-brightPink: #e87da4;
+  --sqrl-brightYellowDim: #f8e7a0;
+  --sqrl-brightYellowDimer: #fdf6de;
+
+  --color-base-00: #ffffff;
+  --color-base-05: var(--sqrl-gray180);
+  --color-base-10: var(--sqrl-gray170);
+  --color-base-20: var(--sqrl-gray170);
+  --color-base-25: var(--sqrl-gray160);
+  --color-base-30: var(--sqrl-gray160);
+  --color-base-35: var(--sqrl-gray150);
+  --color-base-40: var(--sqrl-gray130);
+  --color-base-50: var(--sqrl-gray120);
+  --color-base-60: var(--sqrl-gray090);
+  --color-base-70: var(--sqrl-gray060);
+  --color-base-100: #2f2e30;
+
+  /* magentaContrast: #806f9b */
+  --accent-h: 263;
+  --accent-s: 18%;
+  --accent-l: 52%;
+
+  --color-red: var(--sqrl-red);
+  --color-red-rgb: 192, 97, 89;
+  --color-orange: var(--sqrl-orange);
+  --color-orange-rgb: 222, 158, 89;
+  --color-yellow: var(--sqrl-yellow);
+  --color-yellow-rgb: 228, 193, 88;
+  --color-green: var(--sqrl-green);
+  --color-green-rgb: 155, 174, 126;
+  --color-cyan: var(--sqrl-teal);
+  --color-cyan-rgb: 95, 155, 141;
+  --color-blue: var(--sqrl-blue);
+  --color-blue-rgb: 128, 164, 190;
+  --color-purple: var(--sqrl-magenta);
+  --color-purple-rgb: 172, 155, 197;
+  --color-pink: var(--sqrl-brightPink);
+  --color-pink-rgb: 232, 125, 164;
+
+  --background-primary: var(--sqrl-gray180);
+  --background-primary-alt: var(--sqrl-gray170);
+  --background-secondary: var(--sqrl-gray170);
+  --background-secondary-alt: var(--sqrl-gray170);
+  --background-modifier-hover: var(--sqrl-gray160);
+  --background-modifier-active-hover: var(--sqrl-gray160);
+  --background-modifier-border: var(--sqrl-gray160);
+  --background-modifier-border-hover: var(--sqrl-gray150);
+  --background-modifier-border-focus: var(--sqrl-magenta);
+  --background-modifier-error: var(--color-red);
+  --background-modifier-error-rgb: var(--color-red-rgb);
+  --background-modifier-error-hover: var(--color-red);
+  --background-modifier-success: var(--color-green);
+  --background-modifier-success-rgb: var(--color-green-rgb);
+  --background-modifier-message: var(--sqrl-gray120);
+  --background-modifier-form-field: var(--sqrl-gray180);
+
+  --interactive-normal: var(--sqrl-gray180);
+  --interactive-hover: var(--sqrl-gray160);
+  --interactive-accent: var(--sqrl-gray100);
+  --interactive-accent-hsl: 267, 5%, 55%;
+  --interactive-accent-hover: var(--sqrl-gray090);
+
+  --text-normal: var(--sqrl-gray060);
+  --text-muted: var(--sqrl-gray100);
+  --text-faint: var(--sqrl-gray110);
+  --text-on-accent: var(--sqrl-gray180);
+  --text-on-accent-inverted: var(--sqrl-gray060);
+  --text-success: var(--sqrl-greenContrast);
+  --text-warning: var(--sqrl-orangeContrast);
+  --text-error: var(--sqrl-redContrast);
+  --text-accent: var(--sqrl-gray060);
+  --text-accent-hover: var(--sqrl-gray060);
+
+  --text-selection: var(--sqrl-brightYellowDimer);
+  --text-highlight-bg: var(--sqrl-brightYellowDim);
+
+  --caret-color: var(--sqrl-gray060);
+
+  --indentation-guide-color: var(--sqrl-gray160);
+
+  --modal-border-color: var(--sqrl-gray160);
+
+  --tab-text-color: var(--sqrl-gray090);
+  --tab-text-color-active: var(--sqrl-gray060);
+  --tab-text-color-focused: var(--sqrl-gray060);
+  --tab-text-color-focused-active: var(--sqrl-gray060);
+  --tab-text-color-focused-highlighted: var(--sqrl-gray060);
+  --tab-text-color-focused-active-current: var(--sqrl-gray060);
+  --tab-divider-color: var(--sqrl-gray160);
+  --tab-outline-width: 0.5px;
+  --tab-outline-color: var(--sqrl-gray140);
+
+  --blockquote-border-thickness: 4px;
+  --blockquote-border-color: var(--sqrl-gray140);
+  --blockquote-color: var(--sqrl-gray090);
+
+  --callout-title-weight: var(--sqrl-heading-weight);
+
+  --code-background: var(--sqrl-gray170);
+  --code-normal: var(--sqrl-gray090);
+  --code-comment: var(--sqrl-gray110);
+  --code-function: var(--sqrl-blue);
+  --code-important: var(--sqrl-red);
+  --code-keyword: var(--sqrl-magenta);
+  --code-operator: var(--sqrl-teal);
+  --code-property: var(--sqrl-blue);
+  --code-punctuation: var(--sqrl-gray090);
+  --code-string: var(--sqrl-green);
+  --code-tag: var(--sqrl-magenta);
+  --code-value: var(--sqrl-orange);
+
+  --p-spacing: 1rem;
+
+  --heading-formatting: red;
+  --heading-spacing: 2rem;
+  --h1-size: 2rem;
+  --h1-font: var(--sqrl-font-heading);
+  --h1-weight: var(--sqrl-heading-weight);
+  --h2-size: 1.5rem;
+  --h2-font: var(--sqrl-font-heading);
+  --h2-weight: var(--sqrl-heading-weight);
+  --h3-size: 1.2rem;
+  --h3-font: var(--sqrl-font-heading);
+  --h3-weight: var(--sqrl-heading-weight);
+  --h4-font: var(--sqrl-font-heading);
+  --h4-weight: var(--sqrl-heading-weight);
+  --h5-font: var(--sqrl-font-heading);
+  --h5-weight: var(--sqrl-heading-weight);
+  --h6-font: var(--sqrl-font-heading);
+  --h6-weight: var(--sqrl-heading-weight);
+
+  --hr-color: var(--sqrl-gray140);
+  --hr-thickness: 1px;
+
+  --link-color: var(--sqrl-blueContrast);
+  --link-external-color: var(--sqrl-blueContrast);
+  --link-color-hover: var(--sqrl-blue);
+  --link-external-color-hover: var(--sqrl-blue);
+  --link-decoration: none;
+  --link-external-decoration: none;
+  --link-unresolved-color: salmon;
+
+  --list-indent: 0.1rem;
+  --list-indent-editing: 0.1rem;
+  --list-indent-source: 0.1rem;
+  --list-spacing: 0.1rem;
+  --list-marker-color: var(--sqrl-gray110);
+
+  --checklist-done-decoration: none;
+  --checklist-done-color: var(--sqrl-gray110);
+  --checkbox-margin-inline-start: 0.4rem;
+
+  /* TODO: https://docs.obsidian.md/Reference/CSS+variables/Editor/Properties */
+
+  /* TODO: https://docs.obsidian.md/Reference/CSS+variables/Editor/Table */
+
+  --tag-color: var(--sqrl-gray080);
+  --tag-background: var(--sqrl-gray160);
+
+  --divider-color: var(--sqrl-gray140);
+  --divider-color-hover: var(--sqrl-gray060);
+  --divider-width: 0.5px;
+  --divider-width-hover: 2px;
+
+  --titlebar-background: var(--sqrl-gray160);
+  --titlebar-background-focused: var(--sqrl-gray160);
+  --titlebar-border-width: 0.5px;
+  --titlebar-border-color: var(--sqrl-gray140);
+}
+
+/* Additional styles */
+
+.HyperMD-header {
+  /* A bit of extra space after headings */
+  padding-block-end: 0.5rem !important;
+}
+
+.cm-formatting-header {
+  /* Show #s of headings on the side (like in Bear.app) to avoid jumping text */
+  z-index: 100;
+  position: absolute;
+  right: 100%;
+  white-space: nowrap;
+  background-color: var(--background-primary);
+}
+
+.external-link {
+  /* A bit of space between a link text and an external link icon */
+  padding-inline-start: 0.15rem;
+}
+
+.cm-formatting-list {
+  /* Extra space between a list marker and the text */
+  padding-inline-end: 0.5rem;
+}
+

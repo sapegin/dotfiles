@@ -1,0 +1,69 @@
+#!/usr/bin/env node
+
+// Backs up Obsidian config files.
+//
+// ---
+// Author: Artem Sapegin, sapegin.me
+// License: MIT
+// https://github.com/sapegin/dotfiles
+
+import path from 'node:path';
+import fs from 'node:fs/promises';
+import os from 'node:os';
+
+const SOURCE_DIR = path.join(os.homedir(), 'sewer/.obsidian');
+const DEST_DIR = path.join(import.meta.dirname, '/../obsidian');
+const EXCLUDED_FILES = ['workspace.json', 'workspace-mobile.json'];
+
+async function copyFile(source, dest) {
+	await fs.mkdir(path.dirname(dest), { recursive: true });
+	await fs.copyFile(source, dest);
+}
+
+async function copyDirectory(source, dest) {
+	const entries = await fs.readdir(source, { withFileTypes: true });
+
+	for (const entry of entries) {
+		const sourcePath = path.join(source, entry.name);
+		const destPath = path.join(dest, entry.name);
+
+		if (entry.isDirectory()) {
+			await copyDirectory(sourcePath, destPath);
+		} else if (entry.isFile()) {
+			if (EXCLUDED_FILES.includes(entry.name)) {
+				console.log(`[OBSIDIAN] Skipping ${entry.name}…`);
+				continue;
+			}
+			await copyFile(sourcePath, destPath);
+		}
+	}
+}
+
+console.log();
+console.log('[OBSIDIAN] Backing up config… 🧠');
+
+try {
+	await fs.access(SOURCE_DIR);
+} catch (error) {
+	console.error();
+	console.error(
+		'[OBSIDIAN] Error: Source directory does not exist:',
+		SOURCE_DIR
+	);
+	console.error();
+	console.error('Create a symlink:');
+	console.error(
+		`ln -s ~/Library/Mobile\ Documents/iCloud~md~obsidian/Documents/Sewer ~/sewer`
+	);
+	process.exit(1);
+}
+
+try {
+	await copyDirectory(SOURCE_DIR, DEST_DIR);
+	console.log();
+	console.log('[OBSIDIAN] Done 🦜');
+} catch (error) {
+	console.error();
+	console.error('[OBSIDIAN] Error:', error.message);
+	process.exit(1);
+}

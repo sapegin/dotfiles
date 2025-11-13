@@ -13,6 +13,7 @@ export default [
 			'mrm/tamia/js/*',
 			'mrm/tamia/src/*',
 			'vscode/*',
+			'obsidian/*',
 			'washingcode-book-master/*',
 			'sapegin.me-master/*',
 		],
