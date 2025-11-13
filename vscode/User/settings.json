@@ -9,7 +9,10 @@
 
     // Hide command guide in the terminal (vertical bar that appear on the left
     // side of the command on hover)
-    "notebook.inactiveFocusedCellBorder": "#ffffff00"
+    "notebook.inactiveFocusedCellBorder": "#ffffff00",
+
+    // The foreground color of a chat edited file in the edited file list
+    "chat.editedFileForeground": "#f0f"
   },
 
   // Internal
@@ -133,6 +136,7 @@
   "scm.inputFontSize": 16,
   "scm.inputMaxLineCount": 20,
   "scm.inputMinLineCount": 4,
+  "scm.repositories.selectionMode": "single",
   "scm.showHistoryGraph": false,
   "search.exclude": {
     "**/node_modules": true,
@@ -216,6 +220,9 @@
 
   // Plugins
   "catppuccin-icons.hidesExplorerArrows": true,
+  "chat.agent.thinkingStyle": "collapsed",
+  "chat.agentSessionsViewLocation": "disabled",
+  "chat.checkpoints.enabled": false,
   "chat.commandCenter.enabled": false,
   "chat.editor.fontSize": 15,
   "chat.fontSize": 15,
@@ -289,6 +296,7 @@
   ],
   "githubPullRequests.defaultMergeMethod": "squash",
   "githubPullRequests.pullPullRequestBranchBeforeCheckout": "pullAndMergeBase",
+  "inlineChat.enableV2": true,
   // Disable insanely annoying hints "Cmd+I to continue with Copilot"
   "inlineChat.lineNaturalLanguageHint": false,
   "kilo-code.allowedCommands": [
