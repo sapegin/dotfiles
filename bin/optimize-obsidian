@@ -17,8 +17,8 @@ import sharp from 'sharp';
 const VAULT_DIR = path.join(os.homedir(), 'sewer');
 const TRASH_DIR = path.join(os.homedir(), 'obsidian-trash');
 const MAX_DIMENSION = 4096;
-const PNG_SIZE_THRESHOLD = 2 * 1024 * 1024; // 2 MB
-const AVIF_QUALITY = 90;
+const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2 MB
+const AVIF_QUALITY = 80;
 const ALL_MARKDOWN_PATTERN = `**/*.md`;
 const ALL_IMAGES_PATTERN = `**/*.{png,jpg,jpeg,gif,webp,avif,bmp,tiff}`;
 
@@ -45,7 +45,7 @@ async function moveToTrash(filePath) {
 	}
 
 	await fs.rename(filePath, finalTrashPath);
-	console.log(`[OBSIDIAN] Moved ${filename} to trash`);
+	console.log(`  Move ${filename} to trash`);
 }
 
 async function extractUsedImages(markdownFiles) {
@@ -95,14 +95,14 @@ async function needsOptimization(imagePath) {
 	const stats = await fs.stat(imagePath);
 	const { width, height } = await getImageDimensions(imagePath);
 
-	// Check if PNG is larger than 2 MB
-	if (ext === '.png' && stats.size > PNG_SIZE_THRESHOLD) {
-		return { reason: 'large-png', width, height };
-	}
-
-	// Check if image dimensions exceed allowed
-	if (width > MAX_DIMENSION || height > MAX_DIMENSION) {
-		return { reason: 'oversized', width, height };
+	if (
+		// Check if the file size is too large
+		(ext !== '.avif' && stats.size > MAX_FILE_SIZE) ||
+		// Check if the image dimensions exceed allowed
+		width > MAX_DIMENSION ||
+		height > MAX_DIMENSION
+	) {
+		return { width, height };
 	}
 
 	return undefined;
@@ -156,7 +156,8 @@ async function optimizeImage(imagePath, optimization) {
 	const savedBytes = originalSize - optimizedSize;
 	const savedPercentage = ((savedBytes / originalSize) * 100).toFixed(2);
 
-	console.log(`[OBSIDIAN] ${filename} → ${nameWithoutExt}.avif`);
+	console.log();
+	console.log(`${filename} → ${nameWithoutExt}.avif`);
 	console.log(
 		`  ${(originalSize / 1024 / 1024).toFixed(2)} MB → ${(optimizedSize / 1024 / 1024).toFixed(2)} MB (saved ${savedPercentage}%)`
 	);
@@ -174,8 +175,6 @@ async function optimizeImage(imagePath, optimization) {
 }
 
 async function updateMarkdownLinks(markdownFiles, oldFilename, newFilename) {
-	let updatedCount = 0;
-
 	for (const file of markdownFiles) {
 		let originalContent = await fs.readFile(file, 'utf-8');
 
@@ -193,21 +192,18 @@ async function updateMarkdownLinks(markdownFiles, oldFilename, newFilename) {
 			'g'
 		);
 
+		const basename = path.basename(file);
+		const escapedNewFilename = encodeURIComponent(newFilename);
 		const content = originalContent.replace(regex, (match, alt, fullPath) => {
 			console.log(
-				`  Replaced link to ${fullPath} with ${newFilename} in ${file}`
+				`  Update link ${fullPath} → ${escapedNewFilename} in ${basename}`
 			);
-			return `![${alt}](${newFilename})`;
+			return `![${alt}](${escapedNewFilename})`;
 		});
 
 		if (content !== originalContent) {
 			await fs.writeFile(file, content, 'utf-8');
-			updatedCount++;
 		}
-	}
-
-	if (updatedCount > 0) {
-		console.log(`  Updated links in ${updatedCount} file(s)`);
 	}
 }
 
