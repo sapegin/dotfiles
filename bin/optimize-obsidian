@@ -18,6 +18,7 @@ const VAULT_DIR = path.join(os.homedir(), 'sewer');
 const TRASH_DIR = path.join(os.homedir(), 'obsidian-trash');
 const MAX_DIMENSION = 4096;
 const PNG_SIZE_THRESHOLD = 2 * 1024 * 1024; // 2 MB
+const AVIF_QUALITY = 90;
 const ALL_MARKDOWN_PATTERN = `**/*.md`;
 const ALL_IMAGES_PATTERN = `**/*.{png,jpg,jpeg,gif,webp,avif,bmp,tiff}`;
 
@@ -44,7 +45,7 @@ async function moveToTrash(filePath) {
 	}
 
 	await fs.rename(filePath, finalTrashPath);
-	console.log(`[OBSIDIAN] Moved ${filename} to trash as ${finalTrashPath}`);
+	console.log(`[OBSIDIAN] Moved ${filename} to trash`);
 }
 
 async function extractUsedImages(markdownFiles) {
@@ -57,7 +58,10 @@ async function extractUsedImages(markdownFiles) {
 
 		for (const match of matches) {
 			// Extract just the filename and decode URL encoding
-			usedImages.add(decodeURIComponent(path.basename(match[1])));
+			const decoded = decodeURIComponent(path.basename(match[1])).normalize(
+				'NFC'
+			);
+			usedImages.add(decoded);
 		}
 	}
 
@@ -68,11 +72,10 @@ async function removeUnusedImages(imageFiles, usedImages) {
 	let removedCount = 0;
 
 	for (const imagePath of imageFiles) {
-		const filename = path.basename(imagePath);
+		const filename = path.basename(imagePath).normalize('NFC');
 
 		if (usedImages.has(filename) === false) {
 			await moveToTrash(imagePath);
-			break;
 			removedCount++;
 		}
 	}
@@ -136,10 +139,20 @@ async function optimizeImage(imagePath, optimization) {
 		});
 	}
 
-	await sharpInstance.avif({ quality: 100 }).toFile(avifPath);
+	await sharpInstance.avif({ quality: AVIF_QUALITY }).toFile(avifPath);
 
 	const originalSize = (await fs.stat(imagePath)).size;
 	const optimizedSize = (await fs.stat(avifPath)).size;
+
+	// Only keep the optimized version if it's smaller
+	if (optimizedSize >= originalSize) {
+		await fs.unlink(avifPath);
+		console.log(
+			`[OBSIDIAN] Skipped ${filename} (AVIF not smaller: ${(optimizedSize / 1024 / 1024).toFixed(2)} MB vs ${(originalSize / 1024 / 1024).toFixed(2)} MB)`
+		);
+		return undefined;
+	}
+
 	const savedBytes = originalSize - optimizedSize;
 	const savedPercentage = ((savedBytes / originalSize) * 100).toFixed(2);
 
@@ -166,13 +179,17 @@ async function updateMarkdownLinks(markdownFiles, oldFilename, newFilename) {
 	for (const file of markdownFiles) {
 		let originalContent = await fs.readFile(file, 'utf-8');
 
-		// Match image links with various path formats
+		// Match image links with various path formats (both URL-encoded and non-encoded)
 		const escapedOldFilename = oldFilename.replace(
 			/[.*+?^${}()|[\]\\]/g,
 			'\\$&'
 		);
+		const escapedOldFilenameEncoded = encodeURIComponent(oldFilename).replace(
+			/[.*+?^${}()|[\]\\]/g,
+			'\\$&'
+		);
 		const regex = new RegExp(
-			`!\\[([^\\]]*)\\]\\(([^)]*${escapedOldFilename})\\)`,
+			`!\\[([^\\]]*)\\]\\(([^)]*(${escapedOldFilename}|${escapedOldFilenameEncoded}))\\)`,
 			'g'
 		);
 
@@ -201,12 +218,12 @@ async function optimizeImages(imageFiles, markdownFiles) {
 		const optimization = await needsOptimization(imagePath);
 
 		if (optimization) {
-			const { oldFilename, newFilename } = await optimizeImage(
-				imagePath,
-				optimization
-			);
-			await updateMarkdownLinks(markdownFiles, oldFilename, newFilename);
-			optimizedCount++;
+			const result = await optimizeImage(imagePath, optimization);
+			if (result) {
+				const { oldFilename, newFilename } = result;
+				await updateMarkdownLinks(markdownFiles, oldFilename, newFilename);
+				optimizedCount++;
+			}
 		}
 	}
 
@@ -253,8 +270,6 @@ async function main() {
 
 	console.log('\n[OBSIDIAN] Removing unused images…');
 	await removeUnusedImages(imageFiles, usedImages);
-
-	return;
 
 	console.log('\n[OBSIDIAN] Optimizing images…');
 	const remainingImageFiles = await glob(
