@@ -44,6 +44,8 @@ body {
   --sqrl-gray070: #5c595f;
   --sqrl-gray060: #4c4b4e;
   --sqrl-red: #d67e76;
+  --sqrl-redDim: #e5aba8;
+  --sqrl-redDimer: #f2dbda;
   --sqrl-redContrast: #c06159;
   --sqrl-orange: #de9e59;
   --sqrl-orangeContrast: #bf8240;
@@ -55,6 +57,8 @@ body {
   --sqrl-blueContrast: #527b98;
   --sqrl-magenta: #ac9bc5;
   --sqrl-brightPink: #e87da4;
+  --sqrl-brightPinkDim: #f0a8c2;
+  --sqrl-brightPinkDimer: #fae1ea;
   --sqrl-brightYellowDim: #f8e7a0;
   --sqrl-brightYellowDimer: #fdf6de;
 
@@ -128,7 +132,7 @@ body {
   --text-accent-hover: var(--sqrl-gray060);
 
   --text-selection: var(--sqrl-brightYellowDimer);
-  --text-highlight-bg: var(--sqrl-brightYellowDim);
+  --text-highlight-bg: var(--sqrl-brightPinkDimer);
 
   --caret-color: var(--sqrl-gray060);
 
@@ -250,3 +254,22 @@ body {
   padding-inline-end: 0.5rem;
 }
 
+.is-selected {
+    /* Darker highlight background for selected items as they have white text */
+    --text-highlight-bg: var(--sqrl-brightPink);
+}
+
+.notice-container .notice {
+    /* Less distracting and more readable notification colors */
+    color: var(--sqrl-gray080);
+    background-color: var(--sqrl-gray160);
+}
+
+mjx-merror {
+    /*
+     * Math errors that sometimes appears in old notes, where source code isn't
+     * wrapped in ``
+     */
+    color: var(--sqrl-redContrast) !important;
+    background-color: var(--sqrl-redDimer) !important;
+}
