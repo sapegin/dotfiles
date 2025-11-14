@@ -200,7 +200,7 @@ body {
   --link-external-decoration: none;
   --link-unresolved-color: salmon;
 
-  --list-indent: 0.1rem;
+  --list-indent: 1.5rem;
   --list-indent-editing: 0.1rem;
   --list-indent-source: 0.1rem;
   --list-spacing: 0.1rem;
@@ -235,13 +235,9 @@ body {
   padding-block-end: 0.5rem !important;
 }
 
-.cm-formatting-header {
-  /* Show #s of headings on the side (like in Bear.app) to avoid jumping text */
-  z-index: 100;
-  position: absolute;
-  right: 100%;
-  white-space: nowrap;
-  background-color: var(--background-primary);
+.HyperMD-list-line {
+    /* Hide indentation guides on nested Markdown lists */
+    --indentation-guide-width: 0;
 }
 
 .external-link {
@@ -272,4 +268,29 @@ mjx-merror {
      */
     color: var(--sqrl-redContrast) !important;
     background-color: var(--sqrl-redDimer) !important;
+}
+
+/* Show #s of headings on the side (like in Bear.app) to avoid shifting text */
+.is-live-preview .cm-formatting-header {
+  z-index: 100;
+  position: absolute;
+  right: 100%;
+  white-space: nowrap;
+  background-color: var(--background-primary);
+}
+
+/* Avoid shifting content when editing images */
+.is-live-preview .cm-line.cm-line:has(.cm-formatting-image) {
+    z-index: 100;
+    height: 0;
+}
+.is-live-preview .cm-line.cm-line:has(.cm-formatting-image) > * {
+    padding-block: 0.3rem;
+    background-color: var(--sqrl-gray180);
+}
+.is-live-preview .cm-line.cm-line:has(.cm-formatting-image) > *:first-child {
+    padding-inline-start: 0.2rem;
+}
+.is-live-preview .cm-line.cm-line:has(.cm-formatting-image) > *:last-child {
+    padding-inline-end: 0.2rem;
 }
