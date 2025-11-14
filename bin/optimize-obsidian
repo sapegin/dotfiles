@@ -56,8 +56,8 @@ async function extractUsedImages(markdownFiles) {
 		const matches = content.matchAll(imageRegex);
 
 		for (const match of matches) {
-			// Extract just the filename
-			usedImages.add(path.basename(match[1]));
+			// Extract just the filename and decode URL encoding
+			usedImages.add(decodeURIComponent(path.basename(match[1])));
 		}
 	}
 
@@ -72,6 +72,7 @@ async function removeUnusedImages(imageFiles, usedImages) {
 
 		if (usedImages.has(filename) === false) {
 			await moveToTrash(imagePath);
+			break;
 			removedCount++;
 		}
 	}
@@ -252,6 +253,8 @@ async function main() {
 
 	console.log('\n[OBSIDIAN] Removing unused images…');
 	await removeUnusedImages(imageFiles, usedImages);
+
+	return;
 
 	console.log('\n[OBSIDIAN] Optimizing images…');
 	const remainingImageFiles = await glob(
