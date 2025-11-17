@@ -37,6 +37,7 @@ overpolice
 Photoshop
 preorder
 refactorings
+renamer
 Sapegin
 shortcutting
 signin
