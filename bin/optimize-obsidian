@@ -12,7 +12,6 @@
 import path from 'node:path';
 import fs from 'node:fs/promises';
 import os from 'node:os';
-import { glob } from 'glob';
 import sharp from 'sharp';
 import yaml from 'js-yaml';
 
@@ -269,7 +268,7 @@ function getExtract(body) {
 		.replace(/\[([^\]]+)\]/g, '')
 		.replace(/https?:\/\/.*/g, '')
 		// Remove headings
-		.replace(/^#+\s+/gm, '')
+		.replace(/^#.*/g, '')
 		// Remove code snippets
 		.replace(/```.*?```/gm, '')
 		// Remove markup
@@ -305,7 +304,9 @@ async function updateJournalFile(filePath) {
 }
 
 async function updateJournalEntries() {
-	const journalFiles = await glob(path.join(LOG_DIR, ALL_MARKDOWN_PATTERN));
+	const journalFiles = await Array.fromAsync(
+		fs.glob(path.join(LOG_DIR, ALL_MARKDOWN_PATTERN))
+	);
 	console.log(`[OBSIDIAN] Found ${journalFiles.length} journal entries`);
 
 	for (const file of journalFiles) {
@@ -337,10 +338,14 @@ async function main() {
 
 	console.log('\n[OBSIDIAN] Gathering the files…');
 
-	const markdownFiles = await glob(path.join(VAULT_DIR, ALL_MARKDOWN_PATTERN));
+	const markdownFiles = await Array.fromAsync(
+		fs.glob(path.join(VAULT_DIR, ALL_MARKDOWN_PATTERN))
+	);
 	console.log(`[OBSIDIAN] Found ${markdownFiles.length} Markdown files`);
 
-	const imageFiles = await glob(path.join(VAULT_DIR, ALL_IMAGES_PATTERN));
+	const imageFiles = await Array.fromAsync(
+		fs.glob(path.join(VAULT_DIR, ALL_IMAGES_PATTERN))
+	);
 	console.log(`[OBSIDIAN] Found ${imageFiles.length} images`);
 
 	console.log('\n[OBSIDIAN] Extracting used images from Markdown…');
@@ -351,8 +356,8 @@ async function main() {
 	await removeUnusedImages(imageFiles, usedImages);
 
 	console.log('\n[OBSIDIAN] Optimizing images…');
-	const remainingImageFiles = await glob(
-		path.join(VAULT_DIR, ALL_IMAGES_PATTERN)
+	const remainingImageFiles = await Array.fromAsync(
+		fs.glob(path.join(VAULT_DIR, ALL_IMAGES_PATTERN))
 	);
 	// await optimizeImages(remainingImageFiles, markdownFiles);
 
