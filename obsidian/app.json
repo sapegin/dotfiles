@@ -3,5 +3,8 @@
   "autoPairMarkdown": false,
   "newFileLocation": "folder",
   "attachmentFolderPath": "attachments",
-  "newFileFolderPath": "01. ⏳ Inbox"
+  "newFileFolderPath": "⏳ Inbox",
+  "showInlineTitle": false,
+  "strictLineBreaks": true,
+  "readableLineLength": true
 }

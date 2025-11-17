@@ -1,4 +1,5 @@
 {
-  "folder": "02. 📆 Log",
-  "template": "02. 📆 Log/_template"
+  "folder": "📆 Log",
+  "template": "templates/Daily Note",
+  "format": "YYYY-MM-DD_HHmm"
 }
