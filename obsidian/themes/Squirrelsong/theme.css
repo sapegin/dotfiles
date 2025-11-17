@@ -13,10 +13,10 @@ body {
   --radius-l: 8px;
   --radius-xl: 12px;
   --input-radius: 4px;
-  --button-radius: 6px;
+  --button-radius: 8px;
   --tab-radius-active: 4px;
   --checkbox-radius: 4px;
-  --toggle-radius: 16px;
+  --toggle-radius: 20px;
   --toggle-thumb-radius: 16px;
   --slider-thumb-radius: 12px;
   --modal-radius: 12px;
@@ -30,6 +30,7 @@ body {
 }
 
 .theme-light {
+  /* Squirrelsong Light palette */
   --sqrl-gray180: #fdfdfe;
   --sqrl-gray170: #f7f6f9;
   --sqrl-gray160: #e8e5eb;
@@ -61,6 +62,25 @@ body {
   --sqrl-brightPinkDimer: #fae1ea;
   --sqrl-brightYellowDim: #f8e7a0;
   --sqrl-brightYellowDimer: #fdf6de;
+
+  /* Custom variables */
+  --textfield-shadow: inset 0 3px 0 rgba(0, 0, 0, 0.05);
+  --textfield-shadow-focus: 0 0 0 var(--input-border-width-focus) var(--background-modifier-border-focus), inset 0 3px 0 rgba(0, 0, 0, 0.05);
+  --card-shadow: 0 0 0 1px rgba(0, 0, 0, .15), 0 2px 4px rgba(0,0,0,.05);
+  --card-shadow-hover: 0 0 0 1px rgba(0, 0, 0, .2), 0 1px 2px rgba(0,0,0,.15), 0 3px 6px rgba(0,0,0,.08);
+  --button-shadow: inset 0 0 0 1px rgba(0, 0, 0, .15), inset 0 -2px 0 2px rgba(0, 0, 0, .15), 0 2px 1px -1px rgba(0, 0, 0, .15), 0 4px 5px -2px rgba(0, 0, 0, .1);
+  --active-shadow: inset 0 0 0 1px rgba(0, 0, 0, .1), inset 0 2px 0 1px rgba(0, 0, 0, .05);
+  --button-text-shadow: 0 1px 1px rgba(255, 255, 255, .85);
+  --button-accent-text-shadow: 0 -1px 1px rgba(0, 0, 0, .15);
+  --active-text-shadow: var(--button-accent-text-shadow);
+  --toggle-shadow: inset 0px 0px 0px 1px rgba(0, 0, 0, 0.1), inset 0 2px 0 rgba(0, 0, 0, .05), 0 5px 2px -4px rgba(0, 0, 0, .15);
+  --toggle-thumb-shadow: inset 0px 1px 0px 1px rgba(255, 255, 255, 1), inset 0px 0px 0px 1px rgba(0, 0, 0, 0.15), 0 2px 2px rgba(0, 0, 0, 0.2);
+  --slider-track-shadow: inset 0px 0px 0px 1px rgba(0, 0, 0, 0.05), 0px 0px 0px 1px rgba(255, 255, 255, 0.05);
+ --slider-thumb-shadow: inset 0px 1px 0px 1px rgba(255, 255, 255, 1), inset 0px 0px 0px 1px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.25);
+ --slider-thumb-shadow-hover: inset 0px 1px 0px 1px rgba(255, 255, 255, 1), inset 0px 0px 0px 1px rgba(0, 0, 0, 0.1), 0 1px 4px rgba(0, 0, 0, 0.3);
+  --transition: all ease-in 0.15s;
+
+  /* Obsidian variables */
 
   --color-base-00: #ffffff;
   --color-base-05: var(--sqrl-gray180);
@@ -142,13 +162,15 @@ body {
 
   --tab-text-color: var(--sqrl-gray090);
   --tab-text-color-active: var(--sqrl-gray060);
-  --tab-text-color-focused: var(--sqrl-gray060);
+  --tab-text-color-focused: var(--sqrl-gray090);
   --tab-text-color-focused-active: var(--sqrl-gray060);
   --tab-text-color-focused-highlighted: var(--sqrl-gray060);
   --tab-text-color-focused-active-current: var(--sqrl-gray060);
+  --tab-background-active: var(--sqrl-gray170);
   --tab-divider-color: var(--sqrl-gray160);
   --tab-outline-width: 0.5px;
   --tab-outline-color: var(--sqrl-gray140);
+  --tab-curve: 0;
 
   --blockquote-border-thickness: 4px;
   --blockquote-border-color: var(--sqrl-gray140);
@@ -226,9 +248,201 @@ body {
   --titlebar-background-focused: var(--sqrl-gray160);
   --titlebar-border-width: 0.5px;
   --titlebar-border-color: var(--sqrl-gray140);
+
+  --icon-color: var(--sqrl-gray100);
+  --icon-color-hover: var(--sqrl-gray060);
+  --icon-color-active: var(--sqrl-gray060);
+  --icon-color-focus: var(--sqrl-gray060);
+  --icon-opacity: 1;
+
+  --collapse-icon-color: var(--icon-color);
+  --collapse-icon-color-collapsed: var(--icon-color);
+
+  --input-shadow: var(--textfield-shadow);
+  --dropdown-background-position: right 0.5em top 55%, 0 0;
+
+  --bases-cards-shadow: var(--card-shadow);
+  --bases-cards-shadow-hover: var(--card-shadow-hover);
+
+  --metadata-border-radius: var(--radius-xl);
+  --metadata-property-radius: 0;
+  --metadata-padding: .75rem;
+  --metadata-property-radius-focus: var(--radius-s);
+  --metadata-property-box-shadow-hover: none;
+  --metadata-property-box-shadow-focus: var(--textfield-shadow-focus);
+  --metadata-input-background-active: transparent;
+  --metadata-label-text-color: var(--sqrl-gray090);
+  --metadata-label-background-active: transparent;
 }
 
 /* Additional styles */
+
+/* All interactive elements should have pointer cursor and transition */
+.tappable, .is-clickable, .clickable-icon, .view-header-breadcrumb, textarea, input, button {
+    transition: var(--transition);
+}
+.tappable, .is-clickable, .clickable-icon, .view-header-breadcrumb, button, input[type="checkbox"] {
+    cursor: var(--cursor);
+}
+
+/* Button styles inspired by https://primary-theme.github.io */
+
+button:not(.clickable-icon) {
+    padding-block-end: 6px;
+    color: var(--sqrl-gray080);
+    background-color: var(--sqrl-gray160);
+    box-shadow: var(--button-shadow);
+    text-shadow: var(--button-text-shadow);
+    transition: var(--transition);
+}
+button:not(.clickable-icon):hover {
+    background-color: var(--sqrl-gray150);
+}
+button.mod-cta {
+    color: var(--sqrl-gray180);
+    background-color: var(--sqrl-gray100);
+    text-shadow: var(--button-accent-text-shadow);
+}
+button.mod-cta:hover {
+    background-color: var(--sqrl-gray090);
+}
+button:active {
+    transform: translateY(1px);
+}
+
+/* Inputs */
+
+textarea, input.metadata-input-text, input[type='date'], input[type='datetime-local'], input[type='text']:not(.metadata-property-key-input), input[type='search'], input[type='email'], input[type='password'], input[type='number'] {
+    /* padding-block-start: 6px; */
+    box-shadow: var(--input-shadow);
+}
+
+textarea:focus-visible, .multi-select-container:focus-visible, input.metadata-input-text:focus-visible, input[type='date']:focus-visible, input[type='datetime-local']:focus-visible, input[type='text']:focus-visible, input[type='search']:focus-visible, input[type='email']:focus-visible, input[type='password']:focus-visible, input[type='number']:focus-visible {
+    box-shadow: var(--textfield-shadow-focus);
+}
+
+/* Dropdowns */
+
+.dropdown {
+    padding-block-start: 2px;
+    border: 1px solid var(--sqrl-gray160);
+}
+.dropdown:hover {
+    background-color: var(--sqrl-gray180);
+    border: 1px solid var(--sqrl-gray140);
+    box-shadow: var(--input-shadow);
+    cursor: var(--cursor);
+}
+
+/* Range input sliders */
+
+input[type='range'],
+input[type='range']:hover,
+input[type='range']:focus {
+    box-shadow: var(--slider-track-shadow);
+}
+
+input[type='range']::-webkit-slider-thumb {
+    transition: var(--transition);
+    box-shadow: var(--slider-thumb-shadow);
+    cursor: grab;
+}
+
+input[type='range']::-webkit-slider-thumb:hover,
+input[type='range']::-webkit-slider-thumb:active,
+input[type='range']:focus::-webkit-slider-thumb,
+input[type='range']:focus-visible::-webkit-slider-thumb {
+    box-shadow: var(--slider-thumb-shadow-hover);
+}
+
+
+/* Checkboxes (toggle buttons) */
+
+.checkbox-container {
+    box-shadow: var(--toggle-shadow);
+}
+.checkbox-container::after {
+    box-shadow: var(--toggle-thumb-shadow);
+}
+.checkbox-container:focus-within {
+    outline-offset: 1px;
+}
+
+/* Horizontal tabs */
+
+.workspace-tab-header-inner, .workspace-tab-header-inner-icon, .workspace-tab-header-inner-close-button {
+    transition: var(--transition);
+}
+.mod-root .workspace-tab-header-container-inner {
+    padding: 4px 16px;
+    margin-block: 0;
+}
+.workspace .mod-root .workspace-tab-header {
+    padding: 2px 4px;
+}
+.workspace-tab-header.is-active {
+    box-shadow: 0 0 0 var(--tab-outline-width) var(--tab-outline-color), 0 2px 4px rgba(0,0,0,.05);
+}
+.workspace-tab-header.is-active .workspace-tab-header-inner-icon {
+    color: var(--icon-color-active);
+}
+.mod-left-split .workspace-tab-header.is-active, .mod-right-split .workspace-tab-header.is-active {
+    box-shadow: none;
+}
+.workspace-tab-header:hover {
+    color: var(--tab-text-color-active);
+}
+.workspace .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header:not(.is-active) .workspace-tab-header-inner-close-button {
+    display: flex;
+    opacity: 0;
+}
+.workspace .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header:hover .workspace-tab-header-inner-close-button {
+    opacity: 1;
+}
+
+/* Vertical tabs (like in settings) */
+
+.vertical-tab-nav-item {
+    border-radius: var(--radius-m);
+    transition: var(--transition);
+}
+.vertical-tab-nav-item.is-active {
+    box-shadow: var(--active-shadow);
+    text-shadow: var(--active-text-shadow);
+}
+
+/* Metadata (properties) section */
+.metadata-container {
+    box-shadow: var(--card-shadow);
+}
+.metadata-properties-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0;
+    cursor: var(--cursor);
+}
+.metadata-properties-title {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    line-height: 1;
+    font-size: var(--font-ui-medium);
+    color: var(--text-muted);
+}
+.metadata-properties-heading .collapse-indicator {
+    position: unset;
+    order: 2;
+    opacity: 1;
+}
+.metadata-content {
+    margin-block-start: .5rem;
+}
+.metadata-property:not(:focus-within) * {
+    cursor: var(--cursor);
+}
+input.metadata-property-key-input:focus-visible {
+    box-shadow: none;
+}
 
 .HyperMD-header {
   /* A bit of extra space after headings */
@@ -243,6 +457,15 @@ body {
 .external-link {
   /* A bit of space between a link text and an external link icon */
   padding-inline-start: 0.15rem;
+}
+.markdown-source-view.mod-cm6 .cm-link .cm-underline, .markdown-source-view.mod-cm6 .cm-url .cm-underline {
+    text-decoration: underline;
+    text-decoration-line: none;
+    text-decoration-color: transparent;
+    transition: var(--transition);
+}
+.markdown-source-view.mod-cm6 .cm-link .cm-underline:hover, .markdown-source-view.mod-cm6 .cm-url .cm-underline:hover {
+    text-decoration-color: currentColor;
 }
 
 .cm-formatting-list {
@@ -293,4 +516,12 @@ mjx-merror {
 }
 .is-live-preview .cm-line.cm-line:has(.cm-formatting-image) > *:last-child {
     padding-inline-end: 0.2rem;
+}
+
+input.prompt-input, input.prompt-input:hover, input.prompt-input:focus, input.prompt-input:focus-visible, .prompt-instructions {
+    /* Revert theme input styles */
+    padding: var(--size-4-6);
+    box-shadow: none;
+    /* Correct (darker) border color */
+    border-color: var(--sqrl-gray160);
 }
