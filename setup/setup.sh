@@ -54,7 +54,10 @@ echo
 
 # Node.js
 echo "🚀 Installing Node.js dependencies…"
+# Less verbose output
 npm config set loglevel warn
+# Install exact version of packages ("1.1.1" instead of "^1.1.1" or "~1.1.1")
+npm config set save-exact true
 npm install -g npm-upgrade
 npm install
 echo
