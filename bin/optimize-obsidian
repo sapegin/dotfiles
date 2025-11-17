@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
 // Optimizes images in Obsidian vault: removes unused images, converts large
-// PNG files to AVIF, and downsizes oversized images.
+// PNG files to AVIF, and downsizes oversized images. Also cleans up journal
+// entries frontmatter.
 //
 // ---
 // Author: Artem Sapegin, sapegin.me
@@ -13,9 +14,11 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import { glob } from 'glob';
 import sharp from 'sharp';
+import yaml from 'js-yaml';
 
 const VAULT_DIR = path.join(os.homedir(), 'sewer');
 const TRASH_DIR = path.join(os.homedir(), 'obsidian-trash');
+const LOG_DIR = path.join(VAULT_DIR, '📆 Log');
 const MAX_DIMENSION = 4096;
 const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2 MB
 const AVIF_QUALITY = 80;
@@ -230,6 +233,86 @@ async function optimizeImages(imageFiles, markdownFiles) {
 	}
 }
 
+function parseFrontmatter(content) {
+	const match = content.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+	if (!match) {
+		return { frontmatter: '', body: content };
+	}
+
+	const frontmatterText = match[1];
+	const body = match[2];
+	const frontmatter = yaml.load(frontmatterText);
+
+	return { frontmatter, body };
+}
+
+function serializeFrontmatter(frontmatter) {
+	const yamlContent = yaml.dump(frontmatter, {
+		lineWidth: -1,
+		noRefs: true,
+	});
+	return `---\n${yamlContent.trim()}\n---`;
+}
+
+function getFirstImage(body) {
+	const imageRegex = /!\[.*?\]\(([^)]+)\)/;
+	const match = body.match(imageRegex);
+	return match ? path.basename(decodeURIComponent(match[1])) : undefined;
+}
+
+function getExtract(body) {
+	const textOnly = body
+		// Remove images
+		.replace(/!\[.*?\]\([^)]+\)/g, '')
+		// Remove links
+		.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+		.replace(/\[([^\]]+)\]/g, '')
+		.replace(/https?:\/\/.*/g, '')
+		// Remove headings
+		.replace(/^#+\s+/gm, '')
+		// Remove code snippets
+		.replace(/```.*?```/gm, '')
+		// Remove markup
+		.replace(/[*_>~`]/g, '')
+		// Join lines
+		.replace(/\n/gm, ' ')
+		// Clean up
+		.replace(/\s+/g, ' ')
+		.trim();
+
+	const match = textOnly.match(/.{300}[^ ]*/);
+	return match ? `${match[0].replace(/[\.,!?…\(\)]$/, '')}…` : textOnly;
+}
+
+async function updateJournalFile(filePath) {
+	const content = await fs.readFile(filePath, 'utf-8');
+	const { frontmatter, body } = parseFrontmatter(content);
+
+	if (frontmatter === '') {
+		return;
+	}
+
+	const firstImage = getFirstImage(body);
+	if (firstImage) {
+		frontmatter.image = firstImage;
+	}
+
+	frontmatter.extract = getExtract(body);
+
+	const newContent = `${serializeFrontmatter(frontmatter)}\n${body}`;
+
+	await fs.writeFile(filePath, newContent, 'utf-8');
+}
+
+async function updateJournalEntries() {
+	const journalFiles = await glob(path.join(LOG_DIR, ALL_MARKDOWN_PATTERN));
+	console.log(`[OBSIDIAN] Found ${journalFiles.length} journal entries`);
+
+	for (const file of journalFiles) {
+		await updateJournalFile(file);
+	}
+}
+
 async function main() {
 	console.log();
 	console.log('[OBSIDIAN] Optimizing vault images… 🧠');
@@ -271,7 +354,10 @@ async function main() {
 	const remainingImageFiles = await glob(
 		path.join(VAULT_DIR, ALL_IMAGES_PATTERN)
 	);
-	await optimizeImages(remainingImageFiles, markdownFiles);
+	// await optimizeImages(remainingImageFiles, markdownFiles);
+
+	console.log('\n[OBSIDIAN] Updating journal entries…');
+	await updateJournalEntries();
 
 	console.log();
 	console.log('[OBSIDIAN] Done 🦜');
