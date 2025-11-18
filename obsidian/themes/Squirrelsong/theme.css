@@ -69,6 +69,9 @@ body {
   --card-shadow: 0 0 0 1px rgba(0, 0, 0, .15), 0 2px 4px rgba(0,0,0,.05);
   --card-shadow-hover: 0 0 0 1px rgba(0, 0, 0, .2), 0 1px 2px rgba(0,0,0,.15), 0 3px 6px rgba(0,0,0,.08);
   --button-shadow: inset 0 0 0 1px rgba(0, 0, 0, .15), inset 0 -2px 0 2px rgba(0, 0, 0, .15), 0 2px 1px -1px rgba(0, 0, 0, .15), 0 4px 5px -2px rgba(0, 0, 0, .1);
+  --button-shadow-active: inset 0 0 0 1px rgba(0, 0, 0, .15), inset 0 0 0 3px rgba(0, 0, 0, .05), inset 0 2px 8px 0 rgba(0, 0, 0, .05), 0 1px 2px rgba(0, 0, 0, 0.05);
+  --dropdown-shadow: inset 0 0 0 1px rgba(0, 0, 0, .15), inset 0 -2px 0 2px rgba(0, 0, 0, .03), 0 2px 1px -1px rgba(0, 0, 0, .1), 0 4px 5px -2px rgba(0, 0, 0, .08);
+  --dropdown-shadow-focus: 0 0 0 var(--input-border-width-focus) var(--background-modifier-border-focus), inset 0 0 0 1px rgba(0, 0, 0, .15), inset 0 -2px 0 2px rgba(0, 0, 0, .03), 0 2px 1px -1px rgba(0, 0, 0, .1), 0 4px 5px -2px rgba(0, 0, 0, .08);
   --active-shadow: inset 0 0 0 1px rgba(0, 0, 0, .1), inset 0 2px 0 1px rgba(0, 0, 0, .05);
   --button-text-shadow: 0 1px 1px rgba(255, 255, 255, .85);
   --button-accent-text-shadow: 0 -1px 1px rgba(0, 0, 0, .15);
@@ -83,7 +86,8 @@ body {
             text-decoration 0.15s ease-in,
             color 0.15s ease-in,
             background-color 0.15s ease-in,
-            opacity 0.15s ease-in;
+            opacity 0.15s ease-in,
+            padding 0.15s ease-in;
 
   /* Obsidian variables */
 
@@ -303,6 +307,10 @@ button:not(.clickable-icon) {
 button:not(.clickable-icon):hover {
     background-color: var(--sqrl-gray150);
 }
+button:not(.clickable-icon):active {
+  padding-block-end: 5px;
+  box-shadow: var(--button-shadow-active);
+}
 button.mod-cta {
     color: var(--sqrl-gray180);
     background-color: var(--sqrl-gray100);
@@ -310,9 +318,6 @@ button.mod-cta {
 }
 button.mod-cta:hover {
     background-color: var(--sqrl-gray090);
-}
-button:active {
-    transform: translateY(1px);
 }
 
 /* Inputs */
@@ -329,14 +334,19 @@ textarea:focus-visible, .multi-select-container:focus-visible, input[type='date'
 /* Dropdowns */
 
 .dropdown {
-    padding-block-start: 2px;
-    border: 1px solid var(--sqrl-gray160);
+    border: 0;
+    border-radius: var(--button-radius);
+    background-color: var(--sqrl-gray180);
+    box-shadow: var(--dropdown-shadow);
+    text-shadow: var(--button-text-shadow);
 }
 .dropdown:hover {
-    background-color: var(--sqrl-gray180);
-    border: 1px solid var(--sqrl-gray140);
-    box-shadow: var(--input-shadow);
+    background-color: var(--sqrl-gray170);
+    box-shadow: var(--dropdown-shadow);
     cursor: var(--cursor);
+}
+.dropdown:focus-visible {
+    box-shadow: var(--dropdown-shadow-focus);
 }
 
 /* Range input sliders */
@@ -537,5 +547,6 @@ mjx-merror {
 }
 
 .cm-s-obsidian span.obsidian-search-match-highlight {
+    /* Search highlighting in the editor */
     --text-accent: var(--sqrl-brightPink);
 }
