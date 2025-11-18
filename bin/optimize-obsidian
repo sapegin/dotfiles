@@ -246,7 +246,10 @@ function parseFrontmatter(content) {
 }
 
 function serializeFrontmatter(frontmatter) {
-	const yamlContent = YAML.stringify(frontmatter);
+	const yamlContent = YAML.stringify(frontmatter, undefined, {
+		// Don't wrap long lines
+		lineWidth: 0,
+	});
 	return `---\n${yamlContent.trim()}\n---`;
 }
 
@@ -258,14 +261,14 @@ function getFirstImage(body) {
 
 function getExcerpt(body) {
 	const textOnly = body
+		// Remove headings
+		.replace(/^#.*/gm, '')
 		// Remove images
 		.replace(/!\[.*?\]\([^)]+\)/g, '')
 		// Remove links
 		.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
-		.replace(/\[([^\]]+)\]/g, '')
+		.replace(/\[\[([^\]]+)\]\]/g, '$1')
 		.replace(/https?:\/\/.*/g, '')
-		// Remove headings
-		.replace(/^#.*/g, '')
 		// Remove code snippets
 		.replace(/```.*?```/gm, '')
 		// Remove markup
