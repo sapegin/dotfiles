@@ -50,7 +50,7 @@ async function moveToTrash(filePath) {
 	console.log(`  Move ${filename} to trash`);
 }
 
-async function extractUsedImages(markdownFiles) {
+async function getUsedImages(markdownFiles) {
 	const usedImages = new Set();
 	const imageRegex = /!\[.*?\]\(([^)]+)\)/g;
 
@@ -259,7 +259,7 @@ function getFirstImage(body) {
 	return match ? path.basename(decodeURIComponent(match[1])) : undefined;
 }
 
-function getExtract(body) {
+function getExcerpt(body) {
 	const textOnly = body
 		// Remove images
 		.replace(/!\[.*?\]\([^)]+\)/g, '')
@@ -296,7 +296,7 @@ async function updateJournalFile(filePath) {
 		frontmatter.image = firstImage;
 	}
 
-	frontmatter.extract = getExtract(body);
+	frontmatter.excerpt = getExcerpt(body);
 
 	const newContent = `${serializeFrontmatter(frontmatter)}\n${body}`;
 
@@ -348,8 +348,8 @@ async function main() {
 	);
 	console.log(`[OBSIDIAN] Found ${imageFiles.length} images`);
 
-	console.log('\n[OBSIDIAN] Extracting used images from Markdown…');
-	const usedImages = await extractUsedImages(markdownFiles);
+	console.log('\n[OBSIDIAN] Collecting used images from Markdown…');
+	const usedImages = await getUsedImages(markdownFiles);
 	console.log(`[OBSIDIAN] Found ${usedImages.size} used images`);
 
 	console.log('\n[OBSIDIAN] Removing unused images…');
