@@ -1,0 +1,11 @@
+{
+	"id": "fold-properties-by-default",
+	"name": "Fold Properties By Default",
+	"version": "1.0.8",
+	"minAppVersion": "0.15.0",
+	"description": "Always have editor/metadata properties folded by default.",
+	"author": "Tommy Bergeron",
+	"authorUrl": "https://github.com/tbergeron",
+	"fundingUrl": "https://www.paypal.com/donate/?hosted_button_id=93Z9BUUD778SG",
+	"isDesktopOnly": false
+}

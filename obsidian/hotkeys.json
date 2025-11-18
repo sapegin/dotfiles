@@ -44,5 +44,32 @@
       ],
       "key": "F6"
     }
-  ]
+  ],
+  "editor:toggle-source": [
+    {
+      "modifiers": [],
+      "key": "F4"
+    }
+  ],
+  "markdown:toggle-preview": [
+    {
+      "modifiers": [],
+      "key": "F3"
+    }
+  ],
+  "editor:open-search-replace": [
+    {
+      "modifiers": [
+        "Mod"
+      ],
+      "key": "R"
+    }
+  ],
+  "app:delete-file": [
+    {
+      "modifiers": [],
+      "key": "F8"
+    }
+  ],
+  "editor:delete-paragraph": []
 }
