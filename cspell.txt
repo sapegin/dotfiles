@@ -25,6 +25,7 @@ greppability
 greppable
 Hygraph
 keymap
+Lightroom
 longstringers
 microlibraries
 microlibrary

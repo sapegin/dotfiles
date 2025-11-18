@@ -26,33 +26,35 @@ brew "zsh-syntax-highlighting" # Syntax highlighting for zsh
 brew "zoxide" # `cd` replacement
 
 # GUI apps
-cask "1password" # Password manager
-cask "adobe-creative-cloud"
+cask "adobe-creative-cloud" # Lightroom & Photoshop
+cask "affinity" # Image editor
 cask "alfred" # App launcher
-cask "bruno" # GraphQL API client
+cask "bruno" # REST/GraphQL API client
 cask "choosy" # Browser selector
-cask "chromium", args: { no_quarantine: true }
 cask "cleanshot" # Screenshots
 cask "colorsnapper" # Color picker
 cask "coteditor" # Simple code/text editor
 cask "dash" # Documentation reader
-cask "firefox"
+cask "firefox" # Main browser
 cask "firefox@developer-edition"
 cask "ghostty" # Terminal emulator
 cask "github" # GitHub Desktop
+cask "google-chrome" # Browser for testing
 cask "jordanbaird-ice" # Hides menu bar icons
 cask "kap" # Video screen recording
 cask "keka" # Archive reader
+cask "languagetool" # Spell checker
 cask "nimble-commander" # File manager
-cask "notion"
+cask "notion" # Collaborative notes
 cask "numi" # Calculator
+cask "obsidian" # Note taking
 cask "optimage" # Image optimization
 cask "polypane" # Responsive design and accessibility testing
 cask "quitter" # Quit apps after certain time
 cask "replacicon" # Custom app icons
-cask "telegram"
-cask "visual-studio-code"
-cask "whatsapp"
+cask "telegram" # Chat
+cask "visual-studio-code" # Main code editor
+cask "whatsapp" # Another chat
 
 # Fonts
 cask "font-symbols-only-nerd-font"
@@ -85,12 +87,8 @@ vscode "uooobarry.githubdesktop-open"
 # TODO: Find a way to print this _after_ the installation, not before
 puts "☕️ Install more apps if you need them:"
 puts "brew install --cask charles"
-puts "brew install --cask choosy"
-puts "brew install --cask daisydisk"
+puts "brew install --cask fastmail"
 puts "brew install --cask figma"
-puts "brew install --cask gemini"
-puts "brew install --cask messenger"
-puts "brew install --cask rapidapi"
 puts "brew install --cask slack"
 puts "brew install --cask zoom"
 puts ""
