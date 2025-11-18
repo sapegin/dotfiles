@@ -13,7 +13,7 @@ import path from 'node:path';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import sharp from 'sharp';
-import yaml from 'js-yaml';
+import YAML from 'yaml';
 
 const VAULT_DIR = path.join(os.homedir(), 'sewer');
 const TRASH_DIR = path.join(os.homedir(), 'obsidian-trash');
@@ -240,16 +240,13 @@ function parseFrontmatter(content) {
 
 	const frontmatterText = match[1];
 	const body = match[2];
-	const frontmatter = yaml.load(frontmatterText);
+	const frontmatter = YAML.parse(frontmatterText);
 
 	return { frontmatter, body };
 }
 
 function serializeFrontmatter(frontmatter) {
-	const yamlContent = yaml.dump(frontmatter, {
-		lineWidth: -1,
-		noRefs: true,
-	});
+	const yamlContent = YAML.stringify(frontmatter);
 	return `---\n${yamlContent.trim()}\n---`;
 }
 
