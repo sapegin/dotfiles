@@ -8,8 +8,8 @@
  * https://github.com/sapegin/dotfiles
  */
 
-import os from 'node:os';
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { parseEnv } from 'node:util';
 import { globSync } from 'glob';

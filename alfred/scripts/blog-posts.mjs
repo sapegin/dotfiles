@@ -9,8 +9,8 @@
  */
 
 import fs from 'node:fs';
-import path from 'node:path';
 import os from 'node:os';
+import path from 'node:path';
 import { globSync } from 'glob';
 
 const FILES = `${os.homedir()}/_/sapegin.me/src/content/blog/*.md`;
