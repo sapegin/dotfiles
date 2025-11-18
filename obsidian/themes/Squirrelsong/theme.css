@@ -78,7 +78,12 @@ body {
   --slider-track-shadow: inset 0px 0px 0px 1px rgba(0, 0, 0, 0.05), 0px 0px 0px 1px rgba(255, 255, 255, 0.05);
  --slider-thumb-shadow: inset 0px 1px 0px 1px rgba(255, 255, 255, 1), inset 0px 0px 0px 1px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.25);
  --slider-thumb-shadow-hover: inset 0px 1px 0px 1px rgba(255, 255, 255, 1), inset 0px 0px 0px 1px rgba(0, 0, 0, 0.1), 0 1px 4px rgba(0, 0, 0, 0.3);
-  --transition: all ease-in 0.15s;
+  --transition: text-shadow 0.15s ease-in,
+            box-shadow 0.15s ease-in,
+            text-decoration 0.15s ease-in,
+            color 0.15s ease-in,
+            background-color 0.15s ease-in,
+            opacity 0.15s ease-in;
 
   /* Obsidian variables */
 
@@ -312,12 +317,12 @@ button:active {
 
 /* Inputs */
 
-textarea, input.metadata-input-text, input[type='date'], input[type='datetime-local'], input[type='text']:not(.metadata-property-key-input), input[type='search'], input[type='email'], input[type='password'], input[type='number'] {
-    /* padding-block-start: 6px; */
+textarea, input[type='date'], input[type='datetime-local'], input[type='text'], input[type='search'], input[type='email'], input[type='password'], input[type='number'] {
+    padding-block-start: 6px;
     box-shadow: var(--input-shadow);
 }
 
-textarea:focus-visible, .multi-select-container:focus-visible, input.metadata-input-text:focus-visible, input[type='date']:focus-visible, input[type='datetime-local']:focus-visible, input[type='text']:focus-visible, input[type='search']:focus-visible, input[type='email']:focus-visible, input[type='password']:focus-visible, input[type='number']:focus-visible {
+textarea:focus-visible, .multi-select-container:focus-visible, input[type='date']:focus-visible, input[type='datetime-local']:focus-visible, input[type='text']:focus-visible, input[type='search']:focus-visible, input[type='email']:focus-visible, input[type='password']:focus-visible, input[type='number']:focus-visible {
     box-shadow: var(--textfield-shadow-focus);
 }
 
@@ -412,6 +417,7 @@ input[type='range']:focus-visible::-webkit-slider-thumb {
 }
 
 /* Metadata (properties) section */
+
 .metadata-container {
     box-shadow: var(--card-shadow);
 }
@@ -440,9 +446,21 @@ input[type='range']:focus-visible::-webkit-slider-thumb {
 .metadata-property:not(:focus-within) * {
     cursor: var(--cursor);
 }
-input.metadata-property-key-input:focus-visible {
+input.metadata-property-key-input, input.metadata-property-key-input:focus-visible, input.metadata-input, input.metadata-input:focus-visible {
     box-shadow: none;
 }
+
+/* Prompt modals (quick switcher, command palette) */
+
+input.prompt-input, input.prompt-input:hover, input.prompt-input:focus, input.prompt-input:focus-visible, .prompt-instructions {
+    /* Revert theme input styles */
+    padding: var(--size-4-6);
+    box-shadow: none;
+    /* Correct (darker) border color */
+    border-color: var(--sqrl-gray160);
+}
+
+/* Editor */
 
 .HyperMD-header {
   /* A bit of extra space after headings */
@@ -518,10 +536,6 @@ mjx-merror {
     padding-inline-end: 0.2rem;
 }
 
-input.prompt-input, input.prompt-input:hover, input.prompt-input:focus, input.prompt-input:focus-visible, .prompt-instructions {
-    /* Revert theme input styles */
-    padding: var(--size-4-6);
-    box-shadow: none;
-    /* Correct (darker) border color */
-    border-color: var(--sqrl-gray160);
+.cm-s-obsidian span.obsidian-search-match-highlight {
+    --text-accent: var(--sqrl-brightPink);
 }
