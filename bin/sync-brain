@@ -87,13 +87,8 @@ const SOURCES = [
 			contents.includes(`title: 'Washing your code: `) === false,
 	},
 	{
-		// My unfinished writings
-		from: `~/Library/Mobile Documents/com~apple~CloudDocs/Writings`,
-		to: 'drafts',
-	},
-	{
 		// Extra Markdown files
-		from: `~/Library/Mobile Documents/com~apple~CloudDocs/Articles`,
+		from: `~/sewer/🪦 Archive/Internets`,
 		to: 'articles',
 	},
 ];

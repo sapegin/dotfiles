@@ -50,11 +50,6 @@ try {
 		'[OBSIDIAN] Error: Source directory does not exist:',
 		SOURCE_DIR
 	);
-	console.error();
-	console.error('Create a symlink:');
-	console.error(
-		`ln -s ~/Library/Mobile\ Documents/iCloud~md~obsidian/Documents/Sewer ~/sewer`
-	);
 	process.exit(1);
 }
 

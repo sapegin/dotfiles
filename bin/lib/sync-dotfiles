@@ -21,6 +21,16 @@ const TILDE_DIR = `${HOME}/dotfiles/tilde`;
 const IGNORE = ['.DS_Store', 'Brewfile.lock.json'];
 const SPECIALS = [
 	{
+		// Convenience symlink: iCloud Documents
+		source: `${HOME}/Library/Mobile Documents/com~apple~CloudDocs`,
+		destination: `${HOME}/cloud`,
+	},
+	{
+		// Convenience symlink: Obsidian vault (Digital Sewer)
+		source: `${HOME}/Library/Mobile Documents/iCloud~md~obsidian/Documents/Sewer`,
+		destination: `${HOME}/sewer`,
+	},
+	{
 		// Visual Studio Code
 		source: `${HOME}/dotfiles/vscode/User`,
 		destination: `${HOME}/Library/Application Support/Code/User`,

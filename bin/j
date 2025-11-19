@@ -37,12 +37,12 @@ const WORK_PROJECTS_DIR = untildify(env.WORK_PROJECTS_DIR);
 const EXTRA_PROJECTS = [os.homedir(), ['dotfiles']];
 const CLOUD_PROJECTS = [
 	{
-		label: 'Apple iCloud Docs',
-		dir: untildify(`~/Library/Mobile Documents/com~apple~CloudDocs`),
+		label: 'iCloud Docs',
+		dir: untildify(`~/cloud`),
 	},
 	{
-		label: 'Cloud Writings',
-		dir: untildify(`~/Library/Mobile Documents/com~apple~CloudDocs/Writings`),
+		label: 'Digital Sewer',
+		dir: untildify(`~/sewer`),
 	},
 ];
 

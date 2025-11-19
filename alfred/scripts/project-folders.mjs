@@ -34,8 +34,8 @@ const folders = [
 	untildify(`~/dotfiles/`),
 
 	// Cloud folders
-	untildify(`~/Library/Mobile Documents/com~apple~CloudDocs`),
-	untildify(`~/Library/Mobile Documents/com~apple~CloudDocs/Writings`),
+	untildify(`~/cloud`),
+	untildify(`~/sewer`),
 ].flat();
 
 const items = folders

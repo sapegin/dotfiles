@@ -326,11 +326,6 @@ async function main() {
 			'[OBSIDIAN] Error: Vault directory does not exist:',
 			VAULT_DIR
 		);
-		console.error();
-		console.error('Create a symlink:');
-		console.error(
-			`ln -s ~/Library/Mobile\\ Documents/iCloud~md~obsidian/Documents/Sewer ~/sewer`
-		);
 		process.exit(1);
 	}
 
