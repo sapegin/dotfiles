@@ -284,6 +284,8 @@ body {
   --metadata-input-background-active: transparent;
   --metadata-label-text-color: var(--sqrl-gray090);
   --metadata-label-background-active: transparent;
+
+  --file-margins: .5rem 1rem;
 }
 
 /* Additional styles */
@@ -477,6 +479,10 @@ input.prompt-input, input.prompt-input:hover, input.prompt-input:focus, input.pr
 .HyperMD-header {
   /* A bit of extra space after headings */
   padding-block-end: 0.5rem !important;
+}
+.cm-s-obsidian .cm-line.HyperMD-header:first-child {
+    /* Remove top padding on the very first header on the page */
+    padding-top: 0;
 }
 
 .HyperMD-list-line {
