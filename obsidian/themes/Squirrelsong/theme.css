@@ -86,8 +86,10 @@ body {
             text-decoration 0.15s ease-in,
             color 0.15s ease-in,
             background-color 0.15s ease-in,
+            border-color 0.15s ease-in,
             opacity 0.15s ease-in,
-            padding 0.15s ease-in;
+            padding-block-start 0.15s ease-in,
+            padding-block-end 0.15s ease-in;
 
   /* Obsidian variables */
 
