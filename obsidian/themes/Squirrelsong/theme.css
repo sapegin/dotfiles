@@ -243,9 +243,8 @@ body {
   --checklist-done-color: var(--sqrl-gray110);
   --checkbox-margin-inline-start: 0.4rem;
 
-  /* TODO: https://docs.obsidian.md/Reference/CSS+variables/Editor/Properties */
-
-  /* TODO: https://docs.obsidian.md/Reference/CSS+variables/Editor/Table */
+  --table-row-alt-background: var(--sqrl-gray170);
+  --table-row-alt-background-hover: var(--sqrl-gray170);
 
   --tag-color: var(--sqrl-gray080);
   --tag-background: var(--sqrl-gray160);
@@ -374,7 +373,6 @@ input[type='range']:focus-visible::-webkit-slider-thumb {
     box-shadow: var(--slider-thumb-shadow-hover);
 }
 
-
 /* Checkboxes (toggle buttons) */
 
 .checkbox-container {
@@ -466,12 +464,26 @@ input.metadata-property-key-input, input.metadata-property-key-input:focus-visib
 
 /* Prompt modals (quick switcher, command palette) */
 
-input.prompt-input, input.prompt-input:hover, input.prompt-input:focus, input.prompt-input:focus-visible, .prompt-instructions {
+input.prompt-input, input.prompt-input:hover, input.prompt-input:focus, input.prompt-input:focus-visible {
     /* Revert theme input styles */
     padding: var(--size-4-6);
     box-shadow: none;
     /* Correct (darker) border color */
     border-color: var(--sqrl-gray160);
+}
+.prompt-instructions {
+    /* A bit more air */
+    padding-block: var(--size-4-3);
+}
+
+/* Search */
+
+@media (hover: hover) {
+    .search-result-file-match:hover {
+        /* Use correct hover colors instead of yellow background */
+        color: var(--text-accent);
+        background-color: var(--sqrl-gray160);
+    }
 }
 
 /* Editor */
@@ -509,6 +521,26 @@ input.prompt-input, input.prompt-input:hover, input.prompt-input:focus, input.pr
   padding-inline-end: 0.5rem;
 }
 
+/* Tables */
+
+.markdown-source-view.mod-cm6 .cm-table-widget th, .markdown-source-view.mod-cm6 .cm-table-widget td {
+    padding: .25rem .5rem;
+}
+.cm-html-embed td, .markdown-rendered td, .cm-html-embed th, .markdown-rendered th {
+    border: 0;
+}
+.cm-html-embed tbody tr > td:not(:first-child), .markdown-rendered tbody tr > td:not(:first-child), .cm-html-embed thead tr > th:not(:first-child), .markdown-rendered thead tr > th:not(:first-child) {
+    border-left: var(--table-border-width) solid var(--table-border-color);
+}
+
+.cm-html-embed table, .markdown-rendered table {
+    border-spacing: 0;
+    border-collapse: separate;
+    overflow: hidden;
+    border-radius: var(--radius-m);
+    border: var(--table-border-width) solid var(--table-border-color);
+}
+
 .is-selected {
     /* Darker highlight background for selected items as they have white text */
     --text-highlight-bg: var(--sqrl-brightPink);
@@ -529,6 +561,14 @@ mjx-merror {
     background-color: var(--sqrl-redDimer) !important;
 }
 
+.markdown-source-view.mod-cm6.is-live-preview .HyperMD-quote:before {
+    /*
+     * Show blockquote side line on the padding to avoid overlapping with the
+     * `>` character
+     */
+    inset-inline-start: -.3rem;
+}
+
 /* Show #s of headings on the side (like in Bear.app) to avoid shifting text */
 .is-live-preview .cm-formatting-header {
   z-index: 100;
@@ -539,18 +579,22 @@ mjx-merror {
 }
 
 /* Avoid shifting content when editing images */
-.is-live-preview .cm-line.cm-line:has(.cm-formatting-image) {
+.is-live-preview .cm-line.cm-line:has(.cm-formatting-image),
+.is-live-preview .cm-line.cm-line:has(.cm-formatting-embed) {
     z-index: 100;
     height: 0;
 }
-.is-live-preview .cm-line.cm-line:has(.cm-formatting-image) > * {
+.is-live-preview .cm-line.cm-line:has(.cm-formatting-image) > *,
+.is-live-preview .cm-line.cm-line:has(.cm-formatting-embed) > * {
     padding-block: 0.3rem;
     background-color: var(--sqrl-gray180);
 }
-.is-live-preview .cm-line.cm-line:has(.cm-formatting-image) > *:first-child {
+.is-live-preview .cm-line.cm-line:has(.cm-formatting-image) > *:first-child,
+.is-live-preview .cm-line.cm-line:has(.cm-formatting-embed) > *:first-child {
     padding-inline-start: 0.2rem;
 }
-.is-live-preview .cm-line.cm-line:has(.cm-formatting-image) > *:last-child {
+.is-live-preview .cm-line.cm-line:has(.cm-formatting-image) > *:last-child,
+.is-live-preview .cm-line.cm-line:has(.cm-formatting-embed) > *:last-child {
     padding-inline-end: 0.2rem;
 }
 
