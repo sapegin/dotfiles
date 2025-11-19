@@ -9,7 +9,7 @@
     "format": "prettier --log-level warn --ignore-unknown --write \"**/*.{js,cjs,md,json,sh}\" \"bin/*\""
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=24"
   },
   "dependencies": {
     "@shikijs/rehype": "^3.15.0",
