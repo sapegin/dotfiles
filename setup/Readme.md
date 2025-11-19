@@ -52,28 +52,3 @@ Create `~/Library/KeyBindings/DefaultKeyBinding.dict`:
   "^$\UF72B" = moveToEndOfDocumentAndModifySelection:; // ctrl-shift-end
 }
 ```
-
-### How to open files in different apps depending on their location by Cmd+click in iTerm2
-
-Create a script:
-
-```bash
-#!/usr/bin/env bash
-
-if [[ "$1" == /Users/admin/badoo/* ]]; then
-  /usr/local/bin/pstorm "$1"
-  open /Applications/PhpStorm.app # Focus
-else
-  open "$1"
-fi
-```
-
-Go to iTerm2 preferences → Profiles → Advanced → Semantic History. Choose _Run command_ and type: `/Users/admin/bin/iopen "\1"`.
-
-### Useful iTerm2 triggers
-
-Go to iTerm2 preferences → Profiles → Advanced → Triggers. Click _Edit_.
-
-| Description | RegExp | Action | Color |
-| --- | --- | --- | --- |
-| Highlight Git merge conflicts | `CONFLICT \([^)]+\)\:.*` | Highlight Text | Text: `f2ac00` |
