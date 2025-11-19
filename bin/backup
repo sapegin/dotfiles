@@ -7,6 +7,14 @@
 # `backup`
 #
 # ---
+#
+# If nothing happens but there's a 🔒 icon on the progress bar, type your
+# password and press Enter.
+#
+# If you get an error "The authenticity of host 'hippopotamus.local (...)' can't
+# be established", run this command:
+#    ssh sapegin@Hippopotamus.local
+#
 # Prerequisites:
 # 1. Update rsync:
 #    brew install rsync
@@ -50,8 +58,8 @@ command -v rsyncy > /dev/null 2>&1 || {
 	exit 1
 }
 
-# Bear notes
-bk "$HOME/Library/Group Containers/9K33E3U3T4.net.shinyfrog.bear/" "Stuffses/Backups/Bear"
+# Obsidian vault
+bk "$HOME/sewer/" "Stuffses/Backups/Sewer"
 
-# iCloud Drive
-bk "$HOME/Library/Mobile Documents/" "Stuffses/Backups/iCloud"
+# iCloud Drive documents
+bk "$HOME/cloud/" "Stuffses/Backups/iCloud"
