@@ -1,5 +1,5 @@
 {
   "folder": "📆 Log",
   "template": "templates/Daily Note",
-  "format": "YYYY-MM-DD_HHmm"
+  "format": "YYYY/YYYY-MM-DD_HHmm"
 }
