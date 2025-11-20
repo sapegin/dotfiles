@@ -14,14 +14,20 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import sharp from 'sharp';
 import YAML from 'yaml';
+import ExifReader from 'exifreader';
 
 const VAULT_DIR = path.join(os.homedir(), 'sewer');
+const ATTACHMENTS_DIR = path.join(VAULT_DIR, 'attachments');
 const TRASH_DIR = path.join(os.homedir(), 'obsidian-trash');
 const MAX_DIMENSION = 2048;
 const MAX_FILE_SIZE = 1024 * 1024; // 1 MB
-const AVIF_QUALITY = 80;
+const AVIF_QUALITY = 75;
 const ALL_IMAGES_PATTERN = `**/*.{png,jpg,jpeg,gif,webp,avif,bmp,tiff}`;
 const ALL_NOTES_PATTERN = `**/*.md`;
+
+// Either regular Markdown images (![Alt text](image.ext)`), or Obsidian images
+// with optional resizing pipe (`![[image.png|100]]`)
+const imageRegex = /!\[.*?\]\(([^)]+)\)|!\[\[([^\]]+)\]\]/g;
 
 async function moveToTrash(filePath) {
 	const filename = path.basename(filePath);
@@ -49,25 +55,41 @@ async function moveToTrash(filePath) {
 	console.log(`  Move ${filename} to trash`);
 }
 
+/** Return all images in Markdown */
+function getMarkdownImages(body) {
+	const matches = Array.from(body.matchAll(imageRegex));
+	return matches.map((match) => {
+		const filePath = match[1] || match[2];
+		// Extract just the filename, remove Obsidian's resizing pipe
+		// (`image.png|100`), and decode URL encoding
+		const cleanFilePath = filePath.split('|')[0];
+		return decodeURIComponent(path.basename(cleanFilePath)).normalize('NFC');
+	});
+}
+
+/** Return basename of the first image in Markdown. */
+function getFirstImage(body) {
+	const images = getMarkdownImages(body);
+	return images.length > 0 ? path.basename(images[0]) : undefined;
+}
+
+/** Read EXIF photo metadata. */
+async function getImageMetadata(filename) {
+	const buffer = await fs.readFile(path.join(ATTACHMENTS_DIR, filename));
+	const exif = ExifReader.load(buffer);
+
+	const date = exif.DateTimeOriginal?.description ?? '';
+
+	return { date };
+}
+
 async function findUsedImages(markdownFiles) {
 	const usedImages = new Set();
-	// Either regular Markdown images (![Alt text](image.ext)`), or Obsidian images
-	// with optional resizing pipe (`![[image.png|100]]`)
-	const imageRegex = /!\[.*?\]\(([^)]+)\)|!\[\[([^\]]+)\]\]/g;
 
 	for (const file of markdownFiles) {
 		const content = await fs.readFile(file, 'utf-8');
-		const matches = content.matchAll(imageRegex);
-
-		for (const match of matches) {
-			const link = match[1] || match[2];
-			// Extract just the filename, remove Obsidian's resizing pipe
-			// (`image.png|100`), and decode URL encoding
-			const cleanLink = link.split('|')[0];
-			const decoded = decodeURIComponent(path.basename(cleanLink)).normalize(
-				'NFC'
-			);
-			usedImages.add(decoded);
+		for (const image of getMarkdownImages(content)) {
+			usedImages.add(image);
 		}
 	}
 
@@ -253,12 +275,6 @@ function serializeFrontmatter(frontmatter) {
 	return `---\n${yamlContent.trim()}\n---`;
 }
 
-function getFirstImage(body) {
-	const imageRegex = /!\[.*?\]\(([^)]+)\)/;
-	const match = body.match(imageRegex);
-	return match ? path.basename(decodeURIComponent(match[1])) : undefined;
-}
-
 function getExcerpt(body) {
 	const textOnly = body
 		// Remove headings
@@ -313,36 +329,54 @@ async function updateImages() {
 	// await optimizeImages(remainingImageFiles, markdownFiles);
 }
 
-function updateNoteFrontmatter(frontmatter, body, file) {
-	// Only process journal notes
-	if (frontmatter === '' || file.includes('📆 Log/') === false) {
-		return frontmatter;
-	}
-
+async function updateNote(frontmatter, body, file) {
 	const newFrontmatter = { ...frontmatter };
-
-	// Set `image` field to the first image of the note
-	const firstImage = getFirstImage(body);
-	if (firstImage) {
-		newFrontmatter.image = firstImage;
-	}
-
-	// Set `excerpt` field
-	newFrontmatter.excerpt = getExcerpt(body);
-
-	return newFrontmatter;
-}
-
-function updateNoteBody(frontmatter, body, file) {
-	const basename = path.basename(file, '.md');
 	let newBody = body;
+	let newFile = file;
+
+	const basename = path.basename(file, '.md');
 
 	// Add missing top-level headers
 	if (body.trim().startsWith('# ') === false) {
 		newBody = `# ${basename}\n${newBody}`;
 	}
 
-	return newBody;
+	// Journal notes
+	if (file.includes('📆 Log/') && frontmatter) {
+		const firstImage = getFirstImage(body);
+
+		// Set `image` field to the first image of the note
+		if (firstImage) {
+			newFrontmatter.image = firstImage;
+		}
+
+		// Set `excerpt` field
+		newFrontmatter.excerpt = getExcerpt(body);
+
+		// Update journal date based on the first photo. The note heading should look
+		// like this: YYYY-MM-DD?!
+		if (firstImage && /^# \d\d\d\d-\d\d-\d\d\?!/.test(body.trimStart())) {
+			const metadata = await getImageMetadata(firstImage);
+			if (metadata.date) {
+				// EXIF date strings look like 2025:02:13 18:25:59. First, convert it to
+				// filename format: YYYY-MM-DD_HHss
+				const newBasename = metadata.date.replace(
+					/^(\d{4}):(\d{2}):(\d{2}) (\d{2}):(\d{2}):(\d{2})/,
+					'$1-$2-$3_$4$5'
+				);
+				// Then to heading format: YYYY-MM-DD
+				const newHeader = newBasename.slice(0, 10);
+
+				// Update heading in the body
+				newBody = newBody.replace(/^.*?\n/, `# ${newHeader}\n`);
+
+				// Update basename in the file path
+				newFile = file.replace(basename, newBasename);
+			}
+		}
+	}
+
+	return { newFrontmatter, newBody, newFile };
 }
 
 async function updateNotes() {
@@ -359,15 +393,25 @@ async function updateNotes() {
 		const content = await fs.readFile(file, 'utf-8');
 		const { frontmatter, body } = parseFrontmatter(content);
 
-		const newFrontmatter = updateNoteFrontmatter(frontmatter, body, file);
-		const newBody = updateNoteBody(frontmatter, body, file);
+		const { newFrontmatter, newBody, newFile } = await updateNote(
+			frontmatter,
+			body,
+			file
+		);
 
-		const newContent = frontmatter
-			? `${serializeFrontmatter(frontmatter)}\n${newBody}`
+		const newContent = newFrontmatter
+			? `${serializeFrontmatter(newFrontmatter)}\n${newBody}`
 			: newBody;
+
+		// Update file if the contents was changed
 		if (newContent !== content) {
 			updatedCount++;
-			await fs.writeFile(file, newContent, 'utf-8');
+			await fs.writeFile(newFile, newContent, 'utf-8');
+		}
+
+		// Remove old file if the name was changed
+		if (newFile !== file) {
+			moveToTrash(file);
 		}
 	}
 

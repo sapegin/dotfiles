@@ -21,6 +21,7 @@ cyclomatic
 deburr
 discoverability
 dotfiles
+exif
 Flexbox
 Formik
 googleable
