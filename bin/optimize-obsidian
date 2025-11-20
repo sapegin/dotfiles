@@ -224,9 +224,7 @@ async function optimizeImages(imageFiles, markdownFiles) {
 		}
 	}
 
-	if (optimizedCount > 0) {
-		console.log(`\nOptimized ${optimizedCount} images`);
-	}
+	console.log(`\nOptimized ${optimizedCount} images`);
 }
 
 function parseFrontmatter(content) {
@@ -280,8 +278,8 @@ function getExcerpt(body) {
 	return match ? `${match[0].replace(/[\.,!?…\(\)]$/, '')}…` : textOnly;
 }
 
-async function optimizeImages() {
-	console.log('📸 Optimizing images…');
+async function updateImages() {
+	console.log('\n📸 Updating images…');
 
 	await fs.mkdir(TRASH_DIR, { recursive: true });
 
@@ -330,25 +328,30 @@ async function updateFrontmatter(frontmatter, body, file) {
 	return newFrontmatter;
 }
 
-async function optimizeNotes() {
-	console.log('📝 Optimizing notes…');
+async function updateNotes() {
+	console.log('\n📝 Updating notes…');
+
+	let updatedCount = 0;
 
 	const noteFiles = await Array.fromAsync(
 		fs.glob(path.join(VAULT_DIR, ALL_NOTES_PATTERN))
 	);
-	console.log(`Found ${noteFiles.length} notes`);
+	console.log(`\nFound ${noteFiles.length} notes`);
 
 	for (const file of noteFiles) {
-		const content = await fs.readFile(filePath, 'utf-8');
+		const content = await fs.readFile(file, 'utf-8');
 		const { frontmatter, body } = parseFrontmatter(content);
 
-		newFrontmatter = updateFrontmatter(frontmatter, body, file);
+		const newFrontmatter = updateFrontmatter(frontmatter, body, file);
 
 		const newContent = `${serializeFrontmatter(frontmatter)}\n${body}`;
 		if (newContent !== content) {
-			await fs.writeFile(filePath, newContent, 'utf-8');
+			updatedCount++;
+			await fs.writeFile(file, newContent, 'utf-8');
 		}
 	}
+
+	console.log(`\nUpdated ${updatedCount} notes`);
 }
 
 async function main() {
@@ -360,8 +363,8 @@ async function main() {
 		process.exit(1);
 	}
 
-	optimizeImages();
-	optimizeNotes();
+	await updateImages();
+	await updateNotes();
 
 	console.log();
 	console.log('Done 🦜');
