@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# TODO: Try to use rsync directly with --progress2 key
+
 # Backs up all the things to the Synology NAS.
 #
 # - Run the backup:
