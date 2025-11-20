@@ -49,17 +49,22 @@ async function moveToTrash(filePath) {
 	console.log(`  Move ${filename} to trash`);
 }
 
-async function getUsedImages(markdownFiles) {
+async function findUsedImages(markdownFiles) {
 	const usedImages = new Set();
-	const imageRegex = /!\[.*?\]\(([^)]+)\)/g;
+	// Either regular Markdown images (![Alt text](image.ext)`), or Obsidian images
+	// with optional resizing pipe (`![[image.png|100]]`)
+	const imageRegex = /!\[.*?\]\(([^)]+)\)|!\[\[([^\]]+)\]\]/g;
 
 	for (const file of markdownFiles) {
 		const content = await fs.readFile(file, 'utf-8');
 		const matches = content.matchAll(imageRegex);
 
 		for (const match of matches) {
-			// Extract just the filename and decode URL encoding
-			const decoded = decodeURIComponent(path.basename(match[1])).normalize(
+			const link = match[1] || match[2];
+			// Extract just the filename, remove Obsidian's resizing pipe
+			// (`image.png|100`), and decode URL encoding
+			const cleanLink = link.split('|')[0];
+			const decoded = decodeURIComponent(path.basename(cleanLink)).normalize(
 				'NFC'
 			);
 			usedImages.add(decoded);
@@ -295,7 +300,7 @@ async function updateImages() {
 	);
 
 	console.log('\nCollecting used images from Markdown…');
-	const usedImages = await getUsedImages(markdownFiles);
+	const usedImages = await findUsedImages(markdownFiles);
 	console.log(`Found ${usedImages.size} used images`);
 
 	console.log('\nRemoving unused images…');
