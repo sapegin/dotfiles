@@ -313,7 +313,7 @@ async function updateImages() {
 	// await optimizeImages(remainingImageFiles, markdownFiles);
 }
 
-async function updateFrontmatter(frontmatter, body, file) {
+function updateNoteFrontmatter(frontmatter, body, file) {
 	// Only process journal notes
 	if (frontmatter === '' || file.includes('📆 Log/') === false) {
 		return frontmatter;
@@ -333,6 +333,18 @@ async function updateFrontmatter(frontmatter, body, file) {
 	return newFrontmatter;
 }
 
+function updateNoteBody(frontmatter, body, file) {
+	const basename = path.basename(file, '.md');
+	let newBody = body;
+
+	// Add missing top-level headers
+	if (body.trim().startsWith('# ') === false) {
+		newBody = `# ${basename}\n${newBody}`;
+	}
+
+	return newBody;
+}
+
 async function updateNotes() {
 	console.log('\n📝 Updating notes…');
 
@@ -347,9 +359,12 @@ async function updateNotes() {
 		const content = await fs.readFile(file, 'utf-8');
 		const { frontmatter, body } = parseFrontmatter(content);
 
-		const newFrontmatter = updateFrontmatter(frontmatter, body, file);
+		const newFrontmatter = updateNoteFrontmatter(frontmatter, body, file);
+		const newBody = updateNoteBody(frontmatter, body, file);
 
-		const newContent = `${serializeFrontmatter(frontmatter)}\n${body}`;
+		const newContent = frontmatter
+			? `${serializeFrontmatter(frontmatter)}\n${newBody}`
+			: newBody;
 		if (newContent !== content) {
 			updatedCount++;
 			await fs.writeFile(file, newContent, 'utf-8');
