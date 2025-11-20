@@ -17,12 +17,11 @@ import YAML from 'yaml';
 
 const VAULT_DIR = path.join(os.homedir(), 'sewer');
 const TRASH_DIR = path.join(os.homedir(), 'obsidian-trash');
-const LOG_DIR = path.join(VAULT_DIR, '📆 Log');
 const MAX_DIMENSION = 4096;
 const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2 MB
 const AVIF_QUALITY = 80;
-const ALL_MARKDOWN_PATTERN = `**/*.md`;
 const ALL_IMAGES_PATTERN = `**/*.{png,jpg,jpeg,gif,webp,avif,bmp,tiff}`;
+const ALL_NOTES_PATTERN = `**/*.md`;
 
 async function moveToTrash(filePath) {
 	const filename = path.basename(filePath);
@@ -83,7 +82,7 @@ async function removeUnusedImages(imageFiles, usedImages) {
 	}
 
 	if (removedCount > 0) {
-		console.log(`\n[OBSIDIAN] Removed ${removedCount} unused image(s)`);
+		console.log(`\nRemoved ${removedCount} unused images`);
 	}
 }
 
@@ -150,7 +149,7 @@ async function optimizeImage(imagePath, optimization) {
 	if (optimizedSize >= originalSize) {
 		await fs.unlink(avifPath);
 		console.log(
-			`[OBSIDIAN] Skipped ${filename} (AVIF not smaller: ${(optimizedSize / 1024 / 1024).toFixed(2)} MB vs ${(originalSize / 1024 / 1024).toFixed(2)} MB)`
+			`Skipped ${filename} (AVIF not smaller: ${(optimizedSize / 1024 / 1024).toFixed(2)} MB vs ${(originalSize / 1024 / 1024).toFixed(2)} MB)`
 		);
 		return undefined;
 	}
@@ -226,9 +225,7 @@ async function optimizeImages(imageFiles, markdownFiles) {
 	}
 
 	if (optimizedCount > 0) {
-		console.log(`\n[OBSIDIAN] Optimized ${optimizedCount} image(s)`);
-	} else {
-		console.log('\n[OBSIDIAN] No images need optimization');
+		console.log(`\nOptimized ${optimizedCount} images`);
 	}
 }
 
@@ -283,88 +280,95 @@ function getExcerpt(body) {
 	return match ? `${match[0].replace(/[\.,!?…\(\)]$/, '')}…` : textOnly;
 }
 
-async function updateJournalFile(filePath) {
-	const content = await fs.readFile(filePath, 'utf-8');
-	const { frontmatter, body } = parseFrontmatter(content);
-
-	if (frontmatter === '') {
-		return;
-	}
-
-	const firstImage = getFirstImage(body);
-	if (firstImage) {
-		frontmatter.image = firstImage;
-	}
-
-	frontmatter.excerpt = getExcerpt(body);
-
-	const newContent = `${serializeFrontmatter(frontmatter)}\n${body}`;
-
-	await fs.writeFile(filePath, newContent, 'utf-8');
-}
-
-async function updateJournalEntries() {
-	const journalFiles = await Array.fromAsync(
-		fs.glob(path.join(LOG_DIR, ALL_MARKDOWN_PATTERN))
-	);
-	console.log(`[OBSIDIAN] Found ${journalFiles.length} journal entries`);
-
-	for (const file of journalFiles) {
-		await updateJournalFile(file);
-	}
-}
-
-async function main() {
-	console.log();
-	console.log('[OBSIDIAN] Optimizing vault images… 🧠');
-
-	try {
-		await fs.access(VAULT_DIR);
-	} catch (error) {
-		console.error();
-		console.error(
-			'[OBSIDIAN] Error: Vault directory does not exist:',
-			VAULT_DIR
-		);
-		process.exit(1);
-	}
+async function optimizeImages() {
+	console.log('📸 Optimizing images…');
 
 	await fs.mkdir(TRASH_DIR, { recursive: true });
 
-	console.log('\n[OBSIDIAN] Gathering the files…');
-
+	console.log('\nGathering the files…');
 	const markdownFiles = await Array.fromAsync(
-		fs.glob(path.join(VAULT_DIR, ALL_MARKDOWN_PATTERN))
+		fs.glob(path.join(VAULT_DIR, ALL_NOTES_PATTERN))
 	);
-	console.log(`[OBSIDIAN] Found ${markdownFiles.length} Markdown files`);
-
 	const imageFiles = await Array.fromAsync(
 		fs.glob(path.join(VAULT_DIR, ALL_IMAGES_PATTERN))
 	);
-	console.log(`[OBSIDIAN] Found ${imageFiles.length} images`);
+	console.log(
+		`Found ${markdownFiles.length} notes and ${imageFiles.length} images`
+	);
 
-	console.log('\n[OBSIDIAN] Collecting used images from Markdown…');
+	console.log('\nCollecting used images from Markdown…');
 	const usedImages = await getUsedImages(markdownFiles);
-	console.log(`[OBSIDIAN] Found ${usedImages.size} used images`);
+	console.log(`Found ${usedImages.size} used images`);
 
-	console.log('\n[OBSIDIAN] Removing unused images…');
+	console.log('\nRemoving unused images…');
 	await removeUnusedImages(imageFiles, usedImages);
 
-	console.log('\n[OBSIDIAN] Optimizing images…');
+	console.log('\nOptimizing images…');
 	const remainingImageFiles = await Array.fromAsync(
 		fs.glob(path.join(VAULT_DIR, ALL_IMAGES_PATTERN))
 	);
 	// await optimizeImages(remainingImageFiles, markdownFiles);
+}
 
-	console.log('\n[OBSIDIAN] Updating journal entries…');
-	await updateJournalEntries();
+async function updateFrontmatter(frontmatter, body, file) {
+	// Only process journal notes
+	if (frontmatter === '' || file.includes('📆 Log/') === false) {
+		return frontmatter;
+	}
+
+	const newFrontmatter = { ...frontmatter };
+
+	// Set `image` field to the first image of the note
+	const firstImage = getFirstImage(body);
+	if (firstImage) {
+		newFrontmatter.image = firstImage;
+	}
+
+	// Set `excerpt` field
+	newFrontmatter.excerpt = getExcerpt(body);
+
+	return newFrontmatter;
+}
+
+async function optimizeNotes() {
+	console.log('📝 Optimizing notes…');
+
+	const noteFiles = await Array.fromAsync(
+		fs.glob(path.join(VAULT_DIR, ALL_NOTES_PATTERN))
+	);
+	console.log(`Found ${noteFiles.length} notes`);
+
+	for (const file of noteFiles) {
+		const content = await fs.readFile(filePath, 'utf-8');
+		const { frontmatter, body } = parseFrontmatter(content);
+
+		newFrontmatter = updateFrontmatter(frontmatter, body, file);
+
+		const newContent = `${serializeFrontmatter(frontmatter)}\n${body}`;
+		if (newContent !== content) {
+			await fs.writeFile(filePath, newContent, 'utf-8');
+		}
+	}
+}
+
+async function main() {
+	try {
+		await fs.access(VAULT_DIR);
+	} catch (error) {
+		console.error();
+		console.error('Error: Vault directory does not exist:', VAULT_DIR);
+		process.exit(1);
+	}
+
+	optimizeImages();
+	optimizeNotes();
 
 	console.log();
-	console.log('[OBSIDIAN] Done 🦜');
+	console.log('Done 🦜');
 }
 
 main().catch((error) => {
 	console.error();
-	console.error('[OBSIDIAN] Error:', error.message);
+	console.error('Error:', error.message);
 	process.exit(1);
 });
