@@ -17,8 +17,8 @@ import YAML from 'yaml';
 
 const VAULT_DIR = path.join(os.homedir(), 'sewer');
 const TRASH_DIR = path.join(os.homedir(), 'obsidian-trash');
-const MAX_DIMENSION = 4096;
-const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2 MB
+const MAX_DIMENSION = 2048;
+const MAX_FILE_SIZE = 1024 * 1024; // 1 MB
 const AVIF_QUALITY = 80;
 const ALL_IMAGES_PATTERN = `**/*.{png,jpg,jpeg,gif,webp,avif,bmp,tiff}`;
 const ALL_NOTES_PATTERN = `**/*.md`;
