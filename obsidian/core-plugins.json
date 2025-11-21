@@ -3,7 +3,7 @@
   "global-search": true,
   "switcher": true,
   "graph": false,
-  "backlink": false,
+  "backlink": true,
   "canvas": false,
   "outgoing-link": false,
   "tag-pane": true,

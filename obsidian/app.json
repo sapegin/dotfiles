@@ -6,5 +6,6 @@
   "newFileFolderPath": "⏳ Inbox",
   "showInlineTitle": false,
   "strictLineBreaks": true,
-  "readableLineLength": true
+  "readableLineLength": true,
+  "trashOption": "local"
 }
