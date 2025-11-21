@@ -7,6 +7,8 @@
 // License: MIT
 // https://github.com/sapegin/dotfiles
 
+// TODO: Add templates and bases
+
 import path from 'node:path';
 import fs from 'node:fs/promises';
 import os from 'node:os';

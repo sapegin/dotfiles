@@ -488,13 +488,19 @@ input.prompt-input, input.prompt-input:hover, input.prompt-input:focus, input.pr
 
 /* Editor */
 
-.HyperMD-header {
-  /* A bit of extra space after headings */
-  padding-block-end: 0.5rem !important;
+
+/* Consistent top/bottom paddings on heading in preview and source modes */
+.cm-s-obsidian .cm-line.HyperMD-header {
+    padding-top: 1rem;
+    padding-block-end: 0.5rem;
 }
-.cm-s-obsidian .cm-line.HyperMD-header:first-child {
-    /* Remove top padding on the very first header on the page */
+/*
+ * Remove top padding on the very first header on the page, and increase bottom
+ * padding
+ */
+.cm-s-obsidian .cm-line.HyperMD-header.HyperMD-header-1 {
     padding-top: 0;
+    padding-block-end: 1rem;
 }
 
 .HyperMD-list-line {
@@ -502,10 +508,14 @@ input.prompt-input, input.prompt-input:hover, input.prompt-input:focus, input.pr
     --indentation-guide-width: 0;
 }
 
+/* A bit of space between a link text and an external link icon */
 .external-link {
-  /* A bit of space between a link text and an external link icon */
-  padding-inline-start: 0.15rem;
+    padding-inline-end: 1rem;
 }
+.cm-formatting.external-link {
+    padding-inline-start: 0.1rem;
+}
+
 .markdown-source-view.mod-cm6 .cm-link .cm-underline, .markdown-source-view.mod-cm6 .cm-url .cm-underline {
     text-decoration: underline;
     text-decoration-line: none;
