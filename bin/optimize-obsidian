@@ -281,12 +281,13 @@ function getExcerpt(body) {
 		.replace(/^#.*/gm, '')
 		// Remove images
 		.replace(/!\[.*?\]\([^)]+\)/g, '')
+		.replace(/!\[\[.*?\]\]/g, '')
 		// Remove links
 		.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
 		.replace(/\[\[([^\]]+)\]\]/g, '$1')
 		.replace(/https?:\/\/.*/g, '')
 		// Remove code snippets
-		.replace(/```.*?```/gm, '')
+		.replace(/```[\S\s]*?```/gm, '')
 		// Remove markup
 		.replace(/[*_>~`]/g, '')
 		// Join lines
@@ -329,7 +330,7 @@ async function updateImages() {
 	// await optimizeImages(remainingImageFiles, markdownFiles);
 }
 
-async function updateNote(frontmatter, body, file) {
+async function updateNote(frontmatter, body, file, allNotes) {
 	const newFrontmatter = { ...frontmatter };
 	let newBody = body;
 	let newFile = file;
@@ -352,6 +353,19 @@ async function updateNote(frontmatter, body, file) {
 
 		// Set `excerpt` field
 		newFrontmatter.excerpt = getExcerpt(body);
+
+		if (
+			frontmatter.location &&
+			frontmatter.location.startsWith('[[') === false
+		) {
+			// Link notes about places if they exist in the vault
+			const locationNote = allNotes.find(
+				(notePath) => path.basename(notePath, '.md') === frontmatter.location
+			);
+			if (locationNote) {
+				newFrontmatter.location = `[[${frontmatter.location}]]`;
+			}
+		}
 
 		// Update journal date based on the first photo. The note heading should look
 		// like this: YYYY-MM-DD?!
@@ -390,28 +404,34 @@ async function updateNotes() {
 	console.log(`\nFound ${noteFiles.length} notes`);
 
 	for (const file of noteFiles) {
-		const content = await fs.readFile(file, 'utf-8');
-		const { frontmatter, body } = parseFrontmatter(content);
+		try {
+			const content = await fs.readFile(file, 'utf-8');
+			const { frontmatter, body } = parseFrontmatter(content);
 
-		const { newFrontmatter, newBody, newFile } = await updateNote(
-			frontmatter,
-			body,
-			file
-		);
+			const { newFrontmatter, newBody, newFile } = await updateNote(
+				frontmatter,
+				body,
+				file,
+				noteFiles
+			);
 
-		const newContent = newFrontmatter
-			? `${serializeFrontmatter(newFrontmatter)}\n${newBody}`
-			: newBody;
+			const newContent = newFrontmatter
+				? `${serializeFrontmatter(newFrontmatter)}\n${newBody}`
+				: newBody;
 
-		// Update file if the contents was changed
-		if (newContent !== content) {
-			updatedCount++;
-			await fs.writeFile(newFile, newContent, 'utf-8');
-		}
+			// Update file if the contents was changed
+			if (newContent !== content) {
+				updatedCount++;
+				await fs.writeFile(newFile, newContent, 'utf-8');
+			}
 
-		// Remove old file if the name was changed
-		if (newFile !== file) {
-			moveToTrash(file);
+			// Remove old file if the name was changed
+			if (newFile !== file) {
+				moveToTrash(file);
+			}
+		} catch (error) {
+			console.error(`Error updating ${file}:`);
+			console.error(error.message);
 		}
 	}
 
