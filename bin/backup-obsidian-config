@@ -49,11 +49,16 @@ console.log();
 console.log('Backing up Obsidian configs… 🧠');
 
 try {
+	// Delete the existing backup
+	await fs.rm(DEST_DIR, { recursive: true, force: true });
+
+	// Copy all the folders
 	for (const from of DIRS_TO_BACKUP) {
 		console.log('👉', from);
 		const to = path.join(DEST_DIR, path.basename(from));
 		await copyDirectory(untildify(from), to);
 	}
+
 	console.log();
 	console.log('Done 🦜');
 } catch (error) {
