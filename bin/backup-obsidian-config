@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-// Backs up Obsidian config files.
+// Backs up Obsidian config files, templates, and bases.
 //
 // ---
 // Author: Artem Sapegin, sapegin.me
@@ -37,7 +37,7 @@ async function copyDirectory(source, dest) {
 			await copyDirectory(sourcePath, destPath);
 		} else if (entry.isFile()) {
 			if (EXCLUDED_FILES.includes(entry.name)) {
-				console.log(`Skipping ${entry.name}…`);
+				console.log('Skipping', entry.name);
 				continue;
 			}
 			await copyFile(sourcePath, destPath);
