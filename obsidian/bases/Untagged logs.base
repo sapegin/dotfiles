@@ -1,0 +1,16 @@
+filters:
+  and:
+    - file.folder.startsWith("📆 Log")
+    - file.tags.isEmpty()
+views:
+  - type: cards
+    name: Cards
+    order:
+      - file.name
+      - excerpt
+    sort:
+      - property: file.name
+        direction: DESC
+    image: note.image
+    imageAspectRatio: 0.45
+    cardSize: 230

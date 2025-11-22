@@ -1,0 +1,24 @@
+filters:
+  and:
+    - file.folder.startsWith("📆 Log")
+    - formula.on_this_day == true
+formulas:
+  on_this_day: file.name.slice(0,4) != now().year && file.name.slice(5,7) == now().month && file.name.slice(8,10) == now().day
+  Date: date(file.name.slice(0,10)).format('YYYY — dddd')
+properties:
+  formula.on_this_day:
+    displayName: On this day
+views:
+  - type: cards
+    name: On this day
+    order:
+      - formula.Date
+      - location
+      - tags
+      - excerpt
+    sort:
+      - property: file.name
+        direction: DESC
+    cardSize: 280
+    image: note.image
+    imageAspectRatio: 0.4

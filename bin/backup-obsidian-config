@@ -7,15 +7,19 @@
 // License: MIT
 // https://github.com/sapegin/dotfiles
 
-// TODO: Add templates and bases
-
 import path from 'node:path';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 
-const SOURCE_DIR = path.join(os.homedir(), 'sewer/.obsidian');
+const untildify = (x) => x.replace(/^~/, os.homedir());
+
 const DEST_DIR = path.join(import.meta.dirname, '/../obsidian');
 const EXCLUDED_FILES = ['workspace.json', 'workspace-mobile.json'];
+const DIRS_TO_BACKUP = [
+	path.join('~/sewer/.obsidian'),
+	path.join('~/sewer/templates'),
+	path.join('~/sewer/bases'),
+];
 
 async function copyFile(source, dest) {
 	await fs.mkdir(path.dirname(dest), { recursive: true });
@@ -33,7 +37,7 @@ async function copyDirectory(source, dest) {
 			await copyDirectory(sourcePath, destPath);
 		} else if (entry.isFile()) {
 			if (EXCLUDED_FILES.includes(entry.name)) {
-				console.log(`[OBSIDIAN] Skipping ${entry.name}…`);
+				console.log(`Skipping ${entry.name}…`);
 				continue;
 			}
 			await copyFile(sourcePath, destPath);
@@ -42,25 +46,18 @@ async function copyDirectory(source, dest) {
 }
 
 console.log();
-console.log('[OBSIDIAN] Backing up config… 🧠');
+console.log('Backing up Obsidian configs… 🧠');
 
 try {
-	await fs.access(SOURCE_DIR);
-} catch (error) {
-	console.error();
-	console.error(
-		'[OBSIDIAN] Error: Source directory does not exist:',
-		SOURCE_DIR
-	);
-	process.exit(1);
-}
-
-try {
-	await copyDirectory(SOURCE_DIR, DEST_DIR);
+	for (const from of DIRS_TO_BACKUP) {
+		console.log('👉', from);
+		const to = path.join(DEST_DIR, path.basename(from));
+		await copyDirectory(untildify(from), to);
+	}
 	console.log();
-	console.log('[OBSIDIAN] Done 🦜');
+	console.log('Done 🦜');
 } catch (error) {
 	console.error();
-	console.error('[OBSIDIAN] Error:', error.message);
+	console.error('Error:', error.message);
 	process.exit(1);
 }

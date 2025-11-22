@@ -1,0 +1,179 @@
+/* Modal Container Styles
+-------------------------------------------------- */
+.obsifetch-modal {
+    padding: 2em;
+    background: var(--background-primary);
+    max-height: 90vh;
+    position: block;
+}
+
+.modal-content.obsifetch-modal {
+    max-height: 100%;
+    width: fit-content;
+    align-self: center;
+    padding: 0;
+}
+
+/* Layout Container Styles
+-------------------------------------------------- */
+.obsifetch-container {
+    display: flex;
+    flex-direction: row;
+    gap: 2em;
+    width: fit-content;
+    align-items: center;
+    margin-right: 0;
+}
+
+.info-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    width: fit-content;
+    align-self: center;
+}
+
+/* Logo Section Styles
+-------------------------------------------------- */
+.logo-section {
+    flex-shrink: 0;
+    white-space: pre;
+    min-height: 100%;
+}
+
+/* Info Section Styles
+-------------------------------------------------- */
+.info-section {
+    border-radius: 4px;
+    padding: 1em;
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    margin-right: 0;
+}
+
+/* Header Styles
+-------------------------------------------------- */
+.obsifetch-title {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: var(--text-accent);
+    font-family: monospace;
+    font-size: 14px;
+    font-weight: bold;
+    padding-left: 10px;
+    padding-top: 10px;
+}
+
+.vault-header {
+    color: var(--text-accent);
+    font-family: monospace;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.vault-separator {
+    border-color: var(--text-muted);
+    margin-bottom: 0;
+    margin-top: 1em;
+}
+
+/* Text Content Styles
+-------------------------------------------------- */
+.logo-section pre {
+    margin: 0;
+    white-space: pre;
+    color: var(--text-accent);
+    font-weight: bold;
+    line-height: 1.1;
+    height: auto;
+    width: auto;
+}
+
+.info-section pre {
+    text-transform: none;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    color: var(--text-normal);
+    font-weight: normal;
+    white-space: pre;
+    display: block;
+}
+
+/* Stat Labels and Values
+-------------------------------------------------- */
+.stat-label,
+.info-section pre span:first-child,
+.info-section pre span:not(:last-child) {
+    color: var(--text-accent);
+    font-family: monospace;
+    font-weight: bold;
+}
+
+.stat-value,
+.info-section pre span:last-child {
+    color: var(--text-normal);
+    font-weight: normal;
+}
+
+/* Color Squares Display
+-------------------------------------------------- */
+.color-squares {
+    display: grid;
+    grid-template-columns: repeat(9, 1.5em);
+    gap: 0;
+    margin-top: 1em;
+    align-self: flex-start;
+    height: 1.5em;
+}
+
+/* Create base squares using pseudo-elements */
+.color-squares::before,
+.color-squares::after,
+.color-squares > span {
+    content: '';
+    display: block;
+    width: 1.5em;
+    height: 1.5em;
+}
+
+/* First square - interactive accent */
+.color-squares::before {
+    background: var(--interactive-accent);
+    grid-column: 1;
+}
+
+/* Create empty span elements in HTML */
+.color-squares span {
+    display: block;
+    width: 1.5em;
+    height: 1.5em;
+}
+
+/* Color each square */
+.color-squares span:nth-child(1) { background: var(--text-accent); }
+.color-squares span:nth-child(2) { background: var(--text-faint); }
+.color-squares span:nth-child(3) { background: var(--text-normal); }
+.color-squares span:nth-child(4) { background: var(--text-muted); }
+.color-squares span:nth-child(5) { background: var(--text-error); }
+.color-squares span:nth-child(6) { background: var(--text-highlight-bg); }
+.color-squares span:nth-child(7) { background: var(--background-secondary); }
+.color-squares span:nth-child(8) { background: var(--background-primary); }
+
+/* System Info Section
+-------------------------------------------------- */
+.system-info pre {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.system-info pre::after {
+    content: "";
+    display: block;
+    height: 1em;
+    margin-top: 1em;
+    align-items: flex-start;
+}

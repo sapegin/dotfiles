@@ -1,0 +1,29 @@
+filters:
+  and:
+    - file.folder.startsWith("📆 Log")
+    - formula.is_recent == true
+formulas:
+  is_recent: date(file.name.slice(0,10)) > now() - '2w'
+properties:
+  formula.is_recent:
+    displayName: Recent
+views:
+  - type: cards
+    name: Cards
+    order:
+      - file.name
+      - excerpt
+    sort:
+      - property: file.name
+        direction: DESC
+    image: note.image
+    imageAspectRatio: 0.45
+    cardSize: 230
+  - type: table
+    name: Table
+    order:
+      - file.name
+      - excerpt
+    sort:
+      - property: file.name
+        direction: DESC

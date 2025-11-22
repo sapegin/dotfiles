@@ -494,6 +494,7 @@ input.prompt-input, input.prompt-input:hover, input.prompt-input:focus, input.pr
     padding-top: 1rem;
     padding-block-end: 0.5rem;
 }
+
 /*
  * Remove top padding on the very first header on the page, and increase bottom
  * padding
@@ -506,6 +507,11 @@ input.prompt-input, input.prompt-input:hover, input.prompt-input:focus, input.pr
 .HyperMD-list-line {
     /* Hide indentation guides on nested Markdown lists */
     --indentation-guide-width: 0;
+}
+
+.markdown-source-view.mod-cm6 .cm-hmd-list-indent-2 {
+    /* Increase indentation of nested lists */
+    width: 1.6rem;
 }
 
 /* A bit of space between a link text and an external link icon */
