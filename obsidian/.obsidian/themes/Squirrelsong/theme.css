@@ -175,8 +175,6 @@ body {
 
   --indentation-guide-color: var(--sqrl-gray160);
 
-  --modal-border-color: var(--sqrl-gray160);
-
   --tab-text-color: var(--sqrl-gray090);
   --tab-text-color-active: var(--sqrl-gray060);
   --tab-text-color-focused: var(--sqrl-gray090);
@@ -185,8 +183,7 @@ body {
   --tab-text-color-focused-active-current: var(--sqrl-gray060);
   --tab-background-active: var(--sqrl-gray170);
   --tab-divider-color: var(--sqrl-gray160);
-  --tab-outline-width: 0.5px;
-  --tab-outline-color: var(--sqrl-gray140);
+  --tab-outline-color: var(--sqrl-gray150);
   --tab-curve: 0;
 
   --blockquote-border-thickness: 4px;
@@ -254,14 +251,15 @@ body {
   --tag-color: var(--sqrl-gray080);
   --tag-background: var(--sqrl-gray160);
 
-  --divider-color: var(--sqrl-gray140);
+  --modal-border-color: var(--sqrl-gray160);
+  --prompt-border-color: var(--sqrl-gray160);
+
+  --divider-color: var(--sqrl-gray160);
   --divider-color-hover: var(--sqrl-gray060);
-  --divider-width: 0.5px;
   --divider-width-hover: 2px;
 
   --titlebar-background: var(--sqrl-gray160);
   --titlebar-background-focused: var(--sqrl-gray160);
-  --titlebar-border-width: 0.5px;
   --titlebar-border-color: var(--sqrl-gray140);
 
   --icon-color: var(--sqrl-gray100);
