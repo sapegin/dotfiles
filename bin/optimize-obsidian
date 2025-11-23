@@ -29,6 +29,9 @@ const ALL_NOTES_PATTERN = `**/*.md`;
 // with optional resizing pipe (`![[image.png|100]]`)
 const imageRegex = /!\[.*?\]\(([^)]+)\)|!\[\[([^\]]+)\]\]/g;
 
+// Counter for locations used in journal notes
+const locations = new Map();
+
 async function moveToTrash(filePath) {
 	const filename = path.basename(filePath);
 	const trashPath = path.join(TRASH_DIR, filename);
@@ -346,6 +349,8 @@ async function updateNote(frontmatter, body, file, allNotes) {
 	if (file.includes('📆 Log/') && frontmatter) {
 		const firstImage = getFirstImage(body);
 
+		const { location } = frontmatter;
+
 		// Set `image` field to the first image of the note
 		if (firstImage) {
 			newFrontmatter.image = firstImage;
@@ -354,16 +359,16 @@ async function updateNote(frontmatter, body, file, allNotes) {
 		// Set `excerpt` field
 		newFrontmatter.excerpt = getExcerpt(body);
 
-		if (
-			frontmatter.location &&
-			frontmatter.location.startsWith('[[') === false
-		) {
+		if (location && location.startsWith('[[') === false) {
+			// Increase location counter
+			locations.set(location, (locations.get(location) ?? 0) + 1);
+
 			// Link notes about places if they exist in the vault
 			const locationNote = allNotes.find(
-				(notePath) => path.basename(notePath, '.md') === frontmatter.location
+				(notePath) => path.basename(notePath, '.md') === location
 			);
 			if (locationNote) {
-				newFrontmatter.location = `[[${frontmatter.location}]]`;
+				newFrontmatter.location = `[[${location}]]`;
 			}
 		}
 
@@ -415,9 +420,10 @@ async function updateNotes() {
 				noteFiles
 			);
 
-			const newContent = newFrontmatter
-				? `${serializeFrontmatter(newFrontmatter)}\n${newBody}`
-				: newBody;
+			const newContent =
+				Object.keys(newFrontmatter).length > 0
+					? `${serializeFrontmatter(newFrontmatter)}\n${newBody}`
+					: newBody;
 
 			// Update file if the contents was changed
 			if (newContent !== content) {
@@ -436,6 +442,14 @@ async function updateNotes() {
 	}
 
 	console.log(`\nUpdated ${updatedCount} notes`);
+
+	console.log('\n📍 Top locations:');
+	const sortedLocations = Array.from(locations.entries())
+		.sort((a, b) => b[1] - a[1])
+		.slice(0, 10);
+	for (const [location, count] of sortedLocations) {
+		console.log(`${String(count).padStart(3)} ${location}`);
+	}
 }
 
 async function main() {
