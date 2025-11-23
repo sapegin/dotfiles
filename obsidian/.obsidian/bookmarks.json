@@ -1,30 +1,6 @@
 {
   "items": [
     {
-      "type": "folder",
-      "ctime": 1763194704496,
-      "path": "⏳ Inbox",
-      "title": "⏳ Inbox"
-    },
-    {
-      "type": "folder",
-      "ctime": 1763194741071,
-      "path": "⚙️ Projects",
-      "title": "⚙️ Projects"
-    },
-    {
-      "type": "folder",
-      "ctime": 1763194779112,
-      "path": "⛺️ Hobbies",
-      "title": "⛺️ Hobbies"
-    },
-    {
-      "type": "folder",
-      "ctime": 1763194801380,
-      "path": "💼 Work",
-      "title": "💼 Work"
-    },
-    {
       "type": "file",
       "ctime": 1763377483354,
       "path": "bases/Untagged logs.base",
