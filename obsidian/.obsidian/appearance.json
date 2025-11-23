@@ -3,5 +3,6 @@
   "monospaceFontFamily": "MonoLisa",
   "baseFontSize": 18,
   "showRibbon": false,
-  "cssTheme": "Squirrelsong"
+  "cssTheme": "Squirrelsong",
+  "showViewHeader": true
 }

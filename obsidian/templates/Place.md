@@ -1,6 +1,6 @@
 ---
-address:
-coordinates:
+address: null
+coordinates: null
 icon: coffee
 color: saddlebrown
 tags:

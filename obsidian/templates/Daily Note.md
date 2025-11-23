@@ -1,5 +1,5 @@
 ---
 tags: null
-location: Home
+location: "[[Home]]"
 ---
 # {{date}}
