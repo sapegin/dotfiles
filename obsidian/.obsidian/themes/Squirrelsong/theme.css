@@ -49,12 +49,18 @@ body {
   --sqrl-redDimer: #f2dbda;
   --sqrl-redContrast: #c06159;
   --sqrl-orange: #de9e59;
+  --sqrl-orangeDim: #eeceac;
+  --sqrl-orangeDimer: #f7e7d5;
   --sqrl-orangeContrast: #bf8240;
   --sqrl-yellow: #e4c158;
   --sqrl-green: #9bae7e;
+  --sqrl-greenDim: #cbd9c1;
+  --sqrl-greenDimer: #e2ebdf;
   --sqrl-greenContrast: #667e44;
   --sqrl-teal: #5f9b8d;
   --sqrl-blue: #80a4be;
+  --sqrl-blueDim: #bfd1de;
+  --sqrl-blueDimer: #dfe8ef;
   --sqrl-blueContrast: #527b98;
   --sqrl-magenta: #ac9bc5;
   --sqrl-brightPink: #e87da4;
@@ -184,9 +190,10 @@ body {
   --tab-curve: 0;
 
   --blockquote-border-thickness: 4px;
-  --blockquote-border-color: var(--sqrl-gray140);
+  --blockquote-border-color: var(--sqrl-gray120);
   --blockquote-color: var(--sqrl-gray090);
 
+  --callout-border-width: 1px;
   --callout-title-weight: var(--sqrl-heading-weight);
 
   --code-background: var(--sqrl-gray170);
@@ -204,7 +211,6 @@ body {
 
   --p-spacing: 1rem;
 
-  --heading-formatting: red;
   --heading-spacing: 2rem;
   --h1-size: 2rem;
   --h1-font: var(--sqrl-font-heading);
@@ -231,7 +237,6 @@ body {
   --link-external-color-hover: var(--sqrl-blue);
   --link-decoration: none;
   --link-external-decoration: none;
-  --link-unresolved-color: salmon;
 
   --list-indent: 1.5rem;
   --list-indent-editing: 0.1rem;
@@ -488,27 +493,27 @@ input.prompt-input, input.prompt-input:hover, input.prompt-input:focus, input.pr
 
 /* Editor */
 
-
-/* Consistent top/bottom paddings on heading in preview and source modes */
 .cm-s-obsidian .cm-line.HyperMD-header {
+    /* Consistent top/bottom paddings on heading in preview and source modes */
     padding-top: 1rem;
     padding-block-end: 0.5rem;
 }
 
-/*
- * Remove top padding on the very first header on the page, and increase bottom
- * padding
- */
 .cm-s-obsidian .cm-line.HyperMD-header.HyperMD-header-1 {
+    /*
+     * Remove top padding on the very first heading on the page, and increase
+     * bottom padding
+     */
     padding-top: 0;
     padding-block-end: 1rem;
 }
 
-.HyperMD-list-line {
-    /* Hide indentation guides on nested Markdown lists */
-    --indentation-guide-width: 0;
+.cm-s-obsidian .cm-line.HyperMD-header + .HyperMD-header {
+    /* Reduce spacing between two consecutive headings */
+    padding-top: 0;
 }
 
+.cm-hmd-list-indent.cm-hmd-list-indent-1,
 .markdown-source-view.mod-cm6 .cm-hmd-list-indent-2 {
     /* Increase indentation of nested lists */
     width: 1.6rem;
@@ -562,6 +567,16 @@ input.prompt-input, input.prompt-input:hover, input.prompt-input:focus, input.pr
     --text-highlight-bg: var(--sqrl-brightPink);
 }
 
+.cm-strikethrough {
+    /* Grayish color for strikethrough text. */
+    color: var(--text-muted);
+}
+
+.cm-highlight {
+    /* Yellow highlight background (should not be the same as search highlight) */
+    --text-highlight-bg: var(--sqrl-brightYellowDim);
+}
+
 .notice-container .notice {
     /* Less distracting and more readable notification colors */
     color: var(--sqrl-gray080);
@@ -577,12 +592,84 @@ mjx-merror {
     background-color: var(--sqrl-redDimer) !important;
 }
 
-.markdown-source-view.mod-cm6.is-live-preview .HyperMD-quote:before {
+.markdown-source-view.mod-cm6.is-live-preview .HyperMD-quote {
+    /* Align blockquote left edge border with list item markers */
+    margin-inline-start: 8px !important;
+}
+
+.markdown-source-view.mod-cm6.is-live-preview .HyperMD-quote:before, .markdown-source-view.mod-cm6 .cm-blockquote-border:before {
     /*
      * Show blockquote side line on the padding to avoid overlapping with the
      * `>` character
      */
     inset-inline-start: -.3rem;
+    /* Add border radius to the left edge border */
+    border: 0;
+    width: var(--blockquote-border-thickness);
+    background-color: var(--blockquote-border-color);
+    border-radius: var(--radius-s);
+}
+
+.callout-title, .callout-icon .svg-icon {
+    /* Use heading font */
+    font-family: var(--sqrl-font-heading);
+    /* Set color as HEX, not RGB */
+    color: var(--callout-color);
+}
+
+/* Reduce spacing on first/last paragraph */
+.markdown-rendered .callout p:first-child {
+    margin-block-start: .5rem;
+}
+.markdown-rendered .callout p:last-child {
+    margin-block-end: 0;
+}
+
+/* Blue callouts */
+.callout[data-callout="info"],
+.callout[data-callout="todo"],
+.callout[data-callout="tip"],
+.callout[data-callout="hint"],
+.callout[data-callout="abstract"],
+.callout[data-callout="summary"],
+.callout[data-callout="tldr"],
+.callout[data-callout="important"],
+.callout[data-callout="example"],
+.callout[data-callout="quote"],
+.callout[data-callout="cite"] {
+  --callout-color: var(--sqrl-blueContrast);
+  border-color: var(--sqrl-blueDim);
+  background-color: var(--sqrl-blueDimer);
+}
+/* Green callouts */
+.callout[data-callout="success"],
+.callout[data-callout="check"],
+.callout[data-callout="done"] {
+  --callout-color: var(--sqrl-greenContrast);
+  border-color: var(--sqrl-greenDim);
+  background-color: var(--sqrl-greenDimer);
+}
+/* Orange callouts */
+.callout[data-callout="question"],
+.callout[data-callout="help"],
+.callout[data-callout="faq"],
+.callout[data-callout="warning"],
+.callout[data-callout="caution"],
+.callout[data-callout="attention"] {
+  --callout-color: var(--sqrl-orangeContrast);
+  border-color: var(--sqrl-orangeDim);
+  background-color: var(--sqrl-orangeDimer);
+}
+/* Red callouts */
+.callout[data-callout="failure"],
+.callout[data-callout="fail"],
+.callout[data-callout="missing"],
+.callout[data-callout="danger"],
+.callout[data-callout="error"],
+.callout[data-callout="bug"] {
+  --callout-color: var(--sqrl-redContrast);
+  border-color: var(--sqrl-redDim);
+  background-color: var(--sqrl-redDimer);
 }
 
 /* Show #s of headings on the side (like in Bear.app) to avoid shifting text */
