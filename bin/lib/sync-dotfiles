@@ -26,9 +26,9 @@ const SPECIALS = [
 		destination: `${HOME}/cloud`,
 	},
 	{
-		// Convenience symlink: Obsidian vault (Digital Sewer)
-		source: `${HOME}/Library/Mobile Documents/iCloud~md~obsidian/Documents/Sewer`,
-		destination: `${HOME}/sewer`,
+		// Convenience symlink: Obsidian vault
+		source: `${HOME}/Library/Mobile Documents/iCloud~md~obsidian/Documents/Murder`,
+		destination: `${HOME}/murder`,
 	},
 	{
 		// Visual Studio Code

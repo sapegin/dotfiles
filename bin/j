@@ -41,8 +41,8 @@ const CLOUD_PROJECTS = [
 		dir: untildify(`~/cloud`),
 	},
 	{
-		label: 'Digital Sewer',
-		dir: untildify(`~/sewer`),
+		label: 'Obsidian Vault',
+		dir: untildify(`~/murder`),
 	},
 ];
 

@@ -16,9 +16,9 @@ const untildify = (x) => x.replace(/^~/, os.homedir());
 const DEST_DIR = path.join(import.meta.dirname, '/../obsidian');
 const EXCLUDED_FILES = ['workspace.json', 'workspace-mobile.json'];
 const DIRS_TO_BACKUP = [
-	path.join('~/sewer/.obsidian'),
-	path.join('~/sewer/templates'),
-	path.join('~/sewer/bases'),
+	path.join('~/murder/.obsidian'),
+	path.join('~/murder/templates'),
+	path.join('~/murder/bases'),
 ];
 
 async function copyFile(source, dest) {

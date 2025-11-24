@@ -87,8 +87,9 @@ const SOURCES = [
 			contents.includes(`title: 'Washing your code: `) === false,
 	},
 	{
+		// TODO: Find a better organization
 		// Extra Markdown files
-		from: `~/sewer/🪦 Archive/Internets`,
+		from: `~/murder/🪦 Archive/Internets`,
 		to: 'articles',
 	},
 ];

@@ -35,7 +35,7 @@ const folders = [
 
 	// Cloud folders
 	untildify(`~/cloud`),
-	untildify(`~/sewer`),
+	untildify(`~/murder`),
 ].flat();
 
 const items = folders

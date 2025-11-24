@@ -16,7 +16,7 @@ import sharp from 'sharp';
 import YAML from 'yaml';
 import ExifReader from 'exifreader';
 
-const VAULT_DIR = path.join(os.homedir(), 'sewer');
+const VAULT_DIR = path.join(os.homedir(), 'murder');
 const ATTACHMENTS_DIR = path.join(VAULT_DIR, 'attachments');
 const TRASH_DIR = path.join(os.homedir(), 'obsidian-trash');
 const MAX_DIMENSION = 2048;

@@ -61,7 +61,7 @@ command -v rsyncy > /dev/null 2>&1 || {
 }
 
 # Obsidian vault
-bk "$HOME/sewer/" "Stuffses/Backups/Sewer"
+bk "$HOME/murder/" "Stuffses/Backups/Obsidian"
 
 # iCloud Drive documents
 bk "$HOME/cloud/" "Stuffses/Backups/iCloud"
