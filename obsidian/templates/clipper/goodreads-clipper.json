@@ -1,0 +1,38 @@
+{
+	"schemaVersion": "0.1.0",
+	"name": "Goodreads",
+	"behavior": "create",
+	"noteNameFormat": "{{selector:.BookPageTitleSection__title h1}}",
+	"path": "🗂️ References",
+	"noteContentFormat": "{{selector:.BookPageMetadataSection__description}}",
+	"properties": [
+		{
+			"name": "author",
+			"value": "{{selector:.ContributorLink__name|unique|wikilink|join}}",
+			"type": "multitext"
+		},
+		{
+			"name": "year",
+			"value": "{{selector:p[data-testid='publicationInfo']|split:\\\"First published \\\"|slice:1|date:\\\"YYYY\\\"}}",
+			"type": "number"
+		},
+		{
+			"name": "rating",
+			"value": "",
+			"type": "number"
+		},
+		{
+			"name": "cover",
+			"value": "{{selector:.BookCover__image img?src|first}}",
+			"type": "text"
+		},
+		{
+			"name": "tags",
+			"value": "books",
+			"type": "multitext"
+		}
+	],
+	"triggers": [
+		"https://www.goodreads.com/book/"
+	]
+}

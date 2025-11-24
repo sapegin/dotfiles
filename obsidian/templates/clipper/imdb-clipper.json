@@ -1,0 +1,43 @@
+{
+	"schemaVersion": "0.1.0",
+	"name": "IMDB",
+	"behavior": "create",
+	"noteNameFormat": "{{schema:name}}",
+	"path": "🗂️ References",
+	"noteContentFormat": "",
+	"properties": [
+		{
+			"name": "director",
+			"value": "{{selector:[data-testid=\\\"title-pc-principal-credit\\\"]:first-child a|unique|wikilink|join}}",
+			"type": "multitext"
+		},
+		{
+			"name": "cast",
+			"value": "{{selector:[data-testid=\\\"title-pc-principal-credit\\\"]:nth-child(2) div a|unique|wikilink|join}}",
+			"type": "multitext"
+		},
+		{
+			"name": "cover",
+			"value": "{{schema:image}}",
+			"type": "text"
+		},
+		{
+			"name": "plot",
+			"value": "{{schema:description}}",
+			"type": "text"
+		},
+		{
+			"name": "year",
+			"value": "{{schema:datePublished|split:\\\"-\\\"|slice:0,1}}",
+			"type": "number"
+		},
+		{
+			"name": "tags",
+			"value": "movies",
+			"type": "multitext"
+		}
+	],
+	"triggers": [
+		"/^https:\\/\\/www\\.imdb\\.com\\/title\\/tt\\d+(?!\\/reference\\/)(\\/[^\\s]*)?$/"
+	]
+}
