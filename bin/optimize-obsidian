@@ -1,13 +1,18 @@
 #!/usr/bin/env node
 
-// Optimizes images in Obsidian vault: removes unused images, converts large
-// PNG files to AVIF, and downsizes oversized images. Also cleans up journal
-// entries frontmatter.
+// Optimizes Obsidian vault:
+// * Downscales and compress images
+// * Removes unused images
+// * Updates frontmatters
+// * etc.
 //
 // ---
 // Author: Artem Sapegin, sapegin.me
 // License: MIT
 // https://github.com/sapegin/dotfiles
+
+// TODO: Report missing images
+// TODO: Use location coordinates if there's no first image or it doesn't have coordinates
 
 import path from 'node:path';
 import fs from 'node:fs/promises';
@@ -76,14 +81,74 @@ function getFirstImage(body) {
 	return images.length > 0 ? path.basename(images[0]) : undefined;
 }
 
+/** Calculate decimal coordinate from EXIF GPS data. */
+function getGpsCoordinate(exif, type) {
+	const tag = exif[`GPS${type}`];
+	const ref = exif[`GPS${type}Ref`];
+	if (tag === undefined || ref === undefined) {
+		return undefined;
+	}
+
+	const value = tag.value;
+	const refValue = ref.value[0];
+
+	const calculate = (v) => {
+		if (Array.isArray(v) && v.length === 2 && v[1] !== 0) {
+			return v[0] / v[1];
+		}
+		return 0;
+	};
+
+	const degrees = calculate(value[0]);
+	const minutes = calculate(value[1]);
+	const seconds = calculate(value[2]);
+
+	let coordinate = degrees + minutes / 60 + seconds / 3600;
+
+	if (refValue === 'S' || refValue === 'W') {
+		coordinate = -coordinate;
+	}
+
+	return coordinate;
+}
+
 /** Read EXIF photo metadata. */
 async function getImageMetadata(filename) {
-	const buffer = await fs.readFile(path.join(ATTACHMENTS_DIR, filename));
+	if (!filename) {
+		return { date: '', coordinates: undefined };
+	}
+
+	let filePath = path.join(ATTACHMENTS_DIR, filename);
+	const ext = path.extname(filename).toLowerCase();
+
+	// If the image isn't JPEG, look for the original JPEG file in the trash
+	if (ext !== '.jpg' && ext !== '.jpeg') {
+		const nameWithoutExt = path.basename(filename, ext);
+		const jpegFiles = await Array.fromAsync(
+			fs.glob(path.join(TRASH_DIR, `${nameWithoutExt}.{jpg,jpeg,JPG,JPEG}`))
+		);
+		if (jpegFiles.length > 0) {
+			filePath = jpegFiles[0];
+		} else {
+			// Can't do anything, only JPEG files have metadata
+			return { date: '', coordinates: undefined };
+		}
+	}
+
+	const buffer = await fs.readFile(filePath);
 	const exif = ExifReader.load(buffer);
 
 	const date = exif.DateTimeOriginal?.description ?? '';
 
-	return { date };
+	const lat = getGpsCoordinate(exif, 'Latitude');
+	const lon = getGpsCoordinate(exif, 'Longitude');
+
+	let coordinates;
+	if (lat !== undefined && lon !== undefined) {
+		coordinates = `${lat.toFixed(10)}, ${lon.toFixed(10)}`;
+	}
+
+	return { date, coordinates };
 }
 
 async function findUsedImages(markdownFiles) {
@@ -287,6 +352,7 @@ function getExcerpt(body) {
 		.replace(/!\[\[.*?\]\]/g, '')
 		// Remove links
 		.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+		.replace(/\[\[[^\]\|]+\|([^\]]+)\]\]/g, '$1')
 		.replace(/\[\[([^\]]+)\]\]/g, '$1')
 		.replace(/https?:\/\/.*/g, '')
 		// Remove code snippets
@@ -348,12 +414,17 @@ async function updateNote(frontmatter, body, file, allNotes) {
 	// Journal notes
 	if (file.includes('📆 Log/') && frontmatter) {
 		const firstImage = getFirstImage(body);
-
+		const metadata = await getImageMetadata(firstImage);
 		const { location } = frontmatter;
 
 		// Set `image` field to the first image of the note
 		if (firstImage) {
 			newFrontmatter.image = firstImage;
+
+			// Set coordinates if not set already
+			if (metadata.coordinates) {
+				newFrontmatter.coordinates = metadata.coordinates;
+			}
 		}
 
 		// Set `excerpt` field
@@ -375,7 +446,6 @@ async function updateNote(frontmatter, body, file, allNotes) {
 		// Update journal date based on the first photo. The note heading should look
 		// like this: YYYY-MM-DD?!
 		if (firstImage && /^# \d\d\d\d-\d\d-\d\d\?!/.test(body.trimStart())) {
-			const metadata = await getImageMetadata(firstImage);
 			if (metadata.date) {
 				// EXIF date strings look like 2025:02:13 18:25:59. First, convert it to
 				// filename format: YYYY-MM-DD_HHss
