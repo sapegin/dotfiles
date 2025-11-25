@@ -12,7 +12,6 @@
 // https://github.com/sapegin/dotfiles
 
 // TODO: Report missing images
-// TODO: Use location coordinates if there's no first image or it doesn't have coordinates
 
 import path from 'node:path';
 import fs from 'node:fs/promises';
@@ -415,7 +414,7 @@ async function updateNote(frontmatter, body, file, allNotes) {
 	if (file.includes('📆 Log/') && frontmatter) {
 		const firstImage = getFirstImage(body);
 		const metadata = await getImageMetadata(firstImage);
-		const { location } = frontmatter;
+		let { location } = frontmatter;
 
 		// Set `image` field to the first image of the note
 		if (firstImage) {
@@ -440,6 +439,31 @@ async function updateNote(frontmatter, body, file, allNotes) {
 			);
 			if (locationNote) {
 				newFrontmatter.location = `[[${location}]]`;
+			}
+		}
+
+		// If no coordinates from image, try to get them from linked location note
+		if (newFrontmatter.coordinates === undefined && location) {
+			// Extract location name from wiki link format [[Location]] or plain text
+			const locationName = location.startsWith('[[')
+				? location.slice(2, -2)
+				: location;
+
+			const locationNotePath = allNotes.find(
+				(notePath) => path.basename(notePath, '.md') === locationName
+			);
+
+			if (locationNotePath) {
+				try {
+					const locationContent = await fs.readFile(locationNotePath, 'utf-8');
+					const { frontmatter: locationFrontmatter } =
+						parseFrontmatter(locationContent);
+					if (locationFrontmatter?.coordinates) {
+						newFrontmatter.coordinates = locationFrontmatter.coordinates;
+					}
+				} catch (error) {
+					// Ignore errors reading location note
+				}
 			}
 		}
 
