@@ -21,9 +21,13 @@ cyclomatic
 deburr
 discoverability
 dotfiles
+downscale
+downscales
 exif
 Flexbox
 Formik
+frontmatter
+frontmatters
 googleable
 grayscale
 greppability
@@ -40,6 +44,7 @@ lofi
 longstringers
 lookahead
 lookaheads
+meteo
 microlibraries
 microlibrary
 neurodiverse
