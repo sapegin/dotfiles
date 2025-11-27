@@ -12,6 +12,8 @@
 // https://github.com/sapegin/dotfiles
 
 // TODO: Support .heic images
+// TODO: Cleanup multiple new lines
+// TODO: Update log headings to a human-readable date
 
 import path from 'node:path';
 import fs from 'node:fs/promises';
