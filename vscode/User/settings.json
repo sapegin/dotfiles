@@ -225,7 +225,7 @@
   "chat.checkpoints.enabled": false,
   "chat.commandCenter.enabled": false,
   "chat.editor.fontSize": 15,
-  "chat.fontSize": 15,
+  "chat.fontSize": 16,
   "chat.instructionsFilesLocations": {
     // I don’t know if it works ¯\_(ツ)_/¯
     "~/dotfiles/ai-rules/rules": true
