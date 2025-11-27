@@ -393,33 +393,6 @@ async function optimizeImages(imageFiles) {
 	const renamedFiles = new Map();
 	let optimizedCount = 0;
 
-	// Check for AVIF files that were already converted but links weren't updated
-	for (const imagePath of imageFiles) {
-		const filename = path.basename(imagePath);
-		const ext = path.extname(filename).toLowerCase();
-
-		if (ext === '.avif') {
-			// Strip .avif extension to get the base name
-			const baseName = path.basename(filename, ext);
-
-			// Look for original files in trash with same base name
-			const trashMatches = await Array.fromAsync(
-				fs.glob(
-					path.join(
-						TRASH_DIR,
-						`${baseName}.{${IMAGE_EXTENSIONS.map((e) => e.slice(1)).join(',')}}`
-					)
-				)
-			);
-
-			if (trashMatches.length > 0) {
-				const originalFilename = path.basename(trashMatches[0]);
-				renamedFiles.set(originalFilename, filename);
-				console.log(`  Found renamed: ${originalFilename} → ${filename}`);
-			}
-		}
-	}
-
 	for (const imagePath of imageFiles) {
 		const ext = path.extname(imagePath).toLowerCase();
 
@@ -535,7 +508,14 @@ async function updateNote({
 	// Check for missing images after renaming
 	const updatedImages = getMarkdownImages(newBody);
 	for (const image of updatedImages) {
-		if (attachmentNames.has(image) === false) {
+		if (
+			// Skip MOV files
+			image.endsWith('.mov') === false &&
+			// Skip Obsidian Bases
+			image.endsWith('.base') === false &&
+			image.includes('.base#') === false &&
+			attachmentNames.has(image) === false
+		) {
 			console.log(`⚠️  Missing image: ${image} in ${path.basename(file)}`);
 		}
 	}
@@ -603,6 +583,30 @@ async function updateNote({
 			}
 		}
 
+		// Update journal date based on the first photo. The note heading should look
+		// like this: YYYY-MM-DD?!
+		if (firstImage && /^# \d\d\d\d-\d\d-\d\d\?!/.test(body.trimStart())) {
+			if (metadata.date) {
+				// EXIF date strings look like 2025:02:13 18:25:59. First, convert it to
+				// filename format: YYYY-MM-DD_HHss
+				const newBasename = metadata.date.replace(
+					/^(\d{4}):(\d{2}):(\d{2}) (\d{2}):(\d{2}):(\d{2})/,
+					'$1-$2-$3_$4$5'
+				);
+				// Then to heading format: YYYY-MM-DD
+				const newHeader = newBasename.slice(0, 10);
+
+				// Update heading in the body
+				newBody = newBody.replace(/^.*?\n/, `# ${newHeader}\n`);
+
+				// Update basename in the file path
+				newFile = file.replace(basename, newBasename);
+
+				// Delete existing weather info, as it should be updated for the new date/teme
+				delete newFrontmatter.weather;
+			}
+		}
+
 		// Fetch weather if we have coordinates and no weather field yet
 		if (newFrontmatter.weather === undefined && newFrontmatter.coordinates) {
 			// Parse coordinates
@@ -625,27 +629,6 @@ async function updateNote({
 
 				// Small delay to avoid hitting rate limits
 				await new Promise((resolve) => setTimeout(resolve, 100));
-			}
-		}
-
-		// Update journal date based on the first photo. The note heading should look
-		// like this: YYYY-MM-DD?!
-		if (firstImage && /^# \d\d\d\d-\d\d-\d\d\?!/.test(body.trimStart())) {
-			if (metadata.date) {
-				// EXIF date strings look like 2025:02:13 18:25:59. First, convert it to
-				// filename format: YYYY-MM-DD_HHss
-				const newBasename = metadata.date.replace(
-					/^(\d{4}):(\d{2}):(\d{2}) (\d{2}):(\d{2}):(\d{2})/,
-					'$1-$2-$3_$4$5'
-				);
-				// Then to heading format: YYYY-MM-DD
-				const newHeader = newBasename.slice(0, 10);
-
-				// Update heading in the body
-				newBody = newBody.replace(/^.*?\n/, `# ${newHeader}\n`);
-
-				// Update basename in the file path
-				newFile = file.replace(basename, newBasename);
 			}
 		}
 	}
