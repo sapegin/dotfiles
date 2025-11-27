@@ -11,7 +11,7 @@
 // License: MIT
 // https://github.com/sapegin/dotfiles
 
-// TODO: Report missing images
+// TODO: Support .heic images
 
 import path from 'node:path';
 import fs from 'node:fs/promises';
@@ -26,7 +26,17 @@ const TRASH_DIR = path.join(os.homedir(), 'obsidian-trash');
 const MAX_DIMENSION = 2048;
 const MAX_FILE_SIZE = 1024 * 1024; // 1 MB
 const AVIF_QUALITY = 75;
-const ALL_IMAGES_PATTERN = `**/*.{png,jpg,jpeg,gif,webp,avif,bmp,tiff}`;
+const IMAGE_EXTENSIONS = [
+	'.png',
+	'.jpg',
+	'.jpeg',
+	'.gif',
+	'.webp',
+	'.bmp',
+	'.tiff',
+];
+const ALL_IMAGE_EXTENSIONS = [...IMAGE_EXTENSIONS, '.avif'];
+const ALL_IMAGES_PATTERN = `**/*.{${ALL_IMAGE_EXTENSIONS.map((ext) => ext.slice(1)).join(',')}}`;
 const ALL_NOTES_PATTERN = `**/*.md`;
 
 // Either regular Markdown images (![Alt text](image.ext)`), or Obsidian images
@@ -229,6 +239,13 @@ async function getImageMetadata(filename) {
 		}
 	}
 
+	// Check if file exists
+	try {
+		await fs.access(filePath);
+	} catch {
+		return { date: '', coordinates: undefined };
+	}
+
 	const buffer = await fs.readFile(filePath);
 	const exif = ExifReader.load(buffer);
 
@@ -301,8 +318,16 @@ async function needsOptimization(imagePath) {
 async function optimizeImage(imagePath, optimization) {
 	const { width, height } = optimization;
 	const filename = path.basename(imagePath);
-	const nameWithoutExt = path.basename(filename, path.extname(filename));
 	const dir = path.dirname(imagePath);
+
+	// Strip all image extensions to avoid conflicts (e.g., file.jpg.webp → file)
+	let nameWithoutExt = filename;
+	for (const ext of ALL_IMAGE_EXTENSIONS) {
+		if (nameWithoutExt.toLowerCase().endsWith(ext)) {
+			nameWithoutExt = nameWithoutExt.slice(0, -ext.length);
+		}
+	}
+
 	const avifPath = path.join(dir, `${nameWithoutExt}.avif`);
 
 	// Calculate new dimensions if needed
@@ -364,57 +389,60 @@ async function optimizeImage(imagePath, optimization) {
 	return { oldFilename: filename, newFilename: `${nameWithoutExt}.avif` };
 }
 
-async function updateMarkdownLinks(markdownFiles, oldFilename, newFilename) {
-	for (const file of markdownFiles) {
-		let originalContent = await fs.readFile(file, 'utf-8');
-
-		// Match image links with various path formats (both URL-encoded and
-		// non-encoded)
-		const escapedOldFilename = oldFilename.replace(
-			/[.*+?^${}()|[\]\\]/g,
-			'\\$&'
-		);
-		const escapedOldFilenameEncoded = encodeURIComponent(oldFilename).replace(
-			/[.*+?^${}()|[\]\\]/g,
-			'\\$&'
-		);
-		const regex = new RegExp(
-			`!\\[([^\\]]*)\\]\\(([^)]*(${escapedOldFilename}|${escapedOldFilenameEncoded}))\\)`,
-			'g'
-		);
-
-		const basename = path.basename(file);
-		const escapedNewFilename = encodeURIComponent(newFilename);
-		const content = originalContent.replace(regex, (match, alt, fullPath) => {
-			console.log(
-				`  Update link ${fullPath} → ${escapedNewFilename} in ${basename}`
-			);
-			return `![${alt}](${escapedNewFilename})`;
-		});
-
-		if (content !== originalContent) {
-			await fs.writeFile(file, content, 'utf-8');
-		}
-	}
-}
-
-async function optimizeImages(imageFiles, markdownFiles) {
+async function optimizeImages(imageFiles) {
+	const renamedFiles = new Map();
 	let optimizedCount = 0;
 
+	// Check for AVIF files that were already converted but links weren't updated
 	for (const imagePath of imageFiles) {
+		const filename = path.basename(imagePath);
+		const ext = path.extname(filename).toLowerCase();
+
+		if (ext === '.avif') {
+			// Strip .avif extension to get the base name
+			const baseName = path.basename(filename, ext);
+
+			// Look for original files in trash with same base name
+			const trashMatches = await Array.fromAsync(
+				fs.glob(
+					path.join(
+						TRASH_DIR,
+						`${baseName}.{${IMAGE_EXTENSIONS.map((e) => e.slice(1)).join(',')}}`
+					)
+				)
+			);
+
+			if (trashMatches.length > 0) {
+				const originalFilename = path.basename(trashMatches[0]);
+				renamedFiles.set(originalFilename, filename);
+				console.log(`  Found renamed: ${originalFilename} → ${filename}`);
+			}
+		}
+	}
+
+	for (const imagePath of imageFiles) {
+		const ext = path.extname(imagePath).toLowerCase();
+
+		// TODO: We still need to optimize them, some are very large
+		// Skip AVIF files - they're already optimized
+		if (ext === '.avif') {
+			continue;
+		}
+
 		const optimization = await needsOptimization(imagePath);
 
 		if (optimization) {
 			const result = await optimizeImage(imagePath, optimization);
 			if (result) {
 				const { oldFilename, newFilename } = result;
-				await updateMarkdownLinks(markdownFiles, oldFilename, newFilename);
+				renamedFiles.set(oldFilename, newFilename);
 				optimizedCount++;
 			}
 		}
 	}
 
 	console.log(`\nOptimized ${optimizedCount} images`);
+	return renamedFiles;
 }
 
 function parseFrontmatter(content) {
@@ -464,51 +492,63 @@ function getExcerpt(body) {
 	return match ? `${match[0].replace(/[\.,!?…\(\)]$/, '')}…` : textOnly;
 }
 
-async function updateImages() {
-	console.log('\n📸 Updating images…');
-
-	await fs.mkdir(TRASH_DIR, { recursive: true });
-
-	console.log('\nGathering the files…');
-	const markdownFiles = await Array.fromAsync(
-		fs.glob(path.join(VAULT_DIR, ALL_NOTES_PATTERN))
-	);
-	const imageFiles = await Array.fromAsync(
-		fs.glob(path.join(VAULT_DIR, ALL_IMAGES_PATTERN))
-	);
-	console.log(
-		`Found ${markdownFiles.length} notes and ${imageFiles.length} images`
-	);
-
-	console.log('\nCollecting used images from Markdown…');
-	const usedImages = await findUsedImages(markdownFiles);
-	console.log(`Found ${usedImages.size} used images`);
-
-	console.log('\nRemoving unused images…');
-	await removeUnusedImages(imageFiles, usedImages);
-
-	console.log('\nOptimizing images…');
-	const remainingImageFiles = await Array.fromAsync(
-		fs.glob(path.join(VAULT_DIR, ALL_IMAGES_PATTERN))
-	);
-	// await optimizeImages(remainingImageFiles, markdownFiles);
-}
-
-async function updateNote(frontmatter, body, file, allNotes) {
+async function updateNote({
+	frontmatter,
+	body,
+	file,
+	allNotes,
+	renamedFiles,
+	attachmentNames,
+}) {
 	const newFrontmatter = { ...frontmatter };
 	let newBody = body;
 	let newFile = file;
 
 	const basename = path.basename(file, '.md');
 
+	// Check for missing images and update renamed image links
+	const images = getMarkdownImages(body);
+	for (const image of images) {
+		// Update renamed images
+		if (renamedFiles.has(image)) {
+			const newFilename = renamedFiles.get(image);
+			const escapedOldFilename = RegExp.escape(image);
+			const escapedOldFilenameEncoded = RegExp.escape(
+				encodeURIComponent(image)
+			);
+			const regex = new RegExp(
+				`!\\[([^\\]]*)\\]\\(([^)]*(${escapedOldFilename}|${escapedOldFilenameEncoded}))\\)`,
+				'g'
+			);
+			const escapedNewFilename = encodeURIComponent(newFilename);
+			newBody = newBody.replace(regex, (match, alt) => {
+				return `![${alt}](${escapedNewFilename})`;
+			});
+
+			// Update frontmatter image field if it matches the renamed image
+			if (frontmatter?.image === image) {
+				newFrontmatter.image = newFilename;
+			}
+		}
+	}
+
+	// Check for missing images after renaming
+	const updatedImages = getMarkdownImages(newBody);
+	for (const image of updatedImages) {
+		if (attachmentNames.has(image) === false) {
+			console.log(`⚠️  Missing image: ${image} in ${path.basename(file)}`);
+		}
+	}
+
 	// Add missing top-level headers
-	if (body.trim().startsWith('# ') === false) {
+	if (newBody.trim().startsWith('# ') === false) {
 		newBody = `# ${basename}\n${newBody}`;
 	}
 
 	// Journal notes
 	if (file.includes('📆 Log/') && frontmatter) {
-		const firstImage = getFirstImage(body);
+		// Use the updated image from frontmatter if available, otherwise get from body
+		const firstImage = newFrontmatter.image || getFirstImage(newBody);
 		const metadata = await getImageMetadata(firstImage);
 		let { location } = frontmatter;
 
@@ -613,27 +653,37 @@ async function updateNote(frontmatter, body, file, allNotes) {
 	return { newFrontmatter, newBody, newFile };
 }
 
-async function updateNotes() {
+async function updateNotes(renamedFiles) {
 	console.log('\n📝 Updating notes…');
 
 	let updatedCount = 0;
 
-	const noteFiles = await Array.fromAsync(
+	const allNotes = await Array.fromAsync(
 		fs.glob(path.join(VAULT_DIR, ALL_NOTES_PATTERN))
 	);
-	console.log(`\nFound ${noteFiles.length} notes`);
+	console.log(`\nFound ${allNotes.length} notes`);
 
-	for (const file of noteFiles) {
+	// Gather all attachment filenames
+	const imageFiles = await Array.fromAsync(
+		fs.glob(path.join(VAULT_DIR, ALL_IMAGES_PATTERN))
+	);
+	const attachmentNames = new Set(
+		imageFiles.map((imagePath) => path.basename(imagePath).normalize('NFC'))
+	);
+
+	for (const file of allNotes) {
 		try {
 			const content = await fs.readFile(file, 'utf-8');
 			const { frontmatter, body } = parseFrontmatter(content);
 
-			const { newFrontmatter, newBody, newFile } = await updateNote(
+			const { newFrontmatter, newBody, newFile } = await updateNote({
 				frontmatter,
 				body,
 				file,
-				noteFiles
-			);
+				allNotes,
+				renamedFiles,
+				attachmentNames,
+			});
 
 			const newContent =
 				Object.keys(newFrontmatter).length > 0
@@ -676,8 +726,35 @@ async function main() {
 		process.exit(1);
 	}
 
-	await updateImages();
-	await updateNotes();
+	await fs.mkdir(TRASH_DIR, { recursive: true });
+
+	console.log('\n📸 Processing images…');
+
+	console.log('\nGathering the files…');
+	const markdownFiles = await Array.fromAsync(
+		fs.glob(path.join(VAULT_DIR, ALL_NOTES_PATTERN))
+	);
+	const imageFiles = await Array.fromAsync(
+		fs.glob(path.join(VAULT_DIR, ALL_IMAGES_PATTERN))
+	);
+	console.log(
+		`Found ${markdownFiles.length} notes and ${imageFiles.length} images`
+	);
+
+	console.log('\nOptimizing images…');
+	const renamedFiles = await optimizeImages(imageFiles);
+
+	await updateNotes(renamedFiles);
+
+	console.log('\nCollecting used images from Markdown…');
+	const usedImages = await findUsedImages(markdownFiles);
+	console.log(`Found ${usedImages.size} used images`);
+
+	console.log('\nRemoving unused images…');
+	const remainingImageFiles = await Array.fromAsync(
+		fs.glob(path.join(VAULT_DIR, ALL_IMAGES_PATTERN))
+	);
+	await removeUnusedImages(remainingImageFiles, usedImages);
 
 	console.log();
 	console.log('Done 🦜');
