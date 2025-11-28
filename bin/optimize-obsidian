@@ -393,12 +393,10 @@ async function optimizeImage(imagePath, optimization) {
 
 async function optimizeImages(imageFiles) {
 	const renamedFiles = new Map();
-	let optimizedCount = 0;
 
 	for (const imagePath of imageFiles) {
 		const ext = path.extname(imagePath).toLowerCase();
 
-		// TODO: We still need to optimize them, some are very large
 		// Skip AVIF files - they're already optimized
 		if (ext === '.avif') {
 			continue;
@@ -411,12 +409,11 @@ async function optimizeImages(imageFiles) {
 			if (result) {
 				const { oldFilename, newFilename } = result;
 				renamedFiles.set(oldFilename, newFilename);
-				optimizedCount++;
 			}
 		}
 	}
 
-	console.log(`\nOptimized ${optimizedCount} images`);
+	console.log(`\nOptimized ${renamedFiles.size} images`);
 	return renamedFiles;
 }
 
@@ -487,17 +484,23 @@ async function updateNote({
 		// Update renamed images
 		if (renamedFiles.has(image)) {
 			const newFilename = renamedFiles.get(image);
+
+			console.log(`🌭 Updating image links: ${image} → ${newFilename}`);
+
 			const escapedOldFilename = RegExp.escape(image);
 			const escapedOldFilenameEncoded = RegExp.escape(
 				encodeURIComponent(image)
 			);
+
+			// Simplified regexp to cath Markdown images (![Alt text](image.ext)`) and
+			// Obsidian images with optional resizing pipe (`![[image.png|100]]`)
 			const regex = new RegExp(
-				`!\\[([^\\]]*)\\]\\(([^)]*(${escapedOldFilename}|${escapedOldFilenameEncoded}))\\)`,
+				`([\(\[])(${escapedOldFilename}|${escapedOldFilenameEncoded})([\)\]\|])`,
 				'g'
 			);
-			const escapedNewFilename = encodeURIComponent(newFilename);
-			newBody = newBody.replace(regex, (match, alt) => {
-				return `![${alt}](${escapedNewFilename})`;
+			// Update the image name in the link
+			newBody = newBody.replace(regex, (_match, prefix, _image, suffix) => {
+				return `${prefix}${newFilename}${suffix}`;
 			});
 
 			// Update frontmatter image field if it matches the renamed image
@@ -604,7 +607,7 @@ async function updateNote({
 				// Update basename in the file path
 				newFile = file.replace(basename, newBasename);
 
-				// Delete existing weather info, as it should be updated for the new date/teme
+				// Delete existing weather info, as it should be updated for the new date/time
 				delete newFrontmatter.weather;
 			}
 		}
@@ -683,6 +686,7 @@ async function updateNotes(renamedFiles) {
 
 			// Remove old file if the name was changed
 			if (newFile !== file) {
+				console.log(`  ${file} → ${newFile}`);
 				moveToTrash(file);
 			}
 		} catch (error) {
@@ -732,7 +736,10 @@ async function main() {
 	await updateNotes(renamedFiles);
 
 	console.log('\nCollecting used images from Markdown…');
-	const usedImages = await findUsedImages(markdownFiles);
+	const updatedMarkdownFiles = await Array.fromAsync(
+		fs.glob(path.join(VAULT_DIR, ALL_NOTES_PATTERN))
+	);
+	const usedImages = await findUsedImages(updatedMarkdownFiles);
 	console.log(`Found ${usedImages.size} used images`);
 
 	console.log('\nRemoving unused images…');
