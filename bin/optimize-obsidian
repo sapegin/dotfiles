@@ -13,7 +13,6 @@
 
 // TODO: Support .heic images
 // TODO: Cleanup multiple new lines
-// TODO: Update log headings to a human-readable date
 
 import path from 'node:path';
 import fs from 'node:fs/promises';
@@ -83,6 +82,16 @@ const WMO_WEATHER_CODES_NIGHT = {
 	0: 'clear',
 	1: 'mainly clear',
 };
+
+function parseNoteDate(basename) {
+	// Parse datetime from basename (format: YYYY-MM-DD_HHmm)
+	const datetimeMatch = basename.match(/^(\d{4}-\d{2}-\d{2})_(\d{2})(\d{2})$/);
+	if (datetimeMatch) {
+		const [, date, hour, minute] = datetimeMatch;
+		return new Date(Date.parse(`${date}T${hour}:${minute}:00`));
+	}
+	return undefined;
+}
 
 async function moveToTrash(filePath) {
 	const filename = path.basename(filePath);
@@ -160,20 +169,16 @@ function getGpsCoordinate(exif, type) {
 }
 
 /** Fetch weather data from Open-Meteo API. */
-async function getWeather(lat, lon, dateTime) {
-	if (lat === undefined || lon === undefined || dateTime === undefined) {
-		return undefined;
-	}
-
+async function getWeather(lat, lon, date) {
 	try {
-		const date = dateTime.slice(0, 10); // YYYY-MM-DD
-		const hour = dateTime.slice(11, 13); // HH
+		const isoDateString = date.toISOString();
+		const dateString = isoDateString.slice(0, 10); // YYYY-MM-DD
+		const hourString = isoDateString.slice(11, 13); // HH
 
 		// Determine if we need historical or current API
-		const noteDate = new Date(date);
 		const threeMonthsAgo = new Date();
 		threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
-		const isHistorical = noteDate < threeMonthsAgo;
+		const isHistorical = date < threeMonthsAgo;
 		const baseUrl = isHistorical
 			? 'https://archive-api.open-meteo.com/v1/archive'
 			: 'https://api.open-meteo.com/v1/forecast';
@@ -181,8 +186,8 @@ async function getWeather(lat, lon, dateTime) {
 		const params = new URLSearchParams({
 			latitude: lat,
 			longitude: lon,
-			start_date: date,
-			end_date: date,
+			start_date: dateString,
+			end_date: dateString,
 			hourly: 'temperature_2m,weather_code,is_day',
 			timezone: 'auto',
 		});
@@ -196,7 +201,7 @@ async function getWeather(lat, lon, dateTime) {
 
 		// Find the closest hour
 		const hourIndex = data.hourly.time.findIndex((time) =>
-			time.startsWith(`${date}T${hour}`)
+			time.startsWith(`${dateString}T${hourString}`)
 		);
 
 		if (hourIndex === -1) {
@@ -214,6 +219,8 @@ async function getWeather(lat, lon, dateTime) {
 
 		return condition ? `${temperature}°C, ${condition}` : `${temperature}°C`;
 	} catch (error) {
+		console.error('⚠️ Cannot fetch weather for', lat, lon, date);
+		console.error(error.message);
 		return undefined;
 	}
 }
@@ -478,7 +485,7 @@ async function updateNote({
 
 	const basename = path.basename(file, '.md');
 
-	// Check for missing images and update renamed image links
+	// Update renamed image links
 	const images = getMarkdownImages(body);
 	for (const image of images) {
 		// Update renamed images
@@ -510,7 +517,7 @@ async function updateNote({
 		}
 	}
 
-	// Check for missing images after renaming
+	// Check for missing images
 	const updatedImages = getMarkdownImages(newBody);
 	for (const image of updatedImages) {
 		if (
@@ -523,11 +530,6 @@ async function updateNote({
 		) {
 			console.log(`⚠️  Missing image: ${image} in ${path.basename(file)}`);
 		}
-	}
-
-	// Add missing top-level headers
-	if (newBody.trim().startsWith('# ') === false) {
-		newBody = `# ${basename}\n${newBody}`;
 	}
 
 	// Journal notes
@@ -592,17 +594,12 @@ async function updateNote({
 		// like this: YYYY-MM-DD?!
 		if (firstImage && /^# \d\d\d\d-\d\d-\d\d\?!/.test(body.trimStart())) {
 			if (metadata.date) {
-				// EXIF date strings look like 2025:02:13 18:25:59. First, convert it to
-				// filename format: YYYY-MM-DD_HHss
+				// EXIF date strings look like 2025:02:13 18:25:59. Convert it to filename
+				// format: YYYY-MM-DD_HHss
 				const newBasename = metadata.date.replace(
 					/^(\d{4}):(\d{2}):(\d{2}) (\d{2}):(\d{2}):(\d{2})/,
 					'$1-$2-$3_$4$5'
 				);
-				// Then to heading format: YYYY-MM-DD
-				const newHeader = newBasename.slice(0, 10);
-
-				// Update heading in the body
-				newBody = newBody.replace(/^.*?\n/, `# ${newHeader}\n`);
 
 				// Update basename in the file path
 				newFile = file.replace(basename, newBasename);
@@ -612,29 +609,48 @@ async function updateNote({
 			}
 		}
 
+		// Get the date/time from the filename
+		const date = parseNoteDate(path.basename(newFile, '.md'));
+
 		// Fetch weather if we have coordinates and no weather field yet
-		if (newFrontmatter.weather === undefined && newFrontmatter.coordinates) {
+		if (
+			date &&
+			newFrontmatter.weather === undefined &&
+			newFrontmatter.coordinates
+		) {
 			// Parse coordinates
 			const [lat, lon] = newFrontmatter.coordinates
 				.split(',')
 				.map((c) => c.trim());
 
-			// Parse datetime from basename (format: YYYY-MM-DD_HHmm)
-			const datetimeMatch = basename.match(
-				/^(\d{4}-\d{2}-\d{2})_(\d{2})(\d{2})$/
-			);
-			if (datetimeMatch) {
-				const [, date, hour, minute] = datetimeMatch;
-				const dateTime = `${date}T${hour}:${minute}:00`;
-
-				const weather = await getWeather(lat, lon, dateTime);
-				if (weather) {
-					newFrontmatter.weather = weather;
-				}
-
-				// Small delay to avoid hitting rate limits
-				await new Promise((resolve) => setTimeout(resolve, 100));
+			const weather = await getWeather(lat, lon, date);
+			if (weather) {
+				newFrontmatter.weather = weather;
 			}
+
+			// Small delay to avoid hitting rate limits
+			await new Promise((resolve) => setTimeout(resolve, 100));
+		}
+
+		// Update top-level headers
+		const newDate = date
+			? date.toLocaleDateString('en-US', {
+					weekday: 'long',
+					year: 'numeric',
+					month: 'long',
+					day: 'numeric',
+				})
+			: basename;
+
+		if (newBody.trim().startsWith('# ') === false) {
+			newBody = `# ${newDate}\n${newBody}`;
+		} else {
+			newBody = newBody.replace(/^#.*\n/, `# ${newDate}\n`);
+		}
+	} else {
+		// Add missing top-level headers
+		if (newBody.trim().startsWith('# ') === false) {
+			newBody = `# ${basename}\n${newBody}`;
 		}
 	}
 
@@ -690,7 +706,7 @@ async function updateNotes(renamedFiles) {
 				moveToTrash(file);
 			}
 		} catch (error) {
-			console.error(`Error updating ${file}:`);
+			console.error(`⚠️ Error updating ${file}:`);
 			console.error(error.message);
 		}
 	}
@@ -711,7 +727,7 @@ async function main() {
 		await fs.access(VAULT_DIR);
 	} catch (error) {
 		console.error();
-		console.error('Error: Vault directory does not exist:', VAULT_DIR);
+		console.error('⛔️ Error: Vault directory does not exist:', VAULT_DIR);
 		process.exit(1);
 	}
 
