@@ -12,7 +12,6 @@
 // https://github.com/sapegin/dotfiles
 
 // TODO: Support .heic images
-// TODO: Cleanup multiple new lines
 
 import path from 'node:path';
 import fs from 'node:fs/promises';
@@ -653,6 +652,9 @@ async function updateNote({
 			newBody = `# ${basename}\n${newBody}`;
 		}
 	}
+
+	// Cleanup whitespace only lines and multiple new lines
+	newBody = newBody.replace(/^\s+$/gm, '').replace(/\n\n\n+/gm, '\n\n');
 
 	return { newFrontmatter, newBody, newFile };
 }
