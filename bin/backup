@@ -60,6 +60,8 @@ command -v rsyncy > /dev/null 2>&1 || {
 	exit 1
 }
 
+# TODO: Backup notes separately in a dated zip file
+
 # Obsidian vault
 bk "$HOME/murder/" "Stuffses/Backups/Obsidian"
 

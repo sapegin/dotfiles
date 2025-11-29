@@ -769,7 +769,7 @@ async function main() {
 }
 
 main().catch((error) => {
-	console.error();
-	console.error('Error:', error.message);
+	console.log();
+	console.error(error.stack);
 	process.exit(1);
 });
