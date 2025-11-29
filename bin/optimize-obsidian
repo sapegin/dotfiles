@@ -11,8 +11,6 @@
 // License: MIT
 // https://github.com/sapegin/dotfiles
 
-// TODO: Support .heic images
-
 import path from 'node:path';
 import fs from 'node:fs/promises';
 import os from 'node:os';
@@ -27,13 +25,15 @@ const MAX_DIMENSION = 2048;
 const MAX_FILE_SIZE = 1024 * 1024; // 1 MB
 const AVIF_QUALITY = 75;
 const IMAGE_EXTENSIONS = [
-	'.png',
-	'.jpg',
-	'.jpeg',
-	'.gif',
-	'.webp',
 	'.bmp',
+	'.gif',
+	'.heic',
+	'.jpeg',
+	'.jpg',
+	'.mov',
+	'.png',
 	'.tiff',
+	'.webp',
 ];
 const ALL_IMAGE_EXTENSIONS = [...IMAGE_EXTENSIONS, '.avif'];
 const ALL_IMAGES_PATTERN = `**/*.{${ALL_IMAGE_EXTENSIONS.map((ext) => ext.slice(1)).join(',')}}`;
@@ -403,8 +403,8 @@ async function optimizeImages(imageFiles) {
 	for (const imagePath of imageFiles) {
 		const ext = path.extname(imagePath).toLowerCase();
 
-		// Skip AVIF files - they're already optimized
-		if (ext === '.avif') {
+		// Skip AVIF as already optimized, and HEIC/MOV as Sharp doesn't support them
+		if (ext === '.avif' || ext === '.heic' || ext === '.mov') {
 			continue;
 		}
 
@@ -520,8 +520,6 @@ async function updateNote({
 	const updatedImages = getMarkdownImages(newBody);
 	for (const image of updatedImages) {
 		if (
-			// Skip MOV files
-			image.endsWith('.mov') === false &&
 			// Skip Obsidian Bases
 			image.endsWith('.base') === false &&
 			image.includes('.base#') === false &&
