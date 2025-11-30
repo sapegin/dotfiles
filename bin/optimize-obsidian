@@ -36,6 +36,7 @@ const IMAGE_EXTENSIONS = [
 	'.webp',
 ];
 const ALL_IMAGE_EXTENSIONS = [...IMAGE_EXTENSIONS, '.avif'];
+const ALL_EXTENSIONS = [...ALL_IMAGE_EXTENSIONS, '.md'];
 const ALL_IMAGES_PATTERN = `**/*.{${ALL_IMAGE_EXTENSIONS.map((ext) => ext.slice(1)).join(',')}}`;
 const ALL_NOTES_PATTERN = `**/*.md`;
 
@@ -90,6 +91,23 @@ function parseNoteDate(basename) {
 		return new Date(Date.parse(`${date}T${hour}:${minute}:00`));
 	}
 	return undefined;
+}
+
+/** Strip known extension (image file or Markdown) from a file path. */
+function stripExtension(filePath) {
+	let newFilePath = filePath;
+	for (const ext of ALL_EXTENSIONS) {
+		if (newFilePath.toLowerCase().endsWith(ext)) {
+			newFilePath = newFilePath.slice(0, -ext.length);
+		}
+	}
+	return newFilePath;
+}
+
+/** File basename that supports multiple (known) extensions. */
+function getBasename(filePath) {
+	const filename = path.basename(filePath);
+	return stripExtension(stripExtension(filename));
 }
 
 async function moveToTrash(filePath) {
@@ -491,7 +509,9 @@ async function updateNote({
 		if (renamedFiles.has(image)) {
 			const newFilename = renamedFiles.get(image);
 
-			console.log(`🌭 Updating image links: ${image} → ${newFilename}`);
+			console.log(
+				`  Updating image links: ${getBasename(image)} → ${getBasename(newFilename)}`
+			);
 
 			const escapedOldFilename = RegExp.escape(image);
 			const escapedOldFilenameEncoded = RegExp.escape(
@@ -615,6 +635,8 @@ async function updateNote({
 			newFrontmatter.weather === undefined &&
 			newFrontmatter.coordinates
 		) {
+			console.log(`  Fetching weather for ${getBasename(newFile)}…`);
+
 			// Parse coordinates
 			const [lat, lon] = newFrontmatter.coordinates
 				.split(',')
@@ -702,12 +724,12 @@ async function updateNotes(renamedFiles) {
 
 			// Remove old file if the name was changed
 			if (newFile !== file) {
-				console.log(`  ${file} → ${newFile}`);
+				console.log(`  ${getBasename(file)} → ${getBasename(newFile)}`);
 				moveToTrash(file);
 			}
 		} catch (error) {
 			console.error(`⚠️ Error updating ${file}:`);
-			console.error(error.message);
+			console.error(error.stack);
 		}
 	}
 
@@ -733,7 +755,7 @@ async function main() {
 
 	await fs.mkdir(TRASH_DIR, { recursive: true });
 
-	console.log('\n📸 Processing images…');
+	console.log('\n📸 Updating images…');
 
 	console.log('\nGathering the files…');
 	const markdownFiles = await Array.fromAsync(
