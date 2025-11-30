@@ -484,7 +484,9 @@ function getExcerpt(body) {
 		.replace(/\s+/g, ' ')
 		.trim();
 
-	const match = textOnly.match(/.{300}[^ ]*/);
+	// Leave only very short snippet of text to avoid excerpts appearing in search
+	// results too often
+	const match = textOnly.match(/.{80}[^ ]*/);
 	return match ? `${match[0].replace(/[\.,!?…\(\)]$/, '')}…` : textOnly;
 }
 
