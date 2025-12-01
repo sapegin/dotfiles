@@ -319,8 +319,16 @@ async function removeUnusedImages(imageFiles, usedImages) {
 }
 
 async function getImageDimensions(imagePath) {
-	const metadata = await sharp(imagePath).metadata();
-	return { width: metadata.width, height: metadata.height };
+	try {
+		const metadata = await sharp(imagePath).metadata();
+		return { width: metadata.width, height: metadata.height };
+	} catch (error) {
+		console.error(
+			`⚠️ Error reading image dimensions of ${getBasename(imagePath)}:`
+		);
+		console.error(error.stack);
+		return { width: 0, height: 0 };
+	}
 }
 
 async function needsOptimization(imagePath) {
