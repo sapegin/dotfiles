@@ -11,18 +11,18 @@
    * UI panels
    */
   {
-    "comment": "Toggle the left sidebar",
-    "key": "cmd+1",
+    "comment": "Toggle the left (auxiliary) sidebar",
+    "key": "cmd+[",
     "command": "workbench.action.toggleAuxiliaryBar"
   },
   {
-    "comment": "Toggle the right sidebar",
-    "key": "cmd+2",
+    "comment": "Toggle the right (main) sidebar",
+    "key": "cmd+]",
     "command": "workbench.action.toggleSidebarVisibility"
   },
   {
     "comment": "Toggle the bottom panel",
-    "key": "cmd+3",
+    "key": "cmd+\\",
     "command": "workbench.action.togglePanel"
   },
   {
@@ -109,12 +109,12 @@
   },
   {
     "comment": "Increase current panel size",
-    "key": "cmd+]",
+    "key": "cmd+shift+]",
     "command": "workbench.action.increaseViewSize"
   },
   {
     "comment": "Decrease current panel size",
-    "key": "cmd+[",
+    "key": "cmd+shift+[",
     "command": "workbench.action.decreaseViewSize"
   },
 
@@ -187,12 +187,6 @@
     "comment": "Duplicate current line or selection",
     "key": "cmd+d",
     "command": "editor.action.duplicateSelection",
-    "when": "editorTextFocus && !editorReadonly"
-  },
-  {
-    "comment": "Join selected lines",
-    "key": "cmd+j",
-    "command": "editor.action.joinLines",
     "when": "editorTextFocus && !editorReadonly"
   },
   {
@@ -974,10 +968,6 @@
   {
     "key": "alt+cmd+b",
     "command": "-workbench.action.toggleAuxiliaryBar"
-  },
-  {
-    "key": "cmd+b",
-    "command": "-workbench.action.toggleSidebarVisibility"
   },
   {
     "key": "cmd+k cmd+m",
