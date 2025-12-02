@@ -1,0 +1,12 @@
+filters:
+  and:
+    - file.tags.contains("1up")
+views:
+  - type: table
+    name: Table
+    order:
+      - file.name
+      - deadline
+    sort:
+      - property: deadline
+        direction: ASC

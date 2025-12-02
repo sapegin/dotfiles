@@ -3,7 +3,7 @@
 	"name": "Google Maps",
 	"behavior": "create",
 	"noteNameFormat": "{{selector:div[role=\"main\"]:aria-label}}",
-	"path": "🗂️ References",
+	"path": "🗂️ References/Places",
 	"noteContentFormat": "",
 	"properties": [
 		{

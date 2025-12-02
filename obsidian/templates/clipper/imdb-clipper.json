@@ -3,7 +3,7 @@
 	"name": "IMDB",
 	"behavior": "create",
 	"noteNameFormat": "{{schema:name}}",
-	"path": "🗂️ References",
+	"path": "🗂️ References/Movies",
 	"noteContentFormat": "",
 	"properties": [
 		{

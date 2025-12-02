@@ -1,5 +1,5 @@
 {
-  "app:toggle-left-sidebar": [
+  "workspace:goto-tab-1": [
     {
       "modifiers": [
         "Mod"
@@ -7,7 +7,7 @@
       "key": "1"
     }
   ],
-  "app:toggle-right-sidebar": [
+  "workspace:goto-tab-2": [
     {
       "modifiers": [
         "Mod"
@@ -15,20 +15,52 @@
       "key": "2"
     }
   ],
-  "workspace:goto-tab-1": [],
-  "workspace:goto-tab-2": [],
-  "workspace:goto-tab-3": [],
-  "workspace:goto-tab-4": [],
-  "workspace:goto-tab-5": [],
-  "workspace:goto-tab-6": [],
-  "workspace:goto-tab-7": [],
-  "workspace:goto-tab-8": [],
-  "editor:toggle-fold-properties": [
+  "workspace:goto-tab-3": [
     {
       "modifiers": [
         "Mod"
       ],
       "key": "3"
+    }
+  ],
+  "workspace:goto-tab-4": [
+    {
+      "modifiers": [
+        "Mod"
+      ],
+      "key": "4"
+    }
+  ],
+  "workspace:goto-tab-5": [
+    {
+      "modifiers": [
+        "Mod"
+      ],
+      "key": "5"
+    }
+  ],
+  "workspace:goto-tab-6": [
+    {
+      "modifiers": [
+        "Mod"
+      ],
+      "key": "6"
+    }
+  ],
+  "workspace:goto-tab-7": [
+    {
+      "modifiers": [
+        "Mod"
+      ],
+      "key": "7"
+    }
+  ],
+  "workspace:goto-tab-8": [
+    {
+      "modifiers": [
+        "Mod"
+      ],
+      "key": "8"
     }
   ],
   "file-explorer:move-file": [
@@ -112,6 +144,40 @@
         "Mod"
       ],
       "key": "L"
+    }
+  ],
+  "daily-notes": [
+    {
+      "modifiers": [
+        "Mod",
+        "Shift"
+      ],
+      "key": "N"
+    }
+  ],
+  "file-explorer:new-file-in-new-pane": [],
+  "app:toggle-left-sidebar": [
+    {
+      "modifiers": [
+        "Mod"
+      ],
+      "key": "["
+    }
+  ],
+  "app:toggle-right-sidebar": [
+    {
+      "modifiers": [
+        "Mod"
+      ],
+      "key": "]"
+    }
+  ],
+  "editor:toggle-fold-properties": [
+    {
+      "modifiers": [
+        "Mod"
+      ],
+      "key": "\\"
     }
   ]
 }

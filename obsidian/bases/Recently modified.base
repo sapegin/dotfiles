@@ -1,0 +1,23 @@
+views:
+  - type: cards
+    name: Cards
+    order:
+      - file.name
+      - excerpt
+    sort:
+      - property: file.mtime
+        direction: DESC
+    limit: 100
+    image: note.image
+    imageAspectRatio: 0.45
+    cardSize: 230
+  - type: table
+    name: Table
+    order:
+      - file.name
+      - file.folder
+      - file.mtime
+    sort:
+      - property: file.mtime
+        direction: DESC
+    limit: 100

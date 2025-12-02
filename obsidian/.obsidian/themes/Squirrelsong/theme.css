@@ -605,7 +605,11 @@ mjx-merror {
     border: 0;
     width: var(--blockquote-border-thickness);
     background-color: var(--blockquote-border-color);
-    border-radius: var(--radius-s);
+}
+.markdown-source-view.mod-cm6.is-live-preview .cm-line:not(.HyperMD-quote) +
+.HyperMD-quote:before {
+    border-start-start-radius: var(--radius-s);
+    border-start-end-radius: var(--radius-s);
 }
 
 .callout-title, .callout-icon .svg-icon {
