@@ -21,15 +21,9 @@ if (text.trim() === undefined) {
 	process.exit(0);
 }
 
-/** Format date as `YYYY-MM-DD, H:mm a`. */
+/** Format date as `YYYY-MM-DD_HHmm`. */
 function formatDate(date) {
-	const datePart = date.toISOString().slice(0, 10);
-	const timePart = new Intl.DateTimeFormat('en-US', {
-		hour: 'numeric',
-		minute: 'numeric',
-		hour12: true,
-	}).format(date);
-	return `${datePart}, ${timePart}`;
+	return date.toISOString().slice(0, 16).replace('T', '_').replace(':', '');
 }
 
 try {
