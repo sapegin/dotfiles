@@ -27,13 +27,13 @@
   },
   {
     "comment": "Maximize/minimize the left sidebar",
-    "key": "cmd+k cmd+f",
+    "key": "alt+enter",
     "command": "workbench.action.toggleMaximizedAuxiliaryBar",
     "when": "auxiliaryBarFocus"
   },
   {
     "comment": "Maximize/minimize the panel (Full screen)",
-    "key": "cmd+k cmd+f",
+    "key": "alt+enter",
     "command": "workbench.action.toggleMaximizedPanel",
     "when": "panelFocus"
   },
@@ -487,7 +487,18 @@
   },
 
   /**
-   * Emmet
+   * Copilot
+   */
+  {
+    // Prevents accidental submitting by pressing Enter
+    "comment": "Submit Copilot prompt",
+    "key": "cmd+enter",
+    "command": "workbench.action.chat.submit",
+    "when": "chatInputHasText && inChatInput && !chatSessionRequestInProgress || chatPromptFileAttached && inChatInput && !chatSessionRequestInProgress"
+  },
+
+  /**
+   * Emme
    */
   {
     "comment": "Select the Inner contents of a tag",
@@ -1169,5 +1180,20 @@
     "key": "cmd+i",
     "command": "-kilo-code.addToContextAndFocus",
     "when": "editorTextFocus && kilocode.ghost.enableQuickInlineTaskKeybinding && !github.copilot.completions.enabled"
+  },
+  {
+    "key": "shift+alt+enter",
+    "command": "-workbench.action.chat.submitWithoutDispatching",
+    "when": "chatInputHasText && inChatInput && !chatSessionRequestInProgress && chatAgentKind == 'ask' || chatPromptFileAttached && inChatInput && !chatSessionRequestInProgress && chatAgentKind == 'ask'"
+  },
+  {
+    "key": "cmd+enter",
+    "command": "-workbench.action.chat.submitWithCodebase",
+    "when": "chatInputHasText && inChatInput && !chatSessionRequestInProgress || chatPromptFileAttached && inChatInput && !chatSessionRequestInProgress"
+  },
+  {
+    "key": "enter",
+    "command": "-workbench.action.chat.submit",
+    "when": "chatInputHasText && inChatInput && !chatSessionRequestInProgress && !withinEditSessionDiff"
   }
 ]
