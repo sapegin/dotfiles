@@ -685,13 +685,37 @@ mjx-merror {
 
 /* Show #s of headings on the side (like in Bear.app) to avoid shifting text */
 .is-live-preview .cm-formatting-header {
+  display: inline-block;
   z-index: 100;
-  position: absolute;
-  right: 100%;
+  position: relative;
   white-space: nowrap;
   background-color: var(--background-primary);
   transform: scale(0.85);
-  transform-origin: bottom;
+  transform-origin: center;
+}
+.is-live-preview .HyperMD-header-1 .cm-formatting-header {
+    width: 1.5rem;
+    margin-left: -1.5rem;
+}
+.is-live-preview .HyperMD-header-2 .cm-formatting-header {
+    width: 2.4rem;
+    margin-left: -2.4rem;
+}
+.is-live-preview .HyperMD-header-3 .cm-formatting-header {
+    width: 2.6rem;
+    margin-left: -2.6rem;
+}
+.is-live-preview .HyperMD-header-4 .cm-formatting-header {
+    width: 3.1rem;
+    margin-left: -3.1rem;
+}
+.is-live-preview .HyperMD-header-5 .cm-formatting-header {
+    width: 3.5rem;
+    margin-left: -3.5rem;
+}
+.is-live-preview .HyperMD-header-6 .cm-formatting-header {
+    width: 3.9rem;
+    margin-left: -3.9rem;
 }
 
 /* Avoid shifting content when editing images */
