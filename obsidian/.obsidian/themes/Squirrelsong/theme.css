@@ -535,11 +535,6 @@ input.prompt-input, input.prompt-input:hover, input.prompt-input:focus, input.pr
     text-decoration-color: currentColor;
 }
 
-.cm-formatting-list {
-  /* Extra space between a list marker and the text */
-  padding-inline-end: 0.5rem;
-}
-
 /* Tables */
 
 .markdown-source-view.mod-cm6 .cm-table-widget th, .markdown-source-view.mod-cm6 .cm-table-widget td {
@@ -558,6 +553,22 @@ input.prompt-input, input.prompt-input:hover, input.prompt-input:focus, input.pr
     overflow: hidden;
     border-radius: var(--radius-m);
     border: var(--table-border-width) solid var(--table-border-color);
+}
+
+.markdown-source-view.mod-cm6 .cm-table-widget {
+    --table-drag-handle-size: 24px;
+}
+.table-row-btn {
+    margin-block-start: -.3rem;
+    padding-block-start: .3rem;
+    border-end-start-radius: var(--radius-m);
+    border-end-end-radius: var(--radius-m);
+}
+.table-col-btn {
+    margin-inline-start: -.3rem;
+    padding-inline-start: .3rem;
+    border-start-end-radius: var(--radius-m);
+    border-end-end-radius: var(--radius-m);
 }
 
 .is-selected {
@@ -605,11 +616,9 @@ mjx-merror {
     border: 0;
     width: var(--blockquote-border-thickness);
     background-color: var(--blockquote-border-color);
-}
-.markdown-source-view.mod-cm6.is-live-preview .cm-line:not(.HyperMD-quote) +
-.HyperMD-quote:before {
-    border-start-start-radius: var(--radius-s);
-    border-start-end-radius: var(--radius-s);
+    border-radius: var(--radius-s);
+    top: -.065rem;
+    bottom: -.065rem;
 }
 
 .callout-title, .callout-icon .svg-icon {
@@ -681,6 +690,8 @@ mjx-merror {
   right: 100%;
   white-space: nowrap;
   background-color: var(--background-primary);
+  transform: scale(0.85);
+  transform-origin: bottom;
 }
 
 /* Avoid shifting content when editing images */
