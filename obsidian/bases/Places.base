@@ -1,0 +1,23 @@
+filters:
+  and:
+    - file.tags.contains("places")
+views:
+  - type: map
+    name: Map
+    coordinates: note.coordinates
+    markerIcon: note.icon
+    markerColor: note.color
+    mapHeight: 360
+    center: "[49.92291, 25.61319]"
+    defaultZoom: 3.3
+  - type: cards
+    name: Cards
+    order:
+      - file.name
+      - excerpt
+    sort:
+      - property: file.name
+        direction: DESC
+    image: note.image
+    imageAspectRatio: 0.45
+    cardSize: 230

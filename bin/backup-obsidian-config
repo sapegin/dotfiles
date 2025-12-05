@@ -14,7 +14,7 @@ import os from 'node:os';
 const untildify = (x) => x.replace(/^~/, os.homedir());
 
 const DEST_DIR = path.join(import.meta.dirname, '/../obsidian');
-const EXCLUDED_FILES = ['workspace.json', 'workspace-mobile.json'];
+const EXCLUDED_FILES = [/^workspace.*?\.json/i];
 const DIRS_TO_BACKUP = [
 	path.join('~/murder/.obsidian'),
 	path.join('~/murder/templates'),
@@ -36,7 +36,7 @@ async function copyDirectory(source, dest) {
 		if (entry.isDirectory()) {
 			await copyDirectory(sourcePath, destPath);
 		} else if (entry.isFile()) {
-			if (EXCLUDED_FILES.includes(entry.name)) {
+			if (EXCLUDED_FILES.some((regexp) => regexp.test(entry.name))) {
 				console.log('Skipping', entry.name);
 				continue;
 			}
