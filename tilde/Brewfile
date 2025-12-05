@@ -23,7 +23,6 @@ brew "tlrc" # `man` replacement
 brew "typos-cli" # Fix typos
 brew "zsh" # Shell
 brew "zsh-syntax-highlighting" # Syntax highlighting for zsh
-brew "zoxide" # `cd` replacement
 
 # GUI apps
 cask "adobe-creative-cloud" # Lightroom & Photoshop
