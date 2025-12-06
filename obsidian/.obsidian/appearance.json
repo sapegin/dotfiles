@@ -1,8 +1,10 @@
 {
   "accentColor": "#806f9b",
   "monospaceFontFamily": "MonoLisa",
-  "baseFontSize": 18,
+  "baseFontSize": 19,
   "showRibbon": false,
   "cssTheme": "Squirrelsong",
-  "showViewHeader": true
+  "showViewHeader": true,
+  "textFontFamily": "Iosevka Custom",
+  "interfaceFontFamily": "SF Pro"
 }

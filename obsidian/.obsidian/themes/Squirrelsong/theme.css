@@ -3,9 +3,6 @@
 body {
   /* Custom variables */
   --sqrl-heading-weight: 500;
-  --sqrl-font-base: "Bear Sans UI", system-ui, sans-serif;
-  --sqrl-font-heading: "Bear Sans UI Heading", system-ui, sans-serif;
-  --sqrl-font-mono: Monolisa, monospace;
 
   /* Obsidian theme variables */
   --radius-s: 4px;
@@ -20,9 +17,6 @@ body {
   --toggle-thumb-radius: 16px;
   --slider-thumb-radius: 12px;
   --modal-radius: 12px;
-
-  --font-text-theme: var(--sqrl-font-base);
-  --font-monospace-theme: var(--sqrl-font-mono);
 
   --cursor: pointer;
   --cursor-link: pointer;
@@ -210,19 +204,18 @@ body {
 
   --heading-spacing: 2rem;
   --h1-size: 2rem;
-  --h1-font: var(--sqrl-font-heading);
   --h1-weight: var(--sqrl-heading-weight);
+  --h1-letter-spacing: -0.05em;
   --h2-size: 1.5rem;
-  --h2-font: var(--sqrl-font-heading);
   --h2-weight: var(--sqrl-heading-weight);
+  --h2-letter-spacing: -0.04em;
   --h3-size: 1.2rem;
-  --h3-font: var(--sqrl-font-heading);
   --h3-weight: var(--sqrl-heading-weight);
-  --h4-font: var(--sqrl-font-heading);
+  --h3-letter-spacing: -0.03em;
   --h4-weight: var(--sqrl-heading-weight);
-  --h5-font: var(--sqrl-font-heading);
+  --h4-letter-spacing: -0.025em;
   --h5-weight: var(--sqrl-heading-weight);
-  --h6-font: var(--sqrl-font-heading);
+  --h5-letter-spacing: -0.02em;
   --h6-weight: var(--sqrl-heading-weight);
 
   --hr-color: var(--sqrl-gray140);
@@ -491,6 +484,14 @@ input.prompt-input, input.prompt-input:hover, input.prompt-input:focus, input.pr
 
 /* Editor */
 
+.markdown-source-view.mod-cm6 .cm-scroller {
+    /*
+     * Tighter letter spacing to improve readability of quasi‑proportional fonts
+     * such as Iosevka Aile
+     */
+    letter-spacing: -.01em;
+}
+
 .cm-s-obsidian .cm-line.HyperMD-header {
     /* Consistent top/bottom paddings on heading in preview and source modes */
     padding-top: 1rem;
@@ -533,6 +534,13 @@ input.prompt-input, input.prompt-input:hover, input.prompt-input:focus, input.pr
 }
 .markdown-source-view.mod-cm6 .cm-link .cm-underline:hover, .markdown-source-view.mod-cm6 .cm-url .cm-underline:hover {
     text-decoration-color: currentColor;
+}
+
+/* Tags */
+
+.markdown-source-view.mod-cm6 .cm-line:has(.cm-formatting-hashtag) {
+    /* A bit of extra space under tags */
+    padding-block-end: .5rem;
 }
 
 /* Tables */
@@ -622,8 +630,6 @@ mjx-merror {
 }
 
 .callout-title, .callout-icon .svg-icon {
-    /* Use heading font */
-    font-family: var(--sqrl-font-heading);
     /* Set color as HEX, not RGB */
     color: var(--callout-color);
 }
