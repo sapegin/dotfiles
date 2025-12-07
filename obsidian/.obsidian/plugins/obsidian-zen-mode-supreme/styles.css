@@ -1,0 +1,46 @@
+/* Tabs */
+.zen-mode-supreme-active .mod-root .workspace-tabs .workspace-tab-header-container,
+/* Sidebar buttons */
+.zen-mode-supreme-active .sidebar-toggle-button.mod-left,
+.zen-mode-supreme-active .sidebar-toggle-button.mod-right,
+/* File name header */
+.zen-mode-supreme-active .workspace-leaf-content[data-type=markdown] .view-header,
+/* Scrollbars */
+.zen-mode-supreme-active .cm-editor ::-webkit-scrollbar,
+/* Status */
+.zen-mode-supreme-active .status-bar,
+/* Tooltips */
+.zen-mode-supreme-active .tooltip
+
+
+ {
+  display: none;
+}
+
+/* Hide properties and show placeholder instead */
+.zen-mode-supreme-active .markdown-source-view.is-live-preview.show-properties .metadata-container:not(.mod-error) > * {
+    display: none;
+}
+.zen-mode-supreme-active .markdown-source-view.is-live-preview.show-properties .metadata-container:not(.mod-error) {
+    opacity: 0.5;
+    padding: 0;
+    font-size: var(--font-ui-small);
+    border: none;
+    box-shadow: none;
+    transform: none;
+}
+.zen-mode-supreme-active .markdown-source-view.is-live-preview.show-properties .metadata-container:not(.mod-error)::before {
+    content: "Turn off zen mode to show properties"
+}
+
+/* Deemphasize hashtags */
+.zen-mode-supreme-active .cm-hashtag.cm-hashtag-begin,
+.zen-mode-supreme-active .cm-hashtag.cm-hashtag-end {
+    opacity: 0.5;
+    font-size: var(--font-ui-small);
+}
+
+/* Add extra whitespace around the editor */
+.zen-mode-supreme-active.zen-mode-supreme-active {
+    --file-margins: 2rem 1rem;
+}

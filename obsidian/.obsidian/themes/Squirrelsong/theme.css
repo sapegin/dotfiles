@@ -283,6 +283,12 @@ body {
   --file-margins: .5rem 1rem;
 }
 
+.zen-mode-supreme-active.theme-light {
+  /* Lower contrast a bit with Zen Mode Supreme plugin  */
+  --background-primary: var(--sqrl-gray170);
+  --background-primary-alt: var(--sqrl-gray160);
+}
+
 /* Additional styles */
 
 /* All interactive elements should have pointer cursor and transition */
@@ -722,6 +728,17 @@ mjx-merror {
 .is-live-preview .HyperMD-header-6 .cm-formatting-header {
     width: 3.9rem;
     margin-left: -3.9rem;
+}
+
+/* Better alignment of the left edge of headers with the text */
+.markdown-source-view.mod-cm6 .cm-content > .cm-line.HyperMD-header.HyperMD-header-1 {
+    margin-inline-start: -0.1rem !important;
+}
+.markdown-source-view.mod-cm6 .cm-content > .cm-line.HyperMD-header.HyperMD-header-2 {
+    margin-inline-start: -.05rem !important;
+}
+.markdown-source-view.mod-cm6 .cm-content > .cm-line.HyperMD-header.HyperMD-header-3 {
+    margin-inline-start: -.025rem !important;
 }
 
 /* Avoid shifting content when editing images */

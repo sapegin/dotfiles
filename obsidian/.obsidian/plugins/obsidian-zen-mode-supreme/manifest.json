@@ -1,0 +1,11 @@
+{
+  "id": "zen-mode-supreme",
+  "name": "Zen Mode Supreme",
+  "version": "1.0.0",
+  "minAppVersion": "0.15.0",
+  "description": "Hides all UI so you can focus on writing.",
+  "author": "Artem Sapegin",
+  "authorUrl": "https://sapegin.me",
+  "fundingUrl": "https://buymeacoffee.com/sapegin",
+  "isDesktopOnly": false
+}

@@ -197,5 +197,22 @@
       ],
       "key": "K"
     }
-  ]
+  ],
+  "zen-mode-supreme:zen-mode-supreme-toggle": [
+    {
+      "modifiers": [
+        "Alt"
+      ],
+      "key": "Enter"
+    }
+  ],
+  "editor:follow-link": [
+    {
+      "modifiers": [
+        "Mod"
+      ],
+      "key": "Enter"
+    }
+  ],
+  "editor:open-link-in-new-leaf": []
 }
