@@ -260,6 +260,7 @@ body {
   --icon-color-active: var(--sqrl-gray060);
   --icon-color-focus: var(--sqrl-gray060);
   --icon-opacity: 1;
+  --icon-opacity-hover: 1;
 
   --collapse-icon-color: var(--icon-color);
   --collapse-icon-color-collapsed: var(--icon-color);
@@ -323,6 +324,18 @@ button.mod-cta {
 }
 button.mod-cta:hover {
     background-color: var(--sqrl-gray090);
+}
+
+/* Clickable icons */
+
+/* Make the active state more visible */
+.input-right-decorator.clickable-icon {
+    padding: 0 2px;
+    border: 1px solid transparent;
+}
+.input-right-decorator.clickable-icon.is-active {
+    background-color: var(--sqrl-gray150);
+    border-color: var(--sqrl-gray140);
 }
 
 /* Inputs */
@@ -435,12 +448,19 @@ input[type='range']:focus-visible::-webkit-slider-thumb {
 .metadata-container {
     box-shadow: var(--card-shadow);
 }
+.is-phone .metadata-container {
+    margin-inline: -1rem;
+    border-radius: 0;
+}
 .metadata-properties-heading {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 0;
     cursor: var(--cursor);
+}
+.is-phone .metadata-properties-heading {
+    padding: .5rem 1rem;
 }
 .metadata-properties-title {
     text-transform: uppercase;
@@ -462,6 +482,17 @@ input[type='range']:focus-visible::-webkit-slider-thumb {
 }
 input.metadata-property-key-input, input.metadata-property-key-input:focus-visible, input.metadata-input, input.metadata-input:focus-visible {
     box-shadow: none;
+}
+.markdown-source-view .metadata-container, .markdown-preview-view .metadata-container {
+    transform: none;
+}
+
+.metadata-property[data-property-key="tags"] .multi-select-pill {
+    /* Pills for keywords */
+    --pill-background: var(--sqrl-gray160);
+    --pill-color: var(--sqrl-gray080);
+    --pill-background-hover: var(--sqrl-gray150);
+    --pill-color-hover: var(--sqrl-gray080);
 }
 
 /* Prompt modals (quick switcher, command palette) */
@@ -547,6 +578,10 @@ input.prompt-input, input.prompt-input:hover, input.prompt-input:focus, input.pr
 .markdown-source-view.mod-cm6 .cm-line:has(.cm-formatting-hashtag) {
     /* A bit of extra space under tags */
     padding-block-end: .5rem;
+}
+.markdown-source-view.mod-cm6 .cm-line:has(.cm-formatting-hashtag):hover .cm-hashtag {
+    /* Change background on hover */
+    background-color: var(--sqrl-gray150);
 }
 
 /* Tables */
