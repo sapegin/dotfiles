@@ -525,8 +525,8 @@ function processPostTimeStats(postTimeStats, minDate, maxDate) {
 		const hours = Math.floor(time / 60);
 		const minutes = time % 60;
 		let timeDecimal = hours + minutes / 60;
-		// Adjust times before 3:30am to next day (24+ hours)
-		if (timeDecimal < 3.5) {
+		// Adjust times before 4am to next day (24+ hours)
+		if (timeDecimal < 4) {
 			timeDecimal += 24;
 		}
 		timePoints.push({ x: monthLabel, y: timeDecimal });
@@ -652,7 +652,10 @@ function generateWeatherChart(data) {
 			scales: {
 				x: {
 					stacked: true,
-					type: 'category'
+					type: 'category',
+					grid: {
+						drawOnChartArea: false
+					}
 				},
 				y: {
 					type: 'linear',
@@ -744,26 +747,34 @@ function generatePostTimeChart(data) {
 					type: 'category',
 					title: {
 						display: false
+					},
+					grid: {
+						drawOnChartArea: false
 					}
 				},
 				y: {
 					type: 'linear',
 					display: true,
 					position: 'right',
-					min: 3.5,
-					max: 27.5,
+					min: 4,
+					max: 28,
 					reverse: true,
 					title: {
 						display: false,
 						text: 'Time (hours)'
 					},
 					ticks: {
+            stepSize: 1,
+						autoSkip: false,
 						callback: function(value) {
-							// TODO: This is the same as above, we should extract it
-							const adjustedValue = value >= 24 ? value - 24 : value;
-							const hours = Math.floor(adjustedValue);
-							const minutes = Math.round((adjustedValue - hours) * 60);
-							return hours + ':' + String(minutes).padStart(2, '0');
+            console.log(value)
+              if (value % 3 === 0) {
+                if (value > 24) {
+                  return (value - 24) + ':00';
+                }
+                return value + ':00';
+              }
+							return '';
 						}
 					}
 				}
@@ -819,7 +830,10 @@ function generateLocationChart(data) {
 			scales: {
 				x: {
 					type: 'category',
-					stacked: true
+					stacked: true,
+					grid: {
+						drawOnChartArea: false
+					}
 				},
 				y: {
 					type: 'linear',
