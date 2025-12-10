@@ -1,0 +1,228 @@
+#!/usr/bin/env node
+
+// Generates Obsidian vault statistics:
+// * Overall daily note heatmap
+//
+// ---
+// Author: Artem Sapegin, sapegin.me
+// License: MIT
+// https://github.com/sapegin/dotfiles
+
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import os from 'node:os';
+
+const VAULT_DIR = path.join(os.homedir(), 'murder');
+const LOG_DIR = path.join(VAULT_DIR, '📆 Log');
+const OUTPUT_FILE = path.join(os.homedir(), 'Documents/MurderStats.html');
+
+const MONTH_NAMES = [
+	'Jan',
+	'Feb',
+	'Mar',
+	'Apr',
+	'May',
+	'Jun',
+	'Jul',
+	'Aug',
+	'Sep',
+	'Oct',
+	'Nov',
+	'Dec',
+];
+
+async function getDailyNotes() {
+	const files = await Array.fromAsync(fs.glob(path.join(LOG_DIR, '**/*.md')));
+
+	const notes = new Map();
+	let minDate = new Date();
+	let maxDate = new Date(0);
+
+	for (const file of files) {
+		const basename = path.basename(file);
+		const match = basename.match(/^(\d{4}-\d{2}-\d{2})_\d{4}\.md$/);
+		if (match) {
+			const dateStr = match[1];
+			const count = notes.get(dateStr) ?? 0;
+			notes.set(dateStr, count + 1);
+
+			const date = new Date(dateStr);
+			if (date < minDate) {
+				minDate = date;
+			}
+			if (date > maxDate) {
+				maxDate = date;
+			}
+		}
+	}
+
+	return { notes, minDate, maxDate };
+}
+
+function getLevel(count, maxCount) {
+	if (count === 0) {
+		return 0;
+	}
+	if (maxCount === 0) {
+		return 0;
+	}
+	const percentage = count / maxCount;
+	if (percentage <= 0.25) {
+		return 1;
+	}
+	if (percentage <= 0.5) {
+		return 2;
+	}
+	if (percentage <= 0.75) {
+		return 3;
+	}
+	return 4;
+}
+
+function formatDate(date) {
+	return date.toISOString().split('T')[0];
+}
+
+const dateFormatter = new Intl.DateTimeFormat('en-US', {
+	year: 'numeric',
+	month: 'short',
+	day: 'numeric',
+});
+
+function formatDateLong(date) {
+	return dateFormatter.format(date);
+}
+
+function generateHeatmap(notes, year, maxCount) {
+	const startDate = new Date(year, 0, 1);
+	const firstDayOfWeek = startDate.getDay();
+
+	const endDate = new Date(year, 11, 31);
+	endDate.setDate(endDate.getDate() + (6 - endDate.getDay()));
+
+	const totalDays = (endDate - startDate) / (1000 * 60 * 60 * 24) + 1;
+	const totalWeeks = Math.ceil((totalDays + firstDayOfWeek) / 7);
+
+	let html = '<table class="heatmap">\n';
+
+	html += '<thead><tr><th></th>';
+	let currentMonth = -1;
+	let monthSpan = 0;
+	const monthCells = [];
+	for (let w = 0; w < totalWeeks; w++) {
+		const weekDate = new Date(startDate);
+		weekDate.setDate(weekDate.getDate() + w * 7 - firstDayOfWeek);
+		const month = weekDate.getMonth();
+		const weekYear = weekDate.getFullYear();
+		if (weekYear === year && month !== currentMonth) {
+			if (currentMonth !== -1) {
+				monthCells.push({ month: currentMonth, span: monthSpan });
+			}
+			currentMonth = month;
+			monthSpan = 1;
+		} else if (weekYear === year) {
+			monthSpan++;
+		}
+	}
+	if (currentMonth !== -1) {
+		monthCells.push({ month: currentMonth, span: monthSpan });
+	}
+	for (const { month, span } of monthCells) {
+		html += `<th colspan="${span}">${MONTH_NAMES[month]}</th>`;
+	}
+	html += '</tr></thead>\n';
+
+	html += '<tbody>\n';
+
+	for (let d = 0; d < 7; d++) {
+		html += '<tr>';
+		const label = d === 1 ? 'Mon' : d === 3 ? 'Wed' : d === 5 ? 'Fri' : '';
+		html += `<td class="day-label">${label}</td>`;
+
+		for (let w = 0; w < totalWeeks; w++) {
+			const date = new Date(startDate);
+			date.setDate(date.getDate() + w * 7 + d - firstDayOfWeek);
+			const dateStr = formatDate(date);
+			const dateYear = date.getFullYear();
+
+			if (dateYear !== year) {
+				html += '<td></td>';
+			} else {
+				const count = notes.get(dateStr) || 0;
+				const level = getLevel(count, maxCount);
+				html += `<td class="level-${level}" title="${count} notes on ${formatDateLong(date)}"></td>`;
+			}
+		}
+		html += '</tr>\n';
+	}
+
+	html += '</tbody></table>';
+	return html;
+}
+
+async function main() {
+	console.log('Scanning daily notes...');
+	const { notes, minDate, maxDate } = await getDailyNotes();
+	console.log(`Found ${notes.size} days with notes.`);
+	console.log(`Range: ${formatDate(minDate)} to ${formatDate(maxDate)}`);
+
+	let maxCount = 0;
+	for (const count of notes.values()) {
+		if (count > maxCount) maxCount = count;
+	}
+
+	const minYear = minDate.getFullYear();
+	const maxYear = maxDate.getFullYear();
+
+	const heatmaps = [];
+	for (let year = maxYear; year >= minYear; year--) {
+		let yearCount = 0;
+		for (const [dateStr, count] of notes) {
+			if (dateStr.startsWith(`${year}-`)) {
+				yearCount += count;
+			}
+		}
+		heatmaps.push(
+			`<h2>${year} <span class="count">(${yearCount} notes)</span></h2>\n${generateHeatmap(notes, year, maxCount)}`
+		);
+	}
+
+	let totalNotes = 0;
+	for (const count of notes.values()) {
+		totalNotes += count;
+	}
+
+	const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Murder of crows vault stats</title>
+<style>
+	body { font-family: -apple-system, sans-serif; padding: 1rem; color: #4c4b4e; background-color: #fff; }
+	h1 { margin-top: 0; margin-bottom: .5rem; }
+	.summary { font-size: 1rem; color: #8c8792; margin-bottom: 1rem; }
+	h2 { margin-top: 2rem; margin-bottom: .5rem; }
+	.count { font-size: 1rem; font-weight: normal; color: #8c8792; }
+	.heatmap { border-collapse: separate; border-spacing: 3px; }
+	.heatmap th { font-size: .7rem; color: #8c8792; font-weight: normal; text-align: left; width: 12px; }
+	.heatmap td { width: .75rem; height: .75rem; border-radius: 2px; }
+	.heatmap .day-label {  font-size: .7rem; color: #8c8792;  vertical-align: middle; text-align: right; padding-right: .2rem; }
+	.level-0 { background-color: #e8e5eb; }
+	.level-1 { background-color: #d5beed; }
+	.level-2 { background-color: #ae95c7; }
+	.level-3 { background-color: #9a7eb4; }
+	.level-4 { background-color: #644e88; }
+</style>
+</head>
+<body>
+	<h1>Murder of crows vault stats</h1>
+	<p class="summary">${totalNotes} notes from ${formatDateLong(minDate)} to ${formatDateLong(maxDate)}</p>
+	${heatmaps.join('\n')}
+</body>
+</html>`;
+
+	await fs.writeFile(OUTPUT_FILE, html);
+	console.log(`Stats generated at: ${OUTPUT_FILE}`);
+}
+
+main().catch(console.error);
