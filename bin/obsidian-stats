@@ -23,7 +23,7 @@ const COLORS = {
 	brightPink: '#ca5a83',
 };
 
-const COLOR_SCALE = ['#e8e5eb', '#d5beed', '#ae95c7', '#9a7eb4', '#644e88'];
+const COLOR_SCALE = ['#f3e9fb', '#d5beed', '#ae95c7', '#9a7eb4', '#644e88'];
 
 const MONTH_NAMES = [
 	'Jan',
@@ -440,7 +440,7 @@ function generateWeatherChart(data) {
 					order: 2
 				},
 				{
-					label: 'Temperature (°C)',
+					label: 'Temperature)',
 					data: ${JSON.stringify(data.tempPoints)},
 					type: 'scatter',
 					borderColor: 'transparent',
@@ -457,9 +457,6 @@ function generateWeatherChart(data) {
 			responsive: true,
 			maintainAspectRatio: false,
 			plugins: {
-				legend: {
-					reverse: true
-				},
 				tooltip: {
 					enabled: false
 				}
@@ -719,11 +716,11 @@ async function main() {
 	.heatmap th { font-size: .7rem; color: #8c8792; font-weight: normal; text-align: left; width: 12px; }
 	.heatmap td { width: .75rem; height: .75rem; border-radius: 2px; }
 	.heatmap .day-label {  font-size: .7rem; color: #8c8792;  vertical-align: middle; text-align: right; padding-right: .2rem; }
-	.level-0 { background-color: #e8e5eb; }
-	.level-1 { background-color: #d5beed; }
-	.level-2 { background-color: #ae95c7; }
-	.level-3 { background-color: #9a7eb4; }
-	.level-4 { background-color: #644e88; }
+	.level-0 { background-color: ${COLOR_SCALE[0]}; }
+	.level-1 { background-color: ${COLOR_SCALE[1]}; }
+	.level-2 { background-color: ${COLOR_SCALE[2]}; }
+	.level-3 { background-color: ${COLOR_SCALE[3]}; }
+	.level-4 { background-color: ${COLOR_SCALE[4]}; }
 </style>
 </head>
 <body>
