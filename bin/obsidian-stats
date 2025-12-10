@@ -43,14 +43,18 @@ async function getDailyNotes() {
 
 	const notes = new Map();
 	const weatherStats = [];
+	const postTimeStats = [];
 	let minDate = new Date();
 	let maxDate = new Date(0);
 
 	for (const file of files) {
 		const basename = path.basename(file);
-		const match = basename.match(/^(\d{4}-\d{2}-\d{2})_\d{4}\.md$/);
+		const match = basename.match(/^(\d{4}-\d{2}-\d{2})_(\d{2})(\d{2})\.md$/);
 		if (match) {
 			const dateStr = match[1];
+			const hours = parseInt(match[2], 10);
+			const minutes = parseInt(match[3], 10);
+			const timeInMinutes = hours * 60 + minutes;
 			const count = notes.get(dateStr) ?? 0;
 			notes.set(dateStr, count + 1);
 
@@ -61,6 +65,8 @@ async function getDailyNotes() {
 			if (date > maxDate) {
 				maxDate = date;
 			}
+
+			postTimeStats.push({ date: dateStr, time: timeInMinutes });
 
 			// Read content for weather
 			const content = await fs.readFile(file, 'utf-8');
@@ -75,7 +81,7 @@ async function getDailyNotes() {
 		}
 	}
 
-	return { notes, weatherStats, minDate, maxDate };
+	return { notes, weatherStats, postTimeStats, minDate, maxDate };
 }
 
 function getLevel(count, maxCount) {
@@ -259,6 +265,48 @@ function processWeatherStats(weatherStats, minDate, maxDate) {
 
 	return { labels, tempPoints, sunny, partly, cloudy, minTemp };
 }
+
+function processPostTimeStats(postTimeStats, minDate, maxDate) {
+	const allMonths = [];
+	let current = new Date(minDate.getFullYear(), minDate.getMonth(), 1);
+	const end = new Date(maxDate.getFullYear(), maxDate.getMonth(), 1);
+
+	while (current <= end) {
+		const monthKey = `${current.getFullYear()}-${String(current.getMonth() + 1).padStart(2, '0')}`;
+		allMonths.push(monthKey);
+		current.setMonth(current.getMonth() + 1);
+	}
+
+	const labels = [];
+	for (const month of allMonths) {
+		const date = new Date(`${month}-02`);
+		labels.push(
+			date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+		);
+	}
+
+	const timePoints = [];
+
+	for (const { date, time } of postTimeStats) {
+		const month = date.substring(0, 7);
+		const monthDate = new Date(`${month}-02`);
+		const monthLabel = monthDate.toLocaleDateString('en-US', {
+			month: 'short',
+			year: 'numeric',
+		});
+		const hours = Math.floor(time / 60);
+		const minutes = time % 60;
+		let timeDecimal = hours + minutes / 60;
+		// Adjust times before 3:30am to next day (24+ hours)
+		if (timeDecimal < 3.5) {
+			timeDecimal += 24;
+		}
+		timePoints.push({ x: monthLabel, y: timeDecimal });
+	}
+
+	return { labels, timePoints };
+}
+
 function generateWeatherChart(data) {
 	const minTemp = Math.floor(data.minTemp);
 	return `
@@ -357,9 +405,90 @@ function generateWeatherChart(data) {
 </script>`;
 }
 
+function generatePostTimeChart(data) {
+	return `
+<div style="position: relative; height: 400px; width: 100%; margin-bottom: 2rem;">
+	<canvas id="postTimeChart"></canvas>
+</div>
+<script>
+	const ctxTime = document.getElementById('postTimeChart');
+	new Chart(ctxTime, {
+		type: 'scatter',
+		data: {
+			labels: ${JSON.stringify(data.labels)},
+			datasets: [
+				{
+					label: 'Post time',
+					data: ${JSON.stringify(data.timePoints)},
+					type: 'scatter',
+					borderColor: 'transparent',
+					backgroundColor: '${COLORS.brightPink}',
+					pointBackgroundColor: '${COLORS.brightPink}',
+					pointBorderColor: '${COLORS.brightPink}',
+					pointRadius: 2
+				}
+			]
+		},
+		options: {
+			responsive: true,
+			maintainAspectRatio: false,
+			plugins: {
+				legend: {
+					display: false
+				},
+				tooltip: {
+					enabled: true,
+					callbacks: {
+						title: function(context) {
+							return context[0].label;
+						},
+						label: function(context) {
+							const value = context.parsed.y;
+							const adjustedValue = value >= 24 ? value - 24 : value;
+							const hours = Math.floor(adjustedValue);
+							const minutes = Math.round((adjustedValue - hours) * 60);
+							return hours + ':' + String(minutes).padStart(2, '0');
+						}
+					}
+				}
+			},
+			scales: {
+				x: {
+					type: 'category',
+					title: {
+						display: false
+					}
+				},
+				y: {
+					type: 'linear',
+					display: true,
+					position: 'left',
+					min: 3.5,
+					max: 27.5,
+					reverse: true,
+					title: {
+						display: true,
+						text: 'Time (hours)'
+					},
+					ticks: {
+						callback: function(value) {
+							const adjustedValue = value >= 24 ? value - 24 : value;
+							const hours = Math.floor(adjustedValue);
+							const minutes = Math.round((adjustedValue - hours) * 60);
+							return hours + ':' + String(minutes).padStart(2, '0');
+						}
+					}
+				}
+			}
+		}
+	});
+</script>`;
+}
+
 async function main() {
 	console.log('Scanning daily notes...');
-	const { notes, weatherStats, minDate, maxDate } = await getDailyNotes();
+	const { notes, weatherStats, postTimeStats, minDate, maxDate } =
+		await getDailyNotes();
 	console.log(`Found ${notes.size} days with notes.`);
 	console.log(`Range: ${formatDate(minDate)} to ${formatDate(maxDate)}`);
 
@@ -392,6 +521,9 @@ async function main() {
 	const weatherData = processWeatherStats(weatherStats, minDate, maxDate);
 	const weatherChart = generateWeatherChart(weatherData);
 
+	const postTimeData = processPostTimeStats(postTimeStats, minDate, maxDate);
+	const postTimeChart = generatePostTimeChart(postTimeData);
+
 	const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -419,6 +551,9 @@ async function main() {
 	<p class="summary">${totalNotes} notes from ${formatDateLong(minDate)} to ${formatDateLong(maxDate)}</p>
 	<h2>Weather over the years</h2>
   ${weatherChart}
+
+  <h2>Journaling times over the years</h2>
+  ${postTimeChart}
 
   <h2>Notes over the years</h2>
 	${heatmaps.join('\n')}
