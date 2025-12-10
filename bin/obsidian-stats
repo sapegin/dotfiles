@@ -12,6 +12,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import os from 'node:os';
+import YAML from 'yaml';
 
 const VAULT_DIR = path.join(os.homedir(), 'murder');
 const LOG_DIR = path.join(VAULT_DIR, '📆 Log');
@@ -47,6 +48,7 @@ async function getDailyNotes() {
 	const weatherStats = [];
 	const postTimeStats = [];
 	const locationStats = [];
+	const notesWithCoords = [];
 	let minDate = new Date();
 	let maxDate = new Date(0);
 
@@ -71,7 +73,7 @@ async function getDailyNotes() {
 
 			postTimeStats.push({ date: dateStr, time: timeInMinutes });
 
-			// Read content for weather and location
+			// Read content for weather, location, and coordinates
 			const content = await fs.readFile(file, 'utf-8');
 			const weatherMatch = content.match(/^weather: (-?\d+)°C(?:, (.+))?$/m);
 			if (weatherMatch) {
@@ -110,6 +112,30 @@ async function getDailyNotes() {
 					locationStats.push({ date: dateStr, locationType });
 				}
 			}
+
+			// Extract coordinates from frontmatter
+			const frontmatterMatch = content.match(/^---\n([\s\S]*?)\n---/);
+			if (frontmatterMatch) {
+				try {
+					const frontmatter = YAML.parse(frontmatterMatch[1]);
+					if (frontmatter?.coordinates) {
+						const [lat, lon] = frontmatter.coordinates
+							.split(',')
+							.map((c) => parseFloat(c.trim()));
+
+						if (!isNaN(lat) && !isNaN(lon)) {
+							notesWithCoords.push({
+								lat,
+								lon,
+								title: basename.replace('.md', ''),
+								file,
+							});
+						}
+					}
+				} catch (error) {
+					// Skip frontmatter parsing errors
+				}
+			}
 		}
 	}
 
@@ -118,6 +144,7 @@ async function getDailyNotes() {
 		weatherStats,
 		postTimeStats,
 		locationStats,
+		notesWithCoords,
 		minDate,
 		maxDate,
 	};
@@ -653,6 +680,45 @@ function generateLocationChart(data) {
 </script>`;
 }
 
+function generateLocationMap(notes) {
+	return `
+<div id="map" style="height: 600px; width: 100%; margin-bottom: 2rem;"></div>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+<script>
+	const mapData = ${JSON.stringify(notes)};
+	const map = L.map('map').setView([${notes.length > 0 ? `${notes[0].lat}, ${notes[0].lon}` : '0, 0'}], ${notes.length > 0 ? '10' : '2'});
+
+	L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		attribution: '© Opnstrtmp',
+		maxZoom: 19
+	}).addTo(map);
+
+	const markers = L.markerClusterGroup({
+		maxClusterRadius: 50,
+		spiderfyOnMaxZoom: true,
+		showCoverageOnHover: false,
+		zoomToBoundsOnClick: true
+	});
+
+	for (const note of mapData) {
+		const marker = L.marker([note.lat, note.lon]);
+		marker.bindPopup(\`<strong>\${note.title}</strong>\`);
+		markers.addLayer(marker);
+	}
+
+	map.addLayer(markers);
+
+	if (mapData.length > 1) {
+		const bounds = L.latLngBounds(mapData.map(n => [n.lat, n.lon]));
+		map.fitBounds(bounds, { padding: [50, 50] });
+	}
+</script>`;
+}
+
 async function main() {
 	console.log('Scanning daily notes...');
 	const {
@@ -660,10 +726,12 @@ async function main() {
 		weatherStats,
 		postTimeStats,
 		locationStats,
+		notesWithCoords,
 		minDate,
 		maxDate,
 	} = await getDailyNotes();
 	console.log(`Found ${notes.size} days with notes.`);
+	console.log(`Found ${notesWithCoords.length} notes with coordinates`);
 	console.log(`Range: ${formatDate(minDate)} to ${formatDate(maxDate)}`);
 
 	let maxCount = 0;
@@ -701,6 +769,8 @@ async function main() {
 	const locationData = processLocationStats(locationStats, minDate, maxDate);
 	const locationChart = generateLocationChart(locationData);
 
+	const locationMap = generateLocationMap(notesWithCoords);
+
 	const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -721,11 +791,13 @@ async function main() {
 	.level-2 { background-color: ${COLOR_SCALE[2]}; }
 	.level-3 { background-color: ${COLOR_SCALE[3]}; }
 	.level-4 { background-color: ${COLOR_SCALE[4]}; }
+	#map { border-radius: 4px; border: 1px solid #e0e0e0; }
 </style>
 </head>
 <body>
 	<h1>Murder of crows vault stats</h1>
 	<p class="summary">${totalNotes} notes from ${formatDateLong(minDate)} to ${formatDateLong(maxDate)}</p>
+
 	<h2>Weather conditions and temperature</h2>
   ${weatherChart}
 
@@ -734,6 +806,9 @@ async function main() {
 
   <h2>Locations</h2>
   ${locationChart}
+
+	<h2>Map of all notes</h2>
+	${locationMap}
 
   <h2>Notes over the years</h2>
 	${heatmaps.join('\n')}
