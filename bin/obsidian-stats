@@ -23,6 +23,8 @@ const COLORS = {
 	brightPink: '#ca5a83',
 };
 
+const COLOR_SCALE = ['#e8e5eb', '#d5beed', '#ae95c7', '#9a7eb4', '#644e88'];
+
 const MONTH_NAMES = [
 	'Jan',
 	'Feb',
@@ -44,6 +46,7 @@ async function getDailyNotes() {
 	const notes = new Map();
 	const weatherStats = [];
 	const postTimeStats = [];
+	const locationStats = [];
 	let minDate = new Date();
 	let maxDate = new Date(0);
 
@@ -68,7 +71,7 @@ async function getDailyNotes() {
 
 			postTimeStats.push({ date: dateStr, time: timeInMinutes });
 
-			// Read content for weather
+			// Read content for weather and location
 			const content = await fs.readFile(file, 'utf-8');
 			const weatherMatch = content.match(/^weather: (-?\d+)°C(?:, (.+))?$/m);
 			if (weatherMatch) {
@@ -78,10 +81,46 @@ async function getDailyNotes() {
 					: 'unknown';
 				weatherStats.push({ date: dateStr, temp, condition });
 			}
+
+			const locationMatch = content.match(/^location: (.+)$/m);
+			if (locationMatch) {
+				const location = locationMatch[1].trim();
+				const wikiLinkMatch = location.match(/\[\[([^\]]+)\]\]/);
+				if (wikiLinkMatch) {
+					const locationName = wikiLinkMatch[1];
+					const locationFilePath = path.join(
+						VAULT_DIR,
+						'🗂️ References/Places',
+						`${locationName}.md`
+					);
+					let locationType = 'other';
+					try {
+						const locationContent = await fs.readFile(
+							locationFilePath,
+							'utf-8'
+						);
+						if (locationContent.includes('dwellings')) {
+							locationType = 'home';
+						} else if (locationContent.includes('offices')) {
+							locationType = 'office';
+						}
+					} catch (err) {
+						// Location file not found, keep `other`
+					}
+					locationStats.push({ date: dateStr, locationType });
+				}
+			}
 		}
 	}
 
-	return { notes, weatherStats, postTimeStats, minDate, maxDate };
+	return {
+		notes,
+		weatherStats,
+		postTimeStats,
+		locationStats,
+		minDate,
+		maxDate,
+	};
 }
 
 function getLevel(count, maxCount) {
@@ -307,6 +346,61 @@ function processPostTimeStats(postTimeStats, minDate, maxDate) {
 	return { labels, timePoints };
 }
 
+function processLocationStats(locationStats, minDate, maxDate) {
+	const months = new Map();
+
+	for (const { date, locationType } of locationStats) {
+		const month = date.substring(0, 7);
+		if (!months.has(month)) {
+			months.set(month, { home: 0, office: 0, other: 0, total: 0 });
+		}
+		const stats = months.get(month);
+		stats.total++;
+		if (locationType === 'home') {
+			stats.home++;
+		} else if (locationType === 'office') {
+			stats.office++;
+		} else {
+			stats.other++;
+		}
+	}
+
+	const allMonths = [];
+	let current = new Date(minDate.getFullYear(), minDate.getMonth(), 1);
+	const end = new Date(maxDate.getFullYear(), maxDate.getMonth(), 1);
+
+	while (current <= end) {
+		const monthKey = `${current.getFullYear()}-${String(current.getMonth() + 1).padStart(2, '0')}`;
+		allMonths.push(monthKey);
+		current.setMonth(current.getMonth() + 1);
+	}
+
+	const labels = [];
+	const homePercentages = [];
+	const officePercentages = [];
+	const otherPercentages = [];
+
+	for (const month of allMonths) {
+		const stats = months.get(month);
+		const date = new Date(`${month}-02`);
+		labels.push(
+			date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+		);
+
+		if (stats && stats.total > 0) {
+			homePercentages.push(((stats.home / stats.total) * 100).toFixed(1));
+			officePercentages.push(((stats.office / stats.total) * 100).toFixed(1));
+			otherPercentages.push(((stats.other / stats.total) * 100).toFixed(1));
+		} else {
+			homePercentages.push(0);
+			officePercentages.push(0);
+			otherPercentages.push(0);
+		}
+	}
+
+	return { labels, homePercentages, officePercentages, otherPercentages };
+}
+
 function generateWeatherChart(data) {
 	const minTemp = Math.floor(data.minTemp);
 	return `
@@ -324,7 +418,7 @@ function generateWeatherChart(data) {
 				{
 					label: 'Sunny',
 					data: ${JSON.stringify(data.sunny)},
-					backgroundColor: '#e4c158',
+					backgroundColor: '${COLOR_SCALE[4]}',
 					stack: 'Stack 0',
 					yAxisID: 'y',
 					order: 2
@@ -332,7 +426,7 @@ function generateWeatherChart(data) {
 				{
 					label: 'Partly cloudy',
 					data: ${JSON.stringify(data.partly)},
-					backgroundColor: '#f3e2d3',
+					backgroundColor: '${COLOR_SCALE[2]}',
 					stack: 'Stack 0',
 					yAxisID: 'y',
 					order: 2
@@ -340,7 +434,7 @@ function generateWeatherChart(data) {
 				{
 					label: 'Cloudy',
 					data: ${JSON.stringify(data.cloudy)},
-					backgroundColor: '#9c96a2',
+					backgroundColor: '${COLOR_SCALE[0]}',
 					stack: 'Stack 0',
 					yAxisID: 'y',
 					order: 2
@@ -381,10 +475,13 @@ function generateWeatherChart(data) {
 					position: 'left',
 					stacked: true,
 					max: 100,
+					ticks: {
+						display: false
+					},
 					title: {
 						display: false,
-						text: 'Weather (%)'
-					}
+						text: 'Conditions'
+					},
 				},
 				y1: {
 					type: 'linear',
@@ -395,8 +492,13 @@ function generateWeatherChart(data) {
 						drawOnChartArea: false,
 					},
 					title: {
-						display: true,
-						text: 'Temperature (°C)'
+						display: false,
+						text: 'Temperature'
+					},
+          ticks: {
+						callback: function(value) {
+							return String(value).replace('-', '−') + '°C';
+						}
 					}
 				},
 			}
@@ -462,16 +564,17 @@ function generatePostTimeChart(data) {
 				y: {
 					type: 'linear',
 					display: true,
-					position: 'left',
+					position: 'right',
 					min: 3.5,
 					max: 27.5,
 					reverse: true,
 					title: {
-						display: true,
+						display: false,
 						text: 'Time (hours)'
 					},
 					ticks: {
 						callback: function(value) {
+              // TODO: This is the same as above, we should extract it
 							const adjustedValue = value >= 24 ? value - 24 : value;
 							const hours = Math.floor(adjustedValue);
 							const minutes = Math.round((adjustedValue - hours) * 60);
@@ -485,10 +588,84 @@ function generatePostTimeChart(data) {
 </script>`;
 }
 
+function generateLocationChart(data) {
+	return `
+<div style="position: relative; height: 400px; width: 100%; margin-bottom: 2rem;">
+	<canvas id="locationChart"></canvas>
+</div>
+<script>
+	const ctxLocation = document.getElementById('locationChart');
+	new Chart(ctxLocation, {
+		type: 'bar',
+		data: {
+			labels: ${JSON.stringify(data.labels)},
+			datasets: [
+				{
+					label: 'Home',
+					data: ${JSON.stringify(data.homePercentages)},
+					backgroundColor: '${COLOR_SCALE[4]}',
+					stack: 'Stack 0'
+				},
+				{
+					label: 'Office',
+					data: ${JSON.stringify(data.officePercentages)},
+					backgroundColor: '${COLOR_SCALE[2]}',
+					stack: 'Stack 0'
+				},
+				{
+					label: 'Other',
+					data: ${JSON.stringify(data.otherPercentages)},
+					backgroundColor: '${COLOR_SCALE[0]}',
+					stack: 'Stack 0'
+				}
+			]
+		},
+		options: {
+			responsive: true,
+			maintainAspectRatio: false,
+			plugins: {
+				legend: {
+					display: true
+				},
+				tooltip: {
+					enabled: false
+				}
+			},
+			scales: {
+				x: {
+					type: 'category',
+					stacked: true
+				},
+				y: {
+					type: 'linear',
+					display: true,
+					position: 'left',
+					stacked: true,
+					min: 0,
+					max: 100,
+					ticks: {
+						display: false
+					},
+					title: {
+						display: false
+					}
+				}
+			}
+		}
+	});
+</script>`;
+}
+
 async function main() {
 	console.log('Scanning daily notes...');
-	const { notes, weatherStats, postTimeStats, minDate, maxDate } =
-		await getDailyNotes();
+	const {
+		notes,
+		weatherStats,
+		postTimeStats,
+		locationStats,
+		minDate,
+		maxDate,
+	} = await getDailyNotes();
 	console.log(`Found ${notes.size} days with notes.`);
 	console.log(`Range: ${formatDate(minDate)} to ${formatDate(maxDate)}`);
 
@@ -524,6 +701,9 @@ async function main() {
 	const postTimeData = processPostTimeStats(postTimeStats, minDate, maxDate);
 	const postTimeChart = generatePostTimeChart(postTimeData);
 
+	const locationData = processLocationStats(locationStats, minDate, maxDate);
+	const locationChart = generateLocationChart(locationData);
+
 	const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -549,11 +729,14 @@ async function main() {
 <body>
 	<h1>Murder of crows vault stats</h1>
 	<p class="summary">${totalNotes} notes from ${formatDateLong(minDate)} to ${formatDateLong(maxDate)}</p>
-	<h2>Weather over the years</h2>
+	<h2>Weather conditions and temperature</h2>
   ${weatherChart}
 
-  <h2>Journaling times over the years</h2>
+	<h2>Times of day</h2>
   ${postTimeChart}
+
+  <h2>Locations</h2>
+  ${locationChart}
 
   <h2>Notes over the years</h2>
 	${heatmaps.join('\n')}
