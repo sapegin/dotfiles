@@ -144,15 +144,14 @@ async function getDailyNotes() {
 					let placeInfo = null;
 					if (frontmatter?.location) {
 						const location = frontmatter.location;
+						// Extract location name from wiki link format [[Location]] or plain text
 						const wikiLinkMatch = location.match(/\[\[([^\]]+)\]\]/);
-						if (wikiLinkMatch) {
-							locationName = wikiLinkMatch[1];
-							placeInfo = await getPlaceInfo(locationName);
-							locationStats.push({
-								date: dateStr,
-								locationType: placeInfo.locationType,
-							});
-						}
+						locationName = wikiLinkMatch ? wikiLinkMatch[1] : location;
+						placeInfo = await getPlaceInfo(locationName);
+						locationStats.push({
+							date: dateStr,
+							locationType: placeInfo.locationType,
+						});
 					}
 
 					// Extract coordinates
@@ -518,7 +517,7 @@ function generateWeatherChart(data) {
 					order: 2
 				},
 				{
-					label: 'Temperature)',
+					label: 'Temperature',
 					data: ${JSON.stringify(data.tempPoints)},
 					type: 'scatter',
 					borderColor: 'transparent',
@@ -791,8 +790,7 @@ function generateLocationMap(notes) {
 
 	const map = L.map('map').setView([${notes.length > 0 ? `${notes[0].lat}, ${notes[0].lon}` : '0, 0'}], ${notes.length > 0 ? '10' : '2'});
 
-	L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-		attribution: '© OpenStreetMap',
+	L.tileLayer('http://services.arcgisonline.com/arcgis/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
 		maxZoom: 19
 	}).addTo(map);
 
@@ -833,7 +831,7 @@ function generateLocationMap(notes) {
 		}
 	}
 
-	// Add all notes as individual markers, but use location info for display
+	// Add all notes as individual markers with shared popup content per location
 	for (const note of allNotes) {
 		const key = \`\${note.lat},\${note.lon}\`;
 		const locInfo = locationInfo.get(key);
@@ -856,9 +854,12 @@ function generateLocationMap(notes) {
 		});
 
 		const marker = L.marker([note.lat, note.lon], { icon: customIcon });
+
+		// All markers at the same location share the same popup content
 		if (locInfo) {
 			marker.bindPopup(\`<strong>\${locInfo.placeName}</strong><br>\${locInfo.count} note\${locInfo.count !== 1 ? 's' : ''}\`);
 		}
+
 		markers.addLayer(marker);
 	}
 

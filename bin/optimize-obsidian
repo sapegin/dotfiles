@@ -238,7 +238,7 @@ async function getWeather(lat, lon, date) {
 			? `${temperature}°C, ${condition}`
 			: `${temperature}°C`;
 
-		console.log(` ↪ ${weather}`);
+		console.log(`  ↪ ${weather}`);
 
 		return weather;
 	} catch (error) {
@@ -585,6 +585,7 @@ async function updateNote({
 		// Set `excerpt` field
 		newFrontmatter.excerpt = getExcerpt(body);
 
+		// Update location field
 		if (location && location.startsWith('[[') === false) {
 			// Increase location counter
 			locations.set(location, (locations.get(location) ?? 0) + 1);
@@ -598,8 +599,8 @@ async function updateNote({
 			}
 		}
 
-		// If no coordinates from image, try to get them from linked location note
-		if (newFrontmatter.coordinates === undefined && location) {
+		// Get the coordinates from linked location note
+		if (location) {
 			// Extract location name from wiki link format [[Location]] or plain text
 			const locationName = location.startsWith('[[')
 				? location.slice(2, -2)
