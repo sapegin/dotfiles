@@ -20,6 +20,10 @@ const OUTPUT_FILE = path.join(os.homedir(), 'Documents/MurderStats.html');
 
 const COLORS = {
 	// Squirrelsong Light
+	gray060: '#4c4b4e',
+	gray100: '#8c8792',
+	gray160: '#e8e5eb',
+	gray180: '#fdfdfe',
 	// Squirrelsong Deep Purple Dark
 	brightPink: '#ca5a83',
 };
@@ -125,7 +129,9 @@ async function getDailyNotes() {
 			// Read content and parse frontmatter
 			const content = await fs.readFile(file, 'utf-8');
 			const frontmatterMatch = content.match(/^---\n([\s\S]*?)\n---/);
-			const body = frontmatterMatch ? content.slice(frontmatterMatch[0].length) : content;
+			const body = frontmatterMatch
+				? content.slice(frontmatterMatch[0].length)
+				: content;
 			const year = date.getFullYear();
 
 			// Extract tags from body
@@ -167,7 +173,9 @@ async function getDailyNotes() {
 
 					// Extract tags from frontmatter
 					if (frontmatter?.tags) {
-						const fmTags = Array.isArray(frontmatter.tags) ? frontmatter.tags : [frontmatter.tags];
+						const fmTags = Array.isArray(frontmatter.tags)
+							? frontmatter.tags
+							: [frontmatter.tags];
 						for (const tag of fmTags) {
 							if (tag && typeof tag === 'string') {
 								if (!tagStats.has(year)) {
@@ -179,32 +187,36 @@ async function getDailyNotes() {
 						}
 					}
 
-				// Extract wikilinks from all frontmatter fields (except location)
-				for (const [key, value] of Object.entries(frontmatter)) {
-					if (key === 'location') {
-						continue;
-					}
-					if (typeof value === 'string') {
-						const fmWikilinks = value.match(/\[\[([^\]]+)\]\]/g);
-						if (fmWikilinks) {
-							for (const link of fmWikilinks) {
-								let cleanLink = link.slice(2, -2);
-								// Strip alias part if present (e.g., "Note|alias" -> "Note")
-								const pipeIndex = cleanLink.indexOf('|');
-								if (pipeIndex !== -1) {
-									cleanLink = cleanLink.slice(0, pipeIndex);
+					// Extract wikilinks from all frontmatter fields (except location)
+					for (const [key, value] of Object.entries(frontmatter)) {
+						if (key === 'location') {
+							continue;
+						}
+						if (typeof value === 'string') {
+							const fmWikilinks = value.match(/\[\[([^\]]+)\]\]/g);
+							if (fmWikilinks) {
+								for (const link of fmWikilinks) {
+									let cleanLink = link.slice(2, -2);
+									// Strip alias part if present (e.g., "Note|alias" -> "Note")
+									const pipeIndex = cleanLink.indexOf('|');
+									if (pipeIndex !== -1) {
+										cleanLink = cleanLink.slice(0, pipeIndex);
+									}
+									// Capitalize first letter to normalize links
+									cleanLink =
+										cleanLink.charAt(0).toUpperCase() + cleanLink.slice(1);
+									if (!wikilinkStats.has(year)) {
+										wikilinkStats.set(year, new Map());
+									}
+									const yearWikilinks = wikilinkStats.get(year);
+									yearWikilinks.set(
+										cleanLink,
+										(yearWikilinks.get(cleanLink) || 0) + 1
+									);
 								}
-								// Capitalize first letter to normalize links
-								cleanLink = cleanLink.charAt(0).toUpperCase() + cleanLink.slice(1);
-								if (!wikilinkStats.has(year)) {
-									wikilinkStats.set(year, new Map());
-								}
-								const yearWikilinks = wikilinkStats.get(year);
-								yearWikilinks.set(cleanLink, (yearWikilinks.get(cleanLink) || 0) + 1);
 							}
 						}
-					}
-				}					// Extract weather
+					} // Extract weather
 					if (frontmatter?.weather) {
 						const weatherMatch =
 							frontmatter.weather.match(/(-?\d+)°C(?:, (.+))?/);
@@ -238,7 +250,10 @@ async function getDailyNotes() {
 							locationLinkStats.set(year, new Map());
 						}
 						const yearLocations = locationLinkStats.get(year);
-						yearLocations.set(cleanLocationName, (yearLocations.get(cleanLocationName) || 0) + 1);
+						yearLocations.set(
+							cleanLocationName,
+							(yearLocations.get(cleanLocationName) || 0) + 1
+						);
 
 						placeInfo = await getPlaceInfo(cleanLocationName);
 						locationStats.push({
@@ -826,41 +841,57 @@ function generateLocationChart(data) {
 </script>`;
 }
 
-function generateYearlyStatsSection(tagStatsMap, wikilinkStatsMap, locationStatsMap, minYear, maxYear) {
+function generateYearlyStatsSection(
+	tagStatsMap,
+	wikilinkStatsMap,
+	locationStatsMap,
+	minYear,
+	maxYear
+) {
 	let html = '';
 	for (let year = maxYear; year >= minYear; year--) {
 		const yearTags = tagStatsMap.get(year);
 		const yearWikilinks = wikilinkStatsMap.get(year);
 		const yearLocations = locationStatsMap.get(year);
 
-		if ((!yearTags || yearTags.size === 0) && (!yearWikilinks || yearWikilinks.size === 0) && (!yearLocations || yearLocations.size === 0)) {
+		if (
+			(!yearTags || yearTags.size === 0) &&
+			(!yearWikilinks || yearWikilinks.size === 0) &&
+			(!yearLocations || yearLocations.size === 0)
+		) {
 			continue;
 		}
 
 		const sortedTags = yearTags
 			? Array.from(yearTags.entries())
-				.filter(([, count]) => count > 1)
-				.sort((a, b) => b[1] - a[1])
-				.slice(0, 10)
+					.filter(([, count]) => count > 1)
+					.sort((a, b) => b[1] - a[1])
+					.slice(0, 10)
 			: [];
 
 		const sortedWikilinks = yearWikilinks
 			? Array.from(yearWikilinks.entries())
-				.filter(([, count]) => count > 1)
-				.sort((a, b) => b[1] - a[1])
-				.slice(0, 10)
+					.filter(([, count]) => count > 1)
+					.sort((a, b) => b[1] - a[1])
+					.slice(0, 10)
 			: [];
 
 		const sortedLocations = yearLocations
 			? Array.from(yearLocations.entries())
-				.filter(([, count]) => count > 1)
-				.sort((a, b) => b[1] - a[1])
-				.slice(0, 10)
+					.filter(([, count]) => count > 1)
+					.sort((a, b) => b[1] - a[1])
+					.slice(0, 10)
 			: [];
 
 		const totalTags = sortedTags.reduce((sum, [, count]) => sum + count, 0);
-		const totalWikilinks = sortedWikilinks.reduce((sum, [, count]) => sum + count, 0);
-		const totalLocations = sortedLocations.reduce((sum, [, count]) => sum + count, 0);
+		const totalWikilinks = sortedWikilinks.reduce(
+			(sum, [, count]) => sum + count,
+			0
+		);
+		const totalLocations = sortedLocations.reduce(
+			(sum, [, count]) => sum + count,
+			0
+		);
 
 		html += `<h3>${year} <span class="count">(${totalTags} tags, ${totalWikilinks} wikilinks, ${totalLocations} locations)</span></h3>\n`;
 		html += '<div class="stats-grid">\n';
@@ -980,7 +1011,22 @@ function generateLocationMap(notes) {
 		maxClusterRadius: 50,
 		spiderfyOnMaxZoom: true,
 		showCoverageOnHover: false,
-		zoomToBoundsOnClick: true
+		zoomToBoundsOnClick: true,
+		iconCreateFunction: function(cluster) {
+			const count = cluster.getChildCount();
+			let color;
+			if (count < 10) color = '#ae95c7';
+			else if (count < 25) color = '#9a7eb4';
+			else if (count < 50) color = '#8067ad';
+			else if (count < 100) color = '#6c5492';
+			else color = '#503f6e';
+
+			return L.divIcon({
+				html: '<div style="box-sizing: border-box; width: 43px; height: 43px; background-color: color-mix(in srgb, ' + color + ' 60%, transparent); padding: 4px; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"><div style="width: 35px; height: 35px; background-color: ' + color + '; display: flex; align-items: center; justify-content: center; color: #f3e9fb; font-weight: bold; border-radius: 50%;">' + count + '</div></div>',
+				className: '',
+				iconSize: [40, 40]
+			});
+		}
 	});
 
 	// Convert kebab-case to PascalCase for Lucide icon names
@@ -1109,7 +1155,13 @@ async function main() {
 
 	const locationMap = generateLocationMap(notesWithCoords);
 
-	const statsSection = generateYearlyStatsSection(tagStats, wikilinkStats, locationLinkStats, minYear, maxYear);
+	const statsSection = generateYearlyStatsSection(
+		tagStats,
+		wikilinkStats,
+		locationLinkStats,
+		minYear,
+		maxYear
+	);
 
 	const html = `<!DOCTYPE html>
 <html lang="en">
@@ -1118,29 +1170,28 @@ async function main() {
 <title>Murder of crows vault stats</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-	body { font-family: -apple-system, sans-serif; padding: 1rem; color: #4c4b4e; background-color: #fff; max-width: 1200px; margin: 0 auto; }
+	body { font-family: -apple-system, sans-serif; padding: 1rem 1.5rem; color: ${COLORS.gray060}; background-color: ${COLORS.gray180}; max-width: 1600px; margin: 0 auto; }
 	h1 { margin-top: 0; margin-bottom: .5rem; }
-	.summary { font-size: 1rem; color: #8c8792; margin-bottom: 1rem; }
+	.summary { font-size: 1rem; color: ${COLORS.gray100}; margin-bottom: 1rem; }
 	h2 { margin-top: 2rem; margin-bottom: .5rem; }
-	.count { font-size: 1rem; font-weight: normal; color: #8c8792; }
+	.count { font-size: 1rem; font-weight: normal; color: ${COLORS.gray100}; }
 	.heatmap { border-collapse: separate; border-spacing: 3px; }
-	.heatmap th { font-size: .7rem; color: #8c8792; font-weight: normal; text-align: left; width: 12px; }
+	.heatmap th { font-size: .7rem; color: ${COLORS.gray100}; font-weight: normal; text-align: left; width: 12px; }
 	.heatmap td { width: .75rem; height: .75rem; border-radius: 2px; }
-	.heatmap .day-label {  font-size: .7rem; color: #8c8792;  vertical-align: middle; text-align: right; padding-right: .2rem; }
+	.heatmap .day-label {  font-size: .7rem; color: ${COLORS.gray100};  vertical-align: middle; text-align: right; padding-right: .2rem; }
 	.level-0 { background-color: ${COLOR_SCALE[0]}; }
 	.level-1 { background-color: ${COLOR_SCALE[1]}; }
 	.level-2 { background-color: ${COLOR_SCALE[2]}; }
 	.level-3 { background-color: ${COLOR_SCALE[3]}; }
 	.level-4 { background-color: ${COLOR_SCALE[4]}; }
-	#map { border-radius: 4px; border: 1px solid #e0e0e0; }
+	#map { border-radius: 4px; border: 1px solid ${COLORS.gray160}; }
 	.stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2rem; margin-bottom: 2rem; }
-	.stats-column h4 { margin-top: 0; margin-bottom: .5rem; font-size: 1rem; color: #4c4b4e; }
+	.stats-column h4 { margin-top: 0; margin-bottom: .5rem; font-size: 1rem; }
 	.stats-table { width: 100%; border-collapse: collapse; }
-	.stats-table tr { border-bottom: 1px solid #f0f0f0; }
+	.stats-table tr { border-bottom: 1px solid ${COLORS.gray160}; }
 	.stats-table td { padding: .4rem 0; }
-	.stats-item { color: #4c4b4e; }
-	.stats-count { text-align: right; color: #8c8792; font-variant-numeric: tabular-nums; }
-	.no-data { color: #8c8792; font-style: italic; }
+	.stats-count { text-align: right; color: ${COLORS.gray100}; font-variant-numeric: tabular-nums; }
+	.no-data { color: ${COLORS.gray100}; font-style: italic; }
 </style>
 </head>
 <body>
