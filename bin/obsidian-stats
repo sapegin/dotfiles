@@ -95,6 +95,8 @@ async function getDailyNotes() {
 	const postTimeStats = [];
 	const locationStats = [];
 	const notesWithCoords = [];
+	const tagStats = new Map();
+	const wikilinkStats = new Map();
 	let minDate = new Date();
 	let maxDate = new Date(0);
 
@@ -122,11 +124,86 @@ async function getDailyNotes() {
 			// Read content and parse frontmatter
 			const content = await fs.readFile(file, 'utf-8');
 			const frontmatterMatch = content.match(/^---\n([\s\S]*?)\n---/);
+			const body = frontmatterMatch ? content.slice(frontmatterMatch[0].length) : content;
+			const year = date.getFullYear();
+
+			// Extract tags from body
+			const bodyTags = body.match(/#(\w+)/g);
+			if (bodyTags) {
+				for (const tag of bodyTags) {
+					const cleanTag = tag.slice(1);
+					if (!tagStats.has(year)) {
+						tagStats.set(year, new Map());
+					}
+					const yearTags = tagStats.get(year);
+					yearTags.set(cleanTag, (yearTags.get(cleanTag) || 0) + 1);
+				}
+			}
+
+			// Extract wikilinks from body
+			const bodyWikilinks = body.match(/\[\[([^\]]+)\]\]/g);
+			if (bodyWikilinks) {
+				for (const link of bodyWikilinks) {
+					let cleanLink = link.slice(2, -2);
+					// Strip alias part if present (e.g., "Note|alias" -> "Note")
+					const pipeIndex = cleanLink.indexOf('|');
+					if (pipeIndex !== -1) {
+						cleanLink = cleanLink.slice(0, pipeIndex);
+					}
+					// Capitalize first letter to normalize links
+					cleanLink = cleanLink.charAt(0).toUpperCase() + cleanLink.slice(1);
+					if (!wikilinkStats.has(year)) {
+						wikilinkStats.set(year, new Map());
+					}
+					const yearWikilinks = wikilinkStats.get(year);
+					yearWikilinks.set(cleanLink, (yearWikilinks.get(cleanLink) || 0) + 1);
+				}
+			}
+
 			if (frontmatterMatch) {
 				try {
 					const frontmatter = YAML.parse(frontmatterMatch[1]);
 
-					// Extract weather
+					// Extract tags from frontmatter
+					if (frontmatter?.tags) {
+						const fmTags = Array.isArray(frontmatter.tags) ? frontmatter.tags : [frontmatter.tags];
+						for (const tag of fmTags) {
+							if (tag && typeof tag === 'string') {
+								if (!tagStats.has(year)) {
+									tagStats.set(year, new Map());
+								}
+								const yearTags = tagStats.get(year);
+								yearTags.set(tag, (yearTags.get(tag) || 0) + 1);
+							}
+						}
+					}
+
+				// Extract wikilinks from all frontmatter fields (except location)
+				for (const [key, value] of Object.entries(frontmatter)) {
+					if (key === 'location') {
+						continue;
+					}
+					if (typeof value === 'string') {
+						const fmWikilinks = value.match(/\[\[([^\]]+)\]\]/g);
+						if (fmWikilinks) {
+							for (const link of fmWikilinks) {
+								let cleanLink = link.slice(2, -2);
+								// Strip alias part if present (e.g., "Note|alias" -> "Note")
+								const pipeIndex = cleanLink.indexOf('|');
+								if (pipeIndex !== -1) {
+									cleanLink = cleanLink.slice(0, pipeIndex);
+								}
+								// Capitalize first letter to normalize links
+								cleanLink = cleanLink.charAt(0).toUpperCase() + cleanLink.slice(1);
+								if (!wikilinkStats.has(year)) {
+									wikilinkStats.set(year, new Map());
+								}
+								const yearWikilinks = wikilinkStats.get(year);
+								yearWikilinks.set(cleanLink, (yearWikilinks.get(cleanLink) || 0) + 1);
+							}
+						}
+					}
+				}					// Extract weather
 					if (frontmatter?.weather) {
 						const weatherMatch =
 							frontmatter.weather.match(/(-?\d+)°C(?:, (.+))?/);
@@ -196,6 +273,8 @@ async function getDailyNotes() {
 		postTimeStats,
 		locationStats,
 		notesWithCoords,
+		tagStats,
+		wikilinkStats,
 		minDate,
 		maxDate,
 	};
@@ -730,6 +809,69 @@ function generateLocationChart(data) {
 </script>`;
 }
 
+function generateYearlyStatsSection(tagStatsMap, wikilinkStatsMap, minYear, maxYear) {
+	let html = '';
+	for (let year = maxYear; year >= minYear; year--) {
+		const yearTags = tagStatsMap.get(year);
+		const yearWikilinks = wikilinkStatsMap.get(year);
+
+		if ((!yearTags || yearTags.size === 0) && (!yearWikilinks || yearWikilinks.size === 0)) {
+			continue;
+		}
+
+		const sortedTags = yearTags
+			? Array.from(yearTags.entries())
+				.filter(([, count]) => count > 1)
+				.sort((a, b) => b[1] - a[1])
+				.slice(0, 10)
+			: [];
+
+		const sortedWikilinks = yearWikilinks
+			? Array.from(yearWikilinks.entries())
+				.filter(([, count]) => count > 1)
+				.sort((a, b) => b[1] - a[1])
+				.slice(0, 10)
+			: [];
+
+		const totalTags = sortedTags.reduce((sum, [, count]) => sum + count, 0);
+		const totalWikilinks = sortedWikilinks.reduce((sum, [, count]) => sum + count, 0);
+
+		html += `<h3>${year} <span class="count">(${totalTags} tags, ${totalWikilinks} wikilinks)</span></h3>\n`;
+		html += '<div class="stats-grid">\n';
+
+		// Tags column
+		html += '<div class="stats-column">\n';
+		html += '<h4>Tags</h4>\n';
+		if (sortedTags.length > 0) {
+			html += '<table class="stats-table">\n';
+			for (const [item, count] of sortedTags) {
+				html += `<tr><td class="stats-item">${item}</td><td class="stats-count">${count}</td></tr>\n`;
+			}
+			html += '</table>\n';
+		} else {
+			html += '<p class="no-data">No data</p>\n';
+		}
+		html += '</div>\n';
+
+		// Wikilinks column
+		html += '<div class="stats-column">\n';
+		html += '<h4>Wikilinks</h4>\n';
+		if (sortedWikilinks.length > 0) {
+			html += '<table class="stats-table">\n';
+			for (const [item, count] of sortedWikilinks) {
+				html += `<tr><td class="stats-item">${item}</td><td class="stats-count">${count}</td></tr>\n`;
+			}
+			html += '</table>\n';
+		} else {
+			html += '<p class="no-data">No data</p>\n';
+		}
+		html += '</div>\n';
+
+		html += '</div>\n';
+	}
+	return html;
+}
+
 function generateLocationMap(notes) {
 	// Group notes by coordinates for display
 	const locationMap = new Map();
@@ -880,6 +1022,8 @@ async function main() {
 		postTimeStats,
 		locationStats,
 		notesWithCoords,
+		tagStats,
+		wikilinkStats,
 		minDate,
 		maxDate,
 	} = await getDailyNotes();
@@ -924,6 +1068,8 @@ async function main() {
 
 	const locationMap = generateLocationMap(notesWithCoords);
 
+	const statsSection = generateYearlyStatsSection(tagStats, wikilinkStats, minYear, maxYear);
+
 	const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -946,6 +1092,14 @@ async function main() {
 	.level-3 { background-color: ${COLOR_SCALE[3]}; }
 	.level-4 { background-color: ${COLOR_SCALE[4]}; }
 	#map { border-radius: 4px; border: 1px solid #e0e0e0; }
+	.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem; }
+	.stats-column h4 { margin-top: 0; margin-bottom: .5rem; font-size: 1rem; color: #4c4b4e; }
+	.stats-table { width: 100%; border-collapse: collapse; }
+	.stats-table tr { border-bottom: 1px solid #f0f0f0; }
+	.stats-table td { padding: .4rem 0; }
+	.stats-item { color: #4c4b4e; }
+	.stats-count { text-align: right; color: #8c8792; font-variant-numeric: tabular-nums; }
+	.no-data { color: #8c8792; font-style: italic; }
 </style>
 </head>
 <body>
@@ -963,6 +1117,9 @@ async function main() {
 
 	<h2>Map of all notes</h2>
 	${locationMap}
+
+	<h2>Most used tags and wikilinks</h2>
+	${statsSection}
 
   <h2>Notes over the years</h2>
 	${heatmaps.join('\n')}
