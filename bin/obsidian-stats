@@ -2,6 +2,7 @@
 
 // Generates Obsidian vault statistics:
 // * Overall daily note heatmap
+// * Weather history chart
 //
 // ---
 // Author: Artem Sapegin, sapegin.me
@@ -15,6 +16,12 @@ import os from 'node:os';
 const VAULT_DIR = path.join(os.homedir(), 'murder');
 const LOG_DIR = path.join(VAULT_DIR, '📆 Log');
 const OUTPUT_FILE = path.join(os.homedir(), 'Documents/MurderStats.html');
+
+const COLORS = {
+	// Squirrelsong Light
+	// Squirrelsong Deep Purple Dark
+	brightPink: '#ca5a83',
+};
 
 const MONTH_NAMES = [
 	'Jan',
@@ -35,6 +42,7 @@ async function getDailyNotes() {
 	const files = await Array.fromAsync(fs.glob(path.join(LOG_DIR, '**/*.md')));
 
 	const notes = new Map();
+	const weatherStats = [];
 	let minDate = new Date();
 	let maxDate = new Date(0);
 
@@ -53,10 +61,21 @@ async function getDailyNotes() {
 			if (date > maxDate) {
 				maxDate = date;
 			}
+
+			// Read content for weather
+			const content = await fs.readFile(file, 'utf-8');
+			const weatherMatch = content.match(/^weather: (-?\d+)°C(?:, (.+))?$/m);
+			if (weatherMatch) {
+				const temp = parseInt(weatherMatch[1], 10);
+				const condition = weatherMatch[2]
+					? weatherMatch[2].trim().toLowerCase()
+					: 'unknown';
+				weatherStats.push({ date: dateStr, temp, condition });
+			}
 		}
 	}
 
-	return { notes, minDate, maxDate };
+	return { notes, weatherStats, minDate, maxDate };
 }
 
 function getLevel(count, maxCount) {
@@ -160,9 +179,187 @@ function generateHeatmap(notes, year, maxCount) {
 	return html;
 }
 
+function processWeatherStats(weatherStats, minDate, maxDate) {
+	const months = new Map(); // "YYYY-MM" -> { tempSum, tempCount, sunny, partly, cloudy }
+
+	for (const { date, temp, condition } of weatherStats) {
+		const month = date.substring(0, 7);
+		if (!months.has(month)) {
+			months.set(month, {
+				tempSum: 0,
+				tempCount: 0,
+				sunny: 0,
+				partly: 0,
+				cloudy: 0,
+			});
+		}
+		const stats = months.get(month);
+		stats.tempSum += temp;
+		stats.tempCount++;
+
+		if (['sunny', 'clear'].includes(condition)) {
+			stats.sunny++;
+		} else if (
+			['mainly sunny', 'mainly clear', 'partly cloudy'].includes(condition)
+		) {
+			stats.partly++;
+		} else if (['overcast', 'cloudy'].includes(condition)) {
+			stats.cloudy++;
+		}
+	}
+
+	// Fill gaps between minDate and maxDate
+	const allMonths = [];
+	let current = new Date(minDate.getFullYear(), minDate.getMonth(), 1);
+	const end = new Date(maxDate.getFullYear(), maxDate.getMonth(), 1);
+
+	while (current <= end) {
+		const monthKey = `${current.getFullYear()}-${String(current.getMonth() + 1).padStart(2, '0')}`;
+		allMonths.push(monthKey);
+		current.setMonth(current.getMonth() + 1);
+	}
+
+	const labels = [];
+	const sunny = [];
+	const partly = [];
+	const cloudy = [];
+	let minTemp = Infinity;
+
+	for (const month of allMonths) {
+		const stats = months.get(month);
+		const date = new Date(`${month}-02`);
+		labels.push(
+			date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+		);
+
+		if (stats && stats.tempCount > 0) {
+			const total = stats.sunny + stats.partly + stats.cloudy;
+			sunny.push(total > 0 ? ((stats.sunny / total) * 100).toFixed(1) : 0);
+			partly.push(total > 0 ? ((stats.partly / total) * 100).toFixed(1) : 0);
+			cloudy.push(total > 0 ? ((stats.cloudy / total) * 100).toFixed(1) : 0);
+		} else {
+			sunny.push(0);
+			partly.push(0);
+			cloudy.push(0);
+		}
+	}
+
+	// Process individual temperature points - map to month labels
+	const tempPoints = [];
+	for (const { date, temp } of weatherStats) {
+		const month = date.substring(0, 7);
+		const monthDate = new Date(`${month}-02`);
+		const monthLabel = monthDate.toLocaleDateString('en-US', {
+			month: 'short',
+			year: 'numeric',
+		});
+		tempPoints.push({ x: monthLabel, y: temp });
+		if (temp < minTemp) minTemp = temp;
+	}
+
+	return { labels, tempPoints, sunny, partly, cloudy, minTemp };
+}
+function generateWeatherChart(data) {
+	const minTemp = Math.floor(data.minTemp);
+	return `
+<div style="position: relative; height: 400px; width: 100%; margin-bottom: 2rem;">
+	<canvas id="weatherChart"></canvas>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+	const ctx = document.getElementById('weatherChart');
+	new Chart(ctx, {
+		type: 'bar',
+		data: {
+			labels: ${JSON.stringify(data.labels)},
+			datasets: [
+				{
+					label: 'Sunny',
+					data: ${JSON.stringify(data.sunny)},
+					backgroundColor: '#e4c158',
+					stack: 'Stack 0',
+					yAxisID: 'y',
+					order: 2
+				},
+				{
+					label: 'Partly cloudy',
+					data: ${JSON.stringify(data.partly)},
+					backgroundColor: '#f3e2d3',
+					stack: 'Stack 0',
+					yAxisID: 'y',
+					order: 2
+				},
+				{
+					label: 'Cloudy',
+					data: ${JSON.stringify(data.cloudy)},
+					backgroundColor: '#9c96a2',
+					stack: 'Stack 0',
+					yAxisID: 'y',
+					order: 2
+				},
+				{
+					label: 'Temperature (°C)',
+					data: ${JSON.stringify(data.tempPoints)},
+					type: 'scatter',
+					borderColor: 'transparent',
+					backgroundColor: '${COLORS.brightPink}',
+					pointBackgroundColor: '${COLORS.brightPink}',
+					pointBorderColor: '${COLORS.brightPink}',
+					pointRadius: 2,
+					yAxisID: 'y1',
+					order: 1
+				}
+			]
+		},
+		options: {
+			responsive: true,
+			maintainAspectRatio: false,
+			plugins: {
+				legend: {
+					reverse: true
+				},
+				tooltip: {
+					enabled: false
+				}
+			},
+			scales: {
+				x: {
+					stacked: true,
+					type: 'category'
+				},
+				y: {
+					type: 'linear',
+					display: true,
+					position: 'left',
+					stacked: true,
+					max: 100,
+					title: {
+						display: false,
+						text: 'Weather (%)'
+					}
+				},
+				y1: {
+					type: 'linear',
+					display: true,
+					position: 'right',
+					min: ${minTemp},
+					grid: {
+						drawOnChartArea: false,
+					},
+					title: {
+						display: true,
+						text: 'Temperature (°C)'
+					}
+				},
+			}
+		}
+	});
+</script>`;
+}
+
 async function main() {
 	console.log('Scanning daily notes...');
-	const { notes, minDate, maxDate } = await getDailyNotes();
+	const { notes, weatherStats, minDate, maxDate } = await getDailyNotes();
 	console.log(`Found ${notes.size} days with notes.`);
 	console.log(`Range: ${formatDate(minDate)} to ${formatDate(maxDate)}`);
 
@@ -183,7 +380,7 @@ async function main() {
 			}
 		}
 		heatmaps.push(
-			`<h2>${year} <span class="count">(${yearCount} notes)</span></h2>\n${generateHeatmap(notes, year, maxCount)}`
+			`<h3>${year} <span class="count">(${yearCount} notes)</span></h3>\n${generateHeatmap(notes, year, maxCount)}`
 		);
 	}
 
@@ -192,13 +389,16 @@ async function main() {
 		totalNotes += count;
 	}
 
+	const weatherData = processWeatherStats(weatherStats, minDate, maxDate);
+	const weatherChart = generateWeatherChart(weatherData);
+
 	const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <title>Murder of crows vault stats</title>
 <style>
-	body { font-family: -apple-system, sans-serif; padding: 1rem; color: #4c4b4e; background-color: #fff; }
+	body { font-family: -apple-system, sans-serif; padding: 1rem; color: #4c4b4e; background-color: #fff; max-width: 1200px; margin: 0 auto; }
 	h1 { margin-top: 0; margin-bottom: .5rem; }
 	.summary { font-size: 1rem; color: #8c8792; margin-bottom: 1rem; }
 	h2 { margin-top: 2rem; margin-bottom: .5rem; }
@@ -217,6 +417,10 @@ async function main() {
 <body>
 	<h1>Murder of crows vault stats</h1>
 	<p class="summary">${totalNotes} notes from ${formatDateLong(minDate)} to ${formatDateLong(maxDate)}</p>
+	<h2>Weather over the years</h2>
+  ${weatherChart}
+
+  <h2>Notes over the years</h2>
 	${heatmaps.join('\n')}
 </body>
 </html>`;
