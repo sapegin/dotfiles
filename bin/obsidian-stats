@@ -73,51 +73,56 @@ async function getDailyNotes() {
 
 			postTimeStats.push({ date: dateStr, time: timeInMinutes });
 
-			// Read content for weather, location, and coordinates
+			// Read content and parse frontmatter
 			const content = await fs.readFile(file, 'utf-8');
-			const weatherMatch = content.match(/^weather: (-?\d+)°C(?:, (.+))?$/m);
-			if (weatherMatch) {
-				const temp = parseInt(weatherMatch[1], 10);
-				const condition = weatherMatch[2]
-					? weatherMatch[2].trim().toLowerCase()
-					: 'unknown';
-				weatherStats.push({ date: dateStr, temp, condition });
-			}
-
-			const locationMatch = content.match(/^location: (.+)$/m);
-			if (locationMatch) {
-				const location = locationMatch[1].trim();
-				const wikiLinkMatch = location.match(/\[\[([^\]]+)\]\]/);
-				if (wikiLinkMatch) {
-					const locationName = wikiLinkMatch[1];
-					const locationFilePath = path.join(
-						VAULT_DIR,
-						'🗂️ References/Places',
-						`${locationName}.md`
-					);
-					let locationType = 'other';
-					try {
-						const locationContent = await fs.readFile(
-							locationFilePath,
-							'utf-8'
-						);
-						if (locationContent.includes('dwellings')) {
-							locationType = 'home';
-						} else if (locationContent.includes('offices')) {
-							locationType = 'office';
-						}
-					} catch (err) {
-						// Location file not found, keep `other`
-					}
-					locationStats.push({ date: dateStr, locationType });
-				}
-			}
-
-			// Extract coordinates from frontmatter
 			const frontmatterMatch = content.match(/^---\n([\s\S]*?)\n---/);
 			if (frontmatterMatch) {
 				try {
 					const frontmatter = YAML.parse(frontmatterMatch[1]);
+
+					// Extract weather
+					if (frontmatter?.weather) {
+						const weatherMatch =
+							frontmatter.weather.match(/(-?\d+)°C(?:, (.+))?/);
+						if (weatherMatch) {
+							const temp = parseInt(weatherMatch[1], 10);
+							const condition = weatherMatch[2]
+								? weatherMatch[2].trim().toLowerCase()
+								: 'unknown';
+							weatherStats.push({ date: dateStr, temp, condition });
+						}
+					}
+
+					// Extract location
+					if (frontmatter?.location) {
+						const location = frontmatter.location;
+						const wikiLinkMatch = location.match(/\[\[([^\]]+)\]\]/);
+						if (wikiLinkMatch) {
+							const locationName = wikiLinkMatch[1];
+							const locationFilePath = path.join(
+								VAULT_DIR,
+								'🗂️ References/Places',
+								`${locationName}.md`
+							);
+							let locationType = 'other';
+							try {
+								const locationContent = await fs.readFile(
+									locationFilePath,
+									'utf-8'
+								);
+								if (locationContent.includes('dwellings')) {
+									locationType = 'home';
+								} else if (locationContent.includes('offices')) {
+									locationType = 'office';
+								}
+							} catch (err) {
+								// Location file not found, keep `other`
+							}
+							locationStats.push({ date: dateStr, locationType });
+						}
+					}
+
+					// Extract coordinates
 					if (frontmatter?.coordinates) {
 						const [lat, lon] = frontmatter.coordinates
 							.split(',')
@@ -798,11 +803,11 @@ async function main() {
 	<h1>Murder of crows vault stats</h1>
 	<p class="summary">${totalNotes} notes from ${formatDateLong(minDate)} to ${formatDateLong(maxDate)}</p>
 
-	<h2>Weather conditions and temperature</h2>
-  ${weatherChart}
-
 	<h2>Times of day</h2>
   ${postTimeChart}
+
+	<h2>Weather conditions and temperature</h2>
+  ${weatherChart}
 
   <h2>Locations</h2>
   ${locationChart}
