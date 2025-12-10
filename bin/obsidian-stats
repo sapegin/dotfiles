@@ -97,6 +97,7 @@ async function getDailyNotes() {
 	const notesWithCoords = [];
 	const tagStats = new Map();
 	const wikilinkStats = new Map();
+	const locationLinkStats = new Map();
 	let minDate = new Date();
 	let maxDate = new Date(0);
 
@@ -224,7 +225,22 @@ async function getDailyNotes() {
 						// Extract location name from wiki link format [[Location]] or plain text
 						const wikiLinkMatch = location.match(/\[\[([^\]]+)\]\]/);
 						locationName = wikiLinkMatch ? wikiLinkMatch[1] : location;
-						placeInfo = await getPlaceInfo(locationName);
+
+						// Strip alias from location if present
+						let cleanLocationName = locationName;
+						const pipeIndex = cleanLocationName.indexOf('|');
+						if (pipeIndex !== -1) {
+							cleanLocationName = cleanLocationName.slice(0, pipeIndex);
+						}
+
+						// Track location usage by year
+						if (!locationLinkStats.has(year)) {
+							locationLinkStats.set(year, new Map());
+						}
+						const yearLocations = locationLinkStats.get(year);
+						yearLocations.set(cleanLocationName, (yearLocations.get(cleanLocationName) || 0) + 1);
+
+						placeInfo = await getPlaceInfo(cleanLocationName);
 						locationStats.push({
 							date: dateStr,
 							locationType: placeInfo.locationType,
@@ -275,6 +291,7 @@ async function getDailyNotes() {
 		notesWithCoords,
 		tagStats,
 		wikilinkStats,
+		locationLinkStats,
 		minDate,
 		maxDate,
 	};
@@ -809,13 +826,14 @@ function generateLocationChart(data) {
 </script>`;
 }
 
-function generateYearlyStatsSection(tagStatsMap, wikilinkStatsMap, minYear, maxYear) {
+function generateYearlyStatsSection(tagStatsMap, wikilinkStatsMap, locationStatsMap, minYear, maxYear) {
 	let html = '';
 	for (let year = maxYear; year >= minYear; year--) {
 		const yearTags = tagStatsMap.get(year);
 		const yearWikilinks = wikilinkStatsMap.get(year);
+		const yearLocations = locationStatsMap.get(year);
 
-		if ((!yearTags || yearTags.size === 0) && (!yearWikilinks || yearWikilinks.size === 0)) {
+		if ((!yearTags || yearTags.size === 0) && (!yearWikilinks || yearWikilinks.size === 0) && (!yearLocations || yearLocations.size === 0)) {
 			continue;
 		}
 
@@ -833,10 +851,18 @@ function generateYearlyStatsSection(tagStatsMap, wikilinkStatsMap, minYear, maxY
 				.slice(0, 10)
 			: [];
 
+		const sortedLocations = yearLocations
+			? Array.from(yearLocations.entries())
+				.filter(([, count]) => count > 1)
+				.sort((a, b) => b[1] - a[1])
+				.slice(0, 10)
+			: [];
+
 		const totalTags = sortedTags.reduce((sum, [, count]) => sum + count, 0);
 		const totalWikilinks = sortedWikilinks.reduce((sum, [, count]) => sum + count, 0);
+		const totalLocations = sortedLocations.reduce((sum, [, count]) => sum + count, 0);
 
-		html += `<h3>${year} <span class="count">(${totalTags} tags, ${totalWikilinks} wikilinks)</span></h3>\n`;
+		html += `<h3>${year} <span class="count">(${totalTags} tags, ${totalWikilinks} wikilinks, ${totalLocations} locations)</span></h3>\n`;
 		html += '<div class="stats-grid">\n';
 
 		// Tags column
@@ -859,6 +885,20 @@ function generateYearlyStatsSection(tagStatsMap, wikilinkStatsMap, minYear, maxY
 		if (sortedWikilinks.length > 0) {
 			html += '<table class="stats-table">\n';
 			for (const [item, count] of sortedWikilinks) {
+				html += `<tr><td class="stats-item">${item}</td><td class="stats-count">${count}</td></tr>\n`;
+			}
+			html += '</table>\n';
+		} else {
+			html += '<p class="no-data">No data</p>\n';
+		}
+		html += '</div>\n';
+
+		// Locations column
+		html += '<div class="stats-column">\n';
+		html += '<h4>Locations</h4>\n';
+		if (sortedLocations.length > 0) {
+			html += '<table class="stats-table">\n';
+			for (const [item, count] of sortedLocations) {
 				html += `<tr><td class="stats-item">${item}</td><td class="stats-count">${count}</td></tr>\n`;
 			}
 			html += '</table>\n';
@@ -1024,6 +1064,7 @@ async function main() {
 		notesWithCoords,
 		tagStats,
 		wikilinkStats,
+		locationLinkStats,
 		minDate,
 		maxDate,
 	} = await getDailyNotes();
@@ -1068,7 +1109,7 @@ async function main() {
 
 	const locationMap = generateLocationMap(notesWithCoords);
 
-	const statsSection = generateYearlyStatsSection(tagStats, wikilinkStats, minYear, maxYear);
+	const statsSection = generateYearlyStatsSection(tagStats, wikilinkStats, locationLinkStats, minYear, maxYear);
 
 	const html = `<!DOCTYPE html>
 <html lang="en">
@@ -1092,7 +1133,7 @@ async function main() {
 	.level-3 { background-color: ${COLOR_SCALE[3]}; }
 	.level-4 { background-color: ${COLOR_SCALE[4]}; }
 	#map { border-radius: 4px; border: 1px solid #e0e0e0; }
-	.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem; }
+	.stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2rem; margin-bottom: 2rem; }
 	.stats-column h4 { margin-top: 0; margin-bottom: .5rem; font-size: 1rem; color: #4c4b4e; }
 	.stats-table { width: 100%; border-collapse: collapse; }
 	.stats-table tr { border-bottom: 1px solid #f0f0f0; }
@@ -1118,7 +1159,7 @@ async function main() {
 	<h2>Map of all notes</h2>
 	${locationMap}
 
-	<h2>Most used tags and wikilinks</h2>
+	<h2>Most used tags, wikilinks, and locations</h2>
 	${statsSection}
 
   <h2>Notes over the years</h2>
