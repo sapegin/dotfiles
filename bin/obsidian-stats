@@ -41,8 +41,54 @@ const MONTH_NAMES = [
 	'Dec',
 ];
 
+const placeInfoCache = new Map();
+
+async function getPlaceInfo(locationName) {
+	if (placeInfoCache.has(locationName)) {
+		return placeInfoCache.get(locationName);
+	}
+
+	const locationFilePath = path.join(
+		VAULT_DIR,
+		'🗂️ References/Places',
+		`${locationName}.md`
+	);
+
+	const defaultInfo = {
+		locationType: 'other',
+		icon: 'map-pin',
+		color: 'silver',
+	};
+
+	try {
+		const locationContent = await fs.readFile(locationFilePath, 'utf-8');
+		const frontmatterMatch = locationContent.match(/^---\n([\s\S]*?)\n---/);
+
+		if (frontmatterMatch) {
+			const frontmatter = YAML.parse(frontmatterMatch[1]);
+			const info = {
+				locationType: locationContent.includes('dwellings')
+					? 'home'
+					: locationContent.includes('offices')
+						? 'office'
+						: 'other',
+				icon: frontmatter?.icon || 'map-pin',
+				color: frontmatter?.color || 'silver',
+			};
+			placeInfoCache.set(locationName, info);
+			return info;
+		}
+	} catch (err) {
+		// Location file not found or error reading
+	}
+
+	placeInfoCache.set(locationName, defaultInfo);
+	return defaultInfo;
+}
+
 async function getDailyNotes() {
 	const files = await Array.fromAsync(fs.glob(path.join(LOG_DIR, '**/*.md')));
+	console.log(`Found ${files.length} daily notes`);
 
 	const notes = new Map();
 	const weatherStats = [];
@@ -93,32 +139,19 @@ async function getDailyNotes() {
 						}
 					}
 
-					// Extract location
+					// Extract location and get place info
+					let locationName = null;
+					let placeInfo = null;
 					if (frontmatter?.location) {
 						const location = frontmatter.location;
 						const wikiLinkMatch = location.match(/\[\[([^\]]+)\]\]/);
 						if (wikiLinkMatch) {
-							const locationName = wikiLinkMatch[1];
-							const locationFilePath = path.join(
-								VAULT_DIR,
-								'🗂️ References/Places',
-								`${locationName}.md`
-							);
-							let locationType = 'other';
-							try {
-								const locationContent = await fs.readFile(
-									locationFilePath,
-									'utf-8'
-								);
-								if (locationContent.includes('dwellings')) {
-									locationType = 'home';
-								} else if (locationContent.includes('offices')) {
-									locationType = 'office';
-								}
-							} catch (err) {
-								// Location file not found, keep `other`
-							}
-							locationStats.push({ date: dateStr, locationType });
+							locationName = wikiLinkMatch[1];
+							placeInfo = await getPlaceInfo(locationName);
+							locationStats.push({
+								date: dateStr,
+								locationType: placeInfo.locationType,
+							});
 						}
 					}
 
@@ -129,11 +162,25 @@ async function getDailyNotes() {
 							.map((c) => parseFloat(c.trim()));
 
 						if (!isNaN(lat) && !isNaN(lon)) {
+							let icon = 'map-pin';
+							let color = 'silver';
+							let placeName = 'Unknown location';
+
+							if (placeInfo) {
+								icon = placeInfo.icon;
+								color = placeInfo.color;
+							}
+
+							if (locationName) {
+								placeName = locationName;
+							}
+
 							notesWithCoords.push({
 								lat,
 								lon,
-								title: basename.replace('.md', ''),
-								file,
+								placeName,
+								icon,
+								color,
 							});
 						}
 					}
@@ -439,7 +486,6 @@ function generateWeatherChart(data) {
 <div style="position: relative; height: 400px; width: 100%; margin-bottom: 2rem;">
 	<canvas id="weatherChart"></canvas>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 	const ctx = document.getElementById('weatherChart');
 	new Chart(ctx, {
@@ -603,7 +649,7 @@ function generatePostTimeChart(data) {
 					},
 					ticks: {
 						callback: function(value) {
-              // TODO: This is the same as above, we should extract it
+							// TODO: This is the same as above, we should extract it
 							const adjustedValue = value >= 24 ? value - 24 : value;
 							const hours = Math.floor(adjustedValue);
 							const minutes = Math.round((adjustedValue - hours) * 60);
@@ -686,6 +732,26 @@ function generateLocationChart(data) {
 }
 
 function generateLocationMap(notes) {
+	// Group notes by coordinates for display
+	const locationMap = new Map();
+	for (const note of notes) {
+		const key = `${note.lat},${note.lon}`;
+		if (!locationMap.has(key)) {
+			locationMap.set(key, {
+				lat: note.lat,
+				lon: note.lon,
+				placeName: note.placeName,
+				icon: note.icon,
+				color: note.color,
+				count: 1,
+			});
+		} else {
+			locationMap.get(key).count++;
+		}
+	}
+
+	const groupedLocations = Array.from(locationMap.values());
+
 	return `
 <div id="map" style="height: 600px; width: 100%; margin-bottom: 2rem;"></div>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -693,12 +759,40 @@ function generateLocationMap(notes) {
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+	.custom-marker {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 32px;
+		height: 32px;
+		background: white;
+		border-radius: 50% 50% 50% 0;
+		box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+		transform: rotate(-45deg);
+		border: 2px solid white;
+	}
+	.custom-marker svg {
+		transform: rotate(45deg);
+		width: 20px;
+		height: 20px;
+	}
+</style>
 <script>
-	const mapData = ${JSON.stringify(notes)};
+	const allNotes = ${JSON.stringify(notes)};
+	const groupedLocations = ${JSON.stringify(groupedLocations)};
+
+	// Create a map to lookup location info by coordinates
+	const locationInfo = new Map();
+	for (const loc of groupedLocations) {
+		locationInfo.set(\`\${loc.lat},\${loc.lon}\`, loc);
+	}
+
 	const map = L.map('map').setView([${notes.length > 0 ? `${notes[0].lat}, ${notes[0].lon}` : '0, 0'}], ${notes.length > 0 ? '10' : '2'});
 
 	L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-		attribution: '© Opnstrtmp',
+		attribution: '© OpenStreetMap',
 		maxZoom: 19
 	}).addTo(map);
 
@@ -709,16 +803,69 @@ function generateLocationMap(notes) {
 		zoomToBoundsOnClick: true
 	});
 
-	for (const note of mapData) {
-		const marker = L.marker([note.lat, note.lon]);
-		marker.bindPopup(\`<strong>\${note.title}</strong>\`);
+	// Convert kebab-case to PascalCase for Lucide icon names
+	function toPascalCase(str) {
+		return str.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join('');
+	}
+
+	// Get Lucide icon SVG
+	function getIconSvg(iconName) {
+		try {
+			const pascalName = toPascalCase(iconName);
+			const iconFunc = lucide[pascalName];
+			if (!iconFunc) {
+				console.warn('Icon not found:', iconName, pascalName);
+				return '';
+			}
+
+			// Create a temporary element to render the icon
+			const temp = document.createElement('div');
+			temp.innerHTML = '<i data-lucide="' + iconName + '"></i>';
+			document.body.appendChild(temp);
+			lucide.createIcons({ icons: { [pascalName]: iconFunc }, nameAttr: 'data-lucide' });
+			const svg = temp.querySelector('svg');
+			const svgString = svg ? svg.outerHTML : '';
+			document.body.removeChild(temp);
+			return svgString;
+		} catch (e) {
+			console.error('Error getting icon:', iconName, e);
+			return '';
+		}
+	}
+
+	// Add all notes as individual markers, but use location info for display
+	for (const note of allNotes) {
+		const key = \`\${note.lat},\${note.lon}\`;
+		const locInfo = locationInfo.get(key);
+
+		let iconHtml;
+		if (note.icon === 'map-pin') {
+			// No icon, just colored background
+			iconHtml = \`<div class="custom-marker" style="background-color: \${note.color};"></div>\`;
+		} else {
+			const iconSvg = getIconSvg(note.icon);
+			iconHtml = \`<div class="custom-marker" style="background-color: \${note.color};">\${iconSvg}</div>\`;
+		}
+
+		const customIcon = L.divIcon({
+			html: iconHtml,
+			className: '',
+			iconSize: [32, 32],
+			iconAnchor: [16, 32],
+			popupAnchor: [0, -32]
+		});
+
+		const marker = L.marker([note.lat, note.lon], { icon: customIcon });
+		if (locInfo) {
+			marker.bindPopup(\`<strong>\${locInfo.placeName}</strong><br>\${locInfo.count} note\${locInfo.count !== 1 ? 's' : ''}\`);
+		}
 		markers.addLayer(marker);
 	}
 
 	map.addLayer(markers);
 
-	if (mapData.length > 1) {
-		const bounds = L.latLngBounds(mapData.map(n => [n.lat, n.lon]));
+	if (allNotes.length > 1) {
+		const bounds = L.latLngBounds(allNotes.map(n => [n.lat, n.lon]));
 		map.fitBounds(bounds, { padding: [50, 50] });
 	}
 </script>`;
@@ -735,7 +882,7 @@ async function main() {
 		minDate,
 		maxDate,
 	} = await getDailyNotes();
-	console.log(`Found ${notes.size} days with notes.`);
+	console.log(`Found ${notes.size} days with notes`);
 	console.log(`Found ${notesWithCoords.length} notes with coordinates`);
 	console.log(`Range: ${formatDate(minDate)} to ${formatDate(maxDate)}`);
 
@@ -781,6 +928,7 @@ async function main() {
 <head>
 <meta charset="utf-8">
 <title>Murder of crows vault stats</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 	body { font-family: -apple-system, sans-serif; padding: 1rem; color: #4c4b4e; background-color: #fff; max-width: 1200px; margin: 0 auto; }
 	h1 { margin-top: 0; margin-bottom: .5rem; }
