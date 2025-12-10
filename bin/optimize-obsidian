@@ -234,7 +234,13 @@ async function getWeather(lat, lon, date) {
 			condition = WMO_WEATHER_CODES_NIGHT[weatherCode];
 		}
 
-		return condition ? `${temperature}°C, ${condition}` : `${temperature}°C`;
+		const weather = condition
+			? `${temperature}°C, ${condition}`
+			: `${temperature}°C`;
+
+		console.log(` ↪ ${weather}`);
+
+		return weather;
 	} catch (error) {
 		console.error('⚠️ Cannot fetch weather for', lat, lon, date);
 		console.error(error.message);
