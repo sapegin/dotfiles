@@ -47,6 +47,27 @@ const MONTH_NAMES = [
 
 const placeInfoCache = new Map();
 
+function normalizeWikilink(wikilink) {
+	let normalized = wikilink.slice(2, -2);
+	// Strip alias part if present (e.g., "Note|alias" -> "Note")
+	const pipeIndex = normalized.indexOf('|');
+	if (pipeIndex !== -1) {
+		normalized = normalized.slice(0, pipeIndex);
+	}
+	// Capitalize the first letter
+	return normalized.charAt(0).toUpperCase() + normalized.slice(1);
+}
+
+async function getAllNoteNames() {
+	const files = await Array.fromAsync(fs.glob(path.join(VAULT_DIR, '**/*.md')));
+	const noteNames = new Set();
+	for (const file of files) {
+		const basename = path.basename(file, '.md');
+		noteNames.add(basename);
+	}
+	return noteNames;
+}
+
 async function getPlaceInfo(locationName) {
 	if (placeInfoCache.has(locationName)) {
 		return placeInfoCache.get(locationName);
@@ -90,7 +111,7 @@ async function getPlaceInfo(locationName) {
 	return defaultInfo;
 }
 
-async function getDailyNotes() {
+async function getDailyNotes(allNotes) {
 	const files = await Array.fromAsync(fs.glob(path.join(LOG_DIR, '**/*.md')));
 	console.log(`Found ${files.length} daily notes`);
 
@@ -102,6 +123,8 @@ async function getDailyNotes() {
 	const tagStats = new Map();
 	const wikilinkStats = new Map();
 	const locationLinkStats = new Map();
+	const unresolvedWikilinkStats = new Map();
+	const nonWikilinkLocations = new Map();
 	let minDate = new Date();
 	let maxDate = new Date(0);
 
@@ -151,19 +174,23 @@ async function getDailyNotes() {
 			const bodyWikilinks = body.match(/\[\[([^\]]+)\]\]/g);
 			if (bodyWikilinks) {
 				for (const link of bodyWikilinks) {
-					let cleanLink = link.slice(2, -2);
-					// Strip alias part if present (e.g., "Note|alias" -> "Note")
-					const pipeIndex = cleanLink.indexOf('|');
-					if (pipeIndex !== -1) {
-						cleanLink = cleanLink.slice(0, pipeIndex);
-					}
-					// Capitalize first letter to normalize links
-					cleanLink = cleanLink.charAt(0).toUpperCase() + cleanLink.slice(1);
+					const cleanLink = normalizeWikilink(link);
 					if (!wikilinkStats.has(year)) {
 						wikilinkStats.set(year, new Map());
 					}
 					const yearWikilinks = wikilinkStats.get(year);
 					yearWikilinks.set(cleanLink, (yearWikilinks.get(cleanLink) || 0) + 1);
+
+					if (allNotes && !allNotes.has(cleanLink)) {
+						if (!unresolvedWikilinkStats.has(year)) {
+							unresolvedWikilinkStats.set(year, new Map());
+						}
+						const yearUnresolved = unresolvedWikilinkStats.get(year);
+						yearUnresolved.set(
+							cleanLink,
+							(yearUnresolved.get(cleanLink) || 0) + 1
+						);
+					}
 				}
 			}
 
@@ -196,15 +223,7 @@ async function getDailyNotes() {
 							const fmWikilinks = value.match(/\[\[([^\]]+)\]\]/g);
 							if (fmWikilinks) {
 								for (const link of fmWikilinks) {
-									let cleanLink = link.slice(2, -2);
-									// Strip alias part if present (e.g., "Note|alias" -> "Note")
-									const pipeIndex = cleanLink.indexOf('|');
-									if (pipeIndex !== -1) {
-										cleanLink = cleanLink.slice(0, pipeIndex);
-									}
-									// Capitalize first letter to normalize links
-									cleanLink =
-										cleanLink.charAt(0).toUpperCase() + cleanLink.slice(1);
+									const cleanLink = normalizeWikilink(link);
 									if (!wikilinkStats.has(year)) {
 										wikilinkStats.set(year, new Map());
 									}
@@ -213,6 +232,17 @@ async function getDailyNotes() {
 										cleanLink,
 										(yearWikilinks.get(cleanLink) || 0) + 1
 									);
+
+									if (allNotes && !allNotes.has(cleanLink)) {
+										if (!unresolvedWikilinkStats.has(year)) {
+											unresolvedWikilinkStats.set(year, new Map());
+										}
+										const yearUnresolved = unresolvedWikilinkStats.get(year);
+										yearUnresolved.set(
+											cleanLink,
+											(yearUnresolved.get(cleanLink) || 0) + 1
+										);
+									}
 								}
 							}
 						}
@@ -254,6 +284,18 @@ async function getDailyNotes() {
 							cleanLocationName,
 							(yearLocations.get(cleanLocationName) || 0) + 1
 						);
+
+						// Track non-wikilink locations
+						if (!wikiLinkMatch) {
+							if (!nonWikilinkLocations.has(year)) {
+								nonWikilinkLocations.set(year, new Map());
+							}
+							const yearNonWikilinks = nonWikilinkLocations.get(year);
+							yearNonWikilinks.set(
+								cleanLocationName,
+								(yearNonWikilinks.get(cleanLocationName) || 0) + 1
+							);
+						}
 
 						placeInfo = await getPlaceInfo(cleanLocationName);
 						locationStats.push({
@@ -307,6 +349,8 @@ async function getDailyNotes() {
 		tagStats,
 		wikilinkStats,
 		locationLinkStats,
+		unresolvedWikilinkStats,
+		nonWikilinkLocations,
 		minDate,
 		maxDate,
 	};
@@ -1114,7 +1158,82 @@ function generateLocationMap(notes) {
 </script>`;
 }
 
+function generateUnresolvedWikilinksSection(
+	unresolvedStatsMap,
+	nonWikilinkLocationsMap,
+	minYear,
+	maxYear
+) {
+	const allUnresolved = new Map();
+	const allNonWikilinks = new Map();
+
+	for (let year = minYear; year <= maxYear; year++) {
+		const yearUnresolved = unresolvedStatsMap.get(year);
+		if (yearUnresolved) {
+			for (const [link, count] of yearUnresolved.entries()) {
+				allUnresolved.set(link, (allUnresolved.get(link) || 0) + count);
+			}
+		}
+
+		const yearNonWikilinks = nonWikilinkLocationsMap.get(year);
+		if (yearNonWikilinks) {
+			for (const [link, count] of yearNonWikilinks.entries()) {
+				allNonWikilinks.set(link, (allNonWikilinks.get(link) || 0) + count);
+			}
+		}
+	}
+
+	const sortedUnresolved = Array.from(allUnresolved.entries())
+		.filter(([, count]) => count > 1)
+		.sort((a, b) => b[1] - a[1])
+		.slice(0, 20);
+
+	const sortedNonWikilinks = Array.from(allNonWikilinks.entries())
+		.filter(([, count]) => count > 1)
+		.sort((a, b) => b[1] - a[1])
+		.slice(0, 20);
+
+	let html =
+		'<div class="stats-grid" style="grid-template-columns: 1fr 1fr;">\n';
+
+	// Unresolved wikilinks column
+	html += '<div class="stats-column">\n';
+	html += '<h4>Unresolved wikilinks</h4>\n';
+	if (sortedUnresolved.length > 0) {
+		html += '<table class="stats-table">\n';
+		for (const [item, count] of sortedUnresolved) {
+			html += `<tr><td class="stats-item">${item}</td><td class="stats-count">${count}</td></tr>\n`;
+		}
+		html += '</table>\n';
+	} else {
+		html += '<p class="no-data">No data</p>\n';
+	}
+	html += '</div>\n';
+
+	// Non-wikilink locations column
+	html += '<div class="stats-column">\n';
+	html += "<h4>Locations that aren't wikilinks</h4>\n";
+	if (sortedNonWikilinks.length > 0) {
+		html += '<table class="stats-table">\n';
+		for (const [item, count] of sortedNonWikilinks) {
+			html += `<tr><td class="stats-item">${item}</td><td class="stats-count">${count}</td></tr>\n`;
+		}
+		html += '</table>\n';
+	} else {
+		html += '<p class="no-data">No data</p>\n';
+	}
+	html += '</div>\n';
+
+	html += '</div>\n';
+
+	return html;
+}
+
 async function main() {
+	console.log('Scanning vault files...');
+	const allNotes = await getAllNoteNames();
+	console.log(`Found ${allNotes.size} files in vault`);
+
 	console.log('Scanning daily notes...');
 	const {
 		notes,
@@ -1125,9 +1244,11 @@ async function main() {
 		tagStats,
 		wikilinkStats,
 		locationLinkStats,
+		unresolvedWikilinkStats,
+		nonWikilinkLocations,
 		minDate,
 		maxDate,
-	} = await getDailyNotes();
+	} = await getDailyNotes(allNotes);
 	console.log(`Found ${notes.size} days with notes`);
 	console.log(`Found ${notesWithCoords.length} notes with coordinates`);
 	console.log(`Range: ${formatDate(minDate)} to ${formatDate(maxDate)}`);
@@ -1173,6 +1294,13 @@ async function main() {
 		tagStats,
 		wikilinkStats,
 		locationLinkStats,
+		minYear,
+		maxYear
+	);
+
+	const unresolvedSection = generateUnresolvedWikilinksSection(
+		unresolvedWikilinkStats,
+		nonWikilinkLocations,
 		minYear,
 		maxYear
 	);
@@ -1226,6 +1354,9 @@ async function main() {
 
 	<h2>Most used tags, wikilinks, and locations</h2>
 	${statsSection}
+
+	<h2>Unresolved wikilinks and locations</h2>
+	${unresolvedSection}
 
   <h2>Notes over the years</h2>
 	${heatmaps.join('\n')}
