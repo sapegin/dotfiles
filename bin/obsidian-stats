@@ -47,6 +47,10 @@ const MONTH_NAMES = [
 
 const placeInfoCache = new Map();
 
+function formatTemperature(value) {
+	return String(value).replace('-', '−') + '°C';
+}
+
 function normalizeWikilink(wikilink) {
 	let normalized = wikilink.slice(2, -2);
 	// Strip alias part if present (e.g., "Note|alias" -> "Note")
@@ -459,6 +463,8 @@ function generateHeatmap(notes, year, maxCount) {
 
 function processWeatherStats(weatherStats, minDate, maxDate) {
 	const months = new Map(); // "YYYY-MM" -> { tempSum, tempCount, sunny, partly, cloudy }
+	let coldestNote = { temp: 0 };
+	let hottestNote = { temp: 0 };
 
 	for (const { date, temp, condition } of weatherStats) {
 		const month = date.substring(0, 7);
@@ -483,6 +489,14 @@ function processWeatherStats(weatherStats, minDate, maxDate) {
 			stats.partly++;
 		} else if (['overcast', 'cloudy'].includes(condition)) {
 			stats.cloudy++;
+		}
+
+		// Track coldest and hottest notes
+		if (temp < coldestNote.temp) {
+			coldestNote = { date, temp, condition };
+		}
+		if (temp > hottestNote.temp) {
+			hottestNote = { date, temp, condition };
 		}
 	}
 
@@ -535,7 +549,16 @@ function processWeatherStats(weatherStats, minDate, maxDate) {
 		if (temp < minTemp) minTemp = temp;
 	}
 
-	return { labels, tempPoints, sunny, partly, cloudy, minTemp };
+	return {
+		labels,
+		tempPoints,
+		sunny,
+		partly,
+		cloudy,
+		minTemp,
+		coldestNote,
+		hottestNote,
+	};
 }
 
 function processPostTimeStats(postTimeStats, minDate, maxDate) {
@@ -636,11 +659,21 @@ function processLocationStats(locationStats, minDate, maxDate) {
 
 function generateWeatherChart(data) {
 	const minTemp = Math.floor(data.minTemp);
+
+	const coldDate = new Date(data.coldestNote.date);
+	const hotDate = new Date(data.hottestNote.date);
+	const extremesHtml =
+		'<div style="margin-top: .5rem;">' +
+		`<p><strong>Coldest day:</strong> ${formatTemperature(data.coldestNote.temp)} on ${formatDateLong(coldDate)}, <strong>hottest day:</strong> ${formatTemperature(data.hottestNote.temp)} on ${formatDateLong(hotDate)}</p>` +
+		'</div>';
+
 	return `
 <div style="position: relative; height: 400px; width: 100%; margin-bottom: 2rem;">
 	<canvas id="weatherChart"></canvas>
 </div>
 <script>
+  ${formatTemperature.toString()}
+
 	const ctx = document.getElementById('weatherChart');
 	new Chart(ctx, {
 		type: 'bar',
@@ -728,15 +761,15 @@ function generateWeatherChart(data) {
 						text: 'Temperature'
 					},
           ticks: {
-						callback: function(value) {
-							return String(value).replace('-', '−') + '°C';
-						}
+						callback: formatTemperature
 					}
 				},
 			}
 		}
 	});
-</script>`;
+</script>
+${extremesHtml}
+`;
 }
 
 function generatePostTimeChart(data) {
