@@ -662,10 +662,7 @@ function generateWeatherChart(data) {
 
 	const coldDate = new Date(data.coldestNote.date);
 	const hotDate = new Date(data.hottestNote.date);
-	const extremesHtml =
-		'<div style="margin-top: .5rem;">' +
-		`<p><strong>Coldest day:</strong> ${formatTemperature(data.coldestNote.temp)} on ${formatDateLong(coldDate)}, <strong>hottest day:</strong> ${formatTemperature(data.hottestNote.temp)} on ${formatDateLong(hotDate)}</p>` +
-		'</div>';
+	const extremesHtml = `<p style="margin-top: .5rem;"><strong>Coldest day:</strong> ${formatTemperature(data.coldestNote.temp)} on ${formatDateLong(coldDate)}, <strong>hottest day:</strong> ${formatTemperature(data.hottestNote.temp)} on ${formatDateLong(hotDate)}</p>`;
 
 	return `
 <div style="position: relative; height: 400px; width: 100%; margin-bottom: 2rem;">
