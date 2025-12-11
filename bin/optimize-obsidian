@@ -44,9 +44,6 @@ const ALL_NOTES_PATTERN = `**/*.md`;
 // with optional resizing pipe (`![[image.png|100]]`)
 const imageRegex = /!\[.*?\]\(([^)]+)\)|!\[\[([^\]]+)\]\]/g;
 
-// Counter for locations used in journal notes
-const locations = new Map();
-
 // WMO Weather interpretation codes
 const WMO_WEATHER_CODES = {
 	0: 'sunny',
@@ -587,9 +584,6 @@ async function updateNote({
 
 		// Update location field
 		if (location && location.startsWith('[[') === false) {
-			// Increase location counter
-			locations.set(location, (locations.get(location) ?? 0) + 1);
-
 			// Link notes about places if they exist in the vault
 			const locationNote = allNotes.find(
 				(notePath) => path.basename(notePath, '.md') === location
@@ -751,14 +745,6 @@ async function updateNotes(renamedFiles) {
 	}
 
 	console.log(`\nUpdated ${updatedCount} notes`);
-
-	console.log('\n📍 Top locations:');
-	const sortedLocations = Array.from(locations.entries())
-		.sort((a, b) => b[1] - a[1])
-		.slice(0, 10);
-	for (const [location, count] of sortedLocations) {
-		console.log(`${String(count).padStart(3)} ${location}`);
-	}
 }
 
 async function main() {
