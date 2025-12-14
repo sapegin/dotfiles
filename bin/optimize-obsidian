@@ -23,6 +23,7 @@ const ATTACHMENTS_DIR = path.join(VAULT_DIR, 'attachments');
 const TRASH_DIR = path.join(os.homedir(), 'obsidian-trash');
 const MAX_DIMENSION = 2048;
 const MAX_FILE_SIZE = 1024 * 1024; // 1 MB
+const MAX_LARGE_FILE_SIZE = MAX_FILE_SIZE * 0.5; // 0.5 MB
 const AVIF_QUALITY = 75;
 const IMAGE_EXTENSIONS = [
 	'.bmp',
@@ -337,18 +338,23 @@ async function getImageDimensions(imagePath) {
 async function needsOptimization(imagePath) {
 	const ext = path.extname(imagePath).toLowerCase();
 	const stats = await fs.stat(imagePath);
-	const { width, height } = await getImageDimensions(imagePath);
+	const dimensions = await getImageDimensions(imagePath);
 
-	if (
-		// Check if the file size is too large
-		(ext !== '.avif' && stats.size > MAX_FILE_SIZE) ||
-		// Check if the image dimensions exceed allowed
-		width > MAX_DIMENSION ||
-		height > MAX_DIMENSION
-	) {
-		return { width, height };
+	// File size is too large
+	if (stats.size > MAX_FILE_SIZE) {
+		return dimensions;
 	}
 
+	if (
+		// Image dimensions exceed allowed
+		(dimensions.width > MAX_DIMENSION || dimensions.height > MAX_DIMENSION) &&
+		// But skip small sizes where optimizations is unlikely to produce smaller file
+		stats.size > MAX_LARGE_FILE_SIZE
+	) {
+		return dimensions;
+	}
+
+	// File doesn't need optimization
 	return undefined;
 }
 
