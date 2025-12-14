@@ -4,7 +4,7 @@
 	"behavior": "create",
 	"noteNameFormat": "{{schema:name}}",
 	"path": "🗂️ References/Movies",
-	"noteContentFormat": "",
+	"noteContentFormat": "# {{schema:name}}\n",
 	"properties": [
 		{
 			"name": "director",
@@ -29,6 +29,11 @@
 		{
 			"name": "year",
 			"value": "{{schema:datePublished|split:\\\"-\\\"|slice:0,1}}",
+			"type": "number"
+		},
+		{
+			"name": "rating",
+			"value": "",
 			"type": "number"
 		},
 		{

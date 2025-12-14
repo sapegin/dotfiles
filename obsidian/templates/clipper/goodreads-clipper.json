@@ -2,9 +2,9 @@
 	"schemaVersion": "0.1.0",
 	"name": "Goodreads",
 	"behavior": "create",
-	"noteNameFormat": "{{selector:.BookPageTitleSection__title h1}}",
+	"noteNameFormat": "{{selector:h1}}",
 	"path": "🗂️ References/Books",
-	"noteContentFormat": "# {{selector:.BookPageTitleSection__title h1}}\n",
+	"noteContentFormat": "# {{selector:h1}}\n",
 	"properties": [
 		{
 			"name": "author",
@@ -17,14 +17,14 @@
 			"type": "number"
 		},
 		{
-			"name": "rating",
-			"value": "",
-			"type": "number"
-		},
-		{
 			"name": "cover",
 			"value": "{{selector:.BookCover__image img?src|first}}",
 			"type": "text"
+		},
+		{
+			"name": "rating",
+			"value": "",
+			"type": "number"
 		},
 		{
 			"name": "tags",

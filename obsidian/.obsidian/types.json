@@ -4,6 +4,7 @@
     "cssclasses": "multitext",
     "tags": "tags",
     "deadline": "date",
-    "sputniks": "multitext"
+    "sputniks": "multitext",
+    "coordinates": "text"
   }
 }

@@ -5,6 +5,35 @@
       "ctime": 1763377483354,
       "path": "bases/Untagged logs.base",
       "title": "🚧 Untagged journals"
+    },
+    {
+      "type": "file",
+      "ctime": 1765347565511,
+      "path": "bases/On this day.base",
+      "title": "📆 On this day"
+    },
+    {
+      "type": "file",
+      "ctime": 1765478073977,
+      "path": "bases/Recent logs.base",
+      "title": "🛸 Recent logs"
+    },
+    {
+      "type": "file",
+      "ctime": 1765537868473,
+      "path": "🌮 Food/Recipes.md",
+      "title": "🥘 Recipes"
+    },
+    {
+      "type": "file",
+      "ctime": 1765553995649,
+      "path": "🐦‍⬛ Dashboard.md"
+    },
+    {
+      "type": "file",
+      "ctime": 1765557872429,
+      "path": "⏳ Inbox/Quickies.md",
+      "title": "🦆 Quickies"
     }
   ]
 }

@@ -212,8 +212,9 @@ body {
   --h3-size: 1.2rem;
   --h3-weight: var(--sqrl-heading-weight);
   --h3-letter-spacing: -0.03em;
-  --h4-weight: var(--sqrl-heading-weight);
-  --h4-letter-spacing: -0.025em;
+  --h4-size: 1rem;
+  --h4-weight: bold;
+  --h4-letter-spacing: -0.02em;
   --h5-weight: var(--sqrl-heading-weight);
   --h5-letter-spacing: -0.02em;
   --h6-weight: var(--sqrl-heading-weight);

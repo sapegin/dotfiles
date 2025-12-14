@@ -2,9 +2,9 @@
 	"schemaVersion": "0.1.0",
 	"name": "Google Maps",
 	"behavior": "create",
-	"noteNameFormat": "{{selector:div[role=\"main\"]:aria-label}}",
+	"noteNameFormat": "{{selector:h1}}",
 	"path": "🗂️ References/Places",
-	"noteContentFormat": "",
+	"noteContentFormat": "# {{selector:h1}}\n",
 	"properties": [
 		{
 			"name": "address",
@@ -14,16 +14,6 @@
 		{
 			"name": "coordinates",
 			"value": "{{url|split:\\\"/@\\\"|slice:1|split:\\\",\\\"|slice:0,2|join}}",
-			"type": "multitext"
-		},
-		{
-			"name": "icon",
-			"value": "",
-			"type": "text"
-		},
-		{
-			"name": "color",
-			"value": "",
 			"type": "text"
 		},
 		{

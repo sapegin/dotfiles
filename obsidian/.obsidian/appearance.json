@@ -6,5 +6,8 @@
   "cssTheme": "Squirrelsong",
   "showViewHeader": true,
   "textFontFamily": "Iosevka Custom",
-  "interfaceFontFamily": "SF Pro"
+  "interfaceFontFamily": "SF Pro",
+  "enabledCssSnippets": [
+    "images"
+  ]
 }

@@ -1,3 +1,6 @@
+filters:
+  and:
+    - file.ext == "md"
 views:
   - type: cards
     name: Cards

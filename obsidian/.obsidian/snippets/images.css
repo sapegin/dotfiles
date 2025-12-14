@@ -1,0 +1,11 @@
+.markdown-source-view.mod-cm6 .cm-content > .internal-embed:has(img[alt*="icon"]) + .cm-line.HyperMD-header.HyperMD-header-1 {
+  min-height: 80px;
+  margin-block-start: -80px !important;
+  margin-block-end: 1rem !important;
+  margin-inline-end: calc(80px + .5rem) !important;
+}
+img[alt*="icon"] {
+  height: 80px;
+  float: right;
+  clear: right;
+}
