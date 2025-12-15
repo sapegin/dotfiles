@@ -4,6 +4,7 @@ tap "homebrew/cask-fonts"
 
 # CLI tools
 brew "bat" # `cat` replacement
+brew "exiftool" # EXIF reader
 brew "eza" # `ls` replacement
 brew "fastfetch" # Displays pretty system info
 brew "fd" # `find` replacement
@@ -56,7 +57,8 @@ cask "visual-studio-code" # Main code editor
 cask "whatsapp" # Another chat
 
 # Fonts
-cask "font-symbols-only-nerd-font"
+cask "font-symbols-only-nerd-font" # Nerd Font
+cask "font-sf-pro" # Apple SF Pro
 
 # Visual Studio Code extensions
 vscode "astro-build.astro-vscode"
