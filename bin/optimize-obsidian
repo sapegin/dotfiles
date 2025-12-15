@@ -562,6 +562,8 @@ async function updateNote({
 			// Skip Obsidian Bases
 			image.endsWith('.base') === false &&
 			image.includes('.base#') === false &&
+			// Skip embedded notes (they don't have a file extension)
+			image.includes('.') === true &&
 			attachmentNames.has(image) === false
 		) {
 			console.log(`⚠️  Missing image: ${image} in ${path.basename(file)}`);
@@ -685,7 +687,12 @@ async function updateNote({
 		}
 	} else {
 		// Add missing top-level headers
-		if (newBody.trim().startsWith('# ') === false) {
+		if (
+			// Note doesn't have a first-level heading yet
+			newBody.trim().startsWith('# ') === false &&
+			// And it doesn't start with an icon image
+			/^\!\[\[[^|]+\|icon\]\]/.test(newBody.trim()) === false
+		) {
 			newBody = `# ${basename}\n${newBody}`;
 		}
 	}
