@@ -462,7 +462,10 @@ function generateHeatmap(notes, year, maxCount) {
 }
 
 function processWeatherStats(weatherStats, minDate, maxDate) {
-	const months = new Map(); // "YYYY-MM" -> { tempSum, tempCount, sunny, partly, cloudy }
+	// "YYYY-MM" -> { tempSum, tempCount, sunny, partly, cloudy }
+	const months = new Map();
+	// "YYYY" -> { minTemp, maxTemp }
+	const years = new Map();
 	let coldestNote = { temp: 0 };
 	let hottestNote = { temp: 0 };
 
@@ -497,6 +500,16 @@ function processWeatherStats(weatherStats, minDate, maxDate) {
 		}
 		if (temp > hottestNote.temp) {
 			hottestNote = { date, temp, condition };
+		}
+
+		// Track min/max temperature per year
+		const year = date.substring(0, 4);
+		if (!years.has(year)) {
+			years.set(year, { minTemp: temp, maxTemp: temp });
+		} else {
+			const yearStats = years.get(year);
+			if (temp < yearStats.minTemp) yearStats.minTemp = temp;
+			if (temp > yearStats.maxTemp) yearStats.maxTemp = temp;
 		}
 	}
 
@@ -549,6 +562,14 @@ function processWeatherStats(weatherStats, minDate, maxDate) {
 		if (temp < minTemp) minTemp = temp;
 	}
 
+	// Process yearly temperature ranges
+	const yearLabels = [];
+	const yearTempRanges = [];
+	for (const [year, stats] of Array.from(years.entries()).sort()) {
+		yearLabels.push(year);
+		yearTempRanges.push([stats.minTemp, stats.maxTemp]);
+	}
+
 	return {
 		labels,
 		tempPoints,
@@ -558,6 +579,8 @@ function processWeatherStats(weatherStats, minDate, maxDate) {
 		minTemp,
 		coldestNote,
 		hottestNote,
+		yearLabels,
+		yearTempRanges,
 	};
 }
 
@@ -761,6 +784,77 @@ function generateWeatherChart(data) {
 						callback: formatTemperature
 					}
 				},
+			}
+		}
+	});
+</script>
+
+<h2 style="margin-top: 2rem;">Temperature distribution by year</h2>
+<div style="position: relative; height: 400px; width: 100%; margin-bottom: 2rem;">
+	<canvas id="tempDistributionChart"></canvas>
+</div>
+<script>
+	const ctxTempDist = document.getElementById('tempDistributionChart');
+	new Chart(ctxTempDist, {
+		type: 'bar',
+		data: {
+			labels: ${JSON.stringify(data.yearLabels)},
+			datasets: [
+				{
+					label: 'Temperature range',
+					data: ${JSON.stringify(data.yearTempRanges)},
+					backgroundColor: function(context) {
+						const chart = context.chart;
+						const {ctx, chartArea} = chart;
+						if (!chartArea) { return null; }
+						const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+						gradient.addColorStop(0, '#3b82f6');
+						gradient.addColorStop(0.4, '#faaf23');
+						gradient.addColorStop(0.6, '#faaf23');
+						gradient.addColorStop(1, '#ef4444');
+						return gradient;
+					},
+					barThickness: 40
+				}
+			]
+		},
+		options: {
+			responsive: true,
+			maintainAspectRatio: false,
+			plugins: {
+				legend: {
+					display: false
+				},
+				tooltip: {
+					callbacks: {
+						label: function(context) {
+							const value = context.parsed.y;
+							const base = context.parsed._custom?.barStart || 0;
+							return formatTemperature(base) + ' to ' + formatTemperature(value);
+						}
+					}
+				}
+			},
+			scales: {
+				x: {
+					grid: {
+						drawOnChartArea: false
+					}
+				},
+				y: {
+					type: 'linear',
+					display: true,
+					position: 'right',
+					grid: {
+						drawOnChartArea: false
+					},
+					title: {
+						display: false
+					},
+					ticks: {
+						callback: formatTemperature
+					}
+				}
 			}
 		}
 	});
