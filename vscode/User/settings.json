@@ -242,6 +242,7 @@
     "npm t": true,
     "npm run build": true
   },
+  "chat.viewSessions.enabled": false,
   "color-highlight.markerType": "underline",
   "color-highlight.markRuler": false,
   "color-highlight.matchWords": false,
@@ -294,6 +295,7 @@
   "github.copilot.chat.reviewSelection.instructions": [
     { "file": "~/dotfiles/ai-rules/rules/javascript.instructions.md" }
   ],
+  "github.copilot.nextEditSuggestions.enabled": false,
   "githubPullRequests.defaultMergeMethod": "squash",
   "githubPullRequests.pullPullRequestBranchBeforeCheckout": "pullAndMergeBase",
   "inlineChat.enableV2": true,
