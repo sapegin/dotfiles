@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
-// Patches Catppuccin Latte icons for VS Code and Cursor with Squirrelsong color
-// palette
+// Patches Catppuccin Latte icons for VS Code with Squirrelsong color palette
 // https://github.com/catppuccin/vscode-icons/
 //
 // ---
@@ -84,7 +83,6 @@ console.log('[VSCODE] Updating icons… 👾');
 console.log();
 
 syncIcons('.vscode');
-syncIcons('.cursor');
 
 console.log();
 console.log('[VSCODE] Done 🦜');

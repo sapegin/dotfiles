@@ -14,9 +14,6 @@ vscode/**/globalStorage/*
 vscode/User/globalStorage/kilocode.kilo-code/*
 !vscode/User/globalStorage/kilocode.kilo-code/settings
 vscode/**/workspaceStorage/
-cursor/**/History/
-cursor/**/globalStorage/
-cursor/**/workspaceStorage/
 tilde/Brewfile.lock.json
 lazygit/state.yml
 washingcode-book-master/

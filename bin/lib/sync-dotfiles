@@ -36,11 +36,6 @@ const SPECIALS = [
 		destination: `${HOME}/Library/Application Support/Code/User`,
 	},
 	{
-		// Cursor
-		source: `${HOME}/dotfiles/vscode/Cursor`,
-		destination: `${HOME}/Library/Application Support/Cursor/User`,
-	},
-	{
 		// Kilo Code rules
 		source: `${HOME}/dotfiles/ai-rules/rules`,
 		destination: `${HOME}/.kilocode/rules`,
@@ -49,13 +44,6 @@ const SPECIALS = [
 		// Kilo Code commands
 		source: `${HOME}/dotfiles/ai-rules/commands`,
 		destination: `${HOME}/.kilocode/workflows`,
-	},
-	{
-		// Cursor commands.
-		// Need to be copied, doesn't work with symlinks
-		source: `${HOME}/dotfiles/ai-rules/commands/review.prompt.md`,
-		destination: `${HOME}/.cursor/commands/review.md`,
-		copy: true,
 	},
 	{
 		// Photoshop
@@ -95,8 +83,6 @@ async function syncDotfiles() {
 		...globSync('*', { dot: true, nodir: true }),
 		// Sync additional config _folders_ in .config/ folder
 		...globSync('.config/*'),
-		// Sync additional Cursor config files (but don't overwrite other files)
-		...globSync('.cursor/**/*', { dot: true, nodir: true }),
 	];
 
 	for (const sourceFile of files) {
