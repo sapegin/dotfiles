@@ -205,15 +205,30 @@ function createRows(images) {
 				const remainingPhotos = photos.length - i;
 				currentPhotosPerRow = Math.min(currentPhotosPerRow, remainingPhotos);
 
-				const rowPhotos = photos.slice(i, i + currentPhotosPerRow);
+				const rowPhotos = [];
+				const maxDaysDiff = 5;
+				for (let j = 0; j < currentPhotosPerRow && i + j < photos.length; j++) {
+					const photo = photos[i + j];
+					if (rowPhotos.length > 0) {
+						const lastPhoto = rowPhotos[rowPhotos.length - 1];
+						const daysDiff =
+							Math.abs(photo.captureDate - lastPhoto.captureDate) /
+							(1000 * 60 * 60 * 24);
+						if (daysDiff > maxDaysDiff) {
+							break;
+						}
+					}
+					rowPhotos.push(photo);
+				}
+
 				allRows.push({
 					group: groupName,
 					orientation,
 					images: rowPhotos,
 					firstPhotoDate: rowPhotos[0].captureDate,
-					columns: currentPhotosPerRow,
+					columns: rowPhotos.length,
 				});
-				i += currentPhotosPerRow;
+				i += rowPhotos.length;
 			}
 		}
 	}
