@@ -1,0 +1,342 @@
+#!/usr/bin/env node
+
+// Generates HTML photo gallery from a folder of images with Apple Photos-style layout.
+//
+// ---
+// Author: Artem Sapegin, sapegin.me
+// License: MIT
+// https://github.com/sapegin/dotfiles
+
+import path from 'node:path';
+import fs from 'node:fs/promises';
+import os from 'node:os';
+import ExifReader from 'exifreader';
+
+const SOURCE_DIR = path.join(os.homedir(), 'Pictures/JunkyardPhotoAlbum');
+const OUTPUT_DIR = path.join(os.homedir(), 'Documents/JunkyardPhotoAlbum');
+const IMAGES_DIR = path.join(OUTPUT_DIR, 'images');
+const OUTPUT_FILE = path.join(OUTPUT_DIR, 'index.html');
+
+async function readExifData(filePath) {
+	try {
+		const buffer = await fs.readFile(filePath);
+		const exif = ExifReader.load(buffer);
+
+		const dateStr = exif.DateTimeOriginal?.description ?? '';
+		const width = exif['Image Width']?.value ?? 0;
+		const height = exif['Image Height']?.value ?? 0;
+		const make = exif.Make?.description ?? '';
+
+		// Parse EXIF date format: "YYYY:MM:DD HH:MM:SS"
+		let captureDate = new Date(0);
+		if (dateStr) {
+			const parts = dateStr.split(' ');
+			if (parts.length === 2) {
+				const datePart = parts[0].replace(/:/g, '-');
+				const timePart = parts[1];
+				captureDate = new Date(`${datePart}T${timePart}`);
+			}
+		}
+
+		// Fallback to filename parsing if no EXIF date
+		if (captureDate.getTime() === 0) {
+			const filename = path.basename(filePath);
+
+			// Try format: YYYY-MM-DD (e.g., "2023-12-15_0293_Artem_Sapegin")
+			const fullDateMatch = filename.match(/(\d{4})-(\d{2})-(\d{2})/);
+			if (fullDateMatch) {
+				captureDate = new Date(
+					`${fullDateMatch[1]}-${fullDateMatch[2]}-${fullDateMatch[3]}`
+				);
+			} else {
+				// Try format: YYYY-MM (e.g., "Thermal_2025-06_002")
+				const monthOnlyMatch = filename.match(/(\d{4})-(\d{2})/);
+				if (monthOnlyMatch) {
+					captureDate = new Date(
+						// Assume 15th of the month as there's no day in the filename
+						`${monthOnlyMatch[1]}-${monthOnlyMatch[2]}-15`
+					);
+				}
+			}
+		}
+
+		return { captureDate, width, height, make };
+	} catch (error) {
+		console.error(`Error reading EXIF from ${filePath}:`, error.message);
+		return { captureDate: new Date(0), width: 0, height: 0, make: '' };
+	}
+}
+
+function getGroup(make) {
+	const makeUpper = make.toUpperCase();
+
+	if (makeUpper.includes('CANON') || makeUpper.includes('FUJIFILM')) {
+		return 'serious';
+	}
+
+	if (makeUpper.includes('APPLE')) {
+		return 'mobile';
+	}
+
+	return 'fun';
+}
+
+function getOrientation(width, height) {
+	if (width === 0 || height === 0) {
+		return 'unknown';
+	}
+
+	const ratio = width / height;
+
+	// Panoramic: wider than 16:7
+	if (ratio > 16 / 7) {
+		return 'panoramic';
+	}
+
+	// Portrait or square: not wider than tall
+	if (ratio <= 1.05) {
+		return 'portrait';
+	}
+
+	// Landscape: wider than tall but not panoramic
+	return 'landscape';
+}
+
+function getRowConfig(group) {
+	if (group === 'serious') {
+		return {
+			landscape: 2,
+			portrait: 3,
+			panoramic: 1,
+		};
+	}
+
+	// Mobile and fun use the same config
+	return {
+		landscape: 4,
+		portrait: 5,
+		panoramic: 2,
+	};
+}
+
+async function getAllImages() {
+	// TODO: We don't need all of these but we should add AVIF when we add photos
+	// from daily notes
+	const imageFiles = await Array.fromAsync(
+		fs.glob('*.{jpg,jpeg,png,heic,gif,webp}', {
+			cwd: SOURCE_DIR,
+		})
+	);
+
+	console.log(`Found ${imageFiles.length} images`);
+
+	const images = [];
+	for (const file of imageFiles) {
+		const filePath = path.join(SOURCE_DIR, file);
+		const { captureDate, width, height, make } = await readExifData(filePath);
+		const group = getGroup(make);
+		const orientation = getOrientation(width, height);
+
+		images.push({
+			filename: file,
+			sourcePath: filePath,
+			captureDate,
+			width,
+			height,
+			make,
+			group,
+			orientation,
+		});
+	}
+
+	// Sort by capture date
+	images.sort((a, b) => a.captureDate - b.captureDate);
+
+	return images;
+}
+
+function createRows(images) {
+	// Group images by group and orientation
+	const groups = {
+		serious: { landscape: [], portrait: [], panoramic: [] },
+		mobile: { landscape: [], portrait: [], panoramic: [] },
+		fun: { landscape: [], portrait: [], panoramic: [] },
+	};
+
+	for (const img of images) {
+		if (groups[img.group] && groups[img.group][img.orientation]) {
+			groups[img.group][img.orientation].push(img);
+		}
+	}
+
+	const allRows = [];
+
+	// Process each group
+	for (const [groupName, orientations] of Object.entries(groups)) {
+		const config = getRowConfig(groupName);
+
+		// Process each orientation within the group
+		for (const [orientation, photos] of Object.entries(orientations)) {
+			if (photos.length === 0) continue;
+
+			const photosPerRow = config[orientation];
+			let i = 0;
+
+			while (i < photos.length) {
+				const rowPhotos = photos.slice(i, i + photosPerRow);
+				allRows.push({
+					group: groupName,
+					orientation,
+					images: rowPhotos,
+					firstPhotoDate: rowPhotos[0].captureDate,
+				});
+				i += photosPerRow;
+			}
+		}
+	}
+
+	// Sort rows by the date of the first photo in each row
+	allRows.sort((a, b) => a.firstPhotoDate - b.firstPhotoDate);
+
+	return allRows;
+}
+
+async function copyImages(images) {
+	await fs.mkdir(IMAGES_DIR, { recursive: true });
+
+	for (const img of images) {
+		const destPath = path.join(IMAGES_DIR, img.filename);
+		await fs.copyFile(img.sourcePath, destPath);
+	}
+
+	console.log(`Copied ${images.length} images to ${IMAGES_DIR}`);
+}
+
+function generateHTML(rows) {
+	const rowsHtml = rows
+		.map((row) => {
+			const imagesHtml = row.images
+				.map((img) => {
+					const imgPath = `images/${img.filename}`;
+					return `<div class="photo"><img src="${imgPath}" alt="${img.filename}" loading="lazy"></div>`;
+				})
+				.join('\n        ');
+
+			const config = getRowConfig(row.group);
+			const columns = config[row.orientation];
+			const rowClass = `row-${row.orientation} row-cols-${columns}`;
+			return `    <div class="row ${rowClass}">
+        ${imagesHtml}
+      </div>`;
+		})
+		.join('\n');
+
+	return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Junkyard Photo Album</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 1rem;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #fff;
+    }
+    h1 {
+      color: #fff;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .gallery {
+      max-width: 1600px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .row {
+      display: grid;
+      gap: 4px;
+    }
+    .row-cols-1 {
+      grid-template-columns: repeat(1, 1fr);
+    }
+    .row-cols-2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .row-cols-3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .row-cols-4 {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .row-cols-5 {
+      grid-template-columns: repeat(5, 1fr);
+    }
+    .photo {
+      background: #fff;
+      overflow: hidden;
+    }
+    .row-portrait .photo {
+      aspect-ratio: 4 / 5;
+    }
+    .row-landscape .photo {
+      aspect-ratio: 5 / 4;
+    }
+    .row-panoramic .photo {
+      aspect-ratio: 3 / 1;
+    }
+    .photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    @media (max-width: 768px) {
+      .row-cols-3,
+      .row-cols-4,
+      .row-cols-5 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Junkyard photo album</h1>
+  <div class="gallery">
+${rowsHtml}
+  </div>
+</body>
+</html>`;
+}
+
+async function main() {
+	console.log('Reading images...');
+	const images = await getAllImages();
+
+	if (images.length === 0) {
+		console.log('No images found');
+		return;
+	}
+
+	console.log('Creating rows...');
+	const rows = createRows(images);
+	console.log(`Created ${rows.length} rows`);
+
+	console.log('Copying images...');
+	await copyImages(images);
+
+	console.log('Generating HTML...');
+	const html = generateHTML(rows);
+	await fs.mkdir(OUTPUT_DIR, { recursive: true });
+	await fs.writeFile(OUTPUT_FILE, html);
+
+	console.log(`Gallery generated at: ${OUTPUT_FILE}`);
+}
+
+main().catch(console.error);
