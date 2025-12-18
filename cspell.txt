@@ -34,6 +34,7 @@ greppability
 greppable
 hackathon
 Hygraph
+instax
 journaling
 keycap
 keycaps

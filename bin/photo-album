@@ -115,7 +115,7 @@ function getRowConfig(group) {
 	return {
 		landscape: 4,
 		portrait: 5,
-		panoramic: 2,
+		panoramic: 1,
 	};
 }
 
@@ -170,6 +170,8 @@ function createRows(images) {
 	}
 
 	const allRows = [];
+	const rowCounters = {};
+	const reductionCounters = {};
 
 	// Process each group
 	for (const [groupName, orientations] of Object.entries(groups)) {
@@ -179,18 +181,39 @@ function createRows(images) {
 		for (const [orientation, photos] of Object.entries(orientations)) {
 			if (photos.length === 0) continue;
 
+			const key = `${groupName}-${orientation}`;
+			if (!rowCounters[key]) {
+				rowCounters[key] = 0;
+			}
+			if (!reductionCounters[key]) {
+				reductionCounters[key] = 0;
+			}
+
 			const photosPerRow = config[orientation];
 			let i = 0;
 
 			while (i < photos.length) {
-				const rowPhotos = photos.slice(i, i + photosPerRow);
+				rowCounters[key]++;
+
+				let currentPhotosPerRow = photosPerRow;
+				if (rowCounters[key] % 2 === 0 && photosPerRow > 2) {
+					reductionCounters[key]++;
+					const reduction = reductionCounters[key] % 2 === 0 ? 2 : 1;
+					currentPhotosPerRow = Math.max(2, photosPerRow - reduction);
+				}
+
+				const remainingPhotos = photos.length - i;
+				currentPhotosPerRow = Math.min(currentPhotosPerRow, remainingPhotos);
+
+				const rowPhotos = photos.slice(i, i + currentPhotosPerRow);
 				allRows.push({
 					group: groupName,
 					orientation,
 					images: rowPhotos,
 					firstPhotoDate: rowPhotos[0].captureDate,
+					columns: currentPhotosPerRow,
 				});
-				i += photosPerRow;
+				i += currentPhotosPerRow;
 			}
 		}
 	}
@@ -218,12 +241,14 @@ function generateHTML(rows) {
 			const imagesHtml = row.images
 				.map((img) => {
 					const imgPath = `images/${img.filename}`;
-					return `<div class="photo"><img src="${imgPath}" alt="${img.filename}" loading="lazy"></div>`;
+					const isInstax = img.filename.startsWith('Instax');
+					const photoClass = isInstax ? 'photo photo-instax' : 'photo';
+					return `<div class="${photoClass}"><img src="${imgPath}" alt="${img.filename}" loading="lazy"></div>`;
 				})
 				.join('\n        ');
 
-			const config = getRowConfig(row.group);
-			const columns = config[row.orientation];
+			const columns = row.columns;
+
 			const rowClass = `row-${row.orientation} row-cols-${columns}`;
 			return `    <div class="row ${rowClass}">
         ${imagesHtml}
@@ -250,21 +275,22 @@ function generateHTML(rows) {
     h1 {
       color: #fff;
       text-align: center;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
     }
     .gallery {
       max-width: 1600px;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 1rem;
     }
     .row {
       display: grid;
-      gap: 4px;
+      gap: 1rem;
     }
     .row-cols-1 {
       grid-template-columns: repeat(1, 1fr);
+      margin-block: 1rem;
     }
     .row-cols-2 {
       grid-template-columns: repeat(2, 1fr);
@@ -279,8 +305,13 @@ function generateHTML(rows) {
       grid-template-columns: repeat(5, 1fr);
     }
     .photo {
+      margin-inline: auto;
+      max-height: 100vh;
       background: #fff;
       overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .row-portrait .photo {
       aspect-ratio: 4 / 5;
@@ -294,8 +325,12 @@ function generateHTML(rows) {
     .photo img {
       width: 100%;
       height: 100%;
+      max-height: calc(100vh - 2rem);
       object-fit: contain;
       display: block;
+    }
+    .photo-instax {
+      padding: 1.5rem;
     }
     @media (max-width: 768px) {
       .row-cols-3,
