@@ -240,7 +240,70 @@ function createRows(images) {
 	// Sort rows by the date of the first photo in each row
 	allRows.sort((a, b) => a.firstPhotoDate - b.firstPhotoDate);
 
-	return allRows;
+	return mergeSinglePhotoRows(allRows);
+}
+
+function mergeSinglePhotoRows(rows) {
+	const result = [];
+	let i = 0;
+
+	while (i < rows.length) {
+		const row = rows[i];
+
+		// Keep panoramic and serious landscape single-photo rows as-is
+		if (
+			row.columns === 1 &&
+			(row.orientation === 'panoramic' ||
+				(row.group === 'serious' && row.orientation === 'landscape'))
+		) {
+			result.push(row);
+			i++;
+			continue;
+		}
+
+		// Check if current row has 1 photo and can be merged
+		if (row.columns === 1) {
+			const mergeable = [row];
+			let j = i + 1;
+
+			// Collect consecutive single-photo rows that can be merged
+			while (j < rows.length && mergeable.length < 3) {
+				const nextRow = rows[j];
+				if (
+					nextRow.columns === 1 &&
+					nextRow.orientation !== 'panoramic' &&
+					!(nextRow.group === 'serious' && nextRow.orientation === 'landscape')
+				) {
+					mergeable.push(nextRow);
+					j++;
+				} else {
+					break;
+				}
+			}
+
+			// Only merge if we found at least 2 rows to merge
+			if (mergeable.length >= 2) {
+				const mergedImages = mergeable.flatMap((r) => r.images);
+				result.push({
+					group: mergeable[0].group,
+					orientation: mergeable[0].orientation,
+					images: mergedImages,
+					firstPhotoDate: mergeable[0].firstPhotoDate,
+					columns: mergedImages.length,
+				});
+				i = j;
+			} else {
+				// Keep single-photo row as-is
+				result.push(row);
+				i++;
+			}
+		} else {
+			result.push(row);
+			i++;
+		}
+	}
+
+	return result;
 }
 
 function groupImagesByYear(images) {
