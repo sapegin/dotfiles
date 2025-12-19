@@ -15,7 +15,11 @@ import ExifReader from 'exifreader';
 const SOURCE_DIR = path.join(os.homedir(), 'Pictures/JunkyardPhotoAlbum');
 const OUTPUT_DIR = path.join(os.homedir(), 'Documents/JunkyardPhotoAlbum');
 const IMAGES_DIR = path.join(OUTPUT_DIR, 'images');
-const OUTPUT_FILE = path.join(OUTPUT_DIR, 'index.html');
+const INDEX_FILE = path.join(OUTPUT_DIR, 'index.html');
+
+function getYearFile(year) {
+	return path.join(OUTPUT_DIR, `${year}.html`);
+}
 
 async function readExifData(filePath) {
 	try {
@@ -239,6 +243,18 @@ function createRows(images) {
 	return allRows;
 }
 
+function groupImagesByYear(images) {
+	const byYear = {};
+	for (const img of images) {
+		const year = img.captureDate.getFullYear();
+		if (!byYear[year]) {
+			byYear[year] = [];
+		}
+		byYear[year].push(img);
+	}
+	return byYear;
+}
+
 async function copyImages(images) {
 	await fs.mkdir(IMAGES_DIR, { recursive: true });
 
@@ -250,7 +266,44 @@ async function copyImages(images) {
 	console.log(`Copied ${images.length} images to ${IMAGES_DIR}`);
 }
 
-function generateHTML(rows) {
+function getCommonCSS() {
+	return `* {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 1rem;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #fff;
+    }
+    h1 {
+      font-size: 7vw;
+      font-weight: normal;
+      margin: 0 0 2vw;
+      color: #111;
+      text-align: center;
+    }`;
+}
+
+function createHTMLPage(title, bodyContent, additionalCSS = '') {
+	return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>${title}</title>
+  <style>
+    ${getCommonCSS()}${additionalCSS}
+  </style>
+</head>
+<body>
+  <h1>${title}</h1>
+${bodyContent}
+</body>
+</html>`;
+}
+
+function generateHTML(rows, year) {
 	const rowsHtml = rows
 		.map((row) => {
 			const imagesHtml = row.images
@@ -271,29 +324,11 @@ function generateHTML(rows) {
 		})
 		.join('\n');
 
-	return `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Junkyard Photo Album</title>
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-    body {
-      margin: 0;
-      padding: 1rem;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #fff;
-    }
-    h1 {
-      font-size: 8vw;
-      font-weight: normal;
-      margin: 0 0 2vw;
-      color: #111;
-      text-align: center;
-    }
+	const bodyContent = `  <div class="gallery">
+${rowsHtml}
+  </div>`;
+
+	const additionalCSS = `
     .gallery {
       max-width: 1600px;
       margin: 0 auto;
@@ -352,16 +387,50 @@ function generateHTML(rows) {
       .row-cols-5 {
         grid-template-columns: 1fr;
       }
+    }`;
+
+	return createHTMLPage(
+		`Junkyard photo album — ${year}`,
+		bodyContent,
+		additionalCSS
+	);
+}
+
+function generateIndexHTML(years) {
+	const yearsHtml = years
+		.map((year) => `    <li><a href="${year}.html">${year}</a></li>`)
+		.join('\n');
+
+	const bodyContent = `  <ul class="years">
+${yearsHtml}
+  </ul>`;
+
+	const additionalCSS = `
+    .years {
+      max-width: 600px;
+      margin: 0 auto;
+      list-style: none;
+      padding: 0;
     }
-  </style>
-</head>
-<body>
-  <h1>Junkyard photo album</h1>
-  <div class="gallery">
-${rowsHtml}
-  </div>
-</body>
-</html>`;
+    .years li {
+      margin-bottom: 1rem;
+    }
+    .years a {
+      display: block;
+      padding: 1rem 2rem;
+      font-size: 2rem;
+      color: #6b676f;
+      text-decoration: none;
+      background: #e8e5eb;
+      border-radius: 0.5rem;
+      text-align: center;
+      transition: background 0.2s;
+    }
+    .years a:hover {
+      background: #dbd7e0;
+    }`;
+
+	return createHTMLPage('Junkyard photo album', bodyContent, additionalCSS);
 }
 
 async function main() {
@@ -373,19 +442,33 @@ async function main() {
 		return;
 	}
 
-	console.log('Creating rows...');
-	const rows = createRows(images);
-	console.log(`Created ${rows.length} rows`);
+	console.log('Grouping by year...');
+	const imagesByYear = groupImagesByYear(images);
+	const years = Object.keys(imagesByYear).sort((a, b) => b - a);
+	console.log(`Found ${years.length} years: ${years.join(', ')}`);
 
 	console.log('Copying images...');
 	await copyImages(images);
 
-	console.log('Generating HTML...');
-	const html = generateHTML(rows);
 	await fs.mkdir(OUTPUT_DIR, { recursive: true });
-	await fs.writeFile(OUTPUT_FILE, html);
 
-	console.log(`Gallery generated at: ${OUTPUT_FILE}`);
+	// Generate year-specific HTML files
+	for (const year of years) {
+		console.log(`Generating ${year}.html...`);
+		const yearImages = imagesByYear[year];
+		const rows = createRows(yearImages);
+		const html = generateHTML(rows, year);
+		await fs.writeFile(getYearFile(year), html);
+	}
+
+	// Generate index page
+	console.log('Generating index.html...');
+	const indexHtml = generateIndexHTML(years);
+	await fs.writeFile(INDEX_FILE, indexHtml);
+
+	console.log(`Gallery generated at: ${OUTPUT_DIR}`);
+	console.log(`Index: ${INDEX_FILE}`);
+	years.forEach((year) => console.log(`  ${year}: ${getYearFile(year)}`));
 }
 
 main().catch(console.error);
