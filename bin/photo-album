@@ -531,7 +531,6 @@ async function main() {
 
 	console.log(`Gallery generated at: ${OUTPUT_DIR}`);
 	console.log(`Index: ${INDEX_FILE}`);
-	years.forEach((year) => console.log(`  ${year}: ${getYearFile(year)}`));
 }
 
 main().catch(console.error);
