@@ -10,12 +10,15 @@
 import path from 'node:path';
 import fs from 'node:fs/promises';
 import os from 'node:os';
+import sharp from 'sharp';
 import ExifReader from 'exifreader';
 
 const SOURCE_DIR = path.join(os.homedir(), 'Pictures/JunkyardPhotoAlbum');
 const OUTPUT_DIR = path.join(os.homedir(), 'Documents/JunkyardPhotoAlbum');
 const IMAGES_DIR = path.join(OUTPUT_DIR, 'images');
 const INDEX_FILE = path.join(OUTPUT_DIR, 'index.html');
+const MAX_DIMENSION = 2048;
+const AVIF_QUALITY = 75;
 
 function getYearFile(year) {
 	return path.join(OUTPUT_DIR, `${year}.html`);
@@ -322,11 +325,39 @@ async function copyImages(images) {
 	await fs.mkdir(IMAGES_DIR, { recursive: true });
 
 	for (const img of images) {
-		const destPath = path.join(IMAGES_DIR, img.filename);
-		await fs.copyFile(img.sourcePath, destPath);
+		const ext = path.extname(img.filename);
+		const nameWithoutExt = path.basename(img.filename, ext);
+		const avifFilename = `${nameWithoutExt}.avif`;
+		const destPath = path.join(IMAGES_DIR, avifFilename);
+
+		let sharpInstance = sharp(img.sourcePath);
+
+		// Resize if needed
+		if (img.width > MAX_DIMENSION || img.height > MAX_DIMENSION) {
+			let newWidth = img.width;
+			let newHeight = img.height;
+
+			if (img.width > img.height) {
+				newWidth = MAX_DIMENSION;
+				newHeight = Math.round(img.height * (MAX_DIMENSION / img.width));
+			} else {
+				newHeight = MAX_DIMENSION;
+				newWidth = Math.round(img.width * (MAX_DIMENSION / img.height));
+			}
+
+			sharpInstance = sharpInstance.resize(newWidth, newHeight, {
+				fit: 'inside',
+				withoutEnlargement: true,
+			});
+		}
+
+		await sharpInstance.avif({ quality: AVIF_QUALITY }).toFile(destPath);
+
+		// Update image filename for HTML generation
+		img.filename = avifFilename;
 	}
 
-	console.log(`Copied ${images.length} images to ${IMAGES_DIR}`);
+	console.log(`Converted ${images.length} images to AVIF in ${IMAGES_DIR}`);
 }
 
 function getCommonCSS() {
