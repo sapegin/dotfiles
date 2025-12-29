@@ -11,6 +11,8 @@
 // License: MIT
 // https://github.com/sapegin/dotfiles
 
+// TODO: Detect missing photos with https:// and show a different error message
+
 import path from 'node:path';
 import fs from 'node:fs/promises';
 import os from 'node:os';
