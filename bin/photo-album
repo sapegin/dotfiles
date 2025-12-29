@@ -326,12 +326,35 @@ async function copyImages(images) {
 
 	const total = images.length;
 	let converted = 0;
+	let skipped = 0;
 
 	for (const img of images) {
 		const ext = path.extname(img.filename);
 		const nameWithoutExt = path.basename(img.filename, ext);
 		const avifFilename = `${nameWithoutExt}.avif`;
 		const destPath = path.join(IMAGES_DIR, avifFilename);
+
+		// Update image filename for HTML generation
+		img.filename = avifFilename;
+
+		// Check if destination exists and is newer than source
+		try {
+			const [sourceStat, destStat] = await Promise.all([
+				fs.stat(img.sourcePath),
+				fs.stat(destPath),
+			]);
+
+			if (destStat.mtime > sourceStat.mtime) {
+				skipped++;
+				converted++;
+				if (converted % 10 === 0 || converted === total) {
+					console.log(`  ${converted}/${total}…`);
+				}
+				continue;
+			}
+		} catch {
+			// Destination doesn't exist, proceed with conversion
+		}
 
 		let sharpInstance = sharp(img.sourcePath);
 
@@ -356,17 +379,15 @@ async function copyImages(images) {
 
 		await sharpInstance.avif({ quality: AVIF_QUALITY }).toFile(destPath);
 
-		// Update image filename for HTML generation
-		img.filename = avifFilename;
-
 		converted++;
 		if (converted % 10 === 0 || converted === total) {
-			const remaining = total - converted;
-			console.log(`  ${converted}/${remaining}…`);
+			console.log(`  ${converted}/${total}…`);
 		}
 	}
 
-	console.log(`Converted ${images.length} images to AVIF in ${IMAGES_DIR}`);
+	console.log(
+		`Converted ${converted - skipped} images, skipped ${skipped} up-to-date images`
+	);
 }
 
 function getCommonCSS() {
