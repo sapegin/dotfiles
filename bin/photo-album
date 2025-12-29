@@ -324,6 +324,9 @@ function groupImagesByYear(images) {
 async function copyImages(images) {
 	await fs.mkdir(IMAGES_DIR, { recursive: true });
 
+	const total = images.length;
+	let converted = 0;
+
 	for (const img of images) {
 		const ext = path.extname(img.filename);
 		const nameWithoutExt = path.basename(img.filename, ext);
@@ -355,6 +358,12 @@ async function copyImages(images) {
 
 		// Update image filename for HTML generation
 		img.filename = avifFilename;
+
+		converted++;
+		if (converted % 10 === 0 || converted === total) {
+			const remaining = total - converted;
+			console.log(`  ${converted}/${remaining}…`);
+		}
 	}
 
 	console.log(`Converted ${images.length} images to AVIF in ${IMAGES_DIR}`);
@@ -541,7 +550,7 @@ async function main() {
 	const years = Object.keys(imagesByYear).sort((a, b) => b - a);
 	console.log(`Found ${years.length} years: ${years.join(', ')}`);
 
-	console.log('Copying images...');
+	console.log(`Converting ${images.length} images…`);
 	await copyImages(images);
 
 	await fs.mkdir(OUTPUT_DIR, { recursive: true });
