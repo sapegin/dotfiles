@@ -578,8 +578,8 @@ async function main() {
 
 	// Generate year-specific HTML files
 	for (const year of years) {
-		console.log(`Generating ${year}.html...`);
 		const yearImages = imagesByYear[year];
+		console.log(`Generating ${year}.html (${yearImages.length} photos)...`);
 		const rows = createRows(yearImages);
 		const html = generateHTML(rows, year);
 		await fs.writeFile(getYearFile(year), html);
