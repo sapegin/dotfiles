@@ -558,7 +558,7 @@ ${yearsHtml}
 }
 
 async function main() {
-	console.log('Reading images...');
+	console.log('Reading images…');
 	const images = await getAllImages();
 
 	if (images.length === 0) {
@@ -566,7 +566,7 @@ async function main() {
 		return;
 	}
 
-	console.log('Grouping by year...');
+	console.log('Grouping by year…');
 	const imagesByYear = groupImagesByYear(images);
 	const years = Object.keys(imagesByYear).sort((a, b) => b - a);
 	console.log(`Found ${years.length} years: ${years.join(', ')}`);
@@ -579,14 +579,14 @@ async function main() {
 	// Generate year-specific HTML files
 	for (const year of years) {
 		const yearImages = imagesByYear[year];
-		console.log(`Generating ${year}.html (${yearImages.length} photos)...`);
+		console.log(`Generating ${year}.html (${yearImages.length} photos)…`);
 		const rows = createRows(yearImages);
 		const html = generateHTML(rows, year);
 		await fs.writeFile(getYearFile(year), html);
 	}
 
 	// Generate index page
-	console.log('Generating index.html...');
+	console.log('Generating index.html…');
 	const indexHtml = generateIndexHTML(years);
 	await fs.writeFile(INDEX_FILE, indexHtml);
 
