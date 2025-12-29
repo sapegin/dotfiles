@@ -33,6 +33,7 @@ async function readExifData(filePath) {
 		const width = exif['Image Width']?.value ?? 0;
 		const height = exif['Image Height']?.value ?? 0;
 		const make = exif.Make?.description ?? '';
+		const rating = exif.Rating?.value ?? 0;
 
 		// Parse EXIF date format: "YYYY:MM:DD HH:MM:SS"
 		let captureDate = new Date(0);
@@ -67,10 +68,10 @@ async function readExifData(filePath) {
 			}
 		}
 
-		return { captureDate, width, height, make };
+		return { captureDate, width, height, make, rating };
 	} catch (error) {
 		console.error(`Error reading EXIF from ${filePath}:`, error.message);
-		return { captureDate: new Date(0), width: 0, height: 0, make: '' };
+		return { captureDate: new Date(0), width: 0, height: 0, make: '', rating: 0 };
 	}
 }
 
@@ -140,7 +141,8 @@ async function getAllImages() {
 	const images = [];
 	for (const file of imageFiles) {
 		const filePath = path.join(SOURCE_DIR, file);
-		const { captureDate, width, height, make } = await readExifData(filePath);
+		const { captureDate, width, height, make, rating } =
+			await readExifData(filePath);
 		const group = getGroup(make);
 		const orientation = getOrientation(width, height);
 
@@ -151,6 +153,7 @@ async function getAllImages() {
 			width,
 			height,
 			make,
+			rating,
 			group,
 			orientation,
 		});
@@ -200,6 +203,21 @@ function createRows(images) {
 			let i = 0;
 
 			while (i < photos.length) {
+				const photo = photos[i];
+
+				// 5-star images get their own row
+				if (photo.rating === 5) {
+					allRows.push({
+						group: groupName,
+						orientation,
+						images: [photo],
+						firstPhotoDate: photo.captureDate,
+						columns: 1,
+					});
+					i++;
+					continue;
+				}
+
 				rowCounters[key]++;
 
 				let currentPhotosPerRow = photosPerRow;
@@ -216,6 +234,10 @@ function createRows(images) {
 				const maxDaysDiff = 5;
 				for (let j = 0; j < currentPhotosPerRow && i + j < photos.length; j++) {
 					const photo = photos[i + j];
+					// Stop if we encounter a 5-star image
+					if (photo.rating === 5) {
+						break;
+					}
 					if (rowPhotos.length > 0) {
 						const lastPhoto = rowPhotos[rowPhotos.length - 1];
 						const daysDiff =
