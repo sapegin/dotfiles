@@ -2,15 +2,20 @@
   "items": [
     {
       "type": "file",
-      "ctime": 1763377483354,
-      "path": "bases/Untagged logs.base",
-      "title": "🚧 Untagged journals"
+      "ctime": 1765553995649,
+      "path": "🐦‍⬛ Dashboard.md"
     },
     {
       "type": "file",
       "ctime": 1765347565511,
       "path": "bases/On this day.base",
       "title": "📆 On this day"
+    },
+    {
+      "type": "file",
+      "ctime": 1765557872429,
+      "path": "⏳ Inbox/Quickies.md",
+      "title": "🦆 Quickies"
     },
     {
       "type": "file",
@@ -26,14 +31,9 @@
     },
     {
       "type": "file",
-      "ctime": 1765553995649,
-      "path": "🐦‍⬛ Dashboard.md"
-    },
-    {
-      "type": "file",
-      "ctime": 1765557872429,
-      "path": "⏳ Inbox/Quickies.md",
-      "title": "🦆 Quickies"
+      "ctime": 1763377483354,
+      "path": "bases/Untagged logs.base",
+      "title": "🚧 Untagged journals"
     }
   ]
 }

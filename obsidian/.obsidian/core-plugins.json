@@ -14,7 +14,7 @@
   "templates": true,
   "note-composer": false,
   "command-palette": true,
-  "slash-command": true,
+  "slash-command": false,
   "editor-status": false,
   "bookmarks": true,
   "markdown-importer": false,

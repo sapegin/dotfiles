@@ -1,0 +1,11 @@
+{
+  "id": "daily-notes-navigation",
+  "name": "Daily Notes Navigation",
+  "version": "1.0.0",
+  "minAppVersion": "0.15.0",
+  "description": "Commands to navigate to previous and next daily notes.",
+  "author": "Artem Sapegin",
+  "authorUrl": "https://sapegin.me",
+  "fundingUrl": "https://buymeacoffee.com/sapegin",
+  "isDesktopOnly": false
+}
