@@ -40,6 +40,7 @@ cask "firefox@developer-edition"
 cask "ghostty" # Terminal emulator
 cask "github" # GitHub Desktop
 cask "google-chrome" # Browser for testing
+cask "hyperkey" # Maps Caps Lock to Super key
 cask "jordanbaird-ice" # Hides menu bar icons
 cask "kap" # Video screen recording
 cask "keka" # Archive reader
