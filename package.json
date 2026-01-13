@@ -16,6 +16,7 @@
     "avif": "^0.5.3",
     "exifreader": "4.32.0",
     "glob": "^11.0.0",
+    "playwright": "^1.50.0",
     "rehype-stringify": "^10.0.1",
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.2",

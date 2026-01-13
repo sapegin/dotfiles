@@ -12,6 +12,7 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import sharp from 'sharp';
 import ExifReader from 'exifreader';
+import { chromium } from 'playwright';
 
 const SOURCE_DIR = path.join(os.homedir(), 'Pictures/JunkyardPhotoAlbum');
 const OUTPUT_DIR = path.join(os.homedir(), 'Documents/JunkyardPhotoAlbum');
@@ -22,6 +23,10 @@ const AVIF_QUALITY = 75;
 
 function getYearFile(year) {
 	return path.join(OUTPUT_DIR, `${year}.html`);
+}
+
+function getYearPdfFile(year) {
+	return path.join(OUTPUT_DIR, `${year}.pdf`);
 }
 
 async function readExifData(filePath) {
@@ -418,7 +423,7 @@ async function copyImages(images) {
 	);
 }
 
-function getCommonCSS() {
+function getCommonCss() {
 	return `* {
       box-sizing: border-box;
     }
@@ -445,7 +450,7 @@ function createHTMLPage(title, bodyContent, additionalCSS = '') {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>${title}</title>
   <style>
-    ${getCommonCSS()}${additionalCSS}
+    ${getCommonCss()}${additionalCSS}
   </style>
 </head>
 <body>
@@ -455,7 +460,7 @@ ${bodyContent}
 </html>`;
 }
 
-function generateHTML(rows, year) {
+function generateHtml(rows, year) {
 	const rowsHtml = rows
 		.map((row) => {
 			const imagesHtml = row.images
@@ -480,7 +485,7 @@ function generateHTML(rows, year) {
 ${rowsHtml}
   </div>`;
 
-	const additionalCSS = `
+	const additionalCss = `
     .gallery {
       max-width: 1600px;
       margin: 0 auto;
@@ -539,12 +544,56 @@ ${rowsHtml}
       .row-cols-5 {
         grid-template-columns: 1fr;
       }
+    }
+    @media print {
+      @page {
+        size: A4 landscape;
+        margin: 1cm;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      h1 {
+        break-inside: avoid;
+        text-align: center;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+      }
+      .gallery {
+        max-width: 100%;
+        gap: 0;
+      }
+      .row {
+        break-before: page;
+        break-inside: avoid;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        padding: 1rem;
+        box-sizing: border-box;
+      }
+      .photo {
+        max-height: none;
+        height: auto;
+      }
+      .photo img {
+        max-height: 90vh;
+        max-width: 100%;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+      }
     }`;
 
 	return createHTMLPage(
 		`Junkyard photo album — ${year}`,
 		bodyContent,
-		additionalCSS
+		additionalCss
 	);
 }
 
@@ -585,6 +634,27 @@ ${yearsHtml}
 	return createHTMLPage('Junkyard photo album', bodyContent, additionalCSS);
 }
 
+async function generatePdf(year) {
+	const htmlPath = getYearFile(year);
+	const pdfPath = getYearPdfFile(year);
+
+	const browser = await chromium.launch();
+	const page = await browser.newPage();
+
+	await page.goto(`file://${htmlPath}`, { waitUntil: 'networkidle' });
+
+	await page.pdf({
+		path: pdfPath,
+		format: 'A4',
+		landscape: true,
+		printBackground: true,
+	});
+
+	await browser.close();
+
+	return pdfPath;
+}
+
 async function main() {
 	console.log('Reading images…');
 	const images = await getAllImages();
@@ -609,8 +679,15 @@ async function main() {
 		const yearImages = imagesByYear[year];
 		console.log(`Generating ${year}.html (${yearImages.length} photos)…`);
 		const rows = createRows(yearImages);
-		const html = generateHTML(rows, year);
+		const html = generateHtml(rows, year);
 		await fs.writeFile(getYearFile(year), html);
+	}
+
+	// Generate year-specific PDF files
+	for (const year of years) {
+		console.log(`Generating ${year}.pdf…`);
+		const pdfPath = await generatePdf(year);
+		console.log(`  PDF saved: ${pdfPath}`);
 	}
 
 	// Generate index page
