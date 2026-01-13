@@ -71,7 +71,13 @@ async function readExifData(filePath) {
 		return { captureDate, width, height, make, rating };
 	} catch (error) {
 		console.error(`Error reading EXIF from ${filePath}:`, error.message);
-		return { captureDate: new Date(0), width: 0, height: 0, make: '', rating: 0 };
+		return {
+			captureDate: new Date(0),
+			width: 0,
+			height: 0,
+			make: '',
+			rating: 0,
+		};
 	}
 }
 
@@ -113,8 +119,8 @@ function getOrientation(width, height) {
 function getRowConfig(group) {
 	if (group === 'serious') {
 		return {
-			landscape: 2,
-			portrait: 3,
+			landscape: 1,
+			portrait: 2,
 			panoramic: 1,
 		};
 	}
