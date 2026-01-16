@@ -145,6 +145,11 @@ body {
   --background-modifier-message: var(--sqrl-gray120);
   --background-modifier-form-field: var(--sqrl-gray180);
 
+  /* Disable translucent blurred backgrounds */
+  --blur-background: var(--background-primary);
+  --blur-translucency-s: 100%;
+  --blur-translucency-m: 100%;
+
   --interactive-normal: var(--sqrl-gray180);
   --interactive-hover: var(--sqrl-gray160);
   --interactive-accent: var(--sqrl-gray100);
@@ -433,6 +438,15 @@ input[type='range']:focus-visible::-webkit-slider-thumb {
     opacity: 1;
 }
 
+/* Suggestions */
+
+.is-mobile .suggestion-container {
+    border-radius: var(--radius-m);
+}
+.is-mobile .suggestion-item {
+    border-radius: var(--radius-s);
+}
+
 /* Vertical tabs (like in settings) */
 
 .vertical-tab-nav-item {
@@ -477,6 +491,9 @@ input[type='range']:focus-visible::-webkit-slider-thumb {
 }
 .metadata-content {
     margin-block-start: .5rem;
+}
+.is-mobile .metadata-content {
+    background-color: transparent;
 }
 .metadata-property:not(:focus-within) * {
     cursor: var(--cursor);
