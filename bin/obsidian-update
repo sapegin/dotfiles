@@ -148,10 +148,10 @@ function getMarkdownImages(body) {
 	});
 }
 
-/** Return basename of the first image in Markdown. */
-function getFirstImage(body) {
+/** Return basename of the given image in Markdown. */
+function getImageByIndex(body, index) {
 	const images = getMarkdownImages(body);
-	return images.length > 0 ? path.basename(images[0]) : undefined;
+	return images.length > 0 ? path.basename(images[index]) : undefined;
 }
 
 /** Calculate decimal coordinate from EXIF GPS data. */
@@ -574,9 +574,10 @@ async function updateNote({
 
 	// Journal notes
 	if (file.includes('📆 Log/') && frontmatter) {
-		// Use the updated image from frontmatter if available, otherwise get from body
-		const firstImage = newFrontmatter.image || getFirstImage(newBody);
-		const metadata = await getImageMetadata(firstImage);
+		// Use the updated image from frontmatter if available, otherwise take the
+		// first image in the Markdown body
+		const firstImage = newFrontmatter.image || getImageByIndex(newBody, 0);
+		const firstImageMetadata = await getImageMetadata(firstImage);
 		let { location } = frontmatter;
 
 		// Set `image` field to the first image of the note
@@ -584,8 +585,8 @@ async function updateNote({
 			newFrontmatter.image = firstImage;
 
 			// Set coordinates if not set already
-			if (metadata.coordinates) {
-				newFrontmatter.coordinates = metadata.coordinates;
+			if (firstImageMetadata.coordinates) {
+				newFrontmatter.coordinates = firstImageMetadata.coordinates;
 			}
 		}
 
@@ -629,12 +630,21 @@ async function updateNote({
 		}
 
 		// Update journal date based on the first photo. The note heading should look
-		// like this: YYYY-MM-DD?!
+		// like this: `YYYY-MM-DD?!` or `YYYY-MM-DD?! N`
 		if (firstImage && /^# \d\d\d\d-\d\d-\d\d\?!/.test(body.trimStart())) {
-			if (metadata.date) {
+			// Get an optional image index (default to the first image)
+			const imageIndexMatch = body.match(/^# \d\d\d\d-\d\d-\d\d\?! (\d+)/);
+			const imageIndex = Number(imageIndexMatch?.[1] || '1') - 1;
+			console.log(`  Updating note date using image #${imageIndex}…`);
+
+			// Get the image metadata
+			const image = getImageByIndex(body, imageIndex);
+			const imageMetadata = await getImageMetadata(image);
+
+			if (imageMetadata.date) {
 				// EXIF date strings look like 2025:02:13 18:25:59. Convert it to filename
 				// format: YYYY-MM-DD_HHss
-				const newBasename = metadata.date.replace(
+				const newBasename = imageMetadata.date.replace(
 					/^(\d{4}):(\d{2}):(\d{2}) (\d{2}):(\d{2}):(\d{2})/,
 					'$1-$2-$3_$4$5'
 				);
@@ -642,7 +652,8 @@ async function updateNote({
 				// Update basename in the file path
 				newFile = file.replace(basename, newBasename);
 
-				// Delete existing weather info, as it should be updated for the new date/time
+				// Delete existing weather info, as it should be updated for the new
+				// date/time
 				delete newFrontmatter.weather;
 			}
 		}
