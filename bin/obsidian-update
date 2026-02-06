@@ -661,6 +661,13 @@ async function updateNote({
 		// Get the date/time from the filename
 		const date = parseNoteDate(path.basename(newFile, '.md'));
 
+		// Check for missing coordinates
+		if (location && newFrontmatter.coordinates === undefined) {
+			console.log(
+				`⚠️  Missing coordinates for ${location} in ${path.basename(file)}`
+			);
+		}
+
 		// Fetch weather if we have coordinates and no weather field yet
 		if (
 			date &&
