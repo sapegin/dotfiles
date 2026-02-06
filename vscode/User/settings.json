@@ -219,6 +219,8 @@
   "zenMode.showTabs": "none",
 
   // Plugins
+  "amp.url": "https://ampcode.com/",
+  "amp.notifications.enabled": false,
   "catppuccin-icons.hidesExplorerArrows": true,
   "chat.agent.thinkingStyle": "collapsed",
   "chat.agentSessionsViewLocation": "disabled",
