@@ -456,7 +456,9 @@ async function optimizeImages(imageFiles) {
 		}
 	}
 
-	console.log(`\nOptimized ${renamedFiles.size} images`);
+	if (renamedFiles.size > 0) {
+		console.log(`\nOptimized ${renamedFiles.size} images`);
+	}
 	return renamedFiles;
 }
 
@@ -724,14 +726,11 @@ async function updateNote({
 }
 
 async function updateNotes(renamedFiles) {
-	console.log('\n📝 Updating notes…');
-
 	let updatedCount = 0;
 
 	const allNotes = await Array.fromAsync(
 		fs.glob(path.join(VAULT_DIR, ALL_NOTES_PATTERN))
 	);
-	console.log(`\nFound ${allNotes.length} notes`);
 
 	// Gather all attachment filenames
 	const imageFiles = await Array.fromAsync(
@@ -791,9 +790,7 @@ async function main() {
 
 	await fs.mkdir(TRASH_DIR, { recursive: true });
 
-	console.log('\n📸 Updating images…');
-
-	console.log('\nGathering the files…');
+	console.log('\n💿 Gathering the files…');
 	const markdownFiles = await Array.fromAsync(
 		fs.glob(path.join(VAULT_DIR, ALL_NOTES_PATTERN))
 	);
@@ -801,11 +798,15 @@ async function main() {
 		fs.glob(path.join(VAULT_DIR, ALL_IMAGES_PATTERN))
 	);
 	console.log(
-		`Found ${markdownFiles.length} notes and ${imageFiles.length} images`
+		`\nFound ${markdownFiles.length} notes and ${imageFiles.length} images`
 	);
+
+	console.log('\n📸 Updating images…');
 
 	console.log('\nOptimizing images…');
 	const renamedFiles = await optimizeImages(imageFiles);
+
+	console.log('\n📝 Updating notes…');
 
 	await updateNotes(renamedFiles);
 
@@ -814,7 +815,7 @@ async function main() {
 		fs.glob(path.join(VAULT_DIR, ALL_NOTES_PATTERN))
 	);
 	const usedImages = await findUsedImages(updatedMarkdownFiles);
-	console.log(`Found ${usedImages.size} used images`);
+	console.log(`\nFound ${usedImages.size} image usages`);
 
 	console.log('\nRemoving unused images…');
 	const remainingImageFiles = await Array.fromAsync(
