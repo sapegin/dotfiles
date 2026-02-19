@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+# Automatically creates an SSH tunnel to a remote Ollama server.
+#
+# Prerequisites:
+# 1. Enable SSH on the Mac Mini
+#    1. Open System Settings → General → Sharing
+#    2. Turn on Remote Login
+#    3. Edit local hostname
+
+# ---
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+
+USERNAME="artemsapegin"
+LOCAL_PORT="11434"
+HOSTNAME="toad.local"
+
+echo "Creating SSH tunnel to Ollama server on ${USERNAME}@${HOSTNAME}:11434…"
+echo "URL: http://localhost:${LOCAL_PORT}/v1"
+ssh -L ${LOCAL_PORT}:localhost:11434 ${USERNAME}@${HOSTNAME} -N
