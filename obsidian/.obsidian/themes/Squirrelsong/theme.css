@@ -17,6 +17,8 @@ body {
   --toggle-thumb-radius: 16px;
   --slider-thumb-radius: 12px;
   --modal-radius: 12px;
+  --touch-radius-xxs: 12px;
+  --touch-radius-xs: 12px;
 
   --cursor: pointer;
   --cursor-link: pointer;
@@ -81,6 +83,8 @@ body {
   --slider-track-shadow: inset 0px 0px 0px 1px rgba(0, 0, 0, 0.05), 0px 0px 0px 1px rgba(255, 255, 255, 0.05);
  --slider-thumb-shadow: inset 0px 1px 0px 1px rgba(255, 255, 255, 1), inset 0px 0px 0px 1px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.25);
  --slider-thumb-shadow-hover: inset 0px 1px 0px 1px rgba(255, 255, 255, 1), inset 0px 0px 0px 1px rgba(0, 0, 0, 0.1), 0 1px 4px rgba(0, 0, 0, 0.3);
+  --top-toolbar-shadow: 0 5px 25px rgba(0, 0, 0, .01);
+  --bottom-toolbar-shadow: 0 -5px 25px rgba(0, 0, 0, .01);
   --transition: text-shadow 0.15s ease-in,
             box-shadow 0.15s ease-in,
             text-decoration 0.15s ease-in,
@@ -152,6 +156,8 @@ body {
   --blur-s: none;
   --blur-m: none;
   --blur-l: none;
+  --blur-opacity-s: 100%;
+  --blur-opacity-m: 100%;
 
   --interactive-normal: var(--sqrl-gray180);
   --interactive-hover: var(--sqrl-gray160);
@@ -187,8 +193,6 @@ body {
   --tab-divider-color: var(--sqrl-gray160);
   --tab-outline-color: var(--sqrl-gray150);
   --tab-curve: 0;
-
-  --navbar-max-width: 100%;
 
   --blockquote-border-thickness: 4px;
   --blockquote-border-color: var(--sqrl-gray120);
@@ -480,17 +484,62 @@ input[type='range']:focus-visible::-webkit-slider-thumb {
     text-shadow: var(--active-text-shadow);
 }
 
-/* Navigation */
+/* Top navigation */
 
+.is-phone.is-floating-nav  {
+    /* Remove ugly white gradients on top and bottom while scrolling */
+    --view-top-fade-mask: none;
+    --view-bottom-fade-mask: none;
+}
+
+.is-mobile.is-floating-nav.is-phone .view-header {
+    background-color: var(--background-primary);
+    border: 0;
+    border-bottom: 1px solid var(--sqrl-gray160);
+    border-radius: 0;
+    box-shadow: var(--top-toolbar-shadow);
+    margin-top: 0;
+    padding-top: var(--view-header-top-offset);
+}
+.is-mobile.is-floating-nav.is-phone .view-header .mod-raised {
+    border: none;
+}
+
+/* Bottom navigation */
+
+.is-mobile.is-floating-nav {
+  --navbar-max-width: 100%;
+}
 .mobile-navbar.mod-raised {
     width: 100vw;
-    margin-bottom: 0;
     border-radius: 0;
-    border-width: 1px 0 0 0;
+    justify-content: center;
 }
 .mobile-navbar-action .clickable-icon, .mobile-navbar-action button {
     border-radius: 0;
 }
+.is-floating-nav .mobile-navbar {
+    height: calc(var(--navbar-height) + (var(--navbar-bottom-offset) - var(--keyboard-height) - 2px));
+    margin-bottom: 0;
+    padding-bottom: calc(var(--navbar-bottom-offset) - var(--keyboard-height) - 2px);
+}
+
+.is-floating-nav .mobile-toolbar {
+    background-color: var(--background-primary);
+    box-shadow: none;
+}
+.is-floating-nav .mobile-toolbar-options-container {
+    width: auto;
+    border: none;
+    box-shadow: none;
+}
+.is-mobile.is-floating-nav .mod-raised {
+    border: 0;
+    border-top: 1px solid var(--sqrl-gray160);
+    border-radius: 0;
+    box-shadow: var(--bottom-toolbar-shadow);
+}
+
 
 /* Metadata (properties) section */
 
@@ -501,6 +550,10 @@ input[type='range']:focus-visible::-webkit-slider-thumb {
     margin-inline: -1rem;
     padding-inline: .5rem;
     border-radius: 0;
+    overflow: hidden;
+}
+.metadata-properties {
+    margin-inline: .25rem;
 }
 .metadata-properties-heading {
     display: flex;
