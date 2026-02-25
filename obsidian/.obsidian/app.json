@@ -14,5 +14,12 @@
     "templates/"
   ],
   "promptDelete": false,
-  "showIndentGuide": false
+  "showIndentGuide": false,
+  "alwaysUpdateLinks": true,
+  "pdfExportSettings": {
+    "pageSize": "A4",
+    "landscape": false,
+    "margin": "0",
+    "downscalePercent": 100
+  }
 }
