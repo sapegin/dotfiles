@@ -89,6 +89,8 @@ function parseNoteDate(basename) {
 	if (datetimeMatch) {
 		const [, date, hour, minute] = datetimeMatch;
 		return new Date(Date.parse(`${date}T${hour}:${minute}:00`));
+	} else {
+		console.error('⚠️ Cannot parse date for', basename);
 	}
 	return undefined;
 }
