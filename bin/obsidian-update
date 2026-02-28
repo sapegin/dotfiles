@@ -12,6 +12,7 @@
 // https://github.com/sapegin/dotfiles
 
 // TODO: Detect missing photos with https:// and show a different error message
+// TODO: Detect incorrect note properties
 
 import path from 'node:path';
 import fs from 'node:fs/promises';
@@ -577,7 +578,26 @@ async function updateNote({
 	}
 
 	// Journal notes
-	if (file.includes('📆 Log/') && frontmatter) {
+	if (file.includes('📆 Log/') && newFrontmatter) {
+		// Detect misspelled note properties
+		for (const field in newFrontmatter) {
+			if (
+				[
+					'coordinates',
+					'crumbs',
+					'excerpt',
+					'image',
+					'location',
+					'source',
+					'sputniks',
+					'tags',
+					'weather',
+				].includes(field) === false
+			) {
+				console.error(`⚠️ Invalid property name “${field}” in`, basename);
+			}
+		}
+
 		// Use the updated image from frontmatter if available, otherwise take the
 		// first image in the Markdown body
 		const firstImage = newFrontmatter.image || getImageByIndex(newBody, 0);
