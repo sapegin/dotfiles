@@ -479,7 +479,13 @@ function parseFrontmatter(content) {
 }
 
 function serializeFrontmatter(frontmatter) {
-	const yamlContent = YAML.stringify(frontmatter, undefined, {
+	// Remove empty (undefined, null, '') values
+	const cleanFrontmatter = Object.fromEntries(
+		Object.entries(frontmatter).filter(
+			([, value]) => value !== undefined && value !== null && value !== ''
+		)
+	);
+	const yamlContent = YAML.stringify(cleanFrontmatter, undefined, {
 		// Don't wrap long lines
 		lineWidth: 0,
 	});
