@@ -12,7 +12,6 @@
 // https://github.com/sapegin/dotfiles
 
 // TODO: Detect missing photos with https:// and show a different error message
-// TODO: Detect incorrect note properties
 
 import path from 'node:path';
 import fs from 'node:fs/promises';
@@ -585,6 +584,15 @@ async function updateNote({
 
 	// Journal notes
 	if (file.includes('📆 Log/') && newFrontmatter) {
+		// Detect incorrect log folder (e.g. 2026/2004-01-03_1134.md)
+		const folderMatch = file.match(/📆 Log\/(\d{4})\//);
+		const dateMatch = basename.match(/^(\d{4})-/);
+		if (folderMatch && dateMatch && folderMatch[1] !== dateMatch[1]) {
+			console.log(
+				`⚠️  Wrong folder: ${basename} is in ${folderMatch[1]}/ but should be in ${dateMatch[1]}/`
+			);
+		}
+
 		// Detect misspelled note properties
 		for (const field in newFrontmatter) {
 			if (
