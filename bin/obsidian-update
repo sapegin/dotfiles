@@ -89,6 +89,8 @@ function parseNoteDate(basename) {
 	if (datetimeMatch) {
 		const [, date, hour, minute] = datetimeMatch;
 		return new Date(Date.parse(`${date}T${hour}:${minute}:00`));
+	} else {
+		console.error('⚠️ Cannot parse date for', basename);
 	}
 	return undefined;
 }
@@ -476,7 +478,13 @@ function parseFrontmatter(content) {
 }
 
 function serializeFrontmatter(frontmatter) {
-	const yamlContent = YAML.stringify(frontmatter, undefined, {
+	// Remove empty (undefined, null, '') values
+	const cleanFrontmatter = Object.fromEntries(
+		Object.entries(frontmatter).filter(
+			([, value]) => value !== undefined && value !== null && value !== ''
+		)
+	);
+	const yamlContent = YAML.stringify(cleanFrontmatter, undefined, {
 		// Don't wrap long lines
 		lineWidth: 0,
 	});
@@ -575,7 +583,35 @@ async function updateNote({
 	}
 
 	// Journal notes
-	if (file.includes('📆 Log/') && frontmatter) {
+	if (file.includes('📆 Log/') && newFrontmatter) {
+		// Detect incorrect log folder (e.g. 2026/2004-01-03_1134.md)
+		const folderMatch = file.match(/📆 Log\/(\d{4})\//);
+		const dateMatch = basename.match(/^(\d{4})-/);
+		if (folderMatch && dateMatch && folderMatch[1] !== dateMatch[1]) {
+			console.log(
+				`⚠️  Wrong folder: ${basename} is in ${folderMatch[1]}/ but should be in ${dateMatch[1]}/`
+			);
+		}
+
+		// Detect misspelled note properties
+		for (const field in newFrontmatter) {
+			if (
+				[
+					'coordinates',
+					'crumbs',
+					'excerpt',
+					'image',
+					'location',
+					'source',
+					'sputniks',
+					'tags',
+					'weather',
+				].includes(field) === false
+			) {
+				console.error(`⚠️ Invalid property name “${field}” in`, basename);
+			}
+		}
+
 		// Use the updated image from frontmatter if available, otherwise take the
 		// first image in the Markdown body
 		const firstImage = newFrontmatter.image || getImageByIndex(newBody, 0);
