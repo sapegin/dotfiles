@@ -135,7 +135,7 @@ async function moveToTrash(filePath) {
 	}
 
 	await fs.rename(filePath, finalTrashPath);
-	console.log(`  Move ${filename} to trash`);
+	console.log(`  ↪ Move ${filename} to trash`);
 }
 
 /** Return all images in Markdown */
@@ -421,12 +421,12 @@ async function optimizeImage(imagePath, optimization) {
 	console.log();
 	console.log(`${filename} → ${nameWithoutExt}.avif`);
 	console.log(
-		`  ${(originalSize / 1024 / 1024).toFixed(2)} MB → ${(optimizedSize / 1024 / 1024).toFixed(2)} MB (saved ${savedPercentage}%)`
+		`  ↪ ${(originalSize / 1024 / 1024).toFixed(2)} MB → ${(optimizedSize / 1024 / 1024).toFixed(2)} MB (saved ${savedPercentage}%)`
 	);
 
 	if (newWidth !== width || newHeight !== height) {
 		console.log(
-			`  Resized from ${width}×${height} to ${newWidth}×${newHeight}`
+			`  ↪ Resized from ${width}×${height} to ${newWidth}×${newHeight}`
 		);
 	}
 
@@ -541,7 +541,7 @@ async function updateNote({
 			const newFilename = renamedFiles.get(image);
 
 			console.log(
-				`  Updating image links: ${getBasename(image)} → ${getBasename(newFilename)}`
+				`Updating image links: ${getBasename(image)} → ${getBasename(newFilename)}`
 			);
 
 			const escapedOldFilename = RegExp.escape(image);
@@ -578,7 +578,7 @@ async function updateNote({
 			image.includes('.') === true &&
 			attachmentNames.has(image) === false
 		) {
-			console.log(`⚠️  Missing image: ${image} in ${path.basename(file)}`);
+			console.log(`⚠️ Missing image: ${image} in ${path.basename(file)}`);
 		}
 	}
 
@@ -589,7 +589,7 @@ async function updateNote({
 		const dateMatch = basename.match(/^(\d{4})-/);
 		if (folderMatch && dateMatch && folderMatch[1] !== dateMatch[1]) {
 			console.log(
-				`⚠️  Wrong folder: ${basename} is in ${folderMatch[1]}/ but should be in ${dateMatch[1]}/`
+				`⚠️ Wrong folder: ${basename} is in ${folderMatch[1]}/ but should be in ${dateMatch[1]}/`
 			);
 		}
 
@@ -635,7 +635,9 @@ async function updateNote({
 		if (location && location.startsWith('[[') === false) {
 			// Link notes about places if they exist in the vault
 			const locationNote = allNotes.find(
-				(notePath) => path.basename(notePath, '.md') === location
+				(notePath) =>
+					path.basename(notePath, '.md').normalize('NFC') ===
+					location.normalize('NFC')
 			);
 			if (locationNote) {
 				newFrontmatter.location = `[[${location}]]`;
@@ -650,7 +652,9 @@ async function updateNote({
 				: location;
 
 			const locationNotePath = allNotes.find(
-				(notePath) => path.basename(notePath, '.md') === locationName
+				(notePath) =>
+					path.basename(notePath, '.md').normalize('NFC') ===
+					locationName.normalize('NFC')
 			);
 
 			if (locationNotePath) {
@@ -673,7 +677,9 @@ async function updateNote({
 			// Get an optional image index (default to the first image)
 			const imageIndexMatch = body.match(/^# \d\d\d\d-\d\d-\d\d\?! (\d+)/);
 			const imageIndex = Number(imageIndexMatch?.[1] || '1') - 1;
-			console.log(`  Updating note date using image number ${imageIndex + 1}…`);
+			console.log(
+				`Updating ${basename} date using image number ${imageIndex + 1}…`
+			);
 
 			// Get the image metadata
 			const image = getImageByIndex(body, imageIndex);
@@ -687,12 +693,16 @@ async function updateNote({
 					'$1-$2-$3_$4$5'
 				);
 
+				console.log(`  ↪`, newBasename);
+
 				// Update basename in the file path
 				newFile = file.replace(basename, newBasename);
 
 				// Delete existing weather info, as it should be updated for the new
 				// date/time
 				delete newFrontmatter.weather;
+			} else {
+				console.log(`⚠️ EXIF date is missing`);
 			}
 		}
 
@@ -702,7 +712,7 @@ async function updateNote({
 		// Check for missing coordinates
 		if (location && newFrontmatter.coordinates === undefined) {
 			console.log(
-				`⚠️  Missing coordinates for ${location} in ${path.basename(file)}`
+				`⚠️ Missing coordinates for ${location} in ${path.basename(file)}`
 			);
 		}
 
@@ -712,7 +722,7 @@ async function updateNote({
 			newFrontmatter.weather === undefined &&
 			newFrontmatter.coordinates
 		) {
-			console.log(`  Fetching weather for ${getBasename(newFile)}…`);
+			console.log(`Fetching weather for ${getBasename(newFile)}…`);
 
 			// Parse coordinates
 			const [lat, lon] = newFrontmatter.coordinates
@@ -803,7 +813,7 @@ async function updateNotes(renamedFiles) {
 
 			// Remove old file if the name was changed
 			if (newFile !== file) {
-				console.log(`  ${getBasename(file)} → ${getBasename(newFile)}`);
+				console.log(`${getBasename(file)} → ${getBasename(newFile)}`);
 				moveToTrash(file);
 			}
 		} catch (error) {
@@ -837,23 +847,23 @@ async function main() {
 		`\nFound ${markdownFiles.length} notes and ${imageFiles.length} images`
 	);
 
-	console.log('\n📸 Updating images…');
+	console.log('\n📸 Updating images…\n');
 
-	console.log('\nOptimizing images…');
+	console.log('\nOptimizing images…\n');
 	const renamedFiles = await optimizeImages(imageFiles);
 
-	console.log('\n📝 Updating notes…');
+	console.log('\n📝 Updating notes…\n');
 
 	await updateNotes(renamedFiles);
 
-	console.log('\nCollecting used images from Markdown…');
+	console.log('\nCollecting used images from Markdown…\n');
 	const updatedMarkdownFiles = await Array.fromAsync(
 		fs.glob(path.join(VAULT_DIR, ALL_NOTES_PATTERN))
 	);
 	const usedImages = await findUsedImages(updatedMarkdownFiles);
 	console.log(`\nFound ${usedImages.size} image usages`);
 
-	console.log('\nRemoving unused images…');
+	console.log('\nRemoving unused images…\n');
 	const remainingImageFiles = await Array.fromAsync(
 		fs.glob(path.join(VAULT_DIR, ALL_IMAGES_PATTERN))
 	);
