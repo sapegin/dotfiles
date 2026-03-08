@@ -540,9 +540,7 @@ async function updateNote({
 		if (renamedFiles.has(image)) {
 			const newFilename = renamedFiles.get(image);
 
-			console.log(
-				`Updating image links: ${getBasename(image)} → ${getBasename(newFilename)}`
-			);
+			console.log(`Updating image links: ${path.basename(newFilename)}`);
 
 			const escapedOldFilename = RegExp.escape(image);
 			const escapedOldFilenameEncoded = RegExp.escape(
