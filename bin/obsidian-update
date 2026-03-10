@@ -587,7 +587,11 @@ async function updateNote({
 		const dateMatch = basename.match(/^(\d{4})-/);
 		if (folderMatch && dateMatch && folderMatch[1] !== dateMatch[1]) {
 			console.log(
-				`⚠️ Wrong folder: ${basename} is in ${folderMatch[1]}/ but should be in ${dateMatch[1]}/`
+				`  ↪ Wrong folder: ${basename} is in ${folderMatch[1]}/ but should be in ${dateMatch[1]}/`
+			);
+			newFile = newFile.replace(
+				`📆 Log/${folderMatch[1]}/`,
+				`📆 Log/${dateMatch[1]}/`
 			);
 		}
 
@@ -806,6 +810,7 @@ async function updateNotes(renamedFiles) {
 			// Update file if the contents was changed
 			if (newContent !== content) {
 				updatedCount++;
+				await fs.mkdir(path.dirname(newFile), { recursive: true });
 				await fs.writeFile(newFile, newContent, 'utf-8');
 			}
 
