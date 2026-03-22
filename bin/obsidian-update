@@ -13,7 +13,6 @@
 
 // TODO: Detect missing photos with https:// and show a different error message
 // TODO: Sort frontmatter fields so they are always in the same order
-// TODO: .trash folder has images that we should move to our trash folder
 // TODO: Sort tags alphabetically
 
 import path from 'node:path';
@@ -140,7 +139,7 @@ async function moveToTrash(filePath) {
 	}
 
 	await fs.rename(filePath, finalTrashPath);
-	console.log(`  ↪ Move ${filename} to trash`);
+	console.log(`Move ${filename} to trash`);
 }
 
 /** Return all images in Markdown */
@@ -835,6 +834,23 @@ async function updateNotes(renamedFiles) {
 	console.log(`\nUpdated ${updatedCount} notes`);
 }
 
+async function cleanObsidianTrash() {
+	const obsidianTrashDir = path.join(VAULT_DIR, '.trash');
+	const imageFiles = await Array.fromAsync(
+		fs.glob(path.join(obsidianTrashDir, ALL_IMAGES_PATTERN))
+	);
+
+	if (imageFiles.length === 0) {
+		return;
+	}
+
+	for (const imagePath of imageFiles) {
+		await moveToTrash(imagePath);
+	}
+
+	console.log(`\nMoved ${imageFiles.length} images from .trash`);
+}
+
 async function backupVault() {
 	await fs.mkdir(BACKUP_DIR, { recursive: true });
 
@@ -906,6 +922,9 @@ async function main() {
 		fs.glob(path.join(VAULT_DIR, ALL_IMAGES_PATTERN))
 	);
 	await removeUnusedImages(remainingImageFiles, usedImages);
+
+	console.log('\n🗑️ Cleaning Obsidian trash…\n');
+	await cleanObsidianTrash();
 
 	console.log();
 	console.log('Done 🦜');
