@@ -1,0 +1,10 @@
+{
+  "amp.terminal.theme": "squirrelsong-dark-dp",
+  // Disable annoying notification sound
+  "amp.notifications.enabled": false,
+  // Block all MCP servers
+  "amp.mcpPermissions": [
+    { "matches": { "command": "*" }, "action": "reject" },
+    { "matches": { "url": "*" }, "action": "reject" }
+  ]
+}

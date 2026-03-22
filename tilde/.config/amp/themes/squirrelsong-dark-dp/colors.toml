@@ -1,0 +1,29 @@
+name = "Squirrelsong Dark Deep Purple"
+mode = "dark"
+
+[colors]
+background = "none"
+foreground = "#bea3d9" # terminalForeground
+primary = "#e9d6fa" # terminalBrightWhite
+secondary = "#bea3d9" # terminalWhite
+accent = "#63a2d6" # terminalBrightBlue
+success = "#558240"  # terminalGreen
+warning = "#ceb250" # terminalYellow
+info = "#89b4fa"
+destructive = "#ac493e" # terminalRed
+
+[ui]
+cursor = "#bea3d9" # terminalForeground
+border = "#644e88" # terminalBlack
+selection = "#bea3d9" # terminalForeground
+muted_foreground = "#644e88" # terminalBlack
+
+[syntax]
+keyword = "#7f61b3" # terminalMagenta
+string = "#558240"  # terminalGreen
+number = "#ceb250" # terminalYellow
+comment = "#7254a6" # terminalBrightBlack
+function = "#5993c2" # terminalBlue
+variable = "#5993c2" # terminalBlue
+type = "#4f9593" # terminalCyan
+operator = "#4f9593" # terminalCyan
