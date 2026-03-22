@@ -12,10 +12,14 @@
 // https://github.com/sapegin/dotfiles
 
 // TODO: Detect missing photos with https:// and show a different error message
+// TODO: Sort frontmatter fields so they are always in the same order
+// TODO: .trash folder has images that we should move to our trash folder
+// TODO: Sort tags alphabetically
 
 import path from 'node:path';
 import fs from 'node:fs/promises';
 import os from 'node:os';
+import { execSync } from 'node:child_process';
 import sharp from 'sharp';
 import YAML from 'yaml';
 import ExifReader from 'exifreader';
@@ -23,6 +27,7 @@ import ExifReader from 'exifreader';
 const VAULT_DIR = path.join(os.homedir(), 'murder');
 const ATTACHMENTS_DIR = path.join(VAULT_DIR, 'attachments');
 const TRASH_DIR = path.join(os.homedir(), 'obsidian-trash');
+const BACKUP_DIR = path.join(os.homedir(), 'obsidian-backup');
 const MAX_DIMENSION = 2048;
 const MAX_FILE_SIZE = 1024 * 1024; // 1 MB
 const MAX_LARGE_FILE_SIZE = MAX_FILE_SIZE * 0.5; // 0.5 MB
@@ -828,6 +833,31 @@ async function updateNotes(renamedFiles) {
 	console.log(`\nUpdated ${updatedCount} notes`);
 }
 
+async function backupVault() {
+	await fs.mkdir(BACKUP_DIR, { recursive: true });
+
+	const today = new Date().toISOString().slice(0, 10);
+	const backupFile = path.join(BACKUP_DIR, `murder_backup_${today}.zip`);
+
+	// Skip if already backed up today
+	try {
+		await fs.access(backupFile);
+		console.log('Backup already exists for today, skipping');
+		return;
+	} catch {
+		// File doesn't exist, proceed with backup
+	}
+
+	console.log(`Creating backup: ${path.basename(backupFile)}…`);
+	execSync(
+		`zip -r -q ${JSON.stringify(backupFile)} . -x "./attachments/*" "./.trash/*"`,
+		{ cwd: VAULT_DIR }
+	);
+	const stats = await fs.stat(backupFile);
+	const sizeMb = (stats.size / 1024 / 1024).toFixed(1);
+	console.log(`  ↪ Backup created (${sizeMb} MB)`);
+}
+
 async function main() {
 	try {
 		await fs.access(VAULT_DIR);
@@ -838,6 +868,9 @@ async function main() {
 	}
 
 	await fs.mkdir(TRASH_DIR, { recursive: true });
+
+	console.log('\n💾 Backing up vault…\n');
+	await backupVault();
 
 	console.log('\n💿 Gathering the files…');
 	const markdownFiles = await Array.fromAsync(
