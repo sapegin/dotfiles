@@ -605,10 +605,10 @@ async function updateNote({
 			if (
 				[
 					'coordinates',
-					'crumbs',
 					'excerpt',
 					'image',
 					'location',
+					'refs',
 					'source',
 					'sputniks',
 					'tags',
