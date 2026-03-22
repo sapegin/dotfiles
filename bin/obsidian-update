@@ -1,9 +1,12 @@
 #!/usr/bin/env node
 
 // Optimizes Obsidian vault:
+// * Back up vault
 // * Downscales and compress images
 // * Removes unused images
 // * Updates frontmatters
+// * Removes images from Obsidian trash
+// * Lint notes
 // * etc.
 //
 // ---
