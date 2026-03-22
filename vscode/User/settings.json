@@ -210,7 +210,7 @@
   "workbench.reduceMotion": "on",
   "workbench.settings.enableNaturalLanguageSearch": false,
   "workbench.sideBar.location": "right",
-"workbench.startupEditor": "none",
+  "workbench.startupEditor": "none",
   "workbench.tips.enabled": false,
   "workbench.tree.indent": 12,
   "zenMode.centerLayout": true,
@@ -389,5 +389,8 @@
     "editor.rulers": [72],
     "editor.wordWrap": "wordWrapColumn",
     "editor.wordWrapColumn": 72
-  }
+  },
+
+  // Keep at the bottom, as VSCode updates these values
+  "workbench.statusBar.visible": false
 }
