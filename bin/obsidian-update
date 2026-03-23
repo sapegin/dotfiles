@@ -776,6 +776,13 @@ async function updateNote({
 		}
 	}
 
+	// Add an empty line after each image (unless followed by a space,
+	// meaning there are more images on the same line)
+	newBody = newBody.replace(
+		/(!\[\[.*?\]\]|!\[.*?\]\([^)]+\))(?! )/g,
+		'$1\n\n'
+	);
+
 	// Cleanup whitespace only lines and multiple new lines
 	newBody = newBody.replace(/^\s+$/gm, '').replace(/\n\n\n+/gm, '\n\n');
 
