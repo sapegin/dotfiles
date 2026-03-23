@@ -147,6 +147,7 @@
   "security.promptForLocalFileProtocolHandling": false,
   "task.problemMatchers.neverPrompt": { "npm": true },
   "telemetry.telemetryLevel": "off",
+  "terminal.external.osxExec": "Ghostty.app",
   // Run tasks in interactive shell, otherwise some things (like pnpm installed
   // using corepack) aren't working
   "terminal.integrated.automationProfile.osx": {
@@ -265,6 +266,7 @@
   ],
   "emmet.excludeLanguages": ["markdown", "javascript", "typescript"],
   "emmet.showSuggestionsAsSnippets": true,
+  "chatgpt.composerEnterBehavior": "cmdIfMultiline",
   "cSpell.blockCheckingWhenLineLengthGreaterThan": 50000,
   "cSpell.spellCheckDelayMs": 500,
   "cSpell.enableFileTypes": ["shellscript"],
@@ -303,13 +305,14 @@
   // Disable insanely annoying hints "Cmd+I to continue with Copilot"
   "inlineChat.lineNaturalLanguageHint": false,
   "kilo-code.allowedCommands": [
-    "npm test",
-    "npm install",
-    "tsc",
     "git log",
     "git diff",
-    "git show"
+    "git show",
+    "npm test",
+    "npm install",
+    "tsc"
   ],
+  "kilo-code.debug": false,
   "kilo-code.deniedCommands": [],
   "tailwindCSS.emmetCompletions": false,
   "typos.diagnosticSeverity": "Information",
