@@ -110,7 +110,7 @@ async function syncDotfiles() {
 			}
 
 			// Remove
-			fs.rmSync(destPath);
+			fs.rmSync(destPath, { recursive: true });
 		}
 
 		// Create a symlink
