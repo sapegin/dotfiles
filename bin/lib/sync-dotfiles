@@ -46,6 +46,11 @@ const SPECIALS = [
 		destination: `${HOME}/.kilocode/workflows`,
 	},
 	{
+		// Codex
+		source: `${HOME}/dotfiles/tilde/.codex/config.toml`,
+		destination: `${HOME}/.codex/config.toml`,
+	},
+	{
 		// Photoshop
 		source: `${HOME}/Library/Mobile Documents/com~apple~CloudDocs/Apps/Adobe Photoshop 2024 Settings`,
 		destination: `${HOME}/Library/Preferences/Adobe Photoshop 2024 Settings`,
