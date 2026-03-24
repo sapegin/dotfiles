@@ -260,6 +260,7 @@ async function getWeather(lat, lon, date) {
 /** Read EXIF photo metadata. */
 async function getImageMetadata(filename) {
 	if (!filename) {
+		console.log(`  ↪ No filename, skipping`);
 		return { date: '', coordinates: undefined };
 	}
 
@@ -276,6 +277,7 @@ async function getImageMetadata(filename) {
 			filePath = jpegFiles[0];
 		} else {
 			// Can't do anything, only JPEG files have metadata
+			console.log(`  ↪ Not JPEG, skipping (${filename})`);
 			return { date: '', coordinates: undefined };
 		}
 	}
@@ -284,6 +286,7 @@ async function getImageMetadata(filename) {
 	try {
 		await fs.access(filePath);
 	} catch {
+		console.log(`  ↪ File doesn't exist, skipping (${filename})`);
 		return { date: '', coordinates: undefined };
 	}
 
@@ -778,10 +781,7 @@ async function updateNote({
 
 	// Add an empty line after each image (unless followed by a space,
 	// meaning there are more images on the same line)
-	newBody = newBody.replace(
-		/(!\[\[.*?\]\]|!\[.*?\]\([^)]+\))(?! )/g,
-		'$1\n\n'
-	);
+	newBody = newBody.replace(/(!\[\[.*?\]\]|!\[.*?\]\([^)]+\))(?! )/g, '$1\n\n');
 
 	// Cleanup whitespace only lines and multiple new lines
 	newBody = newBody.replace(/^\s+$/gm, '').replace(/\n\n\n+/gm, '\n\n');
