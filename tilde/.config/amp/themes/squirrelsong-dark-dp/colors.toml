@@ -4,8 +4,8 @@ mode = "dark"
 [colors]
 background = "none"
 foreground = "#bea3d9" # terminalForeground
-primary = "#e9d6fa" # terminalBrightWhite
-secondary = "#bea3d9" # terminalWhite
+primary = "#bea3d9" # terminalForeground
+secondary = "#7254a6" # terminalBrightBlack
 accent = "#63a2d6" # terminalBrightBlue
 success = "#558240"  # terminalGreen
 warning = "#ceb250" # terminalYellow
@@ -15,7 +15,7 @@ destructive = "#ac493e" # terminalRed
 [ui]
 cursor = "#bea3d9" # terminalForeground
 border = "#644e88" # terminalBlack
-selection = "#bea3d9" # terminalForeground
+selection = "#644e88" # terminalBlack
 muted_foreground = "#644e88" # terminalBlack
 
 [syntax]
