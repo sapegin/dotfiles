@@ -567,11 +567,6 @@ async function updateNote({
 			newBody = newBody.replace(regex, (_match, prefix, _image, suffix) => {
 				return `${prefix}${newFilename}${suffix}`;
 			});
-
-			// Update frontmatter image field if it matches the renamed image
-			if (frontmatter?.image === image) {
-				newFrontmatter.image = newFilename;
-			}
 		}
 	}
 
@@ -587,6 +582,19 @@ async function updateNote({
 			attachmentNames.has(image) === false
 		) {
 			console.log(`⚠️ Missing image: ${image} in ${path.basename(file)}`);
+		}
+	}
+
+	// Check if the cover image exists
+	if (newFrontmatter.image) {
+		const coverImageFilePath = path.join(ATTACHMENTS_DIR, newFrontmatter.image);
+		try {
+			await fs.access(coverImageFilePath);
+		} catch {
+			console.log(
+				`Cover image doesn’t exist (${coverImageFilePath}), updating…`
+			);
+			newFrontmatter.image = undefined;
 		}
 	}
 
@@ -624,24 +632,27 @@ async function updateNote({
 			}
 		}
 
-		// Use the updated image from frontmatter if available, otherwise take the
-		// first image in the Markdown body
-		const firstImage = newFrontmatter.image || getImageByIndex(newBody, 0);
-		const firstImageMetadata = await getImageMetadata(firstImage);
-		let { location } = frontmatter;
-
-		// Set `image` field to the first image of the note
+		const firstImage = getImageByIndex(newBody, 0);
 		if (firstImage) {
-			newFrontmatter.image = firstImage;
+			// Set `image` field to the first image of the note
+			if (newFrontmatter.image === undefined) {
+				newFrontmatter.image = firstImage;
+			}
 
-			// Set coordinates if not set already
-			if (firstImageMetadata.coordinates) {
-				newFrontmatter.coordinates = firstImageMetadata.coordinates;
+			if (newFrontmatter.coordinates === undefined) {
+				const firstImageMetadata = await getImageMetadata(firstImage);
+
+				// Set coordinates
+				if (firstImageMetadata.coordinates) {
+					newFrontmatter.coordinates = firstImageMetadata.coordinates;
+				}
 			}
 		}
 
 		// Set `excerpt` field
 		newFrontmatter.excerpt = getExcerpt(body);
+
+		const { location } = frontmatter;
 
 		// Update location field
 		if (location && location.startsWith('[[') === false) {
