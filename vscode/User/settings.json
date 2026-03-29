@@ -266,6 +266,7 @@
   ],
   "emmet.excludeLanguages": ["markdown", "javascript", "typescript"],
   "emmet.showSuggestionsAsSnippets": true,
+  "chatgpt.commentCodeLensEnabled": false,
   "chatgpt.composerEnterBehavior": "cmdIfMultiline",
   "cSpell.blockCheckingWhenLineLengthGreaterThan": 50000,
   "cSpell.spellCheckDelayMs": 500,
