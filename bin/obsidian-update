@@ -598,6 +598,13 @@ async function updateNote({
 		}
 	}
 
+	// Sort tags alphabetically
+	if (newFrontmatter.tags) {
+		newFrontmatter.tags = newFrontmatter.tags.toSorted((a, b) =>
+			a.localeCompare(b)
+		);
+	}
+
 	// Journal notes
 	if (file.includes('📆 Log/') && newFrontmatter) {
 		// Detect incorrect log folder (e.g. 2026/2004-01-03_1134.md)
