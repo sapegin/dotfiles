@@ -14,8 +14,6 @@
 // License: MIT
 // https://github.com/sapegin/dotfiles
 
-// TODO: Detect missing photos with https:// and show a different error message
-
 import path from 'node:path';
 import fs from 'node:fs/promises';
 import os from 'node:os';
@@ -159,6 +157,16 @@ function getMarkdownImages(body) {
 	const matches = Array.from(body.matchAll(imageRegex));
 	return matches.map((match) => {
 		const filePath = match[1] || match[2];
+
+		// Return absolute paths as is
+		if (
+			filePath.startsWith('/') ||
+			filePath.startsWith('https:') ||
+			filePath.startsWith('http:')
+		) {
+			return filePath;
+		}
+
 		// Extract just the filename, remove Obsidian's resizing pipe
 		// (`image.png|100`), and decode URL encoding
 		const cleanFilePath = filePath.split('|')[0];
@@ -269,7 +277,7 @@ async function getWeather(lat, lon, date) {
 /** Read EXIF photo metadata. */
 async function getImageMetadata(filename) {
 	if (!filename) {
-		console.log(`  ↪ No filename, skipping`);
+		console.log(`No filename, skipping`);
 		return { date: '', coordinates: undefined };
 	}
 
@@ -286,7 +294,7 @@ async function getImageMetadata(filename) {
 			filePath = jpegFiles[0];
 		} else {
 			// Can't do anything, only JPEG files have metadata
-			console.log(`  ↪ Not JPEG, skipping (${filename})`);
+			console.log(`Not JPEG, skipping (${filename})`);
 			return { date: '', coordinates: undefined };
 		}
 	}
@@ -295,7 +303,7 @@ async function getImageMetadata(filename) {
 	try {
 		await fs.access(filePath);
 	} catch {
-		console.log(`  ↪ File doesn't exist, skipping (${filename})`);
+		console.log(`File doesn't exist, skipping (${filename})`);
 		return { date: '', coordinates: undefined };
 	}
 
