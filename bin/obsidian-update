@@ -15,8 +15,6 @@
 // https://github.com/sapegin/dotfiles
 
 // TODO: Detect missing photos with https:// and show a different error message
-// TODO: Sort frontmatter fields so they are always in the same order
-// TODO: Sort tags alphabetically
 
 import path from 'node:path';
 import fs from 'node:fs/promises';
@@ -49,6 +47,17 @@ const ALL_IMAGE_EXTENSIONS = [...IMAGE_EXTENSIONS, '.avif'];
 const ALL_EXTENSIONS = [...ALL_IMAGE_EXTENSIONS, '.md'];
 const ALL_IMAGES_PATTERN = `**/*.{${ALL_IMAGE_EXTENSIONS.map((ext) => ext.slice(1)).join(',')}}`;
 const ALL_NOTES_PATTERN = `**/*.md`;
+const LOG_FIELDS = [
+	'tags',
+	'location',
+	'coordinates',
+	'sputniks',
+	'source',
+	'refs',
+	'weather',
+	'image',
+	'excerpt',
+];
 
 // Either regular Markdown images (![Alt text](image.ext)`), or Obsidian images
 // with optional resizing pipe (`![[image.png|100]]`)
@@ -488,12 +497,17 @@ function parseFrontmatter(content) {
 }
 
 function serializeFrontmatter(frontmatter) {
-	// Remove empty (undefined, null, '') values
+	// Remove empty (undefined, null, '') values, and sort fields
 	const cleanFrontmatter = Object.fromEntries(
-		Object.entries(frontmatter).filter(
-			([, value]) => value !== undefined && value !== null && value !== ''
-		)
+		Object.entries(frontmatter)
+			.filter(
+				([, value]) => value !== undefined && value !== null && value !== ''
+			)
+			.toSorted(
+				([keyA], [keyB]) => LOG_FIELDS.indexOf(keyA) - LOG_FIELDS.indexOf(keyB)
+			)
 	);
+
 	const yamlContent = YAML.stringify(cleanFrontmatter, undefined, {
 		// Don't wrap long lines
 		lineWidth: 0,
@@ -622,19 +636,7 @@ async function updateNote({
 
 		// Detect misspelled note properties
 		for (const field in newFrontmatter) {
-			if (
-				[
-					'coordinates',
-					'excerpt',
-					'image',
-					'location',
-					'refs',
-					'source',
-					'sputniks',
-					'tags',
-					'weather',
-				].includes(field) === false
-			) {
+			if (LOG_FIELDS.includes(field) === false) {
 				console.error(`⚠️ Invalid property name “${field}” in`, basename);
 			}
 		}
