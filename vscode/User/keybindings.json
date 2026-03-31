@@ -49,11 +49,6 @@
     "when": "viewContainer.workbench.view.extensions.enabled"
   },
   {
-    "comment": "Open list of pull Requests in sidebar",
-    "key": "cmd+k cmd+r",
-    "command": "pr:github.focus"
-  },
-  {
     "comment": "Create a New terminal",
     "key": "cmd+n",
     "command": "workbench.action.terminal.new",
@@ -361,12 +356,6 @@
    * Tasks and debugger
    */
   {
-    "comment": "Restarts a currently running task",
-    "key": "cmd+alt+r",
-    "command": "workbench.action.tasks.restartTask",
-    "when": "taskRunning"
-  },
-  {
     "comment": "Run without debugging",
     "key": "f5",
     "command": "workbench.action.debug.run",
@@ -498,7 +487,7 @@
   },
 
   /**
-   * Emme
+   * Emmet
    */
   {
     "comment": "Select the Inner contents of a tag",
