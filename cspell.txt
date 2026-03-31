@@ -11,6 +11,7 @@ autofixable
 autofixed
 autofixing
 automations
+blockquotes
 bouldering
 Catppuccin
 Chemex
