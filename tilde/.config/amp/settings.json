@@ -1,5 +1,7 @@
 {
   "amp.terminal.theme": "squirrelsong-dark-dp",
+  // Disable annoying startup animation
+  "amp.terminal.animation": false,
   // Disable annoying notification sound
   "amp.notifications.enabled": false,
   // Block all MCP servers
