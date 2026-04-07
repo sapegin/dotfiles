@@ -264,8 +264,10 @@
     "html",
     "astro"
   ],
-  "emmet.excludeLanguages": ["markdown", "javascript", "typescript"],
+//   "emmet.excludeLanguages": ["markdown", "javascript", "typescript"],
+  "emmet.excludeLanguages": ["markdown"],
   "emmet.showSuggestionsAsSnippets": true,
+  "emmet.triggerExpansionOnTab": true,
   "chatgpt.commentCodeLensEnabled": false,
   "chatgpt.composerEnterBehavior": "cmdIfMultiline",
   "cSpell.blockCheckingWhenLineLengthGreaterThan": 50000,
@@ -393,8 +395,6 @@
     "editor.rulers": [72],
     "editor.wordWrap": "wordWrapColumn",
     "editor.wordWrapColumn": 72
-  },
-
-  // Keep at the bottom, as VSCode updates these values
-  "workbench.statusBar.visible": false
+},
+"workbench.statusBar.visible": false
 }

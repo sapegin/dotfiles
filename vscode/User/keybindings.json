@@ -87,7 +87,14 @@
     "comment": "Close bottom panel when pressing Escape",
     "key": "escape",
     "command": "workbench.action.closePanel",
-    "when": "panelFocus"
+    "when": "panelFocus && !terminalFocus"
+  },
+  {
+    // Escape is often used by CLI tool, so bind Shift+Escape for the terminal
+    "comment": "Close bottom panel with active terminal when pressing Escape",
+    "key": "shift+escape",
+    "command": "workbench.action.closePanel",
+    "when": "terminalFocus"
   },
   {
     "comment": "Close all sidebars and panels when pressing Escape in the editor",
