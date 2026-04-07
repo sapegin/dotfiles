@@ -6,7 +6,17 @@
   "amp.notifications.enabled": false,
   // Block all MCP servers
   "amp.mcpPermissions": [
-    { "matches": { "command": "*" }, "action": "reject" },
-    { "matches": { "url": "*" }, "action": "reject" }
+    {
+      "matches": {
+        "command": "*"
+      },
+      "action": "reject"
+    },
+    {
+      "matches": {
+        "url": "*"
+      },
+      "action": "reject"
+    }
   ]
 }

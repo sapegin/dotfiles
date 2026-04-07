@@ -2,7 +2,7 @@ name = "Squirrelsong Dark Deep Purple"
 mode = "dark"
 
 [colors]
-background = "none"
+background = "#271e38" # terminalBackground
 foreground = "#bea3d9" # terminalForeground
 primary = "#bea3d9" # terminalForeground
 secondary = "#7254a6" # terminalBrightBlack
