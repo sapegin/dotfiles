@@ -90,7 +90,7 @@
     "when": "panelFocus && !terminalFocus"
   },
   {
-    // Escape is often used by CLI tool, so bind Shift+Escape for the terminal
+    // Escape is often used by CLI tools, so bind Shift+Escape for the terminal
     "comment": "Close bottom panel with active terminal when pressing Escape",
     "key": "shift+escape",
     "command": "workbench.action.closePanel",
