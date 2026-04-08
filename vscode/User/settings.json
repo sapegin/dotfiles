@@ -228,10 +228,6 @@
   "chat.commandCenter.enabled": false,
   "chat.editor.fontSize": 15,
   "chat.fontSize": 16,
-  "chat.instructionsFilesLocations": {
-    // I don’t know if it works ¯\_(ツ)_/¯
-    "~/dotfiles/ai-rules/rules": true
-  },
   "chat.tools.terminal.autoApprove": {
     "npm run typecheck": true,
     "npm run dev": true,
@@ -298,9 +294,6 @@
     { "file": "~/dotfiles/ai-rules/Commits.md" }
   ],
   "github.copilot.chat.reviewSelection.enabled": true,
-  "github.copilot.chat.reviewSelection.instructions": [
-    { "file": "~/dotfiles/ai-rules/rules/javascript.instructions.md" }
-  ],
   "github.copilot.nextEditSuggestions.enabled": false,
   "githubPullRequests.defaultMergeMethod": "squash",
   "githubPullRequests.pullPullRequestBranchBeforeCheckout": "pullAndMergeBase",

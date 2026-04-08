@@ -1,0 +1,1 @@
+../../../ai-rules/AGENTS.md

@@ -36,19 +36,19 @@ const SPECIALS = [
 		destination: `${HOME}/Library/Application Support/Code/User`,
 	},
 	{
-		// Kilo Code rules
-		source: `${HOME}/dotfiles/ai-rules/rules`,
-		destination: `${HOME}/.kilocode/rules`,
-	},
-	{
-		// Kilo Code commands
-		source: `${HOME}/dotfiles/ai-rules/commands`,
-		destination: `${HOME}/.kilocode/workflows`,
-	},
-	{
-		// Codex
+		// Codex config
 		source: `${HOME}/dotfiles/tilde/.codex/config.toml`,
 		destination: `${HOME}/.codex/config.toml`,
+	},
+	{
+		// Codex base prompt
+		source: `${HOME}/dotfiles/ai-rules/AGENTS.md`,
+		destination: `${HOME}/.codex/AGENTS.md`,
+	},
+	{
+		// Copilot base prompt
+		source: `${HOME}/dotfiles/ai-rules/AGENTS.md`,
+		destination: `${HOME}/.copilot/instructions/base.instructions.md`,
 	},
 	{
 		// Photoshop
