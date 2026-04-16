@@ -10,9 +10,10 @@ function _prepend_path() {
 # Homebrew binaries
 _prepend_path "/opt/homebrew/bin"
 
-# fnm, Node version manager (https://github.com/Schniz/fnm)
-# This extends the $PATH, and should have priority over Homebrew but not over Dotfiles
-eval "$(/opt/homebrew/bin/fnm env)"
+# fnm, Node version manager (https://github.com/Schniz/fnm) This extends the
+# $PATH, and should have priority over Homebrew but not over Dotfiles. Also,
+# tell fnm explicitly that we're using zsh to avoid brittle autodetection
+eval "$(/opt/homebrew/bin/fnm env --shell zsh)"
 
 # Unversioned symlinks for Homebrew’s python, python-config, pip etc. binaries
 _prepend_path "$(brew --prefix python)/libexec/bin"
