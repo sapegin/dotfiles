@@ -154,7 +154,11 @@
     "path": "/opt/homebrew/bin/zsh",
     "args": ["-i"]
   },
-  "terminal.integrated.commandsToSkipShell": ["workbench.action.closePanel"],
+  "terminal.integrated.commandsToSkipShell": [
+    "workbench.action.closePanel",
+    "kilo-code.new.agentManagerOpen",
+    "kilo-code.new.agentManager.showTerminal"
+  ],
   "terminal.integrated.copyOnSelection": true,
   "terminal.integrated.cursorStyle": "line",
   "terminal.integrated.cursorStyleInactive": "line",
@@ -226,6 +230,7 @@
   "chat.agentSessionsViewLocation": "disabled",
   "chat.checkpoints.enabled": false,
   "chat.commandCenter.enabled": false,
+  "chat.disableAIFeatures": true,
   "chat.editor.fontSize": 15,
   "chat.fontSize": 16,
   "chat.tools.terminal.autoApprove": {
@@ -260,12 +265,13 @@
     "html",
     "astro"
   ],
-//   "emmet.excludeLanguages": ["markdown", "javascript", "typescript"],
+  //   "emmet.excludeLanguages": ["markdown", "javascript", "typescript"],
   "emmet.excludeLanguages": ["markdown"],
   "emmet.showSuggestionsAsSnippets": true,
   "emmet.triggerExpansionOnTab": true,
   "chatgpt.commentCodeLensEnabled": false,
   "chatgpt.composerEnterBehavior": "cmdIfMultiline",
+  "chatgpt.followUpQueueMode": "steer",
   "cSpell.blockCheckingWhenLineLengthGreaterThan": 50000,
   "cSpell.spellCheckDelayMs": 500,
   "cSpell.enableFileTypes": ["shellscript"],
@@ -388,6 +394,6 @@
     "editor.rulers": [72],
     "editor.wordWrap": "wordWrapColumn",
     "editor.wordWrapColumn": 72
-},
-"workbench.statusBar.visible": false
+  },
+  "workbench.statusBar.visible": false
 }

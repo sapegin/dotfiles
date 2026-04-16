@@ -1,1 +1,4 @@
 personality = "pragmatic"
+
+[projects."/Users/sapegia/umg/dg_stage_web"]
+trust_level = "trusted"
