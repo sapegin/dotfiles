@@ -110,7 +110,7 @@ if has_local_branch "$branch"; then
 	git switch "$branch"
 	if has_remote_branch "$branch"; then
 		# Fix tracking if needed
-		tracking=$(git branch -vv | grep "*" | awk '{ print $4 }')
+		tracking=$(git branch -vv | grep -E "^\*" | awk '{ print $4 '})
 		if [[ ! "$tracking" =~ "$remote" ]]; then
 			echo "⚙️ Your local branch is not tracking the corresponding remote branch, fixing…"
 			git branch --set-upstream-to "$remote/$branch" "$branch"

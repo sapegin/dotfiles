@@ -11,7 +11,7 @@ GIT_SIMPLE_RESET_COLOR="\033[0m"
 
 git_simple() {
 	# Get the branch name
-	local git_current_branch=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
+	local git_current_branch=$(git branch --show-current 2> /dev/null)
 	[[ -z "$git_current_branch" ]] && return
 
 	# Check if the repo is dirty
