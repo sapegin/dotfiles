@@ -45,16 +45,31 @@ const ALL_IMAGE_EXTENSIONS = [...IMAGE_EXTENSIONS, '.avif'];
 const ALL_EXTENSIONS = [...ALL_IMAGE_EXTENSIONS, '.md'];
 const ALL_IMAGES_PATTERN = `**/*.{${ALL_IMAGE_EXTENSIONS.map((ext) => ext.slice(1)).join(',')}}`;
 const ALL_NOTES_PATTERN = `**/*.md`;
-const LOG_FIELDS = [
-	'tags',
-	'location',
+const FRONTMATTER_FIELDS = [
+	'address',
+	'aliases',
+	'author',
+	'cast',
 	'coordinates',
-	'sputniks',
-	'source',
-	'refs',
-	'weather',
+	'created',
+	'deadline',
+	'description',
+	'director',
 	'image',
-	'excerpt',
+	'keywords',
+	'location',
+	'published',
+	'rating',
+	'refs',
+	'source',
+	'sputniks',
+	'status',
+	'tags',
+	'time',
+	'title-english',
+	'weather',
+	'year',
+	'yields',
 ];
 
 // Either regular Markdown images (![Alt text](image.ext)`), or Obsidian images
@@ -124,6 +139,18 @@ function stripExtension(filePath) {
 function getBasename(filePath) {
 	const filename = path.basename(filePath);
 	return stripExtension(stripExtension(filename));
+}
+
+/** Unwrap an Obsidian wikilink (`[[target|alias]]`) to its target. */
+function unwrapWikilink(value) {
+	if (typeof value !== 'string') {
+		return value;
+	}
+	const match = value.match(/^\[\[(.+)\]\]$/);
+	if (match === null) {
+		return value;
+	}
+	return match[1].split('|')[0];
 }
 
 async function moveToTrash(filePath) {
@@ -512,7 +539,8 @@ function serializeFrontmatter(frontmatter) {
 				([, value]) => value !== undefined && value !== null && value !== ''
 			)
 			.toSorted(
-				([keyA], [keyB]) => LOG_FIELDS.indexOf(keyA) - LOG_FIELDS.indexOf(keyB)
+				([keyA], [keyB]) =>
+					FRONTMATTER_FIELDS.indexOf(keyA) - FRONTMATTER_FIELDS.indexOf(keyB)
 			)
 	);
 
@@ -616,6 +644,9 @@ async function updateNote({
 
 	// Check if the cover image exists
 	if (newFrontmatter.image) {
+		// Unwrap Obsidian wikilink format (`[[image.jpg]]`) written by Web Clipper
+		newFrontmatter.image = path.basename(unwrapWikilink(newFrontmatter.image));
+
 		const coverImageFilePath = path.join(ATTACHMENTS_DIR, newFrontmatter.image);
 		try {
 			await fs.access(coverImageFilePath);
@@ -624,6 +655,21 @@ async function updateNote({
 				`Cover image doesn’t exist (${coverImageFilePath}), updating…`
 			);
 			newFrontmatter.image = undefined;
+		}
+	}
+
+	const firstImage = getImageByIndex(newBody, 0);
+	if (firstImage) {
+		// Set `image` field to the first image of the note
+		if (newFrontmatter.image === undefined) {
+			newFrontmatter.image = firstImage;
+		}
+	}
+
+	// Detect misspelled note properties
+	for (const field in newFrontmatter) {
+		if (FRONTMATTER_FIELDS.includes(field) === false) {
+			console.error(`⚠️ Invalid property name “${field}” in`, basename);
 		}
 	}
 
@@ -642,32 +688,8 @@ async function updateNote({
 			);
 		}
 
-		// Detect misspelled note properties
-		for (const field in newFrontmatter) {
-			if (LOG_FIELDS.includes(field) === false) {
-				console.error(`⚠️ Invalid property name “${field}” in`, basename);
-			}
-		}
-
-		const firstImage = getImageByIndex(newBody, 0);
-		if (firstImage) {
-			// Set `image` field to the first image of the note
-			if (newFrontmatter.image === undefined) {
-				newFrontmatter.image = firstImage;
-			}
-
-			if (newFrontmatter.coordinates === undefined) {
-				const firstImageMetadata = await getImageMetadata(firstImage);
-
-				// Set coordinates
-				if (firstImageMetadata.coordinates) {
-					newFrontmatter.coordinates = firstImageMetadata.coordinates;
-				}
-			}
-		}
-
-		// Set `excerpt` field
-		newFrontmatter.excerpt = getExcerpt(body);
+		// Set description
+		newFrontmatter.description = getExcerpt(body);
 
 		const { location } = frontmatter;
 
@@ -686,10 +708,7 @@ async function updateNote({
 
 		// Get the coordinates from linked location note
 		if (location) {
-			// Extract location name from wiki link format [[Location]] or plain text
-			const locationName = location.startsWith('[[')
-				? location.slice(2, -2)
-				: location;
+			const locationName = unwrapWikilink(location);
 
 			const locationNotePath = allNotes.find(
 				(notePath) =>
@@ -708,6 +727,15 @@ async function updateNote({
 				} catch (error) {
 					// Ignore errors reading location note
 				}
+			}
+		}
+
+		// Set coordinates based on the fist image
+		if (firstImage && newFrontmatter.coordinates === undefined) {
+			const firstImageMetadata = await getImageMetadata(firstImage);
+
+			if (firstImageMetadata.coordinates) {
+				newFrontmatter.coordinates = firstImageMetadata.coordinates;
 			}
 		}
 
