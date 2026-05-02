@@ -182,23 +182,29 @@ async function moveToTrash(filePath) {
 /** Return all images in Markdown */
 function getMarkdownImages(body) {
 	const matches = Array.from(body.matchAll(imageRegex));
-	return matches.map((match) => {
-		const filePath = match[1] || match[2];
+	return matches
+		.map((match) => {
+			const filePath = match[1] || match[2];
 
-		// Return absolute paths as is
-		if (
-			filePath.startsWith('/') ||
-			filePath.startsWith('https:') ||
-			filePath.startsWith('http:')
-		) {
-			return filePath;
-		}
+			// Return absolute paths as is
+			if (
+				filePath.startsWith('/') ||
+				filePath.startsWith('https:') ||
+				filePath.startsWith('http:')
+			) {
+				return filePath;
+			}
 
-		// Extract just the filename, remove Obsidian's resizing pipe
-		// (`image.png|100`), and decode URL encoding
-		const cleanFilePath = filePath.split('|')[0];
-		return decodeURIComponent(path.basename(cleanFilePath)).normalize('NFC');
-	});
+			// Extract just the filename, remove Obsidian's resizing pipe
+			// (`image.png|100`), and decode URL encoding
+			const cleanFilePath = filePath.split('|')[0];
+			return decodeURIComponent(path.basename(cleanFilePath)).normalize('NFC');
+		})
+		.filter((filePath) => {
+			// Skip embedded notes (`![[Note name]]`) which have no image extension
+			const ext = path.extname(filePath).toLowerCase();
+			return ALL_IMAGE_EXTENSIONS.includes(ext);
+		});
 }
 
 /** Return basename of the given image in Markdown. */
