@@ -49,6 +49,7 @@ const FRONTMATTER_FIELDS = [
 	'address',
 	'aliases',
 	'author',
+	'born',
 	'cast',
 	'coordinates',
 	'created',
