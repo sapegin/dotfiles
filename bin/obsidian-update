@@ -516,6 +516,13 @@ function serializeFrontmatter(frontmatter) {
 			)
 	);
 
+	// Sort tags alphabetically
+	if (cleanFrontmatter.tags) {
+		cleanFrontmatter.tags = cleanFrontmatter.tags.toSorted((a, b) =>
+			a.localeCompare(b)
+		);
+	}
+
 	const yamlContent = YAML.stringify(cleanFrontmatter, undefined, {
 		// Don't wrap long lines
 		lineWidth: 0,
@@ -618,13 +625,6 @@ async function updateNote({
 			);
 			newFrontmatter.image = undefined;
 		}
-	}
-
-	// Sort tags alphabetically
-	if (newFrontmatter.tags) {
-		newFrontmatter.tags = newFrontmatter.tags.toSorted((a, b) =>
-			a.localeCompare(b)
-		);
 	}
 
 	// Journal notes
