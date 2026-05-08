@@ -46,6 +46,16 @@ const SPECIALS = [
 		destination: `${HOME}/.codex/AGENTS.md`,
 	},
 	{
+		// Codex skills
+		source: `${HOME}/dotfiles/ai-rules/skills/*`,
+		destination: `${HOME}/.codex/skills`,
+	},
+	{
+		// Amp skills
+		source: `${HOME}/dotfiles/ai-rules/skills/*`,
+		destination: `${HOME}/.config/agents/skills`,
+	},
+	{
 		// Copilot base prompt
 		source: `${HOME}/dotfiles/ai-rules/AGENTS.md`,
 		destination: `${HOME}/.copilot/instructions/base.instructions.md`,
@@ -128,54 +138,62 @@ async function syncDotfiles() {
 
 async function syncSpecials() {
 	for (const { source, destination, copy } of SPECIALS) {
-		// Check if the source exists
-		if (fs.existsSync(source) === false) {
-			continue;
-		}
+		const sources = source.endsWith('/*') ? globSync(source) : [source];
 
-		// Check that we aren't overwriting anything
-		if (fs.existsSync(destination)) {
-			if (copy) {
-				// Already identical to the source file?
-				if (
-					fs.lstatSync(destination).isFile() &&
-					fs.readFileSync(source, 'utf8') ===
-						fs.readFileSync(destination, 'utf8')
-				) {
-					continue;
-				}
-			} else {
-				// Already a symlink to dotfiles?
-				if (isSymlinkTo(destination, source)) {
-					continue;
-				}
-			}
+		for (const sourcePath of sources) {
+			const destinationPath = source.endsWith('/*')
+				? path.join(destination, path.basename(sourcePath))
+				: destination;
 
-			// Should overwrite?
-			const shouldOverwrite = await confirmAction(
-				`File already exists: ${destination}. Overwrite?`
-			);
-			if (shouldOverwrite === false) {
-				console.log('Skipping…');
+			// Check if the source exists
+			if (fs.existsSync(sourcePath) === false) {
 				continue;
 			}
 
-			// Remove
-			fs.rmSync(destination, { recursive: true, force: true });
+			// Check that we aren't overwriting anything
+			if (fs.existsSync(destinationPath)) {
+				if (copy) {
+					// Already identical to the source file?
+					if (
+						fs.lstatSync(destinationPath).isFile() &&
+						fs.readFileSync(sourcePath, 'utf8') ===
+							fs.readFileSync(destinationPath, 'utf8')
+					) {
+						continue;
+					}
+				} else {
+					// Already a symlink to dotfiles?
+					if (isSymlinkTo(destinationPath, sourcePath)) {
+						continue;
+					}
+				}
+
+				// Should overwrite?
+				const shouldOverwrite = await confirmAction(
+					`File already exists: ${destinationPath}. Overwrite?`
+				);
+				if (shouldOverwrite === false) {
+					console.log('Skipping…');
+					continue;
+				}
+
+				// Remove
+				fs.rmSync(destinationPath, { recursive: true, force: true });
+			}
+
+			// Create a folder if needed
+			fs.mkdirSync(path.dirname(destinationPath), { recursive: true });
+
+			if (copy) {
+				// Copy the file
+				fs.copyFileSync(sourcePath, destinationPath);
+			} else {
+				// Create a symlink
+				fs.symlinkSync(sourcePath, destinationPath);
+			}
+
+			console.log('🦐', sourcePath, '→', destinationPath);
 		}
-
-		// Create a folder if needed
-		fs.mkdirSync(path.dirname(destination), { recursive: true });
-
-		if (copy) {
-			// Copy the file
-			fs.copyFileSync(source, destination);
-		} else {
-			// Create a symlink
-			fs.symlinkSync(source, destination);
-		}
-
-		console.log('🦐', source, '→', destination);
 	}
 }
 

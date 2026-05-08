@@ -1,5 +1,7 @@
 # Global AI configs
 
+Shared prompts and skills for AI agents. Run `dotfiles` to install them.
+
 ## Base prompt
 
 Source of truth: [AGENTS.md](./AGENTS.md).
@@ -18,6 +20,22 @@ Source of truth: [AGENTS.md](./AGENTS.md).
 | **Windsurf** | `~/.codeium/windsurf/memories/` | Stores persistent instructions/memory |
 | **OpenHands** | `~/.openhands/config.yaml` | Indirect; agent config |
 | **Devin** | N/A (cloud-managed) | No local global prompt file |
+
+## Custom skills
+
+Source of truth: [`skills/`](./skills/). Each skill lives in `skills/<name>/SKILL.md`.
+
+### Codex
+
+Codex reads user-wide skills from `~/.codex/skills/`.
+
+### Amp
+
+Amp reads user-wide skills from `~/.config/agents/skills/` or `~/.config/amp/skills/`.
+
+### GitHub Copilot
+
+Copilot does not read `SKILL.md` directories directly. Convert the relevant skill into a prompt file or instructions file. For example, copy the body of `ai-rules/skills/review-code/SKILL.md` into `.github/prompts/review-code.prompt.md` and invoke it from Copilot Chat.
 
 ## Commit message instructions
 
@@ -38,7 +56,10 @@ Source of truth: [Commits.md](./Commits.md).
 - [AGENTS.md](https://agents.md/)
 - [Two-step approach to AI coding](https://github.com/sapegin/two-step-ai-coding-modes): my custom AI agent modes
 - [AI rules](https://github.com/sapegin/washingcode-book/tree/master/ai) based on my book on clean code for frontend developers
+- [OpenAI Skills](https://help.openai.com/en/articles/20001066)
+- [Amp manual: Agent Skills](https://ampcode.com/manual)
 - [Kilo Code custom modes](https://kilocode.ai/docs/features/custom-modes)
 - [Kilo Code custom rules](https://kilocode.ai/docs/advanced-usage/custom-rules)
 - [Copilot prompt files](https://code.visualstudio.com/docs/copilot/customization/prompt-files)
+- [GitHub Copilot custom instructions](https://docs.github.com/en/copilot/how-tos/configure-custom-instructions/add-repository-instructions)
 - [Claude Code Action](https://github.com/anthropics/claude-code-action)
