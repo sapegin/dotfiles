@@ -1,14 +1,13 @@
 #!/usr/bin/env node
 
-// Gets themes from the Squirrelsong repo or a local repository clone.
+// Two-way syncs themes between a local Squirrelsong clone and this dotfiles
+// repo. For each managed file, the side with the newer mtime overwrites the
+// other; equal mtimes do nothing.
 //
-// - Sync colors from GitHub:
+// Aborts if the Squirrelsong working tree is dirty or runs `git pull` before
+// syncing.
 //
 // `sync-colors`
-//
-// - Sync colors from a local folder:
-//
-// `sync-colors local`
 //
 // ---
 // Author: Artem Sapegin, sapegin.me
@@ -18,7 +17,7 @@
 // Supports themes for the following apps:
 // - [x] Bat
 // - [x] Peek
-// - [x] Fzf
+// - [x] Fzf            (one-way: extracted from Readme.md)
 // - [x] Ghostty
 // - [x] dotfiles/brain
 
@@ -31,38 +30,8 @@ const HOME = os.homedir();
 
 const SKIP_SUDO = false;
 
-const IS_LOCAL = process.argv.includes('local');
-
-const REPO_ROOT =
-	'https://raw.githubusercontent.com/sapegin/squirrelsong/master';
 const LOCAL_ROOT = `${HOME}/_/squirrelsong`;
 const DEST_DIR = `${HOME}/dotfiles/tilde`;
-
-function stripJsonComments(json) {
-	return (
-		json
-			// Remove /* */ comments
-			.replace(/\/\*[\s\S]*?\*\//g, '')
-			// Remove // comments
-			.replace(/\/\/.*$/gm, '')
-	);
-}
-
-async function download(filepath) {
-	if (IS_LOCAL) {
-		const fullPath = path.join(LOCAL_ROOT, filepath);
-		return fs.readFileSync(fullPath, 'utf8');
-	} else {
-		const url = `${REPO_ROOT}/${encodeURI(filepath)}`;
-		const res = await fetch(url);
-		if (res.ok === false) {
-			console.error(`Cannot download ${url}`);
-			console.error(`${res.status}: ${res.statusText}`);
-			process.exit(1);
-		}
-		return res.text();
-	}
-}
 
 function read(filepath) {
 	return fs.readFileSync(filepath, 'utf8');
@@ -74,19 +43,88 @@ function write(file, text) {
 	return fs.writeFileSync(fullPath, text);
 }
 
-async function install(from, toDir) {
-	const theme = await download(from);
-	const filename = path.basename(from);
-	write(path.join(toDir, filename), theme);
+function mtimeMs(filepath) {
+	try {
+		return fs.statSync(filepath).mtimeMs;
+	} catch {
+		return null;
+	}
 }
+
+function copyPreservingMtime(src, dest) {
+	fs.mkdirSync(path.dirname(dest), { recursive: true });
+	fs.copyFileSync(src, dest);
+	const { atime, mtime } = fs.statSync(src);
+	fs.utimesSync(dest, atime, mtime);
+}
+
+let pushedBack = 0;
+
+/**
+ * Two-way sync a single file between the Squirrelsong clone and the
+ * destination. Identical contents are skipped regardless of mtime; otherwise
+ * the side with the newer mtime overwrites the other.
+ *
+ * @param {string} from Path inside LOCAL_ROOT.
+ * @param {string} toDir Destination directory. Relative paths are resolved
+ *     against DEST_DIR; absolute paths are used as-is.
+ */
+function sync(from, toDir) {
+	const filename = path.basename(from);
+	const src = path.join(LOCAL_ROOT, from);
+	const dest = path.isAbsolute(toDir)
+		? path.join(toDir, filename)
+		: path.join(DEST_DIR, toDir, filename);
+
+	const srcMs = mtimeMs(src);
+	if (srcMs === null) {
+		console.error(`   ✗ Source not found: ${src}`);
+		process.exit(1);
+	}
+
+	const destMs = mtimeMs(dest);
+
+	if (destMs !== null && fs.readFileSync(src).equals(fs.readFileSync(dest))) {
+		console.log(`   ✓  ${filename}`);
+		return;
+	}
+
+	if (destMs === null || srcMs > destMs) {
+		console.log(`   ⬇  ${filename}`);
+		copyPreservingMtime(src, dest);
+	} else {
+		console.log(`   ⬆  ${filename}`);
+		copyPreservingMtime(dest, src);
+		pushedBack++;
+	}
+}
+
+/**
+ * Squirrelsong repo: must be clean, then pull
+ */
+
+console.log('🔄 Checking squirrelsong repo…');
+
+const repoStatus = execSync('git status --porcelain', {
+	cwd: LOCAL_ROOT,
+	encoding: 'utf8',
+});
+if (repoStatus.trim() !== '') {
+	console.error(
+		`Squirrelsong repo at ${LOCAL_ROOT} is dirty. Commit or stash changes first.`
+	);
+	process.exit(1);
+}
+
+execSync('git pull', { cwd: LOCAL_ROOT, stdio: 'inherit' });
 
 /**
  * Bat: https://github.com/sharkdp/bat?tab=readme-ov-file#adding-new-themes
  */
 
-console.log('🌈 Installing Bat theme…');
+console.log('🌈 Syncing Bat theme…');
 
-await install(
+sync(
 	'themes/Sublime Text/Squirrelsong Dark Deep Purple/Squirrelsong Dark Deep Purple.tmTheme',
 	'.config/bat/themes'
 );
@@ -96,13 +134,10 @@ execSync(`bat cache --build`);
  * Ghostty
  */
 
-console.log('🌈 Installing Ghostty theme…');
+console.log('🌈 Syncing Ghostty themes…');
 
-await install('themes/Ghostty/Squirrelsong Dark', '.config/ghostty/themes');
-await install(
-	'themes/Ghostty/Squirrelsong Dark Deep Purple',
-	'.config/ghostty/themes'
-);
+sync('themes/Ghostty/Squirrelsong Dark', '.config/ghostty/themes');
+sync('themes/Ghostty/Squirrelsong Dark Deep Purple', '.config/ghostty/themes');
 
 /**
  * Peek
@@ -111,19 +146,18 @@ await install(
 const peekThemeDir = `${HOME}/Library/Group Containers/9V456WSURS.com.bigzlabs.peekgroup/Library/Application Support/Styles`;
 
 if (fs.existsSync(peekThemeDir)) {
-	console.log('🌈 Installing Peek theme…');
-	const peekTheme = await download('themes/Peek/custom.css');
-	write(path.join(peekThemeDir, 'custom.css'), peekTheme);
+	console.log('🌈 Syncing Peek theme…');
+	sync('themes/Peek/custom.css', peekThemeDir);
 }
 
 /**
- * Fzf
+ * Fzf (one-way: extracted from Readme.md, patched into .zshrc)
  */
 
 console.log('🌈 Installing fzf theme…');
 
 const fzfThemeRegExp = /FZF_DEFAULT_OPTS=["'][^'"]+["']/g;
-const fzfThemeReadme = await download('themes/Fzf/Readme.md');
+const fzfThemeReadme = read(path.join(LOCAL_ROOT, 'themes/Fzf/Readme.md'));
 const zshRcFile = `${HOME}/dotfiles/tilde/.zshrc`;
 const fzfThemeTheme = fzfThemeReadme.match(fzfThemeRegExp)[1] ?? '';
 const zshRc = read(zshRcFile);
@@ -136,21 +170,21 @@ console.log('   💡 Reopen your terminal to take effect');
  * dotfiles/brain
  */
 
-const brainThemeDir = `${HOME}/dotfiles/colors/shiki`;
+console.log('🌈 Syncing dotfiles/brain theme…');
 
-console.log('🌈 Installing dotfiles/brain theme…');
-const brainTheme = stripJsonComments(
-	await download(
-		'themes/VSCode/SquirrelsongLight/SquirrelsongLight.color-theme.json'
-	)
-);
-write(
-	path.join(brainThemeDir, 'SquirrelsongLight.color-theme.json'),
-	brainTheme
+sync(
+	'themes/VSCode/SquirrelsongLight/SquirrelsongLight.color-theme.json',
+	`${HOME}/dotfiles/colors/shiki`
 );
 
 // --- 8< -- 8< ---
 
 console.log();
+if (pushedBack > 0) {
+	console.log(
+		`📝 ${pushedBack} files pushed back to squirrelsong; commit and push them.`
+	);
+	console.log();
+}
 console.log('🦜 Install all the remaining themes at:');
 console.log('https://sapegin.me/squirrelsong/#download');
