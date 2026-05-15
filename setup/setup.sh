@@ -58,6 +58,16 @@ echo "🚀 Installing Node.js dependencies…"
 npm config set loglevel warn
 # Install exact version of packages ("1.1.1" instead of "^1.1.1" or "~1.1.1")
 npm config set save-exact true
+# Do not allow installing packages from a directory
+# npm config set allow-directory none
+# Do not allow installing packages from a file
+# npm config set allow-file none
+# Do not allow installing packages from Git
+npm config set allow-git none
+# Do not allow installing packages from remote dependencies (URLs instead of npm packages)
+# npm config set allow-remote none
+# Packages should be at least 1 day old
+npm config set min-release-age 1
 npm install -g npm-upgrade
 npm install
 echo
