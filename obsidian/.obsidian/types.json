@@ -1,7 +1,7 @@
 {
   "types": {
     "aliases": "aliases",
-    "cssclasses": "multitext",
+    "refs": "multitext",
     "tags": "tags",
     "deadline": "date",
     "sputniks": "multitext",
