@@ -232,5 +232,15 @@
       ],
       "key": "ArrowUp"
     }
+  ],
+  "daily-notes-navigation:go-to-last-daily-note": [
+    {
+      "modifiers": [
+        "Alt",
+        "Mod",
+        "Shift"
+      ],
+      "key": "ArrowDown"
+    }
   ]
 }
