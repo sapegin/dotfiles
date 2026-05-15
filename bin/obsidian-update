@@ -649,6 +649,20 @@ async function updateNote({
 			attachmentNames.has(image) === false
 		) {
 			console.log(`⚠️ Missing image: ${image} in ${path.basename(file)}`);
+
+			// Suggest attachments whose name contains the missing file’s base name
+			const imageBasename = stripExtension(image);
+			if (imageBasename !== '') {
+				const suggestions = [];
+				for (const name of attachmentNames) {
+					if (stripExtension(name).includes(imageBasename)) {
+						suggestions.push(name);
+					}
+				}
+				for (const suggestion of suggestions) {
+					console.log(`   ↪ Did you mean: ${suggestion}?`);
+				}
+			}
 		}
 	}
 
