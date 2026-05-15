@@ -11,6 +11,11 @@ font-feature = ss01
 theme = Squirrelsong Dark Deep Purple
 minimum-contrast = 1.1
 macos-icon = custom-style
+macos-icon-frame = beige
+# Generate extended 256 color palette based on theme base palette
+palette-generate = true
+palette-harmonious = true
+faint-opacity = 0.75
 
 # Bar non-blinking cursor
 adjust-cursor-thickness = 2
