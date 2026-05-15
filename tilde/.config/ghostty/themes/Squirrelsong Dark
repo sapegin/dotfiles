@@ -7,6 +7,11 @@ selection-foreground = #bfac99
 selection-background = #574538
 cursor-color = #bfac99
 
+search-foreground = #cfbaa5
+search-background = #482a47
+search-selected-foreground = #cfbaa5
+search-selected-background = #97576f
+
 # Black
 palette = 0=#5b4839
 palette = 8=#695444
