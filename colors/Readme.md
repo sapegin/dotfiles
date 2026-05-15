@@ -14,15 +14,6 @@ bat cache --build
 
 **Note:** The theme is included in [the Zsh config](../zsh/env.zsh).
 
-## Bear
-
-Run this command after each Bear update:
-
-```shell
-sudo command rm "/Applications/Bear.app/Contents/Frameworks/BearCore.framework/Resources/Ayu.theme"
-sudo command cp "$HOME/_/squirrelsong/themes/Bear/Squirrelsong Light.theme" "/Applications/Bear.app/Contents/Frameworks/BearCore.framework/Resources/Ayu.theme"
-```
-
 ## JetBrains
 
 ![Squirrelsong light in WebStorm](https://github.com/sapegin/squirrelsong/raw/master/themes/JetBrains/squirrelsong-light/screenshot.png)

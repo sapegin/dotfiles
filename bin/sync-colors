@@ -17,7 +17,6 @@
 
 // Supports themes for the following apps:
 // - [x] Bat
-// - [x] Bear
 // - [x] Peek
 // - [x] Fzf
 // - [x] Ghostty
@@ -149,25 +148,6 @@ write(
 	path.join(brainThemeDir, 'SquirrelsongLight.color-theme.json'),
 	brainTheme
 );
-
-/**
- * Bear
- */
-
-if (SKIP_SUDO === false) {
-	console.log('🌈 Installing Bear theme…');
-
-	const bearTheme = await download('themes/Bear/Squirrelsong Light.theme');
-	const bearThemesDir = `/Applications/Bear.app/Contents/Frameworks/BearCore.framework/Resources`;
-	const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotfiles-'));
-	const tempFile = path.join(tempDir, 'theme');
-	write(tempFile, bearTheme);
-	execSync(
-		`sudo -- sh -c 'command rm "${bearThemesDir}/Ayu.theme" > /dev/null 2>&1; command cp "${tempFile}" "${bearThemesDir}/Ayu.theme"'`
-	);
-	fs.rmSync(tempDir, { recursive: true, force: true });
-	console.log('   💡 Now choose Ayu theme in Bear settings');
-}
 
 // --- 8< -- 8< ---
 
