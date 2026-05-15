@@ -438,6 +438,17 @@ async function optimizeImage(imagePath, optimization) {
 
 	const avifPath = path.join(dir, `${nameWithoutExt}.avif`);
 
+	// Refuse to overwrite an existing AVIF; leave the original alone
+	try {
+		await fs.access(avifPath);
+		console.log(
+			`⚠️ Skipped ${filename}: ${nameWithoutExt}.avif already exists`
+		);
+		return undefined;
+	} catch {
+		// No existing AVIF, proceed
+	}
+
 	// Calculate new dimensions if needed
 	let newWidth = width;
 	let newHeight = height;
