@@ -172,14 +172,6 @@
       "key": "]"
     }
   ],
-  "editor:toggle-fold-properties": [
-    {
-      "modifiers": [
-        "Mod"
-      ],
-      "key": "\\"
-    }
-  ],
   "random-note": [
     {
       "modifiers": [
@@ -241,6 +233,15 @@
         "Shift"
       ],
       "key": "ArrowDown"
+    }
+  ],
+  "editor:toggle-comments": [],
+  "editor:toggle-fold-properties": [
+    {
+      "modifiers": [
+        "Mod"
+      ],
+      "key": "\\"
     }
   ]
 }

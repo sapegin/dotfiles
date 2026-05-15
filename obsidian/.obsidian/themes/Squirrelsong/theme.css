@@ -369,7 +369,6 @@ button.mod-cta:hover {
 
 textarea, input.metadata-input-text, input[type='date'], input[type='datetime-local'], input[type='text'], input[type='search'], input[type='email'], input[type='password'], input[type='number'] {
     padding-block-start: 6px;
-    /* border: var(--input-border-width) solid var(--background-modifier-border); */
     box-shadow: var(--input-shadow);
 }
 
