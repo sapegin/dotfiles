@@ -49,6 +49,12 @@
     "when": "viewContainer.workbench.view.extensions.enabled"
   },
   {
+    "comment": "Create a New terminal editor window",
+    "key": "shift+cmd+t",
+    "command": "workbench.action.createTerminalEditor",
+    "when": "terminalProcessSupported"
+  },
+  {
     "comment": "Create a New terminal",
     "key": "cmd+n",
     "command": "workbench.action.terminal.new",
@@ -87,13 +93,15 @@
     "comment": "Close bottom panel when pressing Escape",
     "key": "escape",
     "command": "workbench.action.closePanel",
-    "when": "panelFocus && !terminalFocus"
+    "when": "panelFocus"
   },
   {
-    // Escape is often used by CLI tools, so bind Shift+Escape for the terminal
-    "comment": "Close bottom panel with active terminal when pressing Escape",
+    // Escape is bound to closing panels in the editor, so use Shift+Escape
+    // to send an actual Escape key to the terminal (for CLI tools)
+    "comment": "Send Escape to the terminal",
     "key": "shift+escape",
-    "command": "workbench.action.closePanel",
+    "command": "workbench.action.terminal.sendSequence",
+    "args": { "text": "\u001b" },
     "when": "terminalFocus"
   },
   {
@@ -158,9 +166,9 @@
    * Code editing and navigation
    */
   {
-    "comment": "Focus on the Editor",
-    "key": "alt+escape",
-    "command": "workbench.action.focusActiveEditorGroup"
+    "comment": "Switch to the previously active editor (code editor or terminal editor)",
+    "key": "cmd+escape",
+    "command": "workbench.action.openPreviousRecentlyUsedEditor"
   },
   {
     "comment": "Format and Save (to make autosave save files without formatting)",
