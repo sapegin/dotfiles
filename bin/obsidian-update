@@ -949,6 +949,121 @@ async function backupVault() {
 	console.log(`  ↪ Backup created (${sizeMb} MB)`);
 }
 
+/**
+ * Heuristic iCloud sync diagnostics.
+ *
+ * Apple exposes no reliable per-file "is uploaded?" API on modern macOS
+ * (`kMDItemIsUbiquitous` is unpopulated, `brctl dump` redacts filenames), so we
+ * surface the signals we *can* trust:
+ *  - container-level health from `brctl status`
+ *  - filename/path patterns iCloud silently rejects
+ *  - stale `.icloud` placeholder files alongside materialized files
+ *  - file-count mismatch between disk and CloudDocs' own item table
+ */
+async function checkICloudSync() {
+	const ICLOUD_MARKER = `${path.sep}Mobile Documents${path.sep}`;
+	const resolvedVault = await fs.realpath(VAULT_DIR);
+	if (resolvedVault.includes(ICLOUD_MARKER) === false) {
+		console.log('Vault is not in iCloud, skipping sync diagnostics');
+		return;
+	}
+
+	// Container name as brctl wants it: iCloud~md~obsidian → iCloud.md.obsidian
+	const containerMatch = resolvedVault.match(
+		/Mobile Documents\/([^/]+)\/Documents/
+	);
+	if (containerMatch === null) {
+		console.log('Could not derive iCloud container from vault path');
+		return;
+	}
+	const container = containerMatch[1].replace(/~/g, '.');
+
+	// 1. Container-level health
+	try {
+		const status = execSync(`brctl status ${JSON.stringify(container)}`, {
+			encoding: 'utf-8',
+			stdio: ['ignore', 'pipe', 'pipe'],
+		});
+		if (/error|stuck|needs-sync:YES/i.test(status)) {
+			console.log('⚠️ Container reports problems:');
+			console.log(status);
+		}
+	} catch (error) {
+		console.log('⚠️ brctl status failed:', error.message);
+	}
+
+	// 2. Per-file structural checks
+	const issues = [];
+	let regularFiles = 0;
+	const allFiles = await Array.fromAsync(fs.glob(path.join(VAULT_DIR, '**/*')));
+	for (const file of allFiles) {
+		const stats = await fs.stat(file).catch(() => null);
+		if (stats === null || stats.isFile() === false) {
+			continue;
+		}
+		regularFiles++;
+
+		const name = path.basename(file);
+		const rel = path.relative(VAULT_DIR, file);
+
+		if (name.includes(':')) {
+			issues.push(`Colon in name: ${rel}`);
+		}
+		if (/[ .]$/.test(path.parse(name).name)) {
+			issues.push(`Trailing space or dot in basename: ${rel}`);
+		}
+		if (Buffer.byteLength(name, 'utf8') > 255) {
+			issues.push(`Filename longer than 255 bytes: ${rel}`);
+		}
+		if (file.includes('.nosync/') || /\.nosync$/.test(name)) {
+			issues.push(`In .nosync (iCloud opt-out): ${rel}`);
+		}
+		try {
+			await fs.access(path.join(path.dirname(file), `.${name}.icloud`));
+			issues.push(`Stale .icloud placeholder beside file: ${rel}`);
+		} catch {
+			// No placeholder, fine
+		}
+	}
+
+	// 3. Disk vs CloudDocs item-count comparison.
+	//
+	// `brctl dump` redacts filenames, so we cannot pinpoint which file is
+	// missing, only that the totals diverge.
+	try {
+		const dump = execSync(`brctl dump ${JSON.stringify(container)}`, {
+			encoding: 'utf-8',
+			maxBuffer: 128 * 1024 * 1024,
+			stdio: ['ignore', 'pipe', 'pipe'],
+		})
+			// Strip ANSI colour escapes that brctl injects between `i:` and `<`
+			.replace(/\x1B\[[0-9;]*m/g, '');
+		const dumpItems = (dump.match(/^\s*i:</gm) || []).length;
+		console.log(`Disk: ${regularFiles} files; CloudDocs: ${dumpItems} items`);
+		const missing = regularFiles - dumpItems;
+		if (missing > regularFiles * 0.05) {
+			console.log(
+				`⚠️ CloudDocs knows about ${missing} fewer items than disk has: some files may not be uploaded.`
+			);
+			console.log(
+				`   Try: \`killall bird\`, then re-save the suspect file, or move it out of the vault and back in.`
+			);
+		}
+	} catch (error) {
+		console.log('⚠️ brctl dump failed:', error.message);
+	}
+
+	if (issues.length > 0) {
+		console.log(`\n⚠️ ${issues.length} filename issues:`);
+		for (const issue of issues.slice(0, 30)) {
+			console.log(`   ${issue}`);
+		}
+		if (issues.length > 30) {
+			console.log(`   … and ${issues.length - 30} more`);
+		}
+	}
+}
+
 async function main() {
 	try {
 		await fs.access(VAULT_DIR);
@@ -959,6 +1074,9 @@ async function main() {
 	}
 
 	await fs.mkdir(TRASH_DIR, { recursive: true });
+
+	console.log('\n☁️ Checking iCloud health…\n');
+	await checkICloudSync();
 
 	console.log('\n💾 Backing up vault…\n');
 	await backupVault();
