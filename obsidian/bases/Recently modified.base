@@ -6,7 +6,7 @@ views:
     name: Cards
     order:
       - file.name
-      - excerpt
+      - description
     sort:
       - property: file.mtime
         direction: DESC

@@ -12,7 +12,7 @@ views:
     name: Cards
     order:
       - file.name
-      - excerpt
+      - description
     sort:
       - property: file.name
         direction: DESC

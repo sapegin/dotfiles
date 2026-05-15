@@ -1,0 +1,9 @@
+filters:
+  and:
+    - sputniks.contains("Dessi")
+views:
+  - type: cards
+    name: Cards
+    cardSize: 260
+    image: note.image
+    imageAspectRatio: 0.6

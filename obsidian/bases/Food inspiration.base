@@ -1,7 +1,7 @@
 filters:
   and:
     - file.folder.startsWith("📆 Log")
-    - file.tags.isEmpty()
+    - file.tags.contains("food-inspiration")
 views:
   - type: cards
     name: Cards

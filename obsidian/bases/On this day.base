@@ -15,7 +15,7 @@ views:
       - formula.Date
       - location
       - tags
-      - excerpt
+      - description
     sort:
       - property: file.name
         direction: DESC

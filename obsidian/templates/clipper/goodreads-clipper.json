@@ -17,7 +17,7 @@
 			"type": "number"
 		},
 		{
-			"name": "cover",
+			"name": "image",
 			"value": "{{selector:.BookCover__image img?src|first}}",
 			"type": "text"
 		},

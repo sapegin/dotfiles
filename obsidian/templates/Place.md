@@ -1,13 +1,6 @@
 ---
-address: null
-coordinates: null
-icon: coffee
-color: saddlebrown
 tags:
-  - places
   - coffee
+  - places
 ---
 # {{title}}
-
-> [!tip]
-> [Icons](https://lucide.dev/) • [Colors](https://sapegin.github.io/csscolors/)
