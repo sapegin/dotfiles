@@ -1,6 +1,7 @@
 /* https://docs.obsidian.md/Reference/CSS+variables/CSS+variables */
 
-body {
+body,
+.is-mobile {
   /* Custom variables */
   --sqrl-heading-weight: 500;
 
@@ -19,10 +20,15 @@ body {
   --modal-radius: 12px;
   --touch-radius-xxs: 12px;
   --touch-radius-xs: 12px;
+  --touch-radius-s: 12px;
+  --touch-radius-m: 12px;
+
+  --input-border-width: 1px;
+  --callout-border-width: 1px;
+  --callout-title-weight: var(--sqrl-heading-weight);
 
   --cursor: pointer;
   --cursor-link: pointer;
-
 }
 
 .theme-light {
@@ -198,8 +204,6 @@ body {
   --blockquote-border-color: var(--sqrl-gray120);
   --blockquote-color: var(--sqrl-gray090);
 
-  --callout-border-width: 1px;
-  --callout-title-weight: var(--sqrl-heading-weight);
 
   --code-background: var(--sqrl-gray170);
   --code-normal: var(--sqrl-gray090);
@@ -363,12 +367,13 @@ button.mod-cta:hover {
 
 /* Inputs */
 
-textarea, input[type='date'], input[type='datetime-local'], input[type='text'], input[type='search'], input[type='email'], input[type='password'], input[type='number'] {
+textarea, input.metadata-input-text, input[type='date'], input[type='datetime-local'], input[type='text'], input[type='search'], input[type='email'], input[type='password'], input[type='number'] {
     padding-block-start: 6px;
+    /* border: var(--input-border-width) solid var(--background-modifier-border); */
     box-shadow: var(--input-shadow);
 }
 
-textarea:focus-visible, .multi-select-container:focus-visible, input[type='date']:focus-visible, input[type='datetime-local']:focus-visible, input[type='text']:focus-visible, input[type='search']:focus-visible, input[type='email']:focus-visible, input[type='password']:focus-visible, input[type='number']:focus-visible {
+textarea:focus-visible, input.metadata-input-text:focus-visible, input[type='date']:focus-visible, input[type='datetime-local']:focus-visible, input[type='text']:focus-visible, input[type='search']:focus-visible, input[type='email']:focus-visible, input[type='password']:focus-visible, input[type='number']:focus-visible {
     box-shadow: var(--textfield-shadow-focus);
 }
 
@@ -438,6 +443,9 @@ input[type='range']:focus-visible::-webkit-slider-thumb {
 .workspace-tab-header.is-active {
     box-shadow: 0 0 0 var(--tab-outline-width) var(--tab-outline-color), 0 2px 4px rgba(0,0,0,.05);
 }
+.is-mobile .workspace-tab-header.is-active {
+    box-shadow: none;
+}
 .workspace-tab-header.is-active .workspace-tab-header-inner-icon {
     color: var(--icon-color-active);
 }
@@ -453,6 +461,21 @@ input[type='range']:focus-visible::-webkit-slider-thumb {
 }
 .workspace .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header:hover .workspace-tab-header-inner-close-button {
     opacity: 1;
+}
+
+/* Drawers */
+
+.workspace-drawer-tab-options-list {
+  box-shadow: var(--card-shadow);
+}
+
+.is-mobile.is-floating-nav .workspace-drawer .workspace-leaf-content:after {
+    display: none;
+}
+
+.workspace-drawer-header {
+    border-top: 1px solid var(--sqrl-gray160);
+    box-shadow: var(--bottom-toolbar-shadow);
 }
 
 /* Menus */
@@ -535,11 +558,16 @@ input[type='range']:focus-visible::-webkit-slider-thumb {
 }
 .is-mobile.is-floating-nav .mod-raised {
     border: 0;
-    border-top: 1px solid var(--sqrl-gray160);
     border-radius: 0;
+    box-shadow: none;
+}
+.is-mobile.is-floating-nav .mobile-toolbar .mod-raised {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    border-top: 1px solid var(--sqrl-gray160);
     box-shadow: var(--bottom-toolbar-shadow);
 }
-
 
 /* Metadata (properties) section */
 
@@ -631,6 +659,14 @@ input.prompt-input, input.prompt-input:hover, input.prompt-input:focus, input.pr
         color: var(--text-accent);
         background-color: var(--sqrl-gray160);
     }
+}
+
+.workspace-drawer .search-input-container {
+    --input-radius: 4px;
+}
+
+.workspace-drawer .search-input-container input {
+    border-width: var(--input-border-width);
 }
 
 /* Editor */
