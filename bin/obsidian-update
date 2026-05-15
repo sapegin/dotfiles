@@ -494,7 +494,10 @@ async function optimizeImage(imagePath, optimization) {
 	// Move original to trash
 	await moveToTrash(imagePath);
 
-	return { oldFilename: filename, newFilename: `${nameWithoutExt}.avif` };
+	return {
+		oldFilename: filename.normalize('NFC'),
+		newFilename: `${nameWithoutExt}.avif`.normalize('NFC'),
+	};
 }
 
 async function optimizeImages(imageFiles) {
