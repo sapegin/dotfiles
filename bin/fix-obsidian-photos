@@ -17,7 +17,7 @@ import os from 'node:os';
 const VAULT_DIR = path.join(os.homedir(), 'murder');
 const ATTACHMENTS_DIR = path.join(VAULT_DIR, 'attachments');
 
-const year = process.argv[2];               
+const year = process.argv[2];
 
 if (!year) {
 	console.error('Usage: fix-obsidian-photos <year>');

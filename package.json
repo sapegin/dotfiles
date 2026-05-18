@@ -4,9 +4,10 @@
   "type": "module",
   "scripts": {
     "lint": "eslint . --cache --fix",
-    "test": "npm run lint",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run lint && npm run typecheck",
     "posttest": "npm run format",
-    "format": "prettier --log-level warn --ignore-unknown --write \"**/*.{js,cjs,md,json,sh}\" \"bin/*\""
+    "format": "prettier --log-level warn --ignore-unknown --write \"**/*.{js,cjs,ts,md,json,sh}\" \"bin/*\""
   },
   "engines": {
     "node": ">=24"
@@ -14,21 +15,23 @@
   "dependencies": {
     "@shikijs/rehype": "^3.15.0",
     "avif": "^0.5.3",
-    "exifreader": "4.32.0",
+    "exifreader": "4.39.0",
     "glob": "^11.0.0",
-    "playwright": "^1.50.0",
+    "playwright": "1.60.0",
     "rehype-stringify": "^10.0.1",
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.2",
     "sharp": "0.34.5",
     "shiki": "^3.15.0",
     "unified": "^11.0.5",
-    "yaml": "2.8.1"
+    "yaml": "2.9.0"
   },
   "devDependencies": {
+    "@types/node": "24.10.1",
     "eslint": "^9.39.1",
-    "eslint-config-tamia": "^9.9.0",
-    "prettier": "^3.6.2",
-    "prettier-plugin-sh": "^0.18.0"
+    "eslint-config-tamia": "^9.9.2",
+    "prettier": "^3.8.3",
+    "prettier-plugin-sh": "^0.18.1",
+    "typescript": "5.9.3"
   }
 }

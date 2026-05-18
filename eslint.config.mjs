@@ -1,11 +1,15 @@
 import tamia from 'eslint-config-tamia';
+import tamiaTypeScript from 'eslint-config-tamia/typescript';
 
 export default [
 	...tamia,
+	...tamiaTypeScript,
 	{
 		rules: {
-			// Most of the scripts use console.log() for UI
+			// Most scripts use console.log() for UI
 			'no-console': 'off',
+			// Many scripts use process.exit()
+			'unicorn/no-process-exit': 'off',
 		},
 	},
 	{
