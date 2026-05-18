@@ -4,6 +4,7 @@ Alexa
 antipattern
 antipatterns
 aphantasia
+artefacts
 Artem
 Astro
 autofix
