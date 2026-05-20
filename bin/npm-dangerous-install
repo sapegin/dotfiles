@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# Removes min-release-age limitation, runs npm install, and sets the limitation
+# back to 1 day.
+#
+# - Dangerously install npm packages:
+#
+# `npm-dangerous-install`
+#
+# ---
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+
+set -e
+
+npm config set min-release-age 0
+npm install
+npm config set min-release-age 1
