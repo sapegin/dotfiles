@@ -43,8 +43,8 @@
   "editor.cursorBlinking": "solid",
   // Always use indentation from EditorConfig/Prettier instead of file own indentation
   "editor.detectIndentation": false,
-  // Don't copy a line to clipboard when nothing is selected
   "editor.defaultFormatter": "esbenp.prettier-vscode",
+  // Don't copy a line to clipboard when nothing is selected
   "editor.emptySelectionClipboard": false,
   "editor.experimentalEditContextEnabled": true,
   "editor.find.addExtraSpaceOnTop": false,
@@ -295,9 +295,6 @@
     "markdown": false,
     "scminput": false
   },
-  "github.copilot.chat.commitMessageGeneration.instructions": [
-    { "file": "~/dotfiles/ai-rules/Commits.md" }
-  ],
   "github.copilot.chat.reviewSelection.enabled": true,
   "github.copilot.nextEditSuggestions.enabled": false,
   "githubPullRequests.defaultMergeMethod": "squash",
@@ -338,51 +335,20 @@
   ],
 
   // File types
-  "javascript.autoClosingTags": false,
-  "javascript.format.enable": false,
-  "javascript.preferences.importModuleSpecifier": "relative",
-  "javascript.preferences.jsxAttributeCompletionStyle": "none",
-  "javascript.preferGoToSourceDefinition": true,
-  "javascript.updateImportsOnFileMove.enabled": "always",
-  "javascript.validate.enable": false,
-  "typescript.autoClosingTags": false,
-  "typescript.enablePromptUseWorkspaceTsdk": true,
-  "typescript.format.enable": false,
-  "typescript.preferences.importModuleSpecifier": "relative",
-  "typescript.preferences.jsxAttributeCompletionStyle": "none",
-  "typescript.preferences.preferTypeOnlyAutoImports": true,
-  "typescript.preferGoToSourceDefinition": true,
-  "typescript.updateImportsOnFileMove.enabled": "always",
-  "typescript.workspaceSymbols.scope": "currentProject",
+  "js/ts.autoClosingTags": false,
+  "js/ts.enablePromptUseWorkspaceTsdk": true,
+  "js/ts.format.enable": false,
+  "js/ts.preferences.importModuleSpecifier": "relative",
+  "js/ts.preferences.jsxAttributeCompletionStyle": "none",
+  "js/ts.preferences.preferTypeOnlyAutoImports": true,
+  "js/ts.preferGoToSourceDefinition": true,
+  "js/ts.updateImportsOnFileMove.enabled": "always",
+  "js/ts.validate.enable": false,
+  "js/ts.workspaceSymbols.scope": "currentProject",
   "html.format.wrapLineLength": 0,
   "html.format.enable": false,
   "html.autoClosingTags": false,
   "html.autoCreateQuotes": false,
-  "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[javascriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[typescriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[markdown]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "files.trimTrailingWhitespace": false
-  },
-  "[html]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[jsonc]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
   "[astro]": {
     "editor.defaultFormatter": "astro-build.astro-vscode"
   },
