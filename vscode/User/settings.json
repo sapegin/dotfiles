@@ -41,12 +41,13 @@
   "editor.cursorStyle": "line",
   "editor.cursorWidth": 2,
   "editor.cursorBlinking": "solid",
-  // Always use indentation from EditorConfig/Prettier instead of file own indentation
+  // Always use indentation from EditorConfig/Prettier instead of file own
+  // indentation
   "editor.detectIndentation": false,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   // Don't copy a line to clipboard when nothing is selected
   "editor.emptySelectionClipboard": false,
-  "editor.experimentalEditContextEnabled": true,
+  "editor.editContext": true,
   "editor.find.addExtraSpaceOnTop": false,
   // Don't use words under cursor to seed find, only selection
   "editor.find.seedSearchStringFromSelection": "selection",
@@ -137,7 +138,6 @@
   "scm.inputMaxLineCount": 20,
   "scm.inputMinLineCount": 4,
   "scm.repositories.selectionMode": "single",
-  "scm.showHistoryGraph": false,
   "search.exclude": {
     "**/node_modules": true,
     "**/package-lock.json": true,
@@ -206,7 +206,6 @@
     "*.svg": "default"
   },
   "workbench.enableExperiments": false,
-  "workbench.experimental.enableNewProfilesUI": true,
   "workbench.fontAliasing": "auto",
   "workbench.iconTheme": "catppuccin-latte",
   "workbench.layoutControl.enabled": false,
@@ -222,13 +221,9 @@
   "zenMode.showTabs": "none",
 
   // Plugins
-  "amp.url": "https://ampcode.com/",
-  "amp.notifications.enabled": false,
   "catppuccin-icons.hidesExplorerArrows": true,
   "chat.agent.thinkingStyle": "collapsed",
-  "chat.agentSessionsViewLocation": "disabled",
   "chat.checkpoints.enabled": false,
-  "chat.commandCenter.enabled": false,
   "chat.disableAIFeatures": true,
   "chat.editor.fontSize": 15,
   "chat.fontSize": 16,
@@ -264,7 +259,6 @@
     "html",
     "astro"
   ],
-  //   "emmet.excludeLanguages": ["markdown", "javascript", "typescript"],
   "emmet.excludeLanguages": ["markdown"],
   "emmet.showSuggestionsAsSnippets": true,
   "emmet.triggerExpansionOnTab": true,
@@ -273,7 +267,11 @@
   "chatgpt.followUpQueueMode": "steer",
   "cSpell.blockCheckingWhenLineLengthGreaterThan": 50000,
   "cSpell.spellCheckDelayMs": 500,
-  "cSpell.enableFileTypes": ["shellscript"],
+  "cSpell.enabledFileTypes": {
+    "*": true,
+    "markdown": true,
+    "shellscript": true
+  },
   "cSpell.enabledNotifications": {
     "Average Word Length too Long": false,
     "Lines too Long": false,
@@ -335,15 +333,15 @@
   ],
 
   // File types
-  "js/ts.autoClosingTags": false,
-  "js/ts.enablePromptUseWorkspaceTsdk": true,
-  "js/ts.format.enable": false,
+  "js/ts.autoClosingTags.enabled": false,
+  "js/ts.tsdk.promptToUseWorkspaceVersion": true,
+  "js/ts.format.enabled": false,
   "js/ts.preferences.importModuleSpecifier": "relative",
   "js/ts.preferences.jsxAttributeCompletionStyle": "none",
   "js/ts.preferences.preferTypeOnlyAutoImports": true,
   "js/ts.preferGoToSourceDefinition": true,
   "js/ts.updateImportsOnFileMove.enabled": "always",
-  "js/ts.validate.enable": false,
+  "js/ts.validate.enabled": true,
   "js/ts.workspaceSymbols.scope": "currentProject",
   "html.format.wrapLineLength": 0,
   "html.format.enable": false,
