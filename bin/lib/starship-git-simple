@@ -10,12 +10,15 @@ GIT_SIMPLE_DIRTY_COLOR="\033[31;1m" # Bold red
 GIT_SIMPLE_RESET_COLOR="\033[0m"
 
 git_simple() {
+	local git_current_branch
+	local is_dirty
+
 	# Get the branch name
-	local git_current_branch=$(git branch --show-current 2> /dev/null)
+	git_current_branch=$(git branch --show-current 2> /dev/null)
 	[[ -z "$git_current_branch" ]] && return
 
 	# Check if the repo is dirty
-	local is_dirty=$(git status -s --ignore-submodules=dirty 2> /dev/null)
+	is_dirty=$(git status -s --ignore-submodules=dirty 2> /dev/null)
 
 	local color="$GIT_SIMPLE_CLEAN_COLOR"
 	local symbol="$GIT_SIMPLE_CLEAN_SYMBOL"

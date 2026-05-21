@@ -56,11 +56,6 @@ function convert_file() {
 	original_size=$(wc -c < "$1")
 	is_smaller=false
 
-	preset="photo"
-	if [ "$extension" == "png" ]; then
-		preset="text"
-	fi
-
 	# Convert to AVIF
 	$bin/avif --quality 50 --effort 8 --input="$1" --output="$directory"
 

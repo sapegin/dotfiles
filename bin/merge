@@ -20,7 +20,7 @@ remote="origin"
 branch=$1
 current_branch=$(git branch --show-current)
 
-if [ -z $branch ]; then
+if [ -z "$branch" ]; then
 	echo "Usage: $0 [branchname]"
 	exit 1
 fi
@@ -30,7 +30,7 @@ git rev-parse --is-inside-work-tree > /dev/null || exit $?
 
 # If there is a remote version of this branch, rebase onto current_branch first
 # If there's a remote (public) branch, we do not want to be rewriting histories
-tracking=$(git branch -vv | grep -E "^\*" | awk '{ print $4 '})
+tracking=$(git branch -vv | grep -E "^\*" | awk '{ print $4 }')
 echo "tracking=$tracking"
 if [[ ! "$tracking" =~ "$remote" ]]; then
 	echo "⚒ Local-only branch, rebasing $branch onto $current_branch first…"
@@ -41,8 +41,8 @@ else
 fi
 
 echo "✂️ Merge $branch into $current_branch"
-git switch $current_branch
-git merge $branch || exit 1
+git switch "$current_branch"
+git merge "$branch" || exit 1
 
 echo
 echo "🦄 Done"

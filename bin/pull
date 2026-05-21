@@ -41,13 +41,13 @@ rollback() {
 	echo
 	echo "${color_error}Something went wrong, rolling back${color_reset}"
 	unstash
-	exit $1
+	exit "$1"
 }
 
 # Test whether a command exists
 # $1 - cmd to test
 cmd_exists() {
-	if which $1 > /dev/null 2>&1; then
+	if which "$1" > /dev/null 2>&1; then
 		return 0
 	fi
 	return 1
@@ -67,7 +67,7 @@ file_exists() {
 change_dir() {
 	file=$(git diff-tree -r --name-only --no-commit-id ORIG_HEAD HEAD | grep "$1")
 	if [[ -e "./$base_dir$file" ]]; then
-		cd $(dirname "./$base_dir$file")
+		cd $(dirname "./$base_dir$file") || exit
 		return 0
 	fi
 	return 1
@@ -75,7 +75,7 @@ change_dir() {
 
 # Go back to
 reset_dir() {
-	cd "$current_dir"
+	cd "$current_dir" || exit
 }
 
 # Test whether a file has changed
@@ -100,7 +100,7 @@ stash=$(git stash --include-untracked)
 
 # Pull, using rebase if configured
 echo "🚀 Fetching from $remote""…"
-git pull --rebase --prune --recurse-submodules --jobs=10 $remote $remote_branch || rollback $?
+git pull --rebase --prune --recurse-submodules --jobs=10 "$remote" "$remote_branch" || rollback $?
 
 # Pop any stashed changes
 unstash
