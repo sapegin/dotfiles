@@ -37,7 +37,7 @@ else
 fi
 echo "🚀 Pushing…"
 echo
-push=$(git push --set-upstream "$args" 2>&1)
+push=$(git push --set-upstream $args 2>&1)
 exit_code=$?
 
 # Preserve useful output returned by the remote server
