@@ -17,7 +17,7 @@ const QUICKIES_FILE = path.join(VAULT_DIR, '⏳ Inbox/Quickies.md');
 
 const text = process.argv[2];
 
-if (text.trim() === undefined) {
+if (text.trim() === '') {
 	process.exit(0);
 }
 

@@ -180,13 +180,13 @@ const dictionary = [
 	'no buy year',
 	'flea market',
 	'vintage',
-  'cottagecore',
+	'cottagecore',
 	'instagrammable',
 	'späti',
 	'TikTok',
 	'MacBook',
 	'Leica',
-  'the Barn',
+	'the Barn',
 ];
 
 /**

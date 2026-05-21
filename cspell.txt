@@ -31,6 +31,7 @@ Formik
 frontends
 frontmatter
 frontmatters
+Ghostty
 googleable
 grayscale
 greppability
@@ -89,6 +90,7 @@ todos
 trackpad
 ungluing
 unlisten
+untildify
 Wayfair
 wikilink
 wikilinks

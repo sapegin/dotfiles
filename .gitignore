@@ -7,7 +7,6 @@ Thumbs.db
 *.sublime-project
 *.sublime-workspace
 *.log
-.eslintcache
 vscode/**/History/
 vscode/**/globalStorage/*
 !vscode/User/globalStorage/kilocode.kilo-code
