@@ -18,50 +18,50 @@ const untildify = (x) => x.replace(/^~/, os.homedir());
 
 const envFile = untildify(`~/.env`);
 const env = fs.existsSync(envFile)
-	? parseEnv(fs.readFileSync(envFile, 'utf8'))
-	: {};
+  ? parseEnv(fs.readFileSync(envFile, 'utf8'))
+  : {};
 
 const folders = [
-	// Personal projects
-	globSync(untildify(`~/_/*/`)),
+  // Personal projects
+  globSync(untildify(`~/_/*/`)),
 
-	// Work projects
-	env.WORK_PROJECTS_DIR
-		? globSync(untildify(`${env.WORK_PROJECTS_DIR}/*/`))
-		: [],
+  // Work projects
+  env.WORK_PROJECTS_DIR
+    ? globSync(untildify(`${env.WORK_PROJECTS_DIR}/*/`))
+    : [],
 
-	// Extra projects
-	untildify(`~/dotfiles/`),
+  // Extra projects
+  untildify(`~/dotfiles/`),
 
-	// Cloud folders
-	untildify(`~/cloud`),
-	untildify(`~/murder`),
+  // Cloud folders
+  untildify(`~/cloud`),
+  untildify(`~/murder`),
 ].flat();
 
 const items = folders
-	.map((file) => {
-		const title = path.basename(file);
-		const date = fs.statSync(file).atime;
-		return {
-			title,
-			date,
-			file,
-		};
-	})
-	.map((doc) => ({
-		title: doc.title,
-		uid: doc.file,
-		type: 'folder',
-		valid: true,
-		arg: doc.file,
-		icon: {
-			type: 'fileicon',
-			path: doc.file,
-		},
-	}));
+  .map((file) => {
+    const title = path.basename(file);
+    const date = fs.statSync(file).atime;
+    return {
+      title,
+      date,
+      file,
+    };
+  })
+  .map((doc) => ({
+    title: doc.title,
+    uid: doc.file,
+    type: 'folder',
+    valid: true,
+    arg: doc.file,
+    icon: {
+      type: 'fileicon',
+      path: doc.file,
+    },
+  }));
 
 console.log(
-	JSON.stringify({
-		items,
-	})
+  JSON.stringify({
+    items,
+  })
 );

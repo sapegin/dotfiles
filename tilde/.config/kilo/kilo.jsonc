@@ -1,7 +1,7 @@
 {
-	"$schema": "https://app.kilo.ai/config.json",
-	"instructions": ["~/dotfiles/ai-rules/AGENTS.md"],
-	"permission": {
-		"bash": "allow",
-	},
+  "$schema": "https://app.kilo.ai/config.json",
+  "instructions": ["~/dotfiles/ai-rules/AGENTS.md"],
+  "permission": {
+    "bash": "allow",
+  },
 }

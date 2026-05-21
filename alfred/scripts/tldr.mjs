@@ -18,14 +18,14 @@ const DOCS_ROOT = `${os.homedir()}/dotfiles/docs/gui/`;
 const bundleId = process.argv[2];
 
 try {
-	const markdown = fs.readFileSync(`${DOCS_ROOT}/${bundleId}.md`, 'utf8');
-	console.log(
-		JSON.stringify({
-			response: markdown,
-		})
-	);
+  const markdown = fs.readFileSync(`${DOCS_ROOT}/${bundleId}.md`, 'utf8');
+  console.log(
+    JSON.stringify({
+      response: markdown,
+    })
+  );
 } catch {
-	console.log(
-		JSON.stringify({ response: `No docs found for \`${bundleId}\`.` })
-	);
+  console.log(
+    JSON.stringify({ response: `No docs found for \`${bundleId}\`.` })
+  );
 }

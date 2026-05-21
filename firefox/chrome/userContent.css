@@ -2,37 +2,37 @@
 
 /* Firefox reader mode styles */
 @-moz-document url-prefix("about:reader") {
-	body.sepia {
-		--selectionBackground: #f8e7a0;
+  body.sepia {
+    --selectionBackground: #f8e7a0;
 
-		/* Custom colors */
-		--sepiaForeground: #5b4839;
-		--sepiaBackground: #f6f2ef;
-		--sepiaHoverBackground: #ebe4dc;
-		--sepiaHoverBorder: #b0a59d;
-		--sepiaDisabled: #9e8e7e;
+    /* Custom colors */
+    --sepiaForeground: #5b4839;
+    --sepiaBackground: #f6f2ef;
+    --sepiaHoverBackground: #ebe4dc;
+    --sepiaHoverBorder: #b0a59d;
+    --sepiaDisabled: #9e8e7e;
 
-		--primary-color: var(--sepiaForeground) !important;
-		--main-background: var(--sepiaBackground) !important;
-		--main-foreground: var(--sepiaForeground) !important;
-		--toolbar-border: var(--sepiaHoverBorder) !important;
-		--toolbar-button-background-hover: var(--sepiaHoverBackground) !important;
-		--toolbar-button-background-active: var(--sepiaHoverBackground) !important;
-		--icon-fill: var(--sepiaForeground) !important;
-		--icon-disabled-fill: var(--sepiaDisabled) !important;
-		--selected-background: var(--selectionBackground) !important;
-	}
+    --primary-color: var(--sepiaForeground) !important;
+    --main-background: var(--sepiaBackground) !important;
+    --main-foreground: var(--sepiaForeground) !important;
+    --toolbar-border: var(--sepiaHoverBorder) !important;
+    --toolbar-button-background-hover: var(--sepiaHoverBackground) !important;
+    --toolbar-button-background-active: var(--sepiaHoverBackground) !important;
+    --icon-fill: var(--sepiaForeground) !important;
+    --icon-disabled-fill: var(--sepiaDisabled) !important;
+    --selected-background: var(--selectionBackground) !important;
+  }
 
-	.domain {
-		/* Use text color for underline instead of black */
-		text-decoration: underline !important;
-	}
+  .domain {
+    /* Use text color for underline instead of black */
+    text-decoration: underline !important;
+  }
 
-	hr {
-		background-color: var(--sepiaHoverBorder);
-		height: 1px;
-		border: 0;
-	}
+  hr {
+    background-color: var(--sepiaHoverBorder);
+    height: 1px;
+    border: 0;
+  }
 }
 
 /*
@@ -40,135 +40,135 @@ uBlock origin error pages:
 - "moz-extension://a7bf810e-ecb9-4c69-8123-00aac8bb4f90/document-blocked.html?
 */
 @-moz-document url-prefix("moz-extension") {
-	:root {
-		--gray060: #4c4b4e;
-		--gray150: #dbd7e0;
-		--gray160: #e8e5eb;
-		--gray170: #f7f6f9;
-		--blue: #80a4be;
-		--blueContrast: #527b98;
+  :root {
+    --gray060: #4c4b4e;
+    --gray150: #dbd7e0;
+    --gray160: #e8e5eb;
+    --gray170: #f7f6f9;
+    --blue: #80a4be;
+    --blueContrast: #527b98;
 
-		--ink-1: var(--gray060) !important;
-		--ink-2: var(--gray060) !important;
-		--surface-1: var(--gray170) !important;
-		--surface-2: var(--gray160) !important;
-		--accent-surface-1: var(--blueContrast) !important;
-		--link-ink: var(--blueContrast) !important;
-		--link-hover-ink: var(--blue) !important;
-	}
+    --ink-1: var(--gray060) !important;
+    --ink-2: var(--gray060) !important;
+    --surface-1: var(--gray170) !important;
+    --surface-2: var(--gray160) !important;
+    --accent-surface-1: var(--blueContrast) !important;
+    --link-ink: var(--blueContrast) !important;
+    --link-hover-ink: var(--blue) !important;
+  }
 }
 
 @-moz-document url-prefix("https://github.com/")
 {
-	:root {
-		/* High contrast Squirrelsong Light theme */
-		--sqrl-gray060: #4c4b4e;
-		--sqrl-gray090: #78737d;
-		--sqrl-gray180: #fdfdfe;
-		--sqrl-magentaContrast: #806f9b;
-		--sqrl-red: #ac493e;
-		--sqrl-redContrast: #c06159;
-		--sqrl-redDim: #e5aba888;
-		--sqrl-redDimer: #f2dbda88;
-		--sqrl-greenContrast: #667e44;
-		--sqrl-greenDim: #cbd9c188;
-		--sqrl-greenDimer: #e2ebdf88;
-		--sqrl-blue: #80a4be;
-		--sqrl-blueContrast: #527b98;
-		--sqrl-blueDim: #bfd1de88;
-		--sqrl-blueDimer: #dfe8ef88;
-		--sqrl-yellowDim: #e8d8a5;
-		--sqrl-yellowDimer: #f7f0da;
+  :root {
+    /* High contrast Squirrelsong Light theme */
+    --sqrl-gray060: #4c4b4e;
+    --sqrl-gray090: #78737d;
+    --sqrl-gray180: #fdfdfe;
+    --sqrl-magentaContrast: #806f9b;
+    --sqrl-red: #ac493e;
+    --sqrl-redContrast: #c06159;
+    --sqrl-redDim: #e5aba888;
+    --sqrl-redDimer: #f2dbda88;
+    --sqrl-greenContrast: #667e44;
+    --sqrl-greenDim: #cbd9c188;
+    --sqrl-greenDimer: #e2ebdf88;
+    --sqrl-blue: #80a4be;
+    --sqrl-blueContrast: #527b98;
+    --sqrl-blueDim: #bfd1de88;
+    --sqrl-blueDimer: #dfe8ef88;
+    --sqrl-yellowDim: #e8d8a5;
+    --sqrl-yellowDimer: #f7f0da;
 
-		--fontStack-monospace:
-			MonoLisa, 'Monaspace Neon', ui-monospace, SFMono-Regular, SF Mono, Menlo,
-			Consolas, Liberation Mono, monospace !important;
+    --fontStack-monospace:
+      MonoLisa, 'Monaspace Neon', ui-monospace, SFMono-Regular, SF Mono, Menlo,
+      Consolas, Liberation Mono, monospace !important;
 
-		--color-prettylights-syntax-brackethighlighter-angle: var(
-			--sqrl-gray090
-		) !important;
-		--color-prettylights-syntax-brackethighlighter-unmatched: var(
-			--sqrl-red
-		) !important;
-		--color-prettylights-syntax-carriage-return-bg: var(--sqrl-red) !important;
-		--color-prettylights-syntax-carriage-return-text: var(
-			--sqrl-gray180
-		) !important;
-		--color-prettylights-syntax-comment: var(--sqrl-gray090) !important;
-		--color-prettylights-syntax-constant: var(--sqrl-blueContrast) !important;
-		--color-prettylights-syntax-constant-other-reference-link: var(
-			--sqrl-blueContrast
-		) !important;
-		--color-prettylights-syntax-entity: var(--sqrl-blueContrast) !important;
-		--color-prettylights-syntax-entity-tag: var(
-			--sqrl-magentaContrast
-		) !important;
-		--color-prettylights-syntax-invalid-illegal-bg: var(--sqrl-red) !important;
-		--color-prettylights-syntax-invalid-illegal-text: var(
-			--sqrl-gray180
-		) !important;
-		--color-prettylights-syntax-keyword: var(--sqrl-magentaContrast) !important;
-		--color-prettylights-syntax-markup-changed-bg: var(
-			--sqrl-blueDimer
-		) !important;
-		--color-prettylights-syntax-markup-changed-text: var(
-			--sqrl-blueContrast
-		) !important;
-		--color-prettylights-syntax-markup-deleted-bg: var(
-			--sqrl-redDimer
-		) !important;
-		--color-prettylights-syntax-markup-deleted-text: var(
-			--sqrl-redContrast
-		) !important;
-		--color-prettylights-syntax-markup-heading: var(
-			--sqrl-blueContrast
-		) !important;
-		--color-prettylights-syntax-markup-ignored-bg: var(
-			--sqrl-blueContrast
-		) !important;
-		--color-prettylights-syntax-markup-ignored-text: var(
-			--sqrl-gray090
-		) !important;
-		--color-prettylights-syntax-markup-inserted-bg: var(
-			--sqrl-greenDimer
-		) !important;
-		--color-prettylights-syntax-markup-inserted-text: var(
-			--sqrl-greenContrast
-		) !important;
-		--color-prettylights-syntax-markup-list: var(--sqrl-gray060) !important;
-		--color-prettylights-syntax-meta-diff-range: var(--sqrl-gray090) !important;
-		--color-prettylights-syntax-string: var(--sqrl-greenContrast) !important;
-		--color-prettylights-syntax-string-regexp: var(
-			--sqrl-greenContrast
-		) !important;
-		--color-prettylights-syntax-sublimelinter-gutter-mark: var(
-			--sqrl-gray090
-		) !important;
-		--color-prettylights-syntax-variable: var(--sqrl-blueContrast) !important;
+    --color-prettylights-syntax-brackethighlighter-angle: var(
+      --sqrl-gray090
+    ) !important;
+    --color-prettylights-syntax-brackethighlighter-unmatched: var(
+      --sqrl-red
+    ) !important;
+    --color-prettylights-syntax-carriage-return-bg: var(--sqrl-red) !important;
+    --color-prettylights-syntax-carriage-return-text: var(
+      --sqrl-gray180
+    ) !important;
+    --color-prettylights-syntax-comment: var(--sqrl-gray090) !important;
+    --color-prettylights-syntax-constant: var(--sqrl-blueContrast) !important;
+    --color-prettylights-syntax-constant-other-reference-link: var(
+      --sqrl-blueContrast
+    ) !important;
+    --color-prettylights-syntax-entity: var(--sqrl-blueContrast) !important;
+    --color-prettylights-syntax-entity-tag: var(
+      --sqrl-magentaContrast
+    ) !important;
+    --color-prettylights-syntax-invalid-illegal-bg: var(--sqrl-red) !important;
+    --color-prettylights-syntax-invalid-illegal-text: var(
+      --sqrl-gray180
+    ) !important;
+    --color-prettylights-syntax-keyword: var(--sqrl-magentaContrast) !important;
+    --color-prettylights-syntax-markup-changed-bg: var(
+      --sqrl-blueDimer
+    ) !important;
+    --color-prettylights-syntax-markup-changed-text: var(
+      --sqrl-blueContrast
+    ) !important;
+    --color-prettylights-syntax-markup-deleted-bg: var(
+      --sqrl-redDimer
+    ) !important;
+    --color-prettylights-syntax-markup-deleted-text: var(
+      --sqrl-redContrast
+    ) !important;
+    --color-prettylights-syntax-markup-heading: var(
+      --sqrl-blueContrast
+    ) !important;
+    --color-prettylights-syntax-markup-ignored-bg: var(
+      --sqrl-blueContrast
+    ) !important;
+    --color-prettylights-syntax-markup-ignored-text: var(
+      --sqrl-gray090
+    ) !important;
+    --color-prettylights-syntax-markup-inserted-bg: var(
+      --sqrl-greenDimer
+    ) !important;
+    --color-prettylights-syntax-markup-inserted-text: var(
+      --sqrl-greenContrast
+    ) !important;
+    --color-prettylights-syntax-markup-list: var(--sqrl-gray060) !important;
+    --color-prettylights-syntax-meta-diff-range: var(--sqrl-gray090) !important;
+    --color-prettylights-syntax-string: var(--sqrl-greenContrast) !important;
+    --color-prettylights-syntax-string-regexp: var(
+      --sqrl-greenContrast
+    ) !important;
+    --color-prettylights-syntax-sublimelinter-gutter-mark: var(
+      --sqrl-gray090
+    ) !important;
+    --color-prettylights-syntax-variable: var(--sqrl-blueContrast) !important;
 
-		--diffBlob-additionNum-bgColor: var(--sqrl-greenDimer) !important;
-		--diffBlob-additionWord-bgColor: var(--sqrl-greenDim) !important;
-		--diffBlob-additionLine-bgColor: var(--sqrl-greenDimer) !important;
-		--diffBlob-deletionNum-bgColor: var(--sqrl-redDimer) !important;
-		--diffBlob-deletionWord-bgColor: var(--sqrl-redDim) !important;
-		--diffBlob-deletionLine-bgColor: var(--sqrl-redDimer) !important;
-		--diffBlob-hunkNum-bgColor-rest: var(--sqrl-blueDimer) !important;
+    --diffBlob-additionNum-bgColor: var(--sqrl-greenDimer) !important;
+    --diffBlob-additionWord-bgColor: var(--sqrl-greenDim) !important;
+    --diffBlob-additionLine-bgColor: var(--sqrl-greenDimer) !important;
+    --diffBlob-deletionNum-bgColor: var(--sqrl-redDimer) !important;
+    --diffBlob-deletionWord-bgColor: var(--sqrl-redDim) !important;
+    --diffBlob-deletionLine-bgColor: var(--sqrl-redDimer) !important;
+    --diffBlob-hunkNum-bgColor-rest: var(--sqrl-blueDimer) !important;
 
-		--bgColor-attention-muted: var(--sqrl-yellowDimer) !important;
-		--bgColor-accent-muted: var(--sqrl-blueDim) !important;
+    --bgColor-attention-muted: var(--sqrl-yellowDimer) !important;
+    --bgColor-accent-muted: var(--sqrl-blueDim) !important;
 
-		--borderColor-accent-muted: var(--sqrl-blue) !important;
+    --borderColor-accent-muted: var(--sqrl-blue) !important;
 
-		--fgColor-accent: var(--sqrl-blueContrast) !important;
-	}
+    --fgColor-accent: var(--sqrl-blueContrast) !important;
+  }
 
-	@layer primer-css-base {
-		code {
-			font-size: 16px !important;
-		}
-	}
+  @layer primer-css-base {
+    code {
+      font-size: 16px !important;
+    }
+  }
 
-	.diff-line-number {
-		color: var(--sqrl-gray090) !important;
-	}
+  .diff-line-number {
+    color: var(--sqrl-gray090) !important;
+  }
 }

@@ -1,35 +1,35 @@
 {
-	"name": "dotfiles",
-	"private": true,
-	"type": "module",
-	"scripts": {
-		"lint": "oxlint --fix",
-		"test": "oxlint",
-		"format": "oxfmt"
-	},
-	"dependencies": {
-		"@shikijs/rehype": "^3.15.0",
-		"avif": "^0.5.3",
-		"exifreader": "4.39.0",
-		"glob": "^11.0.0",
-		"playwright": "1.60.0",
-		"rehype-stringify": "^10.0.1",
-		"remark-parse": "^11.0.0",
-		"remark-rehype": "^11.1.2",
-		"sharp": "0.34.5",
-		"shiki": "^3.15.0",
-		"unified": "^11.0.5",
-		"yaml": "2.9.0"
-	},
-	"devDependencies": {
-		"@types/node": "24.10.1",
-		"oxfmt": "0.51.0",
-		"oxlint": "1.66.0",
-		"oxlint-config-raccoon": "10.0.5",
-		"oxlint-tsgolint": "0.23.0",
-		"typescript": "5.9.3"
-	},
-	"engines": {
-		"node": ">=24"
-	}
+  "name": "dotfiles",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint": "oxlint --fix",
+    "test": "oxlint",
+    "format": "oxfmt"
+  },
+  "dependencies": {
+    "@shikijs/rehype": "^3.15.0",
+    "avif": "^0.5.3",
+    "exifreader": "4.39.0",
+    "glob": "^11.0.0",
+    "playwright": "1.60.0",
+    "rehype-stringify": "^10.0.1",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.1.2",
+    "sharp": "0.34.5",
+    "shiki": "^3.15.0",
+    "unified": "^11.0.5",
+    "yaml": "2.9.0"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.1",
+    "oxfmt": "0.51.0",
+    "oxlint": "1.66.0",
+    "oxlint-config-raccoon": "10.0.5",
+    "oxlint-tsgolint": "0.23.0",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=24"
+  }
 }
