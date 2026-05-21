@@ -917,14 +917,14 @@ async function updateNotes(renamedFiles) {
 			// Update file if the contents was changed
 			if (newContent !== content) {
 				updatedCount++;
-				await fs.mkdir(path.dirname(newFile), { recursive: true });
-				await fs.writeFile(newFile, newContent, 'utf-8');
+				await fs.writeFile(file, newContent, 'utf-8');
 			}
 
-			// Remove old file if the name was changed
+			// Move old file if the name was changed
 			if (newFile !== file) {
+				await fs.mkdir(path.dirname(newFile), { recursive: true });
+        await fs.rename(file, newFile);
 				console.log(`${getBasename(file)} → ${getBasename(newFile)}`);
-				moveToTrash(file);
 			}
 		} catch (error) {
 			console.error(`⚠️ Error updating ${file}:`);
