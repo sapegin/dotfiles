@@ -66,8 +66,8 @@ npm config set save-exact true
 npm config set allow-git none
 # Do not allow installing packages from remote dependencies (URLs instead of npm packages)
 # npm config set allow-remote none
-# Packages should be at least 1 day old
-npm config set min-release-age 1
+# Packages should be at least 7 days old
+npm config set min-release-age 7
 npm install -g npm-upgrade
 npm install
 echo

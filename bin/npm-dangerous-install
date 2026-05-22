@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
 # Removes min-release-age limitation, runs npm install, and sets the limitation
-# back to 1 day.
+# back to 7 days.
+#
+# WARNING: Should only be used to install own packages.
 #
 # - Dangerously install npm packages:
 #
@@ -16,4 +18,7 @@ set -e
 
 npm config set min-release-age 0
 npm install
-npm config set min-release-age 1
+npm config set min-release-age 7
+
+echo "The min-release-age value restored to:"
+pnpm config get min-release-age
