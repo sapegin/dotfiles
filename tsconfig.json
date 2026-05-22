@@ -3,13 +3,14 @@
     "target": "es2024",
     "module": "nodenext",
     "moduleResolution": "nodenext",
-    "lib": ["ES2024"],
+    "lib": ["ESNext"],
     "strict": true,
     "noEmit": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "isolatedModules": true,
     "verbatimModuleSyntax": true,
+    "allowImportingTsExtensions": true,
     "types": ["node"]
   },
   "include": ["bin/**/*.ts", "alfred/**/*.ts"]
