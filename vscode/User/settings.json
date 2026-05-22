@@ -99,7 +99,7 @@
   "explorer.decorations.colors": false,
   "explorer.fileNesting.enabled": false,
   "explorer.openEditors.visible": 1,
-  "extensions.autoUpdate": "onlyEnabledExtensions",
+  "extensions.autoUpdate": false,
   "extensions.ignoreRecommendations": true,
   "files.associations": {
     "*.js.snap": "javascript",
