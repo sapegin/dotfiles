@@ -9,5 +9,6 @@
   "interfaceFontFamily": "SF Pro",
   "enabledCssSnippets": [
     "images"
-  ]
+  ],
+  "theme": "moonstone"
 }

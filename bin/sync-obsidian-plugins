@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+# Build, smoke-test, and install local Obsidian plugins from the monorepo into
+# the live vault and the dotfiles backup, then update the install manifest.
+#
+# ---
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+
+set -euo pipefail
+exec node "$(dirname "$0")/lib/sync-obsidian-plugins.ts" "$@"

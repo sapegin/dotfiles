@@ -3,7 +3,7 @@
   "name": "Better Title Sync",
   "version": "1.0.0",
   "minAppVersion": "0.15.0",
-  "description": "Synchronies title in Markdown when file is renamed",
+  "description": "Updates first-level heading in Markdown when file is renamed.",
   "author": "Artem Sapegin",
   "authorUrl": "https://sapegin.me",
   "fundingUrl": "https://buymeacoffee.com/sapegin",
