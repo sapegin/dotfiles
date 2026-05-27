@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+# Build, package, and install local VS Code extensions from the raccoon-vscode
+# monorepo.
+#
+# ---
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+
+set -euo pipefail
+exec node "$(dirname "$0")/lib/sync-vscode-extensions.ts" "$@"
