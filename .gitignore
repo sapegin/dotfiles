@@ -9,9 +9,6 @@ Thumbs.db
 *.log
 vscode/**/History/
 vscode/**/globalStorage/*
-!vscode/User/globalStorage/kilocode.kilo-code
-vscode/User/globalStorage/kilocode.kilo-code/*
-!vscode/User/globalStorage/kilocode.kilo-code/settings
 vscode/**/workspaceStorage/
 tilde/Brewfile.lock.json
 lazygit/state.yml

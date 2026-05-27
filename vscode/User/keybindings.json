@@ -1171,19 +1171,9 @@
     "when": "editorTextFocus && !editorReadonly"
   },
   {
-    "key": "cmd+i",
-    "command": "-kilo-code.ghost.promptCodeSuggestion",
-    "when": "editorTextFocus && kilocode.ghost.enableQuickInlineTaskKeybinding && !editorTabMovesFocus && !github.copilot.completions.enabled && !inSnippetMode"
-  },
-  {
     "key": "shift+cmd+i",
     "command": "-workbench.action.chat.openagent",
     "when": "config.chat.agent.enabled && !chatSetupDisabled && !chatSetupHidden"
-  },
-  {
-    "key": "cmd+i",
-    "command": "-kilo-code.addToContextAndFocus",
-    "when": "editorTextFocus && kilocode.ghost.enableQuickInlineTaskKeybinding && !github.copilot.completions.enabled"
   },
   {
     "key": "shift+alt+enter",

@@ -155,9 +155,7 @@
     "args": ["-i"]
   },
   "terminal.integrated.commandsToSkipShell": [
-    "workbench.action.closePanel",
-    "kilo-code.new.agentManagerOpen",
-    "kilo-code.new.agentManager.showTerminal"
+    "workbench.action.closePanel"
   ],
   "terminal.integrated.copyOnSelection": true,
   "terminal.integrated.cursorStyle": "line",
@@ -300,16 +298,6 @@
   "inlineChat.enableV2": true,
   // Disable insanely annoying hints "Cmd+I to continue with Copilot"
   "inlineChat.lineNaturalLanguageHint": false,
-  "kilo-code.allowedCommands": [
-    "git log",
-    "git diff",
-    "git show",
-    "npm test",
-    "npm install",
-    "tsc"
-  ],
-  "kilo-code.debug": false,
-  "kilo-code.deniedCommands": [],
   "tailwindCSS.emmetCompletions": false,
   "typos.diagnosticSeverity": "Information",
   "profileGenerator": [

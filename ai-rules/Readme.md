@@ -58,8 +58,6 @@ Source of truth: [Commits.md](./Commits.md).
 - [AI rules](https://github.com/sapegin/washingcode-book/tree/master/ai) based on my book on clean code for frontend developers
 - [OpenAI Skills](https://help.openai.com/en/articles/20001066)
 - [Amp manual: Agent Skills](https://ampcode.com/manual)
-- [Kilo Code custom modes](https://kilocode.ai/docs/features/custom-modes)
-- [Kilo Code custom rules](https://kilocode.ai/docs/advanced-usage/custom-rules)
 - [Copilot prompt files](https://code.visualstudio.com/docs/copilot/customization/prompt-files)
 - [GitHub Copilot custom instructions](https://docs.github.com/en/copilot/how-tos/configure-custom-instructions/add-repository-instructions)
 - [Claude Code Action](https://github.com/anthropics/claude-code-action)
