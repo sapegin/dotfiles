@@ -154,6 +154,16 @@ interface WeatherResponse {
   };
 }
 
+const warnings: string[] = [];
+
+function printWarning(...args: unknown[]): void {
+  const message = args
+    .map((arg) => (typeof arg === 'string' ? arg : String(arg)))
+    .join(' ');
+  warnings.push(message);
+  console.warn(`\n⚠️ ${message}\n`);
+}
+
 function getErrorMessage(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
 }
@@ -171,7 +181,7 @@ function parseNoteDate(basename: string): Date | undefined {
     const [, date, hour, minute] = datetimeMatch;
     return new Date(Date.parse(`${date}T${hour}:${minute}:00`));
   } else {
-    console.error('⚠️ Cannot parse date for', basename);
+    printWarning(`${basename}: Cannot parse date`);
   }
   return undefined;
 }
@@ -305,65 +315,59 @@ async function getWeather(
   lon: string,
   date: Date
 ): Promise<string | undefined> {
-  try {
-    const isoDateString = date.toISOString();
-    const dateString = isoDateString.slice(0, 10); // YYYY-MM-DD
-    const hourString = isoDateString.slice(11, 13); // HH
+  const isoDateString = date.toISOString();
+  const dateString = isoDateString.slice(0, 10); // YYYY-MM-DD
+  const hourString = isoDateString.slice(11, 13); // HH
 
-    // Determine if we need historical or current API
-    const threeMonthsAgo = new Date();
-    threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
-    const isHistorical = date < threeMonthsAgo;
-    const baseUrl = isHistorical
-      ? 'https://archive-api.open-meteo.com/v1/archive'
-      : 'https://api.open-meteo.com/v1/forecast';
+  // Determine if we need historical or current API
+  const threeMonthsAgo = new Date();
+  threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+  const isHistorical = date < threeMonthsAgo;
+  const baseUrl = isHistorical
+    ? 'https://archive-api.open-meteo.com/v1/archive'
+    : 'https://api.open-meteo.com/v1/forecast';
 
-    const params = new URLSearchParams({
-      latitude: lat,
-      longitude: lon,
-      start_date: dateString,
-      end_date: dateString,
-      hourly: 'temperature_2m,weather_code,is_day',
-      timezone: 'auto',
-    });
+  const params = new URLSearchParams({
+    latitude: lat,
+    longitude: lon,
+    start_date: dateString,
+    end_date: dateString,
+    hourly: 'temperature_2m,weather_code,is_day',
+    timezone: 'auto',
+  });
 
-    const response = await fetch(`${baseUrl}?${params.toString()}`);
-    if (response.ok === false) {
-      return undefined;
-    }
-
-    const data = (await response.json()) as WeatherResponse;
-
-    // Find the closest hour
-    const hourIndex = data.hourly.time.findIndex((time) =>
-      time.startsWith(`${dateString}T${hourString}`)
-    );
-
-    if (hourIndex === -1) {
-      return undefined;
-    }
-
-    const temperature = Math.round(data.hourly.temperature_2m[hourIndex]);
-    const weatherCode = data.hourly.weather_code[hourIndex];
-    const isDay = data.hourly.is_day[hourIndex];
-
-    let condition = WMO_WEATHER_CODES[weatherCode];
-    if (isDay === 0 && WMO_WEATHER_CODES_NIGHT[weatherCode]) {
-      condition = WMO_WEATHER_CODES_NIGHT[weatherCode];
-    }
-
-    const weather = condition
-      ? `${temperature}°C, ${condition}`
-      : `${temperature}°C`;
-
-    console.log(`  ↪ ${weather}`);
-
-    return weather;
-  } catch (error) {
-    console.error('⚠️ Cannot fetch weather for', lat, lon, date);
-    console.error(getErrorMessage(error));
+  const response = await fetch(`${baseUrl}?${params.toString()}`);
+  if (response.ok === false) {
     return undefined;
   }
+
+  const data = (await response.json()) as WeatherResponse;
+
+  // Find the closest hour
+  const hourIndex = data.hourly.time.findIndex((time) =>
+    time.startsWith(`${dateString}T${hourString}`)
+  );
+
+  if (hourIndex === -1) {
+    return undefined;
+  }
+
+  const temperature = Math.round(data.hourly.temperature_2m[hourIndex]);
+  const weatherCode = data.hourly.weather_code[hourIndex];
+  const isDay = data.hourly.is_day[hourIndex];
+
+  let condition = WMO_WEATHER_CODES[weatherCode];
+  if (isDay === 0 && WMO_WEATHER_CODES_NIGHT[weatherCode]) {
+    condition = WMO_WEATHER_CODES_NIGHT[weatherCode];
+  }
+
+  const weather = condition
+    ? `${temperature}°C, ${condition}`
+    : `${temperature}°C`;
+
+  console.log(`  ↪ ${weather}`);
+
+  return weather;
 }
 
 /** Read EXIF photo metadata. */
@@ -460,10 +464,10 @@ async function getImageDimensions(imagePath: string): Promise<ImageDimensions> {
     const height = typeof metadata.height === 'number' ? metadata.height : 0;
     return { width, height };
   } catch (error) {
-    console.error(
-      `⚠️ Error reading image dimensions of ${getBasename(imagePath)}:`
+    printWarning(
+      `Error reading image dimensions of ${getBasename(imagePath)}:\n`,
+      getErrorStack(error)
     );
-    console.error(getErrorStack(error));
     return { width: 0, height: 0 };
   }
 }
@@ -513,8 +517,8 @@ async function optimizeImage(
   // Refuse to overwrite an existing AVIF; leave the original alone
   try {
     await fs.access(avifPath);
-    console.log(
-      `⚠️ Skipped ${filename}: ${nameWithoutExt}.avif already exists`
+    printWarning(
+      `Skipped image optimization of ${filename}: ${nameWithoutExt}.avif already exists`
     );
     return undefined;
   } catch {
@@ -757,21 +761,19 @@ async function updateNote({
       image.includes('.') === true &&
       attachmentNames.has(image) === false
     ) {
-      console.log(`⚠️ Missing image: ${image} in ${path.basename(file)}`);
-
-      // Suggest attachments whose name contains the missing file’s base name
+      const suggestions: string[] = [];
       const imageBasename = stripExtension(image);
       if (imageBasename !== '') {
-        const suggestions: string[] = [];
+        // Suggest attachments whose name contains the missing file’s base name
         for (const name of attachmentNames) {
           if (stripExtension(name).includes(imageBasename)) {
             suggestions.push(name);
           }
         }
-        for (const suggestion of suggestions) {
-          console.log(`   ↪ Did you mean: ${suggestion}?`);
-        }
       }
+      printWarning(
+        `${basename}: Missing image ${image}\n   ↪ Did you mean ${suggestions.join(', ')}?`
+      );
     }
   }
 
@@ -800,7 +802,7 @@ async function updateNote({
   // Detect misspelled note properties
   for (const field in newFrontmatter) {
     if (FRONTMATTER_FIELDS.includes(field) === false) {
-      console.error(`⚠️ Invalid property name “${field}” in`, basename);
+      printWarning(`${basename}: Invalid property name “${field}”`);
     }
   }
 
@@ -901,9 +903,9 @@ async function updateNote({
         // date/time
         delete newFrontmatter.weather;
       } else {
-        console.log(`⚠️ EXIF date is missing`);
-        console.log(`Image:`, image);
-        console.log(`Metadata:`, imageMetadata);
+        printWarning(
+          `${basename}: EXIF date is missing in ${image}\nMetadata: ${JSON.stringify(imageMetadata)}`
+        );
       }
     }
 
@@ -912,9 +914,7 @@ async function updateNote({
 
     // Check for missing coordinates
     if (location && newFrontmatter.coordinates === undefined) {
-      console.log(
-        `⚠️ Missing coordinates for ${location} in ${path.basename(file)}`
-      );
+      printWarning(`${basename}: Missing coordinates for ${location}`);
     }
 
     // Fetch weather if we have coordinates and no weather field yet
@@ -930,9 +930,16 @@ async function updateNote({
         .split(',')
         .map((c) => c.trim());
 
-      const weather = await getWeather(lat, lon, date);
-      if (weather) {
-        newFrontmatter.weather = weather;
+      try {
+        const weather = await getWeather(lat, lon, date);
+        if (weather) {
+          newFrontmatter.weather = weather;
+        }
+      } catch (error) {
+        printWarning(
+          `${basename}: Cannot fetch weather for ${lat}, ${lon}, ${date.toISOString()}:`,
+          getErrorMessage(error)
+        );
       }
 
       // Small delay to avoid hitting rate limits
@@ -1030,8 +1037,7 @@ async function updateNotes(renamedFiles: Map<string, string>): Promise<void> {
         console.log(`${getBasename(file)} → ${getBasename(newFile)}`);
       }
     } catch (error) {
-      console.error(`⚠️ Error updating ${file}:`);
-      console.error(getErrorStack(error));
+      printWarning(`Error updating ${file}:`, getErrorStack(error));
     }
   }
 
@@ -1117,11 +1123,10 @@ async function checkICloudSync(): Promise<void> {
       stdio: ['ignore', 'pipe', 'pipe'],
     });
     if (/error|stuck|needs-sync:YES/i.test(status)) {
-      console.log('⚠️ Container reports problems:');
-      console.log(status);
+      printWarning('Container reports problems:', status);
     }
   } catch (error) {
-    console.log('⚠️ brctl status failed:', getErrorMessage(error));
+    printWarning('brctl status failed:', getErrorMessage(error));
   }
 
   // 2. Per-file structural checks
@@ -1175,25 +1180,20 @@ async function checkICloudSync(): Promise<void> {
     console.log(`Disk: ${regularFiles} files; CloudDocs: ${dumpItems} items`);
     const missing = regularFiles - dumpItems;
     if (missing > regularFiles * 0.05) {
-      console.log(
-        `⚠️ CloudDocs knows about ${missing} fewer items than disk has: some files may not be uploaded.`
-      );
-      console.log(
-        `   Try: \`killall bird\`, then re-save the suspect file, or move it out of the vault and back in.`
+      printWarning(
+        `CloudDocs knows about ${missing} fewer items than disk has: some files may not be uploaded.\n   Try: 'killall bird', then re-save the suspect file, or move it out of the vault and back in.`
       );
     }
   } catch (error) {
-    console.log('⚠️ brctl dump failed:', getErrorMessage(error));
+    printWarning('brctl dump failed:', getErrorMessage(error));
   }
 
   if (issues.length > 0) {
-    console.log(`\n⚠️ ${issues.length} filename issues:`);
-    for (const issue of issues.slice(0, 30)) {
-      console.log(`   ${issue}`);
-    }
+    const shown = issues.slice(0, 30).map((issue) => `   ${issue}`);
     if (issues.length > 30) {
-      console.log(`   … and ${issues.length - 30} more`);
+      shown.push(`   … and ${issues.length - 30} more`);
     }
+    printWarning(`${issues.length} filename issues:\n${shown.join('\n')}`);
   }
 }
 
@@ -1249,6 +1249,13 @@ async function main(): Promise<void> {
 
   console.log('\n🗑️ Cleaning Obsidian trash…\n');
   await cleanObsidianTrash();
+
+  if (warnings.length > 0) {
+    console.log(`\n⚠️ ${warnings.length} warnings:\n`);
+    for (const message of warnings) {
+      console.log(`• ${message}`);
+    }
+  }
 
   console.log();
   console.log('Done 🦜');
