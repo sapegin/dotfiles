@@ -9,6 +9,7 @@ When editing existing code:
 - Match local style and conventions.
 - Do not add helpers, abstractions, or generalization for single-use code unless local style already requires it.
 - Remove only code made unused by your changes.
+- Use descriptive names; avoid shortening ordinary words (`lineNum` → `lineNumber`).
 - Mention unrelated issues briefly; do not change them unless asked.
 
 Before broader changes, ask if they are not strictly required.
