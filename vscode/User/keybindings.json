@@ -241,7 +241,7 @@
   {
     // F6 matches file renaming in file managers
     "comment": "Rename the current symbol",
-    "key": "shift+f6",
+    "key": "shift+alt+f6",
     "command": "editor.action.rename",
     "when": "editorHasRenameProvider && editorTextFocus && !editorReadonly"
   },
@@ -567,6 +567,22 @@
     "key": "cmd+n",
     "command": "newFileNow.createNewFile",
     "when": "editorTextFocus"
+  },
+  {
+    // File Operations
+    // F6 matches file renaming in file managers
+    "comment": "Rename active file",
+    "key": "shift+f6",
+    "command": "fileOperations.renameFile",
+    "when": "editorTextFocus && !editorReadonly"
+  },
+  {
+    // File Operations
+    // F8 matches file deletion in file managers
+    "comment": "Delete active file",
+    "key": "f8",
+    "command": "fileOperations.removeFile",
+    "when": "editorTextFocus && !editorReadonly"
   },
   {
     // Dash extension
