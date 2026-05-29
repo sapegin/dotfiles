@@ -585,13 +585,6 @@
     "when": "editorTextFocus && !editorReadonly"
   },
   {
-    // Dash extension
-    "comment": "Open Help for the current symbol in Dash",
-    "key": "cmd+k cmd+h",
-    "command": "extension.dash.specific",
-    "when": "editorTextFocus"
-  },
-  {
     // Grim Wrapper extension
     "comment": "ReWrap current comment",
     "key": "cmd+k cmd+w",
