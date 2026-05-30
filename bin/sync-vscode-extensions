@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# Build, package, and install local VS Code extensions from the raccoon-vscode
-# monorepo.
+# Build, package, and install local VS Code extensions from source repos (the
+# raccoon-vscode monorepo and the squirrelsong themes).
 #
 # ---
 # Author: Artem Sapegin, sapegin.me
