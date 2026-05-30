@@ -205,7 +205,7 @@
   },
   "workbench.enableExperiments": false,
   "workbench.fontAliasing": "auto",
-  "workbench.iconTheme": "catppuccin-latte",
+  "workbench.iconTheme": "squirrelppuccin-icons-light",
   "workbench.layoutControl.enabled": false,
   "workbench.navigationControl.enabled": false,
   "workbench.reduceMotion": "on",
