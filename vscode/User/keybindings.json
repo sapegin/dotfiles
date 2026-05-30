@@ -241,7 +241,7 @@
   {
     // F6 matches file renaming in file managers
     "comment": "Rename the current symbol",
-    "key": "shift+alt+f6",
+    "key": "f6",
     "command": "editor.action.rename",
     "when": "editorHasRenameProvider && editorTextFocus && !editorReadonly"
   },
