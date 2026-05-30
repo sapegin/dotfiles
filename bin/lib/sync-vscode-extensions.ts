@@ -1,6 +1,7 @@
-// Build, package, and install local VS Code extensions from the raccoon-vscode
-// monorepo. Pulls the monorepo first (when its working tree is clean), packages
-// each extension into a temporary .vsix, and installs it via the `code` CLI.
+// Build, package, and install local VS Code extensions from source repos
+// (the raccoon-vscode monorepo and the squirrelsong themes). Pulls each repo
+// first (when its working tree is clean), packages each extension into a
+// temporary .vsix, and installs it via the `code` CLI.
 //
 // ---
 // Author: Artem Sapegin, sapegin.me
@@ -8,12 +9,46 @@
 // https://github.com/sapegin/dotfiles
 
 import { execSync } from 'node:child_process';
+import { globSync } from 'node:fs';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 
-const EXTENSIONS_REPO = path.join(os.homedir(), '_/raccoon-vscode');
-const EXTENSIONS_SRC_DIR = path.join(EXTENSIONS_REPO, 'extensions');
+interface SourceConfig {
+  // Path to the repo (may start with `~`)
+  repo: string;
+  // Commands to run in the repo to build the extensions
+  buildCommands: string[];
+  // Returns absolute paths to each extension directory to package
+  getExtensionDirs(): string[];
+}
+
+const SOURCES: SourceConfig[] = [
+  {
+    repo: '~/_/raccoon-vscode',
+    buildCommands: ['npm install --silent', 'npm run build'],
+    getExtensionDirs() {
+      const extensionsSrcDir = path.join(untildify(this.repo), 'extensions');
+      return globSync(path.join(extensionsSrcDir, '*/')).toSorted();
+    },
+  },
+  {
+    repo: '~/_/squirrelsong',
+    buildCommands: [
+      'npm install --silent',
+      'npm run prepare-themes',
+      'npm run prepare-vscode-icons',
+    ],
+    getExtensionDirs() {
+      const repo = untildify(this.repo);
+      return globSync(path.join(repo, 'themes/VSCode/Squirrel*/')).toSorted();
+    },
+  },
+];
+
+function untildify(filePath: string): string {
+  return filePath.replace(/^~/, os.homedir());
+}
 
 interface ExtensionPackageJson {
   name: string;
@@ -48,18 +83,62 @@ function hasCommand(cmd: string): boolean {
   }
 }
 
-async function getExtensionDirectories(): Promise<string[]> {
-  const entries = await fs.readdir(EXTENSIONS_SRC_DIR, { withFileTypes: true });
-  return entries
-    .filter((e) => e.isDirectory())
-    .map((e) => path.join(EXTENSIONS_SRC_DIR, e.name))
-    .toSorted();
+async function processSource(
+  source: SourceConfig,
+  tempDir: string
+): Promise<void> {
+  const repo = untildify(source.repo);
+  const repoName = path.basename(repo);
+
+  console.log(`\n🔄 Checking ${repoName} repo…`);
+  const repoStatus = execSync('git status --porcelain', {
+    cwd: repo,
+    encoding: 'utf8',
+  });
+  if (repoStatus.trim() === '') {
+    run('git pull', repo);
+  } else {
+    console.warn('⚠️ Working tree is dirty, skipping git pull');
+  }
+
+  console.log(`\n🔨 Building ${repoName}…\n`);
+  for (const cmd of source.buildCommands) {
+    run(cmd, repo);
+  }
+
+  const extensionDirs = source.getExtensionDirs();
+  for (const extensionDir of extensionDirs) {
+    const pkg = await readJson<ExtensionPackageJson>(
+      path.join(extensionDir, 'package.json')
+    );
+    const id = `${pkg.publisher}.${pkg.name}`;
+
+    if (pkg.main !== undefined) {
+      const mainPath = path.join(extensionDir, pkg.main);
+      if ((await doesPathExist(mainPath)) === false) {
+        throw new Error(`Extension ${id}: missing ${pkg.main} after build`);
+      }
+    }
+
+    const vsixPath = path.join(tempDir, `${id}-${pkg.version}.vsix`);
+
+    console.log(`\n📦 Packaging ${id}@${pkg.version}…`);
+    run(
+      `npx --yes vsce package --no-dependencies --out ${JSON.stringify(vsixPath)}`,
+      extensionDir
+    );
+
+    console.log();
+    run(`code --install-extension ${JSON.stringify(vsixPath)} --force`, repo);
+  }
 }
 
 async function main(): Promise<void> {
-  if ((await doesPathExist(EXTENSIONS_REPO)) === false) {
-    console.error(`⛔️ Repo not found: ${EXTENSIONS_REPO}`);
-    process.exit(1);
+  for (const source of SOURCES) {
+    if ((await doesPathExist(untildify(source.repo))) === false) {
+      console.error(`⛔️ Repo not found: ${source.repo}`);
+      process.exit(1);
+    }
   }
 
   if (hasCommand('code') === false) {
@@ -67,49 +146,11 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
-  console.log('🔄 Checking raccoon-vscode repo…');
-  const repoStatus = execSync('git status --porcelain', {
-    cwd: EXTENSIONS_REPO,
-    encoding: 'utf8',
-  });
-  if (repoStatus.trim() === '') {
-    run('git pull', EXTENSIONS_REPO);
-  } else {
-    console.warn('⚠️ Working tree is dirty, skipping git pull');
-  }
-
-  console.log('\n🔨 Building extensions…\n');
-  run('npm install --silent', EXTENSIONS_REPO);
-  run('npm run build', EXTENSIONS_REPO);
-
-  const extensionDirs = await getExtensionDirectories();
   const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'sync-vscode-ext-'));
 
   try {
-    for (const extensionDir of extensionDirs) {
-      const pkg = await readJson<ExtensionPackageJson>(
-        path.join(extensionDir, 'package.json')
-      );
-      const id = `${pkg.publisher}.${pkg.name}`;
-
-      const mainPath = path.join(extensionDir, pkg.main ?? 'unknown');
-      if ((await doesPathExist(mainPath)) === false) {
-        throw new Error(`Extension ${id}: missing ${pkg.main} after build`);
-      }
-
-      const vsixPath = path.join(tempDir, `${id}-${pkg.version}.vsix`);
-
-      console.log(`\n📦 Packaging ${id}@${pkg.version}…`);
-      run(
-        `npx --yes vsce package --no-dependencies --out ${JSON.stringify(vsixPath)}`,
-        extensionDir
-      );
-
-      console.log();
-      run(
-        `code --install-extension ${JSON.stringify(vsixPath)} --force`,
-        EXTENSIONS_REPO
-      );
+    for (const source of SOURCES) {
+      await processSource(source, tempDir);
     }
   } finally {
     await fs.rm(tempDir, { recursive: true, force: true });
