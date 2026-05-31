@@ -19,6 +19,7 @@
 // - [x] Peek
 // - [x] Fzf            (one-way: extracted from Readme.md)
 // - [x] Ghostty
+// - [x] Obsidian
 // - [x] dotfiles/brain
 
 import path from 'node:path';
@@ -165,6 +166,19 @@ const zshRcUpdated = zshRc.replace(fzfThemeRegExp, fzfThemeTheme);
 write(zshRcFile, zshRcUpdated);
 
 console.log('   💡 Reopen your terminal to take effect');
+
+/**
+ * Obsidian
+ */
+
+const obsidianVaultDir = `${HOME}/murder/.obsidian`;
+const obsidianThemeDir = `${obsidianVaultDir}/themes/Squirrelsong`;
+
+if (fs.existsSync(path.dirname(obsidianVaultDir))) {
+	console.log('🌈 Syncing Obsidian theme…');
+	sync('themes/Obsidian/Squirrelsong/manifest.json', obsidianThemeDir);
+	sync('themes/Obsidian/Squirrelsong/theme.css', obsidianThemeDir);
+}
 
 /**
  * dotfiles/brain
