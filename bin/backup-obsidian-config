@@ -14,7 +14,11 @@ import os from 'node:os';
 const untildify = (x) => x.replace(/^~/, os.homedir());
 
 const DEST_DIR = path.join(import.meta.dirname, '/../obsidian');
-const EXCLUDED_FILES = [/^workspace.*?\.json/i];
+const EXCLUDED_PATHS = [
+  /^workspace.*?\.json/i,
+  /\.obsidian\/plugins/i,
+  /\.obsidian\/themes/i,
+];
 const DIRS_TO_BACKUP = [
 	path.join('~/murder/.obsidian'),
 	path.join('~/murder/templates'),
@@ -33,13 +37,15 @@ async function copyDirectory(source, dest) {
 		const sourcePath = path.join(source, entry.name);
 		const destPath = path.join(dest, entry.name);
 
+    if (EXCLUDED_PATHS.some((regexp) => regexp.test(entry.name)) || EXCLUDED_PATHS.some((regexp) => regexp.test(entry.parentPath))) {
+      console.log('Skipping', entry.name);
+      continue;
+    }
+
 		if (entry.isDirectory()) {
 			await copyDirectory(sourcePath, destPath);
 		} else if (entry.isFile()) {
-			if (EXCLUDED_FILES.some((regexp) => regexp.test(entry.name))) {
-				console.log('Skipping', entry.name);
-				continue;
-			}
+
 			await copyFile(sourcePath, destPath);
 		}
 	}
