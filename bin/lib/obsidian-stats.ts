@@ -1,0 +1,1619 @@
+// Generates Obsidian vault statistics:
+// * Overall daily note heatmap
+// * Weather history chart
+//
+// ---
+// Author: Artem Sapegin, sapegin.me
+// License: MIT
+// https://github.com/sapegin/dotfiles
+
+import fs from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
+import YAML from 'yaml';
+
+const VAULT_DIR = path.join(os.homedir(), 'murder');
+const LOG_DIR = path.join(VAULT_DIR, '📆 Log');
+const OUTPUT_FILE = path.join(os.homedir(), 'Documents/MurderStats.html');
+
+const COLORS = {
+  // Squirrelsong Light
+  gray060: '#4c4b4e',
+  gray100: '#8c8792',
+  gray160: '#e8e5eb',
+  gray180: '#fdfdfe',
+  // Squirrelsong Deep Purple Dark
+  brightPink: '#ca5a83',
+};
+
+const COLOR_SCALE = ['#f3e9fb', '#d5beed', '#ae95c7', '#9a7eb4', '#644e88'];
+
+const MONTH_NAMES = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
+
+type LocationType = 'home' | 'office' | 'other';
+
+interface PlaceInfo {
+  locationType: LocationType;
+  icon: string;
+  color: string;
+}
+
+interface WeatherStat {
+  date: string;
+  temp: number;
+  condition: string;
+}
+
+interface PostTimeStat {
+  date: string;
+  time: number;
+}
+
+interface LocationStat {
+  date: string;
+  locationType: LocationType;
+}
+
+interface NoteWithCoords {
+  lat: number;
+  lon: number;
+  placeName: string;
+  icon: string;
+  color: string;
+}
+
+interface ExtremeNote {
+  date: string;
+  temp: number;
+  condition?: string;
+}
+
+interface MonthlyWeatherStats {
+  tempSum: number;
+  tempCount: number;
+  sunny: number;
+  partly: number;
+  cloudy: number;
+}
+
+interface YearlyTempRange {
+  minTemp: number;
+  maxTemp: number;
+}
+
+interface LocationMonthStats {
+  home: number;
+  office: number;
+  other: number;
+  total: number;
+}
+
+interface DailyNotesData {
+  notes: Map<string, number>;
+  weatherStats: WeatherStat[];
+  postTimeStats: PostTimeStat[];
+  locationStats: LocationStat[];
+  notesWithCoords: NoteWithCoords[];
+  tagStats: Map<number, Map<string, number>>;
+  wikilinkStats: Map<number, Map<string, number>>;
+  locationLinkStats: Map<number, Map<string, number>>;
+  unresolvedWikilinkStats: Map<number, Map<string, number>>;
+  nonWikilinkLocations: Map<number, Map<string, number>>;
+  minDate: Date;
+  maxDate: Date;
+}
+
+interface WeatherData {
+  labels: string[];
+  tempPoints: { x: string; y: number }[];
+  sunny: (string | number)[];
+  partly: (string | number)[];
+  cloudy: (string | number)[];
+  minTemp: number;
+  coldestNote: ExtremeNote;
+  hottestNote: ExtremeNote;
+  yearLabels: string[];
+  yearTempRanges: number[][];
+}
+
+interface PostTimeData {
+  labels: string[];
+  timePoints: { x: string; y: number }[];
+}
+
+interface LocationData {
+  labels: string[];
+  homePercentages: (string | number)[];
+  officePercentages: (string | number)[];
+  otherPercentages: (string | number)[];
+}
+
+const placeInfoCache = new Map<string, PlaceInfo>();
+
+function formatTemperature(value: number): string {
+  return String(value).replace('-', '−') + '°C';
+}
+
+function normalizeWikilink(wikilink: string): string {
+  let normalized = wikilink.slice(2, -2);
+  // Strip alias part if present (e.g., "Note|alias" -> "Note")
+  const pipeIndex = normalized.indexOf('|');
+  if (pipeIndex !== -1) {
+    normalized = normalized.slice(0, pipeIndex);
+  }
+  // Capitalize the first letter
+  return normalized.charAt(0).toUpperCase() + normalized.slice(1);
+}
+
+/**
+ * Increment the counter for `key` inside the per-year nested map, creating
+ * either map level on demand. Used by every `Map<year, Map<string, number>>`
+ * accumulator in this script.
+ */
+function incrementYearMap(
+  outer: Map<number, Map<string, number>>,
+  year: number,
+  key: string
+): void {
+  let inner = outer.get(year);
+  if (inner === undefined) {
+    inner = new Map();
+    outer.set(year, inner);
+  }
+  inner.set(key, (inner.get(key) ?? 0) + 1);
+}
+
+/** Return "YYYY-MM" keys for every month from minDate's month to maxDate's. */
+function enumerateMonthKeys(minDate: Date, maxDate: Date): string[] {
+  const totalMonths =
+    (maxDate.getFullYear() - minDate.getFullYear()) * 12 +
+    (maxDate.getMonth() - minDate.getMonth()) +
+    1;
+  const result: string[] = [];
+  for (let i = 0; i < totalMonths; i++) {
+    const d = new Date(minDate.getFullYear(), minDate.getMonth() + i, 1);
+    result.push(
+      `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+    );
+  }
+  return result;
+}
+
+async function getAllNoteNames(): Promise<Set<string>> {
+  const files = await Array.fromAsync(fs.glob(path.join(VAULT_DIR, '**/*.md')));
+  const noteNames = new Set<string>();
+  for (const file of files) {
+    const basename = path.basename(file, '.md');
+    noteNames.add(basename);
+  }
+  return noteNames;
+}
+
+async function getPlaceInfo(locationName: string): Promise<PlaceInfo> {
+  const cached = placeInfoCache.get(locationName);
+  if (cached) {
+    return cached;
+  }
+
+  const locationFilePath = path.join(
+    VAULT_DIR,
+    '🗂️ References/Places',
+    `${locationName}.md`
+  );
+
+  const defaultInfo: PlaceInfo = {
+    locationType: 'other',
+    icon: 'map-pin',
+    color: 'silver',
+  };
+
+  try {
+    const locationContent = await fs.readFile(locationFilePath, 'utf8');
+    const frontmatterMatch = locationContent.match(/^---\n([\s\S]*?)\n---/);
+
+    if (frontmatterMatch) {
+      const frontmatter = YAML.parse(frontmatterMatch[1]) as Record<
+        string,
+        unknown
+      > | null;
+      const icon = frontmatter?.icon;
+      const color = frontmatter?.color;
+      let locationType: LocationType = 'other';
+      if (locationContent.includes('dwellings')) {
+        locationType = 'home';
+      } else if (locationContent.includes('offices')) {
+        locationType = 'office';
+      }
+      const info: PlaceInfo = {
+        locationType,
+        icon: typeof icon === 'string' ? icon : 'map-pin',
+        color: typeof color === 'string' ? color : 'silver',
+      };
+      placeInfoCache.set(locationName, info);
+      return info;
+    }
+  } catch {
+    // Location file not found or error reading
+  }
+
+  placeInfoCache.set(locationName, defaultInfo);
+  return defaultInfo;
+}
+
+async function getDailyNotes(allNotes: Set<string>): Promise<DailyNotesData> {
+  const files = await Array.fromAsync(fs.glob(path.join(LOG_DIR, '**/*.md')));
+  console.log(`Found ${files.length} daily notes`);
+
+  const notes = new Map<string, number>();
+  const weatherStats: WeatherStat[] = [];
+  const postTimeStats: PostTimeStat[] = [];
+  const locationStats: LocationStat[] = [];
+  const notesWithCoords: NoteWithCoords[] = [];
+  const tagStats = new Map<number, Map<string, number>>();
+  const wikilinkStats = new Map<number, Map<string, number>>();
+  const locationLinkStats = new Map<number, Map<string, number>>();
+  const unresolvedWikilinkStats = new Map<number, Map<string, number>>();
+  const nonWikilinkLocations = new Map<number, Map<string, number>>();
+  let minDate = new Date();
+  let maxDate = new Date(0);
+
+  for (const file of files) {
+    const basename = path.basename(file);
+    const match = basename.match(/^(\d{4}-\d{2}-\d{2})_(\d{2})(\d{2})\.md$/);
+    if (match) {
+      const dateStr = match[1];
+      const hours = Number.parseInt(match[2], 10);
+      const minutes = Number.parseInt(match[3], 10);
+      const timeInMinutes = hours * 60 + minutes;
+      const count = notes.get(dateStr) ?? 0;
+      notes.set(dateStr, count + 1);
+
+      const date = new Date(dateStr);
+      if (date < minDate) {
+        minDate = date;
+      }
+      if (date > maxDate) {
+        maxDate = date;
+      }
+
+      postTimeStats.push({ date: dateStr, time: timeInMinutes });
+
+      // Read content and parse frontmatter
+      const content = await fs.readFile(file, 'utf8');
+      const frontmatterMatch = content.match(/^---\n([\s\S]*?)\n---/);
+      const body = frontmatterMatch
+        ? content.slice(frontmatterMatch[0].length)
+        : content;
+      const year = date.getFullYear();
+
+      // Extract tags from body
+      const bodyTags = body.match(/#(\w+)/g);
+      if (bodyTags) {
+        for (const tag of bodyTags) {
+          const cleanTag = tag.slice(1);
+          incrementYearMap(tagStats, year, cleanTag);
+        }
+      }
+
+      // Extract wikilinks from body
+      const bodyWikilinks = body.match(/\[\[([^\]]+)\]\]/g);
+      if (bodyWikilinks) {
+        for (const link of bodyWikilinks) {
+          const cleanLink = normalizeWikilink(link);
+          incrementYearMap(wikilinkStats, year, cleanLink);
+
+          if (!allNotes.has(cleanLink)) {
+            incrementYearMap(unresolvedWikilinkStats, year, cleanLink);
+          }
+        }
+      }
+
+      if (frontmatterMatch) {
+        try {
+          const frontmatter = YAML.parse(frontmatterMatch[1]) as Record<
+            string,
+            unknown
+          > | null;
+
+          // Extract tags from frontmatter
+          if (frontmatter?.tags) {
+            const fmTags = Array.isArray(frontmatter.tags)
+              ? frontmatter.tags
+              : [frontmatter.tags];
+            for (const tag of fmTags) {
+              if (tag && typeof tag === 'string') {
+                incrementYearMap(tagStats, year, tag);
+              }
+            }
+          }
+
+          // Extract wikilinks from all frontmatter fields (except location)
+          if (frontmatter) {
+            for (const [key, value] of Object.entries(frontmatter)) {
+              if (key === 'location') {
+                continue;
+              }
+              if (typeof value === 'string') {
+                const fmWikilinks = value.match(/\[\[([^\]]+)\]\]/g);
+                if (fmWikilinks) {
+                  for (const link of fmWikilinks) {
+                    const cleanLink = normalizeWikilink(link);
+                    incrementYearMap(wikilinkStats, year, cleanLink);
+
+                    if (!allNotes.has(cleanLink)) {
+                      incrementYearMap(
+                        unresolvedWikilinkStats,
+                        year,
+                        cleanLink
+                      );
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+          // Extract weather
+          if (typeof frontmatter?.weather === 'string') {
+            const weatherMatch = frontmatter.weather.match(
+              /(-?\d+)°C(?:, (.+))?/
+            );
+            if (weatherMatch) {
+              const temp = Number.parseInt(weatherMatch[1], 10);
+              const condition = weatherMatch[2]
+                ? weatherMatch[2].trim().toLowerCase()
+                : 'unknown';
+              weatherStats.push({ date: dateStr, temp, condition });
+            }
+          }
+
+          // Extract location and get place info
+          let locationName: string | null = null;
+          let placeInfo: PlaceInfo | null = null;
+          if (typeof frontmatter?.location === 'string') {
+            const location = frontmatter.location;
+            // Extract location name from wiki link format [[Location]] or plain text
+            const wikiLinkMatch = location.match(/\[\[([^\]]+)\]\]/);
+            locationName = wikiLinkMatch ? wikiLinkMatch[1] : location;
+
+            // Strip alias from location if present
+            let cleanLocationName = locationName;
+            const pipeIndex = cleanLocationName.indexOf('|');
+            if (pipeIndex !== -1) {
+              cleanLocationName = cleanLocationName.slice(0, pipeIndex);
+            }
+
+            // Track location usage by year
+            incrementYearMap(locationLinkStats, year, cleanLocationName);
+
+            // Track non-wikilink locations
+            if (wikiLinkMatch === null) {
+              incrementYearMap(nonWikilinkLocations, year, cleanLocationName);
+            }
+
+            placeInfo = await getPlaceInfo(cleanLocationName);
+            locationStats.push({
+              date: dateStr,
+              locationType: placeInfo.locationType,
+            });
+          }
+
+          // Extract coordinates
+          if (typeof frontmatter?.coordinates === 'string') {
+            const [lat, lon] = frontmatter.coordinates
+              .split(',')
+              .map((c) => Number.parseFloat(c.trim()));
+
+            if (!Number.isNaN(lat) && !Number.isNaN(lon)) {
+              let icon = 'map-pin';
+              let color = 'silver';
+              let placeName = 'Unknown location';
+
+              if (placeInfo) {
+                icon = placeInfo.icon;
+                color = placeInfo.color;
+              }
+
+              if (locationName) {
+                placeName = locationName;
+              }
+
+              notesWithCoords.push({
+                lat,
+                lon,
+                placeName,
+                icon,
+                color,
+              });
+            }
+          }
+        } catch {
+          // Skip frontmatter parsing errors
+        }
+      }
+    }
+  }
+
+  return {
+    notes,
+    weatherStats,
+    postTimeStats,
+    locationStats,
+    notesWithCoords,
+    tagStats,
+    wikilinkStats,
+    locationLinkStats,
+    unresolvedWikilinkStats,
+    nonWikilinkLocations,
+    minDate,
+    maxDate,
+  };
+}
+
+function getLevel(count: number, maxCount: number): number {
+  if (count === 0) {
+    return 0;
+  }
+  if (maxCount === 0) {
+    return 0;
+  }
+  const percentage = count / maxCount;
+  if (percentage <= 0.25) {
+    return 1;
+  }
+  if (percentage <= 0.5) {
+    return 2;
+  }
+  if (percentage <= 0.75) {
+    return 3;
+  }
+  return 4;
+}
+
+function formatDate(date: Date): string {
+  return date.toISOString().split('T')[0];
+}
+
+const dateFormatter = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+});
+
+function formatDateLong(date: Date): string {
+  return dateFormatter.format(date);
+}
+
+function generateHeatmap(
+  notes: Map<string, number>,
+  year: number,
+  maxCount: number
+): string {
+  const startDate = new Date(year, 0, 1);
+  const firstDayOfWeek = startDate.getDay();
+
+  const endDate = new Date(year, 11, 31);
+  endDate.setDate(endDate.getDate() + (6 - endDate.getDay()));
+
+  const totalDays =
+    (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24) + 1;
+  const totalWeeks = Math.ceil((totalDays + firstDayOfWeek) / 7);
+
+  let html = '<table class="heatmap">\n';
+
+  html += '<thead><tr><th></th>';
+  let currentMonth = -1;
+  let monthSpan = 0;
+  const monthCells: { month: number; span: number }[] = [];
+  for (let w = 0; w < totalWeeks; w++) {
+    const weekDate = new Date(startDate);
+    weekDate.setDate(weekDate.getDate() + w * 7 - firstDayOfWeek);
+    const month = weekDate.getMonth();
+    const weekYear = weekDate.getFullYear();
+    if (weekYear === year && month !== currentMonth) {
+      if (currentMonth !== -1) {
+        monthCells.push({ month: currentMonth, span: monthSpan });
+      }
+      currentMonth = month;
+      monthSpan = 1;
+    } else if (weekYear === year) {
+      monthSpan++;
+    }
+  }
+  if (currentMonth !== -1) {
+    monthCells.push({ month: currentMonth, span: monthSpan });
+  }
+  for (const { month, span } of monthCells) {
+    html += `<th colspan="${span}">${MONTH_NAMES[month]}</th>`;
+  }
+  html += '</tr></thead>\n';
+
+  html += '<tbody>\n';
+
+  const dayLabels: Record<number, string> = { 1: 'Mon', 3: 'Wed', 5: 'Fri' };
+  for (let d = 0; d < 7; d++) {
+    html += '<tr>';
+    const label = dayLabels[d] ?? '';
+    html += `<td class="day-label">${label}</td>`;
+
+    for (let w = 0; w < totalWeeks; w++) {
+      const date = new Date(startDate);
+      date.setDate(date.getDate() + w * 7 + d - firstDayOfWeek);
+      const dateStr = formatDate(date);
+      const dateYear = date.getFullYear();
+
+      if (dateYear === year) {
+        const count = notes.get(dateStr) ?? 0;
+        const level = getLevel(count, maxCount);
+        html += `<td class="level-${level}" title="${count} notes on ${formatDateLong(date)}"></td>`;
+      } else {
+        html += '<td></td>';
+      }
+    }
+    html += '</tr>\n';
+  }
+
+  html += '</tbody></table>';
+  return html;
+}
+
+function processWeatherStats(
+  weatherStats: WeatherStat[],
+  minDate: Date,
+  maxDate: Date
+): WeatherData {
+  // "YYYY-MM" -> { tempSum, tempCount, sunny, partly, cloudy }
+  const months = new Map<string, MonthlyWeatherStats>();
+  // "YYYY" -> { minTemp, maxTemp }
+  const years = new Map<string, YearlyTempRange>();
+  let coldestNote: ExtremeNote = { date: '', temp: 0 };
+  let hottestNote: ExtremeNote = { date: '', temp: 0 };
+
+  for (const { date, temp, condition } of weatherStats) {
+    const month = date.slice(0, 7);
+    let stats = months.get(month);
+    if (stats === undefined) {
+      stats = {
+        tempSum: 0,
+        tempCount: 0,
+        sunny: 0,
+        partly: 0,
+        cloudy: 0,
+      };
+      months.set(month, stats);
+    }
+    stats.tempSum += temp;
+    stats.tempCount++;
+
+    if (['sunny', 'clear'].includes(condition)) {
+      stats.sunny++;
+    } else if (
+      ['mainly sunny', 'mainly clear', 'partly cloudy'].includes(condition)
+    ) {
+      stats.partly++;
+    } else if (['overcast', 'cloudy'].includes(condition)) {
+      stats.cloudy++;
+    }
+
+    // Track coldest and hottest notes
+    if (temp < coldestNote.temp) {
+      coldestNote = { date, temp, condition };
+    }
+    if (temp > hottestNote.temp) {
+      hottestNote = { date, temp, condition };
+    }
+
+    // Track min/max temperature per year
+    const year = date.slice(0, 4);
+    const yearStats = years.get(year);
+    if (yearStats === undefined) {
+      years.set(year, { minTemp: temp, maxTemp: temp });
+    } else {
+      if (temp < yearStats.minTemp) {
+        yearStats.minTemp = temp;
+      }
+      if (temp > yearStats.maxTemp) {
+        yearStats.maxTemp = temp;
+      }
+    }
+  }
+
+  // Fill gaps between minDate and maxDate
+  const allMonths = enumerateMonthKeys(minDate, maxDate);
+
+  const labels: string[] = [];
+  const sunny: (string | number)[] = [];
+  const partly: (string | number)[] = [];
+  const cloudy: (string | number)[] = [];
+  let minTemp = Infinity;
+
+  for (const month of allMonths) {
+    const stats = months.get(month);
+    const date = new Date(`${month}-02`);
+    labels.push(
+      date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+    );
+
+    if (stats && stats.tempCount > 0) {
+      const total = stats.sunny + stats.partly + stats.cloudy;
+      sunny.push(total > 0 ? ((stats.sunny / total) * 100).toFixed(1) : 0);
+      partly.push(total > 0 ? ((stats.partly / total) * 100).toFixed(1) : 0);
+      cloudy.push(total > 0 ? ((stats.cloudy / total) * 100).toFixed(1) : 0);
+    } else {
+      sunny.push(0);
+      partly.push(0);
+      cloudy.push(0);
+    }
+  }
+
+  // Process individual temperature points - map to month labels
+  const tempPoints: { x: string; y: number }[] = [];
+  for (const { date, temp } of weatherStats) {
+    const month = date.slice(0, 7);
+    const monthDate = new Date(`${month}-02`);
+    const monthLabel = monthDate.toLocaleDateString('en-US', {
+      month: 'short',
+      year: 'numeric',
+    });
+    tempPoints.push({ x: monthLabel, y: temp });
+    if (temp < minTemp) {
+      minTemp = temp;
+    }
+  }
+
+  // Process yearly temperature ranges
+  const yearLabels: string[] = [];
+  const yearTempRanges: number[][] = [];
+  const sortedYears = [...years.entries()].toSorted((a, b) =>
+    a[0].localeCompare(b[0])
+  );
+  for (const [year, stats] of sortedYears) {
+    yearLabels.push(year);
+    yearTempRanges.push([stats.minTemp, stats.maxTemp]);
+  }
+
+  return {
+    labels,
+    tempPoints,
+    sunny,
+    partly,
+    cloudy,
+    minTemp,
+    coldestNote,
+    hottestNote,
+    yearLabels,
+    yearTempRanges,
+  };
+}
+
+function processPostTimeStats(
+  postTimeStats: PostTimeStat[],
+  minDate: Date,
+  maxDate: Date
+): PostTimeData {
+  const allMonths = enumerateMonthKeys(minDate, maxDate);
+
+  const labels: string[] = [];
+  for (const month of allMonths) {
+    const date = new Date(`${month}-02`);
+    labels.push(
+      date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+    );
+  }
+
+  const timePoints: { x: string; y: number }[] = [];
+
+  for (const { date, time } of postTimeStats) {
+    const month = date.slice(0, 7);
+    const monthDate = new Date(`${month}-02`);
+    const monthLabel = monthDate.toLocaleDateString('en-US', {
+      month: 'short',
+      year: 'numeric',
+    });
+    const hours = Math.floor(time / 60);
+    const minutes = time % 60;
+    let timeDecimal = hours + minutes / 60;
+    // Adjust times before 4am to next day (24+ hours)
+    if (timeDecimal < 4) {
+      timeDecimal += 24;
+    }
+    timePoints.push({ x: monthLabel, y: timeDecimal });
+  }
+
+  return { labels, timePoints };
+}
+
+function processLocationStats(
+  locationStats: LocationStat[],
+  minDate: Date,
+  maxDate: Date
+): LocationData {
+  const months = new Map<string, LocationMonthStats>();
+
+  for (const { date, locationType } of locationStats) {
+    const month = date.slice(0, 7);
+    let stats = months.get(month);
+    if (stats === undefined) {
+      stats = { home: 0, office: 0, other: 0, total: 0 };
+      months.set(month, stats);
+    }
+    stats.total++;
+    if (locationType === 'home') {
+      stats.home++;
+    } else if (locationType === 'office') {
+      stats.office++;
+    } else {
+      stats.other++;
+    }
+  }
+
+  const allMonths = enumerateMonthKeys(minDate, maxDate);
+
+  const labels: string[] = [];
+  const homePercentages: (string | number)[] = [];
+  const officePercentages: (string | number)[] = [];
+  const otherPercentages: (string | number)[] = [];
+
+  for (const month of allMonths) {
+    const stats = months.get(month);
+    const date = new Date(`${month}-02`);
+    labels.push(
+      date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+    );
+
+    if (stats && stats.total > 0) {
+      homePercentages.push(((stats.home / stats.total) * 100).toFixed(1));
+      officePercentages.push(((stats.office / stats.total) * 100).toFixed(1));
+      otherPercentages.push(((stats.other / stats.total) * 100).toFixed(1));
+    } else {
+      homePercentages.push(0);
+      officePercentages.push(0);
+      otherPercentages.push(0);
+    }
+  }
+
+  return { labels, homePercentages, officePercentages, otherPercentages };
+}
+
+function generateWeatherChart(data: WeatherData): string {
+  const minTemp = Math.floor(data.minTemp);
+
+  const coldDate = new Date(data.coldestNote.date);
+  const hotDate = new Date(data.hottestNote.date);
+  const extremesHtml = `<p style="margin-top: .5rem;"><strong>Coldest day:</strong> ${formatTemperature(data.coldestNote.temp)} on ${formatDateLong(coldDate)}, <strong>hottest day:</strong> ${formatTemperature(data.hottestNote.temp)} on ${formatDateLong(hotDate)}</p>`;
+
+  return `
+<div style="position: relative; height: 400px; width: 100%; margin-bottom: 2rem;">
+	<canvas id="weatherChart"></canvas>
+</div>
+<script>
+  ${formatTemperature.toString()}
+
+	const ctx = document.getElementById('weatherChart');
+	new Chart(ctx, {
+		type: 'bar',
+		data: {
+			labels: ${JSON.stringify(data.labels)},
+			datasets: [
+				{
+					label: 'Sunny',
+					data: ${JSON.stringify(data.sunny)},
+					backgroundColor: '${COLOR_SCALE[4]}',
+					stack: 'Stack 0',
+					yAxisID: 'y',
+					order: 2
+				},
+				{
+					label: 'Partly cloudy',
+					data: ${JSON.stringify(data.partly)},
+					backgroundColor: '${COLOR_SCALE[2]}',
+					stack: 'Stack 0',
+					yAxisID: 'y',
+					order: 2
+				},
+				{
+					label: 'Cloudy',
+					data: ${JSON.stringify(data.cloudy)},
+					backgroundColor: '${COLOR_SCALE[0]}',
+					stack: 'Stack 0',
+					yAxisID: 'y',
+					order: 2
+				},
+				{
+					label: 'Temperature',
+					data: ${JSON.stringify(data.tempPoints)},
+					type: 'scatter',
+					borderColor: 'transparent',
+					backgroundColor: '${COLORS.brightPink}',
+					pointBackgroundColor: '${COLORS.brightPink}',
+					pointBorderColor: '${COLORS.brightPink}',
+					pointRadius: 2,
+					yAxisID: 'y1',
+					order: 1
+				}
+			]
+		},
+		options: {
+			responsive: true,
+			maintainAspectRatio: false,
+			plugins: {
+				tooltip: {
+					enabled: false
+				}
+			},
+			scales: {
+				x: {
+					stacked: true,
+					type: 'category',
+					grid: {
+						drawOnChartArea: false
+					}
+				},
+				y: {
+					type: 'linear',
+					display: true,
+					position: 'left',
+					stacked: true,
+					max: 100,
+					ticks: {
+						display: false
+					},
+					title: {
+						display: false,
+						text: 'Conditions'
+					},
+				},
+				y1: {
+					type: 'linear',
+					display: true,
+					position: 'right',
+					min: ${minTemp},
+					grid: {
+						drawOnChartArea: false,
+					},
+					title: {
+						display: false,
+						text: 'Temperature'
+					},
+          ticks: {
+						callback: formatTemperature
+					}
+				},
+			}
+		}
+	});
+</script>
+
+<h2 style="margin-top: 2rem;">Temperature distribution by year</h2>
+<div style="position: relative; height: 400px; width: 100%; margin-bottom: 2rem;">
+	<canvas id="tempDistributionChart"></canvas>
+</div>
+<script>
+	const ctxTempDist = document.getElementById('tempDistributionChart');
+	new Chart(ctxTempDist, {
+		type: 'bar',
+		data: {
+			labels: ${JSON.stringify(data.yearLabels)},
+			datasets: [
+				{
+					label: 'Temperature range',
+					data: ${JSON.stringify(data.yearTempRanges)},
+					backgroundColor: function(context) {
+						const chart = context.chart;
+						const {ctx, chartArea} = chart;
+						if (!chartArea) { return null; }
+						const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+						gradient.addColorStop(0, '#3b82f6');
+						gradient.addColorStop(0.4, '#faaf23');
+						gradient.addColorStop(0.6, '#faaf23');
+						gradient.addColorStop(1, '#ef4444');
+						return gradient;
+					},
+					barThickness: 40
+				}
+			]
+		},
+		options: {
+			responsive: true,
+			maintainAspectRatio: false,
+			plugins: {
+				legend: {
+					display: false
+				},
+				tooltip: {
+					callbacks: {
+						label: function(context) {
+							const value = context.parsed.y;
+							const base = context.parsed._custom?.barStart || 0;
+							return formatTemperature(base) + ' to ' + formatTemperature(value);
+						}
+					}
+				}
+			},
+			scales: {
+				x: {
+					grid: {
+						drawOnChartArea: false
+					}
+				},
+				y: {
+					type: 'linear',
+					display: true,
+					position: 'right',
+					grid: {
+						drawOnChartArea: false
+					},
+					title: {
+						display: false
+					},
+					ticks: {
+						callback: formatTemperature
+					}
+				}
+			}
+		}
+	});
+</script>
+${extremesHtml}
+`;
+}
+
+function generatePostTimeChart(data: PostTimeData): string {
+  return `
+<div style="position: relative; height: 400px; width: 100%; margin-bottom: 2rem;">
+	<canvas id="postTimeChart"></canvas>
+</div>
+<script>
+	const ctxTime = document.getElementById('postTimeChart');
+	new Chart(ctxTime, {
+		type: 'scatter',
+		data: {
+			labels: ${JSON.stringify(data.labels)},
+			datasets: [
+				{
+					label: 'Post time',
+					data: ${JSON.stringify(data.timePoints)},
+					type: 'scatter',
+					borderColor: 'transparent',
+					backgroundColor: '${COLORS.brightPink}',
+					pointBackgroundColor: '${COLORS.brightPink}',
+					pointBorderColor: '${COLORS.brightPink}',
+					pointRadius: 2
+				}
+			]
+		},
+		options: {
+			responsive: true,
+			maintainAspectRatio: false,
+			plugins: {
+				legend: {
+					display: false
+				},
+				tooltip: {
+					enabled: true,
+					callbacks: {
+						title: function(context) {
+							return context[0].label;
+						},
+						label: function(context) {
+							const value = context.parsed.y;
+							const adjustedValue = value >= 24 ? value - 24 : value;
+							const hours = Math.floor(adjustedValue);
+							const minutes = Math.round((adjustedValue - hours) * 60);
+							return hours + ':' + String(minutes).padStart(2, '0');
+						}
+					}
+				}
+			},
+			scales: {
+				x: {
+					type: 'category',
+					title: {
+						display: false
+					},
+					grid: {
+						drawOnChartArea: false
+					}
+				},
+				y: {
+					type: 'linear',
+					display: true,
+					position: 'right',
+					min: 4,
+					max: 28,
+					reverse: true,
+					title: {
+						display: false,
+						text: 'Time (hours)'
+					},
+					ticks: {
+            stepSize: 1,
+						autoSkip: false,
+						callback: function(value) {
+            console.log(value)
+              if (value % 3 === 0) {
+                if (value > 24) {
+                  return (value - 24) + ':00';
+                }
+                return value + ':00';
+              }
+							return '';
+						}
+					}
+				}
+			}
+		}
+	});
+</script>`;
+}
+
+function generateLocationChart(data: LocationData): string {
+  return `
+<div style="position: relative; height: 400px; width: 100%; margin-bottom: 2rem;">
+	<canvas id="locationChart"></canvas>
+</div>
+<script>
+	const ctxLocation = document.getElementById('locationChart');
+	new Chart(ctxLocation, {
+		type: 'bar',
+		data: {
+			labels: ${JSON.stringify(data.labels)},
+			datasets: [
+				{
+					label: 'Home',
+					data: ${JSON.stringify(data.homePercentages)},
+					backgroundColor: '${COLOR_SCALE[4]}',
+					stack: 'Stack 0'
+				},
+				{
+					label: 'Office',
+					data: ${JSON.stringify(data.officePercentages)},
+					backgroundColor: '${COLOR_SCALE[2]}',
+					stack: 'Stack 0'
+				},
+				{
+					label: 'Other',
+					data: ${JSON.stringify(data.otherPercentages)},
+					backgroundColor: '${COLOR_SCALE[0]}',
+					stack: 'Stack 0'
+				}
+			]
+		},
+		options: {
+			responsive: true,
+			maintainAspectRatio: false,
+			plugins: {
+				legend: {
+					display: true
+				},
+				tooltip: {
+					enabled: false
+				}
+			},
+			scales: {
+				x: {
+					type: 'category',
+					stacked: true,
+					grid: {
+						drawOnChartArea: false
+					}
+				},
+				y: {
+					type: 'linear',
+					display: true,
+					position: 'left',
+					stacked: true,
+					min: 0,
+					max: 100,
+					ticks: {
+						display: false
+					},
+					title: {
+						display: false
+					}
+				}
+			}
+		}
+	});
+</script>`;
+}
+
+function generateYearlyStatsSection(
+  tagStatsMap: Map<number, Map<string, number>>,
+  wikilinkStatsMap: Map<number, Map<string, number>>,
+  locationStatsMap: Map<number, Map<string, number>>,
+  minYear: number,
+  maxYear: number
+): string {
+  let html = '';
+  for (let year = maxYear; year >= minYear; year--) {
+    const yearTags = tagStatsMap.get(year);
+    const yearWikilinks = wikilinkStatsMap.get(year);
+    const yearLocations = locationStatsMap.get(year);
+
+    if (
+      (!yearTags || yearTags.size === 0) &&
+      (!yearWikilinks || yearWikilinks.size === 0) &&
+      (!yearLocations || yearLocations.size === 0)
+    ) {
+      continue;
+    }
+
+    const sortedTags = yearTags
+      ? [...yearTags.entries()]
+          .filter(([, count]) => count > 1)
+          .toSorted((a, b) => b[1] - a[1])
+          .slice(0, 10)
+      : [];
+
+    const sortedWikilinks = yearWikilinks
+      ? [...yearWikilinks.entries()]
+          .filter(([, count]) => count > 1)
+          .toSorted((a, b) => b[1] - a[1])
+          .slice(0, 10)
+      : [];
+
+    const sortedLocations = yearLocations
+      ? [...yearLocations.entries()]
+          .filter(([, count]) => count > 1)
+          .toSorted((a, b) => b[1] - a[1])
+          .slice(0, 10)
+      : [];
+
+    const totalTags = sortedTags.reduce((sum, [, count]) => sum + count, 0);
+    const totalWikilinks = sortedWikilinks.reduce(
+      (sum, [, count]) => sum + count,
+      0
+    );
+    const totalLocations = sortedLocations.reduce(
+      (sum, [, count]) => sum + count,
+      0
+    );
+
+    html += `<h3>${year} <span class="count">(${totalTags} tags, ${totalWikilinks} wikilinks, ${totalLocations} locations)</span></h3>\n`;
+    html += '<div class="stats-grid">\n';
+
+    // Tags column
+    html += '<div class="stats-column">\n';
+    html += '<h4>Tags</h4>\n';
+    if (sortedTags.length > 0) {
+      html += '<table class="stats-table">\n';
+      for (const [item, count] of sortedTags) {
+        html += `<tr><td class="stats-item">${item}</td><td class="stats-count">${count}</td></tr>\n`;
+      }
+      html += '</table>\n';
+    } else {
+      html += '<p class="no-data">No data</p>\n';
+    }
+    html += '</div>\n';
+
+    // Wikilinks column
+    html += '<div class="stats-column">\n';
+    html += '<h4>Wikilinks</h4>\n';
+    if (sortedWikilinks.length > 0) {
+      html += '<table class="stats-table">\n';
+      for (const [item, count] of sortedWikilinks) {
+        html += `<tr><td class="stats-item">${item}</td><td class="stats-count">${count}</td></tr>\n`;
+      }
+      html += '</table>\n';
+    } else {
+      html += '<p class="no-data">No data</p>\n';
+    }
+    html += '</div>\n';
+
+    // Locations column
+    html += '<div class="stats-column">\n';
+    html += '<h4>Locations</h4>\n';
+    if (sortedLocations.length > 0) {
+      html += '<table class="stats-table">\n';
+      for (const [item, count] of sortedLocations) {
+        html += `<tr><td class="stats-item">${item}</td><td class="stats-count">${count}</td></tr>\n`;
+      }
+      html += '</table>\n';
+    } else {
+      html += '<p class="no-data">No data</p>\n';
+    }
+    html += '</div>\n';
+
+    html += '</div>\n';
+  }
+  return html;
+}
+
+interface GroupedLocation {
+  lat: number;
+  lon: number;
+  placeName: string;
+  icon: string;
+  color: string;
+  count: number;
+}
+
+function generateLocationMap(notes: NoteWithCoords[]): string {
+  // Group notes by coordinates for display
+  const locationMap = new Map<string, GroupedLocation>();
+  for (const note of notes) {
+    const key = `${note.lat},${note.lon}`;
+    const existing = locationMap.get(key);
+    if (existing) {
+      existing.count++;
+    } else {
+      locationMap.set(key, {
+        lat: note.lat,
+        lon: note.lon,
+        placeName: note.placeName,
+        icon: note.icon,
+        color: note.color,
+        count: 1,
+      });
+    }
+  }
+
+  const groupedLocations = [...locationMap.values()];
+
+  return `
+<div id="map" style="height: 600px; width: 100%; margin-bottom: 2rem;"></div>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+	.custom-marker {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 32px;
+		height: 32px;
+		background: white;
+		border-radius: 50% 50% 50% 0;
+		box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+		transform: rotate(-45deg);
+		border: 2px solid white;
+	}
+	.custom-marker svg {
+		transform: rotate(45deg);
+		width: 20px;
+		height: 20px;
+	}
+</style>
+<script>
+	const allNotes = ${JSON.stringify(notes)};
+	const groupedLocations = ${JSON.stringify(groupedLocations)};
+
+	// Create a map to lookup location info by coordinates
+	const locationInfo = new Map();
+	for (const loc of groupedLocations) {
+		locationInfo.set(\`\${loc.lat},\${loc.lon}\`, loc);
+	}
+
+	const map = L.map('map').setView([${notes.length > 0 ? `${notes[0].lat}, ${notes[0].lon}` : '0, 0'}], ${notes.length > 0 ? '10' : '2'});
+
+	L.tileLayer('http://services.arcgisonline.com/arcgis/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+		maxZoom: 19
+	}).addTo(map);
+
+	const markers = L.markerClusterGroup({
+		maxClusterRadius: 50,
+		spiderfyOnMaxZoom: true,
+		showCoverageOnHover: false,
+		zoomToBoundsOnClick: true,
+		iconCreateFunction: function(cluster) {
+			const count = cluster.getChildCount();
+			let color;
+			if (count < 10) color = '#ae95c7';
+			else if (count < 25) color = '#9a7eb4';
+			else if (count < 50) color = '#8067ad';
+			else if (count < 100) color = '#6c5492';
+			else color = '#503f6e';
+
+			return L.divIcon({
+				html: '<div style="box-sizing: border-box; width: 43px; height: 43px; background-color: color-mix(in srgb, ' + color + ' 60%, transparent); padding: 4px; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"><div style="width: 35px; height: 35px; background-color: ' + color + '; display: flex; align-items: center; justify-content: center; color: #f3e9fb; font-weight: bold; border-radius: 50%;">' + count + '</div></div>',
+				className: '',
+				iconSize: [40, 40]
+			});
+		}
+	});
+
+	// Convert kebab-case to PascalCase for Lucide icon names
+	function toPascalCase(str) {
+		return str.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join('');
+	}
+
+	// Get Lucide icon SVG
+	function getIconSvg(iconName) {
+		try {
+			const pascalName = toPascalCase(iconName);
+			const iconFunc = lucide[pascalName];
+			if (!iconFunc) {
+				console.warn('Icon not found:', iconName, pascalName);
+				return '';
+			}
+
+			// Create a temporary element to render the icon
+			const temp = document.createElement('div');
+			temp.innerHTML = '<i data-lucide="' + iconName + '"></i>';
+			document.body.appendChild(temp);
+			lucide.createIcons({ icons: { [pascalName]: iconFunc }, nameAttr: 'data-lucide' });
+			const svg = temp.querySelector('svg');
+			const svgString = svg ? svg.outerHTML : '';
+			document.body.removeChild(temp);
+			return svgString;
+		} catch (e) {
+			console.error('Error getting icon:', iconName, e);
+			return '';
+		}
+	}
+
+	// Add all notes as individual markers with shared popup content per location
+	for (const note of allNotes) {
+		const key = \`\${note.lat},\${note.lon}\`;
+		const locInfo = locationInfo.get(key);
+
+		let iconHtml;
+		if (note.icon === 'map-pin') {
+			// No icon, just colored background
+			iconHtml = \`<div class="custom-marker" style="background-color: \${note.color};"></div>\`;
+		} else {
+			const iconSvg = getIconSvg(note.icon);
+			iconHtml = \`<div class="custom-marker" style="background-color: \${note.color};">\${iconSvg}</div>\`;
+		}
+
+		const customIcon = L.divIcon({
+			html: iconHtml,
+			className: '',
+			iconSize: [32, 32],
+			iconAnchor: [16, 32],
+			popupAnchor: [0, -32]
+		});
+
+		const marker = L.marker([note.lat, note.lon], { icon: customIcon });
+
+		// All markers at the same location share the same popup content
+		if (locInfo) {
+			marker.bindPopup(\`<strong>\${locInfo.placeName}</strong><br>\${locInfo.count} note\${locInfo.count !== 1 ? 's' : ''}\`);
+		}
+
+		markers.addLayer(marker);
+	}
+
+	map.addLayer(markers);
+
+	if (allNotes.length > 1) {
+		const bounds = L.latLngBounds(allNotes.map(n => [n.lat, n.lon]));
+		map.fitBounds(bounds, { padding: [50, 50] });
+	}
+</script>`;
+}
+
+function generateUnresolvedWikilinksSection(
+  unresolvedStatsMap: Map<number, Map<string, number>>,
+  nonWikilinkLocationsMap: Map<number, Map<string, number>>,
+  minYear: number,
+  maxYear: number
+): string {
+  const allUnresolved = new Map<string, number>();
+  const allNonWikilinks = new Map<string, number>();
+
+  for (let year = minYear; year <= maxYear; year++) {
+    const yearUnresolved = unresolvedStatsMap.get(year);
+    if (yearUnresolved) {
+      for (const [link, count] of yearUnresolved.entries()) {
+        allUnresolved.set(link, (allUnresolved.get(link) ?? 0) + count);
+      }
+    }
+
+    const yearNonWikilinks = nonWikilinkLocationsMap.get(year);
+    if (yearNonWikilinks) {
+      for (const [link, count] of yearNonWikilinks.entries()) {
+        allNonWikilinks.set(link, (allNonWikilinks.get(link) ?? 0) + count);
+      }
+    }
+  }
+
+  const sortedUnresolved = [...allUnresolved.entries()]
+    .filter(([, count]) => count > 1)
+    .toSorted((a, b) => b[1] - a[1])
+    .slice(0, 20);
+
+  const sortedNonWikilinks = [...allNonWikilinks.entries()]
+    .filter(([, count]) => count > 1)
+    .toSorted((a, b) => b[1] - a[1])
+    .slice(0, 20);
+
+  let html =
+    '<div class="stats-grid" style="grid-template-columns: 1fr 1fr;">\n';
+
+  // Unresolved wikilinks column
+  html += '<div class="stats-column">\n';
+  html += '<h4>Unresolved wikilinks</h4>\n';
+  if (sortedUnresolved.length > 0) {
+    html += '<table class="stats-table">\n';
+    for (const [item, count] of sortedUnresolved) {
+      html += `<tr><td class="stats-item">${item}</td><td class="stats-count">${count}</td></tr>\n`;
+    }
+    html += '</table>\n';
+  } else {
+    html += '<p class="no-data">No data</p>\n';
+  }
+  html += '</div>\n';
+
+  // Non-wikilink locations column
+  html += '<div class="stats-column">\n';
+  html += "<h4>Locations that aren't wikilinks</h4>\n";
+  if (sortedNonWikilinks.length > 0) {
+    html += '<table class="stats-table">\n';
+    for (const [item, count] of sortedNonWikilinks) {
+      html += `<tr><td class="stats-item">${item}</td><td class="stats-count">${count}</td></tr>\n`;
+    }
+    html += '</table>\n';
+  } else {
+    html += '<p class="no-data">No data</p>\n';
+  }
+  html += '</div>\n';
+
+  html += '</div>\n';
+
+  return html;
+}
+
+async function main(): Promise<void> {
+  console.log('Scanning vault files...');
+  const allNotes = await getAllNoteNames();
+  console.log(`Found ${allNotes.size} files in vault`);
+
+  console.log('Scanning daily notes...');
+  const {
+    notes,
+    weatherStats,
+    postTimeStats,
+    locationStats,
+    notesWithCoords,
+    tagStats,
+    wikilinkStats,
+    locationLinkStats,
+    unresolvedWikilinkStats,
+    nonWikilinkLocations,
+    minDate,
+    maxDate,
+  } = await getDailyNotes(allNotes);
+  console.log(`Found ${notes.size} days with notes`);
+  console.log(`Found ${notesWithCoords.length} notes with coordinates`);
+  console.log(`Range: ${formatDate(minDate)} to ${formatDate(maxDate)}`);
+
+  let maxCount = 0;
+  for (const count of notes.values()) {
+    if (count > maxCount) {
+      maxCount = count;
+    }
+  }
+
+  const minYear = minDate.getFullYear();
+  const maxYear = maxDate.getFullYear();
+
+  const heatmaps: string[] = [];
+  for (let year = maxYear; year >= minYear; year--) {
+    let yearCount = 0;
+    for (const [dateStr, count] of notes) {
+      if (dateStr.startsWith(`${year}-`)) {
+        yearCount += count;
+      }
+    }
+    heatmaps.push(
+      `<h3>${year} <span class="count">(${yearCount} notes)</span></h3>\n${generateHeatmap(notes, year, maxCount)}`
+    );
+  }
+
+  let totalNotes = 0;
+  for (const count of notes.values()) {
+    totalNotes += count;
+  }
+
+  const weatherData = processWeatherStats(weatherStats, minDate, maxDate);
+  const weatherChart = generateWeatherChart(weatherData);
+
+  const postTimeData = processPostTimeStats(postTimeStats, minDate, maxDate);
+  const postTimeChart = generatePostTimeChart(postTimeData);
+
+  const locationData = processLocationStats(locationStats, minDate, maxDate);
+  const locationChart = generateLocationChart(locationData);
+
+  const locationMap = generateLocationMap(notesWithCoords);
+
+  const statsSection = generateYearlyStatsSection(
+    tagStats,
+    wikilinkStats,
+    locationLinkStats,
+    minYear,
+    maxYear
+  );
+
+  const unresolvedSection = generateUnresolvedWikilinksSection(
+    unresolvedWikilinkStats,
+    nonWikilinkLocations,
+    minYear,
+    maxYear
+  );
+
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Murder of crows vault stats</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+	body { font-family: -apple-system, sans-serif; padding: 1rem 1.5rem; color: ${COLORS.gray060}; background-color: ${COLORS.gray180}; max-width: 1600px; margin: 0 auto; }
+	h1 { margin-top: 0; margin-bottom: .5rem; }
+	.summary { font-size: 1rem; color: ${COLORS.gray100}; margin-bottom: 1rem; }
+	h2 { margin-top: 2rem; margin-bottom: .5rem; }
+	.count { font-size: 1rem; font-weight: normal; color: ${COLORS.gray100}; }
+	.heatmap { border-collapse: separate; border-spacing: 3px; }
+	.heatmap th { font-size: .7rem; color: ${COLORS.gray100}; font-weight: normal; text-align: left; width: 12px; }
+	.heatmap td { width: .75rem; height: .75rem; border-radius: 2px; }
+	.heatmap .day-label {  font-size: .7rem; color: ${COLORS.gray100};  vertical-align: middle; text-align: right; padding-right: .2rem; }
+	.level-0 { background-color: ${COLOR_SCALE[0]}; }
+	.level-1 { background-color: ${COLOR_SCALE[1]}; }
+	.level-2 { background-color: ${COLOR_SCALE[2]}; }
+	.level-3 { background-color: ${COLOR_SCALE[3]}; }
+	.level-4 { background-color: ${COLOR_SCALE[4]}; }
+	#map { border-radius: 4px; border: 1px solid ${COLORS.gray160}; }
+	.stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2rem; margin-bottom: 2rem; }
+	.stats-column h4 { margin-top: 0; margin-bottom: .5rem; font-size: 1rem; }
+	.stats-table { width: 100%; border-collapse: collapse; }
+	.stats-table tr { border-bottom: 1px solid ${COLORS.gray160}; }
+	.stats-table td { padding: .4rem 0; }
+	.stats-count { text-align: right; color: ${COLORS.gray100}; font-variant-numeric: tabular-nums; }
+	.no-data { color: ${COLORS.gray100}; font-style: italic; }
+</style>
+</head>
+<body>
+	<h1>Murder of crows vault stats</h1>
+	<p class="summary">${totalNotes} notes from ${formatDateLong(minDate)} to ${formatDateLong(maxDate)}</p>
+
+	<h2>Times of day</h2>
+  ${postTimeChart}
+
+	<h2>Weather conditions and temperature</h2>
+  ${weatherChart}
+
+  <h2>Locations</h2>
+  ${locationChart}
+
+	<h2>Map of all notes</h2>
+	${locationMap}
+
+	<h2>Most used tags, wikilinks, and locations</h2>
+	${statsSection}
+
+	<h2>Unresolved wikilinks and locations</h2>
+	${unresolvedSection}
+
+  <h2>Notes over the years</h2>
+	${heatmaps.join('\n')}
+</body>
+</html>`;
+
+  await fs.writeFile(OUTPUT_FILE, html);
+  console.log(`Stats generated at: ${OUTPUT_FILE}`);
+}
+
+try {
+  await main();
+} catch (error) {
+  console.error(error);
+  process.exit(1);
+}
