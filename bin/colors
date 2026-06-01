@@ -53,7 +53,7 @@ echo
 heading "Escape sequences"
 echo
 echo "Foreground:  Background:"
-echo -e "30  Black    40: On black"
+echo -e "30  \033[30mBlack\033[m    40: \033[40mOn black\033[m"
 echo -e "31  \033[31mRed\033[m      41: \033[41mOn red\033[0m"
 echo -e "32  \033[32mGreen\033[m    42: \033[42mOn green\033[m"
 echo -e "33  \033[33mYellow\033[m   43: \033[43mOn yellow\033[m"
@@ -90,7 +90,7 @@ echo
 heading "Tput commands"
 echo
 echo "Foreground:  Background:"
-echo "setaf 0   Black    40: On black"
+echo "setaf 0   $(tput setaf 0)Black$NOCOLOR    setab 0: $(tput setab 0)On black$NOCOLOR"
 echo "setaf 1   $(tput setaf 1)Red$NOCOLOR      setab 1: $(tput setab 1)On red$NOCOLOR"
 echo "setaf 2   $(tput setaf 2)Green$NOCOLOR    setab 2: $(tput setab 2)On green$NOCOLOR"
 echo "setaf 3   $(tput setaf 3)Yellow$NOCOLOR   setab 3: $(tput setab 3)On yellow$NOCOLOR"
