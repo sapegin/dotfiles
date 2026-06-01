@@ -9,7 +9,6 @@
 // https://github.com/sapegin/dotfiles
 
 import { execSync } from 'node:child_process';
-import { globSync } from 'node:fs';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
@@ -20,7 +19,7 @@ interface SourceConfig {
   // Commands to run in the repo to build the extensions
   buildCommands: string[];
   // Returns absolute paths to each extension directory to package
-  getExtensionDirs(): string[];
+  getExtensionDirs(): AsyncIterable<string>;
 }
 
 const SOURCES: SourceConfig[] = [
@@ -29,7 +28,7 @@ const SOURCES: SourceConfig[] = [
     buildCommands: ['npm install --silent', 'npm run build'],
     getExtensionDirs() {
       const extensionsSrcDir = path.join(untildify(this.repo), 'extensions');
-      return globSync(path.join(extensionsSrcDir, '*/')).toSorted();
+      return fs.glob(path.join(extensionsSrcDir, '*/'));
     },
   },
   {
@@ -41,7 +40,7 @@ const SOURCES: SourceConfig[] = [
     ],
     getExtensionDirs() {
       const repo = untildify(this.repo);
-      return globSync(path.join(repo, 'themes/VSCode/Squirrel*/')).toSorted();
+      return fs.glob(path.join(repo, 'themes/VSCode/Squirrel*/'));
     },
   },
 ];
@@ -106,8 +105,7 @@ async function processSource(
     run(cmd, repo);
   }
 
-  const extensionDirs = source.getExtensionDirs();
-  for (const extensionDir of extensionDirs) {
+  for await (const extensionDir of source.getExtensionDirs()) {
     const pkg = await readJson<ExtensionPackageJson>(
       path.join(extensionDir, 'package.json')
     );
