@@ -154,9 +154,7 @@
     "path": "/opt/homebrew/bin/zsh",
     "args": ["-i"]
   },
-  "terminal.integrated.commandsToSkipShell": [
-    "workbench.action.closePanel"
-  ],
+  "terminal.integrated.commandsToSkipShell": ["workbench.action.closePanel"],
   "terminal.integrated.copyOnSelection": true,
   "terminal.integrated.cursorStyle": "line",
   "terminal.integrated.cursorStyleInactive": "line",
@@ -189,7 +187,7 @@
   "window.zoomLevel": 0.15,
   "workbench.activityBar.location": "hidden",
   "workbench.browser.showInTitleBar": false,
-  "workbench.colorTheme": "Squirrelsong Light (Dark Deep Purple Terminal)",
+  "workbench.colorTheme": "Squirrelsong Light",
   "workbench.commandPalette.preserveInput": false,
   "workbench.editor.customLabels.enabled": true,
   "workbench.editor.customLabels.patterns": {
