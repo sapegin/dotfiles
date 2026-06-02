@@ -47,13 +47,13 @@ export FZF_DEFAULT_COMMAND='fd --type f'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 # Squirrelsong Dark Deep Purple theme colors
 export FZF_DEFAULT_OPTS='
-  --color=fg:-1,fg+:#bea3d9,bg:-1,bg+:#bea3d9
-  --color=hl:#ca5a83,hl+:#97576f,info:#7254a6,marker:#ceb250
-  --color=prompt:#7254a6,spinner:#bea3d9,pointer:#bea3d9,header:#e9d6fa
-  --color=border:#644e88,label:#bea3d9,query:#e9d6fa,disabled:#7254a6
-  --border="rounded" --border-label="" --preview-window="border-rounded" --prompt="> "
-  --marker=">" --pointer="▪︎" --separator="─" --scrollbar="│"
-  --info="right"'
+ --color=fg:-1,fg+:#bea3d9,bg:-1,bg+:#bea3d9
+ --color=hl:#ca5a83,hl+:#97576f,info:#7254a6,marker:#ceb250
+ --color=prompt:#7254a6,spinner:#bea3d9,pointer:#bea3d9,header:#e9d6fa
+ --color=border:#644e88,label:#bea3d9,query:#e9d6fa,disabled:#7254a6
+ --border="rounded" --border-label="" --preview-window="border-rounded" --prompt="> "
+ --marker=">" --pointer="▪︎" --separator="─" --scrollbar="│"
+ --info="right"'
 # Use fd to respect .gitignore and exclude .git directory
 _fzf_compgen_path() {
 	fd --hidden --exclude ".git" . "$1"
@@ -72,30 +72,8 @@ source <(fzf --zsh)
 export STARSHIP_CONFIG=~/.starship.toml
 eval "$(starship init zsh)"
 
-# Enable zsh-syntax-highlighting: https://github.com/zsh-users/zsh-syntax-highlighting
-# Custom colors
-typeset -A ZSH_HIGHLIGHT_STYLES
-ZSH_HIGHLIGHT_STYLES[reserved-word]='fg=magenta,bold'
-ZSH_HIGHLIGHT_STYLES[function]='fg=blue,bold'
-ZSH_HIGHLIGHT_STYLES[command]='fg=blue,bold'
-ZSH_HIGHLIGHT_STYLES[alias]='fg=blue,bold'
-ZSH_HIGHLIGHT_STYLES[builtin]='fg=blue,bold'
-ZSH_HIGHLIGHT_STYLES[commandseparator]='fg=cyan,bold'
-ZSH_HIGHLIGHT_STYLES[redirection]='fg=cyan,bold'
-ZSH_HIGHLIGHT_STYLES[globbing]='fg=magenta,bold'
-ZSH_HIGHLIGHT_STYLES[back-quoted-argument]='fg=green'
-ZSH_HIGHLIGHT_STYLES[single-quoted-argument]='fg=green'
-ZSH_HIGHLIGHT_STYLES[double-quoted-argument]='fg=green'
-ZSH_HIGHLIGHT_STYLES[dollar-quoted-argument]='fg=green'
-ZSH_HIGHLIGHT_STYLES[single-hyphen-option]='fg=magenta'
-ZSH_HIGHLIGHT_STYLES[double-hyphen-option]='fg=magenta'
-ZSH_HIGHLIGHT_STYLES[arithmetic-expansion]='fg=yellow'
-ZSH_HIGHLIGHT_STYLES[dollar-double-quoted-argument]='fg=blue'
-ZSH_HIGHLIGHT_STYLES[back-double-quoted-argument]='fg=green,bold'
-ZSH_HIGHLIGHT_STYLES[back-dollar-quoted-argument]='fg=green,bold'
-ZSH_HIGHLIGHT_STYLES[assign]='fg=blue'
-ZSH_HIGHLIGHT_STYLES[comment]='fg=black'
-# Load zsh-syntax-highlighting
-if [ -f /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
-  source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# Enable zsh-fast-syntax-highlighting:
+# https://github.com/zdharma-continuum/fast-syntax-highlighting
+if [ -f /opt/homebrew/opt/zsh-fast-syntax-highlighting/share/zsh-fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh ]; then
+ source /opt/homebrew/opt/zsh-fast-syntax-highlighting/share/zsh-fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
 fi
