@@ -23,7 +23,7 @@ brew "starship" # Prompt manager
 brew "tlrc" # `man` replacement
 brew "typos-cli" # Fix typos
 brew "zsh" # Shell
-brew "zsh-syntax-highlighting" # Syntax highlighting for zsh
+brew "zsh-fast-syntax-highlighting" # Syntax highlighting for zsh
 
 # GUI apps
 cask "adobe-creative-cloud" # Lightroom & Photoshop
