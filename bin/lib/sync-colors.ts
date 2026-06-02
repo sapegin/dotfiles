@@ -135,6 +135,7 @@ async function main(): Promise<void> {
    */
   console.log('🌈 Syncing Ghostty themes…');
 
+  await sync('themes/Ghostty/Squirrelsong Light', '.config/ghostty/themes');
   await sync('themes/Ghostty/Squirrelsong Dark', '.config/ghostty/themes');
   await sync(
     'themes/Ghostty/Squirrelsong Dark Deep Purple',
