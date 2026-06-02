@@ -91,6 +91,7 @@ async function syncEntry(entry: DotfileEntry): Promise<void> {
 
     // Check that the source exists
     if (fs.existsSync(sourcePath) === false) {
+      console.warn(`⚠️ Source not found: ${sourcePath}`);
       continue;
     }
 
