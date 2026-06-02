@@ -61,6 +61,26 @@ const SPECIALS = [
 		destination: `${HOME}/.copilot/instructions/base.instructions.md`,
 	},
 	{
+		// Pi config
+		source: `${HOME}/dotfiles/tilde/.pi/agent/settings.json`,
+		destination: `${HOME}/.pi/agent/settings.json`,
+	},
+  {
+		// Pi keybindings
+		source: `${HOME}/dotfiles/tilde/.pi/agent/keybindings.json`,
+		destination: `${HOME}/.pi/agent/keybindings.json`,
+	},
+	{
+		// Pi base prompt
+		source: `${HOME}/dotfiles/ai-rules/AGENTS.md`,
+		destination: `${HOME}/.pi/agent/AGENTS.md`,
+	},
+  {
+		// Pi Permission System extension config
+		source: `${HOME}/dotfiles/tilde/.pi/agent/extensions/pi-permission-system/config.json`,
+		destination: `${HOME}/.pi/agent/extensions/pi-permission-system/config.json`,
+	},
+	{
 		// Photoshop
 		source: `${HOME}/Library/Mobile Documents/com~apple~CloudDocs/Apps/Adobe Photoshop 2024 Settings`,
 		destination: `${HOME}/Library/Preferences/Adobe Photoshop 2024 Settings`,

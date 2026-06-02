@@ -1,0 +1,27 @@
+{
+  "permission": {
+    "*": "allow",
+    "bash": {
+      "*": "ask",
+      "ls *": "allow",
+      "git branch *": "allow",
+      "git diff *": "allow",
+      "git log *": "allow",
+      "git status *": "allow",
+      "pnpm exec *": "allow",
+      "cd * && pnpm exec *": "allow",
+      "rm -rf *": "deny",
+      "sudo *": "ask"
+    },
+    "read": {
+      "*": "allow",
+      "~/dotfiles/*": "allow"
+    },
+    "edit": {
+      "*": "allow"
+    },
+    "external_directory": "ask",
+    "third_party_tool": "ask",
+    "mcp": "deny"
+  }
+}
