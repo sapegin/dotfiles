@@ -8,8 +8,11 @@
 - [Custom zsh theme](./tilde/.starship.toml) with Git status, etc. using Starship.
 - [Dotfiles synchronization](./bin/lib/sync-dotfiles.ts).
 - Sensible macOS defaults: [setup/osx.sh](./setup/osx.sh).
-- Visual Studio Code settings synchronization: [vscode](./vscode).
-- My magic project opener ([bin/j](./bin/j)).
+- [Visual Studio Code settings synchronization](./vscode).
+- [Visual Studio Code extensions local installation](./bin/lib/sync-vscode-extensions.ts).
+- [Obsidian vault config](./obsidian).
+- [Obsidian plugins local installation](./bin/lib/sync-obsidian-plugins.ts).
+- Magic project opener ([bin/j](./bin/j)).
 - [zsh aliases](./zsh/aliases.zsh).
 - [Git aliases](./tilde/.gitconfig).
 - [Lots of scripts](./bin).
