@@ -1,24 +1,33 @@
 # Artem Sapegin’s dotfiles 🦝
 
-![Ghostty](https://github.com/sapegin/squirrelsong/raw/master/themes/Ghostty/screenshot-dark.jpg)
+![Raccoonarium](./images/raccoonarium.jpg)
 
 ## Features
 
-- Custom color scheme: [Squirrelsong](https://github.com/sapegin/dotfiles/tree/master/colors).
-- [Custom zsh theme](https://github.com/sapegin/dotfiles/blob/master/tilde/.starship.toml) with Git status, etc. using Starship.
-- [Dotfiles synchronization](https://github.com/sapegin/dotfiles/blob/master/bin/lib/sync-dotfiles).
-- Sensible macOS defaults: [setup/osx.sh](https://github.com/sapegin/dotfiles/blob/master/setup/osx.sh).
-- Visual Studio Code settings synchronization: [vscode](https://github.com/sapegin/dotfiles/tree/master/vscode).
-- My magic project opener ([bin/j](https://github.com/sapegin/dotfiles/blob/master/bin/j)).
-- [zsh aliases](https://github.com/sapegin/dotfiles/blob/master/zsh/aliases.zsh).
-- [Git aliases](https://github.com/sapegin/dotfiles/blob/master/tilde/.gitconfig).
-- [Lots of scripts](https://github.com/sapegin/dotfiles/tree/master/bin).
-- [Firefox custom styles](https://github.com/sapegin/dotfiles/tree/master/firefox).
-- [Brewfile](https://github.com/sapegin/dotfiles/tree/master/tilde/Brewfile)
+- Custom color scheme: [Squirrelsong](./colors).
+- [Custom zsh theme](./tilde/.starship.toml) with Git status, etc. using Starship.
+- [Dotfiles synchronization](./bin/lib/sync-dotfiles.ts).
+- Sensible macOS defaults: [setup/osx.sh](./setup/osx.sh).
+- Visual Studio Code settings synchronization: [vscode](./vscode).
+- My magic project opener ([bin/j](./bin/j)).
+- [zsh aliases](./zsh/aliases.zsh).
+- [Git aliases](./tilde/.gitconfig).
+- [Lots of scripts](./bin).
+- [Firefox custom styles](./firefox).
+- [Brewfile](./tilde/Brewfile)
 - Configs for lots of apps.
 - [macOS apps I use](https://github.com/sapegin/dotfiles/wiki/OS-X-Apps).
 
+![Ghostty](https://github.com/sapegin/squirrelsong/raw/master/themes/Ghostty/screenshot-dark-dp.jpg)
+
 [![Washing your code. A book on clean code for frontend developers](https://sapegin.me/images/washing-code-github.jpg)](https://sapegin.me/book/)
+
+## Related repositories
+
+- [Raccoon Toolbox](https://github.com/sapegin/raccoon-toolbox): collection of GUI tools
+- [Raccoon VSCode](https://github.com/sapegin/raccoon-vscode): my Visual Studio Code extensions
+- [Raccoon Obsidian](https://github.com/sapegin/raccoon-obsidian): my Obsidian extensions
+- [Squirrelsong](https://github.com/sapegin/squirrelsong): my themes
 
 ## Installation
 
