@@ -79,7 +79,7 @@ echo
 
 # Sync dotfiles
 echo "🐿️ Syncing dotfiles…"
-$HOME/dotfiles/bin/lib/sync-dotfiles
+node $HOME/dotfiles/bin/lib/sync-dotfiles.ts
 
 # Sync color schemes
 echo "🦄 Syncing color themes…"

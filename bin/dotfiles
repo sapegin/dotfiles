@@ -14,7 +14,7 @@ cd "$HOME/dotfiles" > /dev/null 2>&1
 echo "Pulling changes from GitHub…"
 git pull
 echo
-bin/lib/sync-dotfiles
+node bin/lib/sync-dotfiles.ts
 echo
 echo "🦆 Open a new terminal for the changes to take effect."
 bin/nyan

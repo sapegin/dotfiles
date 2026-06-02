@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "lint": "oxlint --fix",
-    "test": "oxlint",
+    "test": "oxlint --fix",
     "format": "oxfmt"
   },
   "dependencies": {
