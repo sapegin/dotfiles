@@ -16,6 +16,12 @@ const VAULT_DIR = path.join(os.homedir(), 'murder');
 const LOG_DIR = path.join(VAULT_DIR, '📆 Log');
 const OUTPUT_FILE = path.join(os.homedir(), 'Documents/MurderStats.html');
 
+// TODO: Make an npm package with the theme and all light/dark colors + semantic colors
+// TODO: Analyze all additional colors and see if we can include them in the theme as well
+// TODO: Detect homebase for each year (location with the most records)
+// TODO: Make weather stats only for homebase
+// TODO: Add additional min/max weather stats for _all_ records and include locations
+
 const COLORS = {
   // Squirrelsong Light
   gray060: '#4c4b4e',
