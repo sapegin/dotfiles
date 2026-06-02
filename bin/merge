@@ -16,9 +16,12 @@
 # License: MIT
 # https://github.com/sapegin/dotfiles
 
+# Colors
+color_error="$(tput sgr 0 1)$(tput setaf 1)"
+color_reset="$(tput sgr0)"
+
 remote="origin"
 branch=$1
-current_branch=$(git branch --show-current)
 
 if [ -z "$branch" ]; then
 	echo "Usage: $0 [branchname]"
@@ -28,14 +31,18 @@ fi
 # Abort if this isn't a Git repository
 git rev-parse --is-inside-work-tree > /dev/null || exit $?
 
-# If there is a remote version of this branch, rebase onto current_branch first
-# If there's a remote (public) branch, we do not want to be rewriting histories
-tracking=$(git branch -vv | grep -E "^\*" | awk '{ print $4 }')
-echo "tracking=$tracking"
-if [[ ! "$tracking" =~ "$remote" ]]; then
+current_branch=$(git branch --show-current)
+if [ -z "$current_branch" ]; then
+  echo "${color_error}❌ You’re not on a branch (detached HEAD). Check out a branch first.${color_reset}" >&2
+  exit 1
+fi
+
+# If there's a remote (public) branch, we do not want to be rewriting history
+tracking=$(git rev-parse --abbrev-ref --symbolic-full-name "@{upstream}" 2>/dev/null)
+if [[ "$tracking" != "$remote"/* ]]; then
 	echo "⚒ Local-only branch, rebasing $branch onto $current_branch first…"
-	git switch $branch
-	git rebase $current_branch || exit 1
+	git switch "$branch"
+	git rebase "$current_branch" || exit 1
 else
 	echo "📡 This branch exists remotely, not rebasing"
 fi

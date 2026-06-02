@@ -24,21 +24,26 @@ git rev-parse --is-inside-work-tree > /dev/null || exit $?
 color_error="$(tput sgr 0 1)$(tput setaf 1)"
 color_reset="$(tput sgr0)"
 
+branch=$(git rev-parse --abbrev-ref HEAD) || exit $?
+if [ -z "$branch" ]; then
+  echo "${color_error}❌ You’re not on a branch (detached HEAD). Check out a branch first.${color_reset}" >&2
+  exit 1
+fi
+
 # Push & save output
-if [ -z "$*" ]; then
+if [ $# -eq 0 ]; then
 	# By default push to 'origin'
-	branch=$(git rev-parse --abbrev-ref HEAD) || exit $?
 	default_remote="origin"
 	remote=$(git config "branch.${branch}.remote" || echo "$default_remote")
 	remote_branch=$( (git config "branch.${branch}.merge" || echo "refs/heads/$branch") | cut -d/ -f3-)
 	args="$remote $remote_branch"
 else
-	args="$*"
+	args=("$@")
 fi
 
 echo "🚀 Pushing…"
 echo
-push=$(git push --set-upstream $args 2>&1)
+push=$(git push --set-upstream "${args[@]}" 2>&1)
 exit_code=$?
 
 # Preserve useful output returned by the remote server

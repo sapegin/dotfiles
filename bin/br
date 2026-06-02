@@ -36,7 +36,7 @@ function error() { echo -e "$UNDERLINE$RED$1$NOCOLOR"; }
 # Check whether a local branch exists
 function has_local_branch() {
 	local name="$1"
-	if git show-ref --quiet "refs/heads/$name"; then
+	if git show-ref --verify --quiet "refs/heads/$name"; then
 		return 0
 	else
 		return 1
@@ -46,7 +46,7 @@ function has_local_branch() {
 # Check whether a remote branch exists
 function has_remote_branch() {
 	local name="$1"
-	if git ls-remote --exit-code --heads "$remote" "$name" &> /dev/null; then
+  if git show-ref --verify --quiet "refs/remotes/$remote/$name"; then
 		return 0
 	else
 		return 1
@@ -100,7 +100,7 @@ fi
 # Delete branch
 if [ "$delete" ]; then
 	echo "💀 Removing local branch $branch""…"
-	git branch "$delete" "$branch"
+	git branch "$delete" "$branch" || exit $?
 	exit 0
 fi
 
@@ -110,8 +110,8 @@ if has_local_branch "$branch"; then
 	git switch "$branch"
 	if has_remote_branch "$branch"; then
 		# Fix tracking if needed
-		tracking=$(git branch -vv | grep -E "^\*" | awk '{ print $4 }')
-		if [[ ! "$tracking" =~ "$remote" ]]; then
+		tracking=$(git rev-parse --abbrev-ref --symbolic-full-name "$branch@{upstream}" 2>/dev/null)
+		if [[ "$tracking" != "$remote"/* ]]; then
 			echo "⚙️ Your local branch is not tracking the corresponding remote branch, fixing…"
 			git branch --set-upstream-to "$remote/$branch" "$branch"
 		fi
@@ -130,6 +130,6 @@ else
 	else
 		# No remote branch, creating a new branch
 		echo "🪴 Creating new local branch $branch""…"
-		git checkout -b "$branch"
+		git switch -c "$branch" --no-track
 	fi
 fi
