@@ -1,4 +1,5 @@
-// Makes symlinks for dotfiles: ~/dotfiles/tilde/.bashrc => ~/.bashrc.
+// Makes symlinks (and optional copies) for dotfiles based on dotfiles.json
+// at the repo root, e.g. ~/dotfiles/tilde/.bashrc → ~/.bashrc.
 //
 // ---
 // Author: Artem Sapegin, sapegin.me
@@ -9,85 +10,39 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import readline from 'node:readline/promises';
-import { globSync } from 'glob';
+import { stripJsonComments } from './strip-json-comments.ts';
 
-interface SpecialEntry {
+interface DotfileEntry {
   source: string;
   destination: string;
   copy?: boolean;
+  ignoreFolders?: boolean;
 }
 
 const QUESTION_MARK = '\u001B[33m?\u001B[0m';
 const HOME = os.homedir();
-const TILDE_DIR = `${HOME}/dotfiles/tilde`;
-const IGNORE = ['.DS_Store', 'Brewfile.lock.json'];
-const SPECIALS: SpecialEntry[] = [
-  {
-    // Convenience symlink: iCloud Documents
-    source: `${HOME}/Library/Mobile Documents/com~apple~CloudDocs`,
-    destination: `${HOME}/cloud`,
-  },
-  {
-    // Convenience symlink: Obsidian vault
-    source: `${HOME}/Library/Mobile Documents/iCloud~md~obsidian/Documents/Murder`,
-    destination: `${HOME}/murder`,
-  },
-  {
-    // Visual Studio Code
-    source: `${HOME}/dotfiles/vscode/User`,
-    destination: `${HOME}/Library/Application Support/Code/User`,
-  },
-  {
-    // Codex config
-    source: `${HOME}/dotfiles/tilde/.codex/config.toml`,
-    destination: `${HOME}/.codex/config.toml`,
-  },
-  {
-    // Codex base prompt
-    source: `${HOME}/dotfiles/ai-rules/AGENTS.md`,
-    destination: `${HOME}/.codex/AGENTS.md`,
-  },
-  {
-    // Codex skills
-    source: `${HOME}/dotfiles/ai-rules/skills/*`,
-    destination: `${HOME}/.codex/skills`,
-  },
-  {
-    // Amp skills
-    source: `${HOME}/dotfiles/ai-rules/skills/*`,
-    destination: `${HOME}/.config/agents/skills`,
-  },
-  {
-    // Copilot base prompt
-    source: `${HOME}/dotfiles/ai-rules/AGENTS.md`,
-    destination: `${HOME}/.copilot/instructions/base.instructions.md`,
-  },
-  {
-    // Pi config
-    source: `${HOME}/dotfiles/tilde/.pi/agent/settings.json`,
-    destination: `${HOME}/.pi/agent/settings.json`,
-  },
-  {
-    // Pi keybindings
-    source: `${HOME}/dotfiles/tilde/.pi/agent/keybindings.json`,
-    destination: `${HOME}/.pi/agent/keybindings.json`,
-  },
-  {
-    // Pi base prompt
-    source: `${HOME}/dotfiles/ai-rules/AGENTS.md`,
-    destination: `${HOME}/.pi/agent/AGENTS.md`,
-  },
-  {
-    // Pi Permission System extension config
-    source: `${HOME}/dotfiles/tilde/.pi/agent/extensions/pi-permission-system/config.json`,
-    destination: `${HOME}/.pi/agent/extensions/pi-permission-system/config.json`,
-  },
-  {
-    // Photoshop
-    source: `${HOME}/Library/Mobile Documents/com~apple~CloudDocs/Apps/Adobe Photoshop 2024 Settings`,
-    destination: `${HOME}/Library/Preferences/Adobe Photoshop 2024 Settings`,
-  },
-];
+const REPO_ROOT = path.join(HOME, 'dotfiles');
+const CONFIG_FILE = path.join(REPO_ROOT, 'dotfiles.json');
+const IGNORE = ['.DS_Store'];
+
+function expandPath(input: string): string {
+  if (input === '~') {
+    return HOME;
+  }
+  if (input.startsWith('~/')) {
+    return path.join(HOME, input.slice(2));
+  }
+  return input;
+}
+
+function isGlob(pattern: string): boolean {
+  return pattern.includes('*');
+}
+
+function readConfig(): DotfileEntry[] {
+  const raw = fs.readFileSync(CONFIG_FILE, 'utf8');
+  return JSON.parse(stripJsonComments(raw)) as DotfileEntry[];
+}
 
 function isSymlinkTo(link: string, dest: string): boolean {
   const statLink = fs.lstatSync(link);
@@ -113,33 +68,53 @@ async function confirmAction(message: string): Promise<boolean> {
   }
 }
 
-async function syncDotfiles(): Promise<void> {
-  process.chdir(TILDE_DIR);
-  const files = [
-    // Sync all files in tilde/ folder
-    ...globSync('*', { dot: true, nodir: true }),
-    // Sync additional config _folders_ in .config/ folder
-    ...globSync('.config/*'),
-  ];
+async function syncEntry(entry: DotfileEntry): Promise<void> {
+  const source = expandPath(entry.source);
+  const destination = expandPath(entry.destination);
+  const sourceIsGlob = isGlob(source);
 
-  for (const sourceFile of files) {
-    const sourcePath = `${TILDE_DIR}/${sourceFile}`;
-    const destPath = `${HOME}/${sourceFile}`;
+  const sourcePaths = sourceIsGlob
+    ? fs
+        .globSync(source, { withFileTypes: true })
+        .filter((dirent) => !(entry.ignoreFolders && dirent.isDirectory()))
+        .map((dirent) => path.join(dirent.parentPath, dirent.name))
+    : [source];
 
-    if (IGNORE.includes(sourceFile)) {
+  for (const sourcePath of sourcePaths) {
+    if (IGNORE.includes(path.basename(sourcePath))) {
+      continue;
+    }
+
+    const destinationPath = sourceIsGlob
+      ? path.join(destination, path.basename(sourcePath))
+      : destination;
+
+    // Check that the source exists
+    if (fs.existsSync(sourcePath) === false) {
       continue;
     }
 
     // Check that we aren't overwriting anything
-    if (fs.existsSync(destPath)) {
-      // Already a symlink to dotfiles?
-      if (isSymlinkTo(destPath, sourcePath)) {
-        continue;
+    if (fs.existsSync(destinationPath)) {
+      if (entry.copy) {
+        // Already identical to the source file?
+        if (
+          fs.lstatSync(destinationPath).isFile() &&
+          fs.readFileSync(sourcePath, 'utf8') ===
+            fs.readFileSync(destinationPath, 'utf8')
+        ) {
+          continue;
+        }
+      } else {
+        // Already a symlink to dotfiles?
+        if (isSymlinkTo(destinationPath, sourcePath)) {
+          continue;
+        }
       }
 
       // Should overwrite?
       const shouldOverwrite = await confirmAction(
-        `File already exists: ${destPath}. Overwrite?`
+        `File already exists: ${destinationPath}. Overwrite?`
       );
       if (shouldOverwrite === false) {
         console.log('Skipping…');
@@ -147,82 +122,30 @@ async function syncDotfiles(): Promise<void> {
       }
 
       // Remove
-      fs.rmSync(destPath, { recursive: true });
+      fs.rmSync(destinationPath, { recursive: true, force: true });
     }
 
-    // Create a symlink
-    fs.mkdirSync(path.dirname(destPath), { recursive: true });
-    fs.symlinkSync(sourcePath, destPath);
+    // Create a folder if needed
+    fs.mkdirSync(path.dirname(destinationPath), { recursive: true });
 
-    console.log('🦐', destPath, '→', sourcePath);
-  }
-}
-
-async function syncSpecials(): Promise<void> {
-  for (const { source, destination, copy } of SPECIALS) {
-    const sources = source.endsWith('/*') ? globSync(source) : [source];
-
-    for (const sourcePath of sources) {
-      const destinationPath = source.endsWith('/*')
-        ? path.join(destination, path.basename(sourcePath))
-        : destination;
-
-      // Check if the source exists
-      if (fs.existsSync(sourcePath) === false) {
-        continue;
-      }
-
-      // Check that we aren't overwriting anything
-      if (fs.existsSync(destinationPath)) {
-        if (copy) {
-          // Already identical to the source file?
-          if (
-            fs.lstatSync(destinationPath).isFile() &&
-            fs.readFileSync(sourcePath, 'utf8') ===
-              fs.readFileSync(destinationPath, 'utf8')
-          ) {
-            continue;
-          }
-        } else {
-          // Already a symlink to dotfiles?
-          if (isSymlinkTo(destinationPath, sourcePath)) {
-            continue;
-          }
-        }
-
-        // Should overwrite?
-        const shouldOverwrite = await confirmAction(
-          `File already exists: ${destinationPath}. Overwrite?`
-        );
-        if (shouldOverwrite === false) {
-          console.log('Skipping…');
-          continue;
-        }
-
-        // Remove
-        fs.rmSync(destinationPath, { recursive: true, force: true });
-      }
-
-      // Create a folder if needed
-      fs.mkdirSync(path.dirname(destinationPath), { recursive: true });
-
-      if (copy) {
-        // Copy the file
-        fs.copyFileSync(sourcePath, destinationPath);
-      } else {
-        // Create a symlink
-        fs.symlinkSync(sourcePath, destinationPath);
-      }
-
-      console.log('🦐', sourcePath, '→', destinationPath);
+    if (entry.copy) {
+      // Copy the file
+      fs.copyFileSync(sourcePath, destinationPath);
+    } else {
+      // Create a symlink
+      fs.symlinkSync(sourcePath, destinationPath);
     }
+
+    console.log('🦐', sourcePath, '→', destinationPath);
   }
 }
 
 async function main(): Promise<void> {
   console.log('Syncing dotfiles…');
-  await syncDotfiles();
-  await syncSpecials();
+  const entries = readConfig();
+  for (const entry of entries) {
+    await syncEntry(entry);
+  }
   console.log('Done.');
 }
 
