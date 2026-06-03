@@ -9,5 +9,5 @@
   "skills": ["~/dotfiles/ai-rules/skills"],
   "themes": ["~/dotfiles/tilde/.pi/agent/themes"],
   "theme": "squirrelsong",
-  "packages": ["npm:@gotgenes/pi-permission-system"]
+  "packages": ["npm:@gotgenes/pi-permission-system", "npm:pi-web-access"]
 }
