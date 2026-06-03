@@ -3,13 +3,20 @@
     "*": "allow",
     "bash": {
       "*": "ask",
-      "ls *": "allow",
+      "bash --version": "allow",
+      "cd * && pnpm exec *": "allow",
+      "command -v *": "allow",
+      "find *": "allow",
       "git branch *": "allow",
       "git diff *": "allow",
       "git log *": "allow",
+      "git merge-base *": "allow",
+      "git rev-parse *": "allow",
       "git status *": "allow",
+      "head *": "allow",
+      "ls *": "allow",
+      "nl *": "allow",
       "pnpm exec *": "allow",
-      "cd * && pnpm exec *": "allow",
       "rm -rf *": "deny",
       "sudo *": "ask"
     },
@@ -20,7 +27,11 @@
     "edit": {
       "*": "allow"
     },
-    "external_directory": "ask",
+    "external_directory": {
+      "*": "ask",
+      "~/dotfiles/*": "allow",
+      "/opt/homebrew/bin/bash": "allow"
+    },
     "third_party_tool": "ask",
     "mcp": "deny"
   }
