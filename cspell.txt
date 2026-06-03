@@ -16,6 +16,7 @@ blockquotes
 bouldering
 Catppuccin
 Chemex
+cmux
 colocation
 copypasting
 customizability
