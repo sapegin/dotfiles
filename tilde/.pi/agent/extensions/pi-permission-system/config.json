@@ -6,6 +6,7 @@
       "bash --version": "allow",
       "cd * && pnpm exec *": "allow",
       "command -v *": "allow",
+      "cmp *": "allow",
       "find *": "allow",
       "git branch *": "allow",
       "git diff *": "allow",
@@ -16,6 +17,7 @@
       "head *": "allow",
       "ls *": "allow",
       "nl *": "allow",
+      "stat *": "allow",
       "pnpm exec *": "allow",
       "rm -rf *": "deny",
       "sudo *": "ask"
@@ -38,6 +40,7 @@
     "external_directory": {
       "*": "ask",
       "~/dotfiles/*": "allow",
+      "~/Library/Application Support/fnm/node-versions/*/@earendil-works/pi-coding-agent/*": "allow",
       "/opt/homebrew/bin/bash": "allow"
     },
     "third_party_tool": "ask",
