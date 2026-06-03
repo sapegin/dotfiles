@@ -30,3 +30,7 @@ clipboard-trim-trailing-spaces = true
 copy-on-select = clipboard
 
 macos-titlebar-style = tabs
+
+# Make cmd+enter work. By default, Ghostty doesn’t send Cmd keypresses to
+# terminal programs
+keybind = cmd+enter=csi:13;9u
