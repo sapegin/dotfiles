@@ -21,6 +21,7 @@
     --icon-fill: var(--sepiaForeground) !important;
     --icon-disabled-fill: var(--sepiaDisabled) !important;
     --selected-background: var(--selectionBackground) !important;
+    --visited-link-foreground: var(--sepiaDisabled) !important;
   }
 
   .domain {
