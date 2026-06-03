@@ -1,7 +1,9 @@
 // Sync configuration for bin/lib/sync-dotfiles.ts.
 //
-// Each entry creates a symlink (or, when `copy: true`, a file copy) from
-// `source` to `destination`.
+// Each entry links or syncs `source` to `destination`:
+// - `mode: "link"` (default) creates a symlink at `destination`.
+// - `mode: "sync"` two-way syncs `source` and `destination` by mtime: the newer
+//   side overwrites the other; identical files are skipped.
 //
 // - Paths may start with `~/` to refer to the home directory.
 // - When `source` contains `*` it is treated as a glob pattern: each match is

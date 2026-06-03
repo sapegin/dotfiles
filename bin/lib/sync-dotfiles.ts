@@ -1,4 +1,4 @@
-// Makes symlinks (and optional copies) for dotfiles based on dotfiles.json
+// Makes symlinks (or two-way syncs) for dotfiles based on dotfiles.json
 // at the repo root, e.g. ~/dotfiles/tilde/.bashrc → ~/.bashrc.
 //
 // ---
@@ -11,11 +11,14 @@ import os from 'node:os';
 import path from 'node:path';
 import readline from 'node:readline/promises';
 import { stripJsonComments } from './strip-json-comments.ts';
+import { syncFile } from './syncFile.ts';
+
+type EntryMode = 'link' | 'sync';
 
 interface DotfileEntry {
   source: string;
   destination: string;
-  copy?: boolean;
+  mode?: EntryMode;
   ignoreFolders?: boolean;
 }
 
@@ -24,6 +27,8 @@ const HOME = os.homedir();
 const REPO_ROOT = path.join(HOME, 'dotfiles');
 const CONFIG_FILE = path.join(REPO_ROOT, 'dotfiles.json');
 const IGNORE = ['.DS_Store'];
+
+let pushedBack = 0;
 
 function expandPath(input: string): string {
   if (input === '~') {
@@ -69,6 +74,7 @@ async function confirmAction(message: string): Promise<boolean> {
 }
 
 async function syncEntry(entry: DotfileEntry): Promise<void> {
+  const mode: EntryMode = entry.mode ?? 'link';
   const source = expandPath(entry.source);
   const destination = expandPath(entry.destination);
   const sourceIsGlob = isGlob(source);
@@ -95,22 +101,22 @@ async function syncEntry(entry: DotfileEntry): Promise<void> {
       continue;
     }
 
+    if (mode === 'sync') {
+      const result = await syncFile(sourcePath, destinationPath);
+      if (result === 'pulled') {
+        console.log('🦐', sourcePath, '→', destinationPath);
+      } else if (result === 'pushed') {
+        pushedBack++;
+        console.log('🦐', sourcePath, '←', destinationPath);
+      }
+      continue;
+    }
+
     // Check that we aren't overwriting anything
     if (fs.existsSync(destinationPath)) {
-      if (entry.copy) {
-        // Already identical to the source file?
-        if (
-          fs.lstatSync(destinationPath).isFile() &&
-          fs.readFileSync(sourcePath, 'utf8') ===
-            fs.readFileSync(destinationPath, 'utf8')
-        ) {
-          continue;
-        }
-      } else {
-        // Already a symlink to dotfiles?
-        if (isSymlinkTo(destinationPath, sourcePath)) {
-          continue;
-        }
+      // Already a symlink to dotfiles?
+      if (isSymlinkTo(destinationPath, sourcePath)) {
+        continue;
       }
 
       // Should overwrite?
@@ -129,13 +135,8 @@ async function syncEntry(entry: DotfileEntry): Promise<void> {
     // Create a folder if needed
     fs.mkdirSync(path.dirname(destinationPath), { recursive: true });
 
-    if (entry.copy) {
-      // Copy the file
-      fs.copyFileSync(sourcePath, destinationPath);
-    } else {
-      // Create a symlink
-      fs.symlinkSync(sourcePath, destinationPath);
-    }
+    // Create a symlink
+    fs.symlinkSync(sourcePath, destinationPath);
 
     console.log('🦐', sourcePath, '→', destinationPath);
   }
@@ -146,6 +147,12 @@ async function main(): Promise<void> {
   const entries = readConfig();
   for (const entry of entries) {
     await syncEntry(entry);
+  }
+  if (pushedBack > 0) {
+    console.log();
+    console.log(
+      `💿 ${pushedBack} files pushed back to the source; commit and push them.`
+    );
   }
   console.log('Done.');
 }

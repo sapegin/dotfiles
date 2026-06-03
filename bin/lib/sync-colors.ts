@@ -22,6 +22,7 @@ import { execSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
+import { syncFile } from './syncFile.ts';
 
 const HOME = os.homedir();
 
@@ -37,22 +38,6 @@ async function doesPathExist(fullPath: string): Promise<boolean> {
   } catch {
     return false;
   }
-}
-
-async function mtimeMs(filePath: string): Promise<number | null> {
-  try {
-    const stats = await fs.stat(filePath);
-    return stats.mtimeMs;
-  } catch {
-    return null;
-  }
-}
-
-async function copyPreservingMtime(src: string, dest: string): Promise<void> {
-  await fs.mkdir(path.dirname(dest), { recursive: true });
-  await fs.copyFile(src, dest);
-  const { atime, mtime } = await fs.stat(src);
-  await fs.utimes(dest, atime, mtime);
 }
 
 /**
@@ -71,31 +56,19 @@ async function sync(from: string, toDir: string): Promise<void> {
     ? path.join(toDir, filename)
     : path.join(DEST_DIR, toDir, filename);
 
-  const srcMs = await mtimeMs(src);
-  if (srcMs === null) {
+  const result = await syncFile(src, dest);
+
+  if (result === 'missing') {
     console.error(`   ✗ Source not found: ${src}`);
     process.exit(1);
   }
 
-  const destMs = await mtimeMs(dest);
-
-  if (destMs !== null) {
-    const [srcBuf, destBuf] = await Promise.all([
-      fs.readFile(src),
-      fs.readFile(dest),
-    ]);
-    if (srcBuf.equals(destBuf)) {
-      console.log(`   ✓  ${filename}`);
-      return;
-    }
-  }
-
-  if (destMs === null || srcMs > destMs) {
+  if (result === 'equal') {
+    console.log(`   ✓  ${filename}`);
+  } else if (result === 'pulled') {
     console.log(`   ⬇  ${filename}`);
-    await copyPreservingMtime(src, dest);
   } else {
     console.log(`   ⬆  ${filename}`);
-    await copyPreservingMtime(dest, src);
     pushedBack++;
   }
 }
@@ -196,7 +169,7 @@ async function main(): Promise<void> {
   console.log();
   if (pushedBack > 0) {
     console.log(
-      `📝 ${pushedBack} files pushed back to squirrelsong; commit and push them.`
+      `💿 ${pushedBack} files pushed back to squirrelsong; commit and push them.`
     );
     console.log();
   }
