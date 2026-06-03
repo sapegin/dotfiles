@@ -56,7 +56,7 @@
   // Enable contextual alternative but disable ligatures
   "editor.fontLigatures": "'calt' on, 'liga' off",
   "editor.fontSize": 17,
-  "editor.formatOnSave": false,
+  "editor.formatOnSave": true,
   "editor.glyphMargin": false,
   "editor.gotoLocation.multipleDeclarations": "goto",
   "editor.gotoLocation.multipleDefinitions": "goto",
@@ -105,8 +105,9 @@
     "*.js.snap": "javascript",
     ".prettierrc": "json"
   },
-  "files.autoSave": "onFocusChange",
+  "files.autoSave": "afterDelay",
   "files.autoSaveWhenNoErrors": true,
+  "files.autoSaveWorkspaceFilesOnly": true,
   "files.defaultLanguage": "markdown",
   "files.exclude": {
     // Show node_modules but don't show anything inside

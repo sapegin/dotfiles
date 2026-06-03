@@ -171,14 +171,6 @@
     "command": "workbench.action.openPreviousRecentlyUsedEditor"
   },
   {
-    "comment": "Format and Save (to make autosave save files without formatting)",
-    "key": "cmd+s",
-    "command": "runCommands",
-    "args": {
-      "commands": ["editor.action.format", "workbench.action.files.save"]
-    }
-  },
-  {
     "comment": "Go to line",
     "key": "cmd+k cmd+g",
     "command": "workbench.action.gotoLine"
@@ -634,10 +626,6 @@
   {
     "key": "cmd+t",
     "command": "-workbench.action.showAllSymbols"
-  },
-  {
-    "key": "cmd+s",
-    "command": "-workbench.action.files.save"
   },
   {
     "key": "cmd+shift+o",
