@@ -27,6 +27,14 @@
     "edit": {
       "*": "allow"
     },
+    "skill": {
+      "*": "ask",
+      "grill-in-code": "allow",
+      "grill-me": "allow",
+      "librarian": "allow",
+      "review-code": "allow",
+      "write-pr-description": "allow"
+    },
     "external_directory": {
       "*": "ask",
       "~/dotfiles/*": "allow",
