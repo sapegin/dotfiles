@@ -1,0 +1,20 @@
+{
+  "name": "pretty",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Minimal Pi extension that prettifies built-in tool output",
+  "type": "module",
+  "dependencies": {
+    "@wierdbytes/pi-common": "0.5.0"
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": "*",
+    "@earendil-works/pi-tui": "*",
+    "typebox": "*"
+  },
+  "pi": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

@@ -87,6 +87,11 @@
     "source": "~/dotfiles/tilde/.pi/agent/extensions/cmux-notifications.ts",
     "destination": "~/.pi/agent/extensions/cmux-notifications.ts"
   },
+  // Pi Pretty extension
+  {
+    "source": "~/dotfiles/tilde/.pi/agent/extensions/pretty",
+    "destination": "~/.pi/agent/extensions/pretty"
+  },
   // Pi Permission System extension config
   {
     "source": "~/dotfiles/tilde/.pi/agent/extensions/pi-permission-system/config.json",
