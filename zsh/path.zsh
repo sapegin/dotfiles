@@ -8,6 +8,7 @@ function _prepend_path() {
 # Extend $PATH
 
 # Homebrew binaries
+_prepend_path "/opt/homebrew/sbin"
 _prepend_path "/opt/homebrew/bin"
 
 # fnm, Node version manager (https://github.com/Schniz/fnm) This extends the

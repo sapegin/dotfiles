@@ -1,7 +1,3 @@
-# Taps
-tap "homebrew/bundle"
-tap "homebrew/cask-fonts"
-
 # CLI tools
 brew "bat" # `cat` replacement
 brew "exiftool" # EXIF reader
@@ -10,10 +6,10 @@ brew "fastfetch" # Displays pretty system info
 brew "fd" # `find` replacement
 brew "fnm" # Node.js version manager
 brew "fzf" # Fuzzy finder
-brew "gh" # GitHub command-line tool
 brew "gdu" # Disk usage analyzer
-brew "git" # The Git
+brew "gh" # GitHub command-line tool
 brew "git-delta" # Diff pager for `git` and `grep` output
+brew "git" # The Git
 brew "lazygit" # Git client
 brew "macos-trash" # `rm` replacement with MacOS trash support
 brew "node" # Fallback Node.js version
@@ -22,8 +18,8 @@ brew "rsyncy" # `rsync` replacement
 brew "starship" # Prompt manager
 brew "tlrc" # `man` replacement
 brew "typos-cli" # Fix typos
-brew "zsh" # Shell
 brew "zsh-fast-syntax-highlighting" # Syntax highlighting for zsh
+brew "zsh" # Shell
 
 # GUI apps
 cask "adobe-creative-cloud" # Lightroom & Photoshop
@@ -44,7 +40,7 @@ cask "hyperkey" # Maps Caps Lock to Super key
 cask "jordanbaird-ice" # Hides menu bar icons
 cask "kap" # Video screen recording
 cask "keka" # Archive reader
-cask "languagetool" # Spell checker
+cask "languagetool-desktop" # Spell checker
 cask "nimble-commander" # File manager
 cask "notion" # Collaborative notes
 cask "numi" # Calculator
