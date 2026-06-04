@@ -8,9 +8,9 @@ selection-background = #574538
 cursor-color = #bfac99
 
 search-foreground = #cfbaa5
-search-background = #482a47
+search-background = #5e375c
 search-selected-foreground = #cfbaa5
-search-selected-background = #97576f
+search-selected-background = #a65472
 
 # Black
 palette = 0=#5b4839

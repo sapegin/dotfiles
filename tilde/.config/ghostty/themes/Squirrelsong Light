@@ -21,15 +21,15 @@ palette = 1=#c06159
 palette = 9=#d67e76
 
 # Green
-palette = 2=#667e44
+palette = 2=#657d38
 palette = 10=#9bae7e
 
 # Yellow
-palette = 3=#b39119
-palette = 11=#e4c158
+palette = 3=#c88539
+palette = 11=#de9e59
 
 # Blue
-palette = 4=#527b98
+palette = 4=#4b7b97
 palette = 12=#80a4be
 
 # Magenta
@@ -37,12 +37,12 @@ palette = 5=#806f9b
 palette = 13=#ac9bc5
 
 # Cyan
-palette = 6=#468173
+palette = 6=#3e816e
 palette = 14=#5f9b8d
 
 # White
-palette = 7=#9c96a2
-palette = 15=#b8b1be
+palette = 7=#8c8792
+palette = 15=#9c96a2
 
 # Use Squirrelsong colors for the icon
 macos-icon-ghost-color = #5c595f

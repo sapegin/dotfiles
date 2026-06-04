@@ -23,5 +23,5 @@
 --colors=line:fg:black
 --colors=match:fg:white
 # Squirrelsong Dark brightPinkDimer
---colors=match:bg:72,42,71
+--colors=match:bg:94,55,92
 --colors=match:style:bold

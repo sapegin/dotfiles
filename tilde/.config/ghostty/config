@@ -9,6 +9,7 @@ font-feature = zero
 font-feature = ss01
 
 theme = dark:Squirrelsong Dark Deep Purple,light:Squirrelsong Light
+window-theme = dark
 minimum-contrast = 1.1
 macos-icon = custom-style
 macos-icon-frame = beige
