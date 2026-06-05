@@ -13,12 +13,13 @@ import readline from 'node:readline/promises';
 import { logError, logWarn } from './log.ts';
 import { stripJsonComments } from './strip-json-comments.ts';
 import { isIgnored, syncFile, syncFolder } from './syncFile.ts';
+import { tildify, untildify } from './tildify.ts';
 
 // TODO: Add --verbose mode that shows all files including ignored ones and ones that didn't need sync
 
 type EntryMode = 'link' | 'sync';
 
-interface DotfileEntry {
+export interface DotfileEntry {
   source: string;
   destination: string;
   mode?: EntryMode;
@@ -34,16 +35,6 @@ const CONFIG_FILE = path.join(REPO_ROOT, 'dotfiles.json');
 const BASE_IGNORE = ['\\.DS_Store$'];
 
 let pushedBack = 0;
-
-function expandPath(input: string): string {
-  if (input === '~') {
-    return HOME;
-  }
-  if (input.startsWith('~/')) {
-    return path.join(HOME, input.slice(2));
-  }
-  return input;
-}
 
 function isGlob(pattern: string): boolean {
   return pattern.includes('*');
@@ -80,8 +71,8 @@ async function confirmAction(message: string): Promise<boolean> {
 
 async function syncEntry(entry: DotfileEntry): Promise<void> {
   const mode: EntryMode = entry.mode ?? 'link';
-  const source = expandPath(entry.source);
-  const destination = expandPath(entry.destination);
+  const source = untildify(entry.source);
+  const destination = untildify(entry.destination);
   // Trailing slash on `source` (raw, before normalization) means: two-way sync
   // the whole folder via `syncFolder`. Only valid with `mode: "sync"`.
   const sourceIsFolder = entry.source.endsWith('/');
@@ -163,7 +154,7 @@ async function syncEntry(entry: DotfileEntry): Promise<void> {
     // Create a symlink
     fs.symlinkSync(sourcePath, destinationPath);
 
-    console.log(` ${destinationPath}`);
+    console.log(` ${tildify(destinationPath)}`);
   }
 }
 

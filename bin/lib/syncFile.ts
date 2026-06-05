@@ -13,6 +13,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { logError, logWarn } from './log.ts';
+import { tildify } from './tildify.ts';
 
 export type SyncResult =
   | 'missing' // `src` does not exist (single-file mode only)
@@ -84,17 +85,18 @@ export function isIgnored(
 /**
  * Print a one-line summary of a sync result; or nothing when nothing changed.
  */
-function printResult(result: SyncResult, filename: string): void {
+function printResult(result: SyncResult, filepath: string): void {
+  const shortFilepath = tildify(filepath);
   if (result === 'missing') {
-    logError(`✕ ${filename}\n↪ Source not found!`);
+    logError(`✕ ${shortFilepath}\n↪ Source not found!`);
   } else if (result === 'pulled') {
-    console.log(`⬇ ${filename}`);
+    console.log(`⬇ ${shortFilepath}`);
   } else if (result === 'pushed') {
-    console.log(`⬆ ${filename}`);
+    console.log(`⬆ ${shortFilepath}`);
   } else if (result === 'added') {
-    console.log(`+ ${filename}`);
+    console.log(`+ ${shortFilepath}`);
   } else if (result === 'deleted') {
-    logWarn(` ${filename}\n↪ Source deleted!`);
+    logWarn(` ${shortFilepath}\n↪ Source deleted!`);
   }
 }
 
@@ -132,9 +134,9 @@ async function syncFileQuiet(src: string, dest: string): Promise<SyncResult> {
  * overwrites the other. Prints a one-line summary for `'pulled'`/`'pushed'`.
  *
  * @returns `'missing'` if `src` does not exist, `'equal'` if contents already
- *     match, `'pulled'` if `src` was newer (or `dest` was missing) and `dest`
- *     was overwritten, `'pushed'` if `dest` was newer and `src` was
- *     overwritten.
+ *   match, `'pulled'` if `src` was newer (or `dest` was missing) and `dest`
+ *   was overwritten, `'pushed'` if `dest` was newer and `src` was
+ *   overwritten.
  */
 export async function syncFile(src: string, dest: string): Promise<SyncResult> {
   const result = await syncFileQuiet(src, dest);

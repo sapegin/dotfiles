@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+# Makes symlinks (or two-way syncs) for dotfiles based on dotfiles.json at the
+# repo root, e.g. ~/dotfiles/tilde/.bashrc → ~/.bashrc.
+#
+# ---
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+
+set -euo pipefail
+exec node "$(dirname "$0")/lib/sync-dotfiles.ts" "$@"
