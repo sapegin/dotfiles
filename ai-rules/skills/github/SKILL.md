@@ -1,77 +1,53 @@
 ---
 name: github
-description: Fetching code from GitHub, interacting with GitHub repositories, pull requests, issues, and API. Use when working with GitHub resources instead.
+description: Work with GitHub repositories, source code, pull requests, issues, releases, Actions, and API data using the gh CLI. Use for GitHub URLs and GitHub resources.
 ---
 
-## When to use
+Use `gh` for GitHub resources. It uses the user’s authenticated token and is preferred over `curl`, `wget`, or **web-fetch** for GitHub URLs.
 
-- Browsing or reading code from a GitHub repository: clone it and use read/find/grep/ls/bash
-- Viewing or creating pull requests, issues, releases, or gists
-- Fetching repo metadata or any GitHub API data
-- Interacting with GitHub Actions (runs, workflows)
-- Any task involving GitHub that you might otherwise use `curl`, `wget`, or `web-fetch` for
+Do not use this for non-GitHub URLs, GitHub Pages sites (`*.github.io`), or local Git operations like `git commit` and `git push`.
 
-## When NOT to use
+## Repository code
 
-- Non-GitHub URLs — use `web-fetch` for those
-- Public web content that happens to be hosted on GitHub Pages (`*.github.io`) — use `web-fetch`
-- Local git operations (`git commit`, `git push`) — use `git` directly
-
-## Key principle
-
-**Always use `gh` instead of `curl`, `wget`, or `web-fetch` for GitHub URLs.** The `gh` CLI uses the user’s authenticated token automatically.
-
-## Browsing repository code
-
-**When you only need one file**, use `gh api`:
+For one file or directory, use `gh api`:
 
 ```bash
-# Get raw file content directly (skips base64)
+# Get raw file content directly
 gh api repos/owner/repo/contents/path/to/file.py \
-  -H "Accept: application/vnd.github.raw+json"
-
-# Get file from a specific branch/ref
-gh api repos/owner/repo/contents/path/to/file.py?ref=develop \
   -H "Accept: application/vnd.github.raw+json"
 
 # List directory contents
 gh api repos/owner/repo/contents/src/ --jq '.[].name'
 ```
 
-**To read or browse files from a GitHub repo, clone it locally and use normal file tools** (read/find/grep/ls/bash).
+For broader browsing, clone and use normal file tools:
 
 ```bash
+# Clone to the shared Pi GitHub repo cache
 mkdir -p /tmp/pi-github-repos/owner
 gh repo clone owner/repo /tmp/pi-github-repos/owner/repo -- --depth 1
 ```
 
-For targeted lookups on a clone you already have, use read/find/grep/ls/bash directly. Reuse `/tmp/pi-github-repos/owner/repo` when it already exists.
+Reuse `/tmp/pi-github-repos/owner/repo` when it already exists. Search cloned repos with `find`, `grep`, `read`, `ls`, and `bash`.
 
-## Examples
+## Common commands
 
 ```bash
-# View a repo
+# View repository metadata
 gh repo view owner/repo
 
-# List and view pull request
+# List and inspect pull requests
 gh pr list --repo owner/repo
-gh pr view <number> --repo owner/repo
-
-# View specific issue/PR with comments
-gh issue view <number> --repo owner/repo --comments
 gh pr view <number> --repo owner/repo --comments
 
-# List and view issues
+# List and inspect issues
 gh issue list --repo owner/repo
-gh issue view <number> --repo owner/repo
+gh issue view <number> --repo owner/repo --comments
 
-# Search issues
-gh search issues "memory leak language:rust"
+# Search issues and merged pull requests
 gh search issues "keyword" --repo owner/repo --state all --limit 10
-
-# Search merged pull requests
 gh search prs "keyword" --repo owner/repo --state merged --limit 10
 
-# Release notes
+# List recent release tags
 gh api repos/owner/repo/releases --jq '.[0:5] | .[].tag_name'
 ```

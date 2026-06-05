@@ -1,123 +1,75 @@
 ---
 name: librarian
-description: Research open-source libraries with evidence-backed answers and GitHub permalinks. Use when the user asks about library internals, needs implementation details with source code references, wants to understand why something was changed, or needs authoritative answers backed by actual code.
+description: Research open-source libraries with evidence-backed answers and GitHub permalinks. Use when the user asks about library internals, implementation details, source code references, change history, or authoritative answers backed by actual code.
 ---
 
-Answer questions about open-source libraries by finding evidence with GitHub permalinks. Every claim backed by actual code.
+Research open-source libraries by finding evidence in code, docs, issues, pull requests, and history. Back code-related claims with GitHub permalinks.
 
 When needed, load and follow the **web-search**, **web-fetch**, and **github** skills.
 
-## Step 1: Classify the request
+## Choose the workflow
 
-Before doing anything, classify the request to pick the right research strategy.
+| Request | Use |
+| --- | --- |
+| Usage, concepts, best practices | **web-search** + **github** clone + read README/docs/examples |
+| Implementation details or source code | **github** clone + find/grep/read |
+| Change history or rationale | **github** clone + `git log`, `git blame`, issues/PRs |
+| Broad or ambiguous research | Combine the above |
 
-| Type | Trigger | Primary Approach |
-| --- | --- | --- |
-| **Conceptual** | “How do I use X?”, “Best practice for Y?” | **web-search** + **github** (README/docs) |
-| **Implementation** | “How does X implement Y?”, “Show me the source” | **github** + code search |
-| **Context/History** | “Why was this changed?”, “History of X?” | **github** + `git log` + `git blame` + issue/PR search |
-| **Comprehensive** | Complex or ambiguous requests, deep dive | All of the above |
+## Source workflow
 
-## Step 2: Research by type
+1. Use **github** to clone or inspect the repo.
+2. Search locally with **find** and **grep**; read relevant files with **read**.
+3. For history, use `git log`, `git blame`, and `git show` in the clone.
+4. For issues and pull requests, use `gh issue`, `gh pr`, or `gh search`.
+5. Use **web-search** or **web-fetch** for non-GitHub docs, articles, and discussions when useful.
 
-### Conceptual questions
-
-Use these workflows:
-
-1. **web-search**: `"library-name topic"` for recent articles and discussions
-2. **github**: the library’s GitHub repo URL to clone and check README, docs, or examples
-
-Synthesize web results + repo docs. Cite official documentation and link to relevant source files.
-
-### Implementation questions
-
-The core workflow: clone, find, permalink:
-
-1. Use **github** to clone the GitHub repo URL locally and have the file tree
-2. Use **find** and **grep** to search the cloned repo: `grep "function_name"`, `find . -name "*.ts"`
-3. Use **read** to examine specific files once you’ve located them
-4. Get the commit SHA: `cd /tmp/pi-github-repos/owner/repo && git rev-parse HEAD`
-5. Construct permalink: `https://github.com/owner/repo/blob/<sha>/path/to/file#L10-L20`
-
-Use **github** to clone the repo and **web-search** for recent discussions when useful. Then dig into the clone with grep/read once it’s available.
-
-### Context/history questions
-
-Use Git operations on the cloned repo:
+Common commands:
 
 ```bash
 cd /tmp/pi-github-repos/owner/repo
 
-# Recent changes to a specific file
+# Get the exact commit for permalinks
+git rev-parse HEAD
+
+# Find recent changes to a file
 git log --oneline -n 20 -- path/to/file.ts
 
-# Who changed what and when
+# See who last changed specific lines
 git blame -L 10,30 path/to/file.ts
 
-# Full diff for a specific commit
+# Inspect a commit's changes to a file
 git show <sha> -- path/to/file.ts
 
-# Search commit messages
-git log --oneline --grep="keyword" -n 10
+# Search related GitHub issues and merged PRs
+gh search issues "keyword" --repo owner/repo --state all --limit 10
+gh search prs "keyword" --repo owner/repo --state merged --limit 10
 ```
 
-For issues and pull requests, use **github**.
+## Permalinks
 
-### Comprehensive research
+Use full commit SHAs, not branch names:
 
-Combine everything:
-
-1. **web-search**: recent articles and discussions
-2. **github**: clone the repo (or multiple repos if comparing)
-3. **bash**: `gh search issues "keyword" --repo owner/repo --limit 10 & gh search prs "keyword" --repo owner/repo --state merged --limit 10 & wait`
-
-Then dig into the clone with **find**, **grep**, **read**, `git blame`, `git log` as needed.
-
-## Step 3: Construct permalinks
-
-Permalinks are the whole point. They make your answers citable and verifiable.
-
-```
+```text
 https://github.com/<owner>/<repo>/blob/<commit-sha>/<filepath>#L<start>-L<end>
 ```
 
-Getting the SHA from a cloned repo:
+Get the current clone SHA:
 
 ```bash
 cd /tmp/pi-github-repos/owner/repo && git rev-parse HEAD
 ```
 
-Getting the SHA from a tag:
+Get a tag SHA when answering version-specific questions:
 
 ```bash
 gh api repos/owner/repo/git/refs/tags/v1.0.0 --jq '.object.sha'
 ```
 
-Always use full commit SHAs, not branch names. Branch links break when code changes. Permalinks don't.
+## Answer rules
 
-## Step 4: Cite everything
-
-Every code-related claim needs a permalink. Format:
-
-```markdown
-The stale time check happens in [`notifyManager.ts`](https://github.com/TanStack/query/blob/abc123/packages/query-core/src/notifyManager.ts#L42-L50):
-
-\`\`\`typescript function isStale(query: Query, staleTime: number): boolean { return query.state.dataUpdatedAt + staleTime < Date.now() } \`\`\`
-```
-
-For conceptual answers, link to official docs and relevant source files. For implementation answers, every function/class reference should have a permalink.
-
-## Failure recovery
-
-| Failure | Recovery |
-| --- | --- |
-| grep finds nothing | Broaden the query, try concept names instead of exact function names |
-| gh CLI rate limited | Use the already-cloned repo in /tmp/pi-github-repos/ for git operations |
-| Uncertain about implementation | State your uncertainty explicitly, propose a hypothesis, show what evidence you did find |
-
-## Guidelines
-
-- Vary search queries when running multiple searches: different angles, not the same pattern repeated
-- Prefer recent sources; filter out outdated results when they conflict with newer information
-- For version-specific questions, clone the tagged version
-- When the repo is already cloned from a previous **github** call, reuse it: check the path before cloning again
+- Cite every code-related claim with a permalink.
+- Prefer official docs and source code over articles.
+- State uncertainty when evidence is incomplete.
+- If search fails, broaden terms from exact names to concepts.
+- Reuse existing clones in `/tmp/pi-github-repos/owner/repo`.
