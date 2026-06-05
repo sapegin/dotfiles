@@ -107,5 +107,25 @@
   {
     "source": "~/Library/Mobile Documents/com~apple~CloudDocs/Apps/Adobe Photoshop 2024 Settings",
     "destination": "~/Library/Preferences/Adobe Photoshop 2024 Settings"
+  },
+
+  // Obsidian config backup (plugins and themes are synced separately)
+  {
+    "source": "~/murder/.obsidian/",
+    "destination": "~/dotfiles/obsidian/.obsidian",
+    "mode": "sync",
+    "ignore": ["^workspace.*\\.json", "^plugins/", "^themes/"]
+  },
+  // Obsidian templates backup
+  {
+    "source": "~/murder/templates/",
+    "destination": "~/dotfiles/obsidian/templates",
+    "mode": "sync"
+  },
+  // Obsidian bases backup
+  {
+    "source": "~/murder/bases/",
+    "destination": "~/dotfiles/obsidian/bases",
+    "mode": "sync"
   }
 ]
