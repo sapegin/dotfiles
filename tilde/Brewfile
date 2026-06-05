@@ -1,3 +1,6 @@
+# Taps
+tap "manaflow-ai/cmux"
+
 # CLI tools
 brew "bat" # `cat` replacement
 brew "exiftool" # EXIF reader
@@ -28,6 +31,7 @@ cask "alfred" # App launcher
 cask "bruno" # REST/GraphQL API client
 cask "choosy" # Browser selector
 cask "cleanshot" # Screenshots
+cask "cmux" # Terminal for AI agents
 cask "colorsnapper" # Color picker
 cask "coteditor" # Simple code/text editor
 cask "dash" # Documentation reader
