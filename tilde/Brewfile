@@ -3,6 +3,7 @@ tap "manaflow-ai/cmux"
 
 # CLI tools
 brew "bat" # `cat` replacement
+brew "ddgr" # Duck Duck Go search
 brew "exiftool" # EXIF reader
 brew "eza" # `ls` replacement
 brew "fastfetch" # Displays pretty system info
