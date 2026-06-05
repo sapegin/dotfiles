@@ -20,6 +20,9 @@
       "stat *": "allow",
       "pnpm exec *": "allow",
       "rm -rf *": "deny",
+      "trafilatura *": "allow",
+      "ddgr *": "allow",
+      "echo *": "allow",
       "sudo *": "ask"
     },
     "read": {

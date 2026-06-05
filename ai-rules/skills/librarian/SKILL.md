@@ -5,7 +5,7 @@ description: Research open-source libraries with evidence-backed answers and Git
 
 Answer questions about open-source libraries by finding evidence with GitHub permalinks. Every claim backed by actual code.
 
-Delegate to other skills when necessary: **web-search**, **web-fetch**, **github**.
+When needed, load and follow the **web-search**, **web-fetch**, and **github** skills.
 
 ## Step 1: Classify the request
 
@@ -22,7 +22,7 @@ Before doing anything, classify the request to pick the right research strategy.
 
 ### Conceptual questions
 
-Batch these in one turn:
+Use these workflows:
 
 1. **web-search**: `"library-name topic"` for recent articles and discussions
 2. **github**: the library’s GitHub repo URL to clone and check README, docs, or examples
@@ -39,7 +39,7 @@ The core workflow: clone, find, permalink:
 4. Get the commit SHA: `cd /tmp/pi-github-repos/owner/repo && git rev-parse HEAD`
 5. Construct permalink: `https://github.com/owner/repo/blob/<sha>/path/to/file#L10-L20`
 
-Batch the initial calls: **github** (clone) + **web-search** (recent discussions) in one turn. Then dig into the clone with grep/read once it’s available.
+Use **github** to clone the repo and **web-search** for recent discussions when useful. Then dig into the clone with grep/read once it’s available.
 
 ### Context/history questions
 
@@ -65,7 +65,7 @@ For issues and pull requests, use **github**.
 
 ### Comprehensive research
 
-Combine everything. Batch these in one turn:
+Combine everything:
 
 1. **web-search**: recent articles and discussions
 2. **github**: clone the repo (or multiple repos if comparing)

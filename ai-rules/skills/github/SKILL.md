@@ -41,12 +41,11 @@ gh api repos/owner/repo/contents/src/ --jq '.[].name'
 **To read or browse files from a GitHub repo, clone it locally and use normal file tools** (read/find/grep/ls/bash).
 
 ```bash
-clonedir="$TMPDIR/gh-clones-$(date +%s)"
-mkdir -p "$clonedir"
-gh repo clone owner/repo "$clonedir/repo" -- --depth 1
+mkdir -p /tmp/pi-github-repos/owner
+gh repo clone owner/repo /tmp/pi-github-repos/owner/repo -- --depth 1
 ```
 
-For targeted lookups on a clone you already have, use read/find/grep/ls/bash directly.
+For targeted lookups on a clone you already have, use read/find/grep/ls/bash directly. Reuse `/tmp/pi-github-repos/owner/repo` when it already exists.
 
 ## Examples
 

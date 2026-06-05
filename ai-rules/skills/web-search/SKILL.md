@@ -45,7 +45,7 @@ ddgr --noua --json "python asyncio tutorial"
 Limit to 5 results:
 
 ```bash
-ddgr --noua --json -num 5 "quick query"
+ddgr --noua --json --num 5 "quick query"
 ```
 
 Recent results (last week):
