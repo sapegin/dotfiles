@@ -22,6 +22,7 @@ import { execSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
+import { logWarn } from './log.ts';
 import { syncFile } from './syncFile.ts';
 
 const HOME = os.homedir();
@@ -57,18 +58,10 @@ async function sync(from: string, toDir: string): Promise<void> {
     : path.join(DEST_DIR, toDir, filename);
 
   const result = await syncFile(src, dest);
-
   if (result === 'missing') {
-    console.error(`   ✗ Source not found: ${src}`);
     process.exit(1);
   }
-
-  if (result === 'equal') {
-    console.log(`   ✓  ${filename}`);
-  } else if (result === 'pulled') {
-    console.log(`   ⬇  ${filename}`);
-  } else {
-    console.log(`   ⬆  ${filename}`);
+  if (result === 'pushed') {
     pushedBack++;
   }
 }
@@ -83,14 +76,11 @@ async function main(): Promise<void> {
     cwd: LOCAL_ROOT,
     encoding: 'utf8',
   });
-  if (repoStatus.trim() !== '') {
-    console.error(
-      `Squirrelsong repo at ${LOCAL_ROOT} is dirty. Commit or stash changes first.`
-    );
-    process.exit(1);
+  if (repoStatus.trim() === '') {
+    execSync('git pull', { cwd: LOCAL_ROOT, stdio: 'inherit' });
+  } else {
+    logWarn('⚠️ Working tree is dirty, skipping git pull');
   }
-
-  execSync('git pull', { cwd: LOCAL_ROOT, stdio: 'inherit' });
 
   /**
    * Bat: https://github.com/sharkdp/bat?tab=readme-ov-file#adding-new-themes
@@ -128,20 +118,12 @@ async function main(): Promise<void> {
   /**
    * Fzf (one-way: extracted from Readme.md, patched into .zshrc)
    */
-  console.log('🌈 Installing fzf theme…');
-
-  const fzfThemeRegExp = /FZF_DEFAULT_OPTS=["'][^'"]+["']/g;
-  const fzfThemeReadme = await fs.readFile(
-    path.join(LOCAL_ROOT, 'themes/Fzf/Readme.md'),
-    'utf8'
+  console.log('🌈 Syncing fzf theme…');
+  await sync(
+    'themes/fzf/fzf-squirrelsong-dark-dp.sh',
+    `${HOME}/dotfiles/colors`
   );
-  const zshRcFile = path.join(HOME, 'dotfiles/tilde/.zshrc');
-  const fzfThemeTheme = fzfThemeReadme.match(fzfThemeRegExp)?.[1] ?? '';
-  const zshRc = await fs.readFile(zshRcFile, 'utf8');
-  const zshRcUpdated = zshRc.replace(fzfThemeRegExp, fzfThemeTheme);
-  await fs.writeFile(zshRcFile, zshRcUpdated);
-
-  console.log('   💡 Reopen your terminal to take effect');
+  console.log('💡 Reopen your terminal to take effect');
 
   /**
    * Obsidian

@@ -10,8 +10,11 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import readline from 'node:readline/promises';
+import { logError, logWarn } from './log.ts';
 import { stripJsonComments } from './strip-json-comments.ts';
-import { syncFile } from './syncFile.ts';
+import { isIgnored, syncFile, syncFolder } from './syncFile.ts';
+
+// TODO: Add --verbose mode that shows all files including ignored ones and ones that didn't need sync
 
 type EntryMode = 'link' | 'sync';
 
@@ -19,14 +22,16 @@ interface DotfileEntry {
   source: string;
   destination: string;
   mode?: EntryMode;
-  ignoreFolders?: boolean;
+  /** Regex patterns (substring match); applied to glob matches and folder syncs. */
+  ignore?: string[];
 }
 
 const QUESTION_MARK = '\u001B[33m?\u001B[0m';
 const HOME = os.homedir();
 const REPO_ROOT = path.join(HOME, 'dotfiles');
 const CONFIG_FILE = path.join(REPO_ROOT, 'dotfiles.json');
-const IGNORE = ['.DS_Store'];
+/** Always-on ignore patterns, merged with each entry's `ignore`. */
+const BASE_IGNORE = ['\\.DS_Store$'];
 
 let pushedBack = 0;
 
@@ -77,37 +82,57 @@ async function syncEntry(entry: DotfileEntry): Promise<void> {
   const mode: EntryMode = entry.mode ?? 'link';
   const source = expandPath(entry.source);
   const destination = expandPath(entry.destination);
+  // Trailing slash on `source` (raw, before normalization) means: two-way sync
+  // the whole folder via `syncFolder`. Only valid with `mode: "sync"`.
+  const sourceIsFolder = entry.source.endsWith('/');
   const sourceIsGlob = isGlob(source);
+  const ignorePatterns = [...BASE_IGNORE, ...(entry.ignore ?? [])];
+
+  if (sourceIsFolder) {
+    if (mode !== 'sync') {
+      logWarn(
+        `⚠ ${source}\n  ↪ Trailing "/" requires \`mode: "sync"\`; skipping.`
+      );
+      return;
+    }
+    if (fs.existsSync(source) === false) {
+      logError(`✕ ${source}\n  ↪ Source not found!`);
+      return;
+    }
+    const results = await syncFolder(source, destination, ignorePatterns);
+    for (const { result } of results) {
+      if (result === 'pushed') {
+        pushedBack++;
+      }
+    }
+    return;
+  }
 
   const sourcePaths = sourceIsGlob
     ? fs
         .globSync(source, { withFileTypes: true })
-        .filter((dirent) => !(entry.ignoreFolders && dirent.isDirectory()))
+        .filter(
+          (dirent) =>
+            !isIgnored(dirent.name, ignorePatterns, dirent.isDirectory())
+        )
         .map((dirent) => path.join(dirent.parentPath, dirent.name))
     : [source];
 
   for (const sourcePath of sourcePaths) {
-    if (IGNORE.includes(path.basename(sourcePath))) {
-      continue;
-    }
-
     const destinationPath = sourceIsGlob
       ? path.join(destination, path.basename(sourcePath))
       : destination;
 
     // Check that the source exists
     if (fs.existsSync(sourcePath) === false) {
-      console.warn(`⚠️ Source not found: ${sourcePath}`);
+      logError(`✕ ${sourcePath}\n  ↪ Source not found!`);
       continue;
     }
 
     if (mode === 'sync') {
       const result = await syncFile(sourcePath, destinationPath);
-      if (result === 'pulled') {
-        console.log('🦐', sourcePath, '→', destinationPath);
-      } else if (result === 'pushed') {
+      if (result === 'pushed') {
         pushedBack++;
-        console.log('🦐', sourcePath, '←', destinationPath);
       }
       continue;
     }
@@ -138,7 +163,7 @@ async function syncEntry(entry: DotfileEntry): Promise<void> {
     // Create a symlink
     fs.symlinkSync(sourcePath, destinationPath);
 
-    console.log('🦐', sourcePath, '→', destinationPath);
+    console.log(` ${destinationPath}`);
   }
 }
 

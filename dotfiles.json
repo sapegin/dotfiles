@@ -8,13 +8,19 @@
 // - Paths may start with `~/` to refer to the home directory.
 // - When `source` contains `*` it is treated as a glob pattern: each match is
 //   placed under `destination` using the match's basename.
-// - `ignoreFolders: true` skips directory matches (glob sources only).
+// - When `source` ends with `/` it is treated as a folder: the contents of
+//   `source` and `destination` are two-way synced recursively. Requires
+//   `mode: "sync"`; entries with other modes are skipped with a warning.
+// - `ignore` is an array of JavaScript regex sources (substring match,
+//   unanchored unless the pattern uses `^`/`$`). When the entry is a
+//   directory the path is tested with a trailing `/`, so `/$` matches any
+//   directory. `\.DS_Store$` is always ignored.
 [
   // ~/dotfiles/tilde/.* → ~/
   {
     "source": "~/dotfiles/tilde/.*",
     "destination": "~",
-    "ignoreFolders": true
+    "ignore": ["/$"] // All folders
   },
   // Homebrew bundle file
   {
@@ -82,10 +88,10 @@
     "source": "~/dotfiles/ai-rules/AGENTS.md",
     "destination": "~/.pi/agent/AGENTS.md"
   },
-  // Pi Cmux notifications extension
+  // Pi Cmux custom extensions
   {
-    "source": "~/dotfiles/tilde/.pi/agent/extensions/cmux-notifications.ts",
-    "destination": "~/.pi/agent/extensions/cmux-notifications.ts"
+    "source": "~/dotfiles/tilde/.pi/agent/extensions/*.ts",
+    "destination": "~/.pi/agent/extensions/"
   },
   // Pi Pretty extension
   {
