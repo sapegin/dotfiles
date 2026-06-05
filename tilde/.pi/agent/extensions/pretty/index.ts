@@ -11,10 +11,10 @@ import {
   createReadTool,
   createWriteTool,
 } from '@earendil-works/pi-coding-agent';
-import { truncateToWidth, Text } from '@earendil-works/pi-tui';
+import { truncateToWidth, Text, type Component } from '@earendil-works/pi-tui';
 import * as Diff from 'diff';
 
-/** A single diff line (context / addition / deletion / hunk separator). */
+/** A single diff line. */
 export interface DiffLine {
   type: 'ctx' | 'add' | 'del' | 'sep';
   oldNum: number | null;
@@ -23,19 +23,22 @@ export interface DiffLine {
 
 /** Parsed diff with line list + summary stats. */
 export interface ParsedDiff {
-  lines: DiffLine[];
   added: number;
   removed: number;
 }
 
-/** Visual status of a tool execution, used to colour the frame chrome. */
+/** Visual status of a tool execution, used to color the frame chrome. */
 export type FrameStatus = 'pending' | 'success' | 'error';
 
 function tildify(filepath: string) {
   return filepath.replace(os.homedir(), '~');
 }
 
-function toolIcon(theme: any, status: FrameStatus): string {
+function getTextComponent(ctx: { lastComponent?: Component }) {
+  return (ctx.lastComponent as Text | undefined) ?? new Text('', 0, 0);
+}
+
+function toolIcon(theme: Theme, status: FrameStatus): string {
   if (status === 'error') {
     return theme.fg('error', '✕');
   } else if (status === 'success') {
@@ -45,7 +48,7 @@ function toolIcon(theme: any, status: FrameStatus): string {
   }
 }
 
-function toolTitle(theme: any, name: string, value: string): string {
+function toolTitle(theme: Theme, name: string, value: string): string {
   return `${theme.fg('toolTitle', theme.bold(name))} ${theme.fg('accent', value)}`;
 }
 
@@ -65,7 +68,7 @@ function countLines(text: string): number {
   return text.replace(/\n$/, '').split('\n').length;
 }
 
-function formatError(theme: any, message: string): string {
+function formatError(theme: Theme, message: string): string {
   const truncatedMessage = truncateToWidth(
     firstLine(message),
     frameWidth() - 4,
@@ -93,59 +96,30 @@ export function getFrameStatus(ctx: {
 }
 
 /**
- * Parse two text blobs into a diff-line list using `diff` package's
- * `structuredPatch`. Hunk separators are emitted as `{ type: "sep" }`
- * with `newNum` carrying the gap line count.
+ * Returns added/removed lines stats for a diff.
  */
-function parseDiff(
-  oldContent: string,
-  newContent: string,
-  ctx = 3
-): ParsedDiff {
-  const patch = Diff.structuredPatch('', '', oldContent, newContent, '', '', {
-    context: ctx,
-  });
-  const lines: DiffLine[] = [];
+function getDiffStats(oldContent: string, newContent: string): ParsedDiff {
+  const patch = Diff.structuredPatch('', '', oldContent, newContent, '', '');
   let added = 0;
   let removed = 0;
-  for (let hi = 0; hi < patch.hunks.length; hi++) {
-    if (hi > 0) {
-      const prev = patch.hunks[hi - 1];
-      const gap = patch.hunks[hi].oldStart - (prev.oldStart + prev.oldLines);
-      lines.push({
-        type: 'sep',
-        oldNum: null,
-        newNum: gap > 0 ? gap : null,
-      });
-    }
-    const h = patch.hunks[hi];
-    let oL = h.oldStart;
-    let nL = h.newStart;
-    for (const raw of h.lines) {
-      if (raw === '\\ No newline at end of file') {
-        continue;
-      }
-      const ch = raw[0];
-      if (ch === '+') {
-        lines.push({ type: 'add', oldNum: null, newNum: nL++ });
+  for (const hunk of patch.hunks) {
+    for (const raw of hunk.lines) {
+      const character = raw[0];
+      if (character === '+') {
         added++;
-      } else if (ch === '-') {
-        lines.push({ type: 'del', oldNum: oL++, newNum: null });
+      } else if (character === '-') {
         removed++;
-      } else {
-        lines.push({ type: 'ctx', oldNum: oL++, newNum: nL++ });
       }
     }
   }
   return {
-    lines,
     added,
     removed,
   };
 }
 
 /** Compact `+N -M` summary string with diff fg colors. */
-function summarizeDiff(theme: any, added: number, removed: number): string {
+function summarizeDiff(theme: Theme, added: number, removed: number): string {
   const parts: string[] = [];
   if (added > 0) {
     parts.push(theme.fg('success', `+${added}`));
@@ -156,7 +130,7 @@ function summarizeDiff(theme: any, added: number, removed: number): string {
   return parts.length > 0 ? parts.join(' ') : theme.fg('dim', 'no changes');
 }
 
-function summarizeAll(theme: any, diffs: ParsedDiff[]): string {
+function summarizeAll(theme: Theme, diffs: ParsedDiff[]): string {
   const added = diffs.reduce((total, diff) => total + diff.added, 0);
   const removed = diffs.reduce((total, diff) => total + diff.removed, 0);
   return summarizeDiff(theme, added, removed);
@@ -174,10 +148,9 @@ export default function pretty(pi: ExtensionAPI) {
 }
 
 function basicToolHeading(
+  theme: Theme,
   titleAnsi: string,
   status: FrameStatus,
-  // TODO: Move to the first argument
-  theme: Theme,
   extra?: string,
   error?: string
 ) {
@@ -198,8 +171,13 @@ function basicToolHeading(
     .join('\n');
 }
 
-// TODO: Handle not found error nicely:
-// ENOENT: no such file or directory, access '/Users/sapegia/.pi/settings.json'
+function formatReadError(message: string) {
+  // ENOENT: no such file or directory, access '...'
+  if (message.startsWith('ENOENT')) {
+    return 'File not found';
+  }
+  return message;
+}
 
 function registerRead(pi: ExtensionAPI, cwd: string): void {
   const original = createReadTool(cwd);
@@ -210,8 +188,7 @@ function registerRead(pi: ExtensionAPI, cwd: string): void {
       return new Text('', 0, 0);
     },
     renderResult(result, _options, theme, ctx) {
-      const text =
-        (ctx.lastComponent as Text | undefined) ?? new Text('', 0, 0);
+      const text = getTextComponent(ctx);
 
       const filepath = ctx.args.path;
       const content =
@@ -219,15 +196,11 @@ function registerRead(pi: ExtensionAPI, cwd: string): void {
 
       text.setText(
         basicToolHeading(
-          toolTitle(
-            theme,
-            ctx.isPartial ? 'Reading' : 'Read',
-            tildify(filepath)
-          ),
-          getFrameStatus(ctx),
           theme,
+          toolTitle(theme, 'Read', tildify(filepath)),
+          getFrameStatus(ctx),
           undefined,
-          ctx.isError ? content : undefined
+          ctx.isError ? formatReadError(content) : undefined
         )
       );
 
@@ -245,8 +218,7 @@ function registerFind(pi: ExtensionAPI, cwd: string): void {
       return new Text('', 0, 0);
     },
     renderResult(result, _options, theme, ctx) {
-      const text =
-        (ctx.lastComponent as Text | undefined) ?? new Text('', 0, 0);
+      const text = getTextComponent(ctx);
 
       const pattern = ctx.args.pattern;
       const content =
@@ -254,10 +226,10 @@ function registerFind(pi: ExtensionAPI, cwd: string): void {
 
       text.setText(
         basicToolHeading(
-          toolTitle(theme, ctx.isPartial ? 'Finding' : 'Find', pattern),
-          getFrameStatus(ctx),
           theme,
-          ctx.isPartial ? undefined : `(${countLines(content)} items)`,
+          toolTitle(theme, 'Find', pattern),
+          getFrameStatus(ctx),
+          ctx.isPartial ? undefined : `${countLines(content)} items`,
           ctx.isError ? content : undefined
         )
       );
@@ -276,8 +248,7 @@ function registerGrep(pi: ExtensionAPI, cwd: string): void {
       return new Text('', 0, 0);
     },
     renderResult(result, _options, theme, ctx) {
-      const text =
-        (ctx.lastComponent as Text | undefined) ?? new Text('', 0, 0);
+      const text = getTextComponent(ctx);
 
       const pattern = ctx.args.pattern;
       const content =
@@ -285,10 +256,10 @@ function registerGrep(pi: ExtensionAPI, cwd: string): void {
 
       text.setText(
         basicToolHeading(
-          toolTitle(theme, ctx.isPartial ? 'Grepping' : 'Grep', pattern),
-          getFrameStatus(ctx),
           theme,
-          ctx.isPartial ? undefined : `(${countLines(content)} items)`,
+          toolTitle(theme, 'Grep', pattern),
+          getFrameStatus(ctx),
+          ctx.isPartial ? undefined : `${countLines(content)} items`,
           ctx.isError ? content : undefined
         )
       );
@@ -307,8 +278,7 @@ function registerLs(pi: ExtensionAPI, cwd: string): void {
       return new Text('', 0, 0);
     },
     renderResult(result, _options, theme, ctx) {
-      const text =
-        (ctx.lastComponent as Text | undefined) ?? new Text('', 0, 0);
+      const text = getTextComponent(ctx);
 
       const root = tildify(ctx.args.path ?? '');
       const content =
@@ -316,10 +286,10 @@ function registerLs(pi: ExtensionAPI, cwd: string): void {
 
       text.setText(
         basicToolHeading(
-          toolTitle(theme, ctx.isPartial ? 'Listing' : 'List', root),
-          getFrameStatus(ctx),
           theme,
-          ctx.isPartial ? undefined : `(${countLines(content)} items)`,
+          toolTitle(theme, 'List', root),
+          getFrameStatus(ctx),
+          ctx.isPartial ? undefined : `${countLines(content)} items`,
           ctx.isError ? content : undefined
         )
       );
@@ -338,8 +308,7 @@ function registerBash(pi: ExtensionAPI, cwd: string): void {
       return new Text('', 0, 0);
     },
     renderResult(result, _options, theme, ctx) {
-      const text =
-        (ctx.lastComponent as Text | undefined) ?? new Text('', 0, 0);
+      const text = getTextComponent(ctx);
 
       const command = singleLine(ctx.args.command);
       const content =
@@ -348,9 +317,9 @@ function registerBash(pi: ExtensionAPI, cwd: string): void {
 
       text.setText(
         basicToolHeading(
-          toolTitle(theme, ctx.isPartial ? 'Bashing' : 'Bash', command),
-          summary.status,
           theme,
+          toolTitle(theme, 'Bash', command),
+          summary.status,
           undefined,
           summary.text
         )
@@ -370,22 +339,19 @@ function registerWrite(pi: ExtensionAPI, cwd: string): void {
       return new Text('', 0, 0);
     },
     renderResult(result, _options, theme, ctx) {
-      const text =
-        (ctx.lastComponent as Text | undefined) ?? new Text('', 0, 0);
+      const text = getTextComponent(ctx);
 
       const filepath = ctx.args.path;
       const content = ctx.args.content;
 
       text.setText(
         basicToolHeading(
-          toolTitle(
-            theme,
-            ctx.isPartial ? 'Writing' : `Write`,
-            tildify(filepath)
-          ),
-          getFrameStatus(ctx),
           theme,
-          ctx.isPartial ? `(${content.split('\n').length} lines)` : undefined,
+          toolTitle(theme, 'Write', tildify(filepath)),
+          getFrameStatus(ctx),
+          ctx.isPartial
+            ? theme.fg('success', `+${content.split('\n').length}`)
+            : undefined,
           result.details.error
         )
       );
@@ -404,34 +370,22 @@ function registerEdit(pi: ExtensionAPI, cwd: string): void {
       return new Text('', 0, 0);
     },
     renderResult(result, _options, theme, ctx) {
-      // const details = result.details as EditToolDetails | undefined;
-
-      const text =
-        (ctx.lastComponent as Text | undefined) ?? new Text('', 0, 0);
+      const text = getTextComponent(ctx);
 
       const filepath = ctx.args.path;
-
-      const diffs = ctx.args.edits.map((edit) =>
-        parseDiff(edit.oldText, edit.newText)
+      const stats = ctx.args.edits.map((edit) =>
+        getDiffStats(edit.oldText, edit.newText)
       );
-      const summary = summarizeAll(theme, diffs);
+      const summary = summarizeAll(theme, stats);
 
       text.setText(
         basicToolHeading(
-          toolTitle(
-            theme,
-            ctx.isError
-              ? // TODO: Test error reporting
-                `${filepath}\n${formatError(theme, result.details.error)}`
-              : ctx.isPartial
-                ? 'Editing'
-                : 'Edit',
-            tildify(filepath)
-          ),
-          getFrameStatus(ctx),
           theme,
-          // Number of edit while the file is still editing
-          ctx.isPartial ? `Edit ${ctx.args.edits.length}` : summary
+          toolTitle(theme, 'Edit', tildify(filepath)),
+          getFrameStatus(ctx),
+          summary,
+          // TODO: Test error reporting
+          ctx.isError ? result.details.error : undefined
         )
       );
 
