@@ -31,10 +31,13 @@
     },
     "skill": {
       "*": "ask",
+      "github": "allow",
       "grill-in-code": "allow",
       "grill-me": "allow",
       "librarian": "allow",
       "review-code": "allow",
+      "web-fetch": "allow",
+      "web-search": "allow",
       "write-pr-description": "allow"
     },
     "external_directory": {

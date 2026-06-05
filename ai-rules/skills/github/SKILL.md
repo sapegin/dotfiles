@@ -56,23 +56,23 @@ gh repo view owner/repo
 
 # List and view pull request
 gh pr list --repo owner/repo
-gh pr view 123 --repo owner/repo
+gh pr view <number> --repo owner/repo
 
-# List pull request and issues comments
-gh api repos/owner/repo/pulls/123/comments --jq '.[].body'
-gh api repos/owner/repo/issues/123/comments --jq '.[].body'
+# View specific issue/PR with comments
+gh issue view <number> --repo owner/repo --comments
+gh pr view <number> --repo owner/repo --comments
 
 # List and view issues
 gh issue list --repo owner/repo
-gh issue view 456 --repo owner/repo
+gh issue view <number> --repo owner/repo
 
 # Search issues
 gh search issues "memory leak language:rust"
-gh search issues "label:bug state:open" --repo owner/repo
+gh search issues "keyword" --repo owner/repo --state all --limit 10
 
-# Call any REST API endpoint
-gh api repos/owner/repo/contents/README.md
+# Search merged pull requests
+gh search prs "keyword" --repo owner/repo --state merged --limit 10
 
-# Call with pagination and jq filtering
-gh api repos/owner/repo/pulls --paginate --jq '.[].title'
+# Release notes
+gh api repos/owner/repo/releases --jq '.[0:5] | .[].tag_name'
 ```
