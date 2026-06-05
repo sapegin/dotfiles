@@ -15,15 +15,8 @@ import {
 import { truncateToWidth, Text, type Component } from '@earendil-works/pi-tui';
 import * as Diff from 'diff';
 
-/** A single diff line. */
-export interface DiffLine {
-  type: 'ctx' | 'add' | 'del' | 'sep';
-  oldNum: number | null;
-  newNum: number | null;
-}
-
-/** Parsed diff with line list + summary stats. */
-export interface ParsedDiff {
+/** Diff summary stats. */
+export interface DiffStats {
   added: number;
   removed: number;
 }
@@ -95,7 +88,7 @@ export function getFrameStatus(ctx: {
 /**
  * Returns added/removed lines stats for a diff.
  */
-function getDiffStats(oldContent: string, newContent: string): ParsedDiff {
+function getDiffStats(oldContent: string, newContent: string): DiffStats {
   const patch = Diff.structuredPatch('', '', oldContent, newContent, '', '');
   let added = 0;
   let removed = 0;
@@ -127,7 +120,7 @@ function summarizeDiff(theme: Theme, added: number, removed: number): string {
   return parts.length > 0 ? parts.join(' ') : theme.fg('dim', 'no changes');
 }
 
-function summarizeAll(theme: Theme, diffs: ParsedDiff[]): string {
+function summarizeAll(theme: Theme, diffs: DiffStats[]): string {
   const added = diffs.reduce((total, diff) => total + diff.added, 0);
   const removed = diffs.reduce((total, diff) => total + diff.removed, 0);
   return summarizeDiff(theme, added, removed);
