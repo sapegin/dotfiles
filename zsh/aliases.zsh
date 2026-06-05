@@ -17,7 +17,7 @@ alias e="$EDITOR"
 alias cc="code ."
 
 # GitHub Desktop
-alias gh="github ."
+alias ghd="github ."
 
 # Lazygit
 alias lg="lazygit --use-config-dir $HOME/dotfiles/lazygit"
