@@ -10,6 +10,7 @@ import {
   createLsTool,
   createReadTool,
   createWriteTool,
+  highlightCode,
 } from '@earendil-works/pi-coding-agent';
 import { truncateToWidth, Text, type Component } from '@earendil-works/pi-tui';
 import * as Diff from 'diff';
@@ -58,10 +59,6 @@ function frameWidth(): number {
 
 function firstLine(text: string): string {
   return text.replace(/\n$/, '').split('\n')[0];
-}
-
-function singleLine(text: string): string {
-  return text.replaceAll(/\s*\n\s*/g, ' ↵ ');
 }
 
 function countLines(text: string): number {
@@ -299,6 +296,11 @@ function registerLs(pi: ExtensionAPI, cwd: string): void {
   });
 }
 
+function formatBashCommand(command: string) {
+  const highlighted = highlightCode(command, 'bash');
+  return highlighted.join(' ↵ ');
+}
+
 function registerBash(pi: ExtensionAPI, cwd: string): void {
   const original = createBashTool(cwd);
   pi.registerTool({
@@ -310,7 +312,7 @@ function registerBash(pi: ExtensionAPI, cwd: string): void {
     renderResult(result, _options, theme, ctx) {
       const text = getTextComponent(ctx);
 
-      const command = singleLine(ctx.args.command);
+      const command = formatBashCommand(ctx.args.command);
       const content =
         result.content[0]?.type === 'text' ? result.content[0].text : '';
       const summary = bashSummary(content, ctx.isPartial, ctx.isError);
