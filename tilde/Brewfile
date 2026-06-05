@@ -21,6 +21,7 @@ brew "ripgrep" # `grep` replacement
 brew "rsyncy" # `rsync` replacement
 brew "starship" # Prompt manager
 brew "tlrc" # `man` replacement
+brew "trafilatura" # Download web pages as text or Markdown
 brew "typos-cli" # Fix typos
 brew "zsh-fast-syntax-highlighting" # Syntax highlighting for zsh
 brew "zsh" # Shell
