@@ -13,10 +13,3 @@ vscode/**/workspaceStorage/
 tilde/Brewfile.lock.json
 tilde/.config/cmux/cmux.*.bak
 lazygit/state.yml
-washingcode-book-master/
-sapegin.me-master/
-brain/book/
-brain/blog/
-brain/drafts/
-brain/articles/
-colors/shiki/SquirrelsongLight.color-theme.json

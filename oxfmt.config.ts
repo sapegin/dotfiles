@@ -6,7 +6,5 @@ export default defineConfig({
   ignorePatterns: [
     'vscode/User/*/',
     'obsidian/*',
-    'washingcode-book-master/*',
-    'sapegin.me-master/*',
   ],
 });

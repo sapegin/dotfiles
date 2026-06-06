@@ -11,7 +11,6 @@
 // - [x] Fzf            (one-way: extracted from Readme.md)
 // - [x] Ghostty
 // - [x] Obsidian
-// - [x] dotfiles/brain
 //
 // ---
 // Author: Artem Sapegin, sapegin.me
@@ -136,16 +135,6 @@ async function main(): Promise<void> {
     await sync('themes/Obsidian/Squirrelsong/manifest.json', obsidianThemeDir);
     await sync('themes/Obsidian/Squirrelsong/theme.css', obsidianThemeDir);
   }
-
-  /**
-   * Dotfiles/brain
-   */
-  console.log('🌈 Syncing dotfiles/brain theme…');
-
-  await sync(
-    'themes/VSCode/SquirrelsongLight/SquirrelsongLight.color-theme.json',
-    `${HOME}/dotfiles/colors/shiki`
-  );
 
   // --- 8< -- 8< ---
   console.log();
