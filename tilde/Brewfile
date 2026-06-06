@@ -20,6 +20,7 @@ brew "node" # Fallback Node.js version
 brew "ripgrep" # `grep` replacement
 brew "rsyncy" # `rsync` replacement
 brew "starship" # Prompt manager
+brew "syntax-highlight" # Quick look with syntax highlighting
 brew "tlrc" # `man` replacement
 brew "trafilatura" # Download web pages as text or Markdown
 brew "typos-cli" # Fix typos

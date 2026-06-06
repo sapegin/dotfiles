@@ -7,7 +7,6 @@
 //
 // Supports themes for the following apps:
 // - [x] Bat
-// - [x] Peek
 // - [x] Fzf            (one-way: extracted from Readme.md)
 // - [x] Ghostty
 // - [x] Obsidian
@@ -105,17 +104,7 @@ async function main(): Promise<void> {
   );
 
   /**
-   * Peek
-   */
-  const peekThemeDir = `${HOME}/Library/Group Containers/9V456WSURS.com.bigzlabs.peekgroup/Library/Application Support/Styles`;
-
-  if (await doesPathExist(peekThemeDir)) {
-    console.log('🌈 Syncing Peek theme…');
-    await sync('themes/Peek/custom.css', peekThemeDir);
-  }
-
-  /**
-   * Fzf (one-way: extracted from Readme.md, patched into .zshrc)
+   * Fzf
    */
   console.log('🌈 Syncing fzf theme…');
   await sync(
