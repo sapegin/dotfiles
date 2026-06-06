@@ -15,7 +15,7 @@
     "minimalMode": true,
     "newWorkspacePlacement": "afterCurrent",
     "openMarkdownInCmuxViewer": true,
-    "openSupportedFilesInCmux": true,
+    "openSupportedFilesInCmux": false,
     "preferredEditor": "code",
     "renameSelectsExistingName": true,
     "reorderOnNotification": false,
