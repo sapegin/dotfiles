@@ -7,6 +7,8 @@ Review the current branch against the base branch.
 
 Read and follow [guidelines for JavaScript/TypeScript](../../references/JavaScript.md).
 
+When needed, load and follow the **web-search**, **web-fetch**, and **github** skills.
+
 ## Process
 
 1. Identify the base branch and inspect the diff first.
@@ -19,12 +21,12 @@ Be ambitious and direct. Flag plausible risks when important, but mark uncertain
 
 ## What to look for
 
-- **Correctness:** null/undefined access, stale closures, effect dependencies, mutation, async races, cleanup, hydration, loading/empty/error states.
+- **Correctness:** logic errors, off-by-one mistakes, incorrect conditionals, null/undefined access, stale closures, effect dependencies, mutation, async races, cleanup, hydration, missing error handlers.
 - **Data and contracts:** API shapes, type drift, cache invalidation, optimistic updates, validation, parsing, serialization, feature flags, authorization, compatibility.
 - **Side effects:** routing, parent/child behavior, global state, storage, analytics, timers, subscriptions, focus, scroll.
 - **Security and privacy:** XSS, unsafe URLs or redirects, exposed secrets, missing permission checks, PII in logs or telemetry, risky third-party scripts.
 - **Performance:** unnecessary renders, expensive render work, unstable props, excessive requests, bundle growth, images, layout thrash, leaks, missing virtualization.
-- **Accessibility and UX:** semantics, labels, keyboard flow, focus, contrast, reduced motion, responsive layout, text overflow.
+- **Accessibility and UX:** semantics, labels, keyboard flow, focus, contrast, reduced motion, loading/empty/error states.
 - **Maintainability:** architecture fit, local conventions, duplicate logic, confusing code, premature abstractions.
 - **Scope**: prepare data or shift conditions left instead of repeating conditions downstream, accidental changes left by abandoned refactoring, unrelated changes.
 - **Tests:** coverage for business logic, critical UI flows, regressions, and edge cases; avoid brittle snapshots and over-complex test code.
