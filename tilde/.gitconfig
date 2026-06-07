@@ -118,6 +118,7 @@
 [merge]
 	conflictstyle = merge
 [diff]
+  algorithm = histogram
 	colorMoved = default
 
 # Default values for new repositories
