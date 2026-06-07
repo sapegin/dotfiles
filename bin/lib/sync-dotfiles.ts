@@ -6,10 +6,12 @@
 // License: MIT
 // https://github.com/sapegin/dotfiles
 
+import { execSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import readline from 'node:readline/promises';
+import { gitPullIfClean } from './gitPullIfClean.ts';
 import { logError, logWarn } from './log.ts';
 import { stripJsonComments } from './strip-json-comments.ts';
 import { isIgnored, syncFile, syncFolder } from './syncFile.ts';
@@ -25,6 +27,8 @@ export interface DotfileEntry {
   mode?: EntryMode;
   /** Regex patterns (substring match); applied to glob matches and folder syncs. */
   ignore?: string[];
+  /** Shell command to run after the entry has synced. */
+  runAfter?: string;
 }
 
 const QUESTION_MARK = '\u001B[33m?\u001B[0m';
@@ -35,9 +39,53 @@ const CONFIG_FILE = path.join(REPO_ROOT, 'dotfiles.json');
 const BASE_IGNORE = ['\\.DS_Store$'];
 
 let pushedBack = 0;
+/** Git repos already pulled this run, so each is pulled at most once. */
+const pulledRepos = new Set<string>();
 
 function isGlob(pattern: string): boolean {
   return pattern.includes('*');
+}
+
+/** Walk up from `start` to the nearest directory containing `.git`. */
+function findGitRoot(start: string): string | undefined {
+  let dir = start;
+  while (true) {
+    if (fs.existsSync(path.join(dir, '.git'))) {
+      return dir;
+    }
+    const parent = path.dirname(dir);
+    if (parent === dir) {
+      return undefined;
+    }
+    dir = parent;
+  }
+}
+
+/**
+ * Pull the Git repo containing `source` at most once per run. The dotfiles repo
+ * itself is skipped (you don't auto-pull the repo you're editing) and sources
+ * outside any repo are ignored.
+ */
+function pullSourceRepo(source: string): void {
+  const cwd =
+    fs.existsSync(source) && fs.statSync(source).isDirectory()
+      ? source
+      : path.dirname(source);
+  const repoRoot = findGitRoot(cwd);
+  if (!repoRoot || repoRoot === REPO_ROOT || pulledRepos.has(repoRoot)) {
+    return;
+  }
+  pulledRepos.add(repoRoot);
+  console.log(`🔄 Pulling ${tildify(repoRoot)}…`);
+  gitPullIfClean(repoRoot);
+}
+
+/** Run an entry's optional follow-up shell command. */
+function runAfterCommand(entry: DotfileEntry): void {
+  if (entry.runAfter) {
+    console.log(`   ⚙ ${entry.runAfter}`);
+    execSync(entry.runAfter, { stdio: 'inherit' });
+  }
 }
 
 function readConfig(): DotfileEntry[] {
@@ -79,6 +127,8 @@ async function syncEntry(entry: DotfileEntry): Promise<void> {
   const sourceIsGlob = isGlob(source);
   const ignorePatterns = [...BASE_IGNORE, ...(entry.ignore ?? [])];
 
+  pullSourceRepo(source);
+
   if (sourceIsFolder) {
     if (mode !== 'sync') {
       logWarn(
@@ -96,6 +146,7 @@ async function syncEntry(entry: DotfileEntry): Promise<void> {
         pushedBack++;
       }
     }
+    runAfterCommand(entry);
     return;
   }
 
