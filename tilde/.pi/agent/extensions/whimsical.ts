@@ -34,8 +34,6 @@ const messages = [
   'Jiggling…',
   'Wiggling…',
   'Shimmying…',
-  'Galumphing…',
-  'Perambulating…',
   'Meandering…',
   'Moseying…',
   'Bumbling…',
