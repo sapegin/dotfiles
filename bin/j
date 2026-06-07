@@ -33,7 +33,7 @@ const env = fs.existsSync(envFile)
 	: {};
 
 const PERSONAL_PROJECTS_DIR = untildify(`~/_`);
-const WORK_PROJECTS_DIR = untildify(env.WORK_PROJECTS_DIR);
+const WORK_PROJECTS_DIR = env.WORK_PROJECTS_DIR ? untildify(env.WORK_PROJECTS_DIR) : undefined;
 const EXTRA_PROJECTS = [os.homedir(), ['dotfiles']];
 const CLOUD_PROJECTS = [
 	{
