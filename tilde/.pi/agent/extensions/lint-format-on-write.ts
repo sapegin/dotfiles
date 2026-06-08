@@ -11,7 +11,8 @@ import {
 
 const execFileAsync = promisify(execFile);
 
-const eslintCommand = ['eslint', '--fix', '--quiet'] as const;
+const eslintFixCommand = ['eslint', '--fix', '--quiet'] as const;
+const eslintCheckCommand = ['eslint', '--quiet'] as const;
 const prettierCommand = [
   'prettier',
   '--write',
@@ -34,15 +35,22 @@ export default function lintFormatOnWrite(pi: ExtensionAPI) {
       return;
     }
 
-    const eslintResult = await runCommand(eslintCommand, filePath, ctx);
-    const eslintErrors = formatEslintErrors(eslintResult);
-    if (!eslintErrors) {
+    const eslintFixResult = await runCommand(eslintFixCommand, filePath, ctx);
+    const eslintFixErrors = formatEslintErrors(eslintFixResult);
+    if (!eslintFixErrors) {
+      await runCommand(prettierCommand, filePath, ctx);
+      return;
+    }
+
+    const eslintCheckResult = await runCommand(eslintCheckCommand, filePath, ctx);
+    const eslintCheckErrors = formatEslintErrors(eslintCheckResult);
+    if (!eslintCheckErrors) {
       await runCommand(prettierCommand, filePath, ctx);
       return;
     }
 
     return {
-      content: [...event.content, { type: 'text', text: eslintErrors }],
+      content: [...event.content, { type: 'text', text: eslintCheckErrors }],
       details: event.details,
       isError: event.isError,
     };
