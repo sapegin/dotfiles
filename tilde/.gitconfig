@@ -116,8 +116,9 @@
 	hyperlinks = true
 	hyperlinks-file-link-format = "vscode://file/{path}:{line}"
 [merge]
-	conflictstyle = merge
+	conflictstyle = zdiff3
 [diff]
+  algorithm = histogram
 	colorMoved = default
 
 # Default values for new repositories
