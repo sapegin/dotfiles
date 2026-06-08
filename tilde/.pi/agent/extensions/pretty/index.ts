@@ -338,6 +338,8 @@ function registerWrite(pi: ExtensionAPI, cwd: string): void {
 
       const filepath = ctx.args.path;
       const content = ctx.args.content;
+      const output =
+        result.content[0]?.type === 'text' ? result.content[0].text : '';
 
       text.setText(
         basicToolHeading(
@@ -347,7 +349,7 @@ function registerWrite(pi: ExtensionAPI, cwd: string): void {
           ctx.isPartial
             ? theme.fg('success', `+${content.split('\n').length}`)
             : undefined,
-          result.details.error
+          ctx.isError ? output : undefined
         )
       );
 
