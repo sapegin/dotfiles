@@ -4,9 +4,14 @@
     "bash": {
       "*": "ask",
       "bash --version": "allow",
+      "cd * && eslint *": "allow",
       "cd * && pnpm exec *": "allow",
-      "command -v *": "allow",
+      "cd * && prettier *": "allow",
       "cmp *": "allow",
+      "command -v *": "allow",
+      "ddgr *": "allow",
+      "echo *": "allow",
+      "eslint *": "allow",
       "find *": "allow",
       "git branch *": "allow",
       "git diff *": "allow",
@@ -17,13 +22,12 @@
       "head *": "allow",
       "ls *": "allow",
       "nl *": "allow",
-      "stat *": "allow",
       "pnpm exec *": "allow",
+      "prettier *": "allow",
       "rm -rf *": "deny",
-      "trafilatura *": "allow",
-      "ddgr *": "allow",
-      "echo *": "allow",
-      "sudo *": "ask"
+      "stat *": "allow",
+      "sudo *": "ask",
+      "trafilatura *": "allow"
     },
     "read": {
       "*": "allow",
