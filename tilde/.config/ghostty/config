@@ -35,10 +35,3 @@ macos-titlebar-style = tabs
 # Make cmd+enter work. By default, Ghostty doesn’t send Cmd keypresses to
 # terminal programs
 keybind = cmd+enter=csi:13;9u
-
-# Don't print the inverse "%" partial-line marker before each prompt. Standalone
-# Ghostty handles zsh's PROMPT_SP cursor-control trick correctly, but cmux's
-# embedded libghostty surface drops the cursor mid-line on session switch, which
-# makes the marker render as a stray prompt line above the real prompt.
-# Disabling PROMPT_SP eliminates the "double prompt" artifact.
-setopt_if_exists no_prompt_sp

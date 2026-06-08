@@ -24,6 +24,9 @@ setopt hist_reduce_blanks
 setopt hist_ignore_space
 # Show command with history expansion to user before running it
 setopt hist_verify
+# Hide the inverse "%" partial-line marker that cmux leaves above the prompt on
+# session switch (standalone Ghostty doesn't show it).
+setopt_if_exists no_prompt_sp
 
 # Terminal title
 DISABLE_AUTO_TITLE="true"
