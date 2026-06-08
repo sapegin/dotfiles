@@ -8,12 +8,16 @@ source ~/dotfiles/zsh/key-bindings.zsh
 # Load plugins
 source ~/dotfiles/zsh/plugins/zsh-shift-select.plugin.zsh
 
-# Do not overwrite files when redirecting using ">". Note that you can still override this with ">|"
+# Do not overwrite files when redirecting using ">". Note that you can still
+# override this with ">|"
 set -o noclobber
 
 # Enable extended glob
 setopt extendedglob
+# Case insensitive globbing (to mimic macOS file system behavior)
+setopt no_case_glob
 
+# Allow comments in interactive shells (like Bash does)
 setopt interactive_comments
 
 # Remove older duplicate entries from history
@@ -24,9 +28,10 @@ setopt hist_reduce_blanks
 setopt hist_ignore_space
 # Show command with history expansion to user before running it
 setopt hist_verify
+
 # Hide the inverse "%" partial-line marker that cmux leaves above the prompt on
 # session switch (standalone Ghostty doesn't show it).
-setopt_if_exists no_prompt_sp
+setopt no_prompt_sp
 
 # Terminal title
 DISABLE_AUTO_TITLE="true"

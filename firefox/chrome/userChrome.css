@@ -114,6 +114,27 @@
   }
 }
 
+/* Always show tab close button on hover and never otherwise */
+.tabbrowser-tab .tab-close-button {
+  opacity: 0;
+  transition:
+    opacity 0.15s ease-in,
+    color 0.15s ease-in;
+}
+.tabbrowser-tab .tab-close-button.close-icon {
+  color: var(--gray100) !important;
+}
+.tabbrowser-tab:not([pinned]):hover .tab-close-button {
+  opacity: 1;
+}
+/* tab:where(:hover) {
+  background-color: #0ff !important;
+} */
+.tabbrowser-tab:not([pinned]) .tab-close-button.close-icon:hover {
+  color: var(--gray060) !important;
+  background-color: var(--gray150) !important;
+}
+
 /* Make the protection icon in the address bar grayscale */
 #tracking-protection-icon-container {
   filter: grayscale() !important;
