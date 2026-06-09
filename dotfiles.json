@@ -58,6 +58,11 @@
     "source": "~/dotfiles/ai-rules/AGENTS.md",
     "destination": "~/.codex/AGENTS.md"
   },
+  // Skills (used by Pi, Cursor)
+  {
+    "source": "~/dotfiles/ai-rules/skills/*",
+    "destination": "~/.agents/skills/"
+  },
   // Codex skills
   {
     "source": "~/dotfiles/ai-rules/skills/*",
@@ -82,6 +87,11 @@
   {
     "source": "~/dotfiles/tilde/.pi/agent/keybindings.json",
     "destination": "~/.pi/agent/keybindings.json"
+  },
+  // Pi themes
+  {
+    "source": "~/dotfiles/tilde/.pi/agent/themes",
+    "destination": "~/.pi/agent/themes"
   },
   // Pi base prompt
   {

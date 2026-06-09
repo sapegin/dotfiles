@@ -1,13 +1,11 @@
 {
-  "lastChangelogVersion": "0.78.1",
+  "lastChangelogVersion": "0.79.0",
   "defaultProvider": "openai-codex",
   "defaultModel": "gpt-5.5",
   "defaultThinkingLevel": "medium",
   "quietStartup": true,
   "enableInstallTelemetry": false,
   "enableSkillCommands": true,
-  "skills": ["~/dotfiles/ai-rules/skills"],
-  "themes": ["~/dotfiles/tilde/.pi/agent/themes"],
   "theme": "squirrelsong",
   "packages": ["npm:@gotgenes/pi-permission-system"]
 }

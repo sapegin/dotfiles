@@ -22,6 +22,7 @@
       "head *": "allow",
       "ls *": "allow",
       "nl *": "allow",
+      "cd *": "allow",
       "pnpm exec *": "allow",
       "prettier *": "allow",
       "rm -rf *": "deny",
@@ -49,9 +50,7 @@
     },
     "external_directory": {
       "*": "ask",
-      "~/dotfiles/*": "allow",
-      "~/Library/Application Support/fnm/node-versions/*/@earendil-works/pi-coding-agent/*": "allow",
-      "/opt/homebrew/bin/bash": "allow"
+      "~/dotfiles/*": "allow"
     },
     "third_party_tool": "ask",
     "mcp": "deny"

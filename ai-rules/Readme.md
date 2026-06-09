@@ -37,6 +37,14 @@ Amp reads user-wide skills from `~/.config/agents/skills/` or `~/.config/amp/ski
 
 Copilot does not read `SKILL.md` directories directly. Convert the relevant skill into a prompt file or instructions file. For example, copy the body of `ai-rules/skills/review-code/SKILL.md` into `.github/prompts/review-code.prompt.md` and invoke it from Copilot Chat.
 
+### Cursor
+
+Codex reads user-wide skills from `~/.agents/skills/` or `~/.cursor/skills/`.
+
+### Pi
+
+Codex reads user-wide skills from `~/.agents/skills/` or `~/.pi/agent/skills/`.
+
 ## Commit message instructions
 
 Source of truth: [Commits.md](./Commits.md).
