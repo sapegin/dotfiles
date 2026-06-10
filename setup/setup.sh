@@ -81,10 +81,6 @@ echo
 echo "🐿️ Syncing dotfiles…"
 node $HOME/dotfiles/bin/lib/sync-dotfiles.ts
 
-# Sync color schemes
-echo "🦄 Syncing color themes…"
-$HOME/dotfiles/bin/sync-colors
-
 echo
 echo "🦆 All done! Now, open a new terminal for the changes to take effect."
 

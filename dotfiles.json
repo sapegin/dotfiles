@@ -15,7 +15,12 @@
 //   unanchored unless the pattern uses `^`/`$`). When the entry is a
 //   directory the path is tested with a trailing `/`, so `/$` matches any
 //   directory. `\.DS_Store$` is always ignored.
+// - `runAfter` is an optional shell command to run after the entry has synced.
 [
+  /**
+   * Basic dotfiles
+   */
+
   // ~/dotfiles/tilde/.* → ~/
   {
     "source": "~/dotfiles/tilde/.*",
@@ -33,21 +38,25 @@
     "destination": "~/.config"
   },
 
-  // Convenience symlink: iCloud Documents
-  {
-    "source": "~/Library/Mobile Documents/com~apple~CloudDocs",
-    "destination": "~/cloud"
-  },
-  // Convenience symlink: Obsidian vault
-  {
-    "source": "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Murder",
-    "destination": "~/murder"
-  },
+  /**
+   * App configs
+   */
+
   // Visual Studio Code configs
   {
     "source": "~/dotfiles/vscode/User",
     "destination": "~/Library/Application Support/Code/User"
   },
+  // Photoshop
+  {
+    "source": "~/Library/Mobile Documents/com~apple~CloudDocs/Apps/Adobe Photoshop 2024 Settings",
+    "destination": "~/Library/Preferences/Adobe Photoshop 2024 Settings"
+  },
+
+  /**
+   * AI agents
+   */
+
   // Codex config
   {
     "source": "~/dotfiles/tilde/.codex/config.toml",
@@ -78,27 +87,18 @@
     "source": "~/dotfiles/ai-rules/AGENTS.md",
     "destination": "~/.copilot/instructions/base.instructions.md"
   },
-  // Pi config
+  // Pi configs
   {
-    "source": "~/dotfiles/tilde/.pi/agent/settings.json",
-    "destination": "~/.pi/agent/settings.json"
-  },
-  // Pi keybindings
-  {
-    "source": "~/dotfiles/tilde/.pi/agent/keybindings.json",
-    "destination": "~/.pi/agent/keybindings.json"
-  },
-  // Pi themes
-  {
-    "source": "~/dotfiles/tilde/.pi/agent/themes",
-    "destination": "~/.pi/agent/themes"
+    "source": "~/dotfiles/tilde/.pi/agent/*",
+    "destination": "~/.pi/agent/",
+    "ignore": ["^extensions"]
   },
   // Pi base prompt
   {
     "source": "~/dotfiles/ai-rules/AGENTS.md",
     "destination": "~/.pi/agent/AGENTS.md"
   },
-  // Pi Cmux custom extensions
+  // Pi custom extensions
   {
     "source": "~/dotfiles/tilde/.pi/agent/extensions/*.ts",
     "destination": "~/.pi/agent/extensions/"
@@ -113,12 +113,16 @@
     "source": "~/dotfiles/tilde/.pi/agent/extensions/pi-permission-system/config.json",
     "destination": "~/.pi/agent/extensions/pi-permission-system/config.json"
   },
-  // Photoshop
-  {
-    "source": "~/Library/Mobile Documents/com~apple~CloudDocs/Apps/Adobe Photoshop 2024 Settings",
-    "destination": "~/Library/Preferences/Adobe Photoshop 2024 Settings"
-  },
 
+  /**
+   * Obsidian
+   */
+
+  // Convenience symlink: Obsidian vault
+  {
+    "source": "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Murder",
+    "destination": "~/murder"
+  },
   // Obsidian config backup (plugins and themes are synced separately)
   {
     "source": "~/murder/.obsidian/",
@@ -137,5 +141,45 @@
     "source": "~/murder/bases/",
     "destination": "~/dotfiles/obsidian/bases",
     "mode": "sync"
+  },
+  // Squirrelsong Obsidian theme
+  {
+    "source": "~/_/squirrelsong/themes/Obsidian/Squirrelsong/*",
+    "destination": "~/murder/.obsidian/themes/Squirrelsong/",
+    "mode": "sync"
+  },
+
+  /**
+   * Color themes
+   */
+
+  // Squirrelsong Bat theme
+  {
+    "source": "~/_/squirrelsong/themes/Sublime Text/Squirrelsong Dark Deep Purple/Squirrelsong Dark Deep Purple.tmTheme",
+    "destination": "~/dotfiles/tilde/.config/bat/themes/Squirrelsong Dark Deep Purple.tmTheme",
+    "mode": "sync",
+    "runAfter": "bat cache --build"
+  },
+  // Squirrelsong Ghostty themes
+  {
+    "source": "~/_/squirrelsong/themes/Ghostty/Squirrelsong *",
+    "destination": "~/dotfiles/tilde/.config/ghostty/themes/",
+    "mode": "sync"
+  },
+  // Squirrelsong fzf theme
+  {
+    "source": "~/_/squirrelsong/themes/fzf/fzf-squirrelsong-dark-dp.sh",
+    "destination": "~/dotfiles/colors/fzf-squirrelsong-dark-dp.sh",
+    "mode": "sync"
+  },
+
+  /**
+   * Misc.
+   */
+
+  // Convenience symlink: iCloud Documents
+  {
+    "source": "~/Library/Mobile Documents/com~apple~CloudDocs",
+    "destination": "~/cloud"
   }
 ]

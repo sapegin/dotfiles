@@ -121,6 +121,7 @@ async function syncEntry(entry: DotfileEntry): Promise<void> {
   const mode: EntryMode = entry.mode ?? 'link';
   const source = untildify(entry.source);
   const destination = untildify(entry.destination);
+
   // Trailing slash on `source` (raw, before normalization) means: two-way sync
   // the whole folder via `syncFolder`. Only valid with `mode: "sync"`.
   const sourceIsFolder = entry.source.endsWith('/');
@@ -160,6 +161,8 @@ async function syncEntry(entry: DotfileEntry): Promise<void> {
         .map((dirent) => path.join(dirent.parentPath, dirent.name))
     : [source];
 
+  let didProcessEntry = false;
+
   for (const sourcePath of sourcePaths) {
     const destinationPath = sourceIsGlob
       ? path.join(destination, path.basename(sourcePath))
@@ -176,6 +179,7 @@ async function syncEntry(entry: DotfileEntry): Promise<void> {
       if (result === 'pushed') {
         pushedBack++;
       }
+      didProcessEntry = true;
       continue;
     }
 
@@ -204,8 +208,13 @@ async function syncEntry(entry: DotfileEntry): Promise<void> {
 
     // Create a symlink
     fs.symlinkSync(sourcePath, destinationPath);
+    didProcessEntry = true;
 
     console.log(` ${tildify(destinationPath)}`);
+  }
+
+  if (didProcessEntry) {
+    runAfterCommand(entry);
   }
 }
 

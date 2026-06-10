@@ -1,9 +1,9 @@
-// Two-way file and folder syncing utility shared between bin/sync-dotfiles and
-// bin/sync-colors. For a single file pair, the side with the newer mtime
-// overwrites the other; identical contents are skipped regardless of mtime. For
-// folder pairs, files present on only one side are treated as additions on that
-// side (and propagated) or deletions on the other side (reported only, never
-// removed — `src` is treated as authoritative).
+// Two-way file and folder syncing utility used by bin/sync-dotfiles. For a
+// single file pair, the side with the newer mtime overwrites the other;
+// identical contents are skipped regardless of mtime. For folder pairs, files
+// present on only one side are treated as additions on that side (and
+// propagated) or deletions on the other side (reported only, never removed —
+// `src` is treated as authoritative).
 //
 // ---
 // Author: Artem Sapegin, sapegin.me
@@ -140,7 +140,10 @@ async function syncFileQuiet(src: string, dest: string): Promise<SyncResult> {
  */
 export async function syncFile(src: string, dest: string): Promise<SyncResult> {
   const result = await syncFileQuiet(src, dest);
-  printResult(result, path.basename(src));
+  const displayPath = path.resolve(
+    result === 'pushed' || result === 'missing' ? src : dest
+  );
+  printResult(result, displayPath);
   return result;
 }
 
@@ -189,7 +192,8 @@ export async function syncFolder(
       // Only in `dest` — report, do not remove.
       result = 'deleted';
     }
-    printResult(result, relPath);
+    const displayPath = path.resolve(result === 'pushed' ? srcPath : destPath);
+    printResult(result, displayPath);
     entries.push({ path: relPath, result });
   }
 
