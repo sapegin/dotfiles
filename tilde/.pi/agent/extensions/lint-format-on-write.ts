@@ -42,7 +42,11 @@ export default function lintFormatOnWrite(pi: ExtensionAPI) {
       return;
     }
 
-    const eslintCheckResult = await runCommand(eslintCheckCommand, filePath, ctx);
+    const eslintCheckResult = await runCommand(
+      eslintCheckCommand,
+      filePath,
+      ctx
+    );
     const eslintCheckErrors = formatEslintErrors(eslintCheckResult);
     if (!eslintCheckErrors) {
       await runCommand(prettierCommand, filePath, ctx);

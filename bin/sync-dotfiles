@@ -9,4 +9,4 @@
 # https://github.com/sapegin/dotfiles
 
 set -euo pipefail
-exec node "$(dirname "$0")/lib/sync-dotfiles.ts" "$@"
+exec node "$(dirname "$0")/src/bin/sync-dotfiles.ts" "$@"

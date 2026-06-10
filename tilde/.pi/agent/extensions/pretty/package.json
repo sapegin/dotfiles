@@ -4,6 +4,9 @@
   "private": true,
   "description": "Minimal Pi extension that prettifies built-in tool output",
   "type": "module",
+  "dependencies": {
+    "diff": "9.0.0"
+  },
   "peerDependencies": {
     "@earendil-works/pi-coding-agent": "*",
     "@earendil-works/pi-tui": "*"
@@ -12,8 +15,5 @@
     "extensions": [
       "./index.ts"
     ]
-  },
-  "dependencies": {
-    "diff": "9.0.0"
   }
 }

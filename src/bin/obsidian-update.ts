@@ -20,7 +20,7 @@ import { setTimeout } from 'node:timers/promises';
 import ExifReader from 'exifreader';
 import sharp from 'sharp';
 import YAML from 'yaml';
-import { atomicWrite } from './atomic-write.ts';
+import { atomicWrite } from '../util/atomicWrite.ts';
 
 // TC39 stage 4, shipped in Node 24, not yet in TypeScript's lib.esnext.
 declare global {

@@ -11,11 +11,11 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import readline from 'node:readline/promises';
-import { gitPullIfClean } from './gitPullIfClean.ts';
-import { logError, logWarn } from './log.ts';
-import { stripJsonComments } from './strip-json-comments.ts';
-import { isIgnored, syncFile, syncFolder } from './syncFile.ts';
-import { tildify, untildify } from './tildify.ts';
+import { gitPullIfClean } from '../util/gitPullIfClean.ts';
+import { logError, logWarn } from '../util/log.ts';
+import { stripJsonComments } from '../util/stripJsonComments.ts';
+import { isIgnored, syncFile, syncFolder } from '../util/syncFile.ts';
+import { tildify, untildify } from '../util/tildify.ts';
 
 // TODO: Add --verbose mode that shows all files including ignored ones and ones that didn't need sync
 

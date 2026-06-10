@@ -12,7 +12,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { atomicCopy } from './atomic-write.ts';
+import { atomicCopy } from '../util/atomicWrite.ts';
 
 const PLUGINS_REPO = path.join(os.homedir(), '_/raccoon-obsidian');
 const PLUGINS_DIR = path.join(PLUGINS_REPO, 'plugins');

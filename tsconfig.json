@@ -13,5 +13,5 @@
     "allowImportingTsExtensions": true,
     "types": ["node"]
   },
-  "include": ["bin/**/*.ts", "alfred/**/*.ts", "*.config.ts"]
+  "include": ["src/**/*.ts", "*.config.ts"]
 }

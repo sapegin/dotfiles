@@ -1,8 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { expect, test } from 'vitest';
-
-import { stripJsonComments } from './strip-json-comments.ts';
+import { stripJsonComments } from './stripJsonComments.ts';
 
 const repoRoot = path.resolve(import.meta.dirname, '../..');
 
@@ -14,8 +13,8 @@ test('removes line comments', () => {
   const output = stripJsonComments(input);
 
   expect(output).toBe(`{
-  
-  "a": 1 
+
+  "a": 1
 }`);
   expect(JSON.parse(output)).toStrictEqual({ a: 1 });
 });
@@ -28,7 +27,7 @@ test('removes block comments', () => {
   const output = stripJsonComments(input);
 
   expect(output).toBe(`{
-  
+
   "a": 1
 }`);
   expect(JSON.parse(output)).toStrictEqual({ a: 1 });

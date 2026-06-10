@@ -13,8 +13,5 @@ export default defineConfig({
     // Many scripts use process.exit()
     'unicorn/no-process-exit': 'off',
   },
-  ignorePatterns: [
-    'vscode/*',
-    'obsidian/*',
-  ],
+  ignorePatterns: ['vscode/*', 'obsidian/*'],
 });
