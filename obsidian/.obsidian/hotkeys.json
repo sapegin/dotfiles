@@ -243,5 +243,14 @@
       ],
       "key": "\\"
     }
+  ],
+  "markdown:add-metadata-property": [],
+  "add-note-property:add-note-property": [
+    {
+      "modifiers": [
+        "Mod"
+      ],
+      "key": ";"
+    }
   ]
 }
