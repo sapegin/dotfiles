@@ -43,7 +43,7 @@ function toolIcon(theme: Theme, status: FrameStatus): string {
 }
 
 function toolTitle(theme: Theme, name: string, value: string): string {
-  return `${theme.fg('toolTitle', theme.bold(name))} ${theme.fg('accent', value)}`;
+  return `${theme.fg('toolTitle', theme.bold(name))} ${theme.fg('muted', value)}`;
 }
 
 function frameWidth(): number {
@@ -126,6 +126,84 @@ function summarizeAll(theme: Theme, diffs: DiffStats[]): string {
   return summarizeDiff(theme, added, removed);
 }
 
+/**
+ * After tools run, Pi emits a separate assistant message for the user-facing
+ * reply. Prepend a markdown horizontal rule so it is visually separated from
+ * the thinking and tool output above.
+ */
+const REPLY_SEPARATOR = '---\n\n';
+
+let pendingReplySeparator = false;
+
+function hasToolCalls(message: {
+  content: readonly { type: string }[];
+}): boolean {
+  return message.content.some((block) => block.type === 'toolCall');
+}
+
+function firstTextBlockIndex(message: {
+  content: readonly { type: string; text?: string }[];
+}): number {
+  return message.content.findIndex(
+    (block) => block.type === 'text' && block.text?.trim()
+  );
+}
+
+function withReplySeparator<
+  T extends { role: string; content: { type: string; text?: string }[] },
+>(message: T): T {
+  const index = firstTextBlockIndex(message);
+  if (index === -1) {
+    return message;
+  }
+
+  const textBlock = message.content[index];
+  if (textBlock.type !== 'text' || !textBlock.text) {
+    return message;
+  }
+
+  if (textBlock.text.startsWith(REPLY_SEPARATOR)) {
+    return message;
+  }
+
+  return {
+    ...message,
+    content: message.content.map((block, blockIndex) =>
+      blockIndex === index && block.type === 'text'
+        ? { ...block, text: `${REPLY_SEPARATOR}${block.text?.trimStart()}` }
+        : block
+    ),
+  };
+}
+
+function registerReplySeparator(pi: ExtensionAPI): void {
+  pi.on('agent_start', () => {
+    pendingReplySeparator = false;
+  });
+
+  pi.on('turn_end', (event) => {
+    if (event.toolResults.length > 0) {
+      pendingReplySeparator = true;
+    }
+  });
+
+  pi.on('message_end', (event) => {
+    if (!pendingReplySeparator || event.message.role !== 'assistant') {
+      return;
+    }
+
+    if (
+      hasToolCalls(event.message) ||
+      firstTextBlockIndex(event.message) === -1
+    ) {
+      return;
+    }
+
+    pendingReplySeparator = false;
+    return { message: withReplySeparator(event.message) };
+  });
+}
+
 export default function pretty(pi: ExtensionAPI) {
   const cwd = process.cwd();
   registerRead(pi, cwd);
@@ -135,6 +213,7 @@ export default function pretty(pi: ExtensionAPI) {
   registerLs(pi, cwd);
   registerWrite(pi, cwd);
   registerEdit(pi, cwd);
+  registerReplySeparator(pi);
 }
 
 function basicToolHeading(
@@ -151,7 +230,7 @@ function basicToolHeading(
       [
         toolIcon(theme, status),
         titleToDisplay,
-        extra ? theme.fg('dim', extra) : undefined,
+        extra ? theme.fg('dim', theme.italic(extra)) : undefined,
       ]
         .filter(Boolean)
         .join(' '),
