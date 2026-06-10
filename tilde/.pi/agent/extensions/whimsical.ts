@@ -27,7 +27,6 @@ const messages = [
   'Jiggling…',
   'Wiggling…',
   'Meandering…',
-  'Moseying…',
   'Bumbling…',
   'Bamboozling…',
   'Discombobulating…',
@@ -170,7 +169,6 @@ const messages = [
   'Receiving transmissions from the cloud…',
   'Asking the hamsters to run faster…',
   'Convincing the pixels to cooperate…',
-  'Teaching electrons new tricks…',
   'Bribing the byte fairies…',
   'Whispering passwords to the void…',
   'Negotiating with cosmic rays…',
@@ -224,6 +222,7 @@ const messages = [
   'Counting sheep…',
   'Yelling at a cloud…',
   'Playing with fonts…',
+  'Playing with fire…',
   'Pushing pixels…',
   'Sacrificing a lamb…',
   'Praying to His Noodliness…',
@@ -252,9 +251,13 @@ const messages = [
   'Converting spaces to tabs…',
   'Plotting…',
   'Scheming…',
-  'Wondering of existence of god…',
+  'Wondering whether god exists…',
   'Questioning motives…',
   'Thinking of lunch…',
+  'Grokking algorithms…',
+  'Expecto patronum…',
+  'Avada kedavra…',
+  'Killing two birds with one stone…',
 ];
 
 function pickRandom(): string {
