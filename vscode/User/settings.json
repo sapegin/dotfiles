@@ -123,6 +123,7 @@
   "git.enableSmartCommit": true,
   "git.mergeEditor": true,
   "git.openRepositoryInParentFolders": "always",
+  "files.simpleDialog.enable": true,
   "json.schemaDownload.trustedDomains": {
     "https://developer.microsoft.com/json-schemas/": true,
     "https://json-schema.org/": true,
