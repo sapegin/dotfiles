@@ -18,7 +18,12 @@ import {
   createWriteTool,
   highlightCode,
 } from '@earendil-works/pi-coding-agent';
-import { truncateToWidth, Text, type Component, visibleWidth } from '@earendil-works/pi-tui';
+import {
+  truncateToWidth,
+  Text,
+  type Component,
+  visibleWidth,
+} from '@earendil-works/pi-tui';
 
 /** Diff summary stats. */
 export interface DiffStats {
@@ -124,7 +129,7 @@ function getSessionCost(ctx: ExtensionContext): number {
 
 function formatContextUsageLabel(
   ctx: ExtensionContext,
-  autoCompactEnabled: boolean,
+  autoCompactEnabled: boolean
 ): { label: string; percent: number | null } {
   const contextUsage = ctx.getContextUsage();
   const contextWindow =
@@ -147,7 +152,7 @@ function formatStatsLine(
   theme: Theme,
   costLabel: string | undefined,
   contextLabel: string,
-  contextPercent: number | null,
+  contextPercent: number | null
 ): string {
   const plainStats = [costLabel, contextLabel].filter(Boolean).join(' ');
 
@@ -166,7 +171,7 @@ function renderPrettyFooter(
   theme: Theme,
   footerData: ReadonlyFooterDataProvider,
   width: number,
-  autoCompactEnabled: boolean,
+  autoCompactEnabled: boolean
 ): string[] {
   const cwd = tildify(ctx.sessionManager.getCwd());
   const branch = footerData.getGitBranch();
@@ -179,17 +184,15 @@ function renderPrettyFooter(
           'dim',
           thinkingLevel === 'off'
             ? `${modelName} • thinking off`
-            : `${modelName} • ${thinkingLevel}`,
+            : `${modelName} • ${thinkingLevel}`
         )
       : theme.fg('dim', modelName);
 
   const totalCost = getSessionCost(ctx);
   const usingSubscription =
     ctx.model === undefined ? false : ctx.modelRegistry.isUsingOAuth(ctx.model);
-  const { label: contextLabel, percent: contextPercent } = formatContextUsageLabel(
-    ctx,
-    autoCompactEnabled,
-  );
+  const { label: contextLabel, percent: contextPercent } =
+    formatContextUsageLabel(ctx, autoCompactEnabled);
   const costLabel =
     totalCost > 0 || usingSubscription
       ? `$${totalCost.toFixed(2)}${usingSubscription ? ' (sub)' : ''}`
@@ -199,7 +202,7 @@ function renderPrettyFooter(
     theme,
     costLabel,
     contextLabel,
-    contextPercent,
+    contextPercent
   );
   const statsLine =
     branch === null
@@ -248,7 +251,7 @@ function registerFooter(pi: ExtensionAPI): void {
             theme,
             footerData,
             width,
-            true,
+            true
           );
         },
       };
@@ -447,11 +450,7 @@ function basicToolHeading(
   const titleToDisplay = truncateToWidth(titleAnsi, maxWidth, '…');
   return [
     ' ' +
-      [
-        toolIcon(theme, status),
-        titleToDisplay,
-        extra ? theme.fg('dim', theme.italic(extra)) : undefined,
-      ]
+      [toolIcon(theme, status), titleToDisplay, extra]
         .filter(Boolean)
         .join(' '),
     error ? formatError(theme, error) : undefined,
@@ -518,7 +517,9 @@ function registerFind(pi: ExtensionAPI, cwd: string): void {
           theme,
           toolTitle(theme, 'Find', pattern),
           getFrameStatus(ctx),
-          ctx.isPartial ? undefined : `${countLines(content)} items`,
+          ctx.isPartial
+            ? undefined
+            : theme.fg('dim', theme.italic(`${countLines(content)} items`)),
           ctx.isError ? content : undefined
         )
       );
@@ -548,7 +549,9 @@ function registerGrep(pi: ExtensionAPI, cwd: string): void {
           theme,
           toolTitle(theme, 'Grep', pattern),
           getFrameStatus(ctx),
-          ctx.isPartial ? undefined : `${countLines(content)} items`,
+          ctx.isPartial
+            ? undefined
+            : theme.fg('dim', theme.italic(`${countLines(content)} items`)),
           ctx.isError ? content : undefined
         )
       );
@@ -578,7 +581,9 @@ function registerLs(pi: ExtensionAPI, cwd: string): void {
           theme,
           toolTitle(theme, 'List', root),
           getFrameStatus(ctx),
-          ctx.isPartial ? undefined : `${countLines(content)} items`,
+          ctx.isPartial
+            ? undefined
+            : theme.fg('dim', theme.italic(`${countLines(content)} items`)),
           ctx.isError ? content : undefined
         )
       );
