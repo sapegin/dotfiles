@@ -1,5 +1,10 @@
+function replaceCommentCharacter(character: string): string {
+  return character === '\n' ? '\n' : ' ';
+}
+
 /**
- * Strips comments in a JSON file.
+ * Strips comments in a JSON file by replacing them with spaces so line and
+ * column positions stay aligned with the original file.
  */
 export function stripJsonComments(json: string) {
   let result = '';
@@ -35,8 +40,10 @@ export function stripJsonComments(json: string) {
 
     if (char === '/' && nextChar === '/') {
       index += 2;
+      result += '  ';
 
       while (index < json.length && json[index] !== '\n') {
+        result += replaceCommentCharacter(json[index]);
         index++;
       }
 
@@ -45,13 +52,16 @@ export function stripJsonComments(json: string) {
 
     if (char === '/' && nextChar === '*') {
       index += 2;
+      result += '  ';
 
       while (index < json.length) {
         if (json[index] === '*' && json[index + 1] === '/') {
+          result += '  ';
           index += 2;
           break;
         }
 
+        result += replaceCommentCharacter(json[index]);
         index++;
       }
 
