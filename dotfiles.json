@@ -1,4 +1,4 @@
-// Sync configuration for bin/lib/sync-dotfiles.ts.
+// Sync configuration for sync-dotfiles.ts.
 //
 // Each entry links or syncs `source` to `destination`:
 // - `mode: "link"` (default) creates a symlink at `destination`.
@@ -101,7 +101,8 @@
   // Pi custom extensions
   {
     "source": "~/dotfiles/pi/agent/extensions/*.ts",
-    "destination": "~/.pi/agent/extensions/"
+    "destination": "~/.pi/agent/extensions/",
+    "ignore": ["\\.test\\.ts$"]
   },
   // Pi Permission System extension config
   {

@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "0.79.0",
+  "lastChangelogVersion": "0.79.1",
   "defaultProvider": "openai-codex",
   "defaultModel": "gpt-5.5",
   "defaultThinkingLevel": "medium",
@@ -7,5 +7,7 @@
   "enableInstallTelemetry": false,
   "enableSkillCommands": true,
   "theme": "squirrelsong",
-  "packages": ["npm:@gotgenes/pi-permission-system"]
+  "packages": [
+    "npm:@gotgenes/pi-permission-system"
+  ]
 }
