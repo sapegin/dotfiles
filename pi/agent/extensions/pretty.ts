@@ -1,3 +1,7 @@
+/*
+ * Minimal Pi extension to prettify built-in tool rendering inspired by Amp.
+ */
+
 // oxlint-disable unicorn/no-nested-ternary
 import os from 'node:os';
 import {
@@ -13,12 +17,71 @@ import {
   highlightCode,
 } from '@earendil-works/pi-coding-agent';
 import { truncateToWidth, Text, type Component } from '@earendil-works/pi-tui';
-import * as Diff from 'diff';
 
 /** Diff summary stats. */
 export interface DiffStats {
   added: number;
   removed: number;
+}
+
+/**
+ * Tokenize text the same way the `diff` package's `diffLines` does:
+ * split on newlines, drop the trailing empty segment when the string
+ * ends with a newline, and keep each line's terminator on the token.
+ */
+function tokenizeLines(value: string): string[] {
+  const linesAndNewlines = value.split(/(\n|\r\n)/);
+
+  if (linesAndNewlines.at(-1) === '') {
+    linesAndNewlines.pop();
+  }
+
+  return linesAndNewlines.reduce<string[]>((lines, line, index) => {
+    if (index % 2 === 1) {
+      const lastIndex = lines.length - 1;
+      return [...lines.slice(0, lastIndex), `${lines[lastIndex]}${line}`];
+    }
+
+    return [...lines, line];
+  }, []);
+}
+
+function longestCommonSubsequenceLength(
+  oldLines: readonly string[],
+  newLines: readonly string[]
+): number {
+  const previous = Array.from({ length: newLines.length + 1 }, () => 0);
+  const current = Array.from({ length: newLines.length + 1 }, () => 0);
+
+  for (const oldLine of oldLines) {
+    for (const [index, newLine] of newLines.entries()) {
+      const column = index + 1;
+      current[column] =
+        oldLine === newLine
+          ? previous[index] + 1
+          : Math.max(previous[column], current[index]);
+    }
+
+    previous.splice(0, previous.length, ...current);
+    current.fill(0);
+  }
+
+  return previous[newLines.length] ?? 0;
+}
+
+/** Count added and removed lines between two strings. */
+export function getLineDiffStats(
+  oldContent: string,
+  newContent: string
+): DiffStats {
+  const oldLines = tokenizeLines(oldContent);
+  const newLines = tokenizeLines(newContent);
+  const unchanged = longestCommonSubsequenceLength(oldLines, newLines);
+
+  return {
+    added: newLines.length - unchanged,
+    removed: oldLines.length - unchanged,
+  };
 }
 
 /** Visual status of a tool execution, used to color the frame chrome. */
@@ -83,29 +146,6 @@ export function getFrameStatus(ctx: {
     return 'pending';
   }
   return 'success';
-}
-
-/**
- * Returns added/removed lines stats for a diff.
- */
-function getDiffStats(oldContent: string, newContent: string): DiffStats {
-  const patch = Diff.structuredPatch('', '', oldContent, newContent, '', '');
-  let added = 0;
-  let removed = 0;
-  for (const hunk of patch.hunks) {
-    for (const raw of hunk.lines) {
-      const character = raw[0];
-      if (character === '+') {
-        added++;
-      } else if (character === '-') {
-        removed++;
-      }
-    }
-  }
-  return {
-    added,
-    removed,
-  };
 }
 
 /** Compact `+N -M` summary string with diff fg colors. */
@@ -450,7 +490,7 @@ function registerEdit(pi: ExtensionAPI, cwd: string): void {
 
       const filepath = ctx.args.path;
       const stats = ctx.args.edits.map((edit) =>
-        getDiffStats(edit.oldText, edit.newText)
+        getLineDiffStats(edit.oldText, edit.newText)
       );
       const summary = summarizeAll(theme, stats);
 

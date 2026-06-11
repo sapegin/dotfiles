@@ -103,11 +103,6 @@
     "source": "~/dotfiles/pi/agent/extensions/*.ts",
     "destination": "~/.pi/agent/extensions/"
   },
-  // Pi Pretty extension
-  {
-    "source": "~/dotfiles/pi/agent/extensions/pretty",
-    "destination": "~/.pi/agent/extensions/pretty"
-  },
   // Pi Permission System extension config
   {
     "source": "~/dotfiles/pi/agent/extensions/pi-permission-system/config.json",
