@@ -8,9 +8,9 @@
 // https://github.com/sapegin/dotfiles
 //
 
-import path from 'node:path';
 import fs from 'node:fs';
 import os from 'node:os';
+import path from 'node:path';
 
 const BIN_DIR = `${os.homedir()}/dotfiles/bin`;
 const DOCS_DIR = `${os.homedir()}/dotfiles/docs`;
@@ -18,42 +18,42 @@ const DOCS_DIR = `${os.homedir()}/dotfiles/docs`;
 export const query = process.argv[2];
 
 function read(file) {
-	return fs.readFileSync(file, 'utf8');
+  return fs.readFileSync(file, 'utf8');
 }
 
 function getDocs(source, name) {
-	const commentRaw = source.match(/((?:(?:\/\/|#)\s+[^\n]+\n)+)/m);
-	if (commentRaw === null) {
-		return '';
-	}
+  const commentRaw = source.match(/((?:(?:\/\/|#)\s+[^\n]+\n)+)/m);
+  if (commentRaw === null) {
+    return '';
+  }
 
-	const comment = commentRaw[1].replace(/(^|\n)(?:\/\/|#)\s*/gm, '\n');
+  const comment = commentRaw[1].replaceAll(/(^|\n)(?:\/\/|#)\s*/gm, '\n');
 
-	const [docs] = comment.split('---');
+  const [docs] = comment.split('---');
 
-	return `# ${name}\n\n> ${docs.trim()}`;
+  return `# ${name}\n\n> ${docs.trim()}`;
 }
 
 // Check for Markdown file
 const mdFilePath = `${DOCS_DIR}/${query}.md`;
 if (fs.existsSync(mdFilePath)) {
-	console.log(mdFilePath);
-	process.exit(0);
+  console.log(mdFilePath);
+  process.exit(0);
 }
 
 // Check for a script
 const binFilePath = `${BIN_DIR}/${query}`;
 if (fs.existsSync(binFilePath)) {
-	const source = read(binFilePath);
-	const docs = getDocs(source, query);
+  const source = read(binFilePath);
+  const docs = getDocs(source, query);
 
-	if (docs) {
-		const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotfiles-'));
-		const tempMdFile = path.join(tempDir, `${query}.md`);
-		fs.writeFileSync(tempMdFile, docs);
+  if (docs) {
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotfiles-'));
+    const tempMdFile = path.join(tempDir, `${query}.md`);
+    fs.writeFileSync(tempMdFile, docs);
 
-		console.log(tempMdFile);
-	}
+    console.log(tempMdFile);
+  }
 
-	process.exit(0);
+  process.exit(0);
 }

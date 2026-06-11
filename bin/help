@@ -19,7 +19,7 @@ root="$(dirname $(dirname $0))"
 config="$root/tilde/.tlrc.toml"
 
 if [[ "$1" != "" ]]; then
-	md="$($root/bin/lib/get-tldr-md $1)"
+	md="$(node $root/src/bin/get-tldr-md.mjs $1)"
 else
 	md="$root/docs/Readme.md"
 fi
