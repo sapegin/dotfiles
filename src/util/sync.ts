@@ -4,11 +4,6 @@
 // present on only one side are treated as additions on that side (and
 // propagated) or deletions on the other side (reported only, never removed —
 // `src` is treated as authoritative).
-//
-// ---
-// Author: Artem Sapegin, sapegin.me
-// License: MIT
-// https://github.com/sapegin/dotfiles
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
