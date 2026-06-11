@@ -31,8 +31,8 @@ declare global {
 
 const VAULT_DIR = path.join(os.homedir(), 'murder');
 const ATTACHMENTS_DIR = path.join(VAULT_DIR, 'attachments');
-const TRASH_DIR = path.join(os.homedir(), 'obsidian-trash');
-const BACKUP_DIR = path.join(os.homedir(), 'obsidian-backup');
+const TRASH_DIR = path.join(os.homedir(), '.obsidian-trash');
+const BACKUP_DIR = path.join(os.homedir(), '.obsidian-backup');
 const MAX_DIMENSION = 2048;
 const MAX_FILE_SIZE = 1024 * 1024; // 1 MB
 const MAX_LARGE_FILE_SIZE = MAX_FILE_SIZE * 0.5; // 0.5 MB
