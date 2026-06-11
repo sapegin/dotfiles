@@ -7,14 +7,21 @@
 // https://github.com/sapegin/dotfiles
 
 import { execSync } from 'node:child_process';
-import fs from 'node:fs';
+import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import readline from 'node:readline/promises';
 import { gitPullIfClean } from '../util/gitPullIfClean.ts';
 import { logError, logWarn } from '../util/log.ts';
 import { stripJsonComments } from '../util/stripJsonComments.ts';
-import { isIgnored, syncFile, syncFolder } from '../util/syncFile.ts';
+import {
+  isIgnored,
+  syncFile,
+  syncFolder,
+  syncLink,
+  didFilesChange,
+  type SyncEntry,
+} from '../util/syncFile.ts';
 import { tildify, untildify } from '../util/tildify.ts';
 
 // TODO: Add --verbose mode that shows all files including ignored ones and ones that didn't need sync
@@ -38,7 +45,6 @@ const CONFIG_FILE = path.join(REPO_ROOT, 'dotfiles.json');
 /** Always-on ignore patterns, merged with each entry's `ignore`. */
 const BASE_IGNORE = ['\\.DS_Store$'];
 
-let pushedBack = 0;
 /** Git repos already pulled this run, so each is pulled at most once. */
 const pulledRepos = new Set<string>();
 
@@ -47,11 +53,14 @@ function isGlob(pattern: string): boolean {
 }
 
 /** Walk up from `start` to the nearest directory containing `.git`. */
-function findGitRoot(start: string): string | undefined {
+async function findGitRoot(start: string): Promise<string | undefined> {
   let dir = start;
   while (true) {
-    if (fs.existsSync(path.join(dir, '.git'))) {
+    try {
+      await fs.access(path.join(dir, '.git'));
       return dir;
+    } catch {
+      // Not a Git root
     }
     const parent = path.dirname(dir);
     if (parent === dir) {
@@ -66,40 +75,41 @@ function findGitRoot(start: string): string | undefined {
  * itself is skipped (you don't auto-pull the repo you're editing) and sources
  * outside any repo are ignored.
  */
-function pullSourceRepo(source: string): void {
-  const cwd =
-    fs.existsSync(source) && fs.statSync(source).isDirectory()
-      ? source
-      : path.dirname(source);
-  const repoRoot = findGitRoot(cwd);
+async function pullSourceRepo(source: string): Promise<void> {
+  let cwd = path.dirname(source);
+  try {
+    const stat = await fs.stat(source);
+    if (stat.isDirectory()) {
+      cwd = source;
+    }
+  } catch {
+    // Use dirname
+  }
+  const repoRoot = await findGitRoot(cwd);
   if (!repoRoot || repoRoot === REPO_ROOT || pulledRepos.has(repoRoot)) {
     return;
   }
   pulledRepos.add(repoRoot);
-  console.log(`🔄 Pulling ${tildify(repoRoot)}…`);
+  console.log(`\n󰓂 Pulling ${tildify(repoRoot)}…`);
   gitPullIfClean(repoRoot);
 }
 
 /** Run an entry's optional follow-up shell command. */
-function runAfterCommand(entry: DotfileEntry): void {
-  if (entry.runAfter) {
-    console.log(`   ⚙ ${entry.runAfter}`);
-    execSync(entry.runAfter, { stdio: 'inherit' });
+function runAfterCommand(
+  entry: DotfileEntry,
+  results: readonly SyncEntry[]
+): void {
+  if (!entry.runAfter || didFilesChange(results) === false) {
+    return;
   }
+
+  console.log(`   ⚙ ${entry.runAfter}`);
+  execSync(entry.runAfter, { stdio: 'inherit' });
 }
 
-function readConfig(): DotfileEntry[] {
-  const raw = fs.readFileSync(CONFIG_FILE, 'utf8');
+async function readConfig(): Promise<DotfileEntry[]> {
+  const raw = await fs.readFile(CONFIG_FILE, 'utf8');
   return JSON.parse(stripJsonComments(raw)) as DotfileEntry[];
-}
-
-function isSymlinkTo(link: string, dest: string): boolean {
-  const statLink = fs.lstatSync(link);
-  if (statLink.isSymbolicLink() === false) {
-    return false;
-  }
-
-  return fs.realpathSync(link) === fs.realpathSync(dest);
 }
 
 async function confirmAction(message: string): Promise<boolean> {
@@ -128,7 +138,9 @@ async function syncEntry(entry: DotfileEntry): Promise<void> {
   const sourceIsGlob = isGlob(source);
   const ignorePatterns = [...BASE_IGNORE, ...(entry.ignore ?? [])];
 
-  pullSourceRepo(source);
+  await pullSourceRepo(source);
+
+  const results: SyncEntry[] = [];
 
   if (sourceIsFolder) {
     if (mode !== 'sync') {
@@ -137,100 +149,56 @@ async function syncEntry(entry: DotfileEntry): Promise<void> {
       );
       return;
     }
-    if (fs.existsSync(source) === false) {
+    try {
+      await fs.access(source);
+    } catch {
       logError(`✕ ${source}\n  ↪ Source not found!`);
       return;
     }
-    const results = await syncFolder(source, destination, ignorePatterns);
-    for (const { result } of results) {
-      if (result === 'pushed') {
-        pushedBack++;
-      }
-    }
-    runAfterCommand(entry);
+    results.push(...(await syncFolder(source, destination, ignorePatterns)));
+    runAfterCommand(entry, results);
     return;
   }
 
-  const sourcePaths = sourceIsGlob
-    ? fs
-        .globSync(source, { withFileTypes: true })
-        .filter(
-          (dirent) =>
-            !isIgnored(dirent.name, ignorePatterns, dirent.isDirectory())
-        )
-        .map((dirent) => path.join(dirent.parentPath, dirent.name))
-    : [source];
-
-  let didProcessEntry = false;
+  let sourcePaths: string[];
+  if (sourceIsGlob) {
+    const globMatches = await Array.fromAsync(
+      fs.glob(source, { withFileTypes: true })
+    );
+    sourcePaths = globMatches
+      .filter(
+        (dirent) =>
+          !isIgnored(dirent.name, ignorePatterns, dirent.isDirectory())
+      )
+      .map((dirent) => path.join(dirent.parentPath, dirent.name));
+  } else {
+    sourcePaths = [source];
+  }
 
   for (const sourcePath of sourcePaths) {
     const destinationPath = sourceIsGlob
       ? path.join(destination, path.basename(sourcePath))
       : destination;
 
-    // Check that the source exists
-    if (fs.existsSync(sourcePath) === false) {
-      logError(`✕ ${sourcePath}\n  ↪ Source not found!`);
-      continue;
-    }
-
     if (mode === 'sync') {
-      const result = await syncFile(sourcePath, destinationPath);
-      if (result === 'pushed') {
-        pushedBack++;
-      }
-      didProcessEntry = true;
-      continue;
+      results.push(await syncFile(sourcePath, destinationPath));
+    } else {
+      results.push(await syncLink(sourcePath, destinationPath, confirmAction));
     }
-
-    // Check that we aren't overwriting anything
-    if (fs.existsSync(destinationPath)) {
-      // Already a symlink to dotfiles?
-      if (isSymlinkTo(destinationPath, sourcePath)) {
-        continue;
-      }
-
-      // Should overwrite?
-      const shouldOverwrite = await confirmAction(
-        `File already exists: ${destinationPath}. Overwrite?`
-      );
-      if (shouldOverwrite === false) {
-        console.log('Skipping…');
-        continue;
-      }
-
-      // Remove
-      fs.rmSync(destinationPath, { recursive: true, force: true });
-    }
-
-    // Create a folder if needed
-    fs.mkdirSync(path.dirname(destinationPath), { recursive: true });
-
-    // Create a symlink
-    fs.symlinkSync(sourcePath, destinationPath);
-    didProcessEntry = true;
-
-    console.log(` ${tildify(destinationPath)}`);
   }
 
-  if (didProcessEntry) {
-    runAfterCommand(entry);
-  }
+  runAfterCommand(entry, results);
 }
 
 async function main(): Promise<void> {
-  console.log('Syncing dotfiles…');
-  const entries = readConfig();
+  console.log('Syncing dotfiles…\n');
+
+  const entries = await readConfig();
   for (const entry of entries) {
     await syncEntry(entry);
   }
-  if (pushedBack > 0) {
-    console.log();
-    console.log(
-      `💿 ${pushedBack} files pushed back to the source; commit and push them.`
-    );
-  }
-  console.log('Done.');
+
+  console.log('\n Done.');
 }
 
 try {

@@ -17,16 +17,28 @@ import { tildify } from './tildify.ts';
 
 export type SyncResult =
   | 'missing' // `src` does not exist (single-file mode only)
-  | 'equal' // contents already match
+  | 'equal' // contents already match, or symlink already correct
   | 'pulled' // `src` newer, `dest` was overwritten
   | 'pushed' // `dest` newer, `src` was overwritten
   | 'added' // file only in `src`, copied to `dest`
+  | 'linked' // symlink created or restored at `dest`
   | 'deleted'; // file only in `dest`, reported but not removed
 
-export interface FolderSyncEntry {
-  /** Path relative to the synced folder root. */
+export interface SyncEntry {
+  /** Path shown in logs (usually destination-side). */
   path: string;
   result: SyncResult;
+}
+
+/** True when any entry records a write (`'deleted'` is report-only). */
+export function didFilesChange(entries: readonly SyncEntry[]): boolean {
+  return entries.some(
+    ({ result }) =>
+      result === 'pulled' ||
+      result === 'pushed' ||
+      result === 'added' ||
+      result === 'linked'
+  );
 }
 
 async function mtimeMs(filePath: string): Promise<number | null> {
@@ -95,6 +107,8 @@ function printResult(result: SyncResult, filepath: string): void {
     console.log(`⬆ ${shortFilepath}`);
   } else if (result === 'added') {
     console.log(`+ ${shortFilepath}`);
+  } else if (result === 'linked') {
+    console.log(` ${shortFilepath}`);
   } else if (result === 'deleted') {
     logWarn(` ${shortFilepath}\n↪ Source deleted!`);
   }
@@ -138,13 +152,98 @@ async function syncFileQuiet(src: string, dest: string): Promise<SyncResult> {
  *   was overwritten, `'pushed'` if `dest` was newer and `src` was
  *   overwritten.
  */
-export async function syncFile(src: string, dest: string): Promise<SyncResult> {
+export async function syncFile(src: string, dest: string): Promise<SyncEntry> {
   const result = await syncFileQuiet(src, dest);
   const displayPath = path.resolve(
     result === 'pushed' || result === 'missing' ? src : dest
   );
   printResult(result, displayPath);
-  return result;
+  return { path: displayPath, result };
+}
+
+/**
+ * True when `link` is a symlink whose target resolves to the same file as
+ * `dest`.
+ */
+async function isSymlinkTo(link: string, dest: string): Promise<boolean> {
+  const statLink = await fs.lstat(link).catch(() => null);
+  if (statLink === null || statLink.isSymbolicLink() === false) {
+    return false;
+  }
+
+  try {
+    const [linkReal, destReal] = await Promise.all([
+      fs.realpath(link),
+      fs.realpath(dest),
+    ]);
+    return linkReal === destReal;
+  } catch {
+    return false;
+  }
+}
+
+/** True when `link` is a symlink whose target does not exist (dangling link). */
+async function isBrokenSymlink(
+  link: string,
+  lstat?: Awaited<ReturnType<typeof fs.lstat>>
+): Promise<boolean> {
+  const statLink = lstat ?? (await fs.lstat(link));
+  if (statLink.isSymbolicLink() === false) {
+    return false;
+  }
+
+  try {
+    await fs.realpath(link);
+    return false;
+  } catch {
+    return true;
+  }
+}
+
+/**
+ * Create a symlink from `dest` → `src`. Existing correct links are skipped;
+ * broken links are restored silently; other paths require `confirmOverwrite`.
+ */
+export async function syncLink(
+  src: string,
+  dest: string,
+  confirmOverwrite: (message: string) => Promise<boolean>
+): Promise<SyncEntry> {
+  const displayPath = path.resolve(dest);
+
+  if ((await mtimeMs(src)) === null) {
+    printResult('missing', displayPath);
+    return { path: displayPath, result: 'missing' };
+  }
+
+  let destinationLstat: Awaited<ReturnType<typeof fs.lstat>> | undefined;
+  try {
+    destinationLstat = await fs.lstat(dest);
+  } catch {
+    destinationLstat = undefined;
+  }
+
+  if (destinationLstat !== undefined) {
+    if (await isSymlinkTo(dest, src)) {
+      return { path: displayPath, result: 'equal' };
+    }
+
+    if ((await isBrokenSymlink(dest, destinationLstat)) === false) {
+      const shouldOverwrite = await confirmOverwrite(
+        `File already exists: ${dest}. Overwrite?`
+      );
+      if (shouldOverwrite === false) {
+        return { path: displayPath, result: 'equal' };
+      }
+    }
+
+    await fs.rm(dest, { recursive: true, force: true });
+  }
+
+  await fs.mkdir(path.dirname(dest), { recursive: true });
+  await fs.symlink(src, dest);
+  printResult('linked', displayPath);
+  return { path: displayPath, result: 'linked' };
 }
 
 /**
@@ -165,7 +264,7 @@ export async function syncFolder(
   src: string,
   dest: string,
   ignore: readonly string[] = []
-): Promise<FolderSyncEntry[]> {
+): Promise<SyncEntry[]> {
   const [srcFiles, destFiles] = await Promise.all([
     listFilesRecursive(src),
     listFilesRecursive(dest),
@@ -174,7 +273,7 @@ export async function syncFolder(
   const allPaths = [...new Set([...srcFiles, ...destFiles])]
     .filter((p) => !isIgnored(p, ignore))
     .toSorted();
-  const entries: FolderSyncEntry[] = [];
+  const entries: SyncEntry[] = [];
 
   for (const relPath of allPaths) {
     const srcPath = path.join(src, relPath);
@@ -194,7 +293,7 @@ export async function syncFolder(
     }
     const displayPath = path.resolve(result === 'pushed' ? srcPath : destPath);
     printResult(result, displayPath);
-    entries.push({ path: relPath, result });
+    entries.push({ path: displayPath, result });
   }
 
   return entries;
