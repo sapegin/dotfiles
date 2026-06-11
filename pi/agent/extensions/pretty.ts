@@ -6,6 +6,8 @@
 import os from 'node:os';
 import {
   type ExtensionAPI,
+  type ExtensionContext,
+  type ReadonlyFooterDataProvider,
   type Theme,
   createBashTool,
   createEditTool,
@@ -16,7 +18,7 @@ import {
   createWriteTool,
   highlightCode,
 } from '@earendil-works/pi-coding-agent';
-import { truncateToWidth, Text, type Component } from '@earendil-works/pi-tui';
+import { truncateToWidth, Text, type Component, visibleWidth } from '@earendil-works/pi-tui';
 
 /** Diff summary stats. */
 export interface DiffStats {
@@ -89,6 +91,183 @@ export type FrameStatus = 'pending' | 'success' | 'error';
 
 function tildify(filepath: string) {
   return filepath.replace(os.homedir(), '~');
+}
+
+function formatContextWindowTokens(count: number): string {
+  if (count < 1000) {
+    return count.toString();
+  }
+  if (count < 1_000_000) {
+    return `${Math.round(count / 1000)}K`;
+  }
+  return `${Math.round(count / 1_000_000)}M`;
+}
+
+function rightPadLine(left: string, right: string, width: number): string {
+  const padding = Math.max(1, width - visibleWidth(left) - visibleWidth(right));
+  return truncateToWidth(`${left}${' '.repeat(padding)}${right}`, width);
+}
+
+function rightAlignLine(content: string, width: number): string {
+  const padding = Math.max(0, width - visibleWidth(content));
+  return `${' '.repeat(padding)}${content}`;
+}
+
+function getSessionCost(ctx: ExtensionContext): number {
+  return ctx.sessionManager.getEntries().reduce((total, entry) => {
+    if (entry.type !== 'message' || entry.message.role !== 'assistant') {
+      return total;
+    }
+    return total + entry.message.usage.cost.total;
+  }, 0);
+}
+
+function formatContextUsageLabel(
+  ctx: ExtensionContext,
+  autoCompactEnabled: boolean,
+): { label: string; percent: number | null } {
+  const contextUsage = ctx.getContextUsage();
+  const contextWindow =
+    contextUsage?.contextWindow ?? ctx.model?.contextWindow ?? 0;
+  const contextPercent = contextUsage?.percent ?? null;
+  const autoIndicator = autoCompactEnabled ? ' (auto)' : '';
+  const windowLabel = formatContextWindowTokens(contextWindow);
+
+  if (contextPercent === null) {
+    return { label: `?/${windowLabel}${autoIndicator}`, percent: null };
+  }
+
+  return {
+    label: `${Math.round(contextPercent)}%/${windowLabel}${autoIndicator}`,
+    percent: contextPercent,
+  };
+}
+
+function formatStatsLine(
+  theme: Theme,
+  costLabel: string | undefined,
+  contextLabel: string,
+  contextPercent: number | null,
+): string {
+  const plainStats = [costLabel, contextLabel].filter(Boolean).join(' ');
+
+  if (contextPercent !== null && contextPercent > 90) {
+    return `${costLabel === undefined ? '' : theme.fg('dim', `${costLabel} `)}${theme.fg('error', contextLabel)}`;
+  }
+  if (contextPercent !== null && contextPercent > 70) {
+    return `${costLabel === undefined ? '' : theme.fg('dim', `${costLabel} `)}${theme.fg('warning', contextLabel)}`;
+  }
+  return theme.fg('dim', plainStats);
+}
+
+function renderPrettyFooter(
+  ctx: ExtensionContext,
+  pi: ExtensionAPI,
+  theme: Theme,
+  footerData: ReadonlyFooterDataProvider,
+  width: number,
+  autoCompactEnabled: boolean,
+): string[] {
+  const cwd = tildify(ctx.sessionManager.getCwd());
+  const branch = footerData.getGitBranch();
+
+  const modelName = ctx.model?.id ?? 'no-model';
+  const thinkingLevel = pi.getThinkingLevel();
+  const rightLine =
+    ctx.model?.reasoning === true
+      ? theme.fg(
+          'dim',
+          thinkingLevel === 'off'
+            ? `${modelName} • thinking off`
+            : `${modelName} • ${thinkingLevel}`,
+        )
+      : theme.fg('dim', modelName);
+
+  const totalCost = getSessionCost(ctx);
+  const usingSubscription =
+    ctx.model === undefined ? false : ctx.modelRegistry.isUsingOAuth(ctx.model);
+  const { label: contextLabel, percent: contextPercent } = formatContextUsageLabel(
+    ctx,
+    autoCompactEnabled,
+  );
+  const costLabel =
+    totalCost > 0 || usingSubscription
+      ? `$${totalCost.toFixed(2)}${usingSubscription ? ' (sub)' : ''}`
+      : undefined;
+
+  const statsContent = formatStatsLine(
+    theme,
+    costLabel,
+    contextLabel,
+    contextPercent,
+  );
+  const statsLine =
+    branch === null
+      ? rightAlignLine(statsContent, width)
+      : rightPadLine(theme.fg('dim', branch), statsContent, width);
+
+  return [
+    rightPadLine(theme.fg('dim', cwd), rightLine, width),
+    truncateToWidth(statsLine, width),
+  ];
+}
+
+function registerFooter(pi: ExtensionAPI): void {
+  let requestRender: (() => void) | undefined;
+  let activeCtx: ExtensionContext | undefined;
+
+  pi.on('session_start', (_event, ctx) => {
+    if (!ctx.hasUI) {
+      return;
+    }
+
+    activeCtx = ctx;
+    ctx.ui.setFooter((tui, theme, footerData) => {
+      requestRender = () => {
+        tui.requestRender();
+      };
+      const unsubscribeBranch = footerData.onBranchChange(() => {
+        requestRender?.();
+      });
+
+      return {
+        dispose() {
+          unsubscribeBranch();
+          requestRender = undefined;
+          activeCtx = undefined;
+        },
+        invalidate() {},
+        render(width: number): string[] {
+          if (activeCtx === undefined) {
+            return [];
+          }
+
+          return renderPrettyFooter(
+            activeCtx,
+            pi,
+            theme,
+            footerData,
+            width,
+            true,
+          );
+        },
+      };
+    });
+  });
+
+  const refreshFooter = () => {
+    requestRender?.();
+  };
+
+  pi.on('turn_end', refreshFooter);
+  pi.on('model_select', refreshFooter);
+  pi.on('thinking_level_select', refreshFooter);
+  pi.on('session_compact', refreshFooter);
+
+  pi.on('session_shutdown', () => {
+    requestRender = undefined;
+    activeCtx = undefined;
+  });
 }
 
 function getTextComponent(ctx: { lastComponent?: Component }) {
@@ -254,6 +433,7 @@ export default function pretty(pi: ExtensionAPI) {
   registerWrite(pi, cwd);
   registerEdit(pi, cwd);
   registerReplySeparator(pi);
+  registerFooter(pi);
 }
 
 function basicToolHeading(
