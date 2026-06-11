@@ -89,7 +89,7 @@
   },
   // Pi configs
   {
-    "source": "~/dotfiles/tilde/.pi/agent/*",
+    "source": "~/dotfiles/pi/agent/*",
     "destination": "~/.pi/agent/",
     "ignore": ["^extensions"]
   },
@@ -100,17 +100,17 @@
   },
   // Pi custom extensions
   {
-    "source": "~/dotfiles/tilde/.pi/agent/extensions/*.ts",
+    "source": "~/dotfiles/pi/agent/extensions/*.ts",
     "destination": "~/.pi/agent/extensions/"
   },
   // Pi Pretty extension
   {
-    "source": "~/dotfiles/tilde/.pi/agent/extensions/pretty",
+    "source": "~/dotfiles/pi/agent/extensions/pretty",
     "destination": "~/.pi/agent/extensions/pretty"
   },
   // Pi Permission System extension config
   {
-    "source": "~/dotfiles/tilde/.pi/agent/extensions/pi-permission-system/config.json",
+    "source": "~/dotfiles/pi/agent/extensions/pi-permission-system/config.json",
     "destination": "~/.pi/agent/extensions/pi-permission-system/config.json"
   },
 
