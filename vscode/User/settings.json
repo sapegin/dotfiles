@@ -145,8 +145,7 @@
   "scm.diffDecorationsIgnoreTrimWhitespace": "true",
   "scm.inputFontFamily": "editor",
   "scm.inputFontSize": 16,
-  "scm.inputMaxLineCount": 20,
-  "scm.inputMinLineCount": 4,
+  "scm.inputMinLineCount": 2,
   "scm.repositories.selectionMode": "single",
   "search.exclude": {
     "**/node_modules": true,
