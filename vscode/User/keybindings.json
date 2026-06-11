@@ -313,50 +313,15 @@
     "when": "focusedView == workbench.scm"
   },
   {
-    // TODO: Can it be just space to match GitHub Desktop and LazyGit?
-    "comment": "Stage selected file in the source control list",
-    "key": "cmd+space",
-    "command": "git.stage",
-    "when": "workbench.scm.active"
-  },
-  {
     "comment": "View all Changes",
     "key": "cmd+g cmd+c",
     "command": "git.viewChanges"
   },
   {
-    // Uses my custom pull script
-    "comment": "Git Pull",
-    "key": "cmd+g cmd+p",
-    "command": "runCommands",
-    "args": {
-      "commands": [
-        "workbench.action.terminal.new",
-        {
-          "command": "workbench.action.terminal.sendSequence",
-          "args": {
-            "text": "pull\u000D"
-          }
-        }
-      ]
-    }
-  },
-  {
-    // Uses my custom push script
-    "comment": "Git pUsh",
-    "key": "cmd+g cmd+u",
-    "command": "runCommands",
-    "args": {
-      "commands": [
-        "workbench.action.terminal.new",
-        {
-          "command": "workbench.action.terminal.sendSequence",
-          "args": {
-            "text": "push\u000D"
-          }
-        }
-      ]
-    }
+    "comment": "Create commit on Enter to match other apps (Shift+Enter to create new line)",
+    "key": "enter",
+    "command": "scm.acceptInput",
+    "when": "scmRepository"
   },
 
   /**
@@ -1186,5 +1151,15 @@
     "key": "enter",
     "command": "-workbench.action.chat.submit",
     "when": "chatInputHasText && inChatInput && !chatSessionRequestInProgress && !withinEditSessionDiff"
+  },
+  {
+    "key": "escape",
+    "command": "-scm.clearInput",
+    "when": "scmRepository && !editorHasSelection && !inlineSuggestionVisible && !scmInputHasValidationMessage && !suggestWidgetVisible"
+  },
+  {
+    "key": "cmd+enter",
+    "command": "-scm.acceptInput",
+    "when": "scmRepository"
   }
 ]
