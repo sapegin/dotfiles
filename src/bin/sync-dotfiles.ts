@@ -21,7 +21,7 @@ import {
   syncLink,
   didFilesChange,
   type SyncEntry,
-} from '../util/syncFile.ts';
+} from '../util/sync.ts';
 import { tildify, untildify } from '../util/tildify.ts';
 
 // TODO: Add --verbose mode that shows all files including ignored ones and ones that didn't need sync
