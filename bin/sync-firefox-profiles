@@ -10,7 +10,6 @@
 import path from 'node:path';
 import fs from 'node:fs';
 import os from 'node:os';
-import { globSync } from 'glob';
 
 const PROFILES_DIR = `${os.homedir()}/Library/Application Support/Firefox/Profiles`;
 
@@ -19,10 +18,10 @@ const TEMPLATE_DIR = path.join(import.meta.dirname, '/../firefox');
 console.log();
 console.log('[FIREFOX] Updating profiles… 🦊');
 
-const profiles = globSync(path.join(PROFILES_DIR, '*/'));
+const profiles = fs.globSync(path.join(PROFILES_DIR, '*/'));
 
-const templates = globSync(path.join(TEMPLATE_DIR, '**/*.*'), {
-	ignore: '/**/*.md',
+const templates = fs.globSync(path.join(TEMPLATE_DIR, '**/*.*'), {
+	exclude: ['/**/*.md'],
 });
 
 for (const profileDirectory of profiles) {

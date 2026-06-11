@@ -12,7 +12,6 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { parseEnv } from 'node:util';
-import { globSync } from 'glob';
 
 const untildify = (x) => x.replace(/^~/, os.homedir());
 
@@ -23,11 +22,11 @@ const env = fs.existsSync(envFile)
 
 const folders = [
   // Personal projects
-  globSync(untildify(`~/_/*/`)),
+  fs.globSync(untildify(`~/_/*/`)),
 
   // Work projects
   env.WORK_PROJECTS_DIR
-    ? globSync(untildify(`${env.WORK_PROJECTS_DIR}/*/`))
+    ? fs.globSync(untildify(`${env.WORK_PROJECTS_DIR}/*/`))
     : [],
 
   // Extra projects

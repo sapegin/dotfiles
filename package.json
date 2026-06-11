@@ -9,17 +9,9 @@
     "format": "oxfmt"
   },
   "dependencies": {
-    "@shikijs/rehype": "^3.15.0",
     "avif": "^0.5.3",
     "exifreader": "4.39.0",
-    "glob": "^11.0.0",
-    "playwright": "1.60.0",
-    "rehype-stringify": "^10.0.1",
-    "remark-parse": "^11.0.0",
-    "remark-rehype": "^11.1.2",
     "sharp": "0.34.5",
-    "shiki": "^3.15.0",
-    "unified": "^11.0.5",
     "yaml": "2.9.0"
   },
   "devDependencies": {

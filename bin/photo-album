@@ -12,7 +12,6 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import sharp from 'sharp';
 import ExifReader from 'exifreader';
-import { chromium } from 'playwright';
 
 const SOURCE_DIR = path.join(os.homedir(), 'Pictures/JunkyardPhotoAlbum');
 const OUTPUT_DIR = path.join(os.homedir(), 'Documents/JunkyardPhotoAlbum');
@@ -23,10 +22,6 @@ const AVIF_QUALITY = 75;
 
 function getYearFile(year) {
 	return path.join(OUTPUT_DIR, `${year}.html`);
-}
-
-function getYearPdfFile(year) {
-	return path.join(OUTPUT_DIR, `${year}.pdf`);
 }
 
 async function readExifData(filePath) {
@@ -643,26 +638,6 @@ ${yearsHtml}
 	return createHTMLPage('Junkyard photo album', bodyContent, additionalCSS);
 }
 
-async function generatePdf(year) {
-	const htmlPath = getYearFile(year);
-	const pdfPath = getYearPdfFile(year);
-
-	const browser = await chromium.launch();
-	const page = await browser.newPage();
-
-	await page.goto(`file://${htmlPath}`, { waitUntil: 'networkidle' });
-
-	await page.pdf({
-		path: pdfPath,
-		format: 'A4',
-		landscape: true,
-		printBackground: true,
-	});
-
-	await browser.close();
-
-	return pdfPath;
-}
 
 async function main() {
 	console.log('Reading images…');
@@ -690,13 +665,6 @@ async function main() {
 		const rows = createRows(yearImages);
 		const html = generateHtml(rows, year);
 		await fs.writeFile(getYearFile(year), html);
-	}
-
-	// Generate year-specific PDF files
-	for (const year of years) {
-		console.log(`Generating ${year}.pdf…`);
-		const pdfPath = await generatePdf(year);
-		console.log(`  PDF saved: ${pdfPath}`);
 	}
 
 	// Generate index page
