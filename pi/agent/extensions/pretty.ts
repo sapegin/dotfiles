@@ -357,6 +357,17 @@ const REPLY_SEPARATOR = '---\n\n';
 
 let pendingReplySeparator = false;
 
+function isAssistantMessage(message: { role: string }): message is {
+  role: 'assistant';
+  content: { type: string; text?: string }[];
+} {
+  return (
+    message.role === 'assistant' &&
+    'content' in message &&
+    Array.isArray(message.content)
+  );
+}
+
 function hasToolCalls(message: {
   content: readonly { type: string }[];
 }): boolean {
@@ -371,31 +382,37 @@ function firstTextBlockIndex(message: {
   );
 }
 
-function withReplySeparator<
-  T extends { role: string; content: { type: string; text?: string }[] },
->(message: T): T {
-  const index = firstTextBlockIndex(message);
-  if (index === -1) {
-    return message;
+function isReplySeparatorCandidate(message: {
+  role: 'assistant';
+  content: readonly { type: string; text?: string }[];
+}): boolean {
+  return (
+    pendingReplySeparator &&
+    !hasToolCalls(message) &&
+    firstTextBlockIndex(message) !== -1
+  );
+}
+
+/** Mutate a streaming message copy before the UI renders it. */
+function applyReplySeparatorInPlace(message: {
+  role: 'assistant';
+  content: { type: string; text?: string }[];
+}): void {
+  if (!isReplySeparatorCandidate(message)) {
+    return;
   }
 
+  const index = firstTextBlockIndex(message);
   const textBlock = message.content[index];
   if (textBlock.type !== 'text' || !textBlock.text) {
-    return message;
+    return;
   }
 
   if (textBlock.text.startsWith(REPLY_SEPARATOR)) {
-    return message;
+    return;
   }
 
-  return {
-    ...message,
-    content: message.content.map((block, blockIndex) =>
-      blockIndex === index && block.type === 'text'
-        ? { ...block, text: `${REPLY_SEPARATOR}${block.text?.trimStart()}` }
-        : block
-    ),
-  };
+  textBlock.text = `${REPLY_SEPARATOR}${textBlock.text.trimStart()}`;
 }
 
 function registerReplySeparator(pi: ExtensionAPI): void {
@@ -409,20 +426,34 @@ function registerReplySeparator(pi: ExtensionAPI): void {
     }
   });
 
+  // Pi emits a fresh shallow copy on each token; prepend the rule every update.
+  pi.on('message_start', (event) => {
+    if (!isAssistantMessage(event.message)) {
+      return;
+    }
+
+    applyReplySeparatorInPlace(event.message);
+  });
+
+  pi.on('message_update', (event) => {
+    if (!isAssistantMessage(event.message)) {
+      return;
+    }
+
+    applyReplySeparatorInPlace(event.message);
+  });
+
+  // Final paint uses the canonical message, not the streaming copies above.
   pi.on('message_end', (event) => {
-    if (!pendingReplySeparator || event.message.role !== 'assistant') {
+    if (!isAssistantMessage(event.message)) {
       return;
     }
 
-    if (
-      hasToolCalls(event.message) ||
-      firstTextBlockIndex(event.message) === -1
-    ) {
-      return;
-    }
+    applyReplySeparatorInPlace(event.message);
 
-    pendingReplySeparator = false;
-    return { message: withReplySeparator(event.message) };
+    if (isReplySeparatorCandidate(event.message)) {
+      pendingReplySeparator = false;
+    }
   });
 }
 
