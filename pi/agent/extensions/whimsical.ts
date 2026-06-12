@@ -51,7 +51,6 @@ const messages = [
   'Bedazzling…',
   'Sparkling…',
   'Glittering…',
-  'Sublimating…',
   'Synthesizing…',
   'Procrastinating…',
   'Dillydallying…',
@@ -173,8 +172,6 @@ const messages = [
   'Whispering passwords to the void…',
   'Negotiating with cosmic rays…',
   'Seducing the semicolons…',
-  'Wooing the while loops…',
-  'Charming the curly braces…',
   'Hypnotizing the hash tables…',
   'Mesmerizing the memory banks…',
   'Enchanting the error handlers…',
@@ -183,7 +180,6 @@ const messages = [
   'Hexing the hexadecimals…',
   'Jinxing the JSON parsers…',
   'Cursing the cache misses…',
-  'Blessing the build process…',
   'Anointing the algorithms…',
   'Consecrating the callbacks…',
   'Sanctifying the source code…',
@@ -212,7 +208,6 @@ const messages = [
   'Garnishing the getters…',
   'Adding a dash of elegance…',
   'Sprinkling some magic dust…',
-  'Drizzling debug sauce…',
   'Folding in the features…',
 
   // Extra
@@ -258,6 +253,14 @@ const messages = [
   'Expecto patronum…',
   'Avada kedavra…',
   'Killing two birds with one stone…',
+  'Intensifying…',
+  'Rolling like cheese in butter…',
+  'Raccooning…',
+  'Squirreling…',
+  'Running like a headless chicken…',
+  'Loosing threads…',
+  'Panicking…',
+  'Pushing tempo…',
 ];
 
 function pickRandom(): string {
