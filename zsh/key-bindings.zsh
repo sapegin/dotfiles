@@ -21,3 +21,8 @@ bindkey "^[[A" up-line-or-beginning-search
 autoload -U down-line-or-beginning-search
 zle -N down-line-or-beginning-search
 bindkey "^[[B" down-line-or-beginning-search
+
+# Shift+Enter to insert a newline
+shift-enter-newline() { LBUFFER+=$'\n'; }
+zle -N shift-enter-newline
+bindkey '^[[27;2;13~' shift-enter-newline
