@@ -4,6 +4,7 @@ source ~/dotfiles/zsh/path.zsh
 source ~/dotfiles/zsh/aliases.zsh
 source ~/dotfiles/zsh/completions.zsh
 source ~/dotfiles/zsh/key-bindings.zsh
+source ~/dotfiles/zsh/fzf.zsh
 
 # Load plugins
 source ~/dotfiles/zsh/plugins/zsh-shift-select.plugin.zsh
@@ -48,23 +49,6 @@ precmd_functions+=(_set_terminal_title)
 HISTFILE=$HOME/.zsh_history
 HISTSIZE=100000
 SAVEHIST=$HISTSIZE
-
-# Enable fzf: https://github.com/junegunn/fzf
-# Use fd (https://github.com/sharkdp/fd) to respect .gitignore
-export FZF_DEFAULT_COMMAND='fd --type f'
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-# Load theme
-source ~/dotfiles/colors/fzf-squirrelsong-dark-dp.sh
-# Use fd to respect .gitignore and exclude .git directory
-_fzf_compgen_path() {
-	fd --hidden --exclude ".git" . "$1"
-}
-_fzf_compgen_dir() {
-	fd --type d --hidden --exclude ".git" . "$1"
-}
-
-# Init fzf
-source <(fzf --zsh)
 
 # Load extra (private) settings
 [ -f ~/.zshlocal ] && source ~/.zshlocal
