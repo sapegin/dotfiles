@@ -13,12 +13,25 @@ import os from 'node:os';
 import path from 'node:path';
 
 const BIN_DIR = `${os.homedir()}/dotfiles/bin`;
+const BIN_TS_DIR = `${os.homedir()}/dotfiles/src/bin`;
 const DOCS_DIR = `${os.homedir()}/dotfiles/docs`;
 
 export const query = process.argv[2];
 
 function read(file) {
   return fs.readFileSync(file, 'utf8');
+}
+
+function getSourceFilepath(name) {
+  const binTsFilePath = `${BIN_TS_DIR}/${name}.ts`;
+  if (fs.existsSync(binTsFilePath)) {
+    return binTsFilePath;
+  }
+
+  const binFilePath = `${BIN_DIR}/${name}`;
+  if (fs.existsSync(binFilePath)) {
+    return binFilePath;
+  }
 }
 
 function getDocs(source, name) {
@@ -42,7 +55,7 @@ if (fs.existsSync(mdFilePath)) {
 }
 
 // Check for a script
-const binFilePath = `${BIN_DIR}/${query}`;
+const binFilePath = getSourceFilepath(query);
 if (fs.existsSync(binFilePath)) {
   const source = read(binFilePath);
   const docs = getDocs(source, query);
