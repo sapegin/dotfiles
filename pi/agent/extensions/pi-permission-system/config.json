@@ -34,16 +34,18 @@
       "npm view *": "allow",
       "pnpm exec *": "allow",
       "pnpm lint *": "allow",
-      "pnpm test *": "allow",
       "pnpm outdated *": "allow",
+      "pnpm test *": "allow",
+      "pnpm view *": "allow",
       "pnpm why *": "allow",
       "prettier *": "allow",
       "readlink *": "allow",
       "rg *": "allow",
       "sort *": "allow",
       "stat *": "allow",
+      "trafilatura *": "allow",
       "true": "allow",
-      "trafilatura *": "allow"
+      "wc *": "allow"
     },
     "read": {
       "*": "allow",
