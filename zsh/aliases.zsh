@@ -58,7 +58,7 @@ j() {
 
 # Cd to Git repository root folder
 gr() {
-	cd "./$(git rev-parse --show-cdup 2> /dev/null)" 2> /dev/null
+	cd "$(git rev-parse --show-toplevel 2> /dev/null)" || return
 }
 
 # git clone and cd to a repo directory
