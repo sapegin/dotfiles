@@ -6,7 +6,7 @@ source ~/dotfiles/zsh/history.zsh
 source ~/dotfiles/zsh/prompt.zsh
 source ~/dotfiles/zsh/aliases.zsh
 source ~/dotfiles/zsh/completions.zsh
-source ~/dotfiles/zsh/key-bindings.zsh
+source ~/dotfiles/zsh/keybindings.zsh
 source ~/dotfiles/zsh/fzf.zsh
 
 # Load extra (private) settings
