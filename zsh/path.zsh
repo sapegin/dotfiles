@@ -1,8 +1,8 @@
 # Prepend $PATH without duplicates
 function _prepend_path() {
-	if ! $(echo "$PATH" | tr ":" "\n" | grep -qx "$1"); then
-		PATH="$1:$PATH"
-	fi
+	[[ -n "$1" ]] || return
+	(( ${path[(Ie)$1]} )) && return
+	path=("$1" $path)
 }
 
 # Extend $PATH
@@ -25,8 +25,3 @@ _prepend_path "$HOME/dotfiles/bin"
 
 # User binaries
 _prepend_path "$HOME/bin"
-
-# Run locally installed Node.js binaries directly
-_prepend_path "./node_modules/.bin"
-
-export PATH
