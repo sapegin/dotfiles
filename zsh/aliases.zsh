@@ -60,13 +60,13 @@ gr() {
 	cd "$(git rev-parse --show-toplevel 2> /dev/null)" || return
 }
 
-# git clone and cd to a repo directory
+# git clone, cd to a repo directory, and install dependencies
 clone() {
-	git clone $@
+	git clone "$@"
 	if [ "$2" ]; then
 		cd "$2"
 	else
-		cd $(basename "$1" .git)
+		cd "$(basename "$1" .git)"
 	fi
 	if [[ -r "./yarn.lock" ]]; then
 		yarn
