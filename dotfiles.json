@@ -146,27 +146,34 @@
   },
 
   /**
-   * Color themes
+   * Squirrelsong color themes
    */
 
-  // Squirrelsong Bat theme
+  // Bat
   {
     "source": "~/_/squirrelsong/themes/Sublime Text/Squirrelsong Dark Deep Purple/Squirrelsong Dark Deep Purple.tmTheme",
     "destination": "~/dotfiles/tilde/.config/bat/themes/Squirrelsong Dark Deep Purple.tmTheme",
     "mode": "sync",
     "runAfter": "bat cache --build"
   },
-  // Squirrelsong Ghostty themes
+  // Ghostty
   {
     "source": "~/_/squirrelsong/themes/Ghostty/Squirrelsong *",
     "destination": "~/dotfiles/tilde/.config/ghostty/themes/",
     "mode": "sync"
   },
-  // Squirrelsong fzf theme
+  // Fzf
   {
-    "source": "~/_/squirrelsong/themes/fzf/fzf-squirrelsong-dark-dp.sh",
-    "destination": "~/dotfiles/colors/fzf-squirrelsong-dark-dp.sh",
+    "source": "~/_/squirrelsong/themes/Zsh/fzf/fzf-squirrelsong-dark-dp.sh",
+    "destination": "~/dotfiles/colors/",
     "mode": "sync"
+  },
+  // Fast-syntax-highlighting
+  {
+    "source": "~/_/squirrelsong/themes/Zsh/fast-syntax-highlighting/fast-syntax-highlighting-squirrelsong.ini",
+    "destination": "~/dotfiles/colors/",
+    "mode": "sync",
+    "runAfter": "zsh -f ~/dotfiles/bin/lib/fast-theme-reload"
   },
 
   /**
