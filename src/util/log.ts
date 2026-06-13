@@ -1,11 +1,28 @@
 const RED = '\u001B[31m';
-const ORANGE = '\u001B[38;5;208m';
+const YELLOW = '\u001B[33m';
 const RESET = '\u001B[0m';
 
-export function logWarn(text: string) {
-  console.warn(`${ORANGE}${text}${RESET}`);
+function logWithColor(
+  write: typeof console.warn,
+  color: string,
+  ...args: Parameters<typeof console.warn>
+) {
+  if (args.length === 0) {
+    write();
+    return;
+  }
+
+  const [first, ...rest] = args;
+  const message =
+    typeof first === 'string' ? `${color}${first}${RESET}` : first;
+
+  write(message, ...rest);
 }
 
-export function logError(text: string) {
-  console.warn(`${RED}${text}${RESET}`);
+export function logWarn(...args: Parameters<typeof console.warn>) {
+  logWithColor(console.warn, YELLOW, ...args);
+}
+
+export function logError(...args: Parameters<typeof console.error>) {
+  logWithColor(console.warn, RED, ...args);
 }
