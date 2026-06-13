@@ -8,10 +8,8 @@ source ~/dotfiles/zsh/aliases.zsh
 source ~/dotfiles/zsh/completions.zsh
 source ~/dotfiles/zsh/key-bindings.zsh
 source ~/dotfiles/zsh/fzf.zsh
-source ~/dotfiles/zsh/syntax-highlighting.zsh
-
-# Load plugins
-source ~/dotfiles/zsh/plugins/zsh-shift-select.plugin.zsh
 
 # Load extra (private) settings
 [ -f ~/.zshlocal ] && source ~/.zshlocal
+
+source ~/dotfiles/zsh/syntax-highlighting.zsh
