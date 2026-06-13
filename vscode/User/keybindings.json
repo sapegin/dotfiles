@@ -49,12 +49,6 @@
     "when": "viewContainer.workbench.view.extensions.enabled"
   },
   {
-    "comment": "Create a New terminal editor window",
-    "key": "shift+cmd+t",
-    "command": "workbench.action.createTerminalEditor",
-    "when": "terminalProcessSupported"
-  },
-  {
     "comment": "Create a New terminal",
     "key": "cmd+n",
     "command": "workbench.action.terminal.new",
@@ -166,8 +160,8 @@
    * Code editing and navigation
    */
   {
-    "comment": "Switch to the previously active editor (code editor or terminal editor)",
-    "key": "cmd+escape",
+    "comment": "Switch to the previously active editor",
+    "key": "shift shift",
     "command": "workbench.action.openPreviousRecentlyUsedEditor"
   },
   {
@@ -177,8 +171,8 @@
   },
   {
     // Convenient to have on the left side of the keyboard so I can use cursor
-    // keys or a trackpad with the right hand, also cmd+e and cmd+d (duplicate line)
-    // are one below the other, which makes them an easy to remember combo
+    // keys or a trackpad with the right hand, also cmd+e and cmd+d (duplicate
+    // line) are one below the other, which makes them an easy to remember combo
     "comment": "Delete (Erase) current or selected lines",
     "key": "cmd+e",
     "command": "editor.action.deleteLines",
@@ -617,12 +611,14 @@
     "command": "-workbench.action.debug.stepOver"
   },
   {
-    // Don't autocomplete on Enter, just on Tab: more ways to get rid of the autocomplete when you don't need it
+    // Don't autocomplete on Enter, just on Tab: more ways to get rid of the
+    // autocomplete when you don't need it
     "key": "enter",
     "command": "-acceptSelectedSuggestion"
   },
   {
-    // Don't autocomplete on Enter in terminal, just on Tab: more ways to get rid of the autocomplete when you don't need it
+    // Don't autocomplete on Enter in terminal, just on Tab: more ways to get
+    // rid of the autocomplete when you don't need it
     "key": "enter",
     "command": "-workbench.action.terminal.acceptSelectedSuggestion"
   },
