@@ -69,6 +69,7 @@ const FRONTMATTER_FIELDS = [
   'published',
   'rating',
   'refs',
+  'slug',
   'source',
   'sputniks',
   'status',
