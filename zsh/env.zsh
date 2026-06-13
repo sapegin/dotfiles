@@ -1,6 +1,6 @@
 # Locale
-export LC_ALL=en_US.UTF-8
-export LANG="en_US"
+export LANG="en_US.UTF-8"
+export LC_ALL="$LANG"
 
 # Preferred editor for local and remote sessions
 if [[ -n $SSH_CONNECTION ]]; then
