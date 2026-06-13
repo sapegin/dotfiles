@@ -11,14 +11,7 @@
 bindkey '^[[3~' delete-char
 bindkey '^[3;5~' delete-char
 
-# History search with arrow keys
-# https://coderwall.com/p/jpj_6q/zsh-better-history-searching-with-arrow-keys
-autoload -U up-line-or-beginning-search down-line-or-beginning-search
-zle -N up-line-or-beginning-search
-zle -N down-line-or-beginning-search
-
 # Shift-selection leaves REGION_ACTIVE set; unmodified movement must clear it first
-
 _deactivate-and-call() {
 	emulate -L zsh
 	local movement=$1
@@ -26,13 +19,13 @@ _deactivate-and-call() {
 	zle $movement -w
 }
 
-up-line-or-beginning-search-unselect() { _deactivate-and-call up-line-or-beginning-search }
-zle -N up-line-or-beginning-search-unselect
-bindkey "^[[A" up-line-or-beginning-search-unselect
+up-line-or-history-unselect() { _deactivate-and-call up-line-or-history }
+zle -N up-line-or-history-unselect
+bindkey '^[[A' up-line-or-history-unselect
 
-down-line-or-beginning-search-unselect() { _deactivate-and-call down-line-or-beginning-search }
-zle -N down-line-or-beginning-search-unselect
-bindkey "^[[B" down-line-or-beginning-search-unselect
+down-line-or-history-unselect() { _deactivate-and-call down-line-or-history }
+zle -N down-line-or-history-unselect
+bindkey '^[[B' down-line-or-history-unselect
 
 backward-char-unselect() { _deactivate-and-call backward-char }
 zle -N backward-char-unselect
@@ -44,11 +37,11 @@ bindkey '^[[C' forward-char-unselect
 
 beginning-of-line-unselect() { _deactivate-and-call beginning-of-line }
 zle -N beginning-of-line-unselect
-bindkey "^[[H" beginning-of-line-unselect
+bindkey '^[[H' beginning-of-line-unselect
 
 end-of-line-unselect() { _deactivate-and-call end-of-line }
 zle -N end-of-line-unselect
-bindkey "^[[F" end-of-line-unselect
+bindkey '^[[F' end-of-line-unselect
 
 # Shift+Enter to insert a newline (Ghostty)
 shift-enter-newline() { LBUFFER+=$'\n'; }
