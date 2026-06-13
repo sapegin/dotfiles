@@ -34,6 +34,9 @@
 	quotepath = false
 	# Enable parallel index preload for operations like git diff
 	preloadindex = true
+  #  in large repositories
+  fsmonitor = true
+  untrackedCache = true
 
 [alias]
 	# Add (stage) file
