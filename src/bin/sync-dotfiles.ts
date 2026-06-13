@@ -131,6 +131,9 @@ async function syncEntry(entry: DotfileEntry): Promise<void> {
   const mode: EntryMode = entry.mode ?? 'link';
   const source = untildify(entry.source);
   const destination = untildify(entry.destination);
+  const destinationDir = destination.endsWith('/')
+    ? destination.slice(0, -1)
+    : undefined;
 
   // Trailing slash on `source` (raw, before normalization) means: two-way sync
   // the whole folder via `syncFolder`. Only valid with `mode: "sync"`.
@@ -155,7 +158,9 @@ async function syncEntry(entry: DotfileEntry): Promise<void> {
       logError(`✕ ${source}\n  ↪ Source not found!`);
       return;
     }
-    results.push(...(await syncFolder(source, destination, ignorePatterns)));
+    results.push(
+      ...(await syncFolder(source, destinationDir ?? destination, ignorePatterns))
+    );
     runAfterCommand(entry, results);
     return;
   }
@@ -176,9 +181,10 @@ async function syncEntry(entry: DotfileEntry): Promise<void> {
   }
 
   for (const sourcePath of sourcePaths) {
-    const destinationPath = sourceIsGlob
-      ? path.join(destination, path.basename(sourcePath))
-      : destination;
+    const destinationPath =
+      sourceIsGlob || destinationDir !== undefined
+        ? path.join(destinationDir ?? destination, path.basename(sourcePath))
+        : destination;
 
     if (mode === 'sync') {
       results.push(await syncFile(sourcePath, destinationPath));
