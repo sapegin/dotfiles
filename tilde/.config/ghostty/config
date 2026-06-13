@@ -22,7 +22,9 @@ faint-opacity = 0.75
 adjust-cursor-thickness = 2
 cursor-style = bar
 cursor-style-blink = false
-shell-integration-features = no-cursor
+
+# Let the shell set the window title
+shell-integration-features = no-title
 
 window-padding-x = 8
 window-padding-y = 12,8
