@@ -42,7 +42,7 @@ alias get="curl -O -L"
 
 # Make a directory and cd to it
 take() {
-	mkdir -p $@ && cd ${@:$#}
+	mkdir -p "$1" && cd "$1"
 }
 
 # cd into whatever is the forefront Finder window
