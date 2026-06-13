@@ -20,8 +20,8 @@ bullet = 2
 example = 4
 
 [style.title]
-color = "black"
-background = "cyan"
+color = "cyan"
+background = "default"
 bold = true
 underline = false
 italic = false
@@ -47,7 +47,7 @@ dim = false
 strikethrough = false
 
 [style.example]
-color = "magenta"
+color = "blue"
 background = "default"
 bold = true
 underline = false
