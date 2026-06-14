@@ -1,31 +1,4 @@
 #!/usr/bin/env bash
 
-# Tldr/tlrc wrapper to show docs from `~/dotfiles/docs` or `~/dotfiles/bin`.
-# > More information: <https://github.com/tldr-pages/tlrc>
-#
-# - Show docs:
-#
-# `help {{command}}`
-#
-# ---
-# Author: Artem Sapegin, sapegin.me
-# License: MIT
-# https://github.com/sapegin/dotfiles
-#
-
-cd "$(dirname $0)/.."
-
-root="$(dirname $(dirname $0))"
-config="$root/tilde/.tlrc.toml"
-
-if [[ "$1" != "" ]]; then
-	md="$(node $root/src/bin/get-tldr-md.mjs $1)"
-else
-	md="$root/docs/Readme.md"
-fi
-
-if [ "$md" != "" ]; then
-	tldr --config "$config" --render "$md"
-else
-	tldr --config "$config" "$@"
-fi
+set -euo pipefail
+exec node "$(dirname "$0")/../src/bin/help.ts" "$@"
