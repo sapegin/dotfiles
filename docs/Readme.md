@@ -1,52 +1,32 @@
 # Dotfiles
 
-- Find in history:
+# General
 
-`Ctrl+R`
+- Show command docs:
+
+`help {{command}}`
+
+- Fuzzy finder:
+
+`Ctrl+R (help fzf for more)`
+
+# Navigation and filesystem
 
 - Navigate to a parent folder:
 
-`. .. ... .... .....`
+`.. ... .... .....`
 
 - Navigate to a previous folder:
 
-`--`
+`-`
 
 - Navigate to whatever is the forefront Finder window:
 
 `cdf`
 
-- Navigate to root of Git repository:
+- Navigate to a project folder:
 
-`gr`
-
-- Clone a repository and navigate to it:
-
-`clone {{url}}`
-
-- Open Finder:
-
-`o {{file}}`
-
-- Open current folder in Finder:
-
-`oo`
-
-- Open default editor:
-
-`e {{file}}`
-
-- Open current folder in Visual Studio Code:
-
-`nn`
-
-- Open current folder in Nimble Commander:
-
-`ff`
-
-- Open current folder in GitHub Desktop:
-
-`gh`
+`j {{name}}`
 
 - Make a folder and navigate to it:
 
@@ -56,49 +36,77 @@
 
 `+x {{file}}`
 
-- Download file and save it with filename of remote file:
+- Find file by name (or regexp):
 
-`get {{url}}`
+`find {{file}}`
 
-- Open a project (~/\_/\*):
+- Quick grep:
 
-`repo {{name}}`
+`g`
 
 - Copy full path of a given file to clipboard:
 
 `ppp {{file}}`
 
+- Download file and save it with filename of remote file:
+
+`get {{url}}`
+
+# Apps
+
+- Open file in default app:
+
+`o {{file}}`
+
+- Open current folder in Finder:
+
+`oo`
+
+- Open file in default editor:
+
+`e {{file}}`
+
+- Open current folder in Visual Studio Code:
+
+`cc`
+
+- Open current folder in Nimble Commander:
+
+`nn`
+
+- Open current folder in GitHub Desktop:
+
+`ghd`
+
+# Git
+
+- Clone a repository and navigate to it:
+
+`clone {{url}}`
+
+- Navigate to root of Git repository:
+
+`gr`
+
+- Pull remote changes:
+
+`pull`
+
+- Push local changes:
+
+`push`
+
+- Merge a branch into the current one:
+
+`merge {{branch}}`
+
+- Stash all changes:
+
+`stash`
+
 - Change Git branch and pull:
 
 `br {{branch}}`
-
-- Remove conflicted copies from Dropbox:
-
-`clean-dropbox {{--remove}}`
-
-- Remove all node_modules folders inside the home folder older than 30 days:
-
-`clean-node-modules`
-
-- Empty trash on all mounted volumes:
-
-`clean-trash`
-
-- Convert Windows line endings to Unix:
-
-`crlf {{file}} {{--force}}`
-
-- Update dotfiles:
-
-`dotfiles`
-
-- Find file by name (or regexp):
-
-`fd {{file}}`
-
-- Quick grep:
-
-`g`
 
 - Remove old Git branches and do other cleanup:
 
@@ -108,14 +116,16 @@
 
 `git-setup`
 
-- Show my commits since yesterday or since last Friday:
+# Maintenance
 
-`git-standup`
+- Empty trash on all mounted volumes:
 
-- Get macOS software updates, update Homebrew, npm, Ruby packages, dotfiles, etc:
+`clean-trash`
+
+- Update dotfiles:
+
+`dotfiles`
+
+- Get macOS software updates, update Homebrew, npm, dotfiles, etc:
 
 `update`
-
-- Open fuzzy file finder:
-
-`fzf`

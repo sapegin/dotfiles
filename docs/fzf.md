@@ -28,7 +28,7 @@
 
 - Move up / down:
 
-`Up` / `Down` or `Ctrl+K` / `Ctrl+J`
+`Up / Down / Ctrl+K / Ctrl+J`
 
 - Accept selection (paste / run):
 
@@ -36,11 +36,11 @@
 
 - Cancel:
 
-`Esc` or `Ctrl+C` or `Ctrl+G`
+`Esc / Ctrl+C / Ctrl+G`
 
 - Toggle multi-select:
 
-`Tab` / `Shift+Tab`
+`Tab / Shift+Tab`
 
 - Clear query:
 
@@ -66,7 +66,7 @@
 
 - In raw mode, jump between matches only:
 
-`Ctrl+P` / `Ctrl+N`
+`Ctrl+P / Ctrl+N`
 
 # Basics
 
