@@ -49,24 +49,17 @@ const MEDIA_EXTENSIONS = new Set([
   '.m4v',
   '.avi',
 ]);
-const STANDARD_IMPORT_PATTERN =
-  /^(\d{4}-\d{2}-\d{2})_(\d+)_Artem_Sapegin\.[^.]+$/i;
+const IMPORT_DATE_PREFIX = /^(\d{4}-\d{2}-\d{2})_/;
 
-interface Photo {
-  sourcePath: string;
-  basename: string;
-  suffix: string;
-  extension: string;
-  captureDate?: string;
-}
-
-interface ImportedMatch {
-  suffix: string;
-  captureDate?: string;
+function getImportDate(filename: string): string | undefined {
+  return path.basename(filename).match(IMPORT_DATE_PREFIX)?.[1];
 }
 
 function getSuffix(filename: string): string | undefined {
-  return path.basename(filename, path.extname(filename)).match(/(\d+)$/)?.[1];
+  const stem = path
+    .basename(filename, path.extname(filename))
+    .replace(IMPORT_DATE_PREFIX, '');
+  return stem.match(/^(\d+)/)?.[1] ?? stem.match(/(\d+)$/)?.[1];
 }
 
 function datesWithinDay(dateA: string, dateB: string): boolean {
@@ -181,57 +174,20 @@ async function pickDestinationFolder(): Promise<string | undefined> {
   return path.join(PHOTOS_ROOT, choice);
 }
 
-function parseImportedFile(filename: string): ImportedMatch | undefined {
-  const standardMatch = filename.match(STANDARD_IMPORT_PATTERN);
-  if (standardMatch) {
-    return { captureDate: standardMatch[1], suffix: standardMatch[2] };
-  }
-  const suffix = getSuffix(filename);
-  return suffix === undefined ? undefined : { suffix };
-}
-
-async function collectImportedPhotos(): Promise<ImportedMatch[]> {
-  const imported: ImportedMatch[] = [];
-  for (const folder of await getDestinationFolders()) {
-    for (const file of await Array.fromAsync(
-      fs.glob('*', { cwd: path.join(PHOTOS_ROOT, folder) })
-    )) {
-      const match = parseImportedFile(file);
-      if (match) {
-        imported.push(match);
-      }
-    }
-  }
-  return imported;
-}
-
-function libraryMatchesForSuffix(
-  suffix: string,
-  importedPhotos: ImportedMatch[]
-): ImportedMatch[] {
-  return importedPhotos.filter((imported) => imported.suffix === suffix);
-}
-
-function isDuplicate(
-  captureDate: string | undefined,
-  libraryMatches: ImportedMatch[]
+function isAlreadyImported(
+  cardDate: string | undefined,
+  libraryDates: (string | undefined)[]
 ): boolean {
-  if (libraryMatches.length === 0) {
-    return false;
-  }
-
-  for (const imported of libraryMatches) {
-    if (imported.captureDate === undefined) {
+  for (const libraryDate of libraryDates) {
+    // Library file has no date in its name — suffix match is enough.
+    if (libraryDate === undefined) {
       return true;
     }
-    if (
-      captureDate !== undefined &&
-      datesWithinDay(imported.captureDate, captureDate)
-    ) {
+    // Library file has a date — suffix and date must match.
+    if (cardDate !== undefined && datesWithinDay(libraryDate, cardDate)) {
       return true;
     }
   }
-
   return false;
 }
 
@@ -250,74 +206,63 @@ async function getCaptureDate(filePath: string): Promise<string | undefined> {
 }
 
 function destinationName(
-  photo: Photo,
+  sourcePath: string,
   captureDate: string | undefined
 ): string {
+  const basename = path.basename(sourcePath);
   if (captureDate === undefined) {
-    return photo.basename;
+    return basename;
   }
-  return `${captureDate}_${photo.suffix}_Artem_Sapegin${photo.extension}`;
+  const suffix = getSuffix(basename);
+  if (suffix === undefined) {
+    return basename;
+  }
+  return `${captureDate}_${suffix}_Artem_Sapegin${path.extname(basename)}`;
 }
 
-async function filterNewPhotos(
-  photos: Photo[],
-  importedPhotos: ImportedMatch[]
-): Promise<{ toImport: Photo[]; skipped: number }> {
-  const toImport: Photo[] = [];
-  let skipped = 0;
-  const datedMatches = photos.filter((photo) =>
-    libraryMatchesForSuffix(photo.suffix, importedPhotos).some(
-      (imported) => imported.captureDate !== undefined
-    )
-  );
-
-  let datedMatchIndex = 0;
-  for (const photo of photos) {
-    const libraryMatches = libraryMatchesForSuffix(
-      photo.suffix,
-      importedPhotos
-    );
-    if (libraryMatches.length === 0) {
-      toImport.push(photo);
-      continue;
-    }
-
-    let captureDate = photo.captureDate;
-    const needsCaptureDate = libraryMatches.some(
-      (imported) => imported.captureDate !== undefined
-    );
-    if (needsCaptureDate && captureDate === undefined) {
-      datedMatchIndex++;
-      if (datedMatches.length > 1) {
-        process.stdout.write(
-          `\rReading photo dates… (${datedMatchIndex}/${datedMatches.length})`
-        );
+async function findPhotosToImport(cardPaths: string[]): Promise<string[]> {
+  // 1. Index library filenames by suffix (date from filename, if present).
+  const libraryBySuffix = new Map<string, (string | undefined)[]>();
+  for (const folder of await getDestinationFolders()) {
+    for (const filename of await Array.fromAsync(
+      fs.glob('*', { cwd: path.join(PHOTOS_ROOT, folder) })
+    )) {
+      const suffix = getSuffix(filename);
+      if (suffix === undefined) {
+        continue;
       }
-      captureDate = await getCaptureDate(photo.sourcePath);
+      const dates = libraryBySuffix.get(suffix) ?? [];
+      dates.push(getImportDate(filename));
+      libraryBySuffix.set(suffix, dates);
     }
+  }
 
-    if (isDuplicate(captureDate, libraryMatches)) {
-      skipped++;
+  // 2. For each card file, look up library entries with the same suffix.
+  const toImport: string[] = [];
+  for (const sourcePath of cardPaths) {
+    const suffix = getSuffix(path.basename(sourcePath));
+    if (suffix === undefined) {
       continue;
     }
 
-    toImport.push(
-      captureDate === undefined ? photo : { ...photo, captureDate }
-    );
+    const libraryDates = libraryBySuffix.get(suffix);
+    if (libraryDates === undefined) {
+      toImport.push(sourcePath);
+      continue;
+    }
+
+    const hasDatedImports = libraryDates.some((date) => date !== undefined);
+    const cardDate = hasDatedImports
+      ? await getCaptureDate(sourcePath)
+      : undefined;
+
+    // 3. Skip when suffix (and date, if available) match a library import.
+    if (isAlreadyImported(cardDate, libraryDates) === false) {
+      toImport.push(sourcePath);
+    }
   }
 
-  if (datedMatches.length > 1) {
-    process.stdout.write('\n');
-  }
-
-  return { toImport, skipped };
-}
-
-function fileExists(filePath: string): Promise<boolean> {
-  return fs.access(filePath).then(
-    () => true,
-    () => false
-  );
+  return toImport;
 }
 
 async function copyPhoto(
@@ -335,28 +280,31 @@ async function copyPhoto(
   }
 }
 
-async function importPhoto({
-  photo,
-  tempPath,
-  destinationDir,
-}: {
-  photo: Photo;
-  tempPath: string;
-  destinationDir: string;
-}): Promise<{ status: 'imported' | 'skipped'; destinationName?: string }> {
-  await copyPhoto(photo.sourcePath, tempPath);
+async function importPhoto(
+  sourcePath: string,
+  tempPath: string,
+  destinationDir: string
+): Promise<string | undefined> {
+  await copyPhoto(sourcePath, tempPath);
 
-  const captureDate = photo.captureDate ?? (await getCaptureDate(tempPath));
-  const name = destinationName(photo, captureDate);
-  const destinationPath = path.join(destinationDir, name);
-  if (await fileExists(destinationPath)) {
+  const captureDate = await getCaptureDate(tempPath);
+  const destinationPath = path.join(
+    destinationDir,
+    destinationName(sourcePath, captureDate)
+  );
+
+  try {
+    await fs.stat(destinationPath);
     await fs.unlink(tempPath);
-    return { status: 'skipped' };
+    return undefined;
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
+      throw error;
+    }
   }
 
   await fs.rename(tempPath, destinationPath);
-
-  return { status: 'imported', destinationName: name };
+  return path.basename(destinationPath);
 }
 
 function getCommonFolder(filePaths: string[]): string {
@@ -379,10 +327,6 @@ function getCommonFolder(filePaths: string[]): string {
   return commonParts.join(path.sep) || directories[0];
 }
 
-function photoCount(count: number): string {
-  return `${count} photo${count === 1 ? '' : 's'}`;
-}
-
 async function confirmYesNo(prompt: string): Promise<boolean> {
   const rl = readline.createInterface({
     input: process.stdin,
@@ -394,13 +338,11 @@ async function confirmYesNo(prompt: string): Promise<boolean> {
   return normalizedAnswer === '' || normalizedAnswer === 'y';
 }
 
-function confirmProceed(
-  destinationDir: string,
-  importCount: number
-): Promise<boolean> {
-  console.log('');
-  console.log(`Import ${photoCount(importCount)} to ${destinationDir}.`);
-  return confirmYesNo('Proceed? [Y/n] ');
+function ejectCard(cardVolume: string): void {
+  console.log(`Ejecting ${cardVolume}…`);
+  execSync(`diskutil eject ${JSON.stringify(cardVolume)}`, {
+    stdio: 'inherit',
+  });
 }
 
 async function main(): Promise<void> {
@@ -423,35 +365,27 @@ async function main(): Promise<void> {
   console.log(`Scanning ${cardVolume}…`);
   const photos = dedupeRawJpegPairs(
     await findMediaFiles(path.join(cardVolume, 'DCIM'))
-  )
-    .map((sourcePath): Photo | undefined => {
-      const basename = path.basename(sourcePath);
-      const suffix = getSuffix(basename);
-      if (suffix === undefined) {
-        logWarn(`Skipping ${basename}: cannot determine number suffix`);
-        return undefined;
-      }
-      return {
-        sourcePath,
-        basename,
-        suffix,
-        extension: path.extname(basename),
-      };
-    })
-    .filter((photo) => photo !== undefined);
+  ).flatMap((sourcePath): string[] => {
+    if (getSuffix(path.basename(sourcePath)) === undefined) {
+      logWarn(
+        `Skipping ${path.basename(sourcePath)}: cannot determine number suffix`
+      );
+      return [];
+    }
+    return [sourcePath];
+  });
 
   if (photos.length === 0) {
     logWarn(`No photos found on ${cardVolume}.`);
     process.exit(1);
   }
 
-  console.log(`Checking duplicates for ${photoCount(photos.length)} photos…`);
-  const importedPhotos = await collectImportedPhotos();
+  console.log(`Checking duplicates for ${photos.length} photos…`);
+  const toImport = await findPhotosToImport(photos);
+  const skipped = photos.length - toImport.length;
 
-  const sourceFolder = getCommonFolder(photos.map((photo) => photo.sourcePath));
-  const { toImport, skipped } = await filterNewPhotos(photos, importedPhotos);
   if (skipped > 0) {
-    console.log(`Skipping ${photoCount(skipped)} already imported photos.`);
+    console.log(`Skipping ${skipped} already imported.`);
   }
 
   if (toImport.length === 0) {
@@ -459,17 +393,13 @@ async function main(): Promise<void> {
       logWarn('Import cancelled.');
       process.exit(1);
     }
-
-    console.log(`Ejecting ${cardVolume}…`);
-    execSync(`diskutil eject ${JSON.stringify(cardVolume)}`, {
-      stdio: 'inherit',
-    });
+    ejectCard(cardVolume);
     console.log('Done.');
     return;
   }
 
+  const sourceFolder = getCommonFolder(photos);
   execFileSync('open', [sourceFolder]);
-
   console.log(`Importing from ${sourceFolder}…`);
 
   const destinationDir = await pickDestinationFolder();
@@ -480,7 +410,9 @@ async function main(): Promise<void> {
 
   await fs.mkdir(destinationDir, { recursive: true });
 
-  if ((await confirmProceed(destinationDir, toImport.length)) === false) {
+  console.log('');
+  console.log(`Import ${toImport.length} photos to ${destinationDir}.`);
+  if ((await confirmYesNo('Proceed? [Y/n] ')) === false) {
     logWarn('Import cancelled.');
     process.exit(1);
   }
@@ -488,38 +420,37 @@ async function main(): Promise<void> {
   const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'photos-import-'));
   const failures: string[] = [];
   let importedCount = 0;
-  let skippedCount = 0;
+  let skippedInFolder = 0;
 
   try {
-    for (const [index, photo] of toImport.entries()) {
+    for (const [index, sourcePath] of toImport.entries()) {
       const tempPath = path.join(
         tempDir,
-        `${String(index).padStart(4, '0')}_${photo.basename}`
+        `${String(index).padStart(4, '0')}_${path.basename(sourcePath)}`
       );
 
       try {
-        const result = await importPhoto({
-          photo,
+        const importedName = await importPhoto(
+          sourcePath,
           tempPath,
-          destinationDir,
-        });
-
-        if (result.status === 'skipped') {
-          skippedCount++;
+          destinationDir
+        );
+        if (importedName === undefined) {
+          skippedInFolder++;
           console.log(
-            `${photo.basename} — already in folder (${index + 1}/${toImport.length})`
+            `${path.basename(sourcePath)} — already in folder (${index + 1}/${toImport.length})`
           );
           continue;
         }
 
         importedCount++;
         console.log(
-          `${photo.basename} → ${result.destinationName} (${index + 1}/${toImport.length})`
+          `${path.basename(sourcePath)} → ${importedName} (${index + 1}/${toImport.length})`
         );
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
         failures.push(message);
-        logError(`Failed to import ${photo.basename}: ${message}`);
+        logError(`Failed to import ${path.basename(sourcePath)}: ${message}`);
       }
     }
   } finally {
@@ -531,31 +462,22 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
+  if (skippedInFolder > 0) {
+    console.log(`Skipped ${skippedInFolder} already in folder.`);
+  }
+
   if (importedCount === 0) {
-    console.log(
-      `Nothing imported (${photoCount(skippedCount)} already in folder).`
-    );
+    console.log('Nothing imported.');
     if ((await confirmYesNo('Eject card? [Y/n] ')) === false) {
       logWarn('Import cancelled.');
       process.exit(1);
     }
-
-    console.log(`Ejecting ${cardVolume}…`);
-    execSync(`diskutil eject ${JSON.stringify(cardVolume)}`, {
-      stdio: 'inherit',
-    });
+    ejectCard(cardVolume);
     console.log('Done.');
     return;
   }
 
-  if (skippedCount > 0) {
-    console.log(`Skipped ${photoCount(skippedCount)} already in folder.`);
-  }
-
-  console.log(`Ejecting ${cardVolume}…`);
-  execSync(`diskutil eject ${JSON.stringify(cardVolume)}`, {
-    stdio: 'inherit',
-  });
+  ejectCard(cardVolume);
 
   try {
     execFileSync('open', ['-a', 'Photomator', destinationDir], {
