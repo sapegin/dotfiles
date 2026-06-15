@@ -1,4 +1,8 @@
-// Remove JPEG files that have a matching RAW in the same folder under ~/Pictures/Photos.
+// Remove JPEG files that have a matching RAW in the same folder.
+//
+// Usage: photos-clean-jpeg-pairs [folder]
+//
+// Default folder: ~/Pictures/Photos
 //
 // ---
 // Author: Artem Sapegin, sapegin.me
@@ -14,7 +18,7 @@ import {
   RAW_EXTENSIONS,
 } from '../util/consts.ts';
 import { logError, logWarn } from '../util/log.ts';
-import { tildify } from '../util/tildify.ts';
+import { tildify, untildify } from '../util/tildify.ts';
 
 function pairKey(filePath: string): string {
   const basename = path.basename(filePath);
@@ -80,8 +84,28 @@ async function confirmYesNo(prompt: string): Promise<boolean> {
 }
 
 async function main(): Promise<void> {
-  console.log(`Scanning ${tildify(PHOTOS_ROOT)}…`);
-  const photoFiles = await findPhotoFiles(PHOTOS_ROOT);
+  const args = process.argv.slice(2);
+  if (args.length > 1) {
+    logWarn('Usage: photos-clean-jpeg-pairs [folder]');
+    process.exit(1);
+  }
+
+  const photosRoot =
+    args.length === 0 ? PHOTOS_ROOT : path.resolve(untildify(args[0]));
+
+  try {
+    const stats = await fs.stat(photosRoot);
+    if (stats.isDirectory() === false) {
+      logWarn(`Not a directory: ${photosRoot}`);
+      process.exit(1);
+    }
+  } catch {
+    logWarn(`Folder not found: ${photosRoot}`);
+    process.exit(1);
+  }
+
+  console.log(`Scanning ${tildify(photosRoot)}…`);
+  const photoFiles = await findPhotoFiles(photosRoot);
   const toRemove = findJpegsWithRawPairs(photoFiles);
 
   if (toRemove.length === 0) {

@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-# Remove JPEG files that have a matching RAW in ~/Pictures/Photos.
+# Remove JPEG files that have a matching RAW in the same folder.
+#
+# Usage: photos-clean-jpeg-pairs [folder]
 #
 # ---
 # Author: Artem Sapegin, sapegin.me
