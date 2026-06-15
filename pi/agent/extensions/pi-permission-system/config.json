@@ -70,7 +70,8 @@
     },
     "external_directory": {
       "*": "ask",
-      "~/dotfiles/*": "allow"
+      "~/dotfiles/*": "allow",
+      "~/.agents/*": "allow"
     },
     "third_party_tool": "ask",
     "mcp": "deny"

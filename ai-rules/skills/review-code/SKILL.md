@@ -5,7 +5,7 @@ description: Review frontend code changes. Use when reviewing pull requests, exa
 
 Review the current branch against the base branch.
 
-Read and follow [guidelines for JavaScript/TypeScript](../../references/JavaScript.md).
+Read and follow [guidelines for JavaScript/TypeScript](~/dotfiles/ai-rules/references/JavaScript.md).
 
 When needed, load and follow the **web-search**, **web-fetch**, and **github** skills.
 
