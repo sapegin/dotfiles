@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# Remove JPEG files that have a matching RAW in ~/Pictures/Photos.
+#
+# ---
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+
+set -euo pipefail
+exec node "$(dirname "$0")/../src/bin/photos-clean-jpeg-pairs.ts" "$@"

@@ -18,28 +18,15 @@ import os from 'node:os';
 import path from 'node:path';
 import readline from 'node:readline/promises';
 import ExifReader from 'exifreader';
+import { JPEG_EXTENSIONS, PHOTOS_ROOT, RAW_EXTENSIONS } from '../util/consts.ts';
 import { logError, logWarn } from '../util/log.ts';
 
-const PHOTOS_ROOT = path.join(os.homedir(), 'Pictures/Photos');
 const VOLUMES_DIR = '/Volumes';
 const NEW_FOLDER_OPTION = '+ New folder…';
 
-const RAW_EXTENSIONS = new Set([
-  '.raf',
-  '.cr2',
-  '.cr3',
-  '.nef',
-  '.arw',
-  '.dng',
-  '.orf',
-  '.rw2',
-  '.pef',
-  '.srw',
-]);
 const MEDIA_EXTENSIONS = new Set([
   ...RAW_EXTENSIONS,
-  '.jpg',
-  '.jpeg',
+  ...JPEG_EXTENSIONS,
   '.heic',
   '.tif',
   '.tiff',
