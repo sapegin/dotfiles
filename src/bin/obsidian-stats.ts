@@ -17,9 +17,6 @@ const OUTPUT_FILE = path.join(DOCUMENTS_ROOT, 'MurderStats.html');
 
 // TODO: Make an npm package with the theme and all light/dark colors + semantic colors
 // TODO: Analyze all additional colors and see if we can include them in the theme as well
-// TODO: Detect homebase for each year (location with the most records)
-// TODO: Make weather stats only for homebase
-// TODO: Add additional min/max weather stats for _all_ records and include locations
 
 const COLORS = {
   // Squirrelsong Light
@@ -60,6 +57,7 @@ interface WeatherStat {
   date: string;
   temp: number;
   condition: string;
+  locationName?: string;
 }
 
 interface PostTimeStat {
@@ -84,6 +82,12 @@ interface ExtremeNote {
   date: string;
   temp: number;
   condition?: string;
+  locationName?: string;
+}
+
+interface WeatherExtremes {
+  coldestNote?: ExtremeNote;
+  hottestNote?: ExtremeNote;
 }
 
 interface MonthlyWeatherStats {
@@ -128,8 +132,10 @@ interface WeatherData {
   partly: (string | number)[];
   cloudy: (string | number)[];
   minTemp: number;
-  coldestNote: ExtremeNote;
-  hottestNote: ExtremeNote;
+  coldestNote?: ExtremeNote;
+  hottestNote?: ExtremeNote;
+  allColdestNote?: ExtremeNote;
+  allHottestNote?: ExtremeNote;
   yearLabels: string[];
   yearTempRanges: number[][];
 }
@@ -373,22 +379,9 @@ async function getDailyNotes(allNotes: Set<string>): Promise<DailyNotesData> {
             }
           }
 
-          // Extract weather
-          if (typeof frontmatter?.weather === 'string') {
-            const weatherMatch = frontmatter.weather.match(
-              /(-?\d+)°C(?:, (.+))?/
-            );
-            if (weatherMatch) {
-              const temp = Number.parseInt(weatherMatch[1], 10);
-              const condition = weatherMatch[2]
-                ? weatherMatch[2].trim().toLowerCase()
-                : 'unknown';
-              weatherStats.push({ date: dateStr, temp, condition });
-            }
-          }
-
           // Extract location and get place info
           let locationName: string | null = null;
+          let cleanLocationName: string | null = null;
           let placeInfo: PlaceInfo | null = null;
           if (typeof frontmatter?.location === 'string') {
             const location = frontmatter.location;
@@ -397,7 +390,7 @@ async function getDailyNotes(allNotes: Set<string>): Promise<DailyNotesData> {
             locationName = wikiLinkMatch ? wikiLinkMatch[1] : location;
 
             // Strip alias from location if present
-            let cleanLocationName = locationName;
+            cleanLocationName = locationName;
             const pipeIndex = cleanLocationName.indexOf('|');
             if (pipeIndex !== -1) {
               cleanLocationName = cleanLocationName.slice(0, pipeIndex);
@@ -416,6 +409,25 @@ async function getDailyNotes(allNotes: Set<string>): Promise<DailyNotesData> {
               date: dateStr,
               locationType: placeInfo.locationType,
             });
+          }
+
+          // Extract weather
+          if (typeof frontmatter?.weather === 'string') {
+            const weatherMatch = frontmatter.weather.match(
+              /(-?\d+)°C(?:, (.+))?/
+            );
+            if (weatherMatch) {
+              const temp = Number.parseInt(weatherMatch[1], 10);
+              const condition = weatherMatch[2]
+                ? weatherMatch[2].trim().toLowerCase()
+                : 'unknown';
+              weatherStats.push({
+                date: dateStr,
+                temp,
+                condition,
+                locationName: cleanLocationName ?? undefined,
+              });
+            }
           }
 
           // Extract coordinates
@@ -577,19 +589,64 @@ function generateHeatmap(
   return html;
 }
 
+function getHomebaseByYear(
+  locationStatsMap: Map<number, Map<string, number>>,
+  minYear: number,
+  maxYear: number
+): Map<number, string> {
+  const homebaseByYear = new Map<number, string>();
+
+  for (let year = minYear; year <= maxYear; year++) {
+    const yearLocations = locationStatsMap.get(year);
+    if (yearLocations === undefined || yearLocations.size === 0) {
+      continue;
+    }
+
+    const homebase = [...yearLocations.entries()].toSorted(
+      (a, b) => b[1] - a[1] || a[0].localeCompare(b[0])
+    )[0][0];
+    homebaseByYear.set(year, homebase);
+  }
+
+  return homebaseByYear;
+}
+
+function getWeatherExtremes(weatherStats: WeatherStat[]): WeatherExtremes {
+  let coldestNote: ExtremeNote | undefined;
+  let hottestNote: ExtremeNote | undefined;
+
+  for (const { date, temp, condition, locationName } of weatherStats) {
+    if (coldestNote === undefined || temp < coldestNote.temp) {
+      coldestNote = { date, temp, condition, locationName };
+    }
+    if (hottestNote === undefined || temp > hottestNote.temp) {
+      hottestNote = { date, temp, condition, locationName };
+    }
+  }
+
+  return { coldestNote, hottestNote };
+}
+
 function processWeatherStats(
   weatherStats: WeatherStat[],
+  homebaseByYear: Map<number, string>,
   minDate: Date,
   maxDate: Date
 ): WeatherData {
+  const homebaseWeatherStats = weatherStats.filter(({ date, locationName }) => {
+    const homebase = homebaseByYear.get(Number.parseInt(date.slice(0, 4), 10));
+    return locationName !== undefined && locationName === homebase;
+  });
+  const allWeatherExtremes = getWeatherExtremes(weatherStats);
+
   // "YYYY-MM" -> { tempSum, tempCount, sunny, partly, cloudy }
   const months = new Map<string, MonthlyWeatherStats>();
   // "YYYY" -> { minTemp, maxTemp }
   const years = new Map<string, YearlyTempRange>();
-  let coldestNote: ExtremeNote = { date: '', temp: 0 };
-  let hottestNote: ExtremeNote = { date: '', temp: 0 };
+  let coldestNote: ExtremeNote | undefined;
+  let hottestNote: ExtremeNote | undefined;
 
-  for (const { date, temp, condition } of weatherStats) {
+  for (const { date, temp, condition, locationName } of homebaseWeatherStats) {
     const month = date.slice(0, 7);
     let stats = months.get(month);
     if (stats === undefined) {
@@ -616,11 +673,11 @@ function processWeatherStats(
     }
 
     // Track coldest and hottest notes
-    if (temp < coldestNote.temp) {
-      coldestNote = { date, temp, condition };
+    if (coldestNote === undefined || temp < coldestNote.temp) {
+      coldestNote = { date, temp, condition, locationName };
     }
-    if (temp > hottestNote.temp) {
-      hottestNote = { date, temp, condition };
+    if (hottestNote === undefined || temp > hottestNote.temp) {
+      hottestNote = { date, temp, condition, locationName };
     }
 
     // Track min/max temperature per year
@@ -668,7 +725,7 @@ function processWeatherStats(
 
   // Process individual temperature points - map to month labels
   const tempPoints: { x: string; y: number }[] = [];
-  for (const { date, temp } of weatherStats) {
+  for (const { date, temp } of homebaseWeatherStats) {
     const month = date.slice(0, 7);
     const monthDate = new Date(`${month}-02`);
     const monthLabel = monthDate.toLocaleDateString('en-US', {
@@ -698,9 +755,11 @@ function processWeatherStats(
     sunny,
     partly,
     cloudy,
-    minTemp,
+    minTemp: minTemp === Infinity ? 0 : minTemp,
     coldestNote,
     hottestNote,
+    allColdestNote: allWeatherExtremes.coldestNote,
+    allHottestNote: allWeatherExtremes.hottestNote,
     yearLabels,
     yearTempRanges,
   };
@@ -795,12 +854,22 @@ function processLocationStats(
   return { labels, homePercentages, officePercentages, otherPercentages };
 }
 
+function formatExtremeNote(note: ExtremeNote): string {
+  const location = note.locationName ? ` in ${note.locationName}` : '';
+  return `${formatTemperature(note.temp)}${location} on ${formatDateLong(new Date(note.date))}`;
+}
+
 function generateWeatherChart(data: WeatherData): string {
   const minTemp = Math.floor(data.minTemp);
 
-  const coldDate = new Date(data.coldestNote.date);
-  const hotDate = new Date(data.hottestNote.date);
-  const extremesHtml = `<p style="margin-top: .5rem;"><strong>Coldest day:</strong> ${formatTemperature(data.coldestNote.temp)} on ${formatDateLong(coldDate)}, <strong>hottest day:</strong> ${formatTemperature(data.hottestNote.temp)} on ${formatDateLong(hotDate)}</p>`;
+  const homebaseExtremesHtml =
+    data.coldestNote && data.hottestNote
+      ? `<p style="margin-top: .5rem;"><strong>Homebase coldest day:</strong> ${formatExtremeNote(data.coldestNote)}, <strong>homebase hottest day:</strong> ${formatExtremeNote(data.hottestNote)}</p>`
+      : '';
+  const allExtremesHtml =
+    data.allColdestNote && data.allHottestNote
+      ? `<p style="margin-top: .5rem;"><strong>All locations coldest day:</strong> ${formatExtremeNote(data.allColdestNote)}, <strong>all locations hottest day:</strong> ${formatExtremeNote(data.allHottestNote)}</p>`
+      : '';
 
   return `
 <div style="position: relative; height: 400px; width: 100%; margin-bottom: 2rem;">
@@ -974,7 +1043,8 @@ function generateWeatherChart(data: WeatherData): string {
 		}
 	});
 </script>
-${extremesHtml}
+${homebaseExtremesHtml}
+${allExtremesHtml}
 `;
 }
 
@@ -1530,7 +1600,13 @@ async function main(): Promise<void> {
     totalNotes += count;
   }
 
-  const weatherData = processWeatherStats(weatherStats, minDate, maxDate);
+  const homebaseByYear = getHomebaseByYear(locationLinkStats, minYear, maxYear);
+  const weatherData = processWeatherStats(
+    weatherStats,
+    homebaseByYear,
+    minDate,
+    maxDate
+  );
   const weatherChart = generateWeatherChart(weatherData);
 
   const postTimeData = processPostTimeStats(postTimeStats, minDate, maxDate);
