@@ -8,13 +8,12 @@
 // https://github.com/sapegin/dotfiles
 
 import fs from 'node:fs/promises';
-import os from 'node:os';
 import path from 'node:path';
 import YAML from 'yaml';
+import { DOCUMENTS_ROOT, OBSIDIAN_VAULT_DIR } from '../util/consts.ts';
 
-const VAULT_DIR = path.join(os.homedir(), 'murder');
-const LOG_DIR = path.join(VAULT_DIR, '📆 Log');
-const OUTPUT_FILE = path.join(os.homedir(), 'Documents/MurderStats.html');
+const LOG_DIR = path.join(OBSIDIAN_VAULT_DIR, '📆 Log');
+const OUTPUT_FILE = path.join(DOCUMENTS_ROOT, 'MurderStats.html');
 
 // TODO: Make an npm package with the theme and all light/dark colors + semantic colors
 // TODO: Analyze all additional colors and see if we can include them in the theme as well
@@ -199,7 +198,9 @@ function enumerateMonthKeys(minDate: Date, maxDate: Date): string[] {
 }
 
 async function getAllNoteNames(): Promise<Set<string>> {
-  const files = await Array.fromAsync(fs.glob(path.join(VAULT_DIR, '**/*.md')));
+  const files = await Array.fromAsync(
+    fs.glob(path.join(OBSIDIAN_VAULT_DIR, '**/*.md'))
+  );
   const noteNames = new Set<string>();
   for (const file of files) {
     const basename = path.basename(file, '.md');
@@ -215,7 +216,7 @@ async function getPlaceInfo(locationName: string): Promise<PlaceInfo> {
   }
 
   const locationFilePath = path.join(
-    VAULT_DIR,
+    OBSIDIAN_VAULT_DIR,
     '🗂️ References/Places',
     `${locationName}.md`
   );

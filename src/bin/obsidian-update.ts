@@ -20,7 +20,9 @@ import { setTimeout } from 'node:timers/promises';
 import sharp from 'sharp';
 import YAML from 'yaml';
 import { atomicWrite } from '../util/atomicWrite.ts';
+import { IMAGE_EXTENSIONS, OBSIDIAN_VAULT_DIR } from '../util/consts.ts';
 import { readExifMetadata } from '../util/exiftool.ts';
+import { logError, logWarn } from '../util/log.ts';
 
 // TC39 stage 4, shipped in Node 24, not yet in TypeScript's lib.esnext.
 declare global {
@@ -29,25 +31,15 @@ declare global {
   }
 }
 
-const VAULT_DIR = path.join(os.homedir(), 'murder');
-const ATTACHMENTS_DIR = path.join(VAULT_DIR, 'attachments');
+const ATTACHMENTS_DIR = path.join(OBSIDIAN_VAULT_DIR, 'attachments');
 const TRASH_DIR = path.join(os.homedir(), '.obsidian-trash');
 const BACKUP_DIR = path.join(os.homedir(), '.obsidian-backup');
+const OBSIDIAN_TRASH_DIR = path.join(OBSIDIAN_VAULT_DIR, '.trash');
 const MAX_DIMENSION = 2048;
 const MAX_FILE_SIZE = 1024 * 1024; // 1 MB
 const MAX_LARGE_FILE_SIZE = MAX_FILE_SIZE * 0.5; // 0.5 MB
 const AVIF_QUALITY = 75;
-const IMAGE_EXTENSIONS = [
-  '.bmp',
-  '.gif',
-  '.heic',
-  '.jpeg',
-  '.jpg',
-  '.mov',
-  '.png',
-  '.tiff',
-  '.webp',
-];
+
 const ALL_IMAGE_EXTENSIONS = [...IMAGE_EXTENSIONS, '.avif'];
 const ALL_EXTENSIONS = [...ALL_IMAGE_EXTENSIONS, '.md'];
 const ALL_IMAGES_PATTERN = `**/*.{${ALL_IMAGE_EXTENSIONS.map((ext) => ext.slice(1)).join(',')}}`;
@@ -162,7 +154,7 @@ function printWarning(...args: unknown[]): void {
     .map((arg) => (typeof arg === 'string' ? arg : String(arg)))
     .join(' ');
   warnings.push(message);
-  console.warn(`\n⚠️ ${message}\n`);
+  logWarn(`\n⚠️ ${message}\n`);
 }
 
 function getErrorMessage(error: unknown): string {
@@ -950,12 +942,12 @@ async function updateNotes(renamedFiles: Map<string, string>): Promise<void> {
   let updatedCount = 0;
 
   const allNotes = await Array.fromAsync(
-    fs.glob(path.join(VAULT_DIR, ALL_NOTES_PATTERN))
+    fs.glob(path.join(OBSIDIAN_VAULT_DIR, ALL_NOTES_PATTERN))
   );
 
   // Gather all attachment filenames
   const imageFiles = await Array.fromAsync(
-    fs.glob(path.join(VAULT_DIR, ALL_IMAGES_PATTERN))
+    fs.glob(path.join(OBSIDIAN_VAULT_DIR, ALL_IMAGES_PATTERN))
   );
   const attachmentNames = new Set(
     imageFiles.map((imagePath) => path.basename(imagePath).normalize('NFC'))
@@ -1005,9 +997,8 @@ async function updateNotes(renamedFiles: Map<string, string>): Promise<void> {
 }
 
 async function cleanObsidianTrash(): Promise<void> {
-  const obsidianTrashDir = path.join(VAULT_DIR, '.trash');
   const imageFiles = await Array.fromAsync(
-    fs.glob(path.join(obsidianTrashDir, ALL_IMAGES_PATTERN))
+    fs.glob(path.join(OBSIDIAN_TRASH_DIR, ALL_IMAGES_PATTERN))
   );
 
   if (imageFiles.length === 0) {
@@ -1039,7 +1030,7 @@ async function backupVault(): Promise<void> {
   console.log(`Creating backup: ${path.basename(backupFile)}…`);
   execSync(
     `zip -r -q ${JSON.stringify(backupFile)} . -x "./attachments/*" "./.trash/*"`,
-    { cwd: VAULT_DIR }
+    { cwd: OBSIDIAN_VAULT_DIR }
   );
   const stats = await fs.stat(backupFile);
   const sizeMb = (stats.size / 1024 / 1024).toFixed(1);
@@ -1060,7 +1051,7 @@ async function backupVault(): Promise<void> {
  */
 async function checkICloudSync(): Promise<void> {
   const ICLOUD_MARKER = `${path.sep}Mobile Documents${path.sep}`;
-  const resolvedVault = await fs.realpath(VAULT_DIR);
+  const resolvedVault = await fs.realpath(OBSIDIAN_VAULT_DIR);
   if (resolvedVault.includes(ICLOUD_MARKER) === false) {
     console.log('Vault is not in iCloud, skipping sync diagnostics');
     return;
@@ -1092,7 +1083,9 @@ async function checkICloudSync(): Promise<void> {
   // 2. Per-file structural checks
   const issues: string[] = [];
   let regularFiles = 0;
-  const allFiles = await Array.fromAsync(fs.glob(path.join(VAULT_DIR, '**/*')));
+  const allFiles = await Array.fromAsync(
+    fs.glob(path.join(OBSIDIAN_VAULT_DIR, '**/*'))
+  );
   for (const file of allFiles) {
     const stats = await fs.stat(file).catch(() => null);
     if (stats === null || stats.isFile() === false) {
@@ -1101,7 +1094,7 @@ async function checkICloudSync(): Promise<void> {
     regularFiles++;
 
     const name = path.basename(file);
-    const rel = path.relative(VAULT_DIR, file);
+    const rel = path.relative(OBSIDIAN_VAULT_DIR, file);
 
     if (name.includes(':')) {
       issues.push(`Colon in name: ${rel}`);
@@ -1159,10 +1152,9 @@ async function checkICloudSync(): Promise<void> {
 
 async function main(): Promise<void> {
   try {
-    await fs.access(VAULT_DIR);
+    await fs.access(OBSIDIAN_VAULT_DIR);
   } catch {
-    console.error();
-    console.error('⛔️ Error: Vault directory does not exist:', VAULT_DIR);
+    logError('\n⛔️ Error: Vault directory does not exist:', OBSIDIAN_VAULT_DIR);
     process.exit(1);
   }
 
@@ -1176,10 +1168,10 @@ async function main(): Promise<void> {
 
   console.log('\n💿 Gathering the files…');
   const markdownFiles = await Array.fromAsync(
-    fs.glob(path.join(VAULT_DIR, ALL_NOTES_PATTERN))
+    fs.glob(path.join(OBSIDIAN_VAULT_DIR, ALL_NOTES_PATTERN))
   );
   const imageFiles = await Array.fromAsync(
-    fs.glob(path.join(VAULT_DIR, ALL_IMAGES_PATTERN))
+    fs.glob(path.join(OBSIDIAN_VAULT_DIR, ALL_IMAGES_PATTERN))
   );
   console.log(
     `\nFound ${markdownFiles.length} notes and ${imageFiles.length} images`
@@ -1196,14 +1188,14 @@ async function main(): Promise<void> {
 
   console.log('\nCollecting used images from Markdown…\n');
   const updatedMarkdownFiles = await Array.fromAsync(
-    fs.glob(path.join(VAULT_DIR, ALL_NOTES_PATTERN))
+    fs.glob(path.join(OBSIDIAN_VAULT_DIR, ALL_NOTES_PATTERN))
   );
   const usedImages = await findUsedImages(updatedMarkdownFiles);
   console.log(`\nFound ${usedImages.size} image usages`);
 
   console.log('\nRemoving unused images…\n');
   const remainingImageFiles = await Array.fromAsync(
-    fs.glob(path.join(VAULT_DIR, ALL_IMAGES_PATTERN))
+    fs.glob(path.join(OBSIDIAN_VAULT_DIR, ALL_IMAGES_PATTERN))
   );
   await removeUnusedImages(remainingImageFiles, usedImages);
 
@@ -1225,6 +1217,6 @@ try {
   await main();
 } catch (error) {
   console.log();
-  console.error(getErrorStack(error));
+  logError(getErrorStack(error));
   process.exit(1);
 }

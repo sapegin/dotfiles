@@ -1,7 +1,27 @@
 import os from 'node:os';
 import path from 'node:path';
 
-export const PHOTOS_ROOT = path.join(os.homedir(), 'Pictures/Photos');
+const HOME = os.homedir();
+
+export const OBSIDIAN_VAULT_DIR = path.join(HOME, 'murder');
+
+export const DOCUMENTS_ROOT = path.join(HOME, 'Documents');
+
+export const PHOTOS_ROOT = path.join(HOME, 'Pictures/Photos');
+
+export const JPEG_EXTENSIONS = new Set(['.jpg', '.jpeg']);
+
+// XXX: It doesn't have .avif
+export const IMAGE_EXTENSIONS = [
+  ...JPEG_EXTENSIONS,
+  '.bmp',
+  '.gif',
+  '.heic',
+  '.mov',
+  '.png',
+  '.tiff',
+  '.webp',
+];
 
 export const RAW_EXTENSIONS = new Set([
   '.raf',
@@ -15,5 +35,3 @@ export const RAW_EXTENSIONS = new Set([
   '.pef',
   '.srw',
 ]);
-
-export const JPEG_EXTENSIONS = new Set(['.jpg', '.jpeg']);
