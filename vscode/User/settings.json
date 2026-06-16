@@ -171,6 +171,7 @@
   "terminal.integrated.drawBoldTextInBrightColors": false,
   "terminal.integrated.enablePersistentSessions": false,
   "terminal.integrated.fontSize": 15,
+  "terminal.integrated.hideOnLastClosed": false,
   "terminal.integrated.hideOnStartup": "always",
   "terminal.integrated.initialHint": false,
   "terminal.integrated.lineHeight": 1.1,
@@ -178,12 +179,14 @@
   "terminal.integrated.shellIntegration.decorationsEnabled": "never",
   "terminal.integrated.shellIntegration.showCommandGuide": false,
   "terminal.integrated.stickyScroll.enabled": false,
-  "terminal.integrated.suggest.enabled": true,
+  "terminal.integrated.suggest.enabled": false,
+  "terminal.integrated.suggest.inlineSuggestion": "off",
   "terminal.integrated.suggest.quickSuggestions": {
     "commands": "off",
     "arguments": "on",
     "unknown": "off"
   },
+  "terminal.integrated.tabs.enabled": false,
   "terminal.integrated.tabs.enableAnimation": false,
   "terminal.integrated.tabs.showActions": "never",
   "terminal.integrated.tabStopWidth": 2,
