@@ -1,9 +1,9 @@
 // Import photos from a camera memory card into ~/Pictures/Photos.
 //
-// - Detects a mounted card (volume containing DCIM/)
+// - Detects a mounted card
 // - Prefers RAW over JPEG pairs
-// - Detects duplicates by matching number suffixes, then comparing capture dates
-// - Copies each new file to a temp folder on disk, reads EXIF there, then moves with the final name
+// - Detects duplicates by matching number suffixes and capture dates
+// - Copies and renames each new file
 // - Skips files that already exist in the destination folder
 // - Ejects the card when done and opens copied photos in Photomator
 //
@@ -17,9 +17,14 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import readline from 'node:readline/promises';
-import ExifReader from 'exifreader';
-import { JPEG_EXTENSIONS, PHOTOS_ROOT, RAW_EXTENSIONS } from '../util/consts.ts';
+import {
+  JPEG_EXTENSIONS,
+  PHOTOS_ROOT,
+  RAW_EXTENSIONS,
+} from '../util/consts.ts';
+import { readExifMetadata } from '../util/exiftool.ts';
 import { logError, logWarn } from '../util/log.ts';
+import { tildify } from '../util/tildify.ts';
 
 const VOLUMES_DIR = '/Volumes';
 const NEW_FOLDER_OPTION = '+ New folder…';
@@ -180,19 +185,18 @@ function isAlreadyImported(
 
 async function getCaptureDate(filePath: string): Promise<string | undefined> {
   try {
-    const exif = ExifReader.load(await fs.readFile(filePath)) as Partial<
-      Record<string, { description?: string }>
-    >;
-    const match = exif.DateTimeOriginal?.description?.match(
-      /^(\d{4}):(\d{2}):(\d{2})/
-    );
-    return match ? `${match[1]}-${match[2]}-${match[3]}` : undefined;
+    const { dateTimeOriginal } = await readExifMetadata(filePath);
+    const match = dateTimeOriginal?.match(/^(\d{4}):(\d{2}):(\d{2})/);
+    if (match) {
+      return `${match[1]}-${match[2]}-${match[3]}`;
+    }
   } catch {
     return undefined;
   }
+  return undefined;
 }
 
-function destinationName(
+function getDestinationName(
   sourcePath: string,
   captureDate: string | undefined
 ): string {
@@ -204,7 +208,7 @@ function destinationName(
   if (suffix === undefined) {
     return basename;
   }
-  return `${captureDate}_${suffix}_Artem_Sapegin${path.extname(basename)}`;
+  return `${captureDate}_${suffix}_Artem_Sapegin${path.extname(basename).toLowerCase()}`;
 }
 
 async function findPhotosToImport(cardPaths: string[]): Promise<string[]> {
@@ -274,10 +278,10 @@ async function importPhoto(
 ): Promise<string | undefined> {
   await copyPhoto(sourcePath, tempPath);
 
-  const captureDate = await getCaptureDate(tempPath);
+  const captureDate = await getCaptureDate(sourcePath);
   const destinationPath = path.join(
     destinationDir,
-    destinationName(sourcePath, captureDate)
+    getDestinationName(sourcePath, captureDate)
   );
 
   try {
@@ -397,9 +401,12 @@ async function main(): Promise<void> {
 
   await fs.mkdir(destinationDir, { recursive: true });
 
-  console.log('');
-  console.log(`Import ${toImport.length} photos to ${destinationDir}.`);
-  if ((await confirmYesNo('Proceed? [Y/n] ')) === false) {
+  console.log();
+  if (
+    (await confirmYesNo(
+      `Import ${toImport.length} photos to ${tildify(destinationDir)}? [Y/n]`
+    )) === false
+  ) {
     logWarn('Import cancelled.');
     process.exit(1);
   }

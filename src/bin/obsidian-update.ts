@@ -17,10 +17,10 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { setTimeout } from 'node:timers/promises';
-import ExifReader from 'exifreader';
 import sharp from 'sharp';
 import YAML from 'yaml';
 import { atomicWrite } from '../util/atomicWrite.ts';
+import { readExifMetadata } from '../util/exiftool.ts';
 
 // TC39 stage 4, shipped in Node 24, not yet in TypeScript's lib.esnext.
 declare global {
@@ -276,40 +276,6 @@ function getImageByIndex(body: string, index: number): string | undefined {
   return images.length > 0 ? path.basename(images[index]) : undefined;
 }
 
-function gpsFraction(v: unknown): number {
-  if (Array.isArray(v) && v.length === 2 && v[1] !== 0) {
-    return v[0] / v[1];
-  }
-  return 0;
-}
-
-/** Calculate decimal coordinate from EXIF GPS data. */
-function getGpsCoordinate(
-  exif: Partial<Record<string, { value: unknown }>>,
-  type: 'Latitude' | 'Longitude'
-): number | undefined {
-  const tag = exif[`GPS${type}`];
-  const ref = exif[`GPS${type}Ref`];
-  if (tag === undefined || ref === undefined) {
-    return undefined;
-  }
-
-  const value = tag.value as [number, number][];
-  const refValue = (ref.value as string[])[0];
-
-  const degrees = gpsFraction(value[0]);
-  const minutes = gpsFraction(value[1]);
-  const seconds = gpsFraction(value[2]);
-
-  let coordinate = degrees + minutes / 60 + seconds / 3600;
-
-  if (refValue === 'S' || refValue === 'W') {
-    coordinate = -coordinate;
-  }
-
-  return coordinate;
-}
-
 /** Fetch weather data from Open-Meteo API. */
 async function getWeather(
   lat: string,
@@ -406,20 +372,13 @@ async function getImageMetadata(
     return { date: '', coordinates: undefined };
   }
 
-  const buffer = await fs.readFile(filePath);
-  const exif = ExifReader.load(buffer) as Partial<
-    Record<string, { value: unknown; description?: string }>
-  >;
-
-  const dateTag = exif.DateTimeOriginal;
-  const date = dateTag?.description ?? '';
-
-  const lat = getGpsCoordinate(exif, 'Latitude');
-  const lon = getGpsCoordinate(exif, 'Longitude');
+  const { dateTimeOriginal, gpsLatitude, gpsLongitude } =
+    await readExifMetadata(filePath);
+  const date = dateTimeOriginal ?? '';
 
   let coordinates: string | undefined;
-  if (lat !== undefined && lon !== undefined) {
-    coordinates = `${lat.toFixed(10)}, ${lon.toFixed(10)}`;
+  if (gpsLatitude !== undefined && gpsLongitude !== undefined) {
+    coordinates = `${gpsLatitude.toFixed(10)}, ${gpsLongitude.toFixed(10)}`;
   }
 
   return { date, coordinates };

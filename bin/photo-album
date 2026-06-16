@@ -11,7 +11,7 @@ import path from 'node:path';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import sharp from 'sharp';
-import ExifReader from 'exifreader';
+import { readExifMetadata } from '../src/util/exiftool.ts';
 
 const SOURCE_DIR = path.join(os.homedir(), 'Pictures/JunkyardPhotoAlbum');
 const OUTPUT_DIR = path.join(os.homedir(), 'Documents/JunkyardPhotoAlbum');
@@ -26,14 +26,12 @@ function getYearFile(year) {
 
 async function readExifData(filePath) {
 	try {
-		const buffer = await fs.readFile(filePath);
-		const exif = ExifReader.load(buffer);
-
-		const dateStr = exif.DateTimeOriginal?.description ?? '';
-		const width = exif['Image Width']?.value ?? 0;
-		const height = exif['Image Height']?.value ?? 0;
-		const make = exif.Make?.description ?? '';
-		const rating = exif.Rating?.value ?? 0;
+		const metadata = await readExifMetadata(filePath);
+		const dateStr = metadata.dateTimeOriginal ?? '';
+		const width = metadata.imageWidth ?? 0;
+		const height = metadata.imageHeight ?? 0;
+		const make = metadata.make ?? '';
+		const rating = metadata.rating ?? 0;
 
 		// Parse EXIF date format: "YYYY:MM:DD HH:MM:SS"
 		let captureDate = new Date(0);
