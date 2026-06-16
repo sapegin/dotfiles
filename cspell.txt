@@ -27,6 +27,7 @@ dotfiles
 downscale
 downscales
 exif
+exiftool
 Flexbox
 Formik
 frontends

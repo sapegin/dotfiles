@@ -51,6 +51,7 @@ interface PlaceInfo {
   locationType: LocationType;
   icon: string;
   color: string;
+  cityName?: string;
 }
 
 interface WeatherStat {
@@ -58,6 +59,7 @@ interface WeatherStat {
   temp: number;
   condition: string;
   locationName?: string;
+  cityName?: string;
 }
 
 interface PostTimeStat {
@@ -83,6 +85,7 @@ interface ExtremeNote {
   temp: number;
   condition?: string;
   locationName?: string;
+  cityName?: string;
 }
 
 interface WeatherExtremes {
@@ -119,6 +122,7 @@ interface DailyNotesData {
   tagStats: Map<number, Map<string, number>>;
   wikilinkStats: Map<number, Map<string, number>>;
   locationLinkStats: Map<number, Map<string, number>>;
+  cityStats: Map<number, Map<string, number>>;
   unresolvedWikilinkStats: Map<number, Map<string, number>>;
   nonWikilinkLocations: Map<number, Map<string, number>>;
   minDate: Date;
@@ -167,6 +171,15 @@ function normalizeWikilink(wikilink: string): string {
   }
   // Capitalize the first letter
   return normalized.charAt(0).toUpperCase() + normalized.slice(1);
+}
+
+function getCityNameFromAddress(address: string): string | undefined {
+  const parts = address.split(', ').filter(Boolean);
+  if (parts.length < 2) {
+    return undefined;
+  }
+
+  return parts.at(-2)?.replace(/ Oblast/i, '');
 }
 
 /**
@@ -244,6 +257,7 @@ async function getPlaceInfo(locationName: string): Promise<PlaceInfo> {
       > | null;
       const icon = frontmatter?.icon;
       const color = frontmatter?.color;
+      const address = frontmatter?.address;
       let locationType: LocationType = 'other';
       if (locationContent.includes('dwellings')) {
         locationType = 'home';
@@ -254,6 +268,10 @@ async function getPlaceInfo(locationName: string): Promise<PlaceInfo> {
         locationType,
         icon: typeof icon === 'string' ? icon : 'map-pin',
         color: typeof color === 'string' ? color : 'silver',
+        cityName:
+          typeof address === 'string'
+            ? getCityNameFromAddress(address)
+            : undefined,
       };
       placeInfoCache.set(locationName, info);
       return info;
@@ -278,6 +296,7 @@ async function getDailyNotes(allNotes: Set<string>): Promise<DailyNotesData> {
   const tagStats = new Map<number, Map<string, number>>();
   const wikilinkStats = new Map<number, Map<string, number>>();
   const locationLinkStats = new Map<number, Map<string, number>>();
+  const cityStats = new Map<number, Map<string, number>>();
   const unresolvedWikilinkStats = new Map<number, Map<string, number>>();
   const nonWikilinkLocations = new Map<number, Map<string, number>>();
   let minDate = new Date();
@@ -382,6 +401,7 @@ async function getDailyNotes(allNotes: Set<string>): Promise<DailyNotesData> {
           // Extract location and get place info
           let locationName: string | null = null;
           let cleanLocationName: string | null = null;
+          let cityName: string | undefined;
           let placeInfo: PlaceInfo | null = null;
           if (typeof frontmatter?.location === 'string') {
             const location = frontmatter.location;
@@ -405,6 +425,14 @@ async function getDailyNotes(allNotes: Set<string>): Promise<DailyNotesData> {
             }
 
             placeInfo = await getPlaceInfo(cleanLocationName);
+            cityName =
+              placeInfo.cityName ??
+              (wikiLinkMatch === null
+                ? getCityNameFromAddress(cleanLocationName)
+                : undefined);
+            if (cityName !== undefined) {
+              incrementYearMap(cityStats, year, cityName);
+            }
             locationStats.push({
               date: dateStr,
               locationType: placeInfo.locationType,
@@ -426,6 +454,7 @@ async function getDailyNotes(allNotes: Set<string>): Promise<DailyNotesData> {
                 temp,
                 condition,
                 locationName: cleanLocationName ?? undefined,
+                cityName,
               });
             }
           }
@@ -475,6 +504,7 @@ async function getDailyNotes(allNotes: Set<string>): Promise<DailyNotesData> {
     tagStats,
     wikilinkStats,
     locationLinkStats,
+    cityStats,
     unresolvedWikilinkStats,
     nonWikilinkLocations,
     minDate,
@@ -589,38 +619,44 @@ function generateHeatmap(
   return html;
 }
 
-function getHomebaseByYear(
-  locationStatsMap: Map<number, Map<string, number>>,
+function getHomebaseCityByYear(
+  cityStatsMap: Map<number, Map<string, number>>,
   minYear: number,
   maxYear: number
 ): Map<number, string> {
-  const homebaseByYear = new Map<number, string>();
+  const homebaseCityByYear = new Map<number, string>();
 
   for (let year = minYear; year <= maxYear; year++) {
-    const yearLocations = locationStatsMap.get(year);
-    if (yearLocations === undefined || yearLocations.size === 0) {
+    const yearCities = cityStatsMap.get(year);
+    if (yearCities === undefined || yearCities.size === 0) {
       continue;
     }
 
-    const homebase = [...yearLocations.entries()].toSorted(
+    const homebaseCity = [...yearCities.entries()].toSorted(
       (a, b) => b[1] - a[1] || a[0].localeCompare(b[0])
     )[0][0];
-    homebaseByYear.set(year, homebase);
+    homebaseCityByYear.set(year, homebaseCity);
   }
 
-  return homebaseByYear;
+  return homebaseCityByYear;
 }
 
 function getWeatherExtremes(weatherStats: WeatherStat[]): WeatherExtremes {
   let coldestNote: ExtremeNote | undefined;
   let hottestNote: ExtremeNote | undefined;
 
-  for (const { date, temp, condition, locationName } of weatherStats) {
+  for (const {
+    date,
+    temp,
+    condition,
+    locationName,
+    cityName,
+  } of weatherStats) {
     if (coldestNote === undefined || temp < coldestNote.temp) {
-      coldestNote = { date, temp, condition, locationName };
+      coldestNote = { date, temp, condition, locationName, cityName };
     }
     if (hottestNote === undefined || temp > hottestNote.temp) {
-      hottestNote = { date, temp, condition, locationName };
+      hottestNote = { date, temp, condition, locationName, cityName };
     }
   }
 
@@ -629,13 +665,15 @@ function getWeatherExtremes(weatherStats: WeatherStat[]): WeatherExtremes {
 
 function processWeatherStats(
   weatherStats: WeatherStat[],
-  homebaseByYear: Map<number, string>,
+  homebaseCityByYear: Map<number, string>,
   minDate: Date,
   maxDate: Date
 ): WeatherData {
-  const homebaseWeatherStats = weatherStats.filter(({ date, locationName }) => {
-    const homebase = homebaseByYear.get(Number.parseInt(date.slice(0, 4), 10));
-    return locationName !== undefined && locationName === homebase;
+  const homebaseWeatherStats = weatherStats.filter(({ date, cityName }) => {
+    const homebaseCity = homebaseCityByYear.get(
+      Number.parseInt(date.slice(0, 4), 10)
+    );
+    return cityName !== undefined && cityName === homebaseCity;
   });
   const allWeatherExtremes = getWeatherExtremes(weatherStats);
 
@@ -646,7 +684,13 @@ function processWeatherStats(
   let coldestNote: ExtremeNote | undefined;
   let hottestNote: ExtremeNote | undefined;
 
-  for (const { date, temp, condition, locationName } of homebaseWeatherStats) {
+  for (const {
+    date,
+    temp,
+    condition,
+    locationName,
+    cityName,
+  } of homebaseWeatherStats) {
     const month = date.slice(0, 7);
     let stats = months.get(month);
     if (stats === undefined) {
@@ -674,10 +718,10 @@ function processWeatherStats(
 
     // Track coldest and hottest notes
     if (coldestNote === undefined || temp < coldestNote.temp) {
-      coldestNote = { date, temp, condition, locationName };
+      coldestNote = { date, temp, condition, locationName, cityName };
     }
     if (hottestNote === undefined || temp > hottestNote.temp) {
-      hottestNote = { date, temp, condition, locationName };
+      hottestNote = { date, temp, condition, locationName, cityName };
     }
 
     // Track min/max temperature per year
@@ -855,7 +899,7 @@ function processLocationStats(
 }
 
 function formatExtremeNote(note: ExtremeNote): string {
-  const location = note.locationName ? ` in ${note.locationName}` : '';
+  const location = note.cityName ? ` in ${note.cityName}` : '';
   return `${formatTemperature(note.temp)}${location} on ${formatDateLong(new Date(note.date))}`;
 }
 
@@ -1029,9 +1073,6 @@ function generateWeatherChart(data: WeatherData): string {
 					type: 'linear',
 					display: true,
 					position: 'right',
-					grid: {
-						drawOnChartArea: false
-					},
 					title: {
 						display: false
 					},
@@ -1563,6 +1604,7 @@ async function main(): Promise<void> {
     tagStats,
     wikilinkStats,
     locationLinkStats,
+    cityStats,
     unresolvedWikilinkStats,
     nonWikilinkLocations,
     minDate,
@@ -1600,10 +1642,10 @@ async function main(): Promise<void> {
     totalNotes += count;
   }
 
-  const homebaseByYear = getHomebaseByYear(locationLinkStats, minYear, maxYear);
+  const homebaseCityByYear = getHomebaseCityByYear(cityStats, minYear, maxYear);
   const weatherData = processWeatherStats(
     weatherStats,
-    homebaseByYear,
+    homebaseCityByYear,
     minDate,
     maxDate
   );
