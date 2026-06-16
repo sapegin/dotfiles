@@ -157,6 +157,7 @@ interface LocationData {
 }
 
 const placeInfoCache = new Map<string, PlaceInfo>();
+const WIKILINK_REGEX = /(?<!!)\[\[([^\]]+)\]\]/g;
 
 function formatTemperature(value: number): string {
   return String(value).replace('-', '−') + '°C';
@@ -341,7 +342,7 @@ async function getDailyNotes(allNotes: Set<string>): Promise<DailyNotesData> {
       }
 
       // Extract wikilinks from body
-      const bodyWikilinks = body.match(/\[\[([^\]]+)\]\]/g);
+      const bodyWikilinks = body.match(WIKILINK_REGEX);
       if (bodyWikilinks) {
         for (const link of bodyWikilinks) {
           const cleanLink = normalizeWikilink(link);
@@ -379,7 +380,7 @@ async function getDailyNotes(allNotes: Set<string>): Promise<DailyNotesData> {
                 continue;
               }
               if (typeof value === 'string') {
-                const fmWikilinks = value.match(/\[\[([^\]]+)\]\]/g);
+                const fmWikilinks = value.match(WIKILINK_REGEX);
                 if (fmWikilinks) {
                   for (const link of fmWikilinks) {
                     const cleanLink = normalizeWikilink(link);
