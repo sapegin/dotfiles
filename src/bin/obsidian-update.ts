@@ -824,43 +824,6 @@ async function updateNote({
       }
     }
 
-    // Update journal date based on the first photo. The note heading should look
-    // like this: `YYYY-MM-DD?!` or `YYYY-MM-DD?! N`
-    if (firstImage && /^# \d\d\d\d-\d\d-\d\d\?!/.test(body.trimStart())) {
-      // Get an optional image index (default to the first image)
-      const imageIndexMatch = body.match(/^# \d\d\d\d-\d\d-\d\d\?! (\d+)/);
-      const imageIndex = Number(imageIndexMatch?.[1] ?? '1') - 1;
-      console.log(
-        `Updating ${basename} date using image number ${imageIndex + 1}…`
-      );
-
-      // Get the image metadata
-      const image = getImageByIndex(body, imageIndex);
-      const imageMetadata = await getImageMetadata(image);
-
-      if (imageMetadata.date) {
-        // EXIF date strings look like 2025:02:13 18:25:59. Convert it to filename
-        // format: YYYY-MM-DD_HHss
-        const newBasename = imageMetadata.date.replace(
-          /^(\d{4}):(\d{2}):(\d{2}) (\d{2}):(\d{2}):(\d{2})/,
-          '$1-$2-$3_$4$5'
-        );
-
-        console.log(`  ↪`, newBasename);
-
-        // Update basename in the file path
-        newFile = file.replace(basename, newBasename);
-
-        // Delete existing weather info, as it should be updated for the new
-        // date/time
-        delete newFrontmatter.weather;
-      } else {
-        printWarning(
-          `${basename}: EXIF date is missing in ${image}\nMetadata: ${JSON.stringify(imageMetadata)}`
-        );
-      }
-    }
-
     // Get the date/time from the filename
     const date = parseNoteDate(path.basename(newFile, '.md'));
 
