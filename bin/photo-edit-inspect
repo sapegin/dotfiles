@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# Inspect Photomator .photo-edit files.
+#
+# Usage: photo-edit-inspect [--output folder] <file.photo-edit>
+#
+# ---
+# Author: Artem Sapegin, sapegin.me
+# License: MIT
+# https://github.com/sapegin/dotfiles
+
+set -euo pipefail
+exec node "$(dirname "$0")/../src/bin/photo-edit-inspect.ts" "$@"
