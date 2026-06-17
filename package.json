@@ -9,7 +9,6 @@
     "format": "oxfmt"
   },
   "dependencies": {
-    "avif": "^0.5.3",
     "sharp": "0.34.5",
     "yaml": "2.9.0"
   },
