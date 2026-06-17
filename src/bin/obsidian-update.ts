@@ -35,15 +35,17 @@ const ATTACHMENTS_DIR = path.join(OBSIDIAN_VAULT_DIR, 'attachments');
 const TRASH_DIR = path.join(os.homedir(), '.obsidian-trash');
 const BACKUP_DIR = path.join(os.homedir(), '.obsidian-backup');
 const OBSIDIAN_TRASH_DIR = path.join(OBSIDIAN_VAULT_DIR, '.trash');
+
 const MAX_DIMENSION = 2048;
 const MAX_FILE_SIZE = 1024 * 1024; // 1 MB
 const MAX_LARGE_FILE_SIZE = MAX_FILE_SIZE * 0.5; // 0.5 MB
 const AVIF_QUALITY = 75;
-
 const ALL_IMAGE_EXTENSIONS = [...IMAGE_EXTENSIONS, '.avif'];
 const ALL_EXTENSIONS = [...ALL_IMAGE_EXTENSIONS, '.md'];
 const ALL_IMAGES_PATTERN = `**/*.{${ALL_IMAGE_EXTENSIONS.map((ext) => ext.slice(1)).join(',')}}`;
+
 const ALL_NOTES_PATTERN = `**/*.md`;
+
 const FRONTMATTER_FIELDS = [
   'address',
   'aliases',

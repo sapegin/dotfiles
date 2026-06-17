@@ -5,6 +5,8 @@ const HOME = os.homedir();
 
 export const DOTFILES_DIR = path.resolve(import.meta.dirname, '..', '..');
 
+export const PROJECTS_DIR = path.join(HOME, '_');
+
 export const OBSIDIAN_VAULT_DIR = path.join(HOME, 'murder');
 
 export const DOCUMENTS_ROOT = path.join(HOME, 'Documents');

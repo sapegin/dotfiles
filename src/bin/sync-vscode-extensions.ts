@@ -13,6 +13,7 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { log } from '../util/theme.ts';
+import { untildify } from '../util/tildify.ts';
 
 interface SourceConfig {
   // Path to the repo (may start with `~`)
@@ -45,10 +46,6 @@ const SOURCES: SourceConfig[] = [
     },
   },
 ];
-
-function untildify(filePath: string): string {
-  return filePath.replace(/^~/, os.homedir());
-}
 
 interface ExtensionPackageJson {
   name: string;

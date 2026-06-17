@@ -14,12 +14,12 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { DOTFILES_DIR } from '../util/consts.ts';
 
-const REPO_ROOT = path.resolve(import.meta.dirname, '..', '..');
-const BIN_DIR = path.join(REPO_ROOT, 'bin');
-const BIN_TS_DIR = path.join(REPO_ROOT, 'src/bin');
-const DOCS_DIR = path.join(REPO_ROOT, 'docs');
-const CONFIG = path.join(REPO_ROOT, 'tilde/.tlrc.toml');
+const BIN_DIR = path.join(DOTFILES_DIR, 'bin');
+const BIN_TS_DIR = path.join(DOTFILES_DIR, 'src/bin');
+const DOCS_DIR = path.join(DOTFILES_DIR, 'docs');
+const CONFIG = path.join(DOTFILES_DIR, 'tilde/.tlrc.toml');
 
 function getSourceFilepath(name: string): string | undefined {
   const binTsFilePath = path.join(BIN_TS_DIR, `${name}.ts`);

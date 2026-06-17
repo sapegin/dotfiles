@@ -10,19 +10,21 @@
 import { execSync } from 'node:child_process';
 import crypto from 'node:crypto';
 import fs from 'node:fs/promises';
-import os from 'node:os';
 import path from 'node:path';
 import { atomicCopy } from '../util/atomicWrite.ts';
+import {
+  DOTFILES_DIR,
+  OBSIDIAN_VAULT_DIR,
+  PROJECTS_DIR,
+} from '../util/consts.ts';
 import { log } from '../util/theme.ts';
 
-const PLUGINS_REPO = path.join(os.homedir(), '_/raccoon-obsidian');
+const PLUGINS_REPO = path.join(PROJECTS_DIR, 'raccoon-obsidian');
 const PLUGINS_DIR = path.join(PLUGINS_REPO, 'plugins');
-
-const TARGET_VAULT = path.join(os.homedir(), 'murder/.obsidian/plugins');
-
+const TARGET_VAULT = path.join(OBSIDIAN_VAULT_DIR, '.obsidian/plugins');
 const MANIFEST_FILE = path.join(
-  os.homedir(),
-  'dotfiles/obsidian/installed-plugins.json'
+  DOTFILES_DIR,
+  'obsidian/installed-plugins.json'
 );
 
 const REQUIRED_FILES = ['main.js', 'manifest.json'] as const;
