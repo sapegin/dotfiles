@@ -1,5 +1,5 @@
 import { execSync } from 'node:child_process';
-import { logWarn } from './log.ts';
+import { log } from './theme.ts';
 
 /**
  * Pulls the Git repository if it's clean. Logs a warning otherwise.
@@ -12,6 +12,6 @@ export function gitPullIfClean(cwd: string) {
   if (repoStatus.trim() === '') {
     execSync('git pull', { cwd, stdio: 'inherit' });
   } else {
-    logWarn('⚠️ Working tree is dirty, skipping git pull');
+    log.warn('⚠️ Working tree is dirty, skipping git pull');
   }
 }

@@ -23,7 +23,7 @@ import {
   RAW_EXTENSIONS,
 } from '../util/consts.ts';
 import { readExifMetadata } from '../util/exiftool.ts';
-import { logError, logWarn } from '../util/log.ts';
+import { log } from '../util/theme.ts';
 import { tildify } from '../util/tildify.ts';
 
 const VOLUMES_DIR = '/Volumes';
@@ -340,7 +340,7 @@ async function main(): Promise<void> {
   console.log('Looking for card…');
   const cardVolumes = await findCardVolumes();
   if (cardVolumes.length === 0) {
-    logWarn('No card found. Insert a card and try again.');
+    log.warn('No card found. Insert a card and try again.');
     process.exit(1);
   }
 
@@ -349,7 +349,7 @@ async function main(): Promise<void> {
       ? cardVolumes[0]
       : runFzf(cardVolumes, 'Select card');
   if (cardVolume === undefined || cardVolume === '') {
-    logWarn('No card selected.');
+    log.warn('No card selected.');
     process.exit(1);
   }
 
@@ -358,7 +358,7 @@ async function main(): Promise<void> {
     await findMediaFiles(path.join(cardVolume, 'DCIM'))
   ).flatMap((sourcePath): string[] => {
     if (getSuffix(path.basename(sourcePath)) === undefined) {
-      logWarn(
+      log.warn(
         `Skipping ${path.basename(sourcePath)}: cannot determine number suffix`
       );
       return [];
@@ -367,7 +367,7 @@ async function main(): Promise<void> {
   });
 
   if (photos.length === 0) {
-    logWarn(`No photos found on ${cardVolume}.`);
+    log.warn(`No photos found on ${cardVolume}.`);
     process.exit(1);
   }
 
@@ -381,7 +381,7 @@ async function main(): Promise<void> {
 
   if (toImport.length === 0) {
     if ((await confirmYesNo('Eject card? [Y/n] ')) === false) {
-      logWarn('Import cancelled.');
+      log.warn('Import cancelled.');
       process.exit(1);
     }
     ejectCard(cardVolume);
@@ -395,7 +395,7 @@ async function main(): Promise<void> {
 
   const destinationDir = await pickDestinationFolder();
   if (destinationDir === undefined) {
-    logWarn('Import cancelled.');
+    log.warn('Import cancelled.');
     process.exit(1);
   }
 
@@ -407,7 +407,7 @@ async function main(): Promise<void> {
       `Import ${toImport.length} photos to ${tildify(destinationDir)}? [Y/n]`
     )) === false
   ) {
-    logWarn('Import cancelled.');
+    log.warn('Import cancelled.');
     process.exit(1);
   }
 
@@ -444,7 +444,7 @@ async function main(): Promise<void> {
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
         failures.push(message);
-        logError(`Failed to import ${path.basename(sourcePath)}: ${message}`);
+        log.error(`Failed to import ${path.basename(sourcePath)}: ${message}`);
       }
     }
   } finally {
@@ -452,7 +452,9 @@ async function main(): Promise<void> {
   }
 
   if (failures.length > 0) {
-    logWarn(`${failures.length} files failed to import; card was not ejected.`);
+    log.warn(
+      `${failures.length} files failed to import; card was not ejected.`
+    );
     process.exit(1);
   }
 
@@ -463,7 +465,7 @@ async function main(): Promise<void> {
   if (importedCount === 0) {
     console.log('Nothing imported.');
     if ((await confirmYesNo('Eject card? [Y/n] ')) === false) {
-      logWarn('Import cancelled.');
+      log.warn('Import cancelled.');
       process.exit(1);
     }
     ejectCard(cardVolume);
@@ -478,7 +480,7 @@ async function main(): Promise<void> {
       stdio: 'inherit',
     });
   } catch {
-    logWarn('Could not open Photomator.');
+    log.warn('Could not open Photomator.');
   }
 
   console.log('Done.');
@@ -487,6 +489,6 @@ async function main(): Promise<void> {
 try {
   await main();
 } catch (error) {
-  logError(error instanceof Error ? error.message : String(error));
+  log.error(error instanceof Error ? error.message : String(error));
   process.exit(1);
 }

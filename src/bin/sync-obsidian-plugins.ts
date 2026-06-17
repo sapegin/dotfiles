@@ -13,6 +13,7 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { atomicCopy } from '../util/atomicWrite.ts';
+import { log } from '../util/theme.ts';
 
 const PLUGINS_REPO = path.join(os.homedir(), '_/raccoon-obsidian');
 const PLUGINS_DIR = path.join(PLUGINS_REPO, 'plugins');
@@ -165,7 +166,7 @@ async function installPlugin(
 
 async function main(): Promise<void> {
   if ((await doesPathExist(PLUGINS_REPO)) === false) {
-    console.error(`⛔️ Repo not found: ${PLUGINS_REPO}`);
+    log.error(`⛔️ Repo not found: ${PLUGINS_REPO}`);
     process.exit(1);
   }
 
@@ -175,7 +176,7 @@ async function main(): Promise<void> {
 
   const pluginDirs = await getPluginsDirectories();
   if (pluginDirs.length === 0) {
-    console.error('⛔️ No plugins found in', PLUGINS_DIR);
+    log.error('⛔️ No plugins found in', PLUGINS_DIR);
     process.exit(1);
   }
 
@@ -198,7 +199,7 @@ async function main(): Promise<void> {
 
     console.log(`📦 Installing ${manifest.id}…`);
     if ((await doesPathExist(TARGET_VAULT)) === false) {
-      console.log(`   ⚠️ Target missing, skipping: ${TARGET_VAULT}`);
+      log.warn(`   ⚠️ Target missing, skipping: ${TARGET_VAULT}`);
     } else {
       const where = await installPlugin(pluginDir, manifest, TARGET_VAULT);
       console.log(`   → ${where}`);
@@ -237,6 +238,6 @@ try {
   await main();
 } catch (error) {
   console.error();
-  console.error(error instanceof Error ? error.stack : error);
+  log.error(error instanceof Error ? error.stack : error);
   process.exit(1);
 }

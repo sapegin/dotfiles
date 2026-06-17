@@ -7,7 +7,7 @@
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { logError, logWarn } from './log.ts';
+import { log } from './theme.ts';
 import { tildify } from './tildify.ts';
 
 export type SyncResult =
@@ -95,7 +95,7 @@ export function isIgnored(
 function printResult(result: SyncResult, filepath: string): void {
   const shortFilepath = tildify(filepath);
   if (result === 'missing') {
-    logError(`✕ ${shortFilepath}\n↪ Source not found!`);
+    log.error(`✕ ${shortFilepath}\n↪ Source not found!`);
   } else if (result === 'pulled') {
     console.log(`⬇ ${shortFilepath}`);
   } else if (result === 'pushed') {
@@ -105,7 +105,7 @@ function printResult(result: SyncResult, filepath: string): void {
   } else if (result === 'linked') {
     console.log(` ${shortFilepath}`);
   } else if (result === 'deleted') {
-    logWarn(` ${shortFilepath}\n↪ Source deleted!`);
+    log.warn(` ${shortFilepath}\n↪ Source deleted!`);
   }
 }
 

@@ -12,7 +12,7 @@ import { execSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { logError, logWarn } from '../util/log.ts';
+import { log } from '../util/theme.ts';
 
 interface SourceConfig {
   // Path to the repo (may start with `~`)
@@ -98,7 +98,7 @@ async function processSource(
   if (repoStatus.trim() === '') {
     run('git pull', repo);
   } else {
-    logWarn('⚠️ Working tree is dirty, skipping git pull');
+    log.warn('⚠️ Working tree is dirty, skipping git pull');
   }
 
   console.log(`\n🔨 Building ${repoName}…\n`);
@@ -135,13 +135,13 @@ async function processSource(
 async function main(): Promise<void> {
   for (const source of SOURCES) {
     if ((await doesPathExist(untildify(source.repo))) === false) {
-      logError(`⛔️ Repo not found: ${source.repo}`);
+      log.error(`⛔️ Repo not found: ${source.repo}`);
       process.exit(1);
     }
   }
 
   if (hasCommand('code') === false) {
-    logError('⛔️ The `code` CLI not found on PATH');
+    log.error('⛔️ The `code` CLI not found on PATH');
     process.exit(1);
   }
 
@@ -162,6 +162,6 @@ try {
   await main();
 } catch (error) {
   console.log();
-  logError(error instanceof Error ? error.stack : error);
+  log.error(error instanceof Error ? error.stack : error);
   process.exit(1);
 }

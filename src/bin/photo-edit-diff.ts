@@ -12,7 +12,8 @@ import { createHash, randomUUID } from 'node:crypto';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { logError, logWarn } from '../util/log.ts';
+import { parseArgs } from '../util/parseArgs.ts';
+import { log } from '../util/theme.ts';
 import { untildify } from '../util/tildify.ts';
 
 const FIELD_SEPARATOR = '\u001F';
@@ -23,10 +24,18 @@ const IGNORED_PATHS = new Set([
   'versionSpecificInfo.imageMetadata.versionSpecificInfo.xmpData',
 ]);
 
-interface CliOptions {
-  readonly beforePath: string;
-  readonly afterPath: string;
-}
+const cliArgs = parseArgs([
+  {
+    name: 'beforePath',
+    positional: true,
+    required: true,
+  },
+  {
+    name: 'afterPath',
+    positional: true,
+    required: true,
+  },
+]);
 
 type DecodedValue =
   | null
@@ -74,34 +83,6 @@ interface ValueChange {
 
 interface StructuredValue {
   readonly value: unknown;
-}
-
-function usage(): string {
-  return [
-    'Usage: photo-edit-diff <before.photo-edit> <after.photo-edit>',
-    '',
-    'Diffs Photomator edit archives and prints compare-friendly JSON.',
-    '',
-    'Options:',
-    '  --help, -h  Show this help',
-  ].join('\n');
-}
-
-function parseArgs(args: readonly string[]): CliOptions {
-  if (args.includes('--help') || args.includes('-h')) {
-    console.log(usage());
-    process.exit(0);
-  }
-
-  if (args.length !== 2) {
-    logWarn(usage());
-    process.exit(1);
-  }
-
-  return {
-    beforePath: path.resolve(untildify(args[0])),
-    afterPath: path.resolve(untildify(args[1])),
-  };
 }
 
 async function unpackPhotoEdit(
@@ -594,7 +575,8 @@ async function diffPhotoEdits(
 }
 
 async function main(): Promise<void> {
-  const { beforePath, afterPath } = parseArgs(process.argv.slice(2));
+  const beforePath = path.resolve(untildify(cliArgs.beforePath));
+  const afterPath = path.resolve(untildify(cliArgs.afterPath));
   const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'photo-edit-diff-'));
   try {
     const changes = await diffPhotoEdits(beforePath, afterPath, tempDir);
@@ -607,6 +589,6 @@ async function main(): Promise<void> {
 try {
   await main();
 } catch (error) {
-  logError(error instanceof Error ? error.message : String(error));
+  log.error(error instanceof Error ? error.message : String(error));
   process.exit(1);
 }

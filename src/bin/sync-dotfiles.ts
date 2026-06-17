@@ -8,11 +8,10 @@
 
 import { execSync } from 'node:child_process';
 import fs from 'node:fs/promises';
-import os from 'node:os';
 import path from 'node:path';
 import readline from 'node:readline/promises';
+import { DOTFILES_DIR } from '../util/consts.ts';
 import { gitPullIfClean } from '../util/gitPullIfClean.ts';
-import { logError, logWarn } from '../util/log.ts';
 import { stripJsonComments } from '../util/stripJsonComments.ts';
 import {
   isIgnored,
@@ -22,6 +21,7 @@ import {
   didFilesChange,
   type SyncEntry,
 } from '../util/sync.ts';
+import { log, theme } from '../util/theme.ts';
 import { tildify, untildify } from '../util/tildify.ts';
 
 // TODO: Add --verbose mode that shows all files including ignored ones and ones that didn't need sync
@@ -38,10 +38,7 @@ export interface DotfileEntry {
   runAfter?: string;
 }
 
-const QUESTION_MARK = '\u001B[33m?\u001B[0m';
-const HOME = os.homedir();
-const REPO_ROOT = path.join(HOME, 'dotfiles');
-const CONFIG_FILE = path.join(REPO_ROOT, 'dotfiles.json');
+const CONFIG_FILE = path.join(DOTFILES_DIR, 'dotfiles.json');
 /** Always-on ignore patterns, merged with each entry's `ignore`. */
 const BASE_IGNORE = ['\\.DS_Store$'];
 
@@ -86,7 +83,7 @@ async function pullSourceRepo(source: string): Promise<void> {
     // Use dirname
   }
   const repoRoot = await findGitRoot(cwd);
-  if (!repoRoot || repoRoot === REPO_ROOT || pulledRepos.has(repoRoot)) {
+  if (!repoRoot || repoRoot === DOTFILES_DIR || pulledRepos.has(repoRoot)) {
     return;
   }
   pulledRepos.add(repoRoot);
@@ -119,7 +116,9 @@ async function confirmAction(message: string): Promise<boolean> {
   });
 
   try {
-    const answer = await rl.question(`${QUESTION_MARK} ${message} (y/N): `);
+    const answer = await rl.question(
+      `${theme.warning('?')} ${message} (y/N): `
+    );
     const response = answer.toLowerCase().trim();
     return response === 'y' || response === 'yes';
   } finally {
@@ -147,7 +146,7 @@ async function syncEntry(entry: DotfileEntry): Promise<void> {
 
   if (sourceIsFolder) {
     if (mode !== 'sync') {
-      logWarn(
+      log.warn(
         `⚠ ${source}\n  ↪ Trailing "/" requires \`mode: "sync"\`; skipping.`
       );
       return;
@@ -155,11 +154,15 @@ async function syncEntry(entry: DotfileEntry): Promise<void> {
     try {
       await fs.access(source);
     } catch {
-      logError(`✕ ${source}\n  ↪ Source not found!`);
+      log.error(`✕ ${source}\n  ↪ Source not found!`);
       return;
     }
     results.push(
-      ...(await syncFolder(source, destinationDir ?? destination, ignorePatterns))
+      ...(await syncFolder(
+        source,
+        destinationDir ?? destination,
+        ignorePatterns
+      ))
     );
     runAfterCommand(entry, results);
     return;
@@ -211,6 +214,6 @@ try {
   await main();
 } catch (error) {
   console.error();
-  console.error(error instanceof Error ? error.stack : error);
+  log.error(error instanceof Error ? error.stack : error);
   process.exit(1);
 }

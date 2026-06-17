@@ -13,16 +13,18 @@
 // License: MIT
 // https://github.com/sapegin/dotfiles
 
+import { parseArgs } from '../util/parseArgs.ts';
 import { searchProjects } from '../util/projectsSearch.ts';
 
-const args = process.argv.slice(2);
-if (args.length !== 1) {
-  console.log('Usage: j <name>');
-  process.exit(1);
-}
+const args = parseArgs([
+  {
+    name: 'query',
+    positional: true,
+    required: true,
+  },
+]);
 
-const query = args[0];
-const results = searchProjects(query);
+const results = searchProjects(args.query);
 
 if (results.length === 0) {
   console.log('Repository not found');

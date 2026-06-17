@@ -12,17 +12,26 @@ import { createHash, randomUUID } from 'node:crypto';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { logError, logWarn } from '../util/log.ts';
+import { parseArgs } from '../util/parseArgs.ts';
+import { log } from '../util/theme.ts';
 import { tildify, untildify } from '../util/tildify.ts';
 
 const FIELD_SEPARATOR = '\u001F';
 const MAX_COMMAND_OUTPUT = 1024 * 1024 * 100;
 const MAX_TEXT_PREVIEW_LENGTH = 400;
 
-interface CliOptions {
-  readonly inputPath: string;
-  readonly outputDir: string | undefined;
-}
+const cliArgs = parseArgs([
+  {
+    name: 'inputPath',
+    positional: true,
+    required: true,
+  },
+  {
+    name: 'output',
+    type: 'string',
+    alias: 'o',
+  },
+]);
 
 type DecodedPayload =
   | {
@@ -73,55 +82,6 @@ interface InspectionReport {
   }[];
   readonly storableInfo: readonly StorableInfoRow[];
   readonly schema: string;
-}
-
-function usage(): string {
-  return [
-    'Usage: photo-edit-inspect [--output folder] <file.photo-edit>',
-    '',
-    'Inspects Photomator edit archives and prints compare-friendly JSON.',
-    '',
-    'Options:',
-    '  --output, -o  Write inspect.json, schema.sql, and decoded payload files',
-    '  --help, -h    Show this help',
-  ].join('\n');
-}
-
-function parseArgs(args: readonly string[]): CliOptions {
-  const outputFlagIndex = args.findIndex(
-    (arg) => arg === '--output' || arg === '-o'
-  );
-  const outputDir =
-    outputFlagIndex === -1 ? undefined : args[outputFlagIndex + 1];
-  const argsWithoutOutput =
-    outputFlagIndex === -1
-      ? args
-      : args.filter(
-          (_, index) =>
-            index !== outputFlagIndex && index !== outputFlagIndex + 1
-        );
-
-  if (
-    argsWithoutOutput.includes('--help') ||
-    argsWithoutOutput.includes('-h')
-  ) {
-    console.log(usage());
-    process.exit(0);
-  }
-
-  if (
-    argsWithoutOutput.length !== 1 ||
-    (outputFlagIndex !== -1 && outputDir === undefined)
-  ) {
-    logWarn(usage());
-    process.exit(1);
-  }
-
-  return {
-    inputPath: path.resolve(untildify(argsWithoutOutput[0])),
-    outputDir:
-      outputDir === undefined ? undefined : path.resolve(untildify(outputDir)),
-  };
 }
 
 async function unpackPhotoEdit(
@@ -430,7 +390,11 @@ async function writeReport(
 }
 
 async function main(): Promise<void> {
-  const { inputPath, outputDir } = parseArgs(process.argv.slice(2));
+  const inputPath = path.resolve(untildify(cliArgs.inputPath));
+  const outputDir =
+    cliArgs.output === undefined
+      ? undefined
+      : path.resolve(untildify(cliArgs.output));
   const tempDir = await fs.mkdtemp(
     path.join(os.tmpdir(), 'photo-edit-inspect-')
   );
@@ -453,6 +417,6 @@ async function main(): Promise<void> {
 try {
   await main();
 } catch (error) {
-  logError(error instanceof Error ? error.message : String(error));
+  log.error(error instanceof Error ? error.message : String(error));
   process.exit(1);
 }

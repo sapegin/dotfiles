@@ -22,7 +22,7 @@ import YAML from 'yaml';
 import { atomicWrite } from '../util/atomicWrite.ts';
 import { IMAGE_EXTENSIONS, OBSIDIAN_VAULT_DIR } from '../util/consts.ts';
 import { readExifMetadata } from '../util/exiftool.ts';
-import { logError, logWarn } from '../util/log.ts';
+import { log } from '../util/theme.ts';
 
 // TC39 stage 4, shipped in Node 24, not yet in TypeScript's lib.esnext.
 declare global {
@@ -154,7 +154,7 @@ function printWarning(...args: unknown[]): void {
     .map((arg) => (typeof arg === 'string' ? arg : String(arg)))
     .join(' ');
   warnings.push(message);
-  logWarn(`\n⚠️ ${message}\n`);
+  log.warn(`\n⚠️ ${message}\n`);
 }
 
 function getErrorMessage(error: unknown): string {
@@ -1117,7 +1117,10 @@ async function main(): Promise<void> {
   try {
     await fs.access(OBSIDIAN_VAULT_DIR);
   } catch {
-    logError('\n⛔️ Error: Vault directory does not exist:', OBSIDIAN_VAULT_DIR);
+    log.error(
+      '\n⛔️ Error: Vault directory does not exist:',
+      OBSIDIAN_VAULT_DIR
+    );
     process.exit(1);
   }
 
@@ -1180,6 +1183,6 @@ try {
   await main();
 } catch (error) {
   console.log();
-  logError(getErrorStack(error));
+  log.error(getErrorStack(error));
   process.exit(1);
 }

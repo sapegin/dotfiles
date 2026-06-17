@@ -11,6 +11,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import YAML from 'yaml';
 import { DOCUMENTS_ROOT, OBSIDIAN_VAULT_DIR } from '../util/consts.ts';
+import { log } from '../util/theme.ts';
 
 const LOG_DIR = path.join(OBSIDIAN_VAULT_DIR, '📆 Log');
 const OUTPUT_FILE = path.join(DOCUMENTS_ROOT, 'MurderStats.html');
@@ -1740,6 +1741,6 @@ async function main(): Promise<void> {
 try {
   await main();
 } catch (error) {
-  console.error(error);
+  log.error(error instanceof Error ? error.stack : error);
   process.exit(1);
 }
