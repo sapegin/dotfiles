@@ -8,6 +8,7 @@
 - Kurush: mail clients (Outlook, Fastmail, etc.)
 - Raven: personal chat apps (Telegram, WhatsApp, etc.)
 - Sunset: note taking apps (Obsidian, Notion, etc.)
+- Terminal: terminal apps (Terminal, Ghossty, Supacode, etc.)
 - Udav: work chats (Slack, Teams, etc.)
 
 I recommend [Replacicon](https://replacicon.app/) to replace Mac icons.
@@ -19,8 +20,9 @@ I recommend [Replacicon](https://replacicon.app/) to replace Mac icons.
 - Internet: original Internet Explorer for Mac icon
 - Netscape: Netscape Navigator logo
 - Kurush: [Sir Kurush by anry](https://www.deviantart.com/anry/art/Sir-Kurush-2527648)
-- Raven: made in Google AI Studio
-- Sunset: made in Google AI Studio
+- Raven: I made it in Google AI Studio
+- Sunset: I made it in Google AI Studio
+- Terminal: I made it in ChatGPT and Pixelmator Pro
 - Udav: a frame from a Soviet cartoon [“38 parrots”](https://en.wikipedia.org/wiki/38_Parrots)
 
 Most icons are exported from [Apple Icon Composer](https://developer.apple.com/icon-composer/).
