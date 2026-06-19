@@ -99,7 +99,8 @@
   "explorer.decorations.colors": false,
   "explorer.fileNesting.enabled": false,
   "explorer.openEditors.visible": 1,
-  "extensions.autoUpdate": false,
+  // Delay auto updates to 7 days
+  "extensions.autoUpdateDelay": 168,
   "extensions.ignoreRecommendations": true,
   "files.associations": {
     "*.js.snap": "javascript",
