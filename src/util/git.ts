@@ -66,6 +66,6 @@ export function pullIfClean(cwd: string): void {
   if (repoStatus.trim() === '') {
     execSync('git pull', { cwd, stdio: 'inherit' });
   } else {
-    log.warn('⚠️ Working tree is dirty, skipping git pull');
+    log.warn(' Working tree is dirty, skipping git pull');
   }
 }

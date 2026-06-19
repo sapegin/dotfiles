@@ -24,7 +24,7 @@ const branch = getCurrentBranch();
 // TODO: This can also go to git.ts -- used three times
 if (branch === undefined) {
   log.error(
-    "❌ You're not on a branch (detached HEAD). Check out a branch first."
+    "✕ You're not on a branch (detached HEAD). Check out a branch first."
   );
   process.exit(1);
 }
@@ -42,7 +42,7 @@ if (extraArgs.length === 0) {
   pushArgs = extraArgs;
 }
 
-console.log('🚀 Pushing…');
+console.log('↑ Pushing…');
 console.log();
 
 const result = spawnSync('git', ['push', '--set-upstream', ...pushArgs], {
@@ -63,5 +63,5 @@ if (result.status !== 0) {
   log.error(`Alas! The push has met with unforeseen resistance!\n\n${output}`);
   process.exit(result.status ?? 1);
 } else if (output.includes('Everything up-to-date')) {
-  console.log('✌️ Git says everything is up-to-date!');
+  console.log('✓ Git says everything is up-to-date!');
 }

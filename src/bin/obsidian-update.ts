@@ -155,7 +155,7 @@ function printWarning(...args: unknown[]): void {
     .map((arg) => (typeof arg === 'string' ? arg : String(arg)))
     .join(' ');
   warnings.push(message);
-  log.warn(`\n⚠️ ${message}\n`);
+  log.warn(`\n ${message}\n`);
 }
 
 function getErrorMessage(error: unknown): string {
@@ -1118,22 +1118,19 @@ async function main(): Promise<void> {
   try {
     await fs.access(dirs.obsidianVault);
   } catch {
-    log.error(
-      '\n⛔️ Error: Vault directory does not exist:',
-      dirs.obsidianVault
-    );
+    log.error('\n✕ Error: Vault directory does not exist:', dirs.obsidianVault);
     process.exit(1);
   }
 
   await fs.mkdir(TRASH_DIR, { recursive: true });
 
-  console.log('\n☁️ Checking iCloud health…\n');
+  console.log('\n☁ Checking iCloud health…\n');
   await checkICloudSync();
 
-  console.log('\n💾 Backing up vault…\n');
+  console.log('\n▣ Backing up vault…\n');
   await backupVault();
 
-  console.log('\n💿 Gathering the files…');
+  console.log('\n◇ Gathering the files…');
   const markdownFiles = await Array.fromAsync(
     fs.glob(path.join(dirs.obsidianVault, ALL_NOTES_PATTERN))
   );
@@ -1144,12 +1141,12 @@ async function main(): Promise<void> {
     `\nFound ${markdownFiles.length} notes and ${imageFiles.length} images`
   );
 
-  console.log('\n📸 Updating images…\n');
+  console.log('\n□ Updating images…\n');
 
   console.log('\nOptimizing images…\n');
   const renamedFiles = await optimizeImages(imageFiles);
 
-  console.log('\n📝 Updating notes…\n');
+  console.log('\n✎ Updating notes…\n');
 
   await updateNotes(renamedFiles);
 
@@ -1166,18 +1163,18 @@ async function main(): Promise<void> {
   );
   await removeUnusedImages(remainingImageFiles, usedImages);
 
-  console.log('\n🗑️ Cleaning Obsidian trash…\n');
+  console.log('\n Cleaning Obsidian trash…\n');
   await cleanObsidianTrash();
 
   if (warnings.length > 0) {
-    console.log(`\n⚠️ ${warnings.length} warnings:\n`);
+    console.log(`\n ${warnings.length} warnings:\n`);
     for (const message of warnings) {
       console.log(`• ${message}`);
     }
   }
 
   console.log();
-  console.log('Done 🦜');
+  console.log('󰇥 Done');
 }
 
 try {

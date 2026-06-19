@@ -36,7 +36,7 @@ const currentBranch = getCurrentBranch();
 
 if (currentBranch === undefined) {
   log.error(
-    "❌ You're not on a branch (detached HEAD). Check out a branch first."
+    "✕ You're not on a branch (detached HEAD). Check out a branch first."
   );
   process.exit(1);
 }
@@ -45,7 +45,7 @@ const remote = 'origin';
 const tracking = getUpstreamTracking();
 
 if (tracking?.startsWith(`${remote}/`)) {
-  console.log('📡 This branch exists remotely, not rebasing');
+  console.log('↑ This branch exists remotely, not rebasing');
 } else {
   console.log(
     `⚒ Local-only branch, rebasing ${args.branch} onto ${currentBranch} first…`
@@ -54,9 +54,6 @@ if (tracking?.startsWith(`${remote}/`)) {
   execFileSync('git', ['rebase', currentBranch], { stdio: 'inherit' });
 }
 
-console.log(`✂️ Merge ${args.branch} into ${currentBranch}`);
+console.log(` Merge ${args.branch} into ${currentBranch}`);
 execFileSync('git', ['switch', currentBranch], { stdio: 'inherit' });
 execFileSync('git', ['merge', args.branch], { stdio: 'inherit' });
-
-console.log();
-console.log('🦄 Done');

@@ -164,17 +164,17 @@ async function installPlugin(
 
 async function main(): Promise<void> {
   if ((await doesPathExist(PLUGINS_REPO)) === false) {
-    log.error(`⛔️ Repo not found: ${PLUGINS_REPO}`);
+    log.error(`✕ Repo not found: ${PLUGINS_REPO}`);
     process.exit(1);
   }
 
-  console.log('🔨 Building plugins…\n');
+  console.log('⚒ Building plugins…\n');
   run('npm install --silent', PLUGINS_REPO);
   run('npm run build', PLUGINS_REPO);
 
   const pluginDirs = await getPluginsDirectories();
   if (pluginDirs.length === 0) {
-    log.error('⛔️ No plugins found in', PLUGINS_DIR);
+    log.error('✕ No plugins found in', PLUGINS_DIR);
     process.exit(1);
   }
 
@@ -192,12 +192,12 @@ async function main(): Promise<void> {
       }
     }
 
-    console.log(`\n🧪 Smoke-testing ${manifest.id}…`);
+    console.log(`\n󰙨 Smoke-testing ${manifest.id}…`);
     await smokeTest(pluginDir, manifest);
 
-    console.log(`📦 Installing ${manifest.id}…`);
+    console.log(`⚒ Installing ${manifest.id}…`);
     if ((await doesPathExist(TARGET_VAULT)) === false) {
-      log.warn(`   ⚠️ Target missing, skipping: ${TARGET_VAULT}`);
+      log.warn(`    Target missing, skipping: ${TARGET_VAULT}`);
     } else {
       const where = await installPlugin(pluginDir, manifest, TARGET_VAULT);
       console.log(`   → ${where}`);
@@ -228,8 +228,7 @@ async function main(): Promise<void> {
     JSON.stringify(installManifest, null, 2),
     'utf8'
   );
-  console.log(`\n📝 Updated ${MANIFEST_FILE}`);
-  console.log('\nDone 🦝');
+  console.log('\n󰇥 Done');
 }
 
 try {

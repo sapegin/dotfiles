@@ -17,7 +17,7 @@ import { execFileSync } from 'node:child_process';
 const args = process.argv.slice(2);
 
 if (args.length === 0) {
-  console.log('🐿️ Stashing changes…');
+  console.log(' Stashing changes…');
   execFileSync('git', ['stash', '--include-untracked'], { stdio: 'inherit' });
 } else {
   execFileSync('git', ['stash', ...args], { stdio: 'inherit' });

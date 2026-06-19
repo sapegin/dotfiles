@@ -17,7 +17,7 @@ const PROFILES_DIR = path.join(
 const TEMPLATE_DIR = path.join(dirs.dotfiles, 'firefox');
 
 console.log();
-console.log('[FIREFOX] Updating profiles… 🦊');
+console.log('Updating profiles…');
 
 const profiles = fs.globSync(path.join(PROFILES_DIR, '*/'));
 
@@ -27,7 +27,7 @@ const templates = fs.globSync(path.join(TEMPLATE_DIR, '**/*.*'), {
 
 for (const profileDirectory of profiles) {
   console.log();
-  console.log(`[FIREFOX] Syncing ${path.basename(profileDirectory)} profile…`);
+  console.log(`Syncing ${path.basename(profileDirectory)} profile…`);
 
   for (const templateFile of templates) {
     const relativeTemplateFilepath = templateFile.replace(
@@ -49,7 +49,7 @@ for (const profileDirectory of profiles) {
 
       // Overwrite the existing file. Every time user.js is replaced (file
       // creation time changed), Firefox resets the profile
-      console.log(`[FIREFOX] Updating ${path.basename(absoluteFilepath)}…`);
+      console.log(`Updating ${path.basename(absoluteFilepath)}…`);
       const content = fs.readFileSync(templateFile, 'utf8');
       // Open file, this also removes the existing file content
       const file = fs.openSync(absoluteFilepath, 'w');
@@ -57,12 +57,9 @@ for (const profileDirectory of profiles) {
       fs.appendFileSync(file, content);
     } else {
       // Copy a new file if it doesn't exist
-      console.log(`[FIREFOX] Creating ${path.basename(absoluteFilepath)}…`);
+      console.log(`Creating ${path.basename(absoluteFilepath)}…`);
       fs.mkdirSync(path.dirname(absoluteFilepath), { recursive: true });
       fs.cpSync(templateFile, absoluteFilepath);
     }
   }
 }
-
-console.log();
-console.log('[FIREFOX] Done 🦜');

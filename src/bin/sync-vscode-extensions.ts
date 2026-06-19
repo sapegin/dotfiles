@@ -88,10 +88,10 @@ async function processSource(
   const repo = untildify(source.repo);
   const repoName = path.basename(repo);
 
-  console.log(`\n🔄 Checking ${repoName} repo…`);
+  console.log(`\n󰚰 Checking ${repoName} repo…`);
   pullIfClean(repo);
 
-  console.log(`\n🔨 Building ${repoName}…\n`);
+  console.log(`\n⚒ Building ${repoName}…\n`);
   for (const cmd of source.buildCommands) {
     run(cmd, repo);
   }
@@ -111,7 +111,7 @@ async function processSource(
 
     const vsixPath = path.join(tempDir, `${id}-${pkg.version}.vsix`);
 
-    console.log(`\n📦 Packaging ${id}@${pkg.version}…`);
+    console.log(`\n⚒ Packaging ${id}@${pkg.version}…`);
     run(
       `npx --yes vsce package --no-dependencies --out ${JSON.stringify(vsixPath)}`,
       extensionDir
@@ -125,13 +125,13 @@ async function processSource(
 async function main(): Promise<void> {
   for (const source of SOURCES) {
     if ((await doesPathExist(untildify(source.repo))) === false) {
-      log.error(`⛔️ Repo not found: ${source.repo}`);
+      log.error(`✕ Repo not found: ${source.repo}`);
       process.exit(1);
     }
   }
 
   if (hasCommand('code') === false) {
-    log.error('⛔️ The `code` CLI not found on PATH');
+    log.error('✕ The `code` CLI not found on PATH');
     process.exit(1);
   }
 
@@ -145,7 +145,7 @@ async function main(): Promise<void> {
     await fs.rm(tempDir, { recursive: true, force: true });
   }
 
-  console.log('\nDone 🦝');
+  console.log('\n󰇥 Done');
 }
 
 try {

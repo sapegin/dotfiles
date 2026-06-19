@@ -104,14 +104,14 @@ if (branch === 'main' && hasLocalBranch('master')) {
 
 // Delete branch
 if (deleteFlag !== undefined) {
-  console.log(`💀 Removing local branch ${branch}…`);
+  console.log(`✕ Removing local branch ${branch}…`);
   execFileSync('git', ['branch', deleteFlag, branch], { stdio: 'inherit' });
   process.exit(0);
 }
 
 if (hasLocalBranch(branch)) {
   // Local branch exists — switch to it
-  console.log(`👓 Switching to existing local branch ${branch}…`);
+  console.log(` Switching to existing local branch ${branch}…`);
   execFileSync('git', ['switch', branch], { stdio: 'inherit' });
 
   if (hasRemoteBranch(branch)) {
@@ -120,7 +120,7 @@ if (hasLocalBranch(branch)) {
 
     if (!tracking?.startsWith(`${remote}/`)) {
       console.log(
-        '⚙️ Your local branch is not tracking the corresponding remote branch, fixing…'
+        '⚙ Your local branch is not tracking the corresponding remote branch, fixing…'
       );
       execFileSync(
         'git',
@@ -133,7 +133,7 @@ if (hasLocalBranch(branch)) {
   }
 } else if (hasRemoteBranch(branch)) {
   // No local branch, but remote exists — fetch and switch
-  console.log(`🛸 Fetching remote branch ${branch}…`);
+  console.log(`↓ Fetching remote branch ${branch}…`);
   execFileSync('git', ['fetch', remote, branch], { stdio: 'inherit' });
   console.log();
   execFileSync(
@@ -145,7 +145,7 @@ if (hasLocalBranch(branch)) {
   );
 } else {
   // No local or remote branch — create a new one
-  console.log(`🪴 Creating new local branch ${branch}…`);
+  console.log(`+ Creating new local branch ${branch}…`);
   execFileSync('git', ['switch', '-c', branch, '--no-track'], {
     stdio: 'inherit',
   });

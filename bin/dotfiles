@@ -16,5 +16,5 @@ git pull
 echo
 node "$(dirname "$0")/../src/bin/sync-dotfiles.ts"
 echo
-echo "🦆 Open a new terminal for the changes to take effect."
+echo "󰇥 Open a new terminal for the changes to take effect."
 bin/nyan

@@ -61,7 +61,7 @@ const branch = getCurrentBranch();
 
 if (branch === undefined) {
   log.error(
-    "❌ You're not on a branch (detached HEAD). Check out a branch first."
+    "✕ You're not on a branch (detached HEAD). Check out a branch first."
   );
   process.exit(1);
 }
@@ -95,7 +95,7 @@ const stashed = stashBefore !== stashAfter;
 
 function unstash(): void {
   if (stashed) {
-    console.log('🍯 Restoring tree from stash…');
+    console.log('󰦛 Restoring tree from stash…');
     execFileSync('git', ['stash', 'pop'], { stdio: 'inherit' });
   }
 }
@@ -108,7 +108,7 @@ function rollback(exitCode: number): never {
 }
 
 // Pull with rebase
-console.log(`🚀 Fetching from ${remote}…`);
+console.log(`↓ Fetching from ${remote}…`);
 try {
   execFileSync(
     'git',
@@ -136,7 +136,7 @@ if (
   (hasChanged('pnpm-lock.yaml') || hasChanged('package.json'))
 ) {
   console.log();
-  console.log('⚔ Installing packages with pnpm…');
+  console.log('⚒ Installing packages with pnpm…');
   const lockFile = getChangedFiles().find((f) => f.includes('pnpm-lock.yaml'));
   const packageFile = getChangedFiles().find((f) => f.includes('package.json'));
   const changedFile = lockFile ?? packageFile;
@@ -146,13 +146,10 @@ if (
   execFileSync('pnpm', ['install'], { stdio: 'inherit', cwd: installDir });
 } else if (commandExists('npm') && hasChanged('package.json')) {
   console.log();
-  console.log('⚔ Installing packages with npm…');
+  console.log('⚒ Installing packages with npm…');
   const packageFile = getChangedFiles().find((f) => f.includes('package.json'));
   const installDir = packageFile
     ? path.join(process.cwd(), getBaseDir(), path.dirname(packageFile))
     : process.cwd();
   execFileSync('npm', ['install'], { stdio: 'inherit', cwd: installDir });
 }
-
-console.log();
-console.log('🦄 Done');

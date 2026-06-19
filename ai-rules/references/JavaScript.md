@@ -93,29 +93,29 @@ Always prioritize code readability and maintainability over cleverness or brevit
 ### Array operations
 
 ```ts
-// ❌ Bad: Traditional for loop
+// Bad: Traditional for loop
 for (let i = 0; i < users.length; i++) {
   console.log(users[i].name);
 }
 
-// ✅ Good: for...of
+// Good: for...of
 for (const user of users) {
   console.log(user.name);
 }
 
-// ✅ Good: Array method
+// Good: Array method
 const userNames = users.map(user => user.name);
 ```
 
 ### State management with discriminated unions
 
 ```ts
-// ❌ Bad: Multiple boolean flags
+// Bad: Multiple boolean flags
 const [isLoading, setIsLoading] = useState(false);
 const [hasError, setHasError] = useState(false);
 const [isEmpty, setIsEmpty] = useState(false);
 
-// ✅ Good: Discriminated union
+// Good: Discriminated union
 type State =
   | { status: 'idle' }
   | { status: 'loading' }
@@ -126,12 +126,12 @@ type State =
 ### Function parameters
 
 ```ts
-// ❌ Bad: Multiple positional parameters
+// Bad: Multiple positional parameters
 function createUser(name, email, age, role, department) {
   // ...
 }
 
-// ✅ Good: Object parameters
+// Good: Object parameters
 function createUser({ name, email, age, role, department }) {
   // ...
 }
@@ -140,12 +140,12 @@ function createUser({ name, email, age, role, department }) {
 ### Immutable updates
 
 ```ts
-// ❌ Bad: Mutation
+// Bad: Mutation
 const users = [...existingUsers];
 users.sort((a, b) => a.name.localeCompare(b.name));
 users.push(newUser);
 
-// ✅ Good: Immutable operations
+// Good: Immutable operations
 const users = [...existingUsers, newUser].toSorted((a, b) =>
   a.name.localeCompare(b.name)
 );
@@ -154,11 +154,11 @@ const users = [...existingUsers, newUser].toSorted((a, b) =>
 ### Explicit conditions
 
 ```ts
-// ❌ Bad: Implicit boolean conversion
+// Bad: Implicit boolean conversion
 if (!users.length) return;
 if (!isEnabled) return;
 
-// ✅ Good: Explicit comparisons
+// Good: Explicit comparisons
 if (users.length === 0) return;
 if (isEnabled === false) return;
 ```
