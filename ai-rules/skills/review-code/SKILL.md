@@ -30,7 +30,7 @@ Be ambitious and direct. Flag plausible risks when important, but mark uncertain
 - **Accessibility and UX:** semantics, labels, keyboard flow, focus, contrast, reduced motion, loading/empty/error states.
 - **Maintainability:** architecture fit, local conventions, duplicate logic, confusing code, premature abstractions.
 - **Scope**: prepare data or shift conditions left instead of repeating conditions downstream, accidental changes left by abandoned refactoring, unexplained behavior changes, unrelated changes.
-- **Tests:** coverage for business logic, critical UI flows, regressions, and edge cases; avoid brittle snapshots and over-complex test code.
+- **Tests:** new logic paths lacking coverage, edge cases not covered by existing tests, coverage for business logic, critical UI flows, and regressions; prefer behavior-focused assertions over implementation details; avoid brittle snapshots and over-complex test code.
 
 ## Output
 
