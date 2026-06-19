@@ -3,15 +3,15 @@ import path from 'node:path';
 
 const HOME = os.homedir();
 
-export const DOTFILES_DIR = path.resolve(import.meta.dirname, '..', '..');
-
-export const PROJECTS_DIR = path.join(HOME, '_');
-
-export const OBSIDIAN_VAULT_DIR = path.join(HOME, 'murder');
-
-export const DOCUMENTS_ROOT = path.join(HOME, 'Documents');
-
-export const PHOTOS_ROOT = path.join(HOME, 'Pictures/Photos');
+export const dirs = {
+  home: HOME,
+  dotfiles: path.resolve(import.meta.dirname, '..', '..'),
+  projects: path.join(HOME, '_'),
+  obsidianVault: path.join(HOME, 'murder'),
+  documents: path.join(HOME, 'Documents'),
+  pictures: path.join(HOME, 'Pictures'),
+  photos: path.join(HOME, 'Pictures', 'Photos'),
+} as const;
 
 export const JPEG_EXTENSIONS = new Set(['.jpg', '.jpeg']);
 

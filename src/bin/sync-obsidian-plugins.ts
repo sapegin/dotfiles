@@ -12,18 +12,14 @@ import crypto from 'node:crypto';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { atomicCopy } from '../util/atomicWrite.ts';
-import {
-  DOTFILES_DIR,
-  OBSIDIAN_VAULT_DIR,
-  PROJECTS_DIR,
-} from '../util/consts.ts';
+import { dirs } from '../util/consts.ts';
 import { log } from '../util/theme.ts';
 
-const PLUGINS_REPO = path.join(PROJECTS_DIR, 'raccoon-obsidian');
+const PLUGINS_REPO = path.join(dirs.projects, 'raccoon-obsidian');
 const PLUGINS_DIR = path.join(PLUGINS_REPO, 'plugins');
-const TARGET_VAULT = path.join(OBSIDIAN_VAULT_DIR, '.obsidian/plugins');
+const TARGET_VAULT = path.join(dirs.obsidianVault, '.obsidian/plugins');
 const MANIFEST_FILE = path.join(
-  DOTFILES_DIR,
+  dirs.dotfiles,
   'obsidian/installed-plugins.json'
 );
 

@@ -22,6 +22,7 @@ _prepend_path "$(brew --prefix python)/libexec/bin"
 # Dotfiles binaries
 _prepend_path "$HOME/dotfiles/bin/lib"
 _prepend_path "$HOME/dotfiles/bin"
+_prepend_path "$HOME/dotfiles/bin/symlinks"
 
 # User binaries
 _prepend_path "$HOME/bin"

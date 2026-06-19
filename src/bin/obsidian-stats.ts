@@ -10,11 +10,11 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import YAML from 'yaml';
-import { DOCUMENTS_ROOT, OBSIDIAN_VAULT_DIR } from '../util/consts.ts';
+import { dirs } from '../util/consts.ts';
 import { log } from '../util/theme.ts';
 
-const LOG_DIR = path.join(OBSIDIAN_VAULT_DIR, '📆 Log');
-const OUTPUT_FILE = path.join(DOCUMENTS_ROOT, 'MurderStats.html');
+const LOG_DIR = path.join(dirs.obsidianVault, '📆 Log');
+const OUTPUT_FILE = path.join(dirs.documents, 'MurderStats.html');
 
 // TODO: Make an npm package with the theme and all light/dark colors + semantic colors
 // TODO: Analyze all additional colors and see if we can include them in the theme as well
@@ -220,7 +220,7 @@ function enumerateMonthKeys(minDate: Date, maxDate: Date): string[] {
 
 async function getAllNoteNames(): Promise<Set<string>> {
   const files = await Array.fromAsync(
-    fs.glob(path.join(OBSIDIAN_VAULT_DIR, '**/*.md'))
+    fs.glob(path.join(dirs.obsidianVault, '**/*.md'))
   );
   const noteNames = new Set<string>();
   for (const file of files) {
@@ -237,7 +237,7 @@ async function getPlaceInfo(locationName: string): Promise<PlaceInfo> {
   }
 
   const locationFilePath = path.join(
-    OBSIDIAN_VAULT_DIR,
+    dirs.obsidianVault,
     '🗂️ References/Places',
     `${locationName}.md`
   );

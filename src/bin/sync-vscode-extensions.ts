@@ -12,6 +12,7 @@ import { execSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
+import { pullIfClean } from '../util/git.ts';
 import { log } from '../util/theme.ts';
 import { untildify } from '../util/tildify.ts';
 
@@ -88,15 +89,7 @@ async function processSource(
   const repoName = path.basename(repo);
 
   console.log(`\n🔄 Checking ${repoName} repo…`);
-  const repoStatus = execSync('git status --porcelain', {
-    cwd: repo,
-    encoding: 'utf8',
-  });
-  if (repoStatus.trim() === '') {
-    run('git pull', repo);
-  } else {
-    log.warn('⚠️ Working tree is dirty, skipping git pull');
-  }
+  pullIfClean(repo);
 
   console.log(`\n🔨 Building ${repoName}…\n`);
   for (const cmd of source.buildCommands) {

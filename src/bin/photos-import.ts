@@ -18,8 +18,8 @@ import os from 'node:os';
 import path from 'node:path';
 import readline from 'node:readline/promises';
 import {
+  dirs,
   JPEG_EXTENSIONS,
-  PHOTOS_ROOT,
   RAW_EXTENSIONS,
 } from '../util/consts.ts';
 import { readExifMetadata } from '../util/exiftool.ts';
@@ -132,7 +132,7 @@ function runFzf(items: string[], prompt: string): string | undefined {
 
 async function getDestinationFolders(): Promise<string[]> {
   try {
-    const entries = await fs.readdir(PHOTOS_ROOT, { withFileTypes: true });
+    const entries = await fs.readdir(dirs.photos, { withFileTypes: true });
     return entries
       .filter((entry) => entry.isDirectory())
       .map((entry) => entry.name)
@@ -143,7 +143,7 @@ async function getDestinationFolders(): Promise<string[]> {
 }
 
 async function pickDestinationFolder(): Promise<string | undefined> {
-  await fs.mkdir(PHOTOS_ROOT, { recursive: true });
+  await fs.mkdir(dirs.photos, { recursive: true });
   const choice = runFzf(
     [...(await getDestinationFolders()), NEW_FOLDER_OPTION],
     'Destination folder'
@@ -160,10 +160,10 @@ async function pickDestinationFolder(): Promise<string | undefined> {
     const answer = await rl.question('New folder name: ');
     rl.close();
     const folderName = answer.trim();
-    return folderName === '' ? undefined : path.join(PHOTOS_ROOT, folderName);
+    return folderName === '' ? undefined : path.join(dirs.photos, folderName);
   }
 
-  return path.join(PHOTOS_ROOT, choice);
+  return path.join(dirs.photos, choice);
 }
 
 function isAlreadyImported(
@@ -216,7 +216,7 @@ async function findPhotosToImport(cardPaths: string[]): Promise<string[]> {
   const libraryBySuffix = new Map<string, (string | undefined)[]>();
   for (const folder of await getDestinationFolders()) {
     for (const filename of await Array.fromAsync(
-      fs.glob('*', { cwd: path.join(PHOTOS_ROOT, folder) })
+      fs.glob('*', { cwd: path.join(dirs.photos, folder) })
     )) {
       const suffix = getSuffix(filename);
       if (suffix === undefined) {

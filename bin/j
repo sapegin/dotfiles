@@ -1,7 +1,0 @@
-# NOTE: Should be used via Bash alias like this:
-# function j { cd "$("$HOME/dotfiles/bin/j" $1)"; }
-
-#!/usr/bin/env bash
-
-set -euo pipefail
-exec node "$(dirname "$0")/../src/bin/j.ts" "$@"

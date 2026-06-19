@@ -13,8 +13,8 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import readline from 'node:readline/promises';
 import {
+  dirs,
   JPEG_EXTENSIONS,
-  PHOTOS_ROOT,
   RAW_EXTENSIONS,
 } from '../util/consts.ts';
 import { parseArgs } from '../util/parseArgs.ts';
@@ -94,7 +94,7 @@ async function confirmYesNo(prompt: string): Promise<boolean> {
 async function main(): Promise<void> {
   const photosRoot =
     args.folder === undefined
-      ? PHOTOS_ROOT
+      ? dirs.photos
       : path.resolve(untildify(args.folder));
 
   try {

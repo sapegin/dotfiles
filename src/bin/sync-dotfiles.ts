@@ -10,8 +10,8 @@ import { execSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import readline from 'node:readline/promises';
-import { DOTFILES_DIR } from '../util/consts.ts';
-import { gitPullIfClean } from '../util/gitPullIfClean.ts';
+import { dirs } from '../util/consts.ts';
+import { pullIfClean } from '../util/git.ts';
 import { stripJsonComments } from '../util/stripJsonComments.ts';
 import {
   isIgnored,
@@ -38,7 +38,7 @@ export interface DotfileEntry {
   runAfter?: string;
 }
 
-const CONFIG_FILE = path.join(DOTFILES_DIR, 'dotfiles.json');
+const CONFIG_FILE = path.join(dirs.dotfiles, 'dotfiles.json');
 /** Always-on ignore patterns, merged with each entry's `ignore`. */
 const BASE_IGNORE = ['\\.DS_Store$'];
 
@@ -83,12 +83,12 @@ async function pullSourceRepo(source: string): Promise<void> {
     // Use dirname
   }
   const repoRoot = await findGitRoot(cwd);
-  if (!repoRoot || repoRoot === DOTFILES_DIR || pulledRepos.has(repoRoot)) {
+  if (!repoRoot || repoRoot === dirs.dotfiles || pulledRepos.has(repoRoot)) {
     return;
   }
   pulledRepos.add(repoRoot);
   console.log(`\n󰓂 Pulling ${tildify(repoRoot)}…`);
-  gitPullIfClean(repoRoot);
+  pullIfClean(repoRoot);
 }
 
 /** Run an entry's optional follow-up shell command. */

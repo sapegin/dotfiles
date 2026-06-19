@@ -1,11 +1,12 @@
 import { execFileSync } from 'node:child_process';
 import path from 'node:path';
-import { DOTFILES_DIR } from './consts.ts';
+import { dirs } from './consts.ts';
 import { log } from './theme.ts';
 
 interface BaseDefinition<Name extends string> {
   readonly name: Name;
   readonly alias?: string;
+  readonly positional?: boolean;
   readonly required?: boolean;
 }
 
@@ -13,7 +14,6 @@ interface StringDefinition<
   Name extends string = string,
 > extends BaseDefinition<Name> {
   readonly type?: 'string';
-  readonly positional?: boolean;
   readonly default?: string;
   readonly values?: readonly string[];
 }
@@ -64,7 +64,7 @@ function getToolName(): string {
 
 function showHelp(toolName: string): void {
   try {
-    execFileSync(path.join(DOTFILES_DIR, 'bin/help'), [toolName], {
+    execFileSync(path.join(dirs.dotfiles, 'bin/help'), [toolName], {
       stdio: 'inherit',
     });
   } catch {
@@ -85,8 +85,8 @@ function isFlag(arg: string): boolean {
 
 function isPositionalDefinition(
   definition: ArgDefinition
-): definition is StringDefinition {
-  return 'positional' in definition && definition.positional === true;
+): boolean {
+  return definition.positional === true;
 }
 
 function getOptionName(arg: string): string | undefined {
@@ -281,7 +281,10 @@ export function parseArgs<const Definitions extends readonly ArgDefinition[]>(
       fail(`Unexpected argument: ${arg}`, toolName);
     }
     const positionalDefinition = positionalDefinitions[positionalIndex];
-    values[positionalDefinition.name] = parseStringValue(
+    if (positionalDefinition.type === 'boolean') {
+      fail(`Argument ${positionalDefinition.name} cannot be a boolean`, toolName);
+    }
+    values[positionalDefinition.name] = parseFlagValue(
       positionalDefinition,
       positionalDefinition.name,
       arg,

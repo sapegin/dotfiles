@@ -14,13 +14,12 @@
 
 import { execSync } from 'node:child_process';
 import fs from 'node:fs/promises';
-import os from 'node:os';
 import path from 'node:path';
 import { setTimeout } from 'node:timers/promises';
 import sharp from 'sharp';
 import YAML from 'yaml';
 import { atomicWrite } from '../util/atomicWrite.ts';
-import { IMAGE_EXTENSIONS, OBSIDIAN_VAULT_DIR } from '../util/consts.ts';
+import { dirs, IMAGE_EXTENSIONS } from '../util/consts.ts';
 import { readExifMetadata } from '../util/exiftool.ts';
 import { log } from '../util/theme.ts';
 
@@ -31,10 +30,10 @@ declare global {
   }
 }
 
-const ATTACHMENTS_DIR = path.join(OBSIDIAN_VAULT_DIR, 'attachments');
-const TRASH_DIR = path.join(os.homedir(), '.obsidian-trash');
-const BACKUP_DIR = path.join(os.homedir(), '.obsidian-backup');
-const OBSIDIAN_TRASH_DIR = path.join(OBSIDIAN_VAULT_DIR, '.trash');
+const ATTACHMENTS_DIR = path.join(dirs.obsidianVault, 'attachments');
+const TRASH_DIR = path.join(dirs.home, '.obsidian-trash');
+const BACKUP_DIR = path.join(dirs.home, '.obsidian-backup');
+const OBSIDIAN_TRASH_DIR = path.join(dirs.obsidianVault, '.trash');
 
 const MAX_DIMENSION = 2048;
 const MAX_FILE_SIZE = 1024 * 1024; // 1 MB
@@ -907,12 +906,12 @@ async function updateNotes(renamedFiles: Map<string, string>): Promise<void> {
   let updatedCount = 0;
 
   const allNotes = await Array.fromAsync(
-    fs.glob(path.join(OBSIDIAN_VAULT_DIR, ALL_NOTES_PATTERN))
+    fs.glob(path.join(dirs.obsidianVault, ALL_NOTES_PATTERN))
   );
 
   // Gather all attachment filenames
   const imageFiles = await Array.fromAsync(
-    fs.glob(path.join(OBSIDIAN_VAULT_DIR, ALL_IMAGES_PATTERN))
+    fs.glob(path.join(dirs.obsidianVault, ALL_IMAGES_PATTERN))
   );
   const attachmentNames = new Set(
     imageFiles.map((imagePath) => path.basename(imagePath).normalize('NFC'))
@@ -995,7 +994,7 @@ async function backupVault(): Promise<void> {
   console.log(`Creating backup: ${path.basename(backupFile)}…`);
   execSync(
     `zip -r -q ${JSON.stringify(backupFile)} . -x "./attachments/*" "./.trash/*"`,
-    { cwd: OBSIDIAN_VAULT_DIR }
+    { cwd: dirs.obsidianVault }
   );
   const stats = await fs.stat(backupFile);
   const sizeMb = (stats.size / 1024 / 1024).toFixed(1);
@@ -1016,7 +1015,7 @@ async function backupVault(): Promise<void> {
  */
 async function checkICloudSync(): Promise<void> {
   const ICLOUD_MARKER = `${path.sep}Mobile Documents${path.sep}`;
-  const resolvedVault = await fs.realpath(OBSIDIAN_VAULT_DIR);
+  const resolvedVault = await fs.realpath(dirs.obsidianVault);
   if (resolvedVault.includes(ICLOUD_MARKER) === false) {
     console.log('Vault is not in iCloud, skipping sync diagnostics');
     return;
@@ -1049,7 +1048,7 @@ async function checkICloudSync(): Promise<void> {
   const issues: string[] = [];
   let regularFiles = 0;
   const allFiles = await Array.fromAsync(
-    fs.glob(path.join(OBSIDIAN_VAULT_DIR, '**/*'))
+    fs.glob(path.join(dirs.obsidianVault, '**/*'))
   );
   for (const file of allFiles) {
     const stats = await fs.stat(file).catch(() => null);
@@ -1059,7 +1058,7 @@ async function checkICloudSync(): Promise<void> {
     regularFiles++;
 
     const name = path.basename(file);
-    const rel = path.relative(OBSIDIAN_VAULT_DIR, file);
+    const rel = path.relative(dirs.obsidianVault, file);
 
     if (name.includes(':')) {
       issues.push(`Colon in name: ${rel}`);
@@ -1117,11 +1116,11 @@ async function checkICloudSync(): Promise<void> {
 
 async function main(): Promise<void> {
   try {
-    await fs.access(OBSIDIAN_VAULT_DIR);
+    await fs.access(dirs.obsidianVault);
   } catch {
     log.error(
       '\n⛔️ Error: Vault directory does not exist:',
-      OBSIDIAN_VAULT_DIR
+      dirs.obsidianVault
     );
     process.exit(1);
   }
@@ -1136,10 +1135,10 @@ async function main(): Promise<void> {
 
   console.log('\n💿 Gathering the files…');
   const markdownFiles = await Array.fromAsync(
-    fs.glob(path.join(OBSIDIAN_VAULT_DIR, ALL_NOTES_PATTERN))
+    fs.glob(path.join(dirs.obsidianVault, ALL_NOTES_PATTERN))
   );
   const imageFiles = await Array.fromAsync(
-    fs.glob(path.join(OBSIDIAN_VAULT_DIR, ALL_IMAGES_PATTERN))
+    fs.glob(path.join(dirs.obsidianVault, ALL_IMAGES_PATTERN))
   );
   console.log(
     `\nFound ${markdownFiles.length} notes and ${imageFiles.length} images`
@@ -1156,14 +1155,14 @@ async function main(): Promise<void> {
 
   console.log('\nCollecting used images from Markdown…\n');
   const updatedMarkdownFiles = await Array.fromAsync(
-    fs.glob(path.join(OBSIDIAN_VAULT_DIR, ALL_NOTES_PATTERN))
+    fs.glob(path.join(dirs.obsidianVault, ALL_NOTES_PATTERN))
   );
   const usedImages = await findUsedImages(updatedMarkdownFiles);
   console.log(`\nFound ${usedImages.size} image usages`);
 
   console.log('\nRemoving unused images…\n');
   const remainingImageFiles = await Array.fromAsync(
-    fs.glob(path.join(OBSIDIAN_VAULT_DIR, ALL_IMAGES_PATTERN))
+    fs.glob(path.join(dirs.obsidianVault, ALL_IMAGES_PATTERN))
   );
   await removeUnusedImages(remainingImageFiles, usedImages);
 

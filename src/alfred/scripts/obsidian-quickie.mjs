@@ -9,11 +9,10 @@
  */
 
 import fs from 'node:fs/promises';
-import os from 'node:os';
 import path from 'node:path';
+import { dirs } from '../../util/consts';
 
-const VAULT_DIR = path.join(os.homedir(), 'murder');
-const QUICKIES_FILE = path.join(VAULT_DIR, '⏳ Inbox/Quickies.md');
+const QUICKIES_FILE = path.join(dirs.obsidianVault, '⏳ Inbox/Quickies.md');
 
 const text = process.argv[2];
 
