@@ -92,7 +92,7 @@ describe(getLineDiffStats, () => {
           added: summary.added + stats.added,
           removed: summary.removed + stats.removed,
         }),
-        { added: 0, removed: 0 },
+        { added: 0, removed: 0 }
       );
 
     expect(totals).toStrictEqual({ added: 2, removed: 1 });
