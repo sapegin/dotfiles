@@ -80,6 +80,7 @@ signup
 Squirrelsong
 Styleguidist
 subclassing
+Supacode
 tacocat
 Tacohuaco
 tamia

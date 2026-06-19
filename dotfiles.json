@@ -47,6 +47,11 @@
     "source": "~/dotfiles/vscode/User",
     "destination": "~/Library/Application Support/Code/User"
   },
+  // Supacode config
+  {
+    "source": "~/dotfiles/supacode/settings.json",
+    "destination": "~/.supacode/"
+  },
   // Photoshop
   {
     "source": "~/Library/Mobile Documents/com~apple~CloudDocs/Apps/Adobe Photoshop 2024 Settings",
