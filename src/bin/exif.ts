@@ -10,7 +10,7 @@
 // https://github.com/sapegin/dotfiles
 
 import { execFileSync } from 'node:child_process';
-import { parseArgs } from '../util/parseArgs.ts';
+import { parseArgs } from '../util/args.ts';
 
 interface ExifToolOutput {
   DateTimeOriginal?: string;

@@ -23,6 +23,7 @@ import {
   RAW_EXTENSIONS,
 } from '../util/consts.ts';
 import { readExifMetadata } from '../util/exiftool.ts';
+import { run } from '../util/run.ts';
 import { log } from '../util/theme.ts';
 import { tildify } from '../util/tildify.ts';
 
@@ -486,9 +487,4 @@ async function main(): Promise<void> {
   console.log('Done.');
 }
 
-try {
-  await main();
-} catch (error) {
-  log.error(error instanceof Error ? error.message : String(error));
-  process.exit(1);
-}
+await run(main);

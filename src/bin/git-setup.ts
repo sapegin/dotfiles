@@ -8,7 +8,7 @@
 
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
-import { parseArgs } from '../util/parseArgs.ts';
+import { parseArgs } from '../util/args.ts';
 
 const args = parseArgs([
   {

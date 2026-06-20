@@ -13,6 +13,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { atomicCopy } from '../util/atomicWrite.ts';
 import { dirs } from '../util/consts.ts';
+import { run as runMain } from '../util/run.ts';
 import { log } from '../util/theme.ts';
 
 const PLUGINS_REPO = path.join(dirs.projects, 'raccoon-obsidian');
@@ -228,13 +229,6 @@ async function main(): Promise<void> {
     JSON.stringify(installManifest, null, 2),
     'utf8'
   );
-  console.log('\n󰇥 Done');
 }
 
-try {
-  await main();
-} catch (error) {
-  console.error();
-  log.error(error instanceof Error ? error.stack : error);
-  process.exit(1);
-}
+await runMain(main, { printDone: true });

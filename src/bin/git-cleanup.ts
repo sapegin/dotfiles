@@ -14,7 +14,7 @@
 // https://github.com/sapegin/dotfiles
 
 import { execFileSync, execSync } from 'node:child_process';
-import { parseArgs } from '../util/parseArgs.ts';
+import { parseArgs } from '../util/args.ts';
 import { log } from '../util/theme.ts';
 
 function getStaleBranches(): string[] {

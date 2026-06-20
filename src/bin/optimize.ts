@@ -24,9 +24,10 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import sharp from 'sharp';
-import { parseArgs } from '../util/parseArgs.ts';
+import { parseArgs } from '../util/args.ts';
 import { prettyBytes } from '../util/prettyBytes.ts';
-import { log, theme } from '../util/theme.ts';
+import { run } from '../util/run.ts';
+import { theme } from '../util/theme.ts';
 
 const EFFORT_LEVEL = 8;
 const MINIMUM_SAVINGS_BYTES = 10 * 1024;
@@ -115,9 +116,4 @@ async function main(): Promise<void> {
   }
 }
 
-try {
-  await main();
-} catch (error) {
-  log.error(error instanceof Error ? error.message : String(error));
-  process.exit(1);
-}
+await run(main);

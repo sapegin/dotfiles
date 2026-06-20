@@ -12,12 +12,9 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import readline from 'node:readline/promises';
-import {
-  dirs,
-  JPEG_EXTENSIONS,
-  RAW_EXTENSIONS,
-} from '../util/consts.ts';
-import { parseArgs } from '../util/parseArgs.ts';
+import { parseArgs } from '../util/args.ts';
+import { dirs, JPEG_EXTENSIONS, RAW_EXTENSIONS } from '../util/consts.ts';
+import { run } from '../util/run.ts';
 import { log } from '../util/theme.ts';
 import { tildify, untildify } from '../util/tildify.ts';
 
@@ -134,9 +131,4 @@ async function main(): Promise<void> {
   console.log(`Removed ${toRemove.length} files.`);
 }
 
-try {
-  await main();
-} catch (error) {
-  log.error(error instanceof Error ? error.message : String(error));
-  process.exit(1);
-}
+await run(main);

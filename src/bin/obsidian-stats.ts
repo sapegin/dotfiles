@@ -11,7 +11,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import YAML from 'yaml';
 import { dirs } from '../util/consts.ts';
-import { log } from '../util/theme.ts';
+import { run } from '../util/run.ts';
 
 const LOG_DIR = path.join(dirs.obsidianVault, '📆 Log');
 const OUTPUT_FILE = path.join(dirs.documents, 'MurderStats.html');
@@ -1738,9 +1738,4 @@ async function main(): Promise<void> {
   console.log(`Stats generated at: ${OUTPUT_FILE}`);
 }
 
-try {
-  await main();
-} catch (error) {
-  log.error(error instanceof Error ? error.stack : error);
-  process.exit(1);
-}
+await run(main);

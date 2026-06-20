@@ -25,8 +25,8 @@
 // https://github.com/sapegin/dotfiles
 
 import { execFileSync, execSync, spawnSync } from 'node:child_process';
+import { parseArgs } from '../util/args.ts';
 import { getUpstreamTracking } from '../util/git.ts';
-import { parseArgs } from '../util/parseArgs.ts';
 
 const remote = 'origin';
 

@@ -12,8 +12,8 @@ import { createHash, randomUUID } from 'node:crypto';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { parseArgs } from '../util/parseArgs.ts';
-import { log } from '../util/theme.ts';
+import { parseArgs } from '../util/args.ts';
+import { run } from '../util/run.ts';
 import { tildify, untildify } from '../util/tildify.ts';
 
 const FIELD_SEPARATOR = '\u001F';
@@ -414,9 +414,4 @@ async function main(): Promise<void> {
   }
 }
 
-try {
-  await main();
-} catch (error) {
-  log.error(error instanceof Error ? error.message : String(error));
-  process.exit(1);
-}
+await run(main);

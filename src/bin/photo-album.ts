@@ -10,6 +10,7 @@ import path from 'node:path';
 import sharp from 'sharp';
 import { dirs } from '../util/consts.ts';
 import { readExifMetadata } from '../util/exiftool.ts';
+import { run } from '../util/run.ts';
 
 const SOURCE_DIR = path.join(dirs.pictures, 'JunkyardPhotoAlbum');
 const OUTPUT_DIR = path.join(dirs.documents, 'JunkyardPhotoAlbum');
@@ -721,9 +722,4 @@ async function main(): Promise<void> {
   console.log(`Index: ${INDEX_FILE}`);
 }
 
-try {
-  await main();
-} catch (error) {
-  console.error(error instanceof Error ? error.message : String(error));
-  process.exit(1);
-}
+await run(main);

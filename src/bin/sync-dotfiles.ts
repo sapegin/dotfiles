@@ -11,7 +11,8 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import readline from 'node:readline/promises';
 import { dirs } from '../util/consts.ts';
-import { pullIfClean } from '../util/git.ts';
+import { findGitRoot, pullIfClean } from '../util/git.ts';
+import { run } from '../util/run.ts';
 import { stripJsonComments } from '../util/stripJsonComments.ts';
 import {
   isIgnored,
@@ -22,7 +23,7 @@ import {
   type SyncEntry,
 } from '../util/sync.ts';
 import { log, theme } from '../util/theme.ts';
-import { tildify, untildify } from '../util/tildify.ts';
+import { untildify } from '../util/tildify.ts';
 
 // TODO: Add --verbose mode that shows all files including ignored ones and ones that didn't need sync
 
@@ -49,24 +50,6 @@ function isGlob(pattern: string): boolean {
   return pattern.includes('*');
 }
 
-/** Walk up from `start` to the nearest directory containing `.git`. */
-async function findGitRoot(start: string): Promise<string | undefined> {
-  let dir = start;
-  while (true) {
-    try {
-      await fs.access(path.join(dir, '.git'));
-      return dir;
-    } catch {
-      // Not a Git root
-    }
-    const parent = path.dirname(dir);
-    if (parent === dir) {
-      return undefined;
-    }
-    dir = parent;
-  }
-}
-
 /**
  * Pull the Git repo containing `source` at most once per run. The dotfiles repo
  * itself is skipped (you don't auto-pull the repo you're editing) and sources
@@ -87,7 +70,6 @@ async function pullSourceRepo(source: string): Promise<void> {
     return;
   }
   pulledRepos.add(repoRoot);
-  console.log(`\n󰓂 Pulling ${tildify(repoRoot)}…`);
   pullIfClean(repoRoot);
 }
 
@@ -199,21 +181,12 @@ async function syncEntry(entry: DotfileEntry): Promise<void> {
   runAfterCommand(entry, results);
 }
 
-async function main(): Promise<void> {
+async function main() {
   console.log('Syncing dotfiles…\n');
-
   const entries = await readConfig();
   for (const entry of entries) {
     await syncEntry(entry);
   }
-
-  console.log('\n Done.');
 }
 
-try {
-  await main();
-} catch (error) {
-  console.error();
-  log.error(error instanceof Error ? error.stack : error);
-  process.exit(1);
-}
+await run(main, { printDone: true });

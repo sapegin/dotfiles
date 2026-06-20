@@ -83,9 +83,7 @@ function isFlag(arg: string): boolean {
   return arg.startsWith('--');
 }
 
-function isPositionalDefinition(
-  definition: ArgDefinition
-): boolean {
+function isPositionalDefinition(definition: ArgDefinition): boolean {
   return definition.positional === true;
 }
 
@@ -282,7 +280,10 @@ export function parseArgs<const Definitions extends readonly ArgDefinition[]>(
     }
     const positionalDefinition = positionalDefinitions[positionalIndex];
     if (positionalDefinition.type === 'boolean') {
-      fail(`Argument ${positionalDefinition.name} cannot be a boolean`, toolName);
+      fail(
+        `Argument ${positionalDefinition.name} cannot be a boolean`,
+        toolName
+      );
     }
     values[positionalDefinition.name] = parseFlagValue(
       positionalDefinition,

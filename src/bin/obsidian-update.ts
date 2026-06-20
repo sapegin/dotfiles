@@ -21,6 +21,7 @@ import YAML from 'yaml';
 import { atomicWrite } from '../util/atomicWrite.ts';
 import { dirs, IMAGE_EXTENSIONS } from '../util/consts.ts';
 import { readExifMetadata } from '../util/exiftool.ts';
+import { run } from '../util/run.ts';
 import { log } from '../util/theme.ts';
 
 // TC39 stage 4, shipped in Node 24, not yet in TypeScript's lib.esnext.
@@ -1172,15 +1173,6 @@ async function main(): Promise<void> {
       console.log(`• ${message}`);
     }
   }
-
-  console.log();
-  console.log('󰇥 Done');
 }
 
-try {
-  await main();
-} catch (error) {
-  console.log();
-  log.error(getErrorStack(error));
-  process.exit(1);
-}
+await run(main, { printDone: true });

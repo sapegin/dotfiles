@@ -11,7 +11,7 @@
 
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
-import { parseArgs } from '../util/parseArgs.ts';
+import { parseArgs } from '../util/args.ts';
 import { prettyBytes } from '../util/prettyBytes.ts';
 
 const args = parseArgs([

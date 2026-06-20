@@ -13,7 +13,7 @@
 // License: MIT
 // https://github.com/sapegin/dotfiles
 
-import { parseArgs } from '../util/parseArgs.ts';
+import { parseArgs } from '../util/args.ts';
 import { searchProjects } from '../util/projectsSearch.ts';
 
 const args = parseArgs([

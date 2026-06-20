@@ -10,8 +10,9 @@
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { parseArgs } from '../util/args.ts';
 import { dirs } from '../util/consts.ts';
-import { parseArgs } from '../util/parseArgs.ts';
+import { run } from '../util/run.ts';
 
 const ATTACHMENTS_DIR = path.join(dirs.obsidianVault, 'attachments');
 
@@ -98,9 +99,4 @@ async function main(): Promise<void> {
   console.log(`Renamed ${totalRenamed} files`);
 }
 
-try {
-  await main();
-} catch (error) {
-  console.error(error instanceof Error ? error.message : String(error));
-  process.exit(1);
-}
+await run(main);

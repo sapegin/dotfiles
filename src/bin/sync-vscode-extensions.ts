@@ -13,6 +13,7 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { pullIfClean } from '../util/git.ts';
+import { run as runMain } from '../util/run.ts';
 import { log } from '../util/theme.ts';
 import { untildify } from '../util/tildify.ts';
 
@@ -68,7 +69,7 @@ async function readJson<T>(filePath: string): Promise<T> {
   return JSON.parse(await fs.readFile(filePath, 'utf8')) as T;
 }
 
-function run(cmd: string, cwd: string): void {
+function command(cmd: string, cwd: string): void {
   execSync(cmd, { cwd, stdio: 'inherit' });
 }
 
@@ -88,12 +89,11 @@ async function processSource(
   const repo = untildify(source.repo);
   const repoName = path.basename(repo);
 
-  console.log(`\n󰚰 Checking ${repoName} repo…`);
   pullIfClean(repo);
 
   console.log(`\n⚒ Building ${repoName}…\n`);
   for (const cmd of source.buildCommands) {
-    run(cmd, repo);
+    command(cmd, repo);
   }
 
   for await (const extensionDir of source.getExtensionDirs()) {
@@ -112,13 +112,13 @@ async function processSource(
     const vsixPath = path.join(tempDir, `${id}-${pkg.version}.vsix`);
 
     console.log(`\n⚒ Packaging ${id}@${pkg.version}…`);
-    run(
+    command(
       `npx --yes vsce package --no-dependencies --out ${JSON.stringify(vsixPath)}`,
       extensionDir
     );
 
     console.log();
-    run(`code --install-extension ${JSON.stringify(vsixPath)} --force`, repo);
+    command(`code --install-extension ${JSON.stringify(vsixPath)} --force`, repo);
   }
 }
 
@@ -144,14 +144,6 @@ async function main(): Promise<void> {
   } finally {
     await fs.rm(tempDir, { recursive: true, force: true });
   }
-
-  console.log('\n󰇥 Done');
 }
 
-try {
-  await main();
-} catch (error) {
-  console.log();
-  log.error(error instanceof Error ? error.stack : error);
-  process.exit(1);
-}
+await runMain(main, { printDone: true });

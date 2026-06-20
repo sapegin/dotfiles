@@ -14,12 +14,12 @@
 // https://github.com/sapegin/dotfiles
 
 import { execFileSync } from 'node:child_process';
+import { parseArgs } from '../util/args.ts';
 import {
   assertGitRepo,
   getCurrentBranch,
   getUpstreamTracking,
 } from '../util/git.ts';
-import { parseArgs } from '../util/parseArgs.ts';
 import { log } from '../util/theme.ts';
 
 const args = parseArgs([

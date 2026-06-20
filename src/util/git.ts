@@ -1,5 +1,8 @@
 import { execFileSync, execSync } from 'node:child_process';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 import { log } from './theme.ts';
+import { tildify } from './tildify.ts';
 
 /**
  * Exits with code 1 if the current directory is not inside a Git repository.
@@ -38,6 +41,26 @@ export function getGitConfig(key: string): string | undefined {
 }
 
 /**
+ * Walks up from `start` to the nearest directory containing `.git`.
+ */
+export async function findGitRoot(start: string): Promise<string | undefined> {
+  let dir = start;
+  while (true) {
+    try {
+      await fs.access(path.join(dir, '.git'));
+      return dir;
+    } catch {
+      // Not a Git root
+    }
+    const parent = path.dirname(dir);
+    if (parent === dir) {
+      return undefined;
+    }
+    dir = parent;
+  }
+}
+
+/**
  * Returns the upstream tracking ref for a branch (defaults to the current
  * branch). Returns undefined if no upstream is configured.
  */
@@ -59,6 +82,7 @@ export function getUpstreamTracking(branch?: string): string | undefined {
  * Logs a warning and skips the pull if there are uncommitted changes.
  */
 export function pullIfClean(cwd: string): void {
+  console.log(`\n󰓂 Pulling ${tildify(cwd)}…`);
   const repoStatus = execSync('git status --porcelain', {
     cwd,
     encoding: 'utf8',
