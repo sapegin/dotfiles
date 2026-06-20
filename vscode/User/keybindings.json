@@ -317,6 +317,11 @@
     "command": "scm.acceptInput",
     "when": "scmRepository"
   },
+  {
+    "comment": "Select Git branch",
+    "key": "cmd+k cmd+b",
+    "command": "git.checkout"
+  },
 
   /**
    * Tasks and debugger
@@ -1157,5 +1162,10 @@
     "key": "cmd+enter",
     "command": "-scm.acceptInput",
     "when": "scmRepository"
+  },
+  {
+    "key": "cmd+k cmd+b",
+    "command": "-editor.action.setSelectionAnchor",
+    "when": "editorTextFocus"
   }
 ]
