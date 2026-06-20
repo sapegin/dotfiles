@@ -14,6 +14,10 @@ set -e
 # Ask for the administrator password upfront
 sudo -v
 
+cd "$HOME/dotfiles" > /dev/null 2>&1
+
+bin/rccnrm
+
 # Install Homebrew
 if ! command -v brew > /dev/null 2>&1; then
 	echo "Installing Homebrew…"
@@ -79,9 +83,9 @@ echo
 
 # Sync dotfiles
 echo "Syncing dotfiles…"
-node $HOME/dotfiles/bin/lib/sync-dotfiles.ts
+node "bin/lib/sync-dotfiles.ts"
 
 echo
 echo "󰇥 All done! Now, open a new terminal for the changes to take effect."
 
-$HOME/dotfiles/bin/nyan
+bin/nyan
