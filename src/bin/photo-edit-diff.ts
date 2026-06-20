@@ -195,6 +195,7 @@ async function tryDecodePlist(
       {
         encoding: 'utf8',
         maxBuffer: MAX_COMMAND_OUTPUT,
+        stdio: ['ignore', 'pipe', 'ignore'],
       }
     );
     return {
@@ -367,9 +368,9 @@ async function getTableRows(
   tempDir: string
 ): Promise<DecodedRow[]> {
   const columns = getColumnNames(databasePath, tableName);
-  const select = columns
+  const select = `json_array(${columns
     .map((columnName) => `quote(${quoteIdentifier(columnName)})`)
-    .join(` || char(31) || `);
+    .join(', ')})`;
   const output = runSqlite(
     databasePath,
     `SELECT ${select} FROM ${quoteIdentifier(tableName)} ORDER BY 1;`
@@ -381,7 +382,12 @@ async function getTableRows(
 
   const rows = await Promise.all(
     output.split('\n').map(async (line) => {
-      const rawValues = line.split(FIELD_SEPARATOR);
+      const rawValues = JSON.parse(line) as string[];
+      if (rawValues.length !== columns.length) {
+        throw new Error(
+          `Expected ${columns.length} values from ${tableName}, got ${rawValues.length}`
+        );
+      }
       const entries = await Promise.all(
         columns.map(async (columnName, index) => [
           columnName,
@@ -430,6 +436,9 @@ function pathToString(pathParts: readonly string[]): string {
 }
 
 function summarizeChangedValue(value: unknown): unknown {
+  if (value === undefined) {
+    return { kind: 'missing' };
+  }
   if (typeof value !== 'string' || value.length <= MAX_TEXT_PREVIEW_LENGTH) {
     return value;
   }
