@@ -52,7 +52,7 @@ cdf() {
 
 # Magic Project Opener
 j() {
-	cd "$(~/dotfiles/bin/j $1)"
+	cd "$(~/dotfiles/bin/symlinks/j $1)"
 }
 
 # Cd to Git repository root folder
