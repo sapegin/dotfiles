@@ -1,0 +1,5 @@
+{
+  "name": "textlint-rule-preset-raccoon",
+  "version": "1.0.0",
+  "main": "./textlint-preset.cjs"
+}
