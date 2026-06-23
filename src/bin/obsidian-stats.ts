@@ -13,7 +13,7 @@ import YAML from 'yaml';
 import { dirs } from '../util/consts.ts';
 import { run } from '../util/run.ts';
 
-const LOG_DIR = path.join(dirs.obsidianVault, '📆 Log');
+const LOG_DIR = path.join(dirs.obsidianVault, 'Log');
 const OUTPUT_FILE = path.join(dirs.documents, 'MurderStats.html');
 
 // TODO: Make an npm package with the theme and all light/dark colors + semantic colors
@@ -238,7 +238,7 @@ async function getPlaceInfo(locationName: string): Promise<PlaceInfo> {
 
   const locationFilePath = path.join(
     dirs.obsidianVault,
-    '🗂️ References/Places',
+    'References/Places',
     `${locationName}.md`
   );
 

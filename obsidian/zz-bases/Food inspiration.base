@@ -1,6 +1,7 @@
+# Food inspiration
 filters:
   and:
-    - file.folder.startsWith("📆 Log")
+    - file.folder.startsWith("Log")
     - file.tags.contains("food-inspiration")
 views:
   - type: cards

@@ -198,10 +198,10 @@ async function main(): Promise<void> {
 
     console.log(` Installing ${manifest.id}…`);
     if ((await doesPathExist(TARGET_VAULT)) === false) {
-      log.warn(`    Target missing, skipping: ${TARGET_VAULT}`);
+      log.warn(`   Target missing, skipping: ${TARGET_VAULT}`);
     } else {
       const where = await installPlugin(pluginDir, manifest, TARGET_VAULT);
-      console.log(`   → ${where}`);
+      console.log(`  ↪ ${where}`);
     }
 
     const files: Record<string, string> = {};

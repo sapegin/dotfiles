@@ -12,7 +12,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { dirs } from '../../util/consts';
 
-const QUICKIES_FILE = path.join(dirs.obsidianVault, '⏳ Inbox/Quickies.md');
+const QUICKIES_FILE = path.join(dirs.obsidianVault, '0-Inbox/Quickies.md');
 
 const text = process.argv[2];
 

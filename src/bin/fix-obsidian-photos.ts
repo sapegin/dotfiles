@@ -14,7 +14,7 @@ import { parseArgs } from '../util/args.ts';
 import { dirs } from '../util/consts.ts';
 import { run } from '../util/run.ts';
 
-const ATTACHMENTS_DIR = path.join(dirs.obsidianVault, 'attachments');
+const ATTACHMENTS_DIR = path.join(dirs.obsidianVault, 'zz-attachments');
 
 const args = parseArgs([
   {
@@ -24,7 +24,7 @@ const args = parseArgs([
   },
 ]);
 
-const LOG_DIR = path.join(dirs.obsidianVault, '📆 Log', args.year);
+const LOG_DIR = path.join(dirs.obsidianVault, 'Log', args.year);
 
 async function main(): Promise<void> {
   const mdFiles = await Array.fromAsync(fs.glob('*.md', { cwd: LOG_DIR }));

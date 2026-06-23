@@ -1,13 +1,14 @@
+# No location logs
 filters:
   and:
-    - file.folder.startsWith("📆 Log")
-    - file.tags.isEmpty()
+    - file.folder.startsWith("Log")
+    - location.isEmpty()
 views:
   - type: cards
     name: Cards
     order:
       - file.name
-      - description
+      - excerpt
     sort:
       - property: file.name
         direction: DESC

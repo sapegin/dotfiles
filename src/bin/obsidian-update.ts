@@ -31,7 +31,7 @@ declare global {
   }
 }
 
-const ATTACHMENTS_DIR = path.join(dirs.obsidianVault, 'attachments');
+const ATTACHMENTS_DIR = path.join(dirs.obsidianVault, 'zz-attachments');
 const TRASH_DIR = path.join(dirs.home, '.obsidian-trash');
 const BACKUP_DIR = path.join(dirs.home, '.obsidian-backup');
 const OBSIDIAN_TRASH_DIR = path.join(dirs.obsidianVault, '.trash');
@@ -761,17 +761,17 @@ async function updateNote({
   }
 
   // Journal notes
-  if (file.includes('📆 Log/')) {
+  if (file.includes('Log/')) {
     // Detect incorrect log folder (e.g. 2026/2004-01-03_1134.md)
-    const folderMatch = file.match(/📆 Log\/(\d{4})\//);
+    const folderMatch = file.match(/Log\/(\d{4})\//);
     const dateMatch = basename.match(/^(\d{4})-/);
     if (folderMatch && dateMatch && folderMatch[1] !== dateMatch[1]) {
       console.log(
         `Wrong folder: ${basename} is in ${folderMatch[1]}/ but should be in ${dateMatch[1]}/`
       );
       newFile = newFile.replace(
-        `📆 Log/${folderMatch[1]}/`,
-        `📆 Log/${dateMatch[1]}/`
+        `Log/${folderMatch[1]}/`,
+        `Log/${dateMatch[1]}/`
       );
     }
 
@@ -994,7 +994,7 @@ async function backupVault(): Promise<void> {
 
   console.log(`Creating backup: ${path.basename(backupFile)}…`);
   execSync(
-    `zip -r -q ${JSON.stringify(backupFile)} . -x "./attachments/*" "./.trash/*"`,
+    `zip -r -q ${JSON.stringify(backupFile)} . -x "./zz-attachments/*" "./.trash/*"`,
     { cwd: dirs.obsidianVault }
   );
   const stats = await fs.stat(backupFile);

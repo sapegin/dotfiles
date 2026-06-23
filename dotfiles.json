@@ -124,6 +124,12 @@
     "source": "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Murder",
     "destination": "~/murder"
   },
+  // Folder Emoji Icon plugin config
+  {
+    "source": "~/dotfiles/obsidian/folder-icons.json",
+    "destination": "~/murder/.obsidian/plugins/obsidian-folder-emoji-icons/data.json",
+    "mode": "sync"
+  },
   // Obsidian config backup (plugins and themes are synced separately)
   {
     "source": "~/murder/.obsidian/",
@@ -133,14 +139,14 @@
   },
   // Obsidian templates backup
   {
-    "source": "~/murder/templates/",
-    "destination": "~/dotfiles/obsidian/templates",
+    "source": "~/murder/zz-templates/",
+    "destination": "~/dotfiles/obsidian/zz-templates",
     "mode": "sync"
   },
   // Obsidian bases backup
   {
-    "source": "~/murder/bases/",
-    "destination": "~/dotfiles/obsidian/bases",
+    "source": "~/murder/zz-bases/",
+    "destination": "~/dotfiles/obsidian/zz-bases",
     "mode": "sync"
   },
   // Squirrelsong Obsidian theme

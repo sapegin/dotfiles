@@ -3,7 +3,7 @@
 	"name": "Goodreads",
 	"behavior": "create",
 	"noteNameFormat": "{{selector:h1}}",
-	"path": "🗂️ References/Books",
+	"path": "References/Books",
 	"noteContentFormat": "# {{selector:h1}}\n",
 	"properties": [
 		{

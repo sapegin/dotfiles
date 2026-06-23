@@ -1,16 +1,17 @@
+# Untagged logs
 filters:
   and:
-    - file.folder == "🌮 Food"
-    - file.tags.contains("recipes")
+    - file.folder.startsWith("Log")
+    - file.tags.isEmpty()
 views:
   - type: cards
     name: Cards
     order:
       - file.name
-      - status
+      - description
     sort:
       - property: file.name
-        direction: ASC
+        direction: DESC
     image: note.image
     imageAspectRatio: 0.45
     cardSize: 230

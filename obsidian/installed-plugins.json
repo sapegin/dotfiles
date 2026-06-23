@@ -1,12 +1,12 @@
 {
-  "updated": "2026-06-10T06:53:40.727Z",
+  "updated": "2026-06-23T08:06:52.723Z",
   "plugins": [
     {
       "id": "add-note-property",
       "version": "1.0.0",
       "files": {
         "main.js": "8f1ed8838243b91535a7c92451f5c30bfaad94f2daee9d45ec996635520b894b",
-        "manifest.json": "ec04ebe6c69536ac4dc5d885405b2adb67b576b81c5724e6b3c7c60f69df73db"
+        "manifest.json": "5bb5941c96ab466483d10ae0ac91797db8cb9684fa1d28d6401925f46d17703b"
       }
     },
     {
@@ -23,6 +23,15 @@
       "files": {
         "main.js": "c92a4db517f98a19138ae68b17b9a40a7eb2fa8abafc0392accf7a97281bff6f",
         "manifest.json": "8ce08720a7f0071b591226a4de1477e25f140e918585af0a6d07db0f35c40b6d"
+      }
+    },
+    {
+      "id": "folder-emoji-icons",
+      "version": "1.0.0",
+      "files": {
+        "main.js": "4f99aa7d95fca2f5418e71586e814c6f747a4d4ffe7aa20125394ae182838cf8",
+        "manifest.json": "7ea4c36a1ffa6c95db93d11a06ff92925eb6f2f6620d7104a8f3c4492c97cac7",
+        "styles.css": "bdd58a72c03bf5e836e564fee857e99a873db08e14996d4ab9c124faf57e8804"
       }
     },
     {

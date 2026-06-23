@@ -1,6 +1,7 @@
+# On this day
 filters:
   and:
-    - file.folder.startsWith("📆 Log")
+    - file.folder.startsWith("Log")
     - formula.on_this_day == true
 formulas:
   on_this_day: file.name.slice(0,4) != now().year && file.name.slice(5,7) == now().month && file.name.slice(8,10) == now().day

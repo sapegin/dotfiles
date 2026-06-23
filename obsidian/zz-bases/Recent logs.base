@@ -1,6 +1,7 @@
+# Recent logs
 filters:
   and:
-    - file.folder.startsWith("📆 Log")
+    - file.folder.startsWith("Log")
     - formula.is_recent == true
 formulas:
   is_recent: date(file.name.slice(0,10)) > now() - '2w'

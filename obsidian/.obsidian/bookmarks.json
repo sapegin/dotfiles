@@ -8,31 +8,31 @@
     {
       "type": "file",
       "ctime": 1765347565511,
-      "path": "bases/On this day.base",
+      "path": "zz-bases/On this day.base",
       "title": "📆 On this day"
     },
     {
       "type": "file",
       "ctime": 1765557872429,
-      "path": "⏳ Inbox/Quickies.md",
+      "path": "0-Inbox/Quickies.md",
       "title": "🦆 Quickies"
     },
     {
       "type": "file",
       "ctime": 1765478073977,
-      "path": "bases/Recent logs.base",
+      "path": "zz-bases/Recent logs.base",
       "title": "🛸 Recent logs"
     },
     {
       "type": "file",
       "ctime": 1765537868473,
-      "path": "🌮 Food/Recipes.md",
+      "path": "Food/Recipes.md",
       "title": "🥘 Recipes"
     },
     {
       "type": "file",
       "ctime": 1763377483354,
-      "path": "bases/Untagged logs.base",
+      "path": "zz-bases/Untagged logs.base",
       "title": "🚧 Untagged journals"
     }
   ]
