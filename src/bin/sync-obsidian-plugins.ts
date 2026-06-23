@@ -169,7 +169,7 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
-  console.log('⚒ Building plugins…\n');
+  console.log(' Building plugins…\n');
   run('npm install --silent', PLUGINS_REPO);
   run('npm run build', PLUGINS_REPO);
 
@@ -196,7 +196,7 @@ async function main(): Promise<void> {
     console.log(`\n󰙨 Smoke-testing ${manifest.id}…`);
     await smokeTest(pluginDir, manifest);
 
-    console.log(`⚒ Installing ${manifest.id}…`);
+    console.log(` Installing ${manifest.id}…`);
     if ((await doesPathExist(TARGET_VAULT)) === false) {
       log.warn(`    Target missing, skipping: ${TARGET_VAULT}`);
     } else {

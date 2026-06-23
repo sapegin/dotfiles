@@ -17,11 +17,7 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import readline from 'node:readline/promises';
-import {
-  dirs,
-  JPEG_EXTENSIONS,
-  RAW_EXTENSIONS,
-} from '../util/consts.ts';
+import { dirs, JPEG_EXTENSIONS, RAW_EXTENSIONS } from '../util/consts.ts';
 import { readExifMetadata } from '../util/exiftool.ts';
 import { run } from '../util/run.ts';
 import { log } from '../util/theme.ts';
@@ -386,7 +382,6 @@ async function main(): Promise<void> {
       process.exit(1);
     }
     ejectCard(cardVolume);
-    console.log('Done.');
     return;
   }
 
@@ -470,7 +465,6 @@ async function main(): Promise<void> {
       process.exit(1);
     }
     ejectCard(cardVolume);
-    console.log('Done.');
     return;
   }
 
@@ -483,8 +477,6 @@ async function main(): Promise<void> {
   } catch {
     log.warn('Could not open Photomator.');
   }
-
-  console.log('Done.');
 }
 
 await run(main);

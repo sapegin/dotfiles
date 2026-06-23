@@ -91,7 +91,7 @@ async function processSource(
 
   pullIfClean(repo);
 
-  console.log(`\n⚒ Building ${repoName}…\n`);
+  console.log(`\n Building ${repoName}…\n`);
   for (const cmd of source.buildCommands) {
     command(cmd, repo);
   }
@@ -111,14 +111,17 @@ async function processSource(
 
     const vsixPath = path.join(tempDir, `${id}-${pkg.version}.vsix`);
 
-    console.log(`\n⚒ Packaging ${id}@${pkg.version}…`);
+    console.log(`\n Packaging ${id}@${pkg.version}…`);
     command(
       `npx --yes vsce package --no-dependencies --out ${JSON.stringify(vsixPath)}`,
       extensionDir
     );
 
     console.log();
-    command(`code --install-extension ${JSON.stringify(vsixPath)} --force`, repo);
+    command(
+      `code --install-extension ${JSON.stringify(vsixPath)} --force`,
+      repo
+    );
   }
 }
 

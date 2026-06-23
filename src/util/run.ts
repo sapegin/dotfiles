@@ -27,7 +27,7 @@ export async function run(
   try {
     await main();
     if (options.printDone === true) {
-      console.log('\nDone 󰇥');
+      console.log('\nDone 🦆');
     }
   } catch (error) {
     // Ctrl+C is an intentional abort, so don't print a stack trace for it.

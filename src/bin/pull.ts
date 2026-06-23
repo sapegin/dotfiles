@@ -136,7 +136,7 @@ if (
   (hasChanged('pnpm-lock.yaml') || hasChanged('package.json'))
 ) {
   console.log();
-  console.log('⚒ Installing packages with pnpm…');
+  console.log(' Installing packages with pnpm…');
   const lockFile = getChangedFiles().find((f) => f.includes('pnpm-lock.yaml'));
   const packageFile = getChangedFiles().find((f) => f.includes('package.json'));
   const changedFile = lockFile ?? packageFile;
@@ -146,7 +146,7 @@ if (
   execFileSync('pnpm', ['install'], { stdio: 'inherit', cwd: installDir });
 } else if (commandExists('npm') && hasChanged('package.json')) {
   console.log();
-  console.log('⚒ Installing packages with npm…');
+  console.log(' Installing packages with npm…');
   const packageFile = getChangedFiles().find((f) => f.includes('package.json'));
   const installDir = packageFile
     ? path.join(process.cwd(), getBaseDir(), path.dirname(packageFile))

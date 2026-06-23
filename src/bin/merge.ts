@@ -48,7 +48,7 @@ if (tracking?.startsWith(`${remote}/`)) {
   console.log('↑ This branch exists remotely, not rebasing');
 } else {
   console.log(
-    `⚒ Local-only branch, rebasing ${args.branch} onto ${currentBranch} first…`
+    ` Local-only branch, rebasing ${args.branch} onto ${currentBranch} first…`
   );
   execFileSync('git', ['switch', args.branch], { stdio: 'inherit' });
   execFileSync('git', ['rebase', currentBranch], { stdio: 'inherit' });
