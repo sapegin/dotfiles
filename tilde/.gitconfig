@@ -57,7 +57,7 @@
 	mmm = !git fetch origin master && git merge origin/master --no-edit
 	mmn = !git fetch origin main && git merge origin/main --no-edit
 	# Compact and readable log
-	l = log --graph --pretty=format:'%C(dim)%h%C(reset)%C(yellow)%d %C(white)%s%C(reset) — %C(bold)%an%C(reset) %C(dim)%ar%C(reset)'
+	l = log --graph --pretty=format:'%C(yellow)%d %C(white)%s%C(reset) — %C(bold)%an%C(reset) %C(dim)%ar%C(reset) %C(dim)(%h)%C(reset)'
 	# Log with list of changed files for each commit
 	ll = log --stat --abbrev-commit
 	# List of my own commits
