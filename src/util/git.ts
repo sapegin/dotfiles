@@ -94,7 +94,7 @@ export function runPull(): void {
  * Logs a warning and skips the pull if there are uncommitted changes.
  */
 export function pullIfClean(cwd: string): void {
-  console.log(`\n󰓂 Pulling ${tildify(cwd)}…`);
+  console.log(`\n↓ Pulling ${tildify(cwd)}…`);
   const repoStatus = execSync('git status --porcelain', {
     cwd,
     encoding: 'utf8',
