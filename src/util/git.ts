@@ -78,6 +78,18 @@ export function getUpstreamTracking(branch?: string): string | undefined {
 }
 
 /**
+ * Runs the `pull` helper script. Exits on failure without a Node stack trace;
+ * pull prints its own errors.
+ */
+export function runPull(): void {
+  try {
+    execFileSync('pull', { stdio: 'inherit' });
+  } catch {
+    process.exit(1);
+  }
+}
+
+/**
  * Pulls the Git repository at `cwd` if the working tree is clean.
  * Logs a warning and skips the pull if there are uncommitted changes.
  */
@@ -88,7 +100,11 @@ export function pullIfClean(cwd: string): void {
     encoding: 'utf8',
   });
   if (repoStatus.trim() === '') {
-    execSync('git pull', { cwd, stdio: 'inherit' });
+    try {
+      execSync('git pull', { cwd, stdio: 'inherit' });
+    } catch {
+      process.exit(1);
+    }
   } else {
     log.warn(' Working tree is dirty, skipping git pull');
   }

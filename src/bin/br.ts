@@ -26,7 +26,7 @@
 
 import { execFileSync, execSync, spawnSync } from 'node:child_process';
 import { parseArgs } from '../util/args.ts';
-import { getUpstreamTracking } from '../util/git.ts';
+import { getUpstreamTracking, runPull } from '../util/git.ts';
 
 const remote = 'origin';
 
@@ -50,7 +50,7 @@ function hasRemoteBranch(name: string): boolean {
 
 function tryPull(branch: string): void {
   if (hasRemoteBranch(branch)) {
-    execFileSync('pull', { stdio: 'inherit' });
+    runPull();
   }
 }
 
@@ -128,9 +128,9 @@ if (hasLocalBranch(branch)) {
         { stdio: 'inherit' }
       );
     }
-
-    execFileSync('pull', { stdio: 'inherit' });
   }
+
+  tryPull(branch);
 } else if (hasRemoteBranch(branch)) {
   // No local branch, but remote exists — fetch and switch
   console.log(`↓ Fetching remote branch ${branch}…`);
