@@ -114,20 +114,15 @@ function isRepositoryInitialized(): boolean {
   return result.status === 0;
 }
 
-// Read a line without echoing it, so a typed password stays off the screen.
-async function promptHidden(query: string): Promise<string> {
+async function prompt(query: string): Promise<string> {
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
   });
-  // `_writeToOutput` is readline's internal echo hook; silencing it hides input.
-  (rl as unknown as { _writeToOutput: () => void })._writeToOutput = () => {};
-  process.stdout.write(query);
   try {
-    return await rl.question('');
+    return await rl.question(query);
   } finally {
     rl.close();
-    process.stdout.write('\n');
   }
 }
 
@@ -139,11 +134,11 @@ async function createPasswordFile(): Promise<void> {
       'if you lose it, the backups are unrecoverable.\n'
   );
 
-  const password = await promptHidden('New password: ');
+  const password = await prompt('New password: ');
   if (password.length === 0) {
     throw new Error('Password must not be empty');
   }
-  if ((await promptHidden('Repeat password: ')) !== password) {
+  if ((await prompt('Repeat password: ')) !== password) {
     throw new Error('Passwords do not match');
   }
 
