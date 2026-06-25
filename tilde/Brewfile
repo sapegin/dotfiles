@@ -18,7 +18,7 @@ brew "lazygit" # Git client
 brew "macos-trash" # `rm` replacement with MacOS trash support
 brew "node" # Fallback Node.js version
 brew "ripgrep" # `grep` replacement
-brew "rsyncy" # `rsync` replacement
+brew "restic" # Incremental backups
 brew "starship" # Prompt manager
 brew "supacode" # Terminal for AI agents
 brew "syntax-highlight" # Quick look with syntax highlighting

@@ -70,6 +70,7 @@ preorder
 raccoonarium
 refactorings
 renamer
+restic
 résumé
 rubberduck
 rubberducking
