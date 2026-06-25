@@ -56,8 +56,12 @@ const EXCLUDES = [
   '.trash', // Obsidian trash
 ];
 
-const DESTINATION =
-  'sftp:sapegin@Hippopotamus.local:/volume1/Stuffses/Backups/restic';
+// The repository lives on the Synology, reached over SMB. macOS mounts the
+// share under /Volumes using the credentials saved in the Keychain, so restic
+// can use its plain `local` backend against the mount point.
+const SHARE_URL = 'smb://Hippopotamus.local/Stuffses';
+const MOUNT_POINT = '/Volumes/Stuffses';
+const DESTINATION = path.join(MOUNT_POINT, 'Backups/restic');
 
 const PASSWORD_FILE = path.join(dirs.home, '.config/restic/password');
 
@@ -103,6 +107,29 @@ function isResticInstalled(): boolean {
     return true;
   } catch {
     return false;
+  }
+}
+
+function isShareMounted(): boolean {
+  const result = spawnSync('mount', { encoding: 'utf8' });
+  return result.stdout.includes(` on ${MOUNT_POINT} (smbfs`);
+}
+
+// Ensure the SMB share is mounted before touching the repository. Without this
+// guard restic's local backend would silently create the repo on the internal
+// disk when the share is offline.
+function ensureShareMounted(): void {
+  if (isShareMounted()) {
+    return;
+  }
+  log.heading('Mounting backup share…');
+  // `mount volume` uses the Keychain credentials and waits until the share is
+  // mounted (it creates the /Volumes mount point itself).
+  execFileSync('osascript', ['-e', `mount volume "${SHARE_URL}"`], {
+    stdio: 'inherit',
+  });
+  if (isShareMounted() === false) {
+    throw new Error(`Failed to mount ${SHARE_URL}`);
   }
 }
 
@@ -165,22 +192,25 @@ async function backup(): Promise<void> {
     await createPasswordFile();
   }
 
+  // Step 3: the backup share must be mounted.
+  ensureShareMounted();
+
   logLine('Starting backup');
 
-  // Step 3: initialize the repository once, on first run.
+  // Step 4: initialize the repository once, on first run.
   if (isRepositoryInitialized() === false) {
     log.heading('Initializing repository…');
     restic(['init']);
   }
 
-  // Step 4: back up all sources.
+  // Step 5: back up all sources.
   restic([
     'backup',
     ...SOURCES,
     ...EXCLUDES.flatMap((pattern) => ['--exclude', pattern]),
   ]);
 
-  // Step 5: apply the retention policy and reclaim unused data.
+  // Step 6: apply the retention policy and reclaim unused data.
   restic([
     'forget',
     '--keep-daily',
