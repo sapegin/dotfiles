@@ -60,20 +60,15 @@ function getAvifPath(filePath: string): string {
   return path.join(directory, `${filenameWithoutExtension}.avif`);
 }
 
-function printResult(
-  filename: string,
+function formatSizeDiff(
+  difference: number,
   originalSize: number,
-  optimizedSize: number,
-  difference: number
-): void {
-  const ratio = (optimizedSize * 100) / originalSize;
-  const sizeChange =
-    difference >= 0
-      ? `-${prettyBytes(difference)}`
-      : `+${prettyBytes(Math.abs(difference))}`;
-  console.log(
-    `${theme.strong(filename)}: ${prettyBytes(originalSize)} → ${theme.info(prettyBytes(optimizedSize))} ${theme.success(`(${ratio.toFixed(2)}%, ${sizeChange})`)}`
-  );
+  optimizedSize: number
+) {
+  const ratio = `${((optimizedSize * 100) / originalSize).toFixed(2)}%`;
+  return difference >= 0
+    ? theme.success(`(-${prettyBytes(difference)}, ${ratio})`)
+    : theme.error(`(+${prettyBytes(Math.abs(difference))}, ${ratio})`);
 }
 
 async function convertFile(
@@ -102,11 +97,15 @@ async function convertFile(
   const difference = originalSize - avifSize;
 
   if (difference > MINIMUM_SAVINGS_BYTES || force) {
-    printResult(avifPath, originalSize, avifSize, difference);
-    return;
+    console.log(
+      `${theme.strong(filePath)}: ${prettyBytes(originalSize)} → ${theme.info(prettyBytes(avifSize))} ${formatSizeDiff(difference, originalSize, avifSize)}`
+    );
+  } else {
+    console.log(
+      `${theme.strong(filePath)}: skipped, AVIF is larger ${prettyBytes(originalSize)} → ${theme.info(prettyBytes(avifSize))} ${formatSizeDiff(difference, originalSize, avifSize)}`
+    );
+    await fs.rm(avifPath);
   }
-
-  await fs.rm(avifPath);
 }
 
 async function main(): Promise<void> {
