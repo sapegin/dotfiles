@@ -28,6 +28,8 @@
       "git rev-parse *": "allow",
       "git show *": "allow",
       "git status *": "allow",
+      "git remote *": "allow",
+      "git symbolic-ref *": "allow",
       "grep *": "allow",
       "head *": "allow",
       "ls *": "allow",
