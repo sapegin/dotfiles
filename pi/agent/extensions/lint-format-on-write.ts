@@ -1,6 +1,5 @@
 import { execFile } from 'node:child_process';
 import fs from 'node:fs';
-import fsPromises from 'node:fs/promises';
 import path from 'node:path';
 import { promisify } from 'node:util';
 import {
@@ -13,16 +12,8 @@ import {
 
 const execFileAsync = promisify(execFile);
 
-const eslintFixCommand = ['eslint', '--fix', '--quiet'] as const;
-const eslintCheckCommand = ['eslint', '--quiet'] as const;
 const oxlintFixCommand = ['oxlint', '--fix', '--quiet'] as const;
 const oxlintCheckCommand = ['oxlint', '--quiet'] as const;
-const prettierCommand = [
-  'prettier',
-  '--write',
-  '--log-level',
-  'silent',
-] as const;
 const oxfmtCommand = ['oxfmt', '--write'] as const;
 
 /** Run linter and formatter after every file change. */
@@ -40,18 +31,28 @@ export default function lintFormatOnWrite(pi: ExtensionAPI) {
       return;
     }
 
-    const commands = await getProjectCommands(filePath);
-    const lintFixResult = await runCommand(commands.lintFix, filePath, ctx);
+    const repositoryRoot = getRepositoryRoot(filePath);
+    const lintFixResult = await runCommand(
+      oxlintFixCommand,
+      filePath,
+      repositoryRoot,
+      ctx
+    );
     const lintFixErrors = formatLintErrors(lintFixResult);
     if (!lintFixErrors) {
-      await runCommand(commands.format, filePath, ctx);
+      await runCommand(oxfmtCommand, filePath, repositoryRoot, ctx);
       return;
     }
 
-    const lintCheckResult = await runCommand(commands.lintCheck, filePath, ctx);
+    const lintCheckResult = await runCommand(
+      oxlintCheckCommand,
+      filePath,
+      repositoryRoot,
+      ctx
+    );
     const lintCheckErrors = formatLintErrors(lintCheckResult);
     if (!lintCheckErrors) {
-      await runCommand(commands.format, filePath, ctx);
+      await runCommand(oxfmtCommand, filePath, repositoryRoot, ctx);
       return;
     }
 
@@ -75,45 +76,16 @@ function getWrittenPath(event: ToolResultEvent, ctx: ExtensionContext) {
     : path.resolve(ctx.cwd, inputPath);
 }
 
-interface ProjectCommands {
-  lintFix: readonly string[];
-  lintCheck: readonly string[];
-  format: readonly string[];
+function getRepositoryRoot(filePath: string) {
+  return findRepositoryRoot(path.dirname(filePath)) ?? path.dirname(filePath);
 }
 
-async function getProjectCommands(filePath: string): Promise<ProjectCommands> {
-  const packageJson = await readProjectPackageJson(path.dirname(filePath));
-  const dependencies = getDependencies(packageJson);
-
-  return {
-    lintFix: dependencies.has('oxlint') ? oxlintFixCommand : eslintFixCommand,
-    lintCheck: dependencies.has('oxlint')
-      ? oxlintCheckCommand
-      : eslintCheckCommand,
-    format: dependencies.has('oxfmt') ? oxfmtCommand : prettierCommand,
-  };
-}
-
-async function readProjectPackageJson(startPath: string): Promise<unknown> {
-  const packageJsonPath = findProjectPackageJson(startPath);
-  if (!packageJsonPath) {
-    return undefined;
-  }
-
-  try {
-    return JSON.parse(await fsPromises.readFile(packageJsonPath, 'utf8'));
-  } catch {
-    return undefined;
-  }
-}
-
-function findProjectPackageJson(startPath: string) {
+function findRepositoryRoot(startPath: string) {
   let currentPath = startPath;
 
   while (true) {
-    const packageJsonPath = path.join(currentPath, 'package.json');
-    if (fs.existsSync(packageJsonPath)) {
-      return packageJsonPath;
+    if (fs.existsSync(path.join(currentPath, '.git'))) {
+      return currentPath;
     }
 
     const parentPath = path.dirname(currentPath);
@@ -122,35 +94,6 @@ function findProjectPackageJson(startPath: string) {
     }
     currentPath = parentPath;
   }
-}
-
-function getDependencies(packageJson: unknown) {
-  const dependencies = new Set<string>();
-  if (!isRecord(packageJson)) {
-    return dependencies;
-  }
-
-  for (const field of [
-    'dependencies',
-    'devDependencies',
-    'peerDependencies',
-    'optionalDependencies',
-  ]) {
-    const entries = packageJson[field];
-    if (!isRecord(entries)) {
-      continue;
-    }
-
-    for (const dependency of Object.keys(entries)) {
-      dependencies.add(dependency);
-    }
-  }
-
-  return dependencies;
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null;
 }
 
 interface CommandResult {
@@ -164,13 +107,14 @@ interface CommandResult {
 async function runCommand(
   command: readonly string[],
   filePath: string,
+  cwd: string,
   ctx: ExtensionContext
 ): Promise<CommandResult> {
   try {
-    const cwd = path.dirname(filePath);
+    const relativeFilePath = path.relative(cwd, filePath);
     const { stdout, stderr } = await execFileAsync(
       command[0],
-      [...command.slice(1), path.basename(filePath)],
+      [...command.slice(1), relativeFilePath],
       {
         cwd,
         env: getCommandEnv(cwd),
