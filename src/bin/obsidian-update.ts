@@ -21,6 +21,7 @@ import YAML from 'yaml';
 import { atomicWrite } from '../util/atomicWrite.ts';
 import { dirs, IMAGE_EXTENSIONS } from '../util/consts.ts';
 import { readExifMetadata } from '../util/exiftool.ts';
+import { prettyBytes } from '../util/prettyBytes.ts';
 import { run } from '../util/run.ts';
 import { log } from '../util/theme.ts';
 
@@ -519,7 +520,7 @@ async function optimizeImage(
   if (optimizedSize >= originalSize) {
     await fs.unlink(avifPath);
     console.log(
-      `Skipped ${filename} (AVIF not smaller: ${(optimizedSize / 1024 / 1024).toFixed(2)} MB vs ${(originalSize / 1024 / 1024).toFixed(2)} MB)`
+      `Skipped ${filename} (AVIF not smaller: ${prettyBytes(optimizedSize)} vs ${prettyBytes(originalSize)})`
     );
     return undefined;
   }
@@ -530,7 +531,7 @@ async function optimizeImage(
   console.log();
   console.log(`${filename} → ${nameWithoutExt}.avif`);
   console.log(
-    `  ↪ ${(originalSize / 1024 / 1024).toFixed(2)} MB → ${(optimizedSize / 1024 / 1024).toFixed(2)} MB (saved ${savedPercentage}%)`
+    `  ↪ ${prettyBytes(originalSize)} → ${prettyBytes(optimizedSize)} (saved ${savedPercentage}%)`
   );
 
   if (newWidth !== width || newHeight !== height) {
@@ -741,7 +742,7 @@ async function updateNote({
       await fs.access(coverImageFilePath);
     } catch {
       console.log(
-        `Cover image doesn’t exist (${coverImageFilePath}), updating…`
+        `Cover image doesn’t exist (${path.basename(coverImageFilePath)}), updating…`
       );
       newFrontmatter.image = undefined;
     }
@@ -998,8 +999,7 @@ async function backupVault(): Promise<void> {
     { cwd: dirs.obsidianVault }
   );
   const stats = await fs.stat(backupFile);
-  const sizeMb = (stats.size / 1024 / 1024).toFixed(1);
-  console.log(`  ↪ Backup created (${sizeMb} MB)`);
+  console.log(`  ↪ Backup created (${prettyBytes(stats.size)}`);
 }
 
 /**
@@ -1125,13 +1125,13 @@ async function main(): Promise<void> {
 
   await fs.mkdir(TRASH_DIR, { recursive: true });
 
-  console.log('\n☁ Checking iCloud health…\n');
+  console.log('\n Checking iCloud health…\n');
   await checkICloudSync();
 
-  console.log('\n▣ Backing up vault…\n');
+  console.log('\n Backing up vault…\n');
   await backupVault();
 
-  console.log('\n◇ Gathering the files…');
+  console.log('\n Gathering the files…');
   const markdownFiles = await Array.fromAsync(
     fs.glob(path.join(dirs.obsidianVault, ALL_NOTES_PATTERN))
   );
@@ -1142,23 +1142,23 @@ async function main(): Promise<void> {
     `\nFound ${markdownFiles.length} notes and ${imageFiles.length} images`
   );
 
-  console.log('\n□ Updating images…\n');
+  console.log('\n󰚰 Updating images…\n');
 
-  console.log('\nOptimizing images…\n');
+  console.log('\n Optimizing images…\n');
   const renamedFiles = await optimizeImages(imageFiles);
 
-  console.log('\n✎ Updating notes…\n');
+  console.log('\n󰚰 Updating notes…\n');
 
   await updateNotes(renamedFiles);
 
-  console.log('\nCollecting used images from Markdown…\n');
+  console.log('\n Collecting used images from Markdown…\n');
   const updatedMarkdownFiles = await Array.fromAsync(
     fs.glob(path.join(dirs.obsidianVault, ALL_NOTES_PATTERN))
   );
   const usedImages = await findUsedImages(updatedMarkdownFiles);
   console.log(`\nFound ${usedImages.size} image usages`);
 
-  console.log('\nRemoving unused images…\n');
+  console.log('\n Removing unused images…\n');
   const remainingImageFiles = await Array.fromAsync(
     fs.glob(path.join(dirs.obsidianVault, ALL_IMAGES_PATTERN))
   );
@@ -1168,7 +1168,7 @@ async function main(): Promise<void> {
   await cleanObsidianTrash();
 
   if (warnings.length > 0) {
-    console.log(`\n ${warnings.length} warnings:\n`);
+    log.warn(`\n ${warnings.length} warnings:\n`);
     for (const message of warnings) {
       console.log(`• ${message}`);
     }
