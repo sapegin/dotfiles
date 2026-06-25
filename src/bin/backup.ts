@@ -203,10 +203,12 @@ async function backup(): Promise<void> {
     restic(['init']);
   }
 
-  // Step 5: back up all sources.
+  // Step 5: back up all sources. Resolve symlinks first: restic stores a
+  // symlink as just the link without descending into it, and the Obsidian vault
+  // is a symlink into iCloud.
   restic([
     'backup',
-    ...SOURCES,
+    ...SOURCES.map((source) => fs.realpathSync(source)),
     ...EXCLUDES.flatMap((pattern) => ['--exclude', pattern]),
   ]);
 
