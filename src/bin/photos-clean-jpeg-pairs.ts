@@ -1,4 +1,8 @@
-// Remove JPEG files that have a matching RAW in the same folder.
+// Clean duplicate JPEG files from a photo folder.
+//
+// - Removes JPEG files when a matching RAW exists in the same folder
+// - Removes .JPEG when a matching .JPG has the same file size
+// - Logs .JPG/.JPEG pairs with different sizes for manual review
 //
 // Usage: photos-clean-jpeg-pairs [folder]
 //
@@ -14,6 +18,7 @@ import path from 'node:path';
 import readline from 'node:readline/promises';
 import { parseArgs } from '../util/args.ts';
 import { dirs, JPEG_EXTENSIONS, RAW_EXTENSIONS } from '../util/consts.ts';
+import { prettyBytes } from '../util/prettyBytes.ts';
 import { run } from '../util/run.ts';
 import { log } from '../util/theme.ts';
 import { tildify, untildify } from '../util/tildify.ts';
@@ -25,10 +30,25 @@ const args = parseArgs([
   },
 ]);
 
+interface ManualReviewItem {
+  readonly reason: string;
+  readonly files: readonly string[];
+}
+
 function pairKey(filePath: string): string {
-  const basename = path.basename(filePath);
-  const stem = basename.slice(0, -path.extname(basename).length).toLowerCase();
+  const stem = path.parse(filePath).name.toLowerCase();
   return `${path.dirname(filePath)}/${stem}`;
+}
+
+function groupByPairKey(filePaths: string[]): Map<string, string[]> {
+  const byPairKey = new Map<string, string[]>();
+  for (const filePath of filePaths) {
+    const key = pairKey(filePath);
+    const group = byPairKey.get(key) ?? [];
+    group.push(filePath);
+    byPairKey.set(key, group);
+  }
+  return byPairKey;
 }
 
 async function findPhotoFiles(root: string): Promise<string[]> {
@@ -50,16 +70,8 @@ async function findPhotoFiles(root: string): Promise<string[]> {
 }
 
 function findJpegsWithRawPairs(filePaths: string[]): string[] {
-  const byPairKey = new Map<string, string[]>();
-  for (const filePath of filePaths) {
-    const key = pairKey(filePath);
-    const group = byPairKey.get(key) ?? [];
-    group.push(filePath);
-    byPairKey.set(key, group);
-  }
-
   const toRemove: string[] = [];
-  for (const group of byPairKey.values()) {
+  for (const group of groupByPairKey(filePaths).values()) {
     const hasRaw = group.some((filePath) =>
       RAW_EXTENSIONS.has(path.extname(filePath).toLowerCase())
     );
@@ -75,6 +87,70 @@ function findJpegsWithRawPairs(filePaths: string[]): string[] {
   }
 
   return toRemove.toSorted((a, b) => a.localeCompare(b));
+}
+
+async function findJpgJpegDuplicateRemovals(
+  filePaths: string[],
+  alreadyRemoving: ReadonlySet<string>
+): Promise<{ toRemove: string[]; needsReview: ManualReviewItem[] }> {
+  const toRemove: string[] = [];
+  const needsReview: ManualReviewItem[] = [];
+
+  for (const group of groupByPairKey(filePaths).values()) {
+    const hasRaw = group.some((filePath) =>
+      RAW_EXTENSIONS.has(path.extname(filePath).toLowerCase())
+    );
+    if (hasRaw) {
+      continue;
+    }
+
+    const jpgFiles = group.filter(
+      (filePath) =>
+        path.extname(filePath).toLowerCase() === '.jpg' &&
+        alreadyRemoving.has(filePath) === false
+    );
+    const jpegFiles = group.filter(
+      (filePath) =>
+        path.extname(filePath).toLowerCase() === '.jpeg' &&
+        alreadyRemoving.has(filePath) === false
+    );
+
+    if (jpgFiles.length === 0 || jpegFiles.length === 0) {
+      continue;
+    }
+
+    if (jpgFiles.length > 1 || jpegFiles.length > 1) {
+      needsReview.push({
+        reason: 'Multiple .jpg/.jpeg variants',
+        files: [...jpgFiles, ...jpegFiles].toSorted((a, b) =>
+          a.localeCompare(b)
+        ),
+      });
+      continue;
+    }
+
+    const [jpgPath] = jpgFiles;
+    const [jpegPath] = jpegFiles;
+    const [jpgStats, jpegStats] = await Promise.all([
+      fs.stat(jpgPath),
+      fs.stat(jpegPath),
+    ]);
+
+    if (jpgStats.size === jpegStats.size) {
+      toRemove.push(jpegPath);
+      continue;
+    }
+
+    needsReview.push({
+      reason: `Size mismatch (${prettyBytes(jpgStats.size)} vs ${prettyBytes(jpegStats.size)})`,
+      files: [jpgPath, jpegPath],
+    });
+  }
+
+  return {
+    toRemove: toRemove.toSorted((a, b) => a.localeCompare(b)),
+    needsReview,
+  };
 }
 
 async function confirmYesNo(prompt: string): Promise<boolean> {
@@ -107,19 +183,50 @@ async function main(): Promise<void> {
 
   console.log(`Scanning ${tildify(photosRoot)}…`);
   const photoFiles = await findPhotoFiles(photosRoot);
-  const toRemove = findJpegsWithRawPairs(photoFiles);
+  const rawRemovals = findJpegsWithRawPairs(photoFiles);
+  const rawRemovalSet = new Set(rawRemovals);
+  const { toRemove: jpgJpegRemovals, needsReview } =
+    await findJpgJpegDuplicateRemovals(photoFiles, rawRemovalSet);
+  const toRemove = [...new Set([...rawRemovals, ...jpgJpegRemovals])].toSorted(
+    (a, b) => a.localeCompare(b)
+  );
+
+  if (needsReview.length > 0) {
+    console.log(`\nManual review needed (${needsReview.length}):`);
+    for (const item of needsReview) {
+      console.log(`  ${item.reason}:`);
+      for (const filePath of item.files) {
+        console.log(`    ${tildify(filePath)}`);
+      }
+    }
+  }
 
   if (toRemove.length === 0) {
-    console.log('No JPEG+RAW pairs found.');
+    if (needsReview.length === 0) {
+      console.log('Nothing to clean.');
+    }
     return;
   }
 
-  console.log(`Found ${toRemove.length} JPEG files with matching RAW:`);
-  for (const filePath of toRemove) {
-    console.log(`  ${filePath}`);
+  if (rawRemovals.length > 0) {
+    console.log(`\nFound ${rawRemovals.length} JPEG files with matching RAW:`);
+    for (const filePath of rawRemovals) {
+      console.log(`  ${filePath}`);
+    }
   }
 
-  if ((await confirmYesNo('Remove them? [Y/n] ')) === false) {
+  if (jpgJpegRemovals.length > 0) {
+    console.log(
+      `\nFound ${jpgJpegRemovals.length} duplicate .JPEG files (same size as .JPG):`
+    );
+    for (const filePath of jpgJpegRemovals) {
+      console.log(`  ${filePath}`);
+    }
+  }
+
+  if (
+    (await confirmYesNo(`Remove ${toRemove.length} files? [Y/n] `)) === false
+  ) {
     log.warn('Cancelled.');
     return;
   }
