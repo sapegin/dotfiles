@@ -1,0 +1,64 @@
+import { describe, expect, test } from 'vitest';
+import { getDestructiveReason } from './block-destructive-operations.ts';
+
+describe(getDestructiveReason, () => {
+  test.each([
+    ['rm', 'rm'],
+    ['rm dist/file.txt', 'rm'],
+    ['rm -rf dist', 'rm'],
+    ['rm -fr dist', 'rm'],
+    ['rm -r -f dist', 'rm'],
+    ['rm --recursive --force dist', 'rm'],
+    ['mv old.txt new.txt', 'mv'],
+    ['chmod 600 ~/.ssh/id_rsa', 'chmod'],
+    ['chown user:group file.txt', 'chown'],
+    ['sudo make install', 'sudo'],
+    ['git reset HEAD~1', 'git reset'],
+    ['git reset --hard HEAD~1', 'git reset'],
+    ['git reset --merge', 'git reset'],
+    ['git clean -n', 'git clean'],
+    ['git clean -fd', 'git clean'],
+    ['git clean --force -d', 'git clean'],
+    ['git checkout main', 'git checkout'],
+    ['git checkout -b new-branch', 'git checkout'],
+    ['git checkout --force main', 'git checkout'],
+    ['git checkout -f main', 'git checkout'],
+    ['git checkout -- path/to/file', 'git checkout'],
+    ['git switch main', 'git switch'],
+    ['git rebase main', 'git rebase'],
+    ['git push origin main', 'git push'],
+    ['git push -f origin main', 'git push'],
+    ['git push --force-with-lease origin main', 'git push'],
+    ['git branch', 'git branch'],
+    ['git branch -d merged-branch', 'git branch'],
+    ['git branch -f rewritten-branch main', 'git branch'],
+    ['git branch -D old-branch', 'git branch'],
+    ['git branch --delete --force old-branch', 'git branch'],
+    ['git tag -d v1.0.0', 'git tag -d'],
+    ['git tag --delete v1.0.0', 'git tag -d'],
+    ['git stash pop', 'git stash pop/drop/clear'],
+    ['git stash drop stash@{0}', 'git stash pop/drop/clear'],
+    ['git stash clear', 'git stash pop/drop/clear'],
+    ['git commit -m "message"', 'git commit'],
+    ['git commit --amend --no-edit', 'git commit'],
+    ['git restore src/file.ts', 'git restore'],
+    ['git restore --staged src/file.ts', 'git restore'],
+    ['git restore --help', 'git restore'],
+    ['find . -name node_modules -delete', 'find -delete'],
+  ])('detects %s', (command, reason) => {
+    expect(getDestructiveReason(command)).toBe(reason);
+  });
+
+  test.each([
+    'git status',
+    'git log --oneline',
+    'git diff',
+    'git fetch --all',
+    'git pull',
+    'git add .',
+    'echo find . -delete',
+    'rg "find . -delete" docs',
+  ])('allows %s', (command) => {
+    expect(getDestructiveReason(command)).toBeUndefined();
+  });
+});

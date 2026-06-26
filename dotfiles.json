@@ -109,11 +109,6 @@
     "destination": "~/.pi/agent/extensions/",
     "ignore": ["\\.test\\.ts$"]
   },
-  // Pi Permission System extension config
-  {
-    "source": "~/dotfiles/pi/agent/extensions/pi-permission-system/config.json",
-    "destination": "~/.pi/agent/extensions/pi-permission-system/config.json"
-  },
 
   /**
    * Obsidian

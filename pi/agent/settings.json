@@ -6,8 +6,5 @@
   "quietStartup": true,
   "enableInstallTelemetry": false,
   "enableSkillCommands": true,
-  "theme": "squirrelsong",
-  "packages": [
-    "npm:@gotgenes/pi-permission-system"
-  ]
+  "theme": "squirrelsong"
 }
