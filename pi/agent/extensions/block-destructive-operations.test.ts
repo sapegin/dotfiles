@@ -55,6 +55,8 @@ describe(getDestructiveReason, () => {
     'git diff',
     'git fetch --all',
     'git pull',
+    'git branch --show-current',
+    'git branch -r --list origin/main',
     'git add .',
     'echo find . -delete',
     'rg "find . -delete" docs',

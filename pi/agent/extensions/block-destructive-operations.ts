@@ -12,7 +12,7 @@ import {
  * unless the user explicitly allows it.
  */
 const choiceAllow = 'Allow';
-const ChoiceDeny = 'Deny, provide reason';
+const choiceDeny = 'Deny, provide reason';
 const choiceRanManually = 'Continue, I ran the command myself';
 
 export default function blockDestructiveOperations(pi: ExtensionAPI) {
@@ -34,8 +34,8 @@ export default function blockDestructiveOperations(pi: ExtensionAPI) {
     }
 
     const choice = await ctx.ui.select(
-      `Permission required\n\nMy Lord, I want to run this destructive command:\n\n${event.input.command}`,
-      [choiceAllow, ChoiceDeny, choiceRanManually]
+      `Permission required\n\nMy Lord, I wish to run this dangerous command:\n\n${event.input.command}`,
+      [choiceAllow, choiceDeny, choiceRanManually]
     );
 
     if (choice === choiceAllow) {
@@ -50,7 +50,7 @@ export default function blockDestructiveOperations(pi: ExtensionAPI) {
     }
 
     let userReason: string | undefined;
-    if (choice === ChoiceDeny) {
+    if (choice === choiceDeny) {
       userReason = await ctx.ui.input(
         'Reason to provide to the agent:',
         `Destructive command blocked: ${reason}`
@@ -81,6 +81,7 @@ export function getDestructiveReason(command: string) {
   const patterns: {
     regex: RegExp;
     reason: string;
+    exceptions?: RegExp[];
     skipForEchoRg?: boolean;
     caseSensitive?: boolean;
   }[] = [
@@ -131,6 +132,10 @@ export function getDestructiveReason(command: string) {
     {
       regex: /\bgit\s+branch\b/,
       reason: 'git branch',
+      exceptions: [
+        /\bgit\s+branch\s+--show-current\b/,
+        /\bgit\s+branch\s+-r\s+--list\b/,
+      ],
     },
     {
       regex:
@@ -156,13 +161,22 @@ export function getDestructiveReason(command: string) {
     },
   ];
 
-  for (const { regex, reason, skipForEchoRg, caseSensitive } of patterns) {
+  for (const {
+    regex,
+    reason,
+    exceptions,
+    skipForEchoRg,
+    caseSensitive,
+  } of patterns) {
     if (skipForEchoRg && isEchoOrRg) {
       continue;
     }
 
     const target = caseSensitive ? command : lowerCommand;
-    if (regex.test(target)) {
+    if (
+      regex.test(target) &&
+      !exceptions?.some((exception) => exception.test(target))
+    ) {
       return reason;
     }
   }
