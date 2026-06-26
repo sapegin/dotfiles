@@ -8,6 +8,7 @@ export const dirs = {
   dotfiles: path.resolve(import.meta.dirname, '..', '..'),
   projects: path.join(HOME, '_'),
   obsidianVault: path.join(HOME, 'murder'),
+  iCloud: path.join(HOME, 'cloud'),
   documents: path.join(HOME, 'Documents'),
   pictures: path.join(HOME, 'Pictures'),
   photos: path.join(HOME, 'Pictures', 'Photos'),

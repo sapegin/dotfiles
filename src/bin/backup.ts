@@ -6,11 +6,11 @@
 //
 // - Install the nightly LaunchAgent (runs at 03:00):
 //
-// `backup --install`
+// `backup install`
 //
 // - Remove the LaunchAgent:
 //
-// `backup --uninstall`
+// `backup uninstall`
 //
 // - List snapshots:
 //
@@ -19,10 +19,6 @@
 // - Restore the latest snapshot:
 //
 // `restic restore latest --target ~/Restore`
-//
-// - Prerequisite: install restic (the password is set on the first run):
-//
-// `brew install restic`
 //
 // ---
 // Author: Artem Sapegin, sapegin.me
@@ -39,12 +35,12 @@ import {
   installLaunchAgent,
   uninstallLaunchAgent,
 } from '../util/launchAgent.ts';
+import { run } from '../util/run.ts';
 import { log } from '../util/theme.ts';
 import { tildify } from '../util/tildify.ts';
 
-// Configuration
-
-const SOURCES = [dirs.obsidianVault];
+// Folders to backup
+const SOURCES = [dirs.obsidianVault, dirs.iCloud];
 
 // Glob patterns excluded from every source. Restic matches each pattern against
 // a file's absolute path on whole path components, so a slash-free name like
@@ -61,20 +57,24 @@ const EXCLUDES = [
 // can use its plain `local` backend against the mount point.
 const SHARE_URL = 'smb://Hippopotamus.local/Stuffses';
 const MOUNT_POINT = '/Volumes/Stuffses';
+
+// Backup destination
 const DESTINATION = path.join(MOUNT_POINT, 'Backups/restic');
 
+// Restic password file
 const PASSWORD_FILE = path.join(dirs.home, '.config/restic/password');
 
+// Retention policy: keep last 7 daily, 4 weekly, 12 monthly and 5 yearly backup
 const KEEP_DAILY = 7;
 const KEEP_WEEKLY = 4;
 const KEEP_MONTHLY = 12;
 const KEEP_YEARLY = 5;
 
+// Backup time: 3am every day
 const BACKUP_HOUR = 3;
 const BACKUP_MINUTE = 0;
 
 // LaunchAgent
-
 const LABEL = 'me.sapegin.backup';
 const PROGRAM = path.join(dirs.dotfiles, 'bin/symlinks/backup');
 const LOG_FILE = path.join(dirs.home, 'Library/Logs/backup.log');
@@ -156,10 +156,10 @@ async function prompt(query: string): Promise<string> {
 // Prompt for a new repository password and store it with private permissions.
 async function createPasswordFile(): Promise<void> {
   log.heading('No restic password found — let’s create one.');
-  console.log(
-    'This password encrypts the whole repository. Store a copy somewhere safe:\n' +
-      'if you lose it, the backups are unrecoverable.\n'
-  );
+  console.log(`
+This password encrypts the whole repository. Store a copy somewhere safe:
+if you lose it, the backups are unrecoverable.
+`);
 
   const password = await prompt('New password: ');
   if (password.length === 0) {
@@ -245,23 +245,21 @@ function uninstall(): void {
 }
 
 const args = parseArgs([
-  { name: 'install', type: 'boolean', default: false },
-  { name: 'uninstall', type: 'boolean', default: false },
+  {
+    name: 'command',
+    positional: true,
+    values: ['install', 'uninstall'],
+  },
 ]);
 
-try {
-  if (args.install) {
+async function main(): Promise<void> {
+  if (args.command === 'install') {
     install();
-  } else if (args.uninstall) {
+  } else if (args.command === 'uninstall') {
     uninstall();
   } else {
     await backup();
   }
-} catch (error) {
-  // `readline/promises` throws this when the user presses Ctrl+C at a prompt.
-  if (error instanceof Error && error.name === 'AbortError') {
-    process.exit(130);
-  }
-  log.error(error instanceof Error ? error.message : String(error));
-  process.exit(1);
 }
+
+await run(main);
