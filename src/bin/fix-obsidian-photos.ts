@@ -1,7 +1,7 @@
-// Renames IMG_* and _MG_* attachments in Obsidian daily notes,
+// Adds year prefixes to IMG_* and _MG_* attachments in Obsidian daily notes,
 // and updates the links in the Markdown files.
 //
-// Usage: fix-obsidian-photos <year>
+// Usage: fix-obsidian-photos
 //
 // ---
 // Author: Artem Sapegin, sapegin.me
@@ -10,24 +10,14 @@
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { parseArgs } from '../util/args.ts';
 import { dirs } from '../util/consts.ts';
 import { run } from '../util/run.ts';
 
 const ATTACHMENTS_DIR = path.join(dirs.obsidianVault, 'zz-attachments');
-
-const args = parseArgs([
-  {
-    name: 'year',
-    positional: true,
-    required: true,
-  },
-]);
-
-const LOG_DIR = path.join(dirs.obsidianVault, 'Log', args.year);
+const LOG_DIR = path.join(dirs.obsidianVault, 'Log');
 
 async function main(): Promise<void> {
-  const mdFiles = await Array.fromAsync(fs.glob('*.md', { cwd: LOG_DIR }));
+  const mdFiles = await Array.fromAsync(fs.glob('**/*.md', { cwd: LOG_DIR }));
 
   console.log(`Found ${mdFiles.length} Markdown files in ${LOG_DIR}`);
 
@@ -39,12 +29,13 @@ async function main(): Promise<void> {
 
   for (const file of mdFiles) {
     const filePath = path.join(LOG_DIR, file);
+    const year = path.basename(path.dirname(file));
     let content = await fs.readFile(filePath, 'utf8');
     let modified = false;
 
     for (const match of content.matchAll(imgPattern)) {
       const oldName = match[1];
-      const newName = `${args.year}_${oldName}`;
+      const newName = `${year}_${oldName}`;
       const oldPath = path.join(ATTACHMENTS_DIR, oldName);
       const newPath = path.join(ATTACHMENTS_DIR, newName);
 
