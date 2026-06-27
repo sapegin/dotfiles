@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-23T08:06:52.723Z",
+  "updated": "2026-06-27T07:40:18.929Z",
   "plugins": [
     {
       "id": "add-note-property",
@@ -13,7 +13,7 @@
       "id": "better-title-sync",
       "version": "1.0.0",
       "files": {
-        "main.js": "5a891a3a617ab6d64dda6c50edaa0566d82bfebd6a8c5fd12df657a8856ab3d4",
+        "main.js": "95f2f575598066045a957d9166da15c5247acdc20a8744372730c3cfdd7caac6",
         "manifest.json": "de15e6534764b6bddf2302e7097402e63a68d2011446f263d6eacb5e0e40e0ab"
       }
     },
@@ -29,7 +29,7 @@
       "id": "folder-emoji-icons",
       "version": "1.0.0",
       "files": {
-        "main.js": "4f99aa7d95fca2f5418e71586e814c6f747a4d4ffe7aa20125394ae182838cf8",
+        "main.js": "8801871fe834c6b294f0c8cf1020596ad0ca4a1471255c2708d866fdc57e0762",
         "manifest.json": "7ea4c36a1ffa6c95db93d11a06ff92925eb6f2f6620d7104a8f3c4492c97cac7",
         "styles.css": "bdd58a72c03bf5e836e564fee857e99a873db08e14996d4ab9c124faf57e8804"
       }

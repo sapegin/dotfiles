@@ -1,4 +1,3 @@
-# On this day
 filters:
   and:
     - file.folder.startsWith("Log")
