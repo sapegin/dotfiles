@@ -16,22 +16,51 @@ import { run } from '../util/run.ts';
 const ATTACHMENTS_DIR = path.join(dirs.obsidianVault, 'zz-attachments');
 const LOG_DIR = path.join(dirs.obsidianVault, 'Log');
 
+function getAttachmentYear(name: string): string | undefined {
+  const imgMatch = name.match(/^(\d{4})_IMG_/);
+  if (imgMatch) {
+    return imgMatch[1];
+  }
+  return undefined;
+}
+
 async function main(): Promise<void> {
   const mdFiles = await Array.fromAsync(fs.glob('**/*.md', { cwd: LOG_DIR }));
 
   console.log(`Found ${mdFiles.length} Markdown files in ${LOG_DIR}`);
 
-  // iPhone photos
+  // iPhone photos without a year prefix yet
   const imgPattern = /!\[\[(IMG_\d{4}\.[^\]]+)]]/g;
   // Old camera photos that were never renamed
   const mgPattern = /!\[\[(_MG_[^\]]+)]]/g;
+  // Any attachment link — used to detect year-prefix mismatches
+  const linkPattern = /!\[\[([^\]]+)]]/g;
   let totalRenamed = 0;
+  const wrongFolder: {
+    file: string;
+    attachment: string;
+    expectedYear: string;
+    actualYear: string;
+  }[] = [];
 
   for (const file of mdFiles) {
     const filePath = path.join(LOG_DIR, file);
     const year = path.basename(path.dirname(file));
     let content = await fs.readFile(filePath, 'utf8');
     let modified = false;
+
+    for (const match of content.matchAll(linkPattern)) {
+      const attachmentName = match[1];
+      const attachmentYear = getAttachmentYear(attachmentName);
+      if (attachmentYear !== undefined && attachmentYear !== year) {
+        wrongFolder.push({
+          file,
+          attachment: attachmentName,
+          expectedYear: attachmentYear,
+          actualYear: year,
+        });
+      }
+    }
 
     for (const match of content.matchAll(imgPattern)) {
       const oldName = match[1];
@@ -88,6 +117,17 @@ async function main(): Promise<void> {
   }
 
   console.log(`Renamed ${totalRenamed} files`);
+
+  if (wrongFolder.length > 0) {
+    console.log(
+      `\n${wrongFolder.length} attachments in incorrect year folders:`
+    );
+    for (const item of wrongFolder) {
+      console.log(
+        `${item.file}: ${item.attachment} (prefix ${item.expectedYear}/, note in ${item.actualYear}/)`
+      );
+    }
+  }
 }
 
 await run(main);
