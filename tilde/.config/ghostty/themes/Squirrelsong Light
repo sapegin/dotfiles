@@ -10,7 +10,7 @@ cursor-color = #4c4b4e
 search-foreground = #4c4b4e
 search-background = #fae1ea
 search-selected-foreground = #4c4b4e
-search-selected-background = #f0a8c2
+search-selected-background = #e698b5
 
 # Black
 palette = 0=#9c96a2
@@ -18,7 +18,7 @@ palette = 8=#8c8792
 
 # Red
 palette = 1=#c06159
-palette = 9=#e87da4
+palette = 9=#db7097
 
 # Green
 palette = 2=#657d38
