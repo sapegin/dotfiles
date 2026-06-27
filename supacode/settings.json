@@ -85,6 +85,9 @@
   "pinnedWorktreeIDs" : [
 
   ],
+  "remoteRepositoryRoots" : [
+
+  ],
   "repositories" : {
     "\/Users\/sapegia\/dotfiles\/" : {
       "archiveScript" : "",
