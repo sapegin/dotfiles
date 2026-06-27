@@ -230,6 +230,7 @@ const messages = [
   'Accepting criteria…',
   'Transgressing…',
   'Signing code with blood…',
+  'Burrowing…',
 ];
 
 function pickRandom(): string {
