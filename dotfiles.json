@@ -170,7 +170,7 @@
   },
   // Fzf
   {
-    "source": "~/_/squirrelsong/themes/Zsh/fzf/fzf-squirrelsong-dark-dp.sh",
+    "source": "~/_/squirrelsong/themes/Zsh/fzf/fzf-squirrelsong.sh",
     "destination": "~/dotfiles/colors/",
     "mode": "sync"
   },

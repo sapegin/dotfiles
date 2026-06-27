@@ -13,12 +13,12 @@ search-selected-foreground = #4c4b4e
 search-selected-background = #f0a8c2
 
 # Black
-palette = 0=#4c4b4e
-palette = 8=#78737d
+palette = 0=#9c96a2
+palette = 8=#8c8792
 
 # Red
 palette = 1=#c06159
-palette = 9=#d67e76
+palette = 9=#e87da4
 
 # Green
 palette = 2=#657d38
@@ -41,8 +41,8 @@ palette = 6=#3e816e
 palette = 14=#5f9b8d
 
 # White
-palette = 7=#8c8792
-palette = 15=#9c96a2
+palette = 7=#78737d
+palette = 15=#4c4b4e
 
 # Use Squirrelsong colors for the icon
 macos-icon-ghost-color = #5c595f

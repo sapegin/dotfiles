@@ -2,7 +2,7 @@
 # https://github.com/junegunn/fzf
 
 # Load theme
-source ~/dotfiles/colors/fzf-squirrelsong-dark-dp.sh
+source ~/dotfiles/colors/fzf-squirrelsong.sh
 
 export FZF_DEFAULT_OPTS="\
 --color '$FZF_COLORS' \
