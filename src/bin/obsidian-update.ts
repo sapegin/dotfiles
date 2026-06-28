@@ -999,7 +999,7 @@ async function backupVault(): Promise<void> {
     { cwd: dirs.obsidianVault }
   );
   const stats = await fs.stat(backupFile);
-  console.log(`  ↪ Backup created (${prettyBytes(stats.size)}`);
+  console.log(`  ↪ Backup created (${prettyBytes(stats.size)})`);
 }
 
 /**
@@ -1131,7 +1131,7 @@ async function main(): Promise<void> {
   console.log('\n Backing up vault…\n');
   await backupVault();
 
-  console.log('\n Gathering the files…');
+  console.log('\n Gathering files…');
   const markdownFiles = await Array.fromAsync(
     fs.glob(path.join(dirs.obsidianVault, ALL_NOTES_PATTERN))
   );
