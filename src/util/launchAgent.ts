@@ -54,6 +54,11 @@ function buildPlist(config: LaunchAgentConfig): string {
 \t<string>${config.logFile}</string>
 \t<key>StandardErrorPath</key>
 \t<string>${config.errFile}</string>
+\t<key>EnvironmentVariables</key>
+\t<dict>
+\t\t<key>PATH</key>
+\t\t<string>/opt/homebrew/bin:/opt/homebrew/sbin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+\t</dict>
 </dict>
 </plist>
 `;
