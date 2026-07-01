@@ -68,7 +68,7 @@ EZA_COLORS+="tm=90:cm=90:.*=90:"    # Hidden and temporary files (black)
 export EZA_COLORS
 
 # Homebrew install badge: beer sucks, coffee rules
-export HOMEBREW_INSTALL_BADGE=''
+export HOMEBREW_INSTALL_BADGE='☕️'
 # Disable telemetry
 export HOMEBREW_NO_ANALYTICS=1
 # Disable hints
