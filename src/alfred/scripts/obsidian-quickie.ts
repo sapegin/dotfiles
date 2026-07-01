@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 /*
  * Appends a quick note to the Obsidian inbox.
  *
@@ -10,18 +8,26 @@
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { dirs } from '../../util/consts';
+import { parseArgs } from '../../util/args.ts';
+import { dirs } from '../../util/consts.ts';
 
 const QUICKIES_FILE = path.join(dirs.obsidianVault, '0-Inbox/Quickies.md');
 
-const text = process.argv[2];
+const args = parseArgs([
+  {
+    name: 'text',
+    positional: true,
+  },
+]);
+
+const text = args.text?.trim() ?? '';
 
 if (text.trim() === '') {
   process.exit(0);
 }
 
 /** Format date as `YYYY-MM-DD_HHmm`. */
-function formatDate(date) {
+function formatDate(date: Date): string {
   return date.toISOString().slice(0, 16).replace('T', '_').replace(':', '');
 }
 
