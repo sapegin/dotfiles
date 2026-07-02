@@ -19,8 +19,15 @@
 
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
+import path from 'node:path';
 import { parseArgs } from '../util/args.ts';
+import { dirs } from '../util/consts.ts';
 import { log } from '../util/theme.ts';
+
+const PA11Y_CONFIG_FILE = path.join(
+  dirs.dotfiles,
+  'accessibility/pa11y-ci.json'
+);
 
 const args = parseArgs([
   {
@@ -90,11 +97,21 @@ for (const pageUrl of urls) {
   }
 }
 
-const backendPackage = args.backend === 'axe' ? '@axe-core/cli' : 'pa11y-ci';
-const backendCommand = args.backend === 'axe' ? 'axe' : 'pa11y-ci';
 const result = spawnSync(
   'npm',
-  ['exec', '--yes', '--package', backendPackage, '--', backendCommand, ...urls],
+  args.backend === 'axe'
+    ? ['exec', '--yes', '--package', '@axe-core/cli', '--', 'axe', ...urls]
+    : [
+        'exec',
+        '--yes',
+        '--package',
+        'pa11y-ci',
+        '--',
+        'pa11y-ci',
+        '--config',
+        PA11Y_CONFIG_FILE,
+        ...urls,
+      ],
   {
     stdio: 'inherit',
   }
