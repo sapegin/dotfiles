@@ -6,6 +6,7 @@
 - Floppy: file managers (Nimble Commander, ForkLift, etc.)
 - Internet, Netscape: browsers (Chrome, Firefox, etc.)
 - Kurush: mail clients (Outlook, Fastmail, etc.)
+- Octopus: Git (GitHub Desktop, etc.)
 - Raven: personal chat apps (Telegram, WhatsApp, etc.)
 - Sunset: note taking apps (Obsidian, Notion, etc.)
 - Terminal: terminal apps (Terminal, Ghossty, Supacode, etc.)
@@ -20,6 +21,7 @@ I recommend [Replacicon](https://replacicon.app/) to replace Mac icons.
 - Internet: original Internet Explorer for Mac icon
 - Netscape: Netscape Navigator logo
 - Kurush: [Sir Kurush by anry](https://www.deviantart.com/anry/art/Sir-Kurush-2527648)
+- Octopus: I made it in ChatGPT
 - Raven: I made it in Google AI Studio
 - Sunset: I made it in Google AI Studio
 - Terminal: I made it in ChatGPT and Pixelmator Pro
