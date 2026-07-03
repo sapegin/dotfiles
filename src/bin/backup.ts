@@ -14,11 +14,15 @@
 //
 // - List snapshots:
 //
-// `restic snapshots`
+// `backup snapshots`
+//
+// - Find a file in backups:
+//
+// `backup find --long "{{filename}}"`
 //
 // - Restore the latest snapshot:
 //
-// `restic restore latest --target ~/Restore`
+// `backup restore latest --target ~/Restore`
 //
 // ---
 // Author: Artem Sapegin, sapegin.me
@@ -29,7 +33,6 @@ import { execFileSync, spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import readline from 'node:readline/promises';
-import { parseArgs } from '../util/args.ts';
 import { dirs } from '../util/consts.ts';
 import {
   installLaunchAgent,
@@ -175,14 +178,13 @@ if you lose it, the backups are unrecoverable.
   log.heading(`Saved password to ${tildify(PASSWORD_FILE)}`);
 }
 
-async function backup(): Promise<void> {
-  // Step 1: restic must be installed.
+async function ensureResticReady(): Promise<void> {
   if (isResticInstalled() === false) {
     throw new Error('restic is not installed: brew install restic');
   }
 
-  // Step 2: the password file must exist. Create it interactively on first run;
-  // refuse to prompt when there is no terminal (e.g. the nightly LaunchAgent).
+  // Create the password file interactively on first run; refuse to prompt when
+  // there is no terminal (e.g. the nightly LaunchAgent).
   if (fs.existsSync(PASSWORD_FILE) === false) {
     if (process.stdin.isTTY !== true) {
       throw new Error(
@@ -192,8 +194,11 @@ async function backup(): Promise<void> {
     await createPasswordFile();
   }
 
-  // Step 3: the backup share must be mounted.
   ensureShareMounted();
+}
+
+async function backup(): Promise<void> {
+  await ensureResticReady();
 
   logLine('Starting backup');
 
@@ -244,21 +249,19 @@ function uninstall(): void {
   uninstallLaunchAgent(LABEL);
 }
 
-const args = parseArgs([
-  {
-    name: 'command',
-    positional: true,
-    values: ['install', 'uninstall'],
-  },
-]);
+const cliArgs = process.argv.slice(2);
+const [command, ...restArgs] = cliArgs;
 
 async function main(): Promise<void> {
-  if (args.command === 'install') {
+  if (command === 'install') {
     install();
-  } else if (args.command === 'uninstall') {
+  } else if (command === 'uninstall') {
     uninstall();
-  } else {
+  } else if (cliArgs.length === 0) {
     await backup();
+  } else {
+    await ensureResticReady();
+    restic([command, ...restArgs]);
   }
 }
 
