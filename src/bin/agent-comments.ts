@@ -35,12 +35,10 @@ const COMMENT_LEADER = String.raw`^\s*(?:#+|//+|/\*+|<!--+|--+|;+|%+|\*+|'+)`;
 // Pattern handed to ripgrep to find candidate lines.
 const SEARCH_PATTERN = `${COMMENT_LEADER}\\s*AI:`;
 
-// Pattern used to extract the message from a matched line.
-const EXTRACT_PATTERN = new RegExp(`${COMMENT_LEADER}\\s*AI:[ \\t]?(.*)`);
-
-// AI: Fix this
-// Trailing comment terminators to strip from the message.
-const TRAILING_TERMINATOR = /\s*(?:\*\/|-->)\s*$/;
+// Capture the message and optional block/HTML comment terminators on the same line.
+const EXTRACT_PATTERN = new RegExp(
+  `${COMMENT_LEADER}\\s*AI:[ \\t]?(.+?)(?:\\s*(?:\\*/|-->))?\\s*$`
+);
 
 interface RipgrepMatch {
   readonly type: string;
@@ -62,7 +60,7 @@ function extractMessage(lineText: string): string | undefined {
   if (match === null) {
     return undefined;
   }
-  return match[1].replace(TRAILING_TERMINATOR, '').trim();
+  return match[1].trim();
 }
 
 async function runRipgrep(directory: string): Promise<string> {
