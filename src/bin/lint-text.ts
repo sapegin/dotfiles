@@ -11,8 +11,7 @@
 
 import { spawnSync } from 'node:child_process';
 import path from 'node:path';
-import { dirs } from '../util/consts.ts';
-import { untildify } from '../util/tildify.ts';
+import { dirs, untildify } from '../util/files.ts';
 
 const result = spawnSync(
   path.join(dirs.dotfiles, 'node_modules/.bin/textlint'),

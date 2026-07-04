@@ -12,7 +12,7 @@
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { dirs } from '../util/consts.ts';
+import { dirs } from '../util/files.ts';
 
 const keyFile = path.join(dirs.home, '.ssh', 'id_rsa');
 

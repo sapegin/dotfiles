@@ -1,6 +1,6 @@
 import { execFileSync } from 'node:child_process';
 import path from 'node:path';
-import { dirs } from './consts.ts';
+import { dirs } from './files.ts';
 import { log } from './theme.ts';
 
 interface BaseDefinition<Name extends string> {

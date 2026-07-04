@@ -17,39 +17,14 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import readline from 'node:readline/promises';
-import { dirs, JPEG_EXTENSIONS, RAW_EXTENSIONS } from '../util/consts.ts';
-import { readExifMetadata } from '../util/exiftool.ts';
+import { readExifMetadata } from '../util/exif.ts';
+import { dirs, exts, hasExtension, tildify } from '../util/files.ts';
+import { getPhotoFilenameDate, getSuffix } from '../util/photos.ts';
 import { run } from '../util/run.ts';
 import { log } from '../util/theme.ts';
-import { tildify } from '../util/tildify.ts';
 
 const VOLUMES_DIR = '/Volumes';
 const NEW_FOLDER_OPTION = '+ New folder…';
-
-const MEDIA_EXTENSIONS = new Set([
-  ...RAW_EXTENSIONS,
-  ...JPEG_EXTENSIONS,
-  '.heic',
-  '.tif',
-  '.tiff',
-  '.png',
-  '.mov',
-  '.mp4',
-  '.m4v',
-  '.avi',
-]);
-const IMPORT_DATE_PREFIX = /^(\d{4}-\d{2}-\d{2})_/;
-
-function getImportDate(filename: string): string | undefined {
-  return path.basename(filename).match(IMPORT_DATE_PREFIX)?.[1];
-}
-
-function getSuffix(filename: string): string | undefined {
-  const stem = path
-    .basename(filename, path.extname(filename))
-    .replace(IMPORT_DATE_PREFIX, '');
-  return stem.match(/^(\d+)/)?.[1] ?? stem.match(/(\d+)$/)?.[1];
-}
 
 function datesWithinDay(dateA: string, dateB: string): boolean {
   const day = 1000 * 60 * 60 * 24;
@@ -86,7 +61,7 @@ async function findMediaFiles(dcimRoot: string): Promise<string[]> {
         basename !== '.DS_Store'
       );
     })
-    .filter((file) => MEDIA_EXTENSIONS.has(path.extname(file).toLowerCase()))
+    .filter((file) => hasExtension(file, exts.media))
     .map((file) => path.join(dcimRoot, file));
 }
 
@@ -105,7 +80,7 @@ function dedupeRawJpegPairs(filePaths: string[]): string[] {
   const selected: string[] = [];
   for (const group of byStem.values()) {
     const rawFiles = group.filter((filePath) =>
-      RAW_EXTENSIONS.has(path.extname(filePath).toLowerCase())
+      hasExtension(filePath, exts.raw)
     );
     selected.push(...(rawFiles.length > 0 ? rawFiles : group));
   }
@@ -220,7 +195,7 @@ async function findPhotosToImport(cardPaths: string[]): Promise<string[]> {
         continue;
       }
       const dates = libraryBySuffix.get(suffix) ?? [];
-      dates.push(getImportDate(filename));
+      dates.push(getPhotoFilenameDate(filename));
       libraryBySuffix.set(suffix, dates);
     }
   }

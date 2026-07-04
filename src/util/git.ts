@@ -1,8 +1,8 @@
 import { execFileSync, execSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { tildify } from './files.ts';
 import { log } from './theme.ts';
-import { tildify } from './tildify.ts';
 
 /**
  * Exits with code 1 if the current directory is not inside a Git repository.

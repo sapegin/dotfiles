@@ -12,10 +12,10 @@ import { execSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
+import { untildify } from '../util/files.ts';
 import { pullIfClean } from '../util/git.ts';
 import { run as runMain } from '../util/run.ts';
 import { log } from '../util/theme.ts';
-import { untildify } from '../util/tildify.ts';
 
 interface SourceConfig {
   // Path to the repo (may start with `~`)

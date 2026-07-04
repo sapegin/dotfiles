@@ -8,7 +8,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { parseEnv } from 'node:util';
-import { untildify } from './tildify.ts';
+import { untildify } from './files.ts';
 
 // Abbreviation bonuses beat fuzzy-only matches; keep them far above
 // length/index tie-breakers.

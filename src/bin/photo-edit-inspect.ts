@@ -13,8 +13,8 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { parseArgs } from '../util/args.ts';
+import { tildify, untildify } from '../util/files.ts';
 import { run } from '../util/run.ts';
-import { tildify, untildify } from '../util/tildify.ts';
 
 const FIELD_SEPARATOR = '\u001F';
 const MAX_COMMAND_OUTPUT = 1024 * 1024 * 100;

@@ -22,8 +22,8 @@ import os from 'node:os';
 import path from 'node:path';
 import sharp from 'sharp';
 import { parseArgs } from '../util/args.ts';
+import { untildify } from '../util/files.ts';
 import { run } from '../util/run.ts';
-import { untildify } from '../util/tildify.ts';
 
 const MAX_COMMAND_OUTPUT = 1024 * 1024 * 100;
 const DOCUMENT_STATE_IDENTIFIER =
@@ -445,8 +445,8 @@ function applyGeometryRawParameters(rawParameters: unknown) {
   }
   const payload = rawParameters[1] as Record<string, unknown>;
   delete payload.CuPre;
-  payload.cx = 0.335_950_911_045_074_46;
-  payload.cy = 0.363_117_337_226_867_7;
+  payload.cx = 0.33595091104507446;
+  payload.cy = 0.3631173372268677;
 }
 
 async function applyGeometrySideEffects(databasePath: string, tempDir: string) {
@@ -615,9 +615,6 @@ async function updateQuickLookCrop(
   operation: Extract<QuickLookOperation, { kind: 'crop' }>
 ) {
   const metadata = await sharp(filePath).metadata();
-  if (metadata.width === undefined || metadata.height === undefined) {
-    throw new Error(`Could not read image dimensions: ${filePath}`);
-  }
   const scaleX = metadata.width / operation.originalWidth;
   const scaleY = metadata.height / operation.originalHeight;
   const left = getScaledCropOffset(operation.left, scaleX, metadata.width - 1);
@@ -650,9 +647,6 @@ async function updateQuickLookRotate(
     .webp({ quality: 90 })
     .toBuffer();
   const metadata = await sharp(rotated).metadata();
-  if (metadata.width === undefined || metadata.height === undefined) {
-    throw new Error(`Could not read rotated image dimensions: ${filePath}`);
-  }
   const targetAspect = operation.width / operation.height;
   const currentAspect = metadata.width / metadata.height;
   const width =
@@ -710,9 +704,6 @@ async function applyOperation(
   operation: OperationSpec
 ): Promise<QuickLookOperation | undefined> {
   if (operation.name === 'crop') {
-    if (operation.values[1] === undefined) {
-      throw new Error('Crop requires width and height');
-    }
     const hasOffset = operation.values.length === 4;
     if (operation.values.length !== 2 && operation.values.length !== 4) {
       throw new Error(

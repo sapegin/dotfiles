@@ -10,7 +10,7 @@ import { execSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import readline from 'node:readline/promises';
-import { dirs } from '../util/consts.ts';
+import { dirs, untildify } from '../util/files.ts';
 import { findGitRoot, pullIfClean } from '../util/git.ts';
 import { run } from '../util/run.ts';
 import { stripJsonComments } from '../util/stripJsonComments.ts';
@@ -23,7 +23,6 @@ import {
   type SyncEntry,
 } from '../util/sync.ts';
 import { log, theme } from '../util/theme.ts';
-import { untildify } from '../util/tildify.ts';
 
 // TODO: Add --verbose mode that shows all files including ignored ones and ones that didn't need sync
 

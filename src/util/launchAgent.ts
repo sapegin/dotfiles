@@ -3,7 +3,7 @@
 import { execFileSync, spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { dirs } from './consts.ts';
+import { dirs } from './files.ts';
 import { log } from './theme.ts';
 
 export interface LaunchAgentConfig {

@@ -17,11 +17,10 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import readline from 'node:readline/promises';
 import { parseArgs } from '../util/args.ts';
-import { dirs, JPEG_EXTENSIONS, RAW_EXTENSIONS } from '../util/consts.ts';
+import { dirs, exts, hasExtension, tildify, untildify } from '../util/files.ts';
 import { prettyBytes } from '../util/prettyBytes.ts';
 import { run } from '../util/run.ts';
 import { log } from '../util/theme.ts';
-import { tildify, untildify } from '../util/tildify.ts';
 
 const args = parseArgs([
   {
@@ -62,25 +61,22 @@ async function findPhotoFiles(root: string): Promise<string[]> {
         basename !== '.DS_Store'
       );
     })
-    .filter((file) => {
-      const extension = path.extname(file).toLowerCase();
-      return RAW_EXTENSIONS.has(extension) || JPEG_EXTENSIONS.has(extension);
-    })
+    .filter(
+      (file) => hasExtension(file, exts.raw) || hasExtension(file, exts.jpeg)
+    )
     .map((file) => path.join(root, file));
 }
 
 function findJpegsWithRawPairs(filePaths: string[]): string[] {
   const toRemove: string[] = [];
   for (const group of groupByPairKey(filePaths).values()) {
-    const hasRaw = group.some((filePath) =>
-      RAW_EXTENSIONS.has(path.extname(filePath).toLowerCase())
-    );
+    const hasRaw = group.some((filePath) => hasExtension(filePath, exts.raw));
     if (hasRaw === false) {
       continue;
     }
 
     for (const filePath of group) {
-      if (JPEG_EXTENSIONS.has(path.extname(filePath).toLowerCase())) {
+      if (hasExtension(filePath, exts.jpeg)) {
         toRemove.push(filePath);
       }
     }
@@ -97,9 +93,7 @@ async function findJpgJpegDuplicateRemovals(
   const needsReview: ManualReviewItem[] = [];
 
   for (const group of groupByPairKey(filePaths).values()) {
-    const hasRaw = group.some((filePath) =>
-      RAW_EXTENSIONS.has(path.extname(filePath).toLowerCase())
-    );
+    const hasRaw = group.some((filePath) => hasExtension(filePath, exts.raw));
     if (hasRaw) {
       continue;
     }

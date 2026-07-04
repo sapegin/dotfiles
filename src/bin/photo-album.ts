@@ -8,14 +8,16 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import sharp from 'sharp';
-import { dirs } from '../util/consts.ts';
-import { readExifMetadata } from '../util/exiftool.ts';
+import { readExifMetadata } from '../util/exif.ts';
+import { dirs, exts, glob } from '../util/files.ts';
 import { run } from '../util/run.ts';
 
 const SOURCE_DIR = path.join(dirs.pictures, 'JunkyardPhotoAlbum');
 const OUTPUT_DIR = path.join(dirs.documents, 'JunkyardPhotoAlbum');
 const IMAGES_DIR = path.join(OUTPUT_DIR, 'images');
 const INDEX_FILE = path.join(OUTPUT_DIR, 'index.html');
+
+// TODO: We should reuse the functions from obsidian.ts
 const MAX_DIMENSION = 2048;
 const AVIF_QUALITY = 75;
 
@@ -164,13 +166,9 @@ function getRowConfig(group: ImageGroup): Record<KnownOrientation, number> {
 }
 
 async function getAllImages(): Promise<ImageInfo[]> {
-  // TODO: We don't need all of these but we should add AVIF when we add photos
-  // from daily notes
-  const imageFiles = await Array.fromAsync(
-    fs.glob('*.{jpg,jpeg,png,heic,gif,webp}', {
-      cwd: SOURCE_DIR,
-    })
-  );
+  const imageFiles = await glob('*', exts.jpeg, {
+    cwd: SOURCE_DIR,
+  });
 
   console.log(`Found ${imageFiles.length} images`);
 

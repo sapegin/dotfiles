@@ -12,7 +12,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { atomicCopy } from '../util/atomicWrite.ts';
-import { dirs } from '../util/consts.ts';
+import { dirs } from '../util/files.ts';
 import { run as runMain } from '../util/run.ts';
 import { log } from '../util/theme.ts';
 

@@ -7,7 +7,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { dirs } from '../util/consts.ts';
+import { dirs } from '../util/files.ts';
 
 const PROFILES_DIR = path.join(
   dirs.home,

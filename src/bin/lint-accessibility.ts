@@ -21,7 +21,7 @@ import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { parseArgs } from '../util/args.ts';
-import { dirs } from '../util/consts.ts';
+import { dirs } from '../util/files.ts';
 import { log } from '../util/theme.ts';
 
 const PA11Y_CONFIG_FILE = path.join(

@@ -12,7 +12,7 @@
 import { execSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { dirs } from '../util/consts.ts';
+import { dirs } from '../util/files.ts';
 
 // TODO: Merge with clean-node-versions
 

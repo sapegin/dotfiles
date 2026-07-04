@@ -33,14 +33,13 @@ import { execFileSync, spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import readline from 'node:readline/promises';
-import { dirs } from '../util/consts.ts';
+import { dirs, tildify } from '../util/files.ts';
 import {
   installLaunchAgent,
   uninstallLaunchAgent,
 } from '../util/launchAgent.ts';
 import { run } from '../util/run.ts';
 import { log } from '../util/theme.ts';
-import { tildify } from '../util/tildify.ts';
 
 // Folders to backup
 const SOURCES = [dirs.obsidianVault, dirs.iCloud];

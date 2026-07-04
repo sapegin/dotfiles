@@ -10,10 +10,9 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import YAML from 'yaml';
-import { dirs } from '../util/consts.ts';
+import { dirs, exts, glob } from '../util/files.ts';
 import { run } from '../util/run.ts';
 
-const LOG_DIR = path.join(dirs.obsidianVault, 'Log');
 const OUTPUT_FILE = path.join(dirs.documents, 'MurderStats.html');
 
 // TODO: Make an npm package with the theme and all light/dark colors + semantic colors
@@ -219,9 +218,7 @@ function enumerateMonthKeys(minDate: Date, maxDate: Date): string[] {
 }
 
 async function getAllNoteNames(): Promise<Set<string>> {
-  const files = await Array.fromAsync(
-    fs.glob(path.join(dirs.obsidianVault, '**/*.md'))
-  );
+  const files = await glob(dirs.obsidianVault, '**/*', exts.markdown);
   const noteNames = new Set<string>();
   for (const file of files) {
     const basename = path.basename(file, '.md');
@@ -287,7 +284,7 @@ async function getPlaceInfo(locationName: string): Promise<PlaceInfo> {
 }
 
 async function getDailyNotes(allNotes: Set<string>): Promise<DailyNotesData> {
-  const files = await Array.fromAsync(fs.glob(path.join(LOG_DIR, '**/*.md')));
+  const files = await glob(dirs.obsidianDailyNotes, '**/*', exts.markdown);
   console.log(`Found ${files.length} daily notes`);
 
   const notes = new Map<string, number>();

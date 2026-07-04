@@ -16,36 +16,24 @@ import { execSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { setTimeout } from 'node:timers/promises';
-import sharp from 'sharp';
 import YAML from 'yaml';
 import { atomicWrite } from '../util/atomicWrite.ts';
-import { dirs, IMAGE_EXTENSIONS } from '../util/consts.ts';
-import { readExifMetadata } from '../util/exiftool.ts';
+import { readExifMetadata } from '../util/exif.ts';
+import {
+  dirs,
+  glob,
+  exts,
+  hasExtension,
+  stripExtensions,
+} from '../util/files.ts';
+import {
+  moveToTrash,
+  needsOptimization,
+  optimizeImage,
+} from '../util/obsidian.ts';
 import { prettyBytes } from '../util/prettyBytes.ts';
 import { run } from '../util/run.ts';
 import { log } from '../util/theme.ts';
-
-// TC39 stage 4, shipped in Node 24, not yet in TypeScript's lib.esnext.
-declare global {
-  interface RegExpConstructor {
-    escape(str: string): string;
-  }
-}
-
-const ATTACHMENTS_DIR = path.join(dirs.obsidianVault, 'zz-attachments');
-const TRASH_DIR = path.join(dirs.home, '.obsidian-trash');
-const BACKUP_DIR = path.join(dirs.home, '.obsidian-backup');
-const OBSIDIAN_TRASH_DIR = path.join(dirs.obsidianVault, '.trash');
-
-const MAX_DIMENSION = 2048;
-const MAX_FILE_SIZE = 1024 * 1024; // 1 MB
-const MAX_LARGE_FILE_SIZE = MAX_FILE_SIZE * 0.5; // 0.5 MB
-const AVIF_QUALITY = 75;
-const ALL_IMAGE_EXTENSIONS = [...IMAGE_EXTENSIONS, '.avif'];
-const ALL_EXTENSIONS = [...ALL_IMAGE_EXTENSIONS, '.md'];
-const ALL_IMAGES_PATTERN = `**/*.{${ALL_IMAGE_EXTENSIONS.map((ext) => ext.slice(1)).join(',')}}`;
-
-const ALL_NOTES_PATTERN = `**/*.md`;
 
 const FRONTMATTER_FIELDS = [
   'address',
@@ -126,19 +114,9 @@ interface Frontmatter {
   [key: string]: unknown;
 }
 
-interface ImageDimensions {
-  width: number;
-  height: number;
-}
-
 interface ImageMetadata {
   date: string;
   coordinates: string | undefined;
-}
-
-interface OptimizeResult {
-  oldFilename: string;
-  newFilename: string;
 }
 
 interface WeatherResponse {
@@ -148,6 +126,14 @@ interface WeatherResponse {
     weather_code: number[];
     is_day: number[];
   };
+}
+
+function findAllNotes() {
+  return glob(dirs.obsidianVault, '**/*', exts.markdown);
+}
+
+function findAllAttachments() {
+  return glob(dirs.obsidianVault, '**/*', exts.media);
 }
 
 const warnings: string[] = [];
@@ -182,21 +168,10 @@ function parseNoteDate(basename: string): Date | undefined {
   return undefined;
 }
 
-/** Strip known extension (image file or Markdown) from a file path. */
-function stripExtension(filePath: string): string {
-  let newFilePath = filePath;
-  for (const ext of ALL_EXTENSIONS) {
-    if (newFilePath.toLowerCase().endsWith(ext)) {
-      newFilePath = newFilePath.slice(0, -ext.length);
-    }
-  }
-  return newFilePath;
-}
-
 /** File basename that supports multiple (known) extensions. */
 function getBasename(filePath: string): string {
   const filename = path.basename(filePath);
-  return stripExtension(stripExtension(filename));
+  return stripExtensions(filename);
 }
 
 /** Unwrap an Obsidian wikilink (`[[target|alias]]`) to its target. */
@@ -209,32 +184,6 @@ function unwrapWikilink(value: unknown): string {
     return value;
   }
   return match[1].split('|')[0];
-}
-
-async function moveToTrash(filePath: string): Promise<void> {
-  const filename = path.basename(filePath);
-  const trashPath = path.join(TRASH_DIR, filename);
-
-  // Handle duplicate filenames in trash
-  let finalTrashPath = trashPath;
-  let counter = 1;
-  while (true) {
-    try {
-      await fs.access(finalTrashPath);
-      const ext = path.extname(filename);
-      const nameWithoutExt = path.basename(filename, ext);
-      finalTrashPath = path.join(
-        TRASH_DIR,
-        `${nameWithoutExt}-${counter}${ext}`
-      );
-      counter++;
-    } catch {
-      break;
-    }
-  }
-
-  await fs.rename(filePath, finalTrashPath);
-  console.log(`Move ${filename} to trash`);
 }
 
 /** Return all images in Markdown */
@@ -260,8 +209,7 @@ function getMarkdownImages(body: string): string[] {
     })
     .filter((filePath) => {
       // Skip embedded notes (`![[Note name]]`) which have no image extension
-      const ext = path.extname(filePath).toLowerCase();
-      return ALL_IMAGE_EXTENSIONS.includes(ext);
+      return hasExtension(filePath, exts.media);
     });
 }
 
@@ -341,14 +289,17 @@ async function getImageMetadata(
     return { date: '', coordinates: undefined };
   }
 
-  let filePath = path.join(ATTACHMENTS_DIR, filename);
+  let filePath = path.join(dirs.obsidianAttachments, filename);
   const ext = path.extname(filename).toLowerCase();
 
   // If the image isn't JPEG, look for the original JPEG file in the trash
-  if (ext !== '.jpg' && ext !== '.jpeg') {
+  if (hasExtension(filename, exts.jpeg) === false) {
     const nameWithoutExt = path.basename(filename, ext);
-    const jpegFiles = await Array.fromAsync(
-      fs.glob(path.join(TRASH_DIR, `${nameWithoutExt}.{jpg,jpeg,JPG,JPEG}`))
+    const jpegFiles = await glob(
+      dirs.obsidianTrash,
+      '**',
+      nameWithoutExt,
+      exts.jpeg
     );
     if (jpegFiles.length > 0) {
       filePath = jpegFiles[0];
@@ -412,143 +363,6 @@ async function removeUnusedImages(
   }
 }
 
-async function getImageDimensions(imagePath: string): Promise<ImageDimensions> {
-  try {
-    const metadata = await sharp(imagePath).metadata();
-    const width = typeof metadata.width === 'number' ? metadata.width : 0;
-    const height = typeof metadata.height === 'number' ? metadata.height : 0;
-    return { width, height };
-  } catch (error) {
-    printWarning(
-      `Error reading image dimensions of ${getBasename(imagePath)}:\n`,
-      getErrorStack(error)
-    );
-    return { width: 0, height: 0 };
-  }
-}
-
-async function needsOptimization(
-  imagePath: string
-): Promise<ImageDimensions | undefined> {
-  const stats = await fs.stat(imagePath);
-  const dimensions = await getImageDimensions(imagePath);
-
-  // File size is too large
-  if (stats.size > MAX_FILE_SIZE) {
-    return dimensions;
-  }
-
-  if (
-    // Image dimensions exceed allowed
-    (dimensions.width > MAX_DIMENSION || dimensions.height > MAX_DIMENSION) &&
-    // But skip small sizes where optimizations is unlikely to produce smaller file
-    stats.size > MAX_LARGE_FILE_SIZE
-  ) {
-    return dimensions;
-  }
-
-  // File doesn't need optimization
-  return undefined;
-}
-
-async function optimizeImage(
-  imagePath: string,
-  optimization: ImageDimensions
-): Promise<OptimizeResult | undefined> {
-  const { width, height } = optimization;
-  const filename = path.basename(imagePath);
-  const dir = path.dirname(imagePath);
-
-  // Strip all image extensions to avoid conflicts (e.g., file.jpg.webp → file)
-  let nameWithoutExt = filename;
-  for (const ext of ALL_IMAGE_EXTENSIONS) {
-    if (nameWithoutExt.toLowerCase().endsWith(ext)) {
-      nameWithoutExt = nameWithoutExt.slice(0, -ext.length);
-    }
-  }
-
-  const avifPath = path.join(dir, `${nameWithoutExt}.avif`);
-
-  // Refuse to overwrite an existing AVIF; leave the original alone
-  try {
-    await fs.access(avifPath);
-    printWarning(
-      `Skipped image optimization of ${filename}: ${nameWithoutExt}.avif already exists`
-    );
-    return undefined;
-  } catch {
-    // No existing AVIF, proceed
-  }
-
-  // Calculate new dimensions if needed
-  let newWidth = width;
-  let newHeight = height;
-
-  if (width > MAX_DIMENSION || height > MAX_DIMENSION) {
-    if (width > height) {
-      newWidth = MAX_DIMENSION;
-      newHeight = Math.round(height * (MAX_DIMENSION / width));
-    } else {
-      newHeight = MAX_DIMENSION;
-      newWidth = Math.round(width * (MAX_DIMENSION / height));
-    }
-  }
-
-  // Convert and optimize
-  let sharpInstance = sharp(imagePath);
-
-  if (newWidth !== width || newHeight !== height) {
-    sharpInstance = sharpInstance.resize(newWidth, newHeight, {
-      fit: 'inside',
-      withoutEnlargement: true,
-    });
-  }
-
-  // Encode AVIF into a temp file, then atomically rename onto the
-  // iCloud-watched destination — sharp's streaming writer would otherwise
-  // expose a partially-written file to the iCloud daemon.
-  await atomicWrite(avifPath, async (tempFile) => {
-    await sharpInstance.avif({ quality: AVIF_QUALITY }).toFile(tempFile);
-  });
-
-  const originalStat = await fs.stat(imagePath);
-  const optimizedStat = await fs.stat(avifPath);
-  const originalSize = originalStat.size;
-  const optimizedSize = optimizedStat.size;
-
-  // Only keep the optimized version if it's smaller
-  if (optimizedSize >= originalSize) {
-    await fs.unlink(avifPath);
-    console.log(
-      `Skipped ${filename} (AVIF not smaller: ${prettyBytes(optimizedSize)} vs ${prettyBytes(originalSize)})`
-    );
-    return undefined;
-  }
-
-  const savedBytes = originalSize - optimizedSize;
-  const savedPercentage = ((savedBytes / originalSize) * 100).toFixed(2);
-
-  console.log();
-  console.log(`${filename} → ${nameWithoutExt}.avif`);
-  console.log(
-    `  ↪ ${prettyBytes(originalSize)} → ${prettyBytes(optimizedSize)} (saved ${savedPercentage}%)`
-  );
-
-  if (newWidth !== width || newHeight !== height) {
-    console.log(
-      `  ↪ Resized from ${width}×${height} to ${newWidth}×${newHeight}`
-    );
-  }
-
-  // Move original to trash
-  await moveToTrash(imagePath);
-
-  return {
-    oldFilename: filename.normalize('NFC'),
-    newFilename: `${nameWithoutExt}.avif`.normalize('NFC'),
-  };
-}
-
 async function optimizeImages(
   imageFiles: string[]
 ): Promise<Map<string, string>> {
@@ -562,10 +376,14 @@ async function optimizeImages(
       continue;
     }
 
-    const optimization = await needsOptimization(imagePath);
+    const optimization = await needsOptimization(imagePath, (message) =>
+      printWarning(message)
+    );
 
     if (optimization) {
-      const result = await optimizeImage(imagePath, optimization);
+      const result = await optimizeImage(imagePath, optimization, {
+        onSkip: (message) => printWarning(message),
+      });
       if (result) {
         const { oldFilename, newFilename } = result;
         renamedFiles.set(oldFilename, newFilename);
@@ -717,17 +535,22 @@ async function updateNote({
       attachmentNames.has(image) === false
     ) {
       const suggestions: string[] = [];
-      const imageBasename = stripExtension(image);
+      const imageBasename = stripExtensions(image);
       if (imageBasename !== '') {
         // Suggest attachments whose name contains the missing file’s base name
         for (const name of attachmentNames) {
-          if (stripExtension(name).includes(imageBasename)) {
+          if (stripExtensions(name).includes(imageBasename)) {
             suggestions.push(name);
           }
         }
       }
       printWarning(
-        `${basename}: Missing image ${image}\n   ↪ Did you mean ${suggestions.join(', ')}?`
+        [
+          `${basename}: Missing image ${image}`,
+          suggestions.length > 0
+            ? `\n↪ Did you mean ${suggestions.join(', ')}?`
+            : '',
+        ].join('')
       );
     }
   }
@@ -737,7 +560,10 @@ async function updateNote({
     // Unwrap Obsidian wikilink format (`[[image.jpg]]`) written by Web Clipper
     newFrontmatter.image = path.basename(unwrapWikilink(newFrontmatter.image));
 
-    const coverImageFilePath = path.join(ATTACHMENTS_DIR, newFrontmatter.image);
+    const coverImageFilePath = path.join(
+      dirs.obsidianAttachments,
+      newFrontmatter.image
+    );
     try {
       await fs.access(coverImageFilePath);
     } catch {
@@ -907,14 +733,10 @@ async function updateNote({
 async function updateNotes(renamedFiles: Map<string, string>): Promise<void> {
   let updatedCount = 0;
 
-  const allNotes = await Array.fromAsync(
-    fs.glob(path.join(dirs.obsidianVault, ALL_NOTES_PATTERN))
-  );
+  const allNotes = await findAllNotes();
 
   // Gather all attachment filenames
-  const imageFiles = await Array.fromAsync(
-    fs.glob(path.join(dirs.obsidianVault, ALL_IMAGES_PATTERN))
-  );
+  const imageFiles = await findAllAttachments();
   const attachmentNames = new Set(
     imageFiles.map((imagePath) => path.basename(imagePath).normalize('NFC'))
   );
@@ -963,9 +785,7 @@ async function updateNotes(renamedFiles: Map<string, string>): Promise<void> {
 }
 
 async function cleanObsidianTrash(): Promise<void> {
-  const imageFiles = await Array.fromAsync(
-    fs.glob(path.join(OBSIDIAN_TRASH_DIR, ALL_IMAGES_PATTERN))
-  );
+  const imageFiles = await glob(dirs.obsidianVaultTrash, '**/*', exts.media);
 
   if (imageFiles.length === 0) {
     return;
@@ -979,10 +799,13 @@ async function cleanObsidianTrash(): Promise<void> {
 }
 
 async function backupVault(): Promise<void> {
-  await fs.mkdir(BACKUP_DIR, { recursive: true });
+  await fs.mkdir(dirs.obsidianBackup, { recursive: true });
 
   const today = new Date().toISOString().slice(0, 10);
-  const backupFile = path.join(BACKUP_DIR, `murder_backup_${today}.zip`);
+  const backupFile = path.join(
+    dirs.obsidianBackup,
+    `murder_backup_${today}.zip`
+  );
 
   // Skip if already backed up today
   try {
@@ -1123,8 +946,6 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
-  await fs.mkdir(TRASH_DIR, { recursive: true });
-
   console.log('\n Checking iCloud health…\n');
   await checkICloudSync();
 
@@ -1132,12 +953,8 @@ async function main(): Promise<void> {
   await backupVault();
 
   console.log('\n Gathering files…');
-  const markdownFiles = await Array.fromAsync(
-    fs.glob(path.join(dirs.obsidianVault, ALL_NOTES_PATTERN))
-  );
-  const imageFiles = await Array.fromAsync(
-    fs.glob(path.join(dirs.obsidianVault, ALL_IMAGES_PATTERN))
-  );
+  const markdownFiles = await findAllNotes();
+  const imageFiles = await findAllAttachments();
   console.log(
     `\nFound ${markdownFiles.length} notes and ${imageFiles.length} images`
   );
@@ -1152,16 +969,12 @@ async function main(): Promise<void> {
   await updateNotes(renamedFiles);
 
   console.log('\n Collecting used images from Markdown…\n');
-  const updatedMarkdownFiles = await Array.fromAsync(
-    fs.glob(path.join(dirs.obsidianVault, ALL_NOTES_PATTERN))
-  );
+  const updatedMarkdownFiles = await findAllNotes();
   const usedImages = await findUsedImages(updatedMarkdownFiles);
   console.log(`\nFound ${usedImages.size} image usages`);
 
   console.log('\n Removing unused images…\n');
-  const remainingImageFiles = await Array.fromAsync(
-    fs.glob(path.join(dirs.obsidianVault, ALL_IMAGES_PATTERN))
-  );
+  const remainingImageFiles = await findAllAttachments();
   await removeUnusedImages(remainingImageFiles, usedImages);
 
   console.log('\n Cleaning Obsidian trash…\n');

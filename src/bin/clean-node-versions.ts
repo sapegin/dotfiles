@@ -12,7 +12,7 @@
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { dirs } from '../util/consts.ts';
+import { dirs } from '../util/files.ts';
 
 const nodeVersionsDir = path.join(dirs.home, '.fnm', 'node-versions');
 

@@ -10,11 +10,8 @@
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { dirs } from '../util/consts.ts';
+import { dirs, exts, glob } from '../util/files.ts';
 import { run } from '../util/run.ts';
-
-const ATTACHMENTS_DIR = path.join(dirs.obsidianVault, 'zz-attachments');
-const LOG_DIR = path.join(dirs.obsidianVault, 'Log');
 
 function getAttachmentYear(name: string): string | undefined {
   const imgMatch = name.match(/^(\d{4})_IMG_/);
@@ -25,9 +22,13 @@ function getAttachmentYear(name: string): string | undefined {
 }
 
 async function main(): Promise<void> {
-  const mdFiles = await Array.fromAsync(fs.glob('**/*.md', { cwd: LOG_DIR }));
+  const mdFiles = await glob('**/*', exts.markdown, {
+    cwd: dirs.obsidianDailyNotes,
+  });
 
-  console.log(`Found ${mdFiles.length} Markdown files in ${LOG_DIR}`);
+  console.log(
+    `Found ${mdFiles.length} Markdown files in ${dirs.obsidianDailyNotes}`
+  );
 
   // iPhone photos without a year prefix yet
   const imgPattern = /!\[\[(IMG_\d{4}\.[^\]]+)]]/g;
@@ -44,7 +45,7 @@ async function main(): Promise<void> {
   }[] = [];
 
   for (const file of mdFiles) {
-    const filePath = path.join(LOG_DIR, file);
+    const filePath = path.join(dirs.obsidianDailyNotes, file);
     const year = path.basename(path.dirname(file));
     let content = await fs.readFile(filePath, 'utf8');
     let modified = false;
@@ -65,8 +66,8 @@ async function main(): Promise<void> {
     for (const match of content.matchAll(imgPattern)) {
       const oldName = match[1];
       const newName = `${year}_${oldName}`;
-      const oldPath = path.join(ATTACHMENTS_DIR, oldName);
-      const newPath = path.join(ATTACHMENTS_DIR, newName);
+      const oldPath = path.join(dirs.obsidianAttachments, oldName);
+      const newPath = path.join(dirs.obsidianAttachments, newName);
 
       try {
         await fs.rename(oldPath, newPath);
@@ -91,8 +92,8 @@ async function main(): Promise<void> {
       const id = oldName.match(/_MG_(\d+)/)?.[1];
       const ext = path.extname(oldName);
       const newName = `${noteDate}_${id}_Artem_Sapegin${ext}`;
-      const oldPath = path.join(ATTACHMENTS_DIR, oldName);
-      const newPath = path.join(ATTACHMENTS_DIR, newName);
+      const oldPath = path.join(dirs.obsidianAttachments, oldName);
+      const newPath = path.join(dirs.obsidianAttachments, newName);
 
       try {
         await fs.rename(oldPath, newPath);

@@ -9,7 +9,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { parseArgs } from '../../util/args.ts';
-import { dirs } from '../../util/consts.ts';
+import { dirs } from '../../util/files.ts';
 
 const QUICKIES_FILE = path.join(dirs.obsidianVault, '0-Inbox/Quickies.md');
 
