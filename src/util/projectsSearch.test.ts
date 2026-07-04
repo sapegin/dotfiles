@@ -59,17 +59,17 @@ describe(searchProjects, () => {
     ).toBe(true);
   });
 
-  test('ranks raccoon-toolbox above react-group for rt', () => {
+  test('ranks raccoon-toolbox (abbreviation) above richtypo.js (fuzzy) for rt', () => {
     const results = searchProjects('rt');
     const raccoonIndex = results.findIndex(
       (projectPath) => path.basename(projectPath) === 'raccoon-toolbox'
     );
-    const reactIndex = results.findIndex(
-      (projectPath) => path.basename(projectPath) === 'react-group'
+    const richtypoIndex = results.findIndex(
+      (projectPath) => path.basename(projectPath) === 'richtypo.js'
     );
 
     expect(raccoonIndex).toBeGreaterThan(-1);
-    expect(reactIndex).toBeGreaterThan(-1);
-    expect(raccoonIndex).toBeLessThan(reactIndex);
+    expect(richtypoIndex).toBeGreaterThan(-1);
+    expect(raccoonIndex).toBeLessThan(richtypoIndex);
   });
 });
