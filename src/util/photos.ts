@@ -1,46 +1,35 @@
 import path from 'node:path';
 
 export const IMPORT_DATE_PREFIX = /^(\d{4}-\d{2}-\d{2})_/;
+const ATTACHMENT_YEAR_PREFIX = /^(\d{4})(?:-\d{2}-\d{2}_|_IMG_)/i;
+const UNPREFIXED_IPHONE_PHOTO = /^IMG_\d{4}\./i;
 
-export interface ParsedExifDate {
-  date: string;
-  year: string;
-  datetime: Date;
+/**
+ * Read year prefix from photo names:
+ *
+ * - '2026_IMG_9488.jpeg' → '2026'
+ * - '1984-02-22_7859_Artem_Sapegin.jpg' → '1984'
+ */
+export function getPhotoFilenameYear(filename: string): string | undefined {
+  return path.basename(filename).match(ATTACHMENT_YEAR_PREFIX)?.[1];
 }
 
-/** Parse ExifTool `DateTimeOriginal` (`2026:07:03 14:42:00`) into date parts. */
-export function parseExifDate(
-  dateTimeOriginal: string | undefined
-): ParsedExifDate | undefined {
-  if (dateTimeOriginal === undefined) {
-    return undefined;
-  }
-
-  const match = dateTimeOriginal.match(
-    /^(\d{4}):(\d{2}):(\d{2}) (\d{2}):(\d{2}):(\d{2})/
-  );
-  if (match === null) {
-    return undefined;
-  }
-
-  const [, year, month, day, hour, minute, second] = match;
-  return {
-    date: `${year}-${month}-${day}`,
-    year,
-    datetime: new Date(`${year}-${month}-${day}T${hour}:${minute}:${second}`),
-  };
-}
-
-/** Read `YYYY-MM-DD` from names like `2026-07-03_1234_Artem_Sapegin.jpg`. */
+/**
+ * Read `YYYY-MM-DD` date from photo names:
+ *
+ * - '2026-07-03_1234_Artem_Sapegin.jpg' → '2026-07-03'
+ */
 export function getPhotoFilenameDate(filename: string): string | undefined {
   return path.basename(filename).match(IMPORT_DATE_PREFIX)?.[1];
 }
 
 /**
- * Extract the numeric suffix from camera filenames like `_MG_1234.CR2` →
- * `1234`.
+ * Extract the numeric suffix from camera filenames:
+ *
+ * - '_MG_1234.CR2' → '1234'.
+ * - '2026-07-03_1234_Artem_Sapegin.jpg' → '1234'
  */
-export function getSuffix(filename: string): string | undefined {
+export function getPhotoFilenameSuffix(filename: string): string | undefined {
   const stem = path
     .basename(filename, path.extname(filename))
     .replace(IMPORT_DATE_PREFIX, '');
@@ -48,32 +37,32 @@ export function getSuffix(filename: string): string | undefined {
 }
 
 /**
- * Build a dated photo filename from EXIF and the original basename.
- * Examples: `IMG_9488.jpeg` → `2026_IMG_9488.jpeg`, `_MG_1234.JPG` →
- * `2026-07-03_1234_Artem_Sapegin.jpg`.
+ * Build a dated photo filename from EXIF and the original basename:
+ *
+ * - 'IMG_9488.jpeg' → '2026_IMG_9488.jpeg'
+ * - '_MG_1234.JPG' → '2026-07-03_1234_Artem_Sapegin.jpg'
  */
-export function getFullMobilePhotoName(
+export function getDatedPhotoFilename(
   originalBasename: string,
-  exif: ParsedExifDate
+  year: string,
+  date?: string
 ): string {
-  const ext = path.extname(originalBasename).toLowerCase();
-
-  if (/^IMG_/i.test(originalBasename)) {
-    return `${exif.year}_${path.basename(originalBasename, path.extname(originalBasename))}${ext}`;
-  }
-
-  const mgMatch = originalBasename.match(/^_MG_(\d+)/i);
-  if (mgMatch !== null) {
-    return `${exif.date}_${mgMatch[1]}_Artem_Sapegin${ext}`;
-  }
-
-  if (IMPORT_DATE_PREFIX.test(originalBasename)) {
+  // File already has date, return as is
+  if (getPhotoFilenameYear(originalBasename) !== undefined) {
     return originalBasename;
   }
 
-  const suffix = getSuffix(originalBasename);
-  if (suffix !== undefined) {
-    return `${exif.date}_${suffix}_Artem_Sapegin${ext}`;
+  const ext = path.extname(originalBasename).toLowerCase();
+
+  // Mobile photos are prefixed with year only
+  if (UNPREFIXED_IPHONE_PHOTO.test(originalBasename)) {
+    return `${year}_${path.basename(originalBasename, path.extname(originalBasename))}${ext}`;
+  }
+
+  // Camera photos are prefixed with full year
+  const suffix = getPhotoFilenameSuffix(originalBasename);
+  if (suffix !== undefined && date !== undefined) {
+    return `${date}_${suffix}_Artem_Sapegin${ext}`;
   }
 
   return originalBasename;

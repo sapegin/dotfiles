@@ -9,9 +9,9 @@
 import { execSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import readline from 'node:readline/promises';
 import { dirs, untildify } from '../util/files.ts';
 import { findGitRoot, pullIfClean } from '../util/git.ts';
+import { confirmYesNo } from '../util/prompt.ts';
 import { run } from '../util/run.ts';
 import { stripJsonComments } from '../util/stripJsonComments.ts';
 import {
@@ -22,7 +22,7 @@ import {
   didFilesChange,
   type SyncEntry,
 } from '../util/sync.ts';
-import { log, theme } from '../util/theme.ts';
+import { log } from '../util/theme.ts';
 
 // TODO: Add --verbose mode that shows all files including ignored ones and ones that didn't need sync
 
@@ -88,23 +88,6 @@ function runAfterCommand(
 async function readConfig(): Promise<DotfileEntry[]> {
   const raw = await fs.readFile(CONFIG_FILE, 'utf8');
   return JSON.parse(stripJsonComments(raw)) as DotfileEntry[];
-}
-
-async function confirmAction(message: string): Promise<boolean> {
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
-
-  try {
-    const answer = await rl.question(
-      `${theme.warning('?')} ${message} (y/N): `
-    );
-    const response = answer.toLowerCase().trim();
-    return response === 'y' || response === 'yes';
-  } finally {
-    rl.close();
-  }
 }
 
 async function syncEntry(entry: DotfileEntry): Promise<void> {
@@ -173,7 +156,7 @@ async function syncEntry(entry: DotfileEntry): Promise<void> {
     if (mode === 'sync') {
       results.push(await syncFile(sourcePath, destinationPath));
     } else {
-      results.push(await syncLink(sourcePath, destinationPath, confirmAction));
+      results.push(await syncLink(sourcePath, destinationPath, confirmYesNo));
     }
   }
 

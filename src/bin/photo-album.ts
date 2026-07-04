@@ -58,22 +58,12 @@ async function readExifData(filePath: string): Promise<{
 }> {
   try {
     const metadata = await readExifMetadata(filePath);
-    const dateStr = metadata.dateTimeOriginal ?? '';
     const width = metadata.imageWidth ?? 0;
     const height = metadata.imageHeight ?? 0;
     const make = metadata.make ?? '';
     const rating = metadata.rating ?? 0;
 
-    // Parse EXIF date format: "YYYY:MM:DD HH:MM:SS"
-    let captureDate = new Date(0);
-    if (dateStr !== '') {
-      const parts = dateStr.split(' ');
-      if (parts.length === 2) {
-        const datePart = parts[0].replaceAll(':', '-');
-        const timePart = parts[1];
-        captureDate = new Date(`${datePart}T${timePart}`);
-      }
-    }
+    let captureDate = metadata.datetime ?? new Date(0);
 
     // Fallback to filename parsing if no EXIF date
     if (captureDate.getTime() === 0) {

@@ -1,8 +1,9 @@
+import { execFileSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import sharp from 'sharp';
 import { atomicWrite } from './atomicWrite.ts';
-import { dirs, stripExtensions } from './files.ts';
+import { dirs, exts, hasExtension, stripExtensions } from './files.ts';
 import { prettyBytes } from './prettyBytes.ts';
 import { log } from './theme.ts';
 
@@ -10,8 +11,13 @@ export const MAX_DIMENSION = 2048;
 export const MAX_FILE_SIZE = 1024 * 1024;
 export const MAX_SMALL_FILE_SIZE = MAX_FILE_SIZE * 0.5;
 export const AVIF_QUALITY = 75;
+const OBSIDIAN_VAULT_NAME = 'Murder';
 
-export const IMAGE_WIKILINK_REGEX = /!\[\[([^\]|]+)(?:\|[^\]]+)?\]\]/g;
+// Matches Markdown images (`![Alt](photo.jpg)`) and Obsidian image wikilinks
+// (`![[photo.jpg|400]]`). Capture groups: Markdown target is 2, Obsidian
+// target is 3, and the optional Obsidian pipe is 4.
+const MARKDOWN_IMAGE_REGEX =
+  /!\[([^\]]*)\]\(([^)]+)\)|!\[\[([^\]|]+)(\|[^\]]+)?\]\]/g;
 
 export interface ImageDimensions {
   width: number;
@@ -35,6 +41,25 @@ export async function assertObsidianVault(): Promise<void> {
   } catch {
     log.error('\n✕ Error: Vault directory does not exist:', dirs.obsidianVault);
     process.exit(1);
+  }
+}
+
+/** Open a vault-relative path in Obsidian. */
+export function openObsidianPath(relativePath: string): void {
+  const uri = `obsidian://open?vault=${encodeURIComponent(OBSIDIAN_VAULT_NAME)}&file=${encodeURIComponent(relativePath)}`;
+  execFileSync('open', [uri]);
+}
+
+/**
+ * Return whether an attachment filename exists in the Obsidian attachments
+ * folder.
+ */
+export async function doesAttachmentExist(filename: string): Promise<boolean> {
+  try {
+    await fs.access(path.join(dirs.obsidianAttachments, filename));
+    return true;
+  } catch {
+    return false;
   }
 }
 
@@ -232,16 +257,92 @@ export function formatNoteHeading(date: Date): string {
   });
 }
 
-/** Return attachment filenames from Obsidian image wikilinks in a note body. */
-export function getImageWikilinks(body: string): string[] {
-  return [...body.matchAll(IMAGE_WIKILINK_REGEX)].map((match) => match[1]);
+/** Normalize an image target to the filename stored in the vault. */
+function getMarkdownImageFilename(target: string): string {
+  if (
+    target.startsWith('/') ||
+    target.startsWith('https:') ||
+    target.startsWith('http:')
+  ) {
+    return target;
+  }
+
+  return decodeURIComponent(path.basename(target)).normalize('NFC');
+}
+
+/**
+ * Return attachment filenames from Markdown and Obsidian image syntax.
+ *
+ * Examples:
+ *
+ * - `![Alt](attachments/photo.jpg)` → `photo.jpg`
+ * - `![[2026_IMG_9488.jpeg|400]]` → `2026_IMG_9488.jpeg`
+ * - `![[Regular note]]` is ignored because it has no media extension.
+ */
+export function getMarkdownImages(body: string): string[] {
+  return [...body.matchAll(MARKDOWN_IMAGE_REGEX)]
+    .map((match) => getMarkdownImageFilename(match[2] || match[3]))
+    .filter((filePath) => hasExtension(filePath, exts.media));
+}
+
+/** Replace plain or URL-encoded filename occurrences inside an image target. */
+function replaceTargetFilename(
+  target: string,
+  oldFilename: string,
+  newFilename: string
+): string {
+  const escapedOldFilename = RegExp.escape(oldFilename);
+  const escapedOldFilenameEncoded = RegExp.escape(
+    encodeURIComponent(oldFilename)
+  );
+  return target.replaceAll(
+    new RegExp(`${escapedOldFilename}|${escapedOldFilenameEncoded}`, 'g'),
+    newFilename
+  );
+}
+
+/** Replace a filename in Markdown and Obsidian image syntax. */
+export function replaceMarkdownImageReferences(
+  body: string,
+  oldFilename: string,
+  newFilename: string
+): string {
+  return body.replaceAll(
+    MARKDOWN_IMAGE_REGEX,
+    (
+      match,
+      alt: string | undefined,
+      markdownTarget: string | undefined,
+      obsidianTarget: string | undefined,
+      obsidianPipe: string | undefined
+    ) => {
+      const target = markdownTarget ?? obsidianTarget ?? '';
+      if (getMarkdownImageFilename(target) !== oldFilename) {
+        return match;
+      }
+
+      if (markdownTarget !== undefined) {
+        return `![${alt}](${replaceTargetFilename(
+          markdownTarget,
+          oldFilename,
+          newFilename
+        )})`;
+      }
+
+      return `![[${newFilename}${obsidianPipe ?? ''}]]`;
+    }
+  );
 }
 
 /** Remove Obsidian image wikilinks from a note body, keeping surrounding text. */
 export function stripImageWikilinks(body: string): string {
   return body
-    .replaceAll(/!\[\[[^\]|]+(?:\|[^\]]+)?\]\]\n*/g, '')
-    .replaceAll(/\n\n\n+/gm, '\n\n')
+    .replaceAll(
+      MARKDOWN_IMAGE_REGEX,
+      (match, _alt: string | undefined, markdownTarget: string | undefined) =>
+        markdownTarget === undefined ? '' : match
+    )
+    .replaceAll(/\n\n+/gm, '\n')
     .trimEnd();
 }
 

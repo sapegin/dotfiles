@@ -4,6 +4,7 @@ import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 import {
   exts,
+  getCommonFolder,
   getExtensionsBrace,
   parseGlobArgs,
   glob,
@@ -44,6 +45,14 @@ describe(stripExtensions, () => {
 describe(getExtensionsBrace, () => {
   test('expands to both lower- and uppercase without duplicates', () => {
     expect(getExtensionsBrace(exts.jpeg)).toBe('{jpg,JPG,jpeg,JPEG}');
+  });
+});
+
+describe(getCommonFolder, () => {
+  test('returns the nearest common parent folder', () => {
+    expect(
+      getCommonFolder(['/Volumes/Card/DCIM/100/file1.RAF', '/Volumes/Card/DCIM/101/file2.JPG'])
+    ).toBe('/Volumes/Card/DCIM');
   });
 });
 

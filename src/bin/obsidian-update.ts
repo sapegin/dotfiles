@@ -18,19 +18,16 @@ import path from 'node:path';
 import { setTimeout } from 'node:timers/promises';
 import YAML from 'yaml';
 import { atomicWrite } from '../util/atomicWrite.ts';
-import { readExifMetadata } from '../util/exif.ts';
+import { dirs, glob, exts, stripExtensions } from '../util/files.ts';
 import {
-  dirs,
-  glob,
-  exts,
-  hasExtension,
-  stripExtensions,
-} from '../util/files.ts';
-import {
+  doesAttachmentExist,
+  getMarkdownImages,
   moveToTrash,
   needsOptimization,
   optimizeImage,
+  replaceMarkdownImageReferences,
 } from '../util/obsidian.ts';
+import { getDatedPhotoFilename } from '../util/photos.ts';
 import { prettyBytes } from '../util/prettyBytes.ts';
 import { run } from '../util/run.ts';
 import { log } from '../util/theme.ts';
@@ -63,10 +60,6 @@ const FRONTMATTER_FIELDS = [
   'year',
   'yields',
 ];
-
-// Either regular Markdown images (![Alt text](image.ext)`), or Obsidian images
-// with optional resizing pipe (`![[image.png|100]]`)
-const imageRegex = /!\[.*?\]\(([^)]+)\)|!\[\[([^\]]+)\]\]/g;
 
 // WMO Weather interpretation codes
 const WMO_WEATHER_CODES: Record<number, string> = {
@@ -112,11 +105,6 @@ interface Frontmatter {
   tags?: string[];
   description?: string;
   [key: string]: unknown;
-}
-
-interface ImageMetadata {
-  date: string;
-  coordinates: string | undefined;
 }
 
 interface WeatherResponse {
@@ -186,37 +174,46 @@ function unwrapWikilink(value: unknown): string {
   return match[1].split('|')[0];
 }
 
-/** Return all images in Markdown */
-function getMarkdownImages(body: string): string[] {
-  const matches = [...body.matchAll(imageRegex)];
-  return matches
-    .map((match) => {
-      const filePath = match[1] || match[2];
-
-      // Return absolute paths as is
-      if (
-        filePath.startsWith('/') ||
-        filePath.startsWith('https:') ||
-        filePath.startsWith('http:')
-      ) {
-        return filePath;
-      }
-
-      // Extract just the filename, remove Obsidian's resizing pipe
-      // (`image.png|100`), and decode URL encoding
-      const cleanFilePath = filePath.split('|')[0];
-      return decodeURIComponent(path.basename(cleanFilePath)).normalize('NFC');
-    })
-    .filter((filePath) => {
-      // Skip embedded notes (`![[Note name]]`) which have no image extension
-      return hasExtension(filePath, exts.media);
-    });
+/**
+ * Return the year folder for daily notes:
+ *
+ * - 'Log/2021/2021-03-26_1947' → '2021'
+ */
+function getDailyNoteYear(file: string): string | undefined {
+  const relativePath = path.relative(dirs.obsidianDailyNotes, file);
+  if (relativePath.startsWith('..') || path.isAbsolute(relativePath)) {
+    return undefined;
+  }
+  return relativePath.split(path.sep)[0];
 }
 
-/** Return basename of the given image in Markdown. */
-function getImageByIndex(body: string, index: number): string | undefined {
-  const images = getMarkdownImages(body);
-  return images.length > 0 ? path.basename(images[index]) : undefined;
+/** Rename an attachment file and keep the in-memory attachment index current. */
+async function renameAttachment(
+  oldName: string,
+  newName: string,
+  attachmentNames: Set<string>
+): Promise<boolean> {
+  if (attachmentNames.has(newName)) {
+    return true;
+  }
+
+  const oldPath = path.join(dirs.obsidianAttachments, oldName);
+  const newPath = path.join(dirs.obsidianAttachments, newName);
+
+  try {
+    await fs.rename(oldPath, newPath);
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+      printWarning(`Not found: ${oldPath}`);
+      return false;
+    }
+    throw error;
+  }
+
+  console.log(`${oldName} → ${newName}`);
+  attachmentNames.delete(oldName);
+  attachmentNames.add(newName);
+  return true;
 }
 
 /** Fetch weather data from Open-Meteo API. */
@@ -278,56 +275,6 @@ async function getWeather(
   console.log(`  ↪ ${weather}`);
 
   return weather;
-}
-
-/** Read EXIF photo metadata. */
-async function getImageMetadata(
-  filename: string | undefined
-): Promise<ImageMetadata> {
-  if (!filename) {
-    console.log(`No filename, skipping`);
-    return { date: '', coordinates: undefined };
-  }
-
-  let filePath = path.join(dirs.obsidianAttachments, filename);
-  const ext = path.extname(filename).toLowerCase();
-
-  // If the image isn't JPEG, look for the original JPEG file in the trash
-  if (hasExtension(filename, exts.jpeg) === false) {
-    const nameWithoutExt = path.basename(filename, ext);
-    const jpegFiles = await glob(
-      dirs.obsidianTrash,
-      '**',
-      nameWithoutExt,
-      exts.jpeg
-    );
-    if (jpegFiles.length > 0) {
-      filePath = jpegFiles[0];
-    } else {
-      // Can't do anything, only JPEG files have metadata
-      console.log(`Not JPEG, skipping (${filename})`);
-      return { date: '', coordinates: undefined };
-    }
-  }
-
-  // Check if file exists
-  try {
-    await fs.access(filePath);
-  } catch {
-    console.log(`File doesn't exist, skipping (${filename})`);
-    return { date: '', coordinates: undefined };
-  }
-
-  const { dateTimeOriginal, gpsLatitude, gpsLongitude } =
-    await readExifMetadata(filePath);
-  const date = dateTimeOriginal ?? '';
-
-  let coordinates: string | undefined;
-  if (gpsLatitude !== undefined && gpsLongitude !== undefined) {
-    coordinates = `${gpsLatitude.toFixed(10)}, ${gpsLongitude.toFixed(10)}`;
-  }
-
-  return { date, coordinates };
 }
 
 async function findUsedImages(markdownFiles: string[]): Promise<Set<string>> {
@@ -496,6 +443,7 @@ async function updateNote({
   let newFile = file;
 
   const basename = path.basename(file, '.md');
+  const year = getDailyNoteYear(file);
 
   // Update renamed image links
   const images = getMarkdownImages(body);
@@ -504,22 +452,26 @@ async function updateNote({
     const newFilename = renamedFiles.get(image);
     if (newFilename !== undefined) {
       console.log(`Updating image links: ${path.basename(newFilename)}`);
+      newBody = replaceMarkdownImageReferences(newBody, image, newFilename);
+    }
+  }
 
-      const escapedOldFilename = RegExp.escape(image);
-      const escapedOldFilenameEncoded = RegExp.escape(
-        encodeURIComponent(image)
-      );
+  // Add year prefixes to mobile photos
+  if (year !== undefined) {
+    for (const image of getMarkdownImages(newBody)) {
+      const newFilename = getDatedPhotoFilename(image, year);
+      if (newFilename === image) {
+        continue;
+      }
 
-      // Simplified regexp to cath Markdown images (![Alt text](image.ext)`) and
-      // Obsidian images with optional resizing pipe (`![[image.png|100]]`)
-      const regex = new RegExp(
-        `([([])(${escapedOldFilename}|${escapedOldFilenameEncoded})([)\\]|])`,
-        'g'
+      const renamed = await renameAttachment(
+        image,
+        newFilename,
+        attachmentNames
       );
-      // Update the image name in the link
-      newBody = newBody.replace(regex, (_match, prefix, _image, suffix) => {
-        return `${prefix}${newFilename}${suffix}`;
-      });
+      if (renamed) {
+        newBody = replaceMarkdownImageReferences(newBody, image, newFilename);
+      }
     }
   }
 
@@ -560,21 +512,15 @@ async function updateNote({
     // Unwrap Obsidian wikilink format (`[[image.jpg]]`) written by Web Clipper
     newFrontmatter.image = path.basename(unwrapWikilink(newFrontmatter.image));
 
-    const coverImageFilePath = path.join(
-      dirs.obsidianAttachments,
-      newFrontmatter.image
-    );
-    try {
-      await fs.access(coverImageFilePath);
-    } catch {
+    if ((await doesAttachmentExist(newFrontmatter.image)) === false) {
       console.log(
-        `Cover image doesn’t exist (${path.basename(coverImageFilePath)}), updating…`
+        `${basename}: Cover image doesn’t exist (${newFrontmatter.image}), updating…`
       );
       newFrontmatter.image = undefined;
     }
   }
 
-  const firstImage = getImageByIndex(newBody, 0);
+  const firstImage = getMarkdownImages(newBody)[0];
   // Set `image` field to the first image of the note
   if (firstImage && newFrontmatter.image === undefined) {
     newFrontmatter.image = firstImage;
@@ -641,15 +587,6 @@ async function updateNote({
         } catch {
           // Ignore errors reading location note
         }
-      }
-    }
-
-    // Set coordinates based on the fist image
-    if (firstImage && newFrontmatter.coordinates === undefined) {
-      const firstImageMetadata = await getImageMetadata(firstImage);
-
-      if (firstImageMetadata.coordinates) {
-        newFrontmatter.coordinates = firstImageMetadata.coordinates;
       }
     }
 

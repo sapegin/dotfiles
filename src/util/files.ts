@@ -85,6 +85,30 @@ export function untildify(input: string): string {
   return input;
 }
 
+/** Return the nearest common parent folder for a list of file paths. */
+export function getCommonFolder(filePaths: readonly string[]): string {
+  const directories = filePaths.map((filePath) => path.dirname(filePath));
+  if (directories.length === 0) {
+    return '';
+  }
+  if (directories.length === 1) {
+    return directories[0];
+  }
+
+  const parts = directories.map((directory) => directory.split(path.sep));
+  const commonParts: string[] = [];
+  for (let index = 0; index < parts[0].length; index++) {
+    const segment = parts[0][index];
+    if (parts.every((directoryParts) => directoryParts[index] === segment)) {
+      commonParts.push(segment);
+    } else {
+      break;
+    }
+  }
+
+  return commonParts.join(path.sep) || directories[0];
+}
+
 /** Case-insensitive check whether `filePath` has one of `extensions`. */
 export function hasExtension(
   filePath: string,
@@ -163,7 +187,6 @@ export function glob(
 ): Promise<string[]>;
 export function glob(...args: unknown[]): Promise<string[]> {
   const { pattern, options } = parseGlobArgs(args);
-  console.log('🍤 pattern', pattern);
 
   return Array.fromAsync(
     options === undefined ? fs.glob(pattern) : fs.glob(pattern, options)

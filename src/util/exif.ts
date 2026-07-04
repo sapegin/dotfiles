@@ -14,7 +14,9 @@ interface ExifToolOutput {
 }
 
 export interface ExifMetadata {
-  dateTimeOriginal?: string;
+  date?: string;
+  year?: string;
+  datetime?: Date;
   gpsLatitude?: number;
   gpsLongitude?: number;
   imageWidth?: number;
@@ -29,6 +31,32 @@ function optionalString(value: unknown): string | undefined {
 
 function optionalNumber(value: unknown): number | undefined {
   return typeof value === 'number' ? value : undefined;
+}
+
+function parseExifDate(dateTimeOriginal: string | undefined):
+  | {
+      date: string;
+      year: string;
+      datetime: Date;
+    }
+  | undefined {
+  if (dateTimeOriginal === undefined) {
+    return undefined;
+  }
+
+  const match = dateTimeOriginal.match(
+    /^(\d{4}):(\d{2}):(\d{2}) (\d{2}):(\d{2}):(\d{2})/
+  );
+  if (match === null) {
+    return undefined;
+  }
+
+  const [, year, month, day, hour, minute, second] = match;
+  return {
+    year,
+    date: `${year}-${month}-${day}`,
+    datetime: new Date(`${year}-${month}-${day}T${hour}:${minute}:${second}`),
+  };
 }
 
 export async function readExifMetadata(
@@ -54,9 +82,11 @@ export async function readExifMetadata(
   if (metadata === undefined) {
     return {};
   }
+  const dateTimeOriginal = optionalString(metadata.DateTimeOriginal);
+  const parsedDate = parseExifDate(dateTimeOriginal);
 
   return {
-    dateTimeOriginal: optionalString(metadata.DateTimeOriginal),
+    ...parsedDate,
     gpsLatitude: optionalNumber(metadata.GPSLatitude),
     gpsLongitude: optionalNumber(metadata.GPSLongitude),
     imageWidth: optionalNumber(metadata.ImageWidth),

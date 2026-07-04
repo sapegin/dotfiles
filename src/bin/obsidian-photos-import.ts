@@ -1,0 +1,224 @@
+// Import JPG/JPEG files from ~/Desktop into the Obsidian vault.
+//
+// - Renames mobile photos like obsidian-update.ts
+// - Resizes and converts images like obsidian-update.ts
+// - Creates daily notes at Log/YYYY/YYYY-MM-DD_HHmm.md
+//
+// Photos are only imported when a new daily note will be created for their day.
+//
+// Usage: obsidian-import-photos
+//
+// ---
+// Author: Artem Sapegin, sapegin.me
+// License: MIT
+// https://github.com/sapegin/dotfiles
+
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { atomicWrite } from '../util/atomicWrite.ts';
+import { readExifMetadata } from '../util/exif.ts';
+import { dirs, exts, glob, stripExtensions } from '../util/files.ts';
+import {
+  assertObsidianVault,
+  doesAttachmentExist,
+  formatDailyNoteBasename,
+  formatNoteHeading,
+  moveToTrash,
+  needsOptimization,
+  openObsidianPath,
+  optimizeImage,
+} from '../util/obsidian.ts';
+import { getDatedPhotoFilename } from '../util/photos.ts';
+import { run } from '../util/run.ts';
+import { log } from '../util/theme.ts';
+
+interface PendingPhoto {
+  sourcePath: string;
+  date: string;
+  datetime: Date;
+  attachmentName: string;
+}
+
+interface ImportedImage {
+  filename: string;
+  datetime: Date;
+}
+
+const UNTAGGED_LOGS_PATH = 'zz-bases/Untagged logs.base';
+
+function getDailyNotePath(datetime: Date): string {
+  const noteBasename = formatDailyNoteBasename(datetime);
+  const year = noteBasename.slice(0, 4);
+  return path.join(dirs.obsidianDailyNotes, year, `${noteBasename}.md`);
+}
+
+async function readPendingPhoto(
+  sourcePath: string
+): Promise<PendingPhoto | undefined> {
+  const originalBasename = path.basename(sourcePath);
+  const { date, year, datetime } = await readExifMetadata(sourcePath);
+
+  if (date === undefined || year === undefined || datetime === undefined) {
+    log.warn(`Skipping ${originalBasename}: missing DateTimeOriginal`);
+    return undefined;
+  }
+
+  return {
+    date,
+    datetime,
+    sourcePath,
+    attachmentName: getDatedPhotoFilename(originalBasename, year, date),
+  };
+}
+
+async function importPhoto(
+  pending: PendingPhoto
+): Promise<ImportedImage | undefined> {
+  const originalBasename = path.basename(pending.sourcePath);
+  const { attachmentName, datetime, sourcePath } = pending;
+  const avifName = `${stripExtensions(attachmentName)}.avif`;
+  let existingName: string | undefined;
+  if (await doesAttachmentExist(avifName)) {
+    existingName = avifName;
+  } else if (await doesAttachmentExist(attachmentName)) {
+    existingName = attachmentName;
+  }
+
+  if (existingName !== undefined) {
+    log.warn(`Skipping ${originalBasename}: ${existingName} already exists`);
+    return undefined;
+  }
+
+  const attachmentPath = path.join(dirs.obsidianAttachments, attachmentName);
+
+  await fs.mkdir(dirs.obsidianAttachments, { recursive: true });
+  await atomicWrite(attachmentPath, (tempFile) =>
+    fs.copyFile(sourcePath, tempFile)
+  );
+
+  let filename = path.basename(attachmentPath).normalize('NFC');
+  const optimization = await needsOptimization(attachmentPath);
+  if (optimization !== undefined) {
+    const result = await optimizeImage(attachmentPath, optimization, {
+      onSkip: (message) => log.warn(message),
+    });
+    if (result !== undefined) {
+      filename = result.newFilename;
+    }
+  }
+
+  await moveToTrash(sourcePath);
+
+  return {
+    filename,
+    datetime,
+  };
+}
+
+function buildDailyNoteContent(importedImages: ImportedImage[]): string {
+  const sortedImages = importedImages.toSorted(
+    (left, right) => left.datetime.getTime() - right.datetime.getTime()
+  );
+  const heading = formatNoteHeading(sortedImages[0].datetime);
+  const coverImage = sortedImages[0].filename;
+  const imageLinks = sortedImages
+    .map((image) => `![[${image.filename}]]`)
+    .join('\n\n');
+
+  return `---
+location: "[[Home]]"
+image: ${coverImage}
+---
+# ${heading}
+
+${imageLinks}
+`;
+}
+
+async function importDay(photos: PendingPhoto[]): Promise<ImportedImage[]> {
+  const sortedPhotos = photos.toSorted(
+    (left, right) => left.datetime.getTime() - right.datetime.getTime()
+  );
+  const notePath = getDailyNotePath(sortedPhotos[0].datetime);
+
+  try {
+    await fs.access(notePath);
+    console.log(
+      `Skipping ${path.relative(dirs.obsidianVault, notePath)} — already exists`
+    );
+    return [];
+  } catch {
+    // Note doesn't exist yet
+  }
+
+  const imported: ImportedImage[] = [];
+
+  for (const photo of sortedPhotos) {
+    console.log(`Importing ${path.basename(photo.sourcePath)}…`);
+    const result = await importPhoto(photo);
+    if (result !== undefined) {
+      imported.push(result);
+    }
+  }
+
+  if (imported.length === 0) {
+    log.warn(
+      `Skipping daily note for ${sortedPhotos[0].date}: no photos imported`
+    );
+    return [];
+  }
+
+  const content = buildDailyNoteContent(imported);
+  await atomicWrite(notePath, (tempFile) =>
+    fs.writeFile(tempFile, content, 'utf8')
+  );
+  console.log(`Created ${path.relative(dirs.obsidianVault, notePath)}`);
+
+  return imported;
+}
+
+async function main(): Promise<void> {
+  await assertObsidianVault();
+
+  const photos = await glob(dirs.desktop, '*', exts.jpeg);
+  console.log(`Found ${photos.length} photos on Desktop`);
+
+  if (photos.length === 0) {
+    return;
+  }
+
+  const photosByDate = new Map<string, PendingPhoto[]>();
+
+  for (const sourcePath of photos) {
+    const pending = await readPendingPhoto(sourcePath);
+    if (pending === undefined) {
+      continue;
+    }
+
+    const group = photosByDate.get(pending.date) ?? [];
+    group.push(pending);
+    photosByDate.set(pending.date, group);
+  }
+
+  if (photosByDate.size === 0) {
+    console.log('\nNo photos to import.');
+    return;
+  }
+
+  let importedCount = 0;
+
+  for (const dayPhotos of photosByDate.values()) {
+    console.log();
+    const dayImported = await importDay(dayPhotos);
+    importedCount += dayImported.length;
+  }
+
+  if (importedCount === 0) {
+    console.log('\nNo photos imported.');
+    return;
+  }
+
+  openObsidianPath(UNTAGGED_LOGS_PATH);
+}
+
+await run(main, { printDone: true });

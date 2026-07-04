@@ -218,9 +218,7 @@ async function main(): Promise<void> {
     }
   }
 
-  if (
-    (await confirmYesNo(`Remove ${toRemove.length} files? [Y/n] `)) === false
-  ) {
+  if ((await confirmYesNo(`Remove ${toRemove.length} files?`)) === false) {
     log.warn('Cancelled.');
     return;
   }
