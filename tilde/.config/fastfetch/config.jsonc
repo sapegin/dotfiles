@@ -8,44 +8,44 @@
       "2": "yellow",
       "3": "red",
       "4": "magenta",
-      "5": "blue",
-    },
+      "5": "blue"
+    }
   },
   "modules": [
     {
       "type": "custom",
-      "format": "\u001b[1mSquirrelsong Dark\u001b[0m",
+      "format": "\u001b[1mSquirrelsong Dark\u001b[0m"
     },
     "separator",
     {
       "type": "custom",
       "key": "Author",
       "keyColor": "yellow",
-      "format": "Artem Sapegin",
+      "format": "Artem Sapegin"
     },
     {
       "type": "custom",
       "key": "URL",
       "keyColor": "yellow",
-      "format": "https://sapegin.me/squirrelsong/",
+      "format": "https://sapegin.me/squirrelsong/"
     },
     {
       "type": "custom",
       "key": "Font",
       "keyColor": "yellow",
-      "format": "MonoLisa",
+      "format": "MonoLisa"
     },
     {
       "type": "os",
-      "format": "{2} {10} {8}",
+      "format": "{2} {10} {8}"
     },
     "shell",
     {
       "type": "terminal",
-      "format": "{5}",
+      "format": "{5}"
     },
     "uptime",
     "break",
-    "colors",
-  ],
+    "colors"
+  ]
 }

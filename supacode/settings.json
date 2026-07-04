@@ -1,117 +1,134 @@
 {
-  "global" : {
-    "agentPresenceBadgesEnabled" : true,
-    "analyticsEnabled" : false,
-    "appearanceMode" : "light",
-    "autoUpdateAgentIntegrationsEnabled" : false,
-    "automatedActionPolicy" : "cliOnly",
-    "confirmQuitMode" : "auto",
-    "copyIgnoredOnWorktreeCreate" : false,
-    "copyUntrackedOnWorktreeCreate" : false,
-    "crashReportsEnabled" : false,
-    "defaultEditorID" : "vscode",
-    "deleteBranchOnDeleteWorktree" : true,
-    "fetchOriginBeforeWorktreeCreation" : true,
-    "githubIntegrationEnabled" : true,
-    "globalScripts" : [
-
-    ],
-    "hideSingleTabBar" : true,
-    "inAppNotificationsEnabled" : true,
-    "moveNotifiedWorktreeToTop" : false,
-    "notificationSoundEnabled" : false,
-    "promptForWorktreeCreation" : true,
-    "pullRequestMergeStrategy" : "squash",
-    "richAgentNotificationsEnabled" : false,
-    "shortcutOverrides" : {
-      "selectWorktree0" : {
-        "isEnabled" : false,
-        "keyCode" : 0,
-        "modifiers" : 0
+  "global": {
+    "agentPresenceBadgesEnabled": true,
+    "analyticsEnabled": false,
+    "appearanceMode": "light",
+    "autoUpdateAgentIntegrationsEnabled": false,
+    "automatedActionPolicy": "cliOnly",
+    "confirmQuitMode": "auto",
+    "copyIgnoredOnWorktreeCreate": false,
+    "copyUntrackedOnWorktreeCreate": false,
+    "crashReportsEnabled": false,
+    "defaultEditorID": "vscode",
+    "deleteBranchOnDeleteWorktree": true,
+    "fetchOriginBeforeWorktreeCreation": true,
+    "githubIntegrationEnabled": true,
+    "globalScripts": [],
+    "hideSingleTabBar": true,
+    "inAppNotificationsEnabled": true,
+    "moveNotifiedWorktreeToTop": false,
+    "notificationSoundEnabled": false,
+    "promptForWorktreeCreation": true,
+    "pullRequestMergeStrategy": "squash",
+    "richAgentNotificationsEnabled": false,
+    "shortcutOverrides": {
+      "selectWorktree0": {
+        "isEnabled": false,
+        "keyCode": 0,
+        "modifiers": 0
       },
-      "selectWorktree1" : {
-        "isEnabled" : true,
-        "keyCode" : 18,
-        "modifiers" : 1
+      "selectWorktree1": {
+        "isEnabled": true,
+        "keyCode": 18,
+        "modifiers": 1
       },
-      "selectWorktree2" : {
-        "isEnabled" : true,
-        "keyCode" : 19,
-        "modifiers" : 1
+      "selectWorktree2": {
+        "isEnabled": true,
+        "keyCode": 19,
+        "modifiers": 1
       },
-      "selectWorktree3" : {
-        "isEnabled" : true,
-        "keyCode" : 20,
-        "modifiers" : 1
+      "selectWorktree3": {
+        "isEnabled": true,
+        "keyCode": 20,
+        "modifiers": 1
       },
-      "selectWorktree4" : {
-        "isEnabled" : true,
-        "keyCode" : 21,
-        "modifiers" : 1
+      "selectWorktree4": {
+        "isEnabled": true,
+        "keyCode": 21,
+        "modifiers": 1
       },
-      "selectWorktree5" : {
-        "isEnabled" : true,
-        "keyCode" : 23,
-        "modifiers" : 1
+      "selectWorktree5": {
+        "isEnabled": true,
+        "keyCode": 23,
+        "modifiers": 1
       },
-      "selectWorktree6" : {
-        "isEnabled" : true,
-        "keyCode" : 22,
-        "modifiers" : 1
+      "selectWorktree6": {
+        "isEnabled": true,
+        "keyCode": 22,
+        "modifiers": 1
       },
-      "selectWorktree7" : {
-        "isEnabled" : true,
-        "keyCode" : 26,
-        "modifiers" : 1
+      "selectWorktree7": {
+        "isEnabled": true,
+        "keyCode": 26,
+        "modifiers": 1
       },
-      "selectWorktree8" : {
-        "isEnabled" : true,
-        "keyCode" : 28,
-        "modifiers" : 1
+      "selectWorktree8": {
+        "isEnabled": true,
+        "keyCode": 28,
+        "modifiers": 1
       },
-      "selectWorktree9" : {
-        "isEnabled" : true,
-        "keyCode" : 25,
-        "modifiers" : 1
+      "selectWorktree9": {
+        "isEnabled": true,
+        "keyCode": 25,
+        "modifiers": 1
       }
     },
-    "systemNotificationsEnabled" : false,
-    "terminalThemeSyncEnabled" : false,
-    "terminateSessionsOnQuit" : false,
-    "updateChannel" : "tip",
-    "updatesAutomaticallyCheckForUpdates" : true,
-    "updatesAutomaticallyDownloadUpdates" : false
+    "systemNotificationsEnabled": false,
+    "terminalThemeSyncEnabled": false,
+    "terminateSessionsOnQuit": false,
+    "updateChannel": "tip",
+    "updatesAutomaticallyCheckForUpdates": true,
+    "updatesAutomaticallyDownloadUpdates": false
   },
-  "pinnedWorktreeIDs" : [
-
-  ],
-  "remoteRepositoryRoots" : [
-
-  ],
-  "repositories" : {
-    "\/Users\/sapegia\/dotfiles\/" : {
-      "archiveScript" : "",
-      "deleteScript" : "",
-      "openActionID" : "auto",
-      "runScript" : "",
-      "scripts" : [
-
-      ],
-      "setupScript" : ""
+  "pinnedWorktreeIDs": [],
+  "remoteRepositoryRoots": [],
+  "repositories": {
+    "\/Users\/sapegia\/_\/kurush\/": {
+      "archiveScript": "",
+      "deleteScript": "",
+      "openActionID": "auto",
+      "runScript": "",
+      "scripts": [],
+      "setupScript": ""
     },
-    "\/Users\/sapegia\/umg\/dg_stage_web\/" : {
-      "archiveScript" : "",
-      "deleteScript" : "",
-      "openActionID" : "auto",
-      "runScript" : "",
-      "scripts" : [
-
-      ],
-      "setupScript" : ""
+    "\/Users\/sapegia\/_\/raccoon-vscode\/": {
+      "archiveScript": "",
+      "deleteScript": "",
+      "openActionID": "auto",
+      "runScript": "",
+      "scripts": [],
+      "setupScript": ""
+    },
+    "\/Users\/sapegia\/_\/sapegin.me\/": {
+      "archiveScript": "",
+      "deleteScript": "",
+      "openActionID": "auto",
+      "runScript": "",
+      "scripts": [],
+      "setupScript": ""
+    },
+    "\/Users\/sapegia\/dotfiles\/": {
+      "archiveScript": "",
+      "deleteScript": "",
+      "openActionID": "auto",
+      "runScript": "",
+      "scripts": [],
+      "setupScript": ""
+    },
+    "\/Users\/sapegia\/umg\/dg_stage_web\/": {
+      "archiveScript": "",
+      "deleteScript": "",
+      "openActionID": "auto",
+      "runScript": "",
+      "scripts": [],
+      "setupScript": ""
     }
   },
-  "repositoryRoots" : [
+  "repositoryRoots": [
     "\/Users\/sapegia\/umg\/dg_stage_web\/",
-    "\/Users\/sapegia\/dotfiles\/"
+    "\/Users\/sapegia\/dotfiles\/",
+    "\/Users\/sapegia\/_\/kurush\/",
+    "\/Users\/sapegia\/_\/sapegin.me\/",
+    "\/Users\/sapegia\/_\/raccoon-vscode\/"
   ]
 }
