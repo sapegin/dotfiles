@@ -32,9 +32,11 @@ Blocks are separated by a blank line. The first line is `file:line`; the rest is
 Work through every comment before re-scanning.
 
 1. Read the file around the reported line and enough surrounding code to understand context.
-2. Implement the instruction with the smallest correct change. Match local style; do not refactor unrelated code.
-3. Remove the `AI:` comment once fixed.
-4. If the instruction is ambiguous, risky, or conflicts with project rules, skip it and note why — do not guess.
+2. Decide whether the comment is asking a question or giving an actionable instruction.
+3. If it is a question, answer the question in the comment. Do not make unrelated code changes, do not guess at an implementation, and do not remove the comment merely to silence the scanner.
+4. If it is an actionable instruction, implement it with the smallest correct change. Match local style; do not refactor unrelated code.
+5. Remove the `AI:` comment only after an actionable instruction has been fixed.
+6. If the comment is ambiguous, risky, or conflicts with project rules, skip it and note why — do not guess.
 
 Prefer fixing comments in dependency order when one fix clearly unblocks another (types before callers, shared helpers before usages).
 
