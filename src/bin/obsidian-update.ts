@@ -115,9 +115,9 @@ interface Frontmatter {
 interface WeatherResponse {
   hourly: {
     time: string[];
-    temperature_2m: number[];
-    weather_code: number[];
-    is_day: number[];
+    temperature_2m: (number | null)[];
+    weather_code: (number | null)[];
+    is_day: (number | null)[];
   };
 }
 
@@ -228,13 +228,14 @@ async function getWeather(
   const dateString = formatLocalDate(date);
   const hourString = formatLocalHour(date);
 
-  // Determine if we need historical or current API
-  const threeMonthsAgo = new Date();
-  threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
-  const isHistorical = date < threeMonthsAgo;
-  const baseUrl = isHistorical
-    ? 'https://archive-api.open-meteo.com/v1/archive'
-    : 'https://api.open-meteo.com/v1/forecast';
+  // Fetch weather older than 5 days from the archive endpoint
+  const recentCutoff = new Date();
+  recentCutoff.setHours(0, 0, 0, 0);
+  recentCutoff.setDate(recentCutoff.getDate() - 5);
+  const baseUrl =
+    date >= recentCutoff
+      ? 'https://api.open-meteo.com/v1/forecast'
+      : 'https://archive-api.open-meteo.com/v1/archive';
 
   const params = new URLSearchParams({
     latitude: lat,
@@ -261,10 +262,14 @@ async function getWeather(
     return undefined;
   }
 
-  const temperature = Math.round(data.hourly.temperature_2m[hourIndex]);
+  const temperatureRaw = data.hourly.temperature_2m[hourIndex];
   const weatherCode = data.hourly.weather_code[hourIndex];
   const isDay = data.hourly.is_day[hourIndex];
+  if (temperatureRaw === null || weatherCode === null || isDay === null) {
+    return undefined;
+  }
 
+  const temperature = Math.round(temperatureRaw);
   let condition = WMO_WEATHER_CODES[weatherCode];
   if (isDay === 0 && WMO_WEATHER_CODES_NIGHT[weatherCode]) {
     condition = WMO_WEATHER_CODES_NIGHT[weatherCode];
