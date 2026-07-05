@@ -30,7 +30,7 @@ import {
 } from '../util/photos.ts';
 import { confirmYesNo } from '../util/prompt.ts';
 import { run } from '../util/run.ts';
-import { log } from '../util/theme.ts';
+import { createProgress, log } from '../util/tui.ts';
 
 const VOLUMES_DIR = '/Volumes';
 const OFFSITE_BACKUP_DIR = path.join(dirs.nasPhotos, 'Backup');
@@ -267,9 +267,11 @@ async function main(): Promise<void> {
   const failures: string[] = [];
   let importedCount = 0;
   let skippedInFolder = 0;
+  const progress = createProgress({ total: toImport.length });
 
   try {
     for (const [index, sourcePath] of toImport.entries()) {
+      const current = index + 1;
       const tempPath = path.join(
         tempDir,
         `${String(index).padStart(4, '0')}_${path.basename(sourcePath)}`
@@ -283,23 +285,28 @@ async function main(): Promise<void> {
         );
         if (importedName === undefined) {
           skippedInFolder++;
-          console.log(
-            `${path.basename(sourcePath)} — already in folder (${index + 1}/${toImport.length})`
+          progress.update(
+            current,
+            `${path.basename(sourcePath)} — already in folder`
           );
           continue;
         }
 
         importedCount++;
-        console.log(
-          `${path.basename(sourcePath)} → ${importedName} (${index + 1}/${toImport.length})`
+        progress.update(
+          current,
+          `${path.basename(sourcePath)} → ${importedName}`
         );
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
         failures.push(message);
-        log.error(`Failed to import ${path.basename(sourcePath)}: ${message}`);
+        progress.error(
+          `Failed to import ${path.basename(sourcePath)}: ${message}`
+        );
       }
     }
   } finally {
+    progress.done();
     await fs.rm(tempDir, { recursive: true, force: true });
   }
 

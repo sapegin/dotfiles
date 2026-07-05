@@ -30,12 +30,12 @@ import {
 import { getDatedPhotoFilename } from '../util/photos.ts';
 import { prettyBytes } from '../util/prettyBytes.ts';
 import { run } from '../util/run.ts';
-import { log } from '../util/theme.ts';
 import {
   formatLocalDate,
   formatLocalHour,
   parseLocalDateTime,
 } from '../util/time.ts';
+import { log } from '../util/tui.ts';
 
 const FRONTMATTER_FIELDS = [
   'address',

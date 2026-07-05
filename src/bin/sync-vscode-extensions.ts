@@ -15,7 +15,7 @@ import path from 'node:path';
 import { untildify } from '../util/files.ts';
 import { pullIfClean } from '../util/git.ts';
 import { run as runMain } from '../util/run.ts';
-import { log } from '../util/theme.ts';
+import { log } from '../util/tui.ts';
 
 interface SourceConfig {
   // Path to the repo (may start with `~`)

@@ -51,7 +51,10 @@ describe(getExtensionsBrace, () => {
 describe(getCommonFolder, () => {
   test('returns the nearest common parent folder', () => {
     expect(
-      getCommonFolder(['/Volumes/Card/DCIM/100/file1.RAF', '/Volumes/Card/DCIM/101/file2.JPG'])
+      getCommonFolder([
+        '/Volumes/Card/DCIM/100/file1.RAF',
+        '/Volumes/Card/DCIM/101/file2.JPG',
+      ])
     ).toBe('/Volumes/Card/DCIM');
   });
 });

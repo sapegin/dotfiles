@@ -39,9 +39,11 @@ describe(replaceMarkdownImageReferences, () => {
         'photo.avif'
       )
     ).toBe(
-      ['![photo.jpg](attachments/photo.avif)', '![[photo.avif|400]]', '![[note]]'].join(
-        '\n'
-      )
+      [
+        '![photo.jpg](attachments/photo.avif)',
+        '![[photo.avif|400]]',
+        '![[note]]',
+      ].join('\n')
     );
   });
 
@@ -58,8 +60,8 @@ describe(replaceMarkdownImageReferences, () => {
 
 describe(stripImageWikilinks, () => {
   test('removes Obsidian image wikilinks without removing Markdown images', () => {
-    expect(stripImageWikilinks('Before\n![[photo.jpg|400]]\n![Alt](photo.jpg)')).toBe(
-      'Before\n![Alt](photo.jpg)'
-    );
+    expect(
+      stripImageWikilinks('Before\n![[photo.jpg|400]]\n![Alt](photo.jpg)')
+    ).toBe('Before\n![Alt](photo.jpg)');
   });
 });

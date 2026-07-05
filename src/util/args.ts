@@ -1,7 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 import { dirs } from './files.ts';
-import { log } from './theme.ts';
+import { log } from './tui.ts';
 
 interface BaseDefinition<Name extends string> {
   readonly name: Name;

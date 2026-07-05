@@ -15,7 +15,7 @@
 
 import { execFileSync, execSync } from 'node:child_process';
 import { parseArgs } from '../util/args.ts';
-import { log } from '../util/theme.ts';
+import { log } from '../util/tui.ts';
 
 function getStaleBranches(): string[] {
   const output = execSync('git branch -vv', { encoding: 'utf8' });

@@ -20,7 +20,7 @@ import {
   getCurrentBranch,
   getUpstreamTracking,
 } from '../util/git.ts';
-import { log } from '../util/theme.ts';
+import { log } from '../util/tui.ts';
 
 const args = parseArgs([
   {

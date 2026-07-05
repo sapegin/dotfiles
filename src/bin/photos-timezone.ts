@@ -17,11 +17,8 @@ import { select } from '../util/fzf.ts';
 import { findMediaFiles, pickPhotoFolder } from '../util/photos.ts';
 import { confirmYesNo } from '../util/prompt.ts';
 import { run } from '../util/run.ts';
-import { log } from '../util/theme.ts';
-import {
-  getPhotoTimezoneShiftMinutes,
-  getTimeZones,
-} from '../util/time.ts';
+import { getPhotoTimezoneShiftMinutes, getTimeZones } from '../util/time.ts';
+import { log } from '../util/tui.ts';
 
 const execFileAsync = promisify(execFile);
 const BATCH_SIZE = 100;

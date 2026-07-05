@@ -15,7 +15,7 @@
 
 import { spawnSync } from 'node:child_process';
 import { assertGitRepo, getCurrentBranch, getGitConfig } from '../util/git.ts';
-import { log } from '../util/theme.ts';
+import { log } from '../util/tui.ts';
 
 assertGitRepo();
 

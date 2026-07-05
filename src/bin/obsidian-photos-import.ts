@@ -25,8 +25,8 @@ import {
 } from '../util/obsidian.ts';
 import { getDatedPhotoFilename } from '../util/photos.ts';
 import { run } from '../util/run.ts';
-import { log } from '../util/theme.ts';
 import { formatLocalDateTime } from '../util/time.ts';
+import { log } from '../util/tui.ts';
 
 interface PendingPhoto {
   sourcePath: string;

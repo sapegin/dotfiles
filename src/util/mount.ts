@@ -1,6 +1,6 @@
 import { execFileSync, spawnSync } from 'node:child_process';
 import path from 'node:path';
-import { log } from './theme.ts';
+import { log } from './tui.ts';
 
 const NAS_SHARE_ROOT = 'smb://Hippopotamus.local';
 

@@ -5,7 +5,7 @@ import sharp from 'sharp';
 import { atomicWrite } from './atomicWrite.ts';
 import { dirs, exts, hasExtension, stripExtensions } from './files.ts';
 import { prettyBytes } from './prettyBytes.ts';
-import { log } from './theme.ts';
+import { log } from './tui.ts';
 
 export const MAX_DIMENSION = 2048;
 export const MAX_FILE_SIZE = 1024 * 1024;

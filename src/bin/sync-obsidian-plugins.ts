@@ -14,7 +14,7 @@ import path from 'node:path';
 import { atomicCopy } from '../util/atomicWrite.ts';
 import { dirs } from '../util/files.ts';
 import { run as runMain } from '../util/run.ts';
-import { log } from '../util/theme.ts';
+import { log } from '../util/tui.ts';
 
 const PLUGINS_REPO = path.join(dirs.projects, 'raccoon-obsidian');
 const PLUGINS_DIR = path.join(PLUGINS_REPO, 'plugins');

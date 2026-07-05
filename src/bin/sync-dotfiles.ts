@@ -22,7 +22,7 @@ import {
   didFilesChange,
   type SyncEntry,
 } from '../util/sync.ts';
-import { log } from '../util/theme.ts';
+import { log } from '../util/tui.ts';
 
 // TODO: Add --verbose mode that shows all files including ignored ones and ones that didn't need sync
 

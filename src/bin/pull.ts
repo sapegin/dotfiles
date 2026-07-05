@@ -17,7 +17,7 @@ import { execFileSync, execSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { assertGitRepo, getCurrentBranch, getGitConfig } from '../util/git.ts';
-import { log } from '../util/theme.ts';
+import { log } from '../util/tui.ts';
 
 // TODO: We can just assume it's installed if the project uses it
 function commandExists(cmd: string): boolean {

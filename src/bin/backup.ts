@@ -40,8 +40,8 @@ import {
 import { ensureVolumeMounted } from '../util/mount.ts';
 import { prompt } from '../util/prompt.ts';
 import { run } from '../util/run.ts';
-import { log } from '../util/theme.ts';
 import { formatLocalTimestamp } from '../util/time.ts';
+import { log } from '../util/tui.ts';
 
 // Folders to backup
 const SOURCES = [dirs.obsidianVault, dirs.iCloud];

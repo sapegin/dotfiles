@@ -1,5 +1,5 @@
 import readline from 'node:readline/promises';
-import { theme } from './theme.ts';
+import { theme } from './tui.ts';
 
 /** Ask a single interactive terminal question and close the readline handle. */
 export async function prompt(question: string): Promise<string> {

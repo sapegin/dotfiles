@@ -1,4 +1,4 @@
-import { log } from './theme.ts';
+import { log } from './tui.ts';
 
 interface RunMainOptions {
   /** Print a shared success message after `main()` finishes. */

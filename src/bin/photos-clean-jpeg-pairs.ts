@@ -23,7 +23,7 @@ import { findMediaFiles, getPhotoPairKey } from '../util/photos.ts';
 import { prettyBytes } from '../util/prettyBytes.ts';
 import { confirmYesNo } from '../util/prompt.ts';
 import { run } from '../util/run.ts';
-import { log } from '../util/theme.ts';
+import { log } from '../util/tui.ts';
 
 const args = parseArgs([
   {

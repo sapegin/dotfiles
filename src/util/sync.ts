@@ -8,7 +8,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { tildify } from './files.ts';
-import { log } from './theme.ts';
+import { log } from './tui.ts';
 
 export type SyncResult =
   | 'missing' // `src` does not exist (single-file mode only)

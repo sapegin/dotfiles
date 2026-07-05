@@ -27,7 +27,7 @@ import sharp from 'sharp';
 import { parseArgs } from '../util/args.ts';
 import { prettyBytes } from '../util/prettyBytes.ts';
 import { run } from '../util/run.ts';
-import { theme } from '../util/theme.ts';
+import { theme } from '../util/tui.ts';
 
 const EFFORT_LEVEL = 8;
 const MINIMUM_SAVINGS_BYTES = 10 * 1024;
