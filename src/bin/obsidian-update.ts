@@ -31,6 +31,11 @@ import { getDatedPhotoFilename } from '../util/photos.ts';
 import { prettyBytes } from '../util/prettyBytes.ts';
 import { run } from '../util/run.ts';
 import { log } from '../util/theme.ts';
+import {
+  formatLocalDate,
+  formatLocalHour,
+  parseLocalDateTime,
+} from '../util/time.ts';
 
 const FRONTMATTER_FIELDS = [
   'address',
@@ -146,14 +151,11 @@ function getErrorStack(error: unknown): string {
 
 /** Parse datetime from basename (format: YYYY-MM-DD_HHmm). */
 function parseNoteDate(basename: string): Date | undefined {
-  const datetimeMatch = basename.match(/^(\d{4}-\d{2}-\d{2})_(\d{2})(\d{2})$/);
-  if (datetimeMatch) {
-    const [, date, hour, minute] = datetimeMatch;
-    return new Date(Date.parse(`${date}T${hour}:${minute}:00`));
-  } else {
+  const date = parseLocalDateTime(basename);
+  if (date === undefined) {
     printWarning(`${basename}: Cannot parse date`);
   }
-  return undefined;
+  return date;
 }
 
 /** File basename that supports multiple (known) extensions. */
@@ -222,9 +224,9 @@ async function getWeather(
   lon: string,
   date: Date
 ): Promise<string | undefined> {
-  const isoDateString = date.toISOString();
-  const dateString = isoDateString.slice(0, 10); // YYYY-MM-DD
-  const hourString = isoDateString.slice(11, 13); // HH
+  // Open Meteo API needs local hour to match hourly report
+  const dateString = formatLocalDate(date);
+  const hourString = formatLocalHour(date);
 
   // Determine if we need historical or current API
   const threeMonthsAgo = new Date();
@@ -738,7 +740,7 @@ async function cleanObsidianTrash(): Promise<void> {
 async function backupVault(): Promise<void> {
   await fs.mkdir(dirs.obsidianBackup, { recursive: true });
 
-  const today = new Date().toISOString().slice(0, 10);
+  const today = formatLocalDate(new Date());
   const backupFile = path.join(
     dirs.obsidianBackup,
     `murder_backup_${today}.zip`

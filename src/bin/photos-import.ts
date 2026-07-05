@@ -17,30 +17,23 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { readExifMetadata } from '../util/exif.ts';
-import {
-  copyFile,
-  dirs,
-  exts,
-  getCommonFolder,
-  glob,
-  hasExtension,
-  tildify,
-} from '../util/files.ts';
-import { select } from '../util/fzf.ts';
+import { copyFile, dirs, getCommonFolder, tildify } from '../util/files.ts';
 import { ensureVolumeMounted } from '../util/mount.ts';
 import {
+  dedupeRawJpegPairs,
+  findMediaFiles,
   getDatedPhotoFilename,
   getPhotoFilenameDate,
-  getPhotoPairKey,
+  getPhotoFolders,
   getPhotoFilenameSuffix,
+  pickPhotoFolder,
 } from '../util/photos.ts';
-import { confirmYesNo, prompt } from '../util/prompt.ts';
+import { confirmYesNo } from '../util/prompt.ts';
 import { run } from '../util/run.ts';
 import { log } from '../util/theme.ts';
 
 const VOLUMES_DIR = '/Volumes';
 const OFFSITE_BACKUP_DIR = path.join(dirs.nasPhotos, 'Backup');
-const NEW_FOLDER_OPTION = '+ New folder…';
 
 /**
  * Check whether two import dates are close enough to be the same capture.
@@ -77,66 +70,6 @@ async function findCardVolumes(): Promise<string[]> {
   }
   return volumes;
 }
-
-/** Find supported media files under a camera card's DCIM folder. */
-async function findMediaFiles(dcimRoot: string): Promise<string[]> {
-  const files = await glob(dcimRoot, '**/*', exts.media);
-  return files.filter((file) => !path.basename(file).startsWith('.'));
-}
-
-/** Prefer RAW files over matching JPEG variants. */
-function dedupeRawJpegPairs(filePaths: string[]): string[] {
-  const byStem = new Map<string, string[]>();
-  for (const filePath of filePaths) {
-    const key = getPhotoPairKey(filePath);
-    const group = byStem.get(key) ?? [];
-    group.push(filePath);
-    byStem.set(key, group);
-  }
-
-  const selected: string[] = [];
-  for (const group of byStem.values()) {
-    const rawFiles = group.filter((filePath) =>
-      hasExtension(filePath, exts.raw)
-    );
-    selected.push(...(rawFiles.length > 0 ? rawFiles : group));
-  }
-  return selected.toSorted((a, b) => a.localeCompare(b));
-}
-
-/** List existing photo import folders. */
-async function getDestinationFolders(): Promise<string[]> {
-  try {
-    const entries = await fs.readdir(dirs.photos, { withFileTypes: true });
-    return entries
-      .filter((entry) => entry.isDirectory())
-      .map((entry) => entry.name)
-      .toSorted((a, b) => a.localeCompare(b));
-  } catch {
-    return [];
-  }
-}
-
-/** Ask the user to choose or create a destination import folder. */
-async function pickDestinationFolder(): Promise<string | undefined> {
-  await fs.mkdir(dirs.photos, { recursive: true });
-  const choice = select(
-    [...(await getDestinationFolders()), NEW_FOLDER_OPTION],
-    'Destination folder'
-  );
-  if (!choice) {
-    return undefined;
-  }
-
-  if (choice === NEW_FOLDER_OPTION) {
-    const answer = await prompt('New folder name: ');
-    const folderName = answer.trim();
-    return folderName === '' ? undefined : path.join(dirs.photos, folderName);
-  }
-
-  return path.join(dirs.photos, choice);
-}
-
 /** Decide whether suffix and date matches mean the card file is imported. */
 function isAlreadyImported(
   cardDate: string | undefined,
@@ -159,7 +92,7 @@ function isAlreadyImported(
 async function findPhotosToImport(cardPaths: string[]): Promise<string[]> {
   // 1. Index library filenames by suffix (date from filename, if present).
   const libraryBySuffix = new Map<string, (string | undefined)[]>();
-  for (const folder of await getDestinationFolders()) {
+  for (const folder of await getPhotoFolders()) {
     for (const filename of await Array.fromAsync(
       fs.glob('*', { cwd: path.join(dirs.photos, folder) })
     )) {
@@ -309,9 +242,11 @@ async function main(): Promise<void> {
   execFileSync('open', [sourceFolder]);
   console.log(`Importing from ${sourceFolder}…`);
 
-  const destinationDir = await pickDestinationFolder();
+  const destinationDir = await pickPhotoFolder({
+    prompt: 'Destination folder',
+    allowNewFolder: true,
+  });
   if (destinationDir === undefined) {
-    log.warn('Import cancelled.');
     process.exit(1);
   }
 

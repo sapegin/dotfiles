@@ -41,6 +41,7 @@ import { ensureVolumeMounted } from '../util/mount.ts';
 import { prompt } from '../util/prompt.ts';
 import { run } from '../util/run.ts';
 import { log } from '../util/theme.ts';
+import { formatLocalTimestamp } from '../util/time.ts';
 
 // Folders to backup
 const SOURCES = [dirs.obsidianVault, dirs.iCloud];
@@ -80,15 +81,9 @@ const resticEnv = {
   RESTIC_PASSWORD_FILE,
 };
 
-function timestamp(): string {
-  // The Swedish locale renders local time as `YYYY-MM-DD HH:MM:SS`; keep
-  // everything up to the minute.
-  return new Date().toLocaleString('sv').slice(0, 16);
-}
-
 function logLine(message: string): void {
   // Nightly runs capture stdout into ~/Library/Logs/backup.log via launchd.
-  console.log(`${timestamp()} ${message}`);
+  console.log(`${formatLocalTimestamp(new Date())} ${message}`);
 }
 
 function restic(args: readonly string[]): void {

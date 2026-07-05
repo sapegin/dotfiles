@@ -10,6 +10,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { parseArgs } from '../../util/args.ts';
 import { dirs } from '../../util/files.ts';
+import { formatLocalDateTime } from '../../util/time.ts';
 
 const QUICKIES_FILE = path.join(dirs.obsidianVault, '0-Inbox/Quickies.md');
 
@@ -26,15 +27,10 @@ if (text.trim() === '') {
   process.exit(0);
 }
 
-/** Format date as `YYYY-MM-DD_HHmm`. */
-function formatDate(date: Date): string {
-  return date.toISOString().slice(0, 16).replace('T', '_').replace(':', '');
-}
-
 try {
   const content = await fs.readFile(QUICKIES_FILE, 'utf8');
 
-  const timestamp = formatDate(new Date());
+  const timestamp = formatLocalDateTime(new Date());
   const newEntry = `* ${timestamp} — ${text}`;
   const newContent = content.trimEnd() + (content ? '\n' : '') + newEntry;
 

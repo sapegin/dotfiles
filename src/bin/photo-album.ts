@@ -10,6 +10,7 @@ import path from 'node:path';
 import sharp from 'sharp';
 import { readExifMetadata } from '../util/exif.ts';
 import { dirs, exts, glob } from '../util/files.ts';
+import { IMPORT_DATE_PREFIX } from '../util/photos.ts';
 import { run } from '../util/run.ts';
 
 const SOURCE_DIR = path.join(dirs.pictures, 'JunkyardPhotoAlbum');
@@ -69,9 +70,8 @@ async function readExifData(filePath: string): Promise<{
     if (captureDate.getTime() === 0) {
       const filename = path.basename(filePath);
 
-      // Try format: YYYY-MM-DD (e.g., "2023-12-15_0293_Artem_Sapegin")
-      const fullDateMatch = filename.match(/(\d{4})-(\d{2})-(\d{2})/);
-      if (fullDateMatch === null) {
+      const fullDate = filename.match(IMPORT_DATE_PREFIX)?.[1];
+      if (fullDate === undefined) {
         // Try format: YYYY-MM (e.g., "Thermal_2025-06_002")
         const monthOnlyMatch = filename.match(/(\d{4})-(\d{2})/);
         if (monthOnlyMatch !== null) {
@@ -81,9 +81,7 @@ async function readExifData(filePath: string): Promise<{
           );
         }
       } else {
-        captureDate = new Date(
-          `${fullDateMatch[1]}-${fullDateMatch[2]}-${fullDateMatch[3]}`
-        );
+        captureDate = new Date(fullDate);
       }
     }
 

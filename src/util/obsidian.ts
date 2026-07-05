@@ -237,16 +237,6 @@ export async function optimizeImage(
   };
 }
 
-/** Daily note basename from EXIF datetime: `2026-07-03_1537`. */
-export function formatDailyNoteBasename(datetime: Date): string {
-  const year = datetime.getFullYear();
-  const month = String(datetime.getMonth() + 1).padStart(2, '0');
-  const day = String(datetime.getDate()).padStart(2, '0');
-  const hour = String(datetime.getHours()).padStart(2, '0');
-  const minute = String(datetime.getMinutes()).padStart(2, '0');
-  return `${year}-${month}-${day}_${hour}${minute}`;
-}
-
 /** Format a daily note heading: `# Sunday, July 3, 2026`. */
 export function formatNoteHeading(date: Date): string {
   return date.toLocaleDateString('en-US', {

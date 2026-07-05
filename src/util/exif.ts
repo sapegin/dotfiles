@@ -1,5 +1,6 @@
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
+import { type DateParts } from './time.ts';
 
 const execFileAsync = promisify(execFile);
 
@@ -13,10 +14,18 @@ interface ExifToolOutput {
   Rating?: unknown;
 }
 
+interface ParsedExifDate {
+  readonly date: string;
+  readonly year: string;
+  readonly datetime: Date;
+  readonly dateParts: DateParts;
+}
+
 export interface ExifMetadata {
   date?: string;
   year?: string;
   datetime?: Date;
+  dateParts?: DateParts;
   gpsLatitude?: number;
   gpsLongitude?: number;
   imageWidth?: number;
@@ -33,13 +42,9 @@ function optionalNumber(value: unknown): number | undefined {
   return typeof value === 'number' ? value : undefined;
 }
 
-function parseExifDate(dateTimeOriginal: string | undefined):
-  | {
-      date: string;
-      year: string;
-      datetime: Date;
-    }
-  | undefined {
+export function parseExifDateParts(
+  dateTimeOriginal: string | undefined
+): DateParts | undefined {
   if (dateTimeOriginal === undefined) {
     return undefined;
   }
@@ -53,9 +58,37 @@ function parseExifDate(dateTimeOriginal: string | undefined):
 
   const [, year, month, day, hour, minute, second] = match;
   return {
-    year,
-    date: `${year}-${month}-${day}`,
-    datetime: new Date(`${year}-${month}-${day}T${hour}:${minute}:${second}`),
+    year: Number(year),
+    month: Number(month),
+    day: Number(day),
+    hour: Number(hour),
+    minute: Number(minute),
+    second: Number(second),
+  };
+}
+
+function parseExifDate(
+  dateTimeOriginal: string | undefined
+): ParsedExifDate | undefined {
+  const dateParts = parseExifDateParts(dateTimeOriginal);
+  if (dateParts === undefined) {
+    return undefined;
+  }
+
+  const { year, month, day, hour, minute, second } = dateParts;
+  const yearString = String(year);
+  const monthString = String(month).padStart(2, '0');
+  const dayString = String(day).padStart(2, '0');
+  const hourString = String(hour).padStart(2, '0');
+  const minuteString = String(minute).padStart(2, '0');
+  const secondString = String(second).padStart(2, '0');
+  return {
+    year: yearString,
+    date: `${yearString}-${monthString}-${dayString}`,
+    datetime: new Date(
+      `${yearString}-${monthString}-${dayString}T${hourString}:${minuteString}:${secondString}`
+    ),
+    dateParts,
   };
 }
 

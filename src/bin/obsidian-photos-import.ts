@@ -17,7 +17,6 @@ import { dirs, exts, glob, stripExtensions } from '../util/files.ts';
 import {
   assertObsidianVault,
   doesAttachmentExist,
-  formatDailyNoteBasename,
   formatNoteHeading,
   moveToTrash,
   needsOptimization,
@@ -27,6 +26,7 @@ import {
 import { getDatedPhotoFilename } from '../util/photos.ts';
 import { run } from '../util/run.ts';
 import { log } from '../util/theme.ts';
+import { formatLocalDateTime } from '../util/time.ts';
 
 interface PendingPhoto {
   sourcePath: string;
@@ -48,7 +48,7 @@ const UNTAGGED_LOGS_PATH = 'zz-bases/Untagged logs.base';
  * - Date() → ~/murder/Log/2026/2026-07-05_1021.md
  */
 function getDailyNotePath(datetime: Date): string {
-  const noteBasename = formatDailyNoteBasename(datetime);
+  const noteBasename = formatLocalDateTime(datetime);
   const year = noteBasename.slice(0, 4);
   return path.join(dirs.obsidianDailyNotes, year, `${noteBasename}.md`);
 }
@@ -124,7 +124,7 @@ function buildDailyNoteContent(importedImages: ImportedImage[]): string {
   const coverImage = sortedImages[0].filename;
   const noteNamesComment =
     sortedImages.length > 1
-      ? `\n<!-- ${sortedImages.map((image) => formatDailyNoteBasename(image.datetime)).join(' ')} -->`
+      ? `\n<!-- ${sortedImages.map((image) => formatLocalDateTime(image.datetime)).join(' ')} -->`
       : '';
   const imageLinks = sortedImages
     .map((image) => `![[${image.filename}]]`)

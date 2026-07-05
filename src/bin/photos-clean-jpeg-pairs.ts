@@ -19,7 +19,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { parseArgs } from '../util/args.ts';
 import { dirs, exts, hasExtension, tildify, untildify } from '../util/files.ts';
-import { getPhotoPairKey } from '../util/photos.ts';
+import { findMediaFiles, getPhotoPairKey } from '../util/photos.ts';
 import { prettyBytes } from '../util/prettyBytes.ts';
 import { confirmYesNo } from '../util/prompt.ts';
 import { run } from '../util/run.ts';
@@ -46,23 +46,6 @@ function groupByPairKey(filePaths: string[]): Map<string, string[]> {
     byPairKey.set(key, group);
   }
   return byPairKey;
-}
-
-async function findPhotoFiles(root: string): Promise<string[]> {
-  const files = await Array.fromAsync(fs.glob('**/*', { cwd: root }));
-  return files
-    .filter((file) => {
-      const basename = path.basename(file);
-      return (
-        basename.startsWith('.') === false &&
-        basename.startsWith('._') === false &&
-        basename !== '.DS_Store'
-      );
-    })
-    .filter(
-      (file) => hasExtension(file, exts.raw) || hasExtension(file, exts.jpeg)
-    )
-    .map((file) => path.join(root, file));
 }
 
 function findJpegsWithRawPairs(filePaths: string[]): string[] {
@@ -163,7 +146,7 @@ async function main(): Promise<void> {
   }
 
   console.log(`Scanning ${tildify(photosRoot)}…`);
-  const photoFiles = await findPhotoFiles(photosRoot);
+  const photoFiles = await findMediaFiles(photosRoot);
   const rawRemovals = findJpegsWithRawPairs(photoFiles);
   const rawRemovalSet = new Set(rawRemovals);
   const { toRemove: jpgJpegRemovals, needsReview } =
