@@ -2,9 +2,9 @@
 //
 // - Detects a mounted card
 // - Prefers RAW over JPEG pairs
-// - Detects duplicates by matching number suffixes and capture dates
 // - Copies and renames each new file
-// - Skips files that already exist in the destination folder
+// - Copies files to NAS backup folder
+// - Skips already imported files by matching number suffixes and capture dates
 // - Ejects the card when done and opens copied photos in Photomator
 //
 // ---
@@ -18,6 +18,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { readExifMetadata } from '../util/exif.ts';
 import {
+  copyFile,
   dirs,
   exts,
   getCommonFolder,
@@ -25,9 +26,12 @@ import {
   hasExtension,
   tildify,
 } from '../util/files.ts';
+import { select } from '../util/fzf.ts';
+import { ensureVolumeMounted } from '../util/mount.ts';
 import {
   getDatedPhotoFilename,
   getPhotoFilenameDate,
+  getPhotoPairKey,
   getPhotoFilenameSuffix,
 } from '../util/photos.ts';
 import { confirmYesNo, prompt } from '../util/prompt.ts';
@@ -35,8 +39,16 @@ import { run } from '../util/run.ts';
 import { log } from '../util/theme.ts';
 
 const VOLUMES_DIR = '/Volumes';
+const OFFSITE_BACKUP_DIR = path.join(dirs.nasPhotos, 'Backup');
 const NEW_FOLDER_OPTION = '+ New folder…';
 
+/**
+ * Check whether two import dates are close enough to be the same capture.
+ *
+ * Two shots must be within 24 hours from each other to be considered the same
+ * day. This accommodates to time zone adjustment of files that are already
+ * imported vs. files that are about to be imported.
+ */
 function datesWithinDay(dateA: string, dateB: string): boolean {
   const day = 1000 * 60 * 60 * 24;
   const timeA = new Date(`${dateA}T12:00:00`).getTime();
@@ -44,6 +56,11 @@ function datesWithinDay(dateA: string, dateB: string): boolean {
   return Math.round(Math.abs(timeA - timeB) / day) <= 1;
 }
 
+/**
+ * Find mounted volumes that look like camera cards.
+ *
+ * Returns all mounted volumes that have DCIM folder.
+ */
 async function findCardVolumes(): Promise<string[]> {
   const volumes: string[] = [];
   for (const entry of await fs.readdir(VOLUMES_DIR, { withFileTypes: true })) {
@@ -61,30 +78,20 @@ async function findCardVolumes(): Promise<string[]> {
   return volumes;
 }
 
+/** Find supported media files under a camera card's DCIM folder. */
 async function findMediaFiles(dcimRoot: string): Promise<string[]> {
-  const files = await glob('**/*', exts.media, { cwd: dcimRoot });
-  return files
-    .filter((file) => {
-      const basename = path.basename(file);
-      return (
-        basename.startsWith('.') === false &&
-        basename.startsWith('._') === false &&
-        basename !== '.DS_Store'
-      );
-    })
-    .map((file) => path.join(dcimRoot, file));
+  const files = await glob(dcimRoot, '**/*', exts.media);
+  return files.filter((file) => !path.basename(file).startsWith('.'));
 }
 
+/** Prefer RAW files over matching JPEG variants. */
 function dedupeRawJpegPairs(filePaths: string[]): string[] {
   const byStem = new Map<string, string[]>();
   for (const filePath of filePaths) {
-    const basename = path.basename(filePath);
-    const stem = basename
-      .slice(0, -path.extname(basename).length)
-      .toLowerCase();
-    const group = byStem.get(stem) ?? [];
+    const key = getPhotoPairKey(filePath);
+    const group = byStem.get(key) ?? [];
     group.push(filePath);
-    byStem.set(stem, group);
+    byStem.set(key, group);
   }
 
   const selected: string[] = [];
@@ -97,21 +104,7 @@ function dedupeRawJpegPairs(filePaths: string[]): string[] {
   return selected.toSorted((a, b) => a.localeCompare(b));
 }
 
-function runFzf(items: string[], query: string): string | undefined {
-  try {
-    return execFileSync(
-      'fzf',
-      ['--height', '40%', '--reverse', '--prompt', `${query} `],
-      {
-        input: items.join('\n'),
-        encoding: 'utf8',
-      }
-    ).trim();
-  } catch {
-    return undefined;
-  }
-}
-
+/** List existing photo import folders. */
 async function getDestinationFolders(): Promise<string[]> {
   try {
     const entries = await fs.readdir(dirs.photos, { withFileTypes: true });
@@ -124,13 +117,14 @@ async function getDestinationFolders(): Promise<string[]> {
   }
 }
 
+/** Ask the user to choose or create a destination import folder. */
 async function pickDestinationFolder(): Promise<string | undefined> {
   await fs.mkdir(dirs.photos, { recursive: true });
-  const choice = runFzf(
+  const choice = select(
     [...(await getDestinationFolders()), NEW_FOLDER_OPTION],
     'Destination folder'
   );
-  if (choice === undefined || choice === '') {
+  if (!choice) {
     return undefined;
   }
 
@@ -143,6 +137,7 @@ async function pickDestinationFolder(): Promise<string | undefined> {
   return path.join(dirs.photos, choice);
 }
 
+/** Decide whether suffix and date matches mean the card file is imported. */
 function isAlreadyImported(
   cardDate: string | undefined,
   libraryDates: (string | undefined)[]
@@ -160,6 +155,7 @@ function isAlreadyImported(
   return false;
 }
 
+/** Filter card files down to photos missing from the local library. */
 async function findPhotosToImport(cardPaths: string[]): Promise<string[]> {
   // 1. Index library filenames by suffix (date from filename, if present).
   const libraryBySuffix = new Map<string, (string | undefined)[]>();
@@ -206,27 +202,13 @@ async function findPhotosToImport(cardPaths: string[]): Promise<string[]> {
   return toImport;
 }
 
-async function copyPhoto(
-  sourcePath: string,
-  destinationPath: string
-): Promise<void> {
-  await fs.copyFile(sourcePath, destinationPath);
-  const [sourceStats, destinationStats] = await Promise.all([
-    fs.stat(sourcePath),
-    fs.stat(destinationPath),
-  ]);
-  if (sourceStats.size !== destinationStats.size) {
-    await fs.unlink(destinationPath);
-    throw new Error(`Size mismatch after copy: ${path.basename(sourcePath)}`);
-  }
-}
-
+/** Copy one card file locally, rename it, and mirror it to the NAS. */
 async function importPhoto(
   sourcePath: string,
   tempPath: string,
   destinationDir: string
 ): Promise<string | undefined> {
-  await copyPhoto(sourcePath, tempPath);
+  await copyFile(sourcePath, tempPath);
 
   const { date, year } = await readExifMetadata(sourcePath);
   if (!year) {
@@ -248,10 +230,26 @@ async function importPhoto(
     }
   }
 
+  const backupPath = path.join(
+    OFFSITE_BACKUP_DIR,
+    path.relative(dirs.photos, destinationDir),
+    path.basename(destinationPath)
+  );
+
   await fs.rename(tempPath, destinationPath);
+  try {
+    await copyFile(destinationPath, backupPath);
+  } catch (error) {
+    // Remove both (destination and backup) files like it never happened, so the
+    // user can try to import the file again
+    await fs.rm(destinationPath, { force: true });
+    await fs.rm(backupPath, { force: true });
+    throw error;
+  }
   return path.basename(destinationPath);
 }
 
+/** Eject the camera card after a successful or empty import. */
 function ejectCard(cardVolume: string): void {
   console.log(`Ejecting ${cardVolume}…`);
   execSync(`diskutil eject ${JSON.stringify(cardVolume)}`, {
@@ -259,7 +257,10 @@ function ejectCard(cardVolume: string): void {
   });
 }
 
+/** Run the interactive camera card import flow. */
 async function main(): Promise<void> {
+  ensureVolumeMounted(dirs.nasPhotos);
+
   console.log('Looking for card…');
   const cardVolumes = await findCardVolumes();
   if (cardVolumes.length === 0) {
@@ -267,14 +268,7 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
-  const cardVolume =
-    cardVolumes.length === 1
-      ? cardVolumes[0]
-      : runFzf(cardVolumes, 'Select card');
-  if (cardVolume === undefined || cardVolume === '') {
-    log.warn('No card selected.');
-    process.exit(1);
-  }
+  const [cardVolume] = cardVolumes;
 
   console.log(`Scanning ${cardVolume}…`);
   const photos = dedupeRawJpegPairs(

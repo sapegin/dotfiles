@@ -42,6 +42,11 @@ interface ImportedImage {
 
 const UNTAGGED_LOGS_PATH = 'zz-bases/Untagged logs.base';
 
+/**
+ * Resolve the daily note file that for a given timestamp.
+ *
+ * - Date() → ~/murder/Log/2026/2026-07-05_1021.md
+ */
 function getDailyNotePath(datetime: Date): string {
   const noteBasename = formatDailyNoteBasename(datetime);
   const year = noteBasename.slice(0, 4);

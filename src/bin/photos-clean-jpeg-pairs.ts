@@ -17,10 +17,11 @@
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import readline from 'node:readline/promises';
 import { parseArgs } from '../util/args.ts';
 import { dirs, exts, hasExtension, tildify, untildify } from '../util/files.ts';
+import { getPhotoPairKey } from '../util/photos.ts';
 import { prettyBytes } from '../util/prettyBytes.ts';
+import { confirmYesNo } from '../util/prompt.ts';
 import { run } from '../util/run.ts';
 import { log } from '../util/theme.ts';
 
@@ -36,15 +37,10 @@ interface ManualReviewItem {
   readonly files: readonly string[];
 }
 
-function pairKey(filePath: string): string {
-  const stem = path.parse(filePath).name.toLowerCase();
-  return `${path.dirname(filePath)}/${stem}`;
-}
-
 function groupByPairKey(filePaths: string[]): Map<string, string[]> {
   const byPairKey = new Map<string, string[]>();
   for (const filePath of filePaths) {
-    const key = pairKey(filePath);
+    const key = getPhotoPairKey(filePath);
     const group = byPairKey.get(key) ?? [];
     group.push(filePath);
     byPairKey.set(key, group);
@@ -147,17 +143,6 @@ async function findJpgJpegDuplicateRemovals(
     toRemove: toRemove.toSorted((a, b) => a.localeCompare(b)),
     needsReview,
   };
-}
-
-async function confirmYesNo(prompt: string): Promise<boolean> {
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
-  const answer = await rl.question(prompt);
-  rl.close();
-  const normalizedAnswer = answer.trim().toLowerCase();
-  return normalizedAnswer === '' || normalizedAnswer === 'y';
 }
 
 async function main(): Promise<void> {

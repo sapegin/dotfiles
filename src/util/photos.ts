@@ -36,6 +36,12 @@ export function getPhotoFilenameSuffix(filename: string): string | undefined {
   return stem.match(/^(\d+)/)?.[1] ?? stem.match(/(\d+)$/)?.[1];
 }
 
+/** Return key to group RAW/JPEG variants by folder and filename stem. */
+export function getPhotoPairKey(filePath: string): string {
+  const stem = path.parse(filePath).name.toLowerCase();
+  return `${path.dirname(filePath)}/${stem}`;
+}
+
 /**
  * Build a dated photo filename from EXIF and the original basename:
  *

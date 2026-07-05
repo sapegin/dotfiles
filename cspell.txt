@@ -21,6 +21,7 @@ colocation
 copypasting
 customizability
 cyclomatic
+dcim
 deburr
 discoverability
 dotfiles
@@ -28,7 +29,7 @@ downscale
 downscales
 exif
 exiftool
-Flexbox
+flexbox
 Formik
 frontends
 frontmatter
@@ -80,6 +81,7 @@ shortcutting
 signin
 signup
 Squirrelsong
+stuffses
 Styleguidist
 subclassing
 Supacode
@@ -88,7 +90,7 @@ Tacohuaco
 tamia
 Tâmia
 Tauri
-Textlint
+textlint
 themable
 timeboxing
 todos

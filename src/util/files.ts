@@ -20,6 +20,8 @@ export const dirs = {
   desktop: path.join(HOME, 'Desktop'),
   pictures: path.join(HOME, 'Pictures'),
   photos: path.join(HOME, 'Pictures', 'Photos'),
+  nasPhotos: '/Volumes/Photos',
+  nasStuffses: '/Volumes/Stuffses',
 } as const;
 
 /**
@@ -191,4 +193,24 @@ export function glob(...args: unknown[]): Promise<string[]> {
   return Array.fromAsync(
     options === undefined ? fs.glob(pattern) : fs.glob(pattern, options)
   ) as Promise<string[]>;
+}
+
+/**
+ * Copy a file, create parent folders, and reject partial writes by comparing
+ * size.
+ */
+export async function copyFile(
+  sourcePath: string,
+  destinationPath: string
+): Promise<void> {
+  await fs.mkdir(path.dirname(destinationPath), { recursive: true });
+  await fs.copyFile(sourcePath, destinationPath);
+  const [sourceStats, destinationStats] = await Promise.all([
+    fs.stat(sourcePath),
+    fs.stat(destinationPath),
+  ]);
+  if (sourceStats.size !== destinationStats.size) {
+    await fs.unlink(destinationPath);
+    throw new Error(`Size mismatch after copy: ${path.basename(sourcePath)}`);
+  }
 }

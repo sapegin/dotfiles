@@ -32,12 +32,13 @@
 import { execFileSync, spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import readline from 'node:readline/promises';
 import { dirs, tildify } from '../util/files.ts';
 import {
   installLaunchAgent,
   uninstallLaunchAgent,
 } from '../util/launchAgent.ts';
+import { ensureVolumeMounted } from '../util/mount.ts';
+import { prompt } from '../util/prompt.ts';
 import { run } from '../util/run.ts';
 import { log } from '../util/theme.ts';
 
@@ -54,17 +55,8 @@ const EXCLUDES = [
   '.trash', // Obsidian trash
 ];
 
-// The repository lives on the Synology, reached over SMB. macOS mounts the
-// share under /Volumes using the credentials saved in the Keychain, so restic
-// can use its plain `local` backend against the mount point.
-const SHARE_URL = 'smb://Hippopotamus.local/Stuffses';
-const MOUNT_POINT = '/Volumes/Stuffses';
-
-// Backup destination
-const DESTINATION = path.join(MOUNT_POINT, 'Backups/restic');
-
-// Restic password file
-const PASSWORD_FILE = path.join(dirs.home, '.config/restic/password');
+const RESTIC_REPOSITORY = path.join(dirs.nasStuffses, 'Backups/restic');
+const RESTIC_PASSWORD_FILE = path.join(dirs.home, '.config/restic/password');
 
 // Retention policy: keep last 7 daily, 4 weekly, 12 monthly and 5 yearly backup
 const KEEP_DAILY = 7;
@@ -84,8 +76,8 @@ const ERR_FILE = path.join(dirs.home, 'Library/Logs/backup.err');
 
 const resticEnv = {
   ...process.env,
-  RESTIC_REPOSITORY: DESTINATION,
-  RESTIC_PASSWORD_FILE: PASSWORD_FILE,
+  RESTIC_REPOSITORY,
+  RESTIC_PASSWORD_FILE,
 };
 
 function timestamp(): string {
@@ -112,29 +104,6 @@ function isResticInstalled(): boolean {
   }
 }
 
-function isShareMounted(): boolean {
-  const result = spawnSync('mount', { encoding: 'utf8' });
-  return result.stdout.includes(` on ${MOUNT_POINT} (smbfs`);
-}
-
-// Ensure the SMB share is mounted before touching the repository. Without this
-// guard restic's local backend would silently create the repo on the internal
-// disk when the share is offline.
-function ensureShareMounted(): void {
-  if (isShareMounted()) {
-    return;
-  }
-  log.heading('Mounting backup share…');
-  // `mount volume` uses the Keychain credentials and waits until the share is
-  // mounted (it creates the /Volumes mount point itself).
-  execFileSync('osascript', ['-e', `mount volume "${SHARE_URL}"`], {
-    stdio: 'inherit',
-  });
-  if (isShareMounted() === false) {
-    throw new Error(`Failed to mount ${SHARE_URL}`);
-  }
-}
-
 function isRepositoryInitialized(): boolean {
   const result = spawnSync('restic', ['cat', 'config'], {
     stdio: 'ignore',
@@ -143,19 +112,9 @@ function isRepositoryInitialized(): boolean {
   return result.status === 0;
 }
 
-async function prompt(query: string): Promise<string> {
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
-  try {
-    return await rl.question(query);
-  } finally {
-    rl.close();
-  }
-}
-
-// Prompt for a new repository password and store it with private permissions.
+/**
+ * Prompt for a new repository password and store it with private permissions.
+ */
 async function createPasswordFile(): Promise<void> {
   log.heading('No restic password found — let’s create one.');
   console.log(`
@@ -171,10 +130,10 @@ if you lose it, the backups are unrecoverable.
     throw new Error('Passwords do not match');
   }
 
-  fs.mkdirSync(path.dirname(PASSWORD_FILE), { recursive: true });
-  fs.writeFileSync(PASSWORD_FILE, password, { mode: 0o600 });
-  fs.chmodSync(PASSWORD_FILE, 0o600);
-  log.heading(`Saved password to ${tildify(PASSWORD_FILE)}`);
+  fs.mkdirSync(path.dirname(RESTIC_PASSWORD_FILE), { recursive: true });
+  fs.writeFileSync(RESTIC_PASSWORD_FILE, password, { mode: 0o600 });
+  fs.chmodSync(RESTIC_PASSWORD_FILE, 0o600);
+  log.heading(`Saved password to ${tildify(RESTIC_PASSWORD_FILE)}`);
 }
 
 async function ensureResticReady(): Promise<void> {
@@ -184,16 +143,16 @@ async function ensureResticReady(): Promise<void> {
 
   // Create the password file interactively on first run; refuse to prompt when
   // there is no terminal (e.g. the nightly LaunchAgent).
-  if (fs.existsSync(PASSWORD_FILE) === false) {
+  if (fs.existsSync(RESTIC_PASSWORD_FILE) === false) {
     if (process.stdin.isTTY !== true) {
       throw new Error(
-        `Password file is missing: ${tildify(PASSWORD_FILE)}. Run \`backup\` once in a terminal to create it.`
+        `Password file is missing: ${tildify(RESTIC_PASSWORD_FILE)}. Run \`backup\` once in a terminal to create it.`
       );
     }
     await createPasswordFile();
   }
 
-  ensureShareMounted();
+  ensureVolumeMounted(dirs.nasStuffses);
 }
 
 async function backup(): Promise<void> {
