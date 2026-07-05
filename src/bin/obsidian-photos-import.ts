@@ -1,12 +1,8 @@
-// Import JPG/JPEG files from ~/Desktop into the Obsidian vault.
+// Import JPEG files from ~/Desktop into the Obsidian vault.
 //
-// - Renames mobile photos like obsidian-update.ts
-// - Resizes and converts images like obsidian-update.ts
-// - Creates daily notes at Log/YYYY/YYYY-MM-DD_HHmm.md
-//
-// Photos are only imported when a new daily note will be created for their day.
-//
-// Usage: obsidian-import-photos
+// - Adds year prefixes to mobile photos
+// - Resizes and converts images to AVIF
+// - Creates daily notes for each day based on photos' EXIF
 //
 // ---
 // Author: Artem Sapegin, sapegin.me
@@ -121,6 +117,10 @@ function buildDailyNoteContent(importedImages: ImportedImage[]): string {
   );
   const heading = formatNoteHeading(sortedImages[0].datetime);
   const coverImage = sortedImages[0].filename;
+  const noteNamesComment =
+    sortedImages.length > 1
+      ? `\n<!-- ${sortedImages.map((image) => formatDailyNoteBasename(image.datetime)).join(' ')} -->`
+      : '';
   const imageLinks = sortedImages
     .map((image) => `![[${image.filename}]]`)
     .join('\n\n');
@@ -130,6 +130,7 @@ location: "[[Home]]"
 image: ${coverImage}
 ---
 # ${heading}
+${noteNamesComment}
 
 ${imageLinks}
 `;

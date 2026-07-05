@@ -1,6 +1,8 @@
 // Diff Photomator .photo-edit files.
 //
-// Usage: photo-edit-diff <before.photo-edit> <after.photo-edit>
+// - Compare two files:
+//
+// `photo-edit-diff {{before.photo-edit}} {{after.photo-edit}}`
 //
 // ---
 // Author: Artem Sapegin, sapegin.me

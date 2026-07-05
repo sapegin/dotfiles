@@ -1,6 +1,8 @@
 // Inspect Photomator .photo-edit files.
 //
-// Usage: photo-edit-inspect [--output folder] <file.photo-edit>
+// - Inspect a file:
+//
+// `photo-edit-inspect [--output {{folder}}] {{file.photo-edit}}`
 //
 // ---
 // Author: Artem Sapegin, sapegin.me

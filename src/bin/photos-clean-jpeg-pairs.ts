@@ -4,9 +4,11 @@
 // - Removes .JPEG when a matching .JPG has the same file size
 // - Logs .JPG/.JPEG pairs with different sizes for manual review
 //
-// Usage: photos-clean-jpeg-pairs [folder]
-//
 // Default folder: ~/Pictures/Photos
+//
+// - Clean duplicate JPEG files:
+//
+// `photos-clean-jpeg-pairs {{folder}}`
 //
 // ---
 // Author: Artem Sapegin, sapegin.me
