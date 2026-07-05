@@ -1,0 +1,14 @@
+filters:
+  and:
+    - file.tags.contains("job-applications")
+views:
+  - type: cards
+    name: Cards
+    order:
+      - file.name
+      - status
+      - date
+    sort:
+      - property: date
+        direction: DESC
+    cardSize: 250

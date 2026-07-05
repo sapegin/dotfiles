@@ -1,4 +1,3 @@
-# Recent logs
 filters:
   and:
     - file.folder.startsWith("Log")

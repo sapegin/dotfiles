@@ -1,4 +1,3 @@
-# Recently modified
 filters:
   and:
     - file.ext == "md"

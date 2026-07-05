@@ -1,4 +1,3 @@
-# Recipes
 filters:
   and:
     - file.folder == "Food"
