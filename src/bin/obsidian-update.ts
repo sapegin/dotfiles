@@ -737,9 +737,7 @@ async function cleanObsidianTrash(): Promise<void> {
   console.log(`\nMoved ${imageFiles.length} images from .trash`);
 }
 
-async function backupVault(): Promise<void> {
-  await fs.mkdir(dirs.obsidianBackup, { recursive: true });
-
+async function backupVault(): Promise<boolean> {
   const today = formatLocalDate(new Date());
   const backupFile = path.join(
     dirs.obsidianBackup,
@@ -750,18 +748,21 @@ async function backupVault(): Promise<void> {
   try {
     await fs.access(backupFile);
     console.log('Backup already exists for today, skipping');
-    return;
+    return false;
   } catch {
     // File doesn't exist, proceed with backup
   }
 
   console.log(`Creating backup: ${path.basename(backupFile)}…`);
+  await fs.mkdir(dirs.obsidianBackup, { recursive: true });
   execSync(
     `zip -r -q ${JSON.stringify(backupFile)} . -x "./zz-attachments/*" "./.trash/*"`,
     { cwd: dirs.obsidianVault }
   );
   const stats = await fs.stat(backupFile);
   console.log(`  ↪ Backup created (${prettyBytes(stats.size)})`);
+
+  return true;
 }
 
 /**
@@ -885,11 +886,13 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
-  console.log('\n Checking iCloud health…\n');
-  await checkICloudSync();
-
   console.log('\n Backing up vault…\n');
-  await backupVault();
+  const wasBackupCreated = await backupVault();
+
+  if (wasBackupCreated) {
+    console.log('\n Checking iCloud health…\n');
+    await checkICloudSync();
+  }
 
   console.log('\n Gathering files…');
   const markdownFiles = await findAllNotes();
