@@ -1,4 +1,6 @@
+import { execFileSync } from 'node:child_process';
 import readline from 'node:readline';
+import readlinePromise from 'node:readline/promises';
 
 type Style = (value: string) => string;
 
@@ -13,6 +15,11 @@ interface Progress {
   done(): void;
 }
 
+const OSC = '\u001B]';
+const BEL = '\u0007';
+const SEP = ';';
+
+// Colors
 const RESET = '\u001B[0m';
 const BOLD = '\u001B[1m';
 const DIM = '\u001B[2m';
@@ -126,4 +133,55 @@ export function createProgress({
   }
 
   return { update, error, done };
+}
+
+/** Ask a single interactive terminal question and close the readline handle. */
+export async function prompt(question: string): Promise<string> {
+  const rl = readlinePromise.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+  try {
+    return await rl.question(question);
+  } finally {
+    rl.close();
+  }
+}
+
+/** Ask a yes/no question, using `defaultValue` for an empty answer. */
+export async function confirm(
+  question: string,
+  defaultValue = false
+): Promise<boolean> {
+  const fullPrompt = `${theme.warning('?')} ${question} ${defaultValue ? '[Y/n]' : '[y/N]'} `;
+  const response = await prompt(fullPrompt);
+  const answer = response.trim().toLowerCase();
+  if (answer === '') {
+    return defaultValue;
+  }
+  return answer === 'y' || answer === 'yes';
+}
+
+/** Let the user choose one item with fzf; return undefined when cancelled. */
+export function select(
+  items: readonly string[],
+  query: string
+): string | undefined {
+  try {
+    return execFileSync('fzf', ['--reverse', '--prompt', `${query} `], {
+      input: items.join('\n'),
+      encoding: 'utf8',
+    }).trim();
+  } catch {
+    return undefined;
+  }
+}
+
+/**
+ * Create a clickable link in the terminal.
+ */
+export function link(text: string, url: string) {
+  const openLink = `${OSC}8${SEP}${SEP}${url}${BEL}`;
+  const closeLink = `${OSC}8${SEP}${SEP}${BEL}`;
+  return openLink + text + closeLink;
 }

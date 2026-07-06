@@ -13,12 +13,10 @@ import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { readExifMetadata } from '../util/exif.ts';
 import { tildify } from '../util/files.ts';
-import { select } from '../util/fzf.ts';
 import { findMediaFiles, pickPhotoFolder } from '../util/photos.ts';
-import { confirmYesNo } from '../util/prompt.ts';
 import { run } from '../util/run.ts';
 import { getPhotoTimezoneShiftMinutes, getTimeZones } from '../util/time.ts';
-import { log } from '../util/tui.ts';
+import { confirm, log, select } from '../util/tui.ts';
 
 const execFileAsync = promisify(execFile);
 const BATCH_SIZE = 100;
@@ -145,7 +143,7 @@ async function main(): Promise<void> {
     console.log(`  ${formatShift(shiftMinutes)}: ${files.length} files`);
   }
 
-  if ((await confirmYesNo('\nApply these EXIF date adjustments?')) === false) {
+  if ((await confirm('\nApply these EXIF date adjustments?')) === false) {
     log.warn('Cancelled.');
     return;
   }

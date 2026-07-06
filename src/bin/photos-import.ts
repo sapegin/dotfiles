@@ -28,9 +28,8 @@ import {
   getPhotoFilenameSuffix,
   pickPhotoFolder,
 } from '../util/photos.ts';
-import { confirmYesNo } from '../util/prompt.ts';
 import { run } from '../util/run.ts';
-import { createProgress, log } from '../util/tui.ts';
+import { confirm, createProgress, log } from '../util/tui.ts';
 
 const VOLUMES_DIR = '/Volumes';
 const OFFSITE_BACKUP_DIR = path.join(dirs.nasPhotos, 'Backup');
@@ -230,7 +229,7 @@ async function main(): Promise<void> {
   }
 
   if (toImport.length === 0) {
-    if ((await confirmYesNo('Eject card?', true)) === false) {
+    if ((await confirm('Eject card?', true)) === false) {
       log.warn('Import cancelled.');
       process.exit(1);
     }
@@ -254,7 +253,7 @@ async function main(): Promise<void> {
 
   console.log();
   if (
-    (await confirmYesNo(
+    (await confirm(
       `Import ${toImport.length} photos to ${tildify(destinationDir)}?`,
       true
     )) === false

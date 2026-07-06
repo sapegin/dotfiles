@@ -1,8 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { dirs, exts, glob, hasExtension } from './files.ts';
-import { select } from './fzf.ts';
-import { prompt } from './prompt.ts';
+import { prompt, select } from './tui.ts';
 
 export const IMPORT_DATE_PREFIX = /^(\d{4}-\d{2}-\d{2})_/;
 const NEW_FOLDER_OPTION = '+ New folder…';

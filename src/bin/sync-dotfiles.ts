@@ -11,9 +11,8 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { dirs, untildify } from '../util/files.ts';
 import { findGitRoot, pullIfClean } from '../util/git.ts';
-import { confirmYesNo } from '../util/prompt.ts';
+import { stripJsonComments } from '../util/json.ts';
 import { run } from '../util/run.ts';
-import { stripJsonComments } from '../util/stripJsonComments.ts';
 import {
   isIgnored,
   syncFile,
@@ -22,7 +21,7 @@ import {
   didFilesChange,
   type SyncEntry,
 } from '../util/sync.ts';
-import { log } from '../util/tui.ts';
+import { confirm, log } from '../util/tui.ts';
 
 // TODO: Add --verbose mode that shows all files including ignored ones and ones that didn't need sync
 
@@ -156,7 +155,7 @@ async function syncEntry(entry: DotfileEntry): Promise<void> {
     if (mode === 'sync') {
       results.push(await syncFile(sourcePath, destinationPath));
     } else {
-      results.push(await syncLink(sourcePath, destinationPath, confirmYesNo));
+      results.push(await syncLink(sourcePath, destinationPath, confirm));
     }
   }
 

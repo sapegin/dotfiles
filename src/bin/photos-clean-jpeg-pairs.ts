@@ -27,9 +27,8 @@ import {
   untildify,
 } from '../util/files.ts';
 import { findMediaFiles, getPhotoPairKey } from '../util/photos.ts';
-import { confirmYesNo } from '../util/prompt.ts';
 import { run } from '../util/run.ts';
-import { log } from '../util/tui.ts';
+import { confirm, log } from '../util/tui.ts';
 
 const args = parseArgs([
   {
@@ -194,7 +193,7 @@ async function main(): Promise<void> {
     }
   }
 
-  if ((await confirmYesNo(`Remove ${toRemove.length} files?`)) === false) {
+  if ((await confirm(`Remove ${toRemove.length} files?`)) === false) {
     log.warn('Cancelled.');
     return;
   }

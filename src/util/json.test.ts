@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { describe, expect, test } from 'vitest';
-import { stripJsonComments } from './stripJsonComments.ts';
+import { stripJsonComments } from './json.ts';
 
 const repoRoot = path.resolve(import.meta.dirname, '../..');
 

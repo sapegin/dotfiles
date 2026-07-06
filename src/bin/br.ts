@@ -26,8 +26,8 @@
 
 import { execFileSync, execSync, spawnSync } from 'node:child_process';
 import { parseArgs } from '../util/args.ts';
-import { select } from '../util/fzf.ts';
 import { getUpstreamTracking, runPull } from '../util/git.ts';
+import { select } from '../util/tui.ts';
 
 const remote = 'origin';
 
