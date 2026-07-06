@@ -11,7 +11,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import YAML from 'yaml';
 import { dirs, exts, glob } from '../util/files.ts';
-import { run } from '../util/run.ts';
+import { run } from '../util/tui.ts';
 
 const OUTPUT_FILE = path.join(dirs.documents, 'MurderStats.html');
 

@@ -12,8 +12,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { atomicCopy, dirs } from '../util/files.ts';
-import { run as runMain } from '../util/run.ts';
-import { log } from '../util/tui.ts';
+import { log, run } from '../util/tui.ts';
 
 const PLUGINS_REPO = path.join(dirs.projects, 'raccoon-obsidian');
 const PLUGINS_DIR = path.join(PLUGINS_REPO, 'plugins');
@@ -61,10 +60,6 @@ async function readJson<T>(filePath: string): Promise<T> {
 async function sha256(filePath: string): Promise<string> {
   const buf = await fs.readFile(filePath);
   return crypto.createHash('sha256').update(buf).digest('hex');
-}
-
-function run(cmd: string, cwd: string): void {
-  execSync(cmd, { cwd, stdio: 'inherit' });
 }
 
 async function getPluginsDirectories(): Promise<string[]> {
@@ -169,8 +164,9 @@ async function main(): Promise<void> {
   }
 
   console.log(' Building plugins…\n');
-  run('npm install --silent', PLUGINS_REPO);
-  run('npm run build', PLUGINS_REPO);
+
+  execSync('npm install --silent', { cwd: PLUGINS_REPO, stdio: 'inherit' });
+  execSync('npm run build', { cwd: PLUGINS_REPO, stdio: 'inherit' });
 
   const pluginDirs = await getPluginsDirectories();
   if (pluginDirs.length === 0) {
@@ -230,4 +226,4 @@ async function main(): Promise<void> {
   );
 }
 
-await runMain(main, { printDone: true });
+await run(main, { printDone: true });

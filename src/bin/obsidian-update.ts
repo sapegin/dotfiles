@@ -34,13 +34,12 @@ import {
   replaceMarkdownImageReferences,
 } from '../util/obsidian.ts';
 import { getDatedPhotoFilename } from '../util/photos.ts';
-import { run } from '../util/run.ts';
 import {
   formatLocalDate,
   formatLocalHour,
   parseLocalDateTime,
 } from '../util/time.ts';
-import { log } from '../util/tui.ts';
+import { log, run } from '../util/tui.ts';
 
 const FRONTMATTER_FIELDS = [
   'address',

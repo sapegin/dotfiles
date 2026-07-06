@@ -23,7 +23,7 @@ import path from 'node:path';
 import sharp from 'sharp';
 import { parseArgs } from '../util/args.ts';
 import { untildify } from '../util/files.ts';
-import { run } from '../util/run.ts';
+import { run } from '../util/tui.ts';
 
 const MAX_COMMAND_OUTPUT = 1024 * 1024 * 100;
 const DOCUMENT_STATE_IDENTIFIER =

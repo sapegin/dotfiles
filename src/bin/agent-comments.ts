@@ -23,7 +23,7 @@
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { parseArgs } from '../util/args.ts';
-import { run } from '../util/run.ts';
+import { run } from '../util/tui.ts';
 
 const execFileAsync = promisify(execFile);
 
@@ -123,7 +123,7 @@ const args = parseArgs([
   },
 ]);
 
-await run(async () => {
+async function main() {
   const comments = await collectComments(args.path);
 
   if (comments.length === 0) {
@@ -135,4 +135,6 @@ await run(async () => {
       .map((comment) => `${comment.file}:${comment.line}\n${comment.message}`)
       .join('\n\n')
   );
-});
+}
+
+await run(main);

@@ -38,9 +38,8 @@ import {
   uninstallLaunchAgent,
 } from '../util/launchAgent.ts';
 import { ensureVolumeMounted } from '../util/mount.ts';
-import { run } from '../util/run.ts';
 import { formatLocalTimestamp } from '../util/time.ts';
-import { log, prompt } from '../util/tui.ts';
+import { log, prompt, run } from '../util/tui.ts';
 
 // Folders to backup
 const SOURCES = [dirs.obsidianVault, dirs.iCloud];

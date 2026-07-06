@@ -14,7 +14,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { parseArgs } from '../util/args.ts';
 import { untildify } from '../util/files.ts';
-import { run } from '../util/run.ts';
+import { run } from '../util/tui.ts';
 
 interface XmpAdjustments {
   readonly cropTop?: number;

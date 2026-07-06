@@ -14,9 +14,8 @@ import { promisify } from 'node:util';
 import { readExifMetadata } from '../util/exif.ts';
 import { tildify } from '../util/files.ts';
 import { findMediaFiles, pickPhotoFolder } from '../util/photos.ts';
-import { run } from '../util/run.ts';
 import { getPhotoTimezoneShiftMinutes, getTimeZones } from '../util/time.ts';
-import { confirm, log, select } from '../util/tui.ts';
+import { confirm, log, run, select } from '../util/tui.ts';
 
 const execFileAsync = promisify(execFile);
 const BATCH_SIZE = 100;

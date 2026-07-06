@@ -27,8 +27,7 @@ import {
   untildify,
 } from '../util/files.ts';
 import { findMediaFiles, getPhotoPairKey } from '../util/photos.ts';
-import { run } from '../util/run.ts';
-import { confirm, log } from '../util/tui.ts';
+import { confirm, log, run } from '../util/tui.ts';
 
 const args = parseArgs([
   {

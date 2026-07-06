@@ -14,8 +14,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { untildify } from '../util/files.ts';
 import { pullIfClean } from '../util/git.ts';
-import { run as runMain } from '../util/run.ts';
-import { log } from '../util/tui.ts';
+import { log, run } from '../util/tui.ts';
 
 interface SourceConfig {
   // Path to the repo (may start with `~`)
@@ -149,4 +148,4 @@ async function main(): Promise<void> {
   }
 }
 
-await runMain(main, { printDone: true });
+await run(main, { printDone: true });

@@ -11,7 +11,7 @@ import sharp from 'sharp';
 import { readExifMetadata } from '../util/exif.ts';
 import { dirs, exts, glob } from '../util/files.ts';
 import { IMPORT_DATE_PREFIX } from '../util/photos.ts';
-import { run } from '../util/run.ts';
+import { run } from '../util/tui.ts';
 
 const SOURCE_DIR = path.join(dirs.pictures, 'JunkyardPhotoAlbum');
 const OUTPUT_DIR = path.join(dirs.documents, 'JunkyardPhotoAlbum');
