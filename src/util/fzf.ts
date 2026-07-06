@@ -6,14 +6,10 @@ export function select(
   prompt: string
 ): string | undefined {
   try {
-    return execFileSync(
-      'fzf',
-      ['--height', '40%', '--reverse', '--prompt', `${prompt} `],
-      {
-        input: items.join('\n'),
-        encoding: 'utf8',
-      }
-    ).trim();
+    return execFileSync('fzf', ['--reverse', '--prompt', `${prompt} `], {
+      input: items.join('\n'),
+      encoding: 'utf8',
+    }).trim();
   } catch {
     return undefined;
   }
