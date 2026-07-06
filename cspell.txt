@@ -64,6 +64,7 @@ outdent
 overpolice
 oxfmt
 oxlint
+Photomator
 Photoshop
 pomodoro
 pomodoros
