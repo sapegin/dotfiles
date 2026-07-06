@@ -16,6 +16,7 @@ import { execFileSync, execSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
+import { openApp, quitApp } from '../util/apps.ts';
 import { readExifMetadata } from '../util/exif.ts';
 import { copyFile, dirs, getCommonFolder, tildify } from '../util/files.ts';
 import { ensureVolumeMounted } from '../util/mount.ts';
@@ -32,6 +33,7 @@ import { confirm, createProgress, log, run } from '../util/tui.ts';
 
 const VOLUMES_DIR = '/Volumes';
 const OFFSITE_BACKUP_DIR = path.join(dirs.nasPhotos, 'Backup');
+const PHOTOMATOR_BUNDLE_ID = 'com.pixelmatorteam.pixelmator.touch.x.photo';
 
 /**
  * Check whether two import dates are close enough to be the same capture.
@@ -178,6 +180,28 @@ async function importPhoto(
     throw error;
   }
   return path.basename(destinationPath);
+}
+
+/**
+ * Open a folder in Photomator's Files browser.
+ *
+ * Photomator remembers its last mode (Photos or Files) and, when handed a
+ * folder in Photos mode, imports the photos into the Apple Photos library
+ * instead of browsing them as local files. Forcing the persisted browser mode
+ * to Files avoids that. The mode is only read on launch, so a running instance
+ * is quit first (its edits are non-destructive, saved to sidecar files), so it
+ * doesn't overwrite the preference on exit and so the relaunch honours it.
+ */
+async function openFolderInPhotomator(folder: string): Promise<void> {
+  await quitApp('Photomator');
+
+  execFileSync('defaults', [
+    'write',
+    PHOTOMATOR_BUNDLE_ID,
+    'PhotoKitSelectedBrowserMode',
+    'files',
+  ]);
+  openApp('Photomator', [folder]);
 }
 
 /** Eject the camera card after a successful or empty import. */
@@ -327,9 +351,7 @@ async function main(): Promise<void> {
   }
 
   try {
-    execFileSync('open', ['-a', 'Photomator', destinationDir], {
-      stdio: 'inherit',
-    });
+    await openFolderInPhotomator(destinationDir);
   } catch {
     log.warn('Could not open Photomator.');
   }
