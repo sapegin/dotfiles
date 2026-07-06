@@ -26,9 +26,26 @@
 
 import { execFileSync, execSync, spawnSync } from 'node:child_process';
 import { parseArgs } from '../util/args.ts';
+import { select } from '../util/fzf.ts';
 import { getUpstreamTracking, runPull } from '../util/git.ts';
 
 const remote = 'origin';
+
+// Lists local branches sorted by most recently updated first.
+function getLocalBranches(): string[] {
+  return execFileSync(
+    'git',
+    [
+      'for-each-ref',
+      '--sort=-committerdate',
+      'refs/heads/',
+      '--format=%(refname:short)',
+    ],
+    { encoding: 'utf8' }
+  )
+    .split('\n')
+    .filter((line) => line.length > 0);
+}
 
 function hasLocalBranch(name: string): boolean {
   return (
@@ -70,13 +87,22 @@ const args = parseArgs([
   {
     name: 'branch',
     positional: true,
-    required: true,
   },
 ]);
 
 // oxlint-disable-next-line unicorn/no-nested-ternary
 const deleteFlag = args.forceDelete ? '-D' : args.delete ? '-d' : undefined;
-const branch = args.branch;
+
+// No branch given — let the user pick one from the local branches
+let branch = args.branch;
+if (branch === undefined) {
+  const branches = getLocalBranches();
+  const selected = select(branches, 'Switch to branch:');
+  if (selected === undefined) {
+    process.exit(0);
+  }
+  branch = selected;
+}
 
 // Switch to a previous branch
 if (branch === '-') {
