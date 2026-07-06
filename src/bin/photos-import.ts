@@ -184,7 +184,7 @@ async function importPhoto(
 
 /** Eject the camera card after a successful or empty import. */
 function ejectCard(cardVolume: string): void {
-  console.log(`Ejecting ${cardVolume}…`);
+  console.log(`Ejecting card…`);
   execSync(`diskutil eject ${JSON.stringify(cardVolume)}`, {
     stdio: 'inherit',
   });
@@ -259,9 +259,10 @@ async function main(): Promise<void> {
       true
     )) === false
   ) {
-    log.warn('Import cancelled.');
     process.exit(1);
   }
+
+  console.log();
 
   const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'photos-import-'));
   const failures: string[] = [];
@@ -321,17 +322,11 @@ async function main(): Promise<void> {
     console.log(`Skipped ${skippedInFolder} already in folder.`);
   }
 
-  if (importedCount === 0) {
-    console.log('Nothing imported.');
-    if ((await confirmYesNo('Eject card?', true)) === false) {
-      log.warn('Import cancelled.');
-      process.exit(1);
-    }
-    ejectCard(cardVolume);
-    return;
-  }
-
   ejectCard(cardVolume);
+
+  if (importedCount === 0) {
+    process.exit(1);
+  }
 
   try {
     execFileSync('open', ['-a', 'Photomator', destinationDir], {

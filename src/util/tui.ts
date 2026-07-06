@@ -110,7 +110,7 @@ export function createProgress({
     );
     readline.clearLine(stream, 0);
     readline.cursorTo(stream, 0);
-    stream.write(`${message}\n`);
+    stream.write(`\n${message}\n`);
     rendered = true;
   }
 
