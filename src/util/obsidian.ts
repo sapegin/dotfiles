@@ -2,9 +2,14 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import sharp from 'sharp';
-import { atomicWrite } from './atomicWrite.ts';
-import { dirs, exts, hasExtension, stripExtensions } from './files.ts';
-import { prettyBytes } from './prettyBytes.ts';
+import {
+  dirs,
+  prettyBytes,
+  exts,
+  hasExtension,
+  stripExtensions,
+  atomicWrite,
+} from './files.ts';
 import { log } from './tui.ts';
 
 export const MAX_DIMENSION = 2048;

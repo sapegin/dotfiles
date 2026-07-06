@@ -17,8 +17,14 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { setTimeout } from 'node:timers/promises';
 import YAML from 'yaml';
-import { atomicWrite } from '../util/atomicWrite.ts';
-import { dirs, glob, exts, stripExtensions } from '../util/files.ts';
+import {
+  dirs,
+  glob,
+  prettyBytes,
+  exts,
+  stripExtensions,
+  atomicWrite,
+} from '../util/files.ts';
 import {
   doesAttachmentExist,
   getMarkdownImages,
@@ -28,7 +34,6 @@ import {
   replaceMarkdownImageReferences,
 } from '../util/obsidian.ts';
 import { getDatedPhotoFilename } from '../util/photos.ts';
-import { prettyBytes } from '../util/prettyBytes.ts';
 import { run } from '../util/run.ts';
 import {
   formatLocalDate,

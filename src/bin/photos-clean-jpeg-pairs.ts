@@ -18,9 +18,15 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { parseArgs } from '../util/args.ts';
-import { dirs, exts, hasExtension, tildify, untildify } from '../util/files.ts';
+import {
+  dirs,
+  prettyBytes,
+  exts,
+  hasExtension,
+  tildify,
+  untildify,
+} from '../util/files.ts';
 import { findMediaFiles, getPhotoPairKey } from '../util/photos.ts';
-import { prettyBytes } from '../util/prettyBytes.ts';
 import { confirmYesNo } from '../util/prompt.ts';
 import { run } from '../util/run.ts';
 import { log } from '../util/tui.ts';

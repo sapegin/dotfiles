@@ -11,9 +11,14 @@
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { atomicWrite } from '../util/atomicWrite.ts';
 import { readExifMetadata } from '../util/exif.ts';
-import { dirs, exts, glob, stripExtensions } from '../util/files.ts';
+import {
+  atomicWrite,
+  dirs,
+  exts,
+  glob,
+  stripExtensions,
+} from '../util/files.ts';
 import {
   assertObsidianVault,
   doesAttachmentExist,
