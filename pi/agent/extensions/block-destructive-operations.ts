@@ -135,6 +135,7 @@ export function getDestructiveReason(command: string) {
       exceptions: [
         /\bgit\s+branch\s+--show-current\b/,
         /\bgit\s+branch\s+-r\s+--list\b/,
+        /\bgit\s+branch\b(?=[^|;&\n]*\s--format(?:=|\s))(?![^|;&\n]*(?:\s-(?!-)[^\s]*[dfmc][^\s]*|\s--(?:delete|force|move|copy|set-upstream-to|unset-upstream|edit-description|track|no-track|create-reflog)\b))/,
       ],
     },
     {
