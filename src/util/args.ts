@@ -1,5 +1,6 @@
 import { execFileSync } from 'node:child_process';
 import path from 'node:path';
+import { parseArgs as parseNodeArgs } from 'node:util';
 import { dirs } from './files.ts';
 import { log } from './tui.ts';
 
@@ -58,6 +59,11 @@ export type ParsedArgs<Definitions extends readonly ArgDefinition[]> = {
   readonly [Definition in Definitions[number] as Definition['name']]: ParsedValue<Definition>;
 };
 
+interface NativeOptionConfig {
+  readonly type: 'boolean' | 'string';
+  readonly short?: string;
+}
+
 function getToolName(): string {
   return path.basename(process.argv[1]).replace(/\.(?:js|ts)$/, '');
 }
@@ -79,41 +85,8 @@ function fail(message: string, toolName: string): never {
   process.exit(1);
 }
 
-function isFlag(arg: string): boolean {
-  return arg.startsWith('--');
-}
-
 function isPositionalDefinition(definition: ArgDefinition): boolean {
   return definition.positional === true;
-}
-
-function getOptionName(arg: string): string | undefined {
-  if (arg.startsWith('--')) {
-    return arg.slice('--'.length).split('=', 1)[0];
-  }
-  if (/^-[^-]$/.test(arg)) {
-    return arg.slice('-'.length);
-  }
-}
-
-function isOption(
-  arg: string,
-  definitionsByOptionName: ReadonlyMap<string, ArgDefinition>
-): boolean {
-  const optionName = getOptionName(arg);
-  return optionName !== undefined && definitionsByOptionName.has(optionName);
-}
-
-function getDefinition(
-  definitionsByOptionName: ReadonlyMap<string, ArgDefinition>,
-  name: string,
-  toolName: string
-): ArgDefinition {
-  const definition = definitionsByOptionName.get(name);
-  if (definition === undefined) {
-    fail(`Unknown option: --${name}`, toolName);
-  }
-  return definition;
 }
 
 function parseStringValue(
@@ -158,6 +131,54 @@ function parseFlagValue(
     : parseStringValue(definition, name, value, toolName);
 }
 
+function getNativeOptions(
+  definitions: readonly ArgDefinition[]
+): Record<string, NativeOptionConfig> {
+  const options: Record<string, NativeOptionConfig> = {};
+  for (const definition of definitions) {
+    if (isPositionalDefinition(definition)) {
+      continue;
+    }
+
+    const option = {
+      type: definition.type === 'boolean' ? 'boolean' : 'string',
+      ...(definition.alias?.length === 1 ? { short: definition.alias } : {}),
+    } as const;
+    options[definition.name] = option;
+    if (definition.alias !== undefined) {
+      options[definition.alias] = { type: option.type };
+    }
+  }
+  return options;
+}
+
+interface ParsedOptionToken {
+  readonly kind: 'option';
+  readonly name: string;
+  readonly rawName: string;
+  readonly value?: string;
+}
+
+interface ParsedPositionalToken {
+  readonly kind: 'positional';
+}
+
+type ParsedArgsWithTokens = ReturnType<typeof parseNodeArgs> & {
+  readonly tokens: readonly (ParsedOptionToken | ParsedPositionalToken)[];
+};
+
+function getDefinition(
+  definitionsByOptionName: ReadonlyMap<string, ArgDefinition>,
+  name: string,
+  toolName: string
+): ArgDefinition {
+  const definition = definitionsByOptionName.get(name);
+  if (definition === undefined) {
+    fail(`Unknown option: --${name}`, toolName);
+  }
+  return definition;
+}
+
 /**
  * Minimal declarative command line arguments parser.
  */
@@ -166,141 +187,87 @@ export function parseArgs<const Definitions extends readonly ArgDefinition[]>(
   args = process.argv.slice(2)
 ): ParsedArgs<Definitions> {
   const toolName = getToolName();
-  const definitionsByOptionName = new Map<string, ArgDefinition>();
-  for (const definition of definitions) {
-    if (isPositionalDefinition(definition)) {
-      continue;
-    }
-    definitionsByOptionName.set(definition.name, definition);
-    if (definition.alias !== undefined) {
-      definitionsByOptionName.set(definition.alias, definition);
-    }
+  if (args.includes('--help') || args.includes('-h')) {
+    showHelp(toolName);
+    process.exit(0);
   }
 
-  // Positional arguments are consumed left-to-right in declaration order.
   const positionalDefinitions = definitions.filter(isPositionalDefinition);
+  const definitionsByOptionName = new Map<string, ArgDefinition>();
   const values: Record<string, unknown> = {};
-  const seen = new Set<string>();
-  let positionalIndex = 0;
 
   for (const definition of definitions) {
     if ('default' in definition) {
       values[definition.name] = definition.default;
     }
+    if (isPositionalDefinition(definition) === false) {
+      definitionsByOptionName.set(definition.name, definition);
+      if (definition.alias !== undefined) {
+        definitionsByOptionName.set(definition.alias, definition);
+      }
+    }
   }
 
-  for (let index = 0; index < args.length; index += 1) {
-    const arg = args[index];
+  let parsed: ParsedArgsWithTokens;
+  try {
+    parsed = parseNodeArgs({
+      args,
+      options: getNativeOptions(definitions),
+      allowNegative: true,
+      allowPositionals: true,
+      tokens: true,
+    }) as ParsedArgsWithTokens;
+  } catch (error) {
+    fail(error instanceof Error ? error.message : String(error), toolName);
+  }
 
-    if (arg === '--help' || arg === '-h') {
-      showHelp(toolName);
-      process.exit(0);
-    }
-
-    if (arg.startsWith('--no-')) {
-      const name = arg.slice('--no-'.length);
-      const definition = getDefinition(definitionsByOptionName, name, toolName);
-      if (definition.type !== 'boolean') {
-        fail(`Option --${name} is not a boolean flag`, toolName);
-      }
-      values[definition.name] = false;
-      seen.add(definition.name);
-      continue;
-    }
-
-    if (isFlag(arg)) {
-      const flag = arg.slice('--'.length);
-      const separatorIndex = flag.indexOf('=');
-      const hasInlineValue = separatorIndex !== -1;
-      const rawName = hasInlineValue ? flag.slice(0, separatorIndex) : flag;
-      const inlineValue = hasInlineValue ? flag.slice(separatorIndex + 1) : '';
-      const definition = getDefinition(
-        definitionsByOptionName,
-        rawName,
-        toolName
-      );
-      if (definition.type === 'boolean') {
-        if (hasInlineValue) {
-          fail(`Option --${rawName} does not take a value`, toolName);
-        }
-        values[definition.name] = true;
-      } else {
-        let value = inlineValue;
-        if (hasInlineValue === false) {
-          if (
-            index + 1 >= args.length ||
-            isOption(args[index + 1], definitionsByOptionName)
-          ) {
-            fail(`Missing value for --${rawName}`, toolName);
-          }
-          value = args[index + 1];
-          index += 1;
-        }
-        values[definition.name] = parseFlagValue(
-          definition,
-          definition.name,
-          value,
-          toolName
-        );
-      }
-      seen.add(definition.name);
-      continue;
-    }
-
-    if (/^-[^-]$/.test(arg)) {
-      const rawName = arg.slice('-'.length);
-      const definition = getDefinition(
-        definitionsByOptionName,
-        rawName,
-        toolName
-      );
-      if (definition.type === 'boolean') {
-        values[definition.name] = true;
-      } else {
-        if (
-          index + 1 >= args.length ||
-          isOption(args[index + 1], definitionsByOptionName)
-        ) {
-          fail(`Missing value for -${rawName}`, toolName);
-        }
-        values[definition.name] = parseFlagValue(
-          definition,
-          definition.name,
-          args[index + 1],
-          toolName
-        );
-        index += 1;
-      }
-      seen.add(definition.name);
-      continue;
-    }
-
-    if (positionalIndex >= positionalDefinitions.length) {
-      fail(`Unexpected argument: ${arg}`, toolName);
-    }
-    const positionalDefinition = positionalDefinitions[positionalIndex];
-    if (positionalDefinition.type === 'boolean') {
-      fail(
-        `Argument ${positionalDefinition.name} cannot be a boolean`,
-        toolName
-      );
-    }
-    values[positionalDefinition.name] = parseFlagValue(
-      positionalDefinition,
-      positionalDefinition.name,
-      arg,
+  if (parsed.positionals.length > positionalDefinitions.length) {
+    fail(
+      `Unexpected argument: ${parsed.positionals[positionalDefinitions.length]}`,
       toolName
     );
-    seen.add(positionalDefinition.name);
-    positionalIndex += 1;
+  }
+
+  for (const [index, value] of parsed.positionals.entries()) {
+    const definition = positionalDefinitions[index];
+    if (definition.type === 'boolean') {
+      fail(`Argument ${definition.name} cannot be a boolean`, toolName);
+    }
+    values[definition.name] = parseFlagValue(
+      definition,
+      definition.name,
+      value,
+      toolName
+    );
+  }
+
+  for (const token of parsed.tokens) {
+    if (token.kind !== 'option') {
+      continue;
+    }
+
+    const definition = getDefinition(
+      definitionsByOptionName,
+      token.name,
+      toolName
+    );
+    if (definition.type === 'boolean') {
+      values[definition.name] = token.rawName.startsWith('--no-') === false;
+    } else {
+      if (token.value === undefined) {
+        fail(`Missing value for --${definition.name}`, toolName);
+      }
+      values[definition.name] = parseFlagValue(
+        definition,
+        definition.name,
+        token.value,
+        toolName
+      );
+    }
   }
 
   for (const definition of definitions) {
-    if (
-      definition.required === true &&
-      seen.has(definition.name) === false &&
-      values[definition.name] === undefined
-    ) {
+    if (definition.required === true && values[definition.name] === undefined) {
       const label = isPositionalDefinition(definition)
         ? `argument ${definition.name}`
         : `option --${definition.name}`;
