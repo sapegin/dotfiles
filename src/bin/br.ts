@@ -71,6 +71,21 @@ function tryPull(branch: string): void {
   }
 }
 
+function runGitSwitch(args: string[]): void {
+  try {
+    execFileSync('git', ['switch', ...args], { stdio: 'inherit' });
+  } catch (error) {
+    process.exit(
+      typeof error === 'object' &&
+        error !== null &&
+        'status' in error &&
+        typeof error.status === 'number'
+        ? error.status
+        : 1
+    );
+  }
+}
+
 const args = parseArgs([
   {
     name: 'delete',
@@ -106,7 +121,7 @@ if (branch === undefined) {
 
 // Switch to a previous branch
 if (branch === '-') {
-  execFileSync('git', ['switch', '-'], { stdio: 'inherit' });
+  runGitSwitch(['-']);
   const currentBranch = execSync('git rev-parse --abbrev-ref HEAD', {
     encoding: 'utf8',
   }).trim();
@@ -116,13 +131,13 @@ if (branch === '-') {
 
 // Attempt to use main when master was requested (and vice versa)
 if (branch === 'master' && hasLocalBranch('main')) {
-  execFileSync('git', ['switch', 'main'], { stdio: 'inherit' });
+  runGitSwitch(['main']);
   console.log('This repository uses main branch, not master');
   tryPull('main');
   process.exit(0);
 }
 if (branch === 'main' && hasLocalBranch('master')) {
-  execFileSync('git', ['switch', 'master'], { stdio: 'inherit' });
+  runGitSwitch(['master']);
   console.log('This repository uses master branch, not main');
   tryPull('master');
   process.exit(0);
@@ -138,7 +153,7 @@ if (deleteFlag !== undefined) {
 if (hasLocalBranch(branch)) {
   // Local branch exists — switch to it
   console.log(` Switching to existing local branch ${branch}…`);
-  execFileSync('git', ['switch', branch], { stdio: 'inherit' });
+  runGitSwitch([branch]);
 
   if (hasRemoteBranch(branch)) {
     // Fix tracking if needed
@@ -162,17 +177,9 @@ if (hasLocalBranch(branch)) {
   console.log(`↓ Fetching remote branch ${branch}…`);
   execFileSync('git', ['fetch', remote, branch], { stdio: 'inherit' });
   console.log();
-  execFileSync(
-    'git',
-    ['switch', '-c', branch, '--track', `${remote}/${branch}`],
-    {
-      stdio: 'inherit',
-    }
-  );
+  runGitSwitch(['-c', branch, '--track', `${remote}/${branch}`]);
 } else {
   // No local or remote branch — create a new one
   console.log(`+ Creating new local branch ${branch}…`);
-  execFileSync('git', ['switch', '-c', branch, '--no-track'], {
-    stdio: 'inherit',
-  });
+  runGitSwitch(['-c', branch, '--no-track']);
 }
