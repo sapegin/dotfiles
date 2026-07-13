@@ -69,27 +69,27 @@
   },
   // Codex base prompt
   {
-    "source": "~/dotfiles/ai-rules/AGENTS.md",
+    "source": "~/dotfiles/ai/AGENTS.md",
     "destination": "~/.codex/AGENTS.md"
   },
   // Skills (used by Pi, Cursor)
   {
-    "source": "~/dotfiles/ai-rules/skills/*",
+    "source": "~/dotfiles/ai/skills/*",
     "destination": "~/.agents/skills/"
   },
   // Codex skills
   {
-    "source": "~/dotfiles/ai-rules/skills/*",
+    "source": "~/dotfiles/ai/skills/*",
     "destination": "~/.codex/skills"
   },
   // Amp skills
   {
-    "source": "~/dotfiles/ai-rules/skills/*",
+    "source": "~/dotfiles/ai/skills/*",
     "destination": "~/.config/agents/skills"
   },
   // Copilot base prompt
   {
-    "source": "~/dotfiles/ai-rules/AGENTS.md",
+    "source": "~/dotfiles/ai/AGENTS.md",
     "destination": "~/.copilot/instructions/base.instructions.md"
   },
   // Pi configs
@@ -100,7 +100,7 @@
   },
   // Pi base prompt
   {
-    "source": "~/dotfiles/ai-rules/AGENTS.md",
+    "source": "~/dotfiles/ai/AGENTS.md",
     "destination": "~/.pi/agent/AGENTS.md"
   },
   // Pi custom extensions

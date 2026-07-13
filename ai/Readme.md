@@ -35,7 +35,7 @@ Amp reads user-wide skills from `~/.config/agents/skills/` or `~/.config/amp/ski
 
 ### GitHub Copilot
 
-Copilot does not read `SKILL.md` directories directly. Convert the relevant skill into a prompt file or instructions file. For example, copy the body of `ai-rules/skills/review-code/SKILL.md` into `.github/prompts/review-code.prompt.md` and invoke it from Copilot Chat.
+Copilot does not read `SKILL.md` directories directly. Convert the relevant skill into a prompt file or instructions file. For example, copy the body of `ai/skills/review-code/SKILL.md` into `.github/prompts/review-code.prompt.md` and invoke it from Copilot Chat.
 
 ### Cursor
 

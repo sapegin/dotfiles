@@ -14,8 +14,8 @@ describe(stripJsonComments, () => {
     const output = stripJsonComments(input);
 
     expect(output).toBe(`{
-                    
-  "a": 1                    
+
+  "a": 1
 }`);
     expect(output).toHaveLength(input.length);
     expect(JSON.parse(output)).toStrictEqual({ a: 1 });
@@ -29,7 +29,7 @@ describe(stripJsonComments, () => {
     const output = stripJsonComments(input);
 
     expect(output).toBe(`{
-             
+
   "a": 1
 }`);
     expect(output).toHaveLength(input.length);
@@ -46,9 +46,9 @@ describe(stripJsonComments, () => {
     const output = stripJsonComments(input);
 
     expect(output).toBe(`{
-    
-              
-     
+
+
+
   "a": 1
 }`);
     expect(output).toHaveLength(input.length);
@@ -57,14 +57,14 @@ describe(stripJsonComments, () => {
 
   test('preserves /* inside strings', () => {
     const input = `{
-  "source": "~/dotfiles/ai-rules/skills/*",
+  "source": "~/dotfiles/ai/skills/*",
   "destination": "~/.codex/skills"
 }`;
     const output = stripJsonComments(input);
 
     expect(output).toBe(input);
     expect(JSON.parse(output)).toStrictEqual({
-      source: '~/dotfiles/ai-rules/skills/*',
+      source: '~/dotfiles/ai/skills/*',
       destination: '~/.codex/skills',
     });
   });
@@ -83,7 +83,7 @@ describe(stripJsonComments, () => {
 
   test('does not treat /* in strings as start of block comments', () => {
     const input = `{
-  "source": "~/dotfiles/ai-rules/skills/*",
+  "source": "~/dotfiles/ai/skills/*",
   "destination": "~/.agents/skills/"
 },
 /**
@@ -97,7 +97,7 @@ describe(stripJsonComments, () => {
     expect(output).toHaveLength(input.length);
     expect(JSON.parse(`[${output}]`)).toStrictEqual([
       {
-        source: '~/dotfiles/ai-rules/skills/*',
+        source: '~/dotfiles/ai/skills/*',
         destination: '~/.agents/skills/',
       },
       {
