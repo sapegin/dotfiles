@@ -6,7 +6,7 @@ Always prioritize code readability and maintainability over cleverness or brevit
 
 ### 1. Avoid traditional loops
 
-- ALWAYS prefer array methods (`map`, `filter`, `find`, `some`, `every`) over traditional `for` loops
+- Prefer array methods (`map`, `filter`, `find`, `some`, `every`) over traditional `for` loops
 - Use `for...of` loops when side effects are needed, never `for...in` or traditional `for` loops
 - Avoid `forEach()` in favor of `for...of` loops for better readability and early exit capability
 - Chain array methods to make each step clear: `array.map().filter()` instead of complex single operations
@@ -17,13 +17,10 @@ Always prioritize code readability and maintainability over cleverness or brevit
 - Replace complex conditionals with lookup tables/maps when possible
 - Extract complex conditions into variables with meaningful names
 - Prefer explicit comparisons: `array.length === 0` instead of `!array.length`
-- Use `===` instead of `==`, `!==` instead of `!=`
-- Use explicit conditions: `value === false` instead of `!value`
 
 ### 3. Avoid variable reassignment
 
-- ALWAYS use `const` by default, only use `let` when reassignment is absolutely necessary
-- Never reuse variables for different purposes – create new variables with descriptive names
+- Never reuse variables for different purposes — create new variables with descriptive names
 - Declare variables as close to their usage as possible
 - Build complete objects in a single place instead of incrementally
 - Use destructuring with default values instead of conditional assignments
@@ -37,47 +34,46 @@ Always prioritize code readability and maintainability over cleverness or brevit
 
 ### 5. Naming conventions
 
-- Use descriptive, searchable names - avoid abbreviations and single-letter variables (except for short scopes like `map(x => ...)`)
+- Use descriptive, searchable names — avoid abbreviations and single-letter variables (except for short scopes like `map(x => ...)`)
 - Use positive boolean names: `isVisible` instead of `isHidden` or `isNotVisible`, `hasData` instead of `hasNoData`
 - Use verbs for functions: `getUserData()`, `fetchWeather()`
 - Use nouns for variables and properties
+- Avoid shortening ordinary words (`lineNum` → `lineNumber`)
+- Use US English
 
 ### 6. Function design
 
 - Keep functions focused on a single responsibility
-- Use object parameters for functions with multiple arguments: `getUserData({id, includeProfile})`
+- Use object parameters for functions with 3 or more arguments: `getUserData({id, email, includeProfile})`
 - Use early returns and guard clauses to reduce nesting
-- Avoid premature abstraction – solve current requirements, not imagined future ones
+- Avoid premature abstraction — solve current requirements, not imagined future ones
 - Make impossible states impossible using enums/discriminated unions
 
 ### 7. Code style and formatting
 
-- Always use braces around control structures, even single statements
 - Prefer template literals over string concatenation
-- Use numeric separators for large numbers: `1_000_000`
 - Add empty lines to create logical paragraphs in functions
 
 ### 8. Error handling and state management
 
 - Use discriminated unions for state management instead of multiple boolean flags
 - Make error states explicit in type definitions
-- Avoid try-catch for control flow – use it only for actual error handling
+- Avoid try-catch for control flow — use it only for actual error handling
 - Use optional chaining (`?.`) and nullish coalescing (`??`) operators when suitable
 
 ### 9. Comments and documentation
 
-- Write code that doesn’t need comments – if you need a comment, consider refactoring first
+- Write code that doesn’t need comments — if you need a comment, consider refactoring first
 - When code isn’t 100% obvious, add a comment with an explanation
 - When comments are necessary, explain WHY, not WHAT
-- Add TODO comments for planned improvements, HACK comments for workarounds
+- Add TODO comments for planned improvements and missing functionality, HACK comments for workarounds
 - Remove or update outdated comments
 
 ### 10. TypeScript specific guidelines
 
 - Use strict TypeScript configuration
-- Prefer `type` over `interface` for object shapes
 - Use discriminated unions for complex state
-- Make types as specific as possible - NEVER use `any`, use `unknown` when needed
+- Make types as specific as possible — never use `any`, use `unknown` when needed
 - Use `readonly` for arrays and objects that shouldn’t be mutated
 
 ## React specific guidelines
@@ -86,7 +82,7 @@ Always prioritize code readability and maintainability over cleverness or brevit
 - Use custom hooks to extract stateful logic
 - Use discriminated unions and `useReducer` hook for component state instead of multiple boolean flags
 - Use a single `variant` prop instead of multiple boolean props
-- Extract complex JSX logic into well-named variables or functions
+- Extract complex JSX logic into well-named components or variables
 
 ## Code examples
 
@@ -155,10 +151,12 @@ const users = [...existingUsers, newUser].toSorted((a, b) =>
 
 ```ts
 // Bad: Implicit boolean conversion
-if (!users.length) return;
-if (!isEnabled) return;
+if (!users.length) {
+  return;
+}
 
 // Good: Explicit comparisons
-if (users.length === 0) return;
-if (isEnabled === false) return;
+if (users.length === 0) {
+  return;
+}
 ```

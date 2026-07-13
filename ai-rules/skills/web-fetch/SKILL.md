@@ -1,6 +1,6 @@
 ---
 name: web-fetch
-description: Fetch web pages as Markdown. Use for reading or analyzing documentation, articles, tutorials, and other non-GitHub web pages.
+description: Fetch web pages as Markdown. Use for reading or analyzing documentation, articles, and other non-GitHub web pages.
 ---
 
 Fetch web pages from the terminal with `trafilatura`.

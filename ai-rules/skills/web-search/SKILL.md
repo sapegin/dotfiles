@@ -1,6 +1,6 @@
 ---
 name: web-search
-description: Search the web using DuckDuckGo via ddgr. Use when the user asks to search online, look something up, find current information, or locate documentation, tutorials, and resources.
+description: Search the web using DuckDuckGo. Use when the user asks to search online, look something up, find current information, or locate documentation, and resources.
 ---
 
 Search DuckDuckGo from the terminal with `ddgr`.

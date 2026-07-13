@@ -1,7 +1,7 @@
 ---
 name: agent-comments
-description: >-
-  Scan the current project for agent code comments and fix each one. Use when the user asks to run agent-comments, fix AI comments.
+description: Scan project for agent code comments and fix them.
+disable-model-invocation: true
 ---
 
 Find and fix every `AI:` comment in the current project.

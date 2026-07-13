@@ -1,6 +1,7 @@
 ---
 name: write-pr-description
-description: Write a concise pull request description for the current branch compared to the base branch. Use when preparing pull request text, summarizing branch changes, or drafting a pull request body.
+description: Write pull request description.
+disable-model-invocation: true
 ---
 
 Write a practical Markdown pull request description for the current branch against the base branch.
@@ -16,7 +17,7 @@ Write a practical Markdown pull request description for the current branch again
 
 Return only the pull request description:
 
-1. One-line title.
+1. One-line title with a [conventional commit message](https://www.conventionalcommits.org/en/v1.0.0/) type (fix, feat, chore, etc.).
 2. One paragraph of 1–3 sentences explaining what changed and why, if known.
 3. Short bullet list of notable changes.
 
@@ -25,7 +26,7 @@ Do not include review findings, risk analysis, test plans, checklists, or implem
 Example:
 
 ```md
-Add language switcher to the footer
+feat: Add language switcher to the footer
 
 Adds a language switcher to the main and campaign footers.
 

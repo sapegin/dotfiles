@@ -1,6 +1,7 @@
 ---
 name: fix-pr-ci
-description: Fetch the current branch pull request’s CI logs, analyze reported failures, and fix them. Use when asked to investigate failing PR checks, or fix CI failures.
+description: Analyze and fix CI failures for current pull request.
+disable-model-invocation: true
 ---
 
 Use `gh` to inspect the pull request for the current branch, fetch failing CI logs, identify the root causes, and make the smallest code changes needed to fix all reported failures.

@@ -1,6 +1,7 @@
 ---
 name: grill-in-code
-description: Stress-test a plan against the codebase, tests, and existing docs before implementation. Use when the user wants a rigorous, correctness-focused plan review.
+description: Stress-test a plan against the codebase, tests, and existing docs before implementation.
+disable-model-invocation: true
 ---
 
 Interview the user until the plan is technically correct and understood. Ask one question at a time, and include your recommended answer.

@@ -45,14 +45,6 @@ Codex reads user-wide skills from `~/.agents/skills/` or `~/.cursor/skills/`.
 
 Codex reads user-wide skills from `~/.agents/skills/` or `~/.pi/agent/skills/`.
 
-## Commit message instructions
-
-Source of truth: [Commits.md](./Commits.md).
-
-| Tool / Agent | Commit instructions location | Notes |
-| --- | --- | --- |
-| **GitHub Copilot (VS Code)** | `github.copilot.chat.commitMessageGeneration.instructions` config option |  |
-
 ## Tips
 
 ### Codex
