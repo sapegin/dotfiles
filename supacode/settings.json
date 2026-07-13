@@ -17,9 +17,11 @@
     "hideSingleTabBar": true,
     "inAppNotificationsEnabled": true,
     "moveNotifiedWorktreeToTop": false,
-    "notificationSoundEnabled": false,
+    "muteNotificationsForActiveSurface": true,
+    "notificationSound": "never",
     "promptForWorktreeCreation": true,
     "pullRequestMergeStrategy": "squash",
+    "remoteSessionPersistenceEnabled": true,
     "richAgentNotificationsEnabled": false,
     "shortcutOverrides": {
       "selectWorktree0": {
@@ -91,6 +93,14 @@
       "scripts": [],
       "setupScript": ""
     },
+    "\/Users\/sapegia\/_\/raccoon-toolbox\/": {
+      "archiveScript": "",
+      "deleteScript": "",
+      "openActionID": "auto",
+      "runScript": "",
+      "scripts": [],
+      "setupScript": ""
+    },
     "\/Users\/sapegia\/_\/raccoon-vscode\/": {
       "archiveScript": "",
       "deleteScript": "",
@@ -129,6 +139,7 @@
     "\/Users\/sapegia\/dotfiles\/",
     "\/Users\/sapegia\/_\/kurush\/",
     "\/Users\/sapegia\/_\/sapegin.me\/",
-    "\/Users\/sapegia\/_\/raccoon-vscode\/"
+    "\/Users\/sapegia\/_\/raccoon-vscode\/",
+    "\/Users\/sapegia\/_\/raccoon-toolbox\/"
   ]
 }
