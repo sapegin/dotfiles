@@ -2,12 +2,9 @@
 export LANG="en_US.UTF-8"
 export LC_ALL="$LANG"
 
-# Preferred editor for local and remote sessions
-if [[ -n $SSH_CONNECTION ]]; then
-	export EDITOR='nano'
-else
-	export EDITOR='cot'
-fi
+# Visual Studio as a preferred editor
+export VISUAL="code --wait"
+export EDITOR="$VISUAL"
 
 # Make less the default pager, add some options
 [ -n "$LESSPIPE" ] && export LESSOPEN="| ${LESSPIPE} %s"
