@@ -78,6 +78,30 @@ export function getUpstreamTracking(branch?: string): string | undefined {
 }
 
 /**
+ * Returns the exit code from a child_process exec error, or 1.
+ */
+export function getExecExitCode(error: unknown): number {
+  return typeof error === 'object' &&
+    error !== null &&
+    'status' in error &&
+    typeof error.status === 'number'
+    ? error.status
+    : 1;
+}
+
+/**
+ * Runs a Git command, forwarding stdio. Exits with Git's status code on failure
+ * without printing a Node stack trace.
+ */
+export function runGit(args: string[], options?: { cwd?: string }): void {
+  try {
+    execFileSync('git', args, { stdio: 'inherit', ...options });
+  } catch (error) {
+    process.exit(getExecExitCode(error));
+  }
+}
+
+/**
  * Runs the `pull` helper script. Exits on failure without a Node stack trace;
  * pull prints its own errors.
  */

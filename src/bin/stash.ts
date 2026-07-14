@@ -12,23 +12,13 @@
 // License: MIT
 // https://github.com/sapegin/dotfiles
 
-import { execFileSync } from 'node:child_process';
+import { runGit } from '../util/git.ts';
 
 const args = process.argv.slice(2);
 
-try {
-  if (args.length === 0) {
-    console.log(' Stashing changes…');
-    execFileSync('git', ['stash', '--include-untracked'], { stdio: 'inherit' });
-  } else {
-    execFileSync('git', ['stash', ...args], { stdio: 'inherit' });
-  }
-} catch (error) {
-  // Git already prints helpful output (including conflicts) to the terminal, so
-  // exit with its status code instead of throwing a Node stack trace.
-  process.exit(
-    typeof error === 'object' && error !== null && 'status' in error
-      ? Number(error.status)
-      : 1
-  );
+if (args.length === 0) {
+  console.log(' Stashing changes…');
+  runGit(['stash', '--include-untracked']);
+} else {
+  runGit(['stash', ...args]);
 }

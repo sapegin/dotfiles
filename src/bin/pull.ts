@@ -16,7 +16,13 @@
 import { execFileSync, execSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { assertGitRepo, getCurrentBranch, getGitConfig } from '../util/git.ts';
+import {
+  assertGitRepo,
+  getCurrentBranch,
+  getExecExitCode,
+  getGitConfig,
+  runGit,
+} from '../util/git.ts';
 import { log } from '../util/tui.ts';
 
 // TODO: We can just assume it's installed if the project uses it
@@ -81,7 +87,7 @@ const stashBefore = execSync(
   }
 ).trim();
 
-execFileSync('git', ['stash', '--include-untracked'], { stdio: 'inherit' });
+runGit(['stash', '--include-untracked']);
 
 const stashAfter = execSync(
   'git rev-parse --verify --quiet refs/stash || true',
@@ -96,7 +102,7 @@ const stashed = stashBefore !== stashAfter;
 function unstash(): void {
   if (stashed) {
     console.log('󰦛 Restoring tree from stash…');
-    execFileSync('git', ['stash', 'pop'], { stdio: 'inherit' });
+    runGit(['stash', 'pop']);
   }
 }
 
@@ -123,8 +129,8 @@ try {
     ],
     { stdio: 'inherit' }
   );
-} catch {
-  rollback(1);
+} catch (error) {
+  rollback(getExecExitCode(error));
 }
 
 unstash();

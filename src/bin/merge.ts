@@ -13,12 +13,12 @@
 // License: MIT
 // https://github.com/sapegin/dotfiles
 
-import { execFileSync } from 'node:child_process';
 import { parseArgs } from '../util/args.ts';
 import {
   assertGitRepo,
   getCurrentBranch,
   getUpstreamTracking,
+  runGit,
 } from '../util/git.ts';
 import { log } from '../util/tui.ts';
 
@@ -50,10 +50,10 @@ if (tracking?.startsWith(`${remote}/`)) {
   console.log(
     ` Local-only branch, rebasing ${args.branch} onto ${currentBranch} first…`
   );
-  execFileSync('git', ['switch', args.branch], { stdio: 'inherit' });
-  execFileSync('git', ['rebase', currentBranch], { stdio: 'inherit' });
+  runGit(['switch', args.branch]);
+  runGit(['rebase', currentBranch]);
 }
 
 console.log(` Merge ${args.branch} into ${currentBranch}`);
-execFileSync('git', ['switch', currentBranch], { stdio: 'inherit' });
-execFileSync('git', ['merge', args.branch], { stdio: 'inherit' });
+runGit(['switch', currentBranch]);
+runGit(['merge', args.branch]);

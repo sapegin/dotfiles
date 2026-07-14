@@ -26,7 +26,7 @@
 
 import { execFileSync, execSync, spawnSync } from 'node:child_process';
 import { parseArgs } from '../util/args.ts';
-import { getUpstreamTracking, runPull } from '../util/git.ts';
+import { getUpstreamTracking, runGit, runPull } from '../util/git.ts';
 import { select } from '../util/tui.ts';
 
 const remote = 'origin';
@@ -72,18 +72,7 @@ function tryPull(branch: string): void {
 }
 
 function runGitSwitch(args: string[]): void {
-  try {
-    execFileSync('git', ['switch', ...args], { stdio: 'inherit' });
-  } catch (error) {
-    process.exit(
-      typeof error === 'object' &&
-        error !== null &&
-        'status' in error &&
-        typeof error.status === 'number'
-        ? error.status
-        : 1
-    );
-  }
+  runGit(['switch', ...args]);
 }
 
 const args = parseArgs([
@@ -146,7 +135,7 @@ if (branch === 'main' && hasLocalBranch('master')) {
 // Delete branch
 if (deleteFlag !== undefined) {
   console.log(`✕ Removing local branch ${branch}…`);
-  execFileSync('git', ['branch', deleteFlag, branch], { stdio: 'inherit' });
+  runGit(['branch', deleteFlag, branch]);
   process.exit(0);
 }
 
@@ -163,11 +152,7 @@ if (hasLocalBranch(branch)) {
       console.log(
         '⚙ Your local branch is not tracking the corresponding remote branch, fixing…'
       );
-      execFileSync(
-        'git',
-        ['branch', '--set-upstream-to', `${remote}/${branch}`, branch],
-        { stdio: 'inherit' }
-      );
+      runGit(['branch', '--set-upstream-to', `${remote}/${branch}`, branch]);
     }
   }
 
@@ -175,7 +160,7 @@ if (hasLocalBranch(branch)) {
 } else if (hasRemoteBranch(branch)) {
   // No local branch, but remote exists — fetch and switch
   console.log(`↓ Fetching remote branch ${branch}…`);
-  execFileSync('git', ['fetch', remote, branch], { stdio: 'inherit' });
+  runGit(['fetch', remote, branch]);
   console.log();
   runGitSwitch(['-c', branch, '--track', `${remote}/${branch}`]);
 } else {
