@@ -113,11 +113,6 @@ function rightPadLine(left: string, right: string, width: number): string {
   return truncateToWidth(`${left}${' '.repeat(padding)}${right}`, width);
 }
 
-function rightAlignLine(content: string, width: number): string {
-  const padding = Math.max(0, width - visibleWidth(content));
-  return `${' '.repeat(padding)}${content}`;
-}
-
 function getSessionCost(ctx: ExtensionContext): number {
   return ctx.sessionManager.getEntries().reduce((total, entry) => {
     if (entry.type !== 'message' || entry.message.role !== 'assistant') {
@@ -148,70 +143,44 @@ function formatContextUsageLabel(
   };
 }
 
-function formatStatsLine(
-  theme: Theme,
-  costLabel: string | undefined,
-  contextLabel: string,
-  contextPercent: number | null
-): string {
-  const plainStats = [costLabel, contextLabel].filter(Boolean).join(' ');
-
-  if (contextPercent !== null && contextPercent > 90) {
-    return `${costLabel === undefined ? '' : theme.fg('dim', `${costLabel} `)}${theme.fg('error', contextLabel)}`;
-  }
-  if (contextPercent !== null && contextPercent > 70) {
-    return `${costLabel === undefined ? '' : theme.fg('dim', `${costLabel} `)}${theme.fg('warning', contextLabel)}`;
-  }
-  return theme.fg('dim', plainStats);
-}
-
 function renderPrettyFooter(
   ctx: ExtensionContext,
   pi: ExtensionAPI,
   theme: Theme,
-  footerData: ReadonlyFooterDataProvider,
   width: number,
   autoCompactEnabled: boolean
 ): string[] {
   const cwd = tildify(ctx.sessionManager.getCwd());
-  const branch = footerData.getGitBranch();
 
   const modelName = ctx.model?.id ?? 'no-model';
   const thinkingLevel = pi.getThinkingLevel();
-  const rightLine =
-    ctx.model?.reasoning === true
-      ? theme.fg(
-          'dim',
-          thinkingLevel === 'off'
-            ? `${modelName} • thinking off`
-            : `${modelName} • ${thinkingLevel}`
-        )
-      : theme.fg('dim', modelName);
+  const modelText = ctx.model?.reasoning
+    ? thinkingLevel === 'off'
+      ? `${modelName}/thinking off`
+      : `${modelName}/${thinkingLevel}`
+    : modelName;
 
   const totalCost = getSessionCost(ctx);
   const usingSubscription =
     ctx.model === undefined ? false : ctx.modelRegistry.isUsingOAuth(ctx.model);
   const { label: contextLabel, percent: contextPercent } =
     formatContextUsageLabel(ctx, autoCompactEnabled);
-  const costLabel =
+  const costText =
     totalCost > 0 || usingSubscription
       ? `$${totalCost.toFixed(2)}${usingSubscription ? ' (sub)' : ''}`
       : undefined;
 
-  const statsContent = formatStatsLine(
-    theme,
-    costLabel,
-    contextLabel,
-    contextPercent
-  );
-  const statsLine =
-    branch === null
-      ? rightAlignLine(statsContent, width)
-      : rightPadLine(theme.fg('dim', branch), statsContent, width);
+  const statsText =
+    (contextPercent ?? 0) > 90
+      ? theme.fg('error', contextLabel)
+      : (contextPercent ?? 0) > 70
+        ? theme.fg('warning', contextLabel)
+        : contextLabel;
+
+  const rightText = `${costText} • ${statsText} • ${modelText}`;
 
   return [
-    rightPadLine(theme.fg('dim', cwd), rightLine, width),
-    truncateToWidth(statsLine, width),
+    rightPadLine(theme.fg('dim', cwd), theme.fg('dim', rightText), width),
   ];
 }
 
@@ -225,17 +194,13 @@ function registerFooter(pi: ExtensionAPI): void {
     }
 
     activeCtx = ctx;
-    ctx.ui.setFooter((tui, theme, footerData) => {
+    ctx.ui.setFooter((tui, theme) => {
       requestRender = () => {
         tui.requestRender();
       };
-      const unsubscribeBranch = footerData.onBranchChange(() => {
-        requestRender?.();
-      });
 
       return {
         dispose() {
-          unsubscribeBranch();
           requestRender = undefined;
           activeCtx = undefined;
         },
@@ -245,14 +210,7 @@ function registerFooter(pi: ExtensionAPI): void {
             return [];
           }
 
-          return renderPrettyFooter(
-            activeCtx,
-            pi,
-            theme,
-            footerData,
-            width,
-            true
-          );
+          return renderPrettyFooter(activeCtx, pi, theme, width, true);
         },
       };
     });
