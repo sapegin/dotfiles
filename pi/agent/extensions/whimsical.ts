@@ -1,6 +1,16 @@
-import { type ExtensionAPI } from '@earendil-works/pi-coding-agent';
+import {
+  type ExtensionAPI,
+  type ExtensionContext,
+  type Theme,
+} from '@earendil-works/pi-coding-agent';
 
 // Based on https://github.com/mitsuhiko/agent-stuff/blob/main/extensions/whimsical.ts
+
+const SPINNER_FRAMES = ['·', '✻', '✽', '✶', '✳', '✢'] as const;
+const SPINNER_INTERVAL_MS = 200;
+const MESSAGE_INTERVAL_MS = 90;
+const GLIDE_WIDTH = 6;
+const GRAPHEME_SEGMENTER = new Intl.Segmenter();
 
 const messages = [
   // Short
@@ -234,13 +244,72 @@ function pickRandom(): string {
   return messages[Math.floor(Math.random() * messages.length)];
 }
 
+function glidingMessage(
+  theme: Theme,
+  characters: readonly string[],
+  frame: number
+): string {
+  const position =
+    (frame % (characters.length + GLIDE_WIDTH * 2)) - GLIDE_WIDTH;
+
+  return characters
+    .map((character, index) => {
+      const distance = Math.abs(index - position);
+      if (distance <= 1) {
+        return theme.fg('syntaxKeyword', theme.bold(character));
+      }
+      if (distance <= GLIDE_WIDTH) {
+        return theme.fg('syntaxKeyword', character);
+      }
+      return theme.fg('dim', character);
+    })
+    .join('');
+}
+
 export default function Whimsical(pi: ExtensionAPI) {
+  let animationTimer: ReturnType<typeof setInterval> | undefined;
+
+  const stopAnimation = (): void => {
+    if (!animationTimer) {
+      return;
+    }
+    clearInterval(animationTimer);
+    animationTimer = undefined;
+  };
+
+  const resetWorkingUi = (ctx: ExtensionContext): void => {
+    stopAnimation();
+    ctx.ui.setWorkingIndicator();
+    ctx.ui.setWorkingMessage();
+  };
+
   pi.on('turn_start', (_event, ctx) => {
-    ctx.ui.setWorkingMessage(pickRandom());
+    stopAnimation();
+    const message = pickRandom();
+    const characters = Array.from(
+      GRAPHEME_SEGMENTER.segment(message),
+      ({ segment }) => segment
+    );
+    let frame = 0;
+
+    ctx.ui.setWorkingIndicator({
+      frames: SPINNER_FRAMES.map((character) =>
+        ctx.ui.theme.fg('syntaxKeyword', character)
+      ),
+      intervalMs: SPINNER_INTERVAL_MS,
+    });
+    ctx.ui.setWorkingMessage(glidingMessage(ctx.ui.theme, characters, frame));
+    animationTimer = setInterval(() => {
+      frame += 1;
+      ctx.ui.setWorkingMessage(glidingMessage(ctx.ui.theme, characters, frame));
+    }, MESSAGE_INTERVAL_MS);
   });
 
   pi.on('turn_end', (_event, ctx) => {
-    // Reset for next time
-    ctx.ui.setWorkingMessage();
+    resetWorkingUi(ctx);
+  });
+
+  pi.on('session_shutdown', (_event, ctx) => {
+    resetWorkingUi(ctx);
   });
 }

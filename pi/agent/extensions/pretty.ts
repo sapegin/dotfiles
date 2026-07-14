@@ -7,15 +7,16 @@ import os from 'node:os';
 import {
   type ExtensionAPI,
   type ExtensionContext,
-  type ReadonlyFooterDataProvider,
   type Theme,
-  createBashTool,
-  createEditTool,
-  createFindTool,
-  createGrepTool,
-  createLsTool,
-  createReadTool,
-  createWriteTool,
+  SkillInvocationMessageComponent,
+  UserMessageComponent,
+  createBashToolDefinition,
+  createEditToolDefinition,
+  createFindToolDefinition,
+  createGrepToolDefinition,
+  createLsToolDefinition,
+  createReadToolDefinition,
+  createWriteToolDefinition,
   highlightCode,
 } from '@earendil-works/pi-coding-agent';
 import {
@@ -113,6 +114,33 @@ function rightPadLine(left: string, right: string, width: number): string {
   return truncateToWidth(`${left}${' '.repeat(padding)}${right}`, width);
 }
 
+type ToolSet = ReturnType<typeof createToolSet>;
+
+const toolSets = new Map<string, ToolSet>();
+
+function createToolSet(cwd: string) {
+  return {
+    bash: createBashToolDefinition(cwd),
+    edit: createEditToolDefinition(cwd),
+    find: createFindToolDefinition(cwd),
+    grep: createGrepToolDefinition(cwd),
+    ls: createLsToolDefinition(cwd),
+    read: createReadToolDefinition(cwd),
+    write: createWriteToolDefinition(cwd),
+  };
+}
+
+function getToolSet(cwd: string): ToolSet {
+  const cached = toolSets.get(cwd);
+  if (cached) {
+    return cached;
+  }
+
+  const tools = createToolSet(cwd);
+  toolSets.set(cwd, tools);
+  return tools;
+}
+
 function getSessionCost(ctx: ExtensionContext): number {
   return ctx.sessionManager.getEntries().reduce((total, entry) => {
     if (entry.type !== 'message' || entry.message.role !== 'assistant') {
@@ -143,7 +171,7 @@ function formatContextUsageLabel(
   };
 }
 
-function renderPrettyFooter(
+export function renderPrettyFooter(
   ctx: ExtensionContext,
   pi: ExtensionAPI,
   theme: Theme,
@@ -152,7 +180,7 @@ function renderPrettyFooter(
 ): string[] {
   const cwd = tildify(ctx.sessionManager.getCwd());
 
-  const modelName = ctx.model?.id ?? 'no-model';
+  const modelName = ctx.model?.name ?? ctx.model?.id ?? 'no-model';
   const thinkingLevel = pi.getThinkingLevel();
   const modelText = ctx.model?.reasoning
     ? thinkingLevel === 'off'
@@ -165,10 +193,7 @@ function renderPrettyFooter(
     ctx.model === undefined ? false : ctx.modelRegistry.isUsingOAuth(ctx.model);
   const { label: contextLabel, percent: contextPercent } =
     formatContextUsageLabel(ctx, autoCompactEnabled);
-  const costText =
-    totalCost > 0 || usingSubscription
-      ? `$${totalCost.toFixed(2)}${usingSubscription ? ' (sub)' : ''}`
-      : undefined;
+  const costText = `$${totalCost.toFixed(2)}${usingSubscription ? ' (sub)' : ''}`;
 
   const statsText =
     (contextPercent ?? 0) > 90
@@ -231,6 +256,66 @@ function registerFooter(pi: ExtensionAPI): void {
   });
 }
 
+interface PatchableUserMessage {
+  text: string;
+  render(width: number): string[];
+}
+
+type PatchableUserMessagePrototype = PatchableUserMessage & {
+  piPrettyOriginalRender?: (
+    this: PatchableUserMessage,
+    width: number
+  ) => string[];
+};
+
+export function formatUserPrompt(
+  theme: Theme,
+  text: string,
+  width: number
+): string {
+  const singleLine = text.replaceAll(/\s+/g, ' ').trim();
+  if (!singleLine) {
+    return '';
+  }
+
+  return truncateToWidth(theme.fg('dim', theme.italic(singleLine)), width, '…');
+}
+
+// Pi has no user-message renderer hook, so patch the built-in component and restore it on shutdown.
+function registerUserPrompt(pi: ExtensionAPI): void {
+  const prototype =
+    UserMessageComponent.prototype as unknown as PatchableUserMessagePrototype;
+  // oxlint-disable-next-line typescript/unbound-method -- Rebound explicitly with Function.call.
+  const originalRender = prototype.piPrettyOriginalRender ?? prototype.render;
+  let activeTheme: Theme | undefined;
+
+  const renderUserPrompt = function (
+    this: PatchableUserMessage,
+    width: number
+  ): string[] {
+    if (!activeTheme) {
+      return originalRender.call(this, width);
+    }
+
+    const prompt = formatUserPrompt(activeTheme, this.text, width);
+    return prompt ? [prompt] : [];
+  };
+
+  prototype.piPrettyOriginalRender = originalRender;
+  prototype.render = renderUserPrompt;
+
+  pi.on('session_start', (_event, ctx) => {
+    activeTheme = ctx.ui.theme;
+  });
+
+  pi.on('session_shutdown', () => {
+    if (prototype.render === renderUserPrompt) {
+      prototype.render = originalRender;
+      delete prototype.piPrettyOriginalRender;
+    }
+  });
+}
+
 function getTextComponent(ctx: { lastComponent?: Component }) {
   return (ctx.lastComponent as Text | undefined) ?? new Text('', 0, 0);
 }
@@ -249,6 +334,61 @@ function toolTitle(theme: Theme, name: string, value: string): string {
   return `${theme.fg('toolTitle', theme.bold(name))} ${theme.fg('muted', value)}`;
 }
 
+interface PatchableSkillInvocation {
+  skillBlock: { name: string };
+  render(width: number): string[];
+}
+
+type PatchableSkillInvocationPrototype = PatchableSkillInvocation & {
+  piPrettyOriginalRender?: (
+    this: PatchableSkillInvocation,
+    width: number
+  ) => string[];
+};
+
+function formatSkillInvocation(
+  theme: Theme,
+  name: string,
+  width: number
+): string {
+  const heading = `${toolIcon(theme, 'success')} ${toolTitle(theme, 'Skill', name)}`;
+  return truncateToWidth(heading, width, '…');
+}
+
+// Pi has no skill-invocation renderer hook, so patch the built-in component and restore it on shutdown.
+function registerSkillInvocation(pi: ExtensionAPI): void {
+  const prototype =
+    SkillInvocationMessageComponent.prototype as unknown as PatchableSkillInvocationPrototype;
+  // oxlint-disable-next-line typescript/unbound-method -- Rebound explicitly with Function.call.
+  const originalRender = prototype.piPrettyOriginalRender ?? prototype.render;
+  let activeTheme: Theme | undefined;
+
+  const renderSkillInvocation = function (
+    this: PatchableSkillInvocation,
+    width: number
+  ): string[] {
+    if (!activeTheme) {
+      return originalRender.call(this, width);
+    }
+
+    return [formatSkillInvocation(activeTheme, this.skillBlock.name, width)];
+  };
+
+  prototype.piPrettyOriginalRender = originalRender;
+  prototype.render = renderSkillInvocation;
+
+  pi.on('session_start', (_event, ctx) => {
+    activeTheme = ctx.ui.theme;
+  });
+
+  pi.on('session_shutdown', () => {
+    if (prototype.render === renderSkillInvocation) {
+      prototype.render = originalRender;
+      delete prototype.piPrettyOriginalRender;
+    }
+  });
+}
+
 function frameWidth(): number {
   return process.stdout.columns;
 }
@@ -257,7 +397,11 @@ function firstLine(text: string): string {
   return text.replace(/\n$/, '').split('\n')[0];
 }
 
-function countLines(text: string): number {
+export function countLines(text: string): number {
+  if (text === '') {
+    return 0;
+  }
+
   return text.replace(/\n$/, '').split('\n').length;
 }
 
@@ -267,7 +411,7 @@ function formatError(theme: Theme, message: string): string {
     frameWidth() - 4,
     '…'
   );
-  return `   ${theme.fg('dim', truncatedMessage)} `;
+  return `  ${theme.fg('dim', truncatedMessage)} `;
 }
 
 /**
@@ -425,6 +569,8 @@ export default function pretty(pi: ExtensionAPI) {
   registerWrite(pi, cwd);
   registerEdit(pi, cwd);
   registerReplySeparator(pi);
+  registerSkillInvocation(pi);
+  registerUserPrompt(pi);
   registerFooter(pi);
 }
 
@@ -438,10 +584,7 @@ function basicToolHeading(
   const maxWidth = frameWidth() - (extra ? extra.length + 1 : 0) - 4;
   const titleToDisplay = truncateToWidth(titleAnsi, maxWidth, '…');
   return [
-    ' ' +
-      [toolIcon(theme, status), titleToDisplay, extra]
-        .filter(Boolean)
-        .join(' '),
+    [toolIcon(theme, status), titleToDisplay, extra].filter(Boolean).join(' '),
     error ? formatError(theme, error) : undefined,
   ]
     .filter(Boolean)
@@ -457,10 +600,19 @@ function formatReadError(message: string) {
 }
 
 function registerRead(pi: ExtensionAPI, cwd: string): void {
-  const original = createReadTool(cwd);
+  const original = getToolSet(cwd).read;
   pi.registerTool({
     ...original,
     renderShell: 'self',
+    execute(toolCallId, params, signal, onUpdate, ctx) {
+      return getToolSet(ctx.cwd).read.execute(
+        toolCallId,
+        params,
+        signal,
+        onUpdate,
+        ctx
+      );
+    },
     renderCall() {
       return new Text('', 0, 0);
     },
@@ -487,10 +639,19 @@ function registerRead(pi: ExtensionAPI, cwd: string): void {
 }
 
 function registerFind(pi: ExtensionAPI, cwd: string): void {
-  const original = createFindTool(cwd);
+  const original = getToolSet(cwd).find;
   pi.registerTool({
     ...original,
     renderShell: 'self',
+    execute(toolCallId, params, signal, onUpdate, ctx) {
+      return getToolSet(ctx.cwd).find.execute(
+        toolCallId,
+        params,
+        signal,
+        onUpdate,
+        ctx
+      );
+    },
     renderCall() {
       return new Text('', 0, 0);
     },
@@ -519,10 +680,19 @@ function registerFind(pi: ExtensionAPI, cwd: string): void {
 }
 
 function registerGrep(pi: ExtensionAPI, cwd: string): void {
-  const original = createGrepTool(cwd);
+  const original = getToolSet(cwd).grep;
   pi.registerTool({
     ...original,
     renderShell: 'self',
+    execute(toolCallId, params, signal, onUpdate, ctx) {
+      return getToolSet(ctx.cwd).grep.execute(
+        toolCallId,
+        params,
+        signal,
+        onUpdate,
+        ctx
+      );
+    },
     renderCall() {
       return new Text('', 0, 0);
     },
@@ -551,10 +721,19 @@ function registerGrep(pi: ExtensionAPI, cwd: string): void {
 }
 
 function registerLs(pi: ExtensionAPI, cwd: string): void {
-  const original = createLsTool(cwd);
+  const original = getToolSet(cwd).ls;
   pi.registerTool({
     ...original,
     renderShell: 'self',
+    execute(toolCallId, params, signal, onUpdate, ctx) {
+      return getToolSet(ctx.cwd).ls.execute(
+        toolCallId,
+        params,
+        signal,
+        onUpdate,
+        ctx
+      );
+    },
     renderCall() {
       return new Text('', 0, 0);
     },
@@ -588,10 +767,19 @@ function formatBashCommand(command: string) {
 }
 
 function registerBash(pi: ExtensionAPI, cwd: string): void {
-  const original = createBashTool(cwd);
+  const original = getToolSet(cwd).bash;
   pi.registerTool({
     ...original,
     renderShell: 'self',
+    execute(toolCallId, params, signal, onUpdate, ctx) {
+      return getToolSet(ctx.cwd).bash.execute(
+        toolCallId,
+        params,
+        signal,
+        onUpdate,
+        ctx
+      );
+    },
     renderCall() {
       return new Text('', 0, 0);
     },
@@ -619,10 +807,19 @@ function registerBash(pi: ExtensionAPI, cwd: string): void {
 }
 
 function registerWrite(pi: ExtensionAPI, cwd: string): void {
-  const original = createWriteTool(cwd);
+  const original = getToolSet(cwd).write;
   pi.registerTool({
     ...original,
     renderShell: 'self',
+    execute(toolCallId, params, signal, onUpdate, ctx) {
+      return getToolSet(ctx.cwd).write.execute(
+        toolCallId,
+        params,
+        signal,
+        onUpdate,
+        ctx
+      );
+    },
     renderCall() {
       return new Text('', 0, 0);
     },
@@ -652,10 +849,19 @@ function registerWrite(pi: ExtensionAPI, cwd: string): void {
 }
 
 function registerEdit(pi: ExtensionAPI, cwd: string): void {
-  const original = createEditTool(cwd);
+  const original = getToolSet(cwd).edit;
   pi.registerTool({
     ...original,
     renderShell: 'self',
+    execute(toolCallId, params, signal, onUpdate, ctx) {
+      return getToolSet(ctx.cwd).edit.execute(
+        toolCallId,
+        params,
+        signal,
+        onUpdate,
+        ctx
+      );
+    },
     renderCall() {
       return new Text('', 0, 0);
     },
@@ -667,15 +873,16 @@ function registerEdit(pi: ExtensionAPI, cwd: string): void {
         getLineDiffStats(edit.oldText, edit.newText)
       );
       const summary = summarizeAll(theme, stats);
+      const error =
+        result.content[0]?.type === 'text' ? result.content[0].text : undefined;
 
       text.setText(
         basicToolHeading(
           theme,
           toolTitle(theme, 'Edit', tildify(filepath)),
           getFrameStatus(ctx),
-          summary,
-          // TODO: Test error reporting
-          ctx.isError ? result.details.error : undefined
+          ctx.isError ? undefined : summary,
+          ctx.isError ? error : undefined
         )
       );
 
