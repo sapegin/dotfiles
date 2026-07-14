@@ -51,3 +51,4 @@ _br() {
     '2:branch:($branches)'
 }
 compdef _br br
+compdef _br merge
