@@ -96,6 +96,11 @@
   /* Sane border radii */
   --border-radius-medium: 4px !important;
   --border-radius-large: 8px !important;
+
+  /* Tabs */
+  --tab-selected-outline-color: transparent !important;
+  --tab-selected-shadow:
+    0 0 0 0.5px var(--gray140), 0 1px 3px rgba(0, 0, 0, 0.1) !important;
 }
 
 /* Make the playing icon less obtrusive on pinned tabs */
@@ -127,9 +132,6 @@
 .tabbrowser-tab:not([pinned]):hover .tab-close-button {
   opacity: 1;
 }
-/* tab:where(:hover) {
-  background-color: #0ff !important;
-} */
 .tabbrowser-tab:not([pinned]) .tab-close-button.close-icon:hover {
   color: var(--gray060) !important;
   background-color: var(--gray150) !important;
