@@ -79,7 +79,7 @@ function runAfterCommand(
     return;
   }
 
-  console.log(`   ⚙ ${entry.runAfter}`);
+  console.log(`  ⚙ ${entry.runAfter}`);
   execSync(entry.runAfter, { stdio: 'inherit' });
 }
 

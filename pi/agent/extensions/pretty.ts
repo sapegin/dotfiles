@@ -326,7 +326,7 @@ function toolIcon(theme: Theme, status: FrameStatus): string {
   } else if (status === 'success') {
     return theme.fg('success', '✓');
   } else {
-    return theme.fg('muted', '…');
+    return theme.fg('muted', '∙');
   }
 }
 
