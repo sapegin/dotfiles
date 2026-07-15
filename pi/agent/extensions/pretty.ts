@@ -411,7 +411,7 @@ function formatError(theme: Theme, message: string): string {
     frameWidth() - 4,
     '…'
   );
-  return `  ${theme.fg('dim', truncatedMessage)} `;
+  return `   ${theme.fg('dim', truncatedMessage)} `;
 }
 
 /**
@@ -583,10 +583,10 @@ function basicToolHeading(
 ) {
   const maxWidth = frameWidth() - (extra ? extra.length + 1 : 0) - 4;
   const titleToDisplay = truncateToWidth(titleAnsi, maxWidth, '…');
-  return [
-    [toolIcon(theme, status), titleToDisplay, extra].filter(Boolean).join(' '),
-    error ? formatError(theme, error) : undefined,
-  ]
+  const heading = [toolIcon(theme, status), titleToDisplay, extra]
+    .filter(Boolean)
+    .join(' ');
+  return [` ${heading}`, error ? formatError(theme, error) : undefined]
     .filter(Boolean)
     .join('\n');
 }

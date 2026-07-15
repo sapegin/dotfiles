@@ -6,6 +6,5 @@
   "quietStartup": true,
   "enableInstallTelemetry": false,
   "enableSkillCommands": true,
-  "theme": "squirrelsong",
-  "outputPad": 0
+  "theme": "squirrelsong"
 }
