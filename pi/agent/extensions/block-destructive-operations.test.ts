@@ -57,6 +57,7 @@ describe(getDestructiveReason, () => {
     'git fetch --all',
     'git pull',
     'git branch --show-current',
+    'git branch --all --no-color && git log --oneline --decorate -12',
     'git branch -r --list origin/main',
     "git branch --format='%(refname:short)'",
     'git branch --list --format %(refname:short)',
