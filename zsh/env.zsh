@@ -6,6 +6,16 @@ export LC_ALL="$LANG"
 export VISUAL="code --wait"
 export EDITOR="$VISUAL"
 
+# Set TERM_THEME from the terminal emulator. Supacode uses a light theme;
+# everything else defaults to dark.
+#
+# It seems impossible to use OSC 11 from shell as intended to detect the theme,
+# so we hardcode which apps need light theme.
+case $TERM_PROGRAM in
+supacode) export TERM_THEME=light ;;
+*) export TERM_THEME=dark ;;
+esac
+
 # Make less the default pager, add some options
 [ -n "$LESSPIPE" ] && export LESSOPEN="| ${LESSPIPE} %s"
 less_options=(
@@ -35,7 +45,9 @@ export LESS="${less_options[*]}"
 export PAGER='less'
 
 # Bat: https://github.com/sharkdp/bat
-export BAT_THEME="Squirrelsong Dark Deep Purple"
+export BAT_THEME=auto
+export BAT_THEME_LIGHT='Squirrelsong Light'
+export BAT_THEME_DARK='Squirrelsong Dark Deep Purple'
 
 # LS colors
 # Used by: fd

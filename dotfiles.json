@@ -157,6 +157,11 @@
 
   // Bat
   {
+    "source": "~/_/squirrelsong/themes/Sublime Text/Squirrelsong Light/Squirrelsong Light.tmTheme",
+    "destination": "~/dotfiles/tilde/.config/bat/themes/Squirrelsong Light.tmTheme",
+    "mode": "sync"
+  },
+  {
     "source": "~/_/squirrelsong/themes/Sublime Text/Squirrelsong Dark Deep Purple/Squirrelsong Dark Deep Purple.tmTheme",
     "destination": "~/dotfiles/tilde/.config/bat/themes/Squirrelsong Dark Deep Purple.tmTheme",
     "mode": "sync",
@@ -170,16 +175,16 @@
   },
   // Fzf
   {
-    "source": "~/_/squirrelsong/themes/Zsh/fzf/fzf-squirrelsong.sh",
+    "source": "~/_/squirrelsong/themes/Zsh/fzf/fzf-squirrelsong-*.sh",
     "destination": "~/dotfiles/colors/",
     "mode": "sync"
   },
-  // Fast-syntax-highlighting
+  // zsh-patina
   {
-    "source": "~/_/squirrelsong/themes/Zsh/fast-syntax-highlighting/fast-syntax-highlighting-squirrelsong.ini",
+    "source": "~/_/squirrelsong/themes/Zsh/patina/patina-squirrelsong.toml",
     "destination": "~/dotfiles/colors/",
     "mode": "sync",
-    "runAfter": "zsh -f ~/dotfiles/bin/lib/fast-theme-reload"
+    "runAfter": "zsh-patina reload"
   },
 
   /**

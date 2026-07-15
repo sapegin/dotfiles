@@ -1,5 +1,6 @@
 # Taps
 tap "manaflow-ai/cmux"
+tap "michel-kraemer/zsh-patina"
 
 # CLI tools
 brew "bat" # `cat` replacement
@@ -25,7 +26,7 @@ brew "syntax-highlight" # Quick look with syntax highlighting
 brew "tlrc" # `man` replacement
 brew "trafilatura" # Download web pages as text or Markdown
 brew "typos-cli" # Fix typos
-brew "zsh-fast-syntax-highlighting" # Syntax highlighting for zsh
+brew "zsh-patina" # Syntax highlighting for zsh
 brew "zsh" # Shell
 
 # GUI apps

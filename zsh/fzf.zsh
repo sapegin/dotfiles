@@ -2,16 +2,16 @@
 # https://github.com/junegunn/fzf
 
 # Load theme
-source ~/dotfiles/colors/fzf-squirrelsong.sh
+source ~/dotfiles/colors/fzf-squirrelsong-${TERM_THEME}.sh
 
 export FZF_DEFAULT_OPTS="\
 --color '$FZF_COLORS' \
 --border='rounded' \
 --border-label='' \
 --preview-window='border-rounded' \
---prompt='> ' \
---marker='>' \
---pointer='▪︎' \
+--prompt=' ' \
+--marker='' \
+--pointer='' \
 --separator='─' \
 --scrollbar='│' \
 --info='right' \

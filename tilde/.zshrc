@@ -12,4 +12,4 @@ source ~/dotfiles/zsh/fzf.zsh
 # Load extra (private) settings
 [ -f ~/.zshlocal ] && source ~/.zshlocal
 
-source ~/dotfiles/zsh/syntax-highlighting.zsh
+source ~/dotfiles/zsh/patina.zsh
