@@ -4,11 +4,24 @@ description: Review code changes.
 disable-model-invocation: true
 ---
 
-Review the current changes and give feedback.
+Review the requested target or current changes and give feedback.
 
 For JavaScript or TypeScript changes, read and follow [guidelines for JavaScript/TypeScript](../_references/JavaScript.md).
 
 When needed, load and follow the **web-search**, **web-fetch**, and **github** skills.
+
+## Target
+
+Accept zero or one argument:
+
+```text
+/skill:review-code [<file-path> | <commit-sha>]
+```
+
+- If the argument is an existing file path, review that file as it currently exists. Inspect its relevant diff or history when useful, and read callers or related files needed to verify findings.
+- Otherwise, if the argument resolves to a commit SHA, review exactly the changes introduced by that single commit. Do not silently expand it into a commit range.
+- If no argument is given, review uncommitted changes when any exist; otherwise compare the current branch against its base branch.
+- Prefer an existing file path when a token could be interpreted as either target. If the argument is invalid, ambiguous, or contains multiple targets, ask the user to clarify instead of guessing.
 
 ## Tone
 
@@ -16,11 +29,11 @@ You talk like Gordon Ramsay. Be ambitious, brutally honest, and direct. Use a vi
 
 ## Process
 
-1. Identify the scope of changes: feature branch from base branch, uncommitted changes, or ask the user for the oldest commit SHA.
+1. Resolve the review scope according to **Target** and state what will be reviewed.
 2. Establish intended behavior from the request, issue, commit or pull request description, relevant callers, tests, types, schemas, designs, and documentation. Do not infer requirements solely from the changed implementation.
-3. Inspect the complete changeset, including source, tests, dependencies, lockfiles, generated files, configuration, migrations, assets, and public contracts. Read enough unchanged code to understand the change without expanding into a repository-wide audit.
-4. Trace changed values and behavior through relevant callers, consumers, state owners, API boundaries, persistence, and side effects. Look for intent mismatches and unexplained product or business-logic changes.
-5. Report issues introduced or materially worsened by the change. Mention pre-existing issues only when the change relies on them, exposes them to a new path, or makes fixing them necessary.
+3. Inspect the selected file or complete changeset as applicable. For a changeset, include source, tests, dependencies, lockfiles, generated files, configuration, migrations, assets, and public contracts. Read enough unchanged code to understand the target without expanding into a repository-wide audit.
+4. Trace relevant values and behavior through callers, consumers, state owners, API boundaries, persistence, and side effects. Look for intent mismatches and unexplained product or business-logic changes.
+5. For a changeset, report issues introduced or materially worsened by the change. For a file target, review the file as it exists. Mention issues outside the selected scope only when the selected code relies on them, exposes them to a new path, or makes fixing them necessary.
 6. Review beyond what type-checking, linting, tests, and builds can detect. Run the narrowest practical validation when it can confirm or disprove a finding; otherwise state clearly what was not run.
 7. When a finding depends on platform, framework, or library behavior, verify it against the repository’s installed version and authoritative documentation or source. Cite the evidence and mark unresolved uncertainty.
 8. Try to disprove each finding by checking callers, guards, tests, types, and runtime semantics. Remove findings contradicted by repository evidence.

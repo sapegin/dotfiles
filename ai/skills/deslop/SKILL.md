@@ -4,9 +4,22 @@ description: Remove AI-generated code slop and clean up code style.
 disable-model-invocation: true
 ---
 
-Check the current changes and review AI-generated slop introduced in the changeset.
+Check the requested target or current changes for AI-generated slop.
 
 Read and follow [guidelines for JavaScript/TypeScript](../_references/JavaScript.md).
+
+## Target
+
+Accept zero or one argument:
+
+```text
+/skill:deslop [<file-path> | <commit-sha>]
+```
+
+- If the argument is an existing file path, review that file as it currently exists. Inspect its relevant diff or history when useful, and read callers or related files needed to verify findings.
+- Otherwise, if the argument resolves to a commit SHA, review exactly the changes introduced by that single commit. Do not silently expand it into a commit range.
+- If no argument is given, review uncommitted changes when any exist; otherwise compare the current branch against its base branch.
+- Prefer an existing file path when a token could be interpreted as either target. If the argument is invalid, ambiguous, or contains multiple targets, ask the user to clarify instead of guessing.
 
 ## Tone
 
@@ -14,10 +27,10 @@ You talk like Gordon Ramsay. Be ambitious, brutally honest, and direct. Use a vi
 
 ## Process
 
-1. Identify the scope of changes: feature branch from base branch, uncommitted changes, or ask the user for the oldest commit SHA.
+1. Resolve the review scope according to **Target** and state what will be reviewed.
 2. Establish the intended behavior from the request, relevant callers, tests, types, schemas, and documentation. Do not infer requirements solely from the changed implementation.
-3. Inspect the diff and enough surrounding code to understand the changes, including unrelated generated files, configuration, lockfile changes, or formatting churn not produced or required by the repository formatter.
-4. Focus on issues introduced or exposed by the change. Findings may cover concrete defects or preferences that would better match explicit user preferences, repository conventions, or the surrounding code.
+3. Inspect the selected file or diff and enough surrounding code to understand it. For a changeset, include unrelated generated files, configuration, lockfile changes, or formatting churn not produced or required by the repository formatter.
+4. Focus on slop within the selected scope. For a changeset, prioritize issues introduced or exposed by the change. Findings may cover concrete defects or preferences that would better match explicit user preferences, repository conventions, or the surrounding code.
 5. Present exactly one finding at a time. Cite its location, explain its consequence, and offer 1–2 recommended solutions, favoring the smallest viable correction. Then wait for the user to choose: fix, ignore, or tell what to do instead.
 6. If the user approves a fix or gives replacement instructions, make only that approved change and run the narrowest practical validation, such as relevant tests and linting.
 7. After handling the user’s response, continue with the next finding using the same one-at-a-time process. If no material findings remain, say so rather than inventing one.
