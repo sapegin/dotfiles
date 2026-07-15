@@ -175,8 +175,13 @@
   },
   // Fzf
   {
-    "source": "~/_/squirrelsong/themes/Zsh/fzf/fzf-squirrelsong-*.sh",
-    "destination": "~/dotfiles/colors/",
+    "source": "~/_/squirrelsong/themes/Zsh/fzf/fzf-squirrelsong-light.sh",
+    "destination": "~/dotfiles/colors/fzf-squirrelsong-light.sh",
+    "mode": "sync"
+  },
+  {
+    "source": "~/_/squirrelsong/themes/Zsh/fzf/fzf-squirrelsong-dark-dp.sh",
+    "destination": "~/dotfiles/colors/fzf-squirrelsong-dark.sh",
     "mode": "sync"
   },
   // zsh-patina

@@ -1,0 +1,79 @@
+# Squirrelsong for zsh-patina
+# https://sapegin.me/squirrelsong/
+
+# Comments
+"comment" = "black"
+"punctuation.definition.comment" = "black"
+
+# Strings
+"string" = "green"
+"string.quoted" = "green"
+"punctuation.definition.string" = "green"
+
+# Regular expressions
+"keyword.operator.regexp" = { foreground = "blue", bold = true }
+
+# Escape characters
+"constant.character.escape" = { foreground = "green", bold = true }
+
+# Numeric file descriptors (e.g. `2> /dev/null`)
+"constant.numeric" = "yellow"
+"constant.numeric.integer.decimal.file-descriptor" = { foreground = "yellow", bold = true }
+
+# Parameters
+"variable" = "blue"
+"variable.parameter" = "blue"
+
+# Environment variables
+"variable.other.readwrite.shell" = "blue"
+"punctuation.definition.variable" = "blue"
+
+# Commands (main) — blue + bold → terminal bright blue
+"variable.function" = { foreground = "blue", bold = true }
+"meta.function-call.shell" = { foreground = "blue", bold = true }
+
+# Subcommands (same blue, no bold)
+"meta.function-call.arguments" = "blue"
+
+# Home directory ~
+"variable.language.tilde" = "blue"
+
+# Keywords / operators
+"keyword" = { foreground = "magenta", bold = true }
+"keyword.control" = "magenta"
+"keyword.operator" = { foreground = "cyan", bold = true }
+
+# Variable assignments
+"storage.modifier" = "magenta"
+"variable.other.readwrite.assignment" = "blue"
+
+# Support terms
+"support" = "blue"
+
+# Function names
+"entity.name.function" = { foreground = "blue", bold = true }
+
+# Braces / structural punctuation
+"punctuation" = "cyan"
+"punctuation.section" = { foreground = "cyan" }
+
+# History expansions
+"meta.group.expansion.history" = { foreground = "blue", bold = true }
+
+# Reset command substitutions to terminal defaults
+"meta.group.expansion.command.parens" = {}
+
+# Dynamic items (replace static callable styles at runtime)
+"dynamic.callable" = { foreground = "blue", bold = true }
+"dynamic.callable.alias" = { foreground = "blue", bold = true }
+"dynamic.callable.builtin" = { foreground = "blue", bold = true }
+"dynamic.callable.command" = { foreground = "blue", bold = true }
+"dynamic.callable.function" = { foreground = "blue", bold = true }
+"dynamic.callable.missing" = { foreground = "red", bold = true }
+"dynamic.path" = { foreground = "blue", underline = true }
+"dynamic.path.file" = { foreground = "blue", underline = true }
+"dynamic.path.directory" = { foreground = "blue", underline = true }
+"dynamic.path.file.complete" = { foreground = "blue", underline = true }
+"dynamic.path.file.partial" = { foreground = "blue", underline = true }
+"dynamic.path.directory.complete" = { foreground = "blue", underline = true }
+"dynamic.path.directory.partial" = { foreground = "blue", underline = true }
