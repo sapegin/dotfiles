@@ -11,5 +11,4 @@ vscode/**/History/
 vscode/**/globalStorage/*
 vscode/**/workspaceStorage/
 tilde/Brewfile.lock.json
-tilde/.config/cmux/cmux.*.bak
 lazygit/state.yml

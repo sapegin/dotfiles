@@ -1,5 +1,4 @@
 # Taps
-tap "manaflow-ai/cmux"
 tap "michel-kraemer/zsh-patina"
 
 # CLI tools
