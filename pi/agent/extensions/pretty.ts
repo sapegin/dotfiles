@@ -297,7 +297,7 @@ function registerUserPrompt(pi: ExtensionAPI): void {
       return originalRender.call(this, width);
     }
 
-    const prompt = formatUserPrompt(activeTheme, this.text, width);
+    const prompt = formatUserPrompt(activeTheme, ` ${this.text}`, width);
     return prompt ? [prompt] : [];
   };
 
