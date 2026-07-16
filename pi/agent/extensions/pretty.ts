@@ -4,7 +4,9 @@
 
 // oxlint-disable unicorn/no-nested-ternary
 import os from 'node:os';
+import { stripVTControlCharacters } from 'node:util';
 import {
+  AssistantMessageComponent,
   type ExtensionAPI,
   type ExtensionContext,
   type Theme,
@@ -256,6 +258,15 @@ function registerFooter(pi: ExtensionAPI): void {
   });
 }
 
+export const MESSAGE_SEPARATOR =
+  ' ─────────────────── 8< ─────────────────── 8< ───────────────────';
+
+export function dimMessageSeparatorLine(theme: Theme, line: string): string {
+  return stripVTControlCharacters(line).trim() === MESSAGE_SEPARATOR.trim()
+    ? theme.fg('dim', line)
+    : line;
+}
+
 interface PatchableUserMessage {
   text: string;
   render(width: number): string[];
@@ -278,7 +289,11 @@ export function formatUserPrompt(
     return '';
   }
 
-  return truncateToWidth(theme.fg('dim', theme.italic(singleLine)), width, '…');
+  return truncateToWidth(
+    theme.fg('dim', theme.italic(` ${singleLine}`)),
+    width,
+    '…'
+  );
 }
 
 // Pi has no user-message renderer hook, so patch the built-in component and restore it on shutdown.
@@ -297,8 +312,13 @@ function registerUserPrompt(pi: ExtensionAPI): void {
       return originalRender.call(this, width);
     }
 
-    const prompt = formatUserPrompt(activeTheme, ` ${this.text}`, width);
-    return prompt ? [prompt] : [];
+    const prompt = formatUserPrompt(activeTheme, this.text, width);
+    if (!prompt) {
+      return [];
+    }
+
+    const separator = activeTheme.fg('dim', MESSAGE_SEPARATOR.slice(0, width));
+    return [separator, '', prompt];
   };
 
   prototype.piPrettyOriginalRender = originalRender;
@@ -351,7 +371,7 @@ function formatSkillInvocation(
   name: string,
   width: number
 ): string {
-  const heading = `${toolIcon(theme, 'success')} ${toolTitle(theme, 'Skill', name)}`;
+  const heading = ` ${toolIcon(theme, 'success')} ${toolTitle(theme, 'Skill', name)}`;
   return truncateToWidth(heading, width, '…');
 }
 
@@ -452,10 +472,10 @@ function summarizeAll(theme: Theme, diffs: DiffStats[]): string {
 
 /**
  * After tools run, Pi emits a separate assistant message for the user-facing
- * reply. Prepend a markdown horizontal rule so it is visually separated from
- * the thinking and tool output above.
+ * reply. Prepend the visual separator so it is distinct from the thinking and
+ * tool output above.
  */
-const REPLY_SEPARATOR = '---\n\n';
+const REPLY_SEPARATOR = `${MESSAGE_SEPARATOR}\n\n`;
 
 let pendingReplySeparator = false;
 
@@ -517,6 +537,51 @@ function applyReplySeparatorInPlace(message: {
   textBlock.text = `${REPLY_SEPARATOR}${textBlock.text.trimStart()}`;
 }
 
+interface PatchableAssistantMessage {
+  render(width: number): string[];
+}
+
+type PatchableAssistantMessagePrototype = PatchableAssistantMessage & {
+  piPrettyOriginalRender?: (
+    this: PatchableAssistantMessage,
+    width: number
+  ) => string[];
+};
+
+// Color the injected separator after Markdown renders it, keeping ANSI codes out of message content.
+function registerAssistantSeparatorColor(pi: ExtensionAPI): void {
+  const prototype =
+    AssistantMessageComponent.prototype as unknown as PatchableAssistantMessagePrototype;
+  // oxlint-disable-next-line typescript/unbound-method -- Rebound explicitly with Function.call.
+  const originalRender = prototype.piPrettyOriginalRender ?? prototype.render;
+  let activeTheme: Theme | undefined;
+
+  const renderAssistantMessage = function (
+    this: PatchableAssistantMessage,
+    width: number
+  ): string[] {
+    const lines = originalRender.call(this, width);
+    const theme = activeTheme;
+    return theme
+      ? lines.map((line) => dimMessageSeparatorLine(theme, line))
+      : lines;
+  };
+
+  prototype.piPrettyOriginalRender = originalRender;
+  prototype.render = renderAssistantMessage;
+
+  pi.on('session_start', (_event, ctx) => {
+    activeTheme = ctx.ui.theme;
+  });
+
+  pi.on('session_shutdown', () => {
+    if (prototype.render === renderAssistantMessage) {
+      prototype.render = originalRender;
+      delete prototype.piPrettyOriginalRender;
+    }
+  });
+}
+
 function registerReplySeparator(pi: ExtensionAPI): void {
   pi.on('agent_start', () => {
     pendingReplySeparator = false;
@@ -569,6 +634,7 @@ export default function pretty(pi: ExtensionAPI) {
   registerWrite(pi, cwd);
   registerEdit(pi, cwd);
   registerReplySeparator(pi);
+  registerAssistantSeparatorColor(pi);
   registerSkillInvocation(pi);
   registerUserPrompt(pi);
   registerFooter(pi);

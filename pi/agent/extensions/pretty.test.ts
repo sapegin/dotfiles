@@ -7,12 +7,15 @@ import {
   type ExtensionContext,
   SkillInvocationMessageComponent,
   type Theme,
+  UserMessageComponent,
 } from '@earendil-works/pi-coding-agent';
 import { describe, expect, test } from 'vitest';
 import pretty, {
   countLines,
+  dimMessageSeparatorLine,
   formatUserPrompt,
   getLineDiffStats,
+  MESSAGE_SEPARATOR,
   renderPrettyFooter,
 } from './pretty.ts';
 
@@ -67,7 +70,7 @@ describe(formatUserPrompt, () => {
       stripVTControlCharacters(
         formatUserPrompt(plainTheme, 'First\n  second', 10)
       )
-    ).toBe('First sec…');
+    ).toBe(' First se…');
   });
 
   test('renders the prompt in dim italic text', () => {
@@ -77,12 +80,45 @@ describe(formatUserPrompt, () => {
     } as Theme;
 
     expect(formatUserPrompt(styledTheme, 'Prompt', 80)).toBe(
-      '<dim><italic>Prompt</italic></dim>'
+      '<dim><italic> Prompt</italic></dim>'
     );
   });
 
   test('does not render an empty prompt', () => {
     expect(formatUserPrompt(plainTheme, ' \n ', 80)).toBe('');
+  });
+});
+
+describe(dimMessageSeparatorLine, () => {
+  test('colors only the message separator as dim text', () => {
+    const theme = {
+      fg: (color: string, text: string) => `<${color}>${text}</${color}>`,
+    } as Theme;
+
+    expect(dimMessageSeparatorLine(theme, MESSAGE_SEPARATOR)).toBe(
+      `<dim>${MESSAGE_SEPARATOR}</dim>`
+    );
+    expect(dimMessageSeparatorLine(theme, 'Reply')).toBe('Reply');
+  });
+});
+
+describe(UserMessageComponent, () => {
+  test('renders a horizontal rule before the prompt', () => {
+    const { shutdown, start } = setupPrettyExtension();
+    const ctx = createExtensionContext(process.cwd());
+
+    try {
+      start(ctx);
+      const component = {
+        text: 'Prompt',
+      } as unknown as UserMessageComponent;
+
+      expect(
+        UserMessageComponent.prototype.render.call(component, 80)
+      ).toStrictEqual([MESSAGE_SEPARATOR, '', ' Prompt']);
+    } finally {
+      shutdown(ctx);
+    }
   });
 });
 
@@ -100,7 +136,7 @@ describe(SkillInvocationMessageComponent, () => {
 
       expect(
         SkillInvocationMessageComponent.prototype.render.call(component, 80)
-      ).toStrictEqual(['✓ Skill deslop']);
+      ).toStrictEqual([' ✓ Skill deslop']);
     } finally {
       shutdown(ctx);
     }
