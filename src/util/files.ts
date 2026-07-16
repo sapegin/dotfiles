@@ -8,6 +8,7 @@ const HOME = os.homedir();
 export const dirs = {
   home: HOME,
   dotfiles: path.resolve(import.meta.dirname, '..', '..'),
+  themes: path.join(HOME, '_', 'squirrelsong', 'themes'),
   projects: path.join(HOME, '_'),
   obsidianVault: path.join(HOME, 'murder'),
   obsidianDailyNotes: path.join(HOME, 'murder/Log'),
@@ -85,6 +86,14 @@ export function untildify(input: string): string {
     return path.join(HOME, input.slice(2));
   }
   return input;
+}
+
+/** Expand `$DOTFILES_DIR`, `$THEMES_DIR`, and `~/` in config paths. */
+export function expandPath(input: string): string {
+  const expanded = input
+    .replaceAll('$DOTFILES_DIR', dirs.dotfiles)
+    .replaceAll('$THEMES_DIR', dirs.themes);
+  return untildify(expanded);
 }
 
 /** Return the nearest common parent folder for a list of file paths. */

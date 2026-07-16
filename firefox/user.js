@@ -99,8 +99,8 @@ user_pref('extensions.htmlaboutaddons.recommendations.enabled', false);
 user_pref('browser.newtabpage.activity-stream.asrouter.userprefs.cfr', false);
 // Don't recommend  features as you browse
 user_pref(
-  'browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features',
-  false
+	'browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features',
+	false
 );
 // Disable shopping experience
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1840156#c0

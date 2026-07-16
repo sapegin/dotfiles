@@ -113,7 +113,7 @@
 [add.interactive]
 	useBuiltin = false
 [delta]
-  features = squirrelsong-dark-dp
+  features = squirrelsong-dark
 	navigate = false
 	light = false
 	hyperlinks = true
@@ -134,7 +134,7 @@
 
 # Include local settings
 [include]
-  path = ~/dotfiles/colors/themes.gitconfig
+  path = ~/_/squirrelsong/themes/Git/themes.gitconfig
 	path = .gitlocal
 
 # Some random bullshit that always appears at the end of the config file

@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-27T07:40:18.929Z",
+  "updated": "2026-07-06T14:52:24.808Z",
   "plugins": [
     {
       "id": "add-note-property",
@@ -30,7 +30,7 @@
       "version": "1.0.0",
       "files": {
         "main.js": "8801871fe834c6b294f0c8cf1020596ad0ca4a1471255c2708d866fdc57e0762",
-        "manifest.json": "7ea4c36a1ffa6c95db93d11a06ff92925eb6f2f6620d7104a8f3c4492c97cac7",
+        "manifest.json": "aea80579d7acf6a402de4fe0a068a0f1cf358c03f645f9948e65bf32805ddbd7",
         "styles.css": "bdd58a72c03bf5e836e564fee857e99a873db08e14996d4ab9c124faf57e8804"
       }
     },
@@ -40,7 +40,7 @@
       "files": {
         "main.js": "29bf866649d8dad82a334f2050dd3e863aebe1dc3b8bf6086922ba7116989a14",
         "manifest.json": "a9a8fc9686cf924a8e2e136f49e677c27c6f0ff3aa1174acd3bbfb42e3f16fc7",
-        "styles.css": "a9a468ef4a31f34f24fde381348e35e3696a79667317675250f4c3127fbba651"
+        "styles.css": "09f47d91a25aff1e9d99fa32d2e52d83b6c06464b27a638ee19d06bdc6b90d11"
       }
     }
   ]

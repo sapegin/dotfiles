@@ -24,7 +24,7 @@ const COLORS = {
   gray100: '#8c8792',
   gray160: '#e8e5eb',
   gray180: '#fdfdfe',
-  // Squirrelsong Deep Purple Dark
+  // Squirrelsong Dark
   brightPink: '#ca5a83',
 };
 

@@ -45,8 +45,48 @@ async function mtimeMs(filePath: string): Promise<number | null> {
   }
 }
 
+/**
+ * Create `dirPath` when missing. Removes broken symlinks and other
+ * non-directories blocking the path (e.g. stale ~/.config/bat links).
+ */
+async function ensureDirectory(dirPath: string): Promise<void> {
+  if (dirPath === path.dirname(dirPath)) {
+    return;
+  }
+
+  await ensureDirectory(path.dirname(dirPath));
+
+  try {
+    const stat = await fs.lstat(dirPath);
+    if (stat.isDirectory()) {
+      return;
+    }
+    if (stat.isSymbolicLink()) {
+      try {
+        const targetStat = await fs.stat(dirPath);
+        if (targetStat.isDirectory()) {
+          return;
+        }
+      } catch {
+        // broken symlink or symlink to a missing path
+      }
+    }
+    await fs.rm(dirPath, { recursive: true, force: true });
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
+      throw error;
+    }
+  }
+
+  await fs.mkdir(dirPath);
+}
+
+async function ensureParentDirectory(filePath: string): Promise<void> {
+  await ensureDirectory(path.dirname(filePath));
+}
+
 async function copyPreservingMtime(src: string, dest: string): Promise<void> {
-  await fs.mkdir(path.dirname(dest), { recursive: true });
+  await ensureParentDirectory(dest);
   await fs.copyFile(src, dest);
   const { atime, mtime } = await fs.stat(src);
   await fs.utimes(dest, atime, mtime);
@@ -235,7 +275,7 @@ export async function syncLink(
     await fs.rm(dest, { recursive: true, force: true });
   }
 
-  await fs.mkdir(path.dirname(dest), { recursive: true });
+  await ensureParentDirectory(dest);
   await fs.symlink(src, dest);
   printResult('linked', displayPath);
   return { path: displayPath, result: 'linked' };

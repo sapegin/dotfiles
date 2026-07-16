@@ -16,6 +16,18 @@ supacode) export TERM_THEME=light ;;
 *) export TERM_THEME=dark ;;
 esac
 
+# git-delta: switch Squirrelsong feature set by terminal appearance
+case $TERM_THEME in
+light)
+	export DELTA_FEATURES=squirrelsong-light
+	export DELTA_LIGHT=true
+	;;
+*)
+	export DELTA_FEATURES=squirrelsong-dark
+	export DELTA_LIGHT=false
+	;;
+esac
+
 # Make less the default pager, add some options
 [ -n "$LESSPIPE" ] && export LESSOPEN="| ${LESSPIPE} %s"
 less_options=(
@@ -45,9 +57,12 @@ export LESS="${less_options[*]}"
 export PAGER='less'
 
 # Bat: https://github.com/sharkdp/bat
-export BAT_THEME=auto
-export BAT_THEME_LIGHT='Squirrelsong Light'
-export BAT_THEME_DARK='Squirrelsong Dark Deep Purple'
+# Resolve theme explicitly: BAT_THEME=auto warns in subprocesses (e.g. ripgrep/fzf
+# previews) that pass the value literally to --theme before auto-detection runs.
+case $TERM_THEME in
+light) export BAT_THEME='Squirrelsong Light' ;;
+*) export BAT_THEME='Squirrelsong Dark' ;;
+esac
 
 # LS colors
 # Used by: fd
@@ -83,5 +98,5 @@ export HOMEBREW_NO_ANALYTICS=1
 # Disable hints
 export HOMEBREW_NO_ENV_HINTS=1
 
-# Ripgrep config file location
-export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
+# Ripgrep config
+export RIPGREP_CONFIG_PATH="$DOTFILES_DIR/ripgrep/ripgreprc"

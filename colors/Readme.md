@@ -1,6 +1,8 @@
 # Squirrelsong color theme
 
-[Squirrelsong](https://sapegin.me/squirrelsong/) is my custom color theme that I use everywhere: ligth and dark.
+[Squirrelsong](https://sapegin.me/squirrelsong/) is my custom color theme that I use everywhere: light and dark.
+
+Theme files live in the [Squirrelsong](https://github.com/sapegin/squirrelsong) repository (`$THEMES_DIR`, default `~/_/squirrelsong/themes`). Tools that support direct paths reference them there; others need symlinks via [sync-dotfiles.ts](../src/bin/sync-dotfiles.ts).
 
 ## Bat
 

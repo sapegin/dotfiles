@@ -19,7 +19,7 @@ alias cc="code ."
 alias ghd="github ."
 
 # Lazygit
-alias lg="lazygit --use-config-dir $HOME/dotfiles/lazygit"
+alias lg="lazygit --use-config-dir $DOTFILES_DIR/lazygit"
 
 # Nimble Commander
 alias nn="open -a 'Nimble Commander' ."
@@ -52,7 +52,7 @@ cdf() {
 
 # Magic Project Opener
 j() {
-	cd "$(~/dotfiles/bin/symlinks/j $1)"
+	cd "$("$DOTFILES_DIR/bin/symlinks/j" $1)"
 }
 
 # Cd to Git repository root folder

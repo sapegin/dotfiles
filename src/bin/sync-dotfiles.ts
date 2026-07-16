@@ -9,7 +9,7 @@
 import { execSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { dirs, untildify } from '../util/files.ts';
+import { dirs, expandPath } from '../util/files.ts';
 import { findGitRoot, pullIfClean } from '../util/git.ts';
 import { stripJsonComments } from '../util/json.ts';
 import {
@@ -90,8 +90,8 @@ async function readConfig(): Promise<DotfileEntry[]> {
 
 async function syncEntry(entry: DotfileEntry): Promise<void> {
   const mode: EntryMode = entry.mode ?? 'link';
-  const source = untildify(entry.source);
-  const destination = untildify(entry.destination);
+  const source = expandPath(entry.source);
+  const destination = expandPath(entry.destination);
   const destinationDir = destination.endsWith('/')
     ? destination.slice(0, -1)
     : undefined;

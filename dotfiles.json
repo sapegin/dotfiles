@@ -6,6 +6,8 @@
 //   side overwrites the other; identical files are skipped.
 //
 // - Paths may start with `~/` to refer to the home directory.
+// - `$DOTFILES_DIR` and `$THEMES_DIR` expand to those env vars (defaults:
+//   ~/dotfiles and ~/_/squirrelsong/themes).
 // - When `source` contains `*` it is treated as a glob pattern: each match is
 //   placed under `destination` using the match's basename.
 // - When `source` ends with `/` it is treated as a folder: the contents of
@@ -21,20 +23,20 @@
    * Basic dotfiles
    */
 
-  // ~/dotfiles/tilde/.* → ~/
+  // $DOTFILES_DIR/tilde/.* → ~/
   {
-    "source": "~/dotfiles/tilde/.*",
+    "source": "$DOTFILES_DIR/tilde/.*",
     "destination": "~",
     "ignore": ["/$"] // All folders
   },
   // Homebrew bundle file
   {
-    "source": "~/dotfiles/tilde/Brewfile",
+    "source": "$DOTFILES_DIR/tilde/Brewfile",
     "destination": "~/Brewfile"
   },
-  // ~/dotfiles/tilde/.config/* → ~/.config/
+  // $DOTFILES_DIR/tilde/.config/* → ~/.config/
   {
-    "source": "~/dotfiles/tilde/.config/*",
+    "source": "$DOTFILES_DIR/tilde/.config/*",
     "destination": "~/.config"
   },
 
@@ -44,12 +46,12 @@
 
   // Visual Studio Code configs
   {
-    "source": "~/dotfiles/vscode/User",
+    "source": "$DOTFILES_DIR/vscode/User",
     "destination": "~/Library/Application Support/Code/User"
   },
   // Supacode config
   {
-    "source": "~/dotfiles/supacode/settings.json",
+    "source": "$DOTFILES_DIR/supacode/settings.json",
     "destination": "~/.supacode/"
   },
   // Photoshop
@@ -64,54 +66,54 @@
 
   // Codex config
   {
-    "source": "~/dotfiles/tilde/.codex/config.toml",
+    "source": "$DOTFILES_DIR/tilde/.codex/config.toml",
     "destination": "~/.codex/config.toml"
   },
   // Codex base prompt
   {
-    "source": "~/dotfiles/ai/AGENTS.md",
+    "source": "$DOTFILES_DIR/ai/AGENTS.md",
     "destination": "~/.codex/AGENTS.md"
   },
   // Skills (used by Pi, Cursor)
   {
-    "source": "~/dotfiles/ai/skills/*",
+    "source": "$DOTFILES_DIR/ai/skills/*",
     "destination": "~/.agents/skills/"
   },
   // Codex skills
   {
-    "source": "~/dotfiles/ai/skills/*",
+    "source": "$DOTFILES_DIR/ai/skills/*",
     "destination": "~/.codex/skills"
   },
   // Amp skills
   {
-    "source": "~/dotfiles/ai/skills/*",
+    "source": "$DOTFILES_DIR/ai/skills/*",
     "destination": "~/.config/agents/skills"
   },
   // Copilot base prompt
   {
-    "source": "~/dotfiles/ai/AGENTS.md",
+    "source": "$DOTFILES_DIR/ai/AGENTS.md",
     "destination": "~/.copilot/instructions/base.instructions.md"
   },
   // Pi configs
   {
-    "source": "~/dotfiles/pi/agent/*",
+    "source": "$DOTFILES_DIR/pi/agent/*",
     "destination": "~/.pi/agent/",
     "ignore": ["^extensions"]
   },
   // Pi base prompt
   {
-    "source": "~/dotfiles/ai/AGENTS.md",
+    "source": "$DOTFILES_DIR/ai/AGENTS.md",
     "destination": "~/.pi/agent/AGENTS.md"
   },
   // Pi custom extensions
   {
-    "source": "~/dotfiles/pi/agent/extensions/*.ts",
+    "source": "$DOTFILES_DIR/pi/agent/extensions/*.ts",
     "destination": "~/.pi/agent/extensions/",
     "ignore": ["\\.test\\.ts$"]
   },
 
   /**
-   * Obsidian
+   * Obsidian (iCloud vault — sync copies only, never symlinks)
    */
 
   // Convenience symlink: Obsidian vault
@@ -121,75 +123,66 @@
   },
   // Folder Emoji Icon plugin config
   {
-    "source": "~/dotfiles/obsidian/folder-icons.json",
+    "source": "$DOTFILES_DIR/obsidian/folder-icons.json",
     "destination": "~/murder/.obsidian/plugins/obsidian-folder-emoji-icons/data.json",
     "mode": "sync"
   },
   // Obsidian config backup (plugins and themes are synced separately)
   {
     "source": "~/murder/.obsidian/",
-    "destination": "~/dotfiles/obsidian/.obsidian",
+    "destination": "$DOTFILES_DIR/obsidian/.obsidian",
     "mode": "sync",
     "ignore": ["^workspace.*\\.json", "^plugins/", "^themes/"]
   },
   // Obsidian templates backup
   {
     "source": "~/murder/zz-templates/",
-    "destination": "~/dotfiles/obsidian/zz-templates",
+    "destination": "$DOTFILES_DIR/obsidian/zz-templates",
     "mode": "sync"
   },
   // Obsidian bases backup
   {
     "source": "~/murder/zz-bases/",
-    "destination": "~/dotfiles/obsidian/zz-bases",
+    "destination": "$DOTFILES_DIR/obsidian/zz-bases",
     "mode": "sync"
   },
   // Squirrelsong Obsidian theme
   {
-    "source": "~/_/squirrelsong/themes/Obsidian/Squirrelsong/*",
+    "source": "$THEMES_DIR/Obsidian/Squirrelsong/*",
     "destination": "~/murder/.obsidian/themes/Squirrelsong/",
     "mode": "sync"
   },
 
   /**
    * Squirrelsong color themes
+   *
+   * These apps only load themes from their config directories, so those stay
+   * symlinked.
    */
 
-  // Bat
+  // Bat (themes live under tilde/.config/bat, symlinked to ~/.config/bat)
   {
-    "source": "~/_/squirrelsong/themes/Sublime Text/Squirrelsong Light/Squirrelsong Light.tmTheme",
-    "destination": "~/dotfiles/tilde/.config/bat/themes/Squirrelsong Light.tmTheme",
-    "mode": "sync"
+    "source": "$THEMES_DIR/Sublime Text/Squirrelsong Light/Squirrelsong Light.tmTheme",
+    "destination": "$DOTFILES_DIR/tilde/.config/bat/themes/Squirrelsong Light.tmTheme"
   },
   {
-    "source": "~/_/squirrelsong/themes/Sublime Text/Squirrelsong Dark Deep Purple/Squirrelsong Dark Deep Purple.tmTheme",
-    "destination": "~/dotfiles/tilde/.config/bat/themes/Squirrelsong Dark Deep Purple.tmTheme",
-    "mode": "sync",
+    "source": "$THEMES_DIR/Sublime Text/Squirrelsong Dark/Squirrelsong Dark.tmTheme",
+    "destination": "$DOTFILES_DIR/tilde/.config/bat/themes/Squirrelsong Dark.tmTheme",
     "runAfter": "bat cache --build"
   },
   // Ghostty
   {
-    "source": "~/_/squirrelsong/themes/Ghostty/Squirrelsong *",
-    "destination": "~/dotfiles/tilde/.config/ghostty/themes/",
-    "mode": "sync"
+    "source": "$THEMES_DIR/Ghostty/Squirrelsong *",
+    "destination": "$DOTFILES_DIR/tilde/.config/ghostty/themes/"
   },
-  // Fzf
+  // Amp
   {
-    "source": "~/_/squirrelsong/themes/Zsh/fzf/fzf-squirrelsong-light.sh",
-    "destination": "~/dotfiles/colors/fzf-squirrelsong-light.sh",
-    "mode": "sync"
+    "source": "$THEMES_DIR/Amp/squirrelsong-light/colors.toml",
+    "destination": "$DOTFILES_DIR/tilde/.config/amp/themes/squirrelsong-light/"
   },
   {
-    "source": "~/_/squirrelsong/themes/Zsh/fzf/fzf-squirrelsong-dark-dp.sh",
-    "destination": "~/dotfiles/colors/fzf-squirrelsong-dark.sh",
-    "mode": "sync"
-  },
-  // zsh-patina
-  {
-    "source": "~/_/squirrelsong/themes/Zsh/patina/patina-squirrelsong.toml",
-    "destination": "~/dotfiles/colors/",
-    "mode": "sync",
-    "runAfter": "zsh-patina reload"
+    "source": "$THEMES_DIR/Amp/squirrelsong-dark/colors.toml",
+    "destination": "$DOTFILES_DIR/tilde/.config/amp/themes/squirrelsong-dark/"
   },
 
   /**

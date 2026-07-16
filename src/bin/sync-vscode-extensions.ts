@@ -12,7 +12,7 @@ import { execSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { untildify } from '../util/files.ts';
+import { dirs, untildify } from '../util/files.ts';
 import { pullIfClean } from '../util/git.ts';
 import { log, run } from '../util/tui.ts';
 
@@ -35,7 +35,7 @@ const SOURCES: SourceConfig[] = [
     },
   },
   {
-    repo: '~/_/squirrelsong',
+    repo: path.dirname(dirs.themes),
     buildCommands: [
       'npm install --silent',
       'npm run prepare-themes',

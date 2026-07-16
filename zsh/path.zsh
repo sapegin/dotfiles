@@ -20,9 +20,9 @@ eval "$(/opt/homebrew/bin/fnm env --shell zsh)"
 _prepend_path "$(brew --prefix python)/libexec/bin"
 
 # Dotfiles binaries
-_prepend_path "$HOME/dotfiles/bin/lib"
-_prepend_path "$HOME/dotfiles/bin"
-_prepend_path "$HOME/dotfiles/bin/symlinks"
+_prepend_path "$DOTFILES_DIR/bin/lib"
+_prepend_path "$DOTFILES_DIR/bin"
+_prepend_path "$DOTFILES_DIR/bin/symlinks"
 
 # User binaries
 _prepend_path "$HOME/bin"

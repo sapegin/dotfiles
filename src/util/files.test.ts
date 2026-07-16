@@ -4,6 +4,7 @@ import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 import {
   exts,
+  expandPath,
   getCommonFolder,
   getExtensionsBrace,
   parseGlobArgs,
@@ -45,6 +46,29 @@ describe(stripExtensions, () => {
 describe(getExtensionsBrace, () => {
   test('expands to both lower- and uppercase without duplicates', () => {
     expect(getExtensionsBrace(exts.jpeg)).toBe('{jpg,JPG,jpeg,JPEG}');
+  });
+});
+
+describe(expandPath, () => {
+  test('expands $DOTFILES_DIR and $THEMES_DIR', () => {
+    expect(expandPath('$DOTFILES_DIR/tilde/.zshrc')).toBe(
+      path.join(
+        process.env.DOTFILES_DIR ??
+          path.resolve(import.meta.dirname, '..', '..'),
+        'tilde/.zshrc'
+      )
+    );
+    expect(expandPath('$THEMES_DIR/Git/themes.gitconfig')).toBe(
+      path.join(
+        process.env.THEMES_DIR ??
+          path.join(os.homedir(), '_', 'squirrelsong', 'themes'),
+        'Git/themes.gitconfig'
+      )
+    );
+  });
+
+  test('still expands ~/', () => {
+    expect(expandPath('~/murder')).toBe(path.join(os.homedir(), 'murder'));
   });
 });
 

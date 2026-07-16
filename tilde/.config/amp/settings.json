@@ -1,5 +1,5 @@
 {
-  "amp.terminal.theme": "squirrelsong-dark-dp",
+  "amp.terminal.theme": "squirrelsong-light",
   // Disable annoying startup animation
   "amp.terminal.animation": false,
   // Disable annoying notification sound
