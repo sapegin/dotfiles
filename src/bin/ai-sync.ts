@@ -32,19 +32,19 @@ async function loadPersonas(): Promise<ReadonlyMap<string, string>> {
   return personas;
 }
 
-async function getTargetPaths(): Promise<string[]> {
-  const skillPaths = await Array.fromAsync(
-    fs.glob(path.join(AI_DIRECTORY, 'skills/*/SKILL.md'))
-  );
-  return [path.join(AI_DIRECTORY, 'AGENTS.md'), ...skillPaths.toSorted()];
-}
-
 async function main(): Promise<void> {
   const args = parseArgs([{ name: 'check', type: 'boolean', default: false }]);
   const personas = await loadPersonas();
   const changes: { path: string; generated: string }[] = [];
+  const skillPaths = await Array.fromAsync(
+    fs.glob(path.join(AI_DIRECTORY, 'skills/*/SKILL.md'))
+  );
+  const targetPaths = [
+    path.join(AI_DIRECTORY, 'AGENTS.md'),
+    ...skillPaths.toSorted(),
+  ];
 
-  for (const targetPath of await getTargetPaths()) {
+  for (const targetPath of targetPaths) {
     const source = await fs.readFile(targetPath, 'utf8');
     const relativePath = path.relative(dirs.dotfiles, targetPath);
     const generated = generatePersonaSections(source, personas, relativePath);

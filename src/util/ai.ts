@@ -1,14 +1,12 @@
 const PERSONA_ELEMENT_PATTERN = /^<persona name="([a-z0-9]+(?:-[a-z0-9]+)*)">$/;
 const PERSONA_END_ELEMENT = '</persona>';
-const PERSONA_HEADING_PREFIX = '# ';
-const SECTION_HEADING_PREFIX = '## ';
 
 /** Extract and validate the generated body of a canonical persona file. */
 export function parsePersona(source: string, expectedName: string): string {
   const normalizedSource = source.replaceAll('\r\n', '\n').trim();
   const [heading, ...bodyLines] = normalizedSource.split('\n');
 
-  if (heading !== `${PERSONA_HEADING_PREFIX}${expectedName}`) {
+  if (heading !== `# ${expectedName}`) {
     throw new Error(
       `Persona ${expectedName} must start with "# ${expectedName}".`
     );
@@ -28,14 +26,19 @@ export function generatePersonaSections(
   personas: ReadonlyMap<string, string>,
   sourceName = 'Markdown'
 ): string {
-  const hasTrailingNewline = source.endsWith('\n');
   const lines = source.split('\n');
   const output: string[] = [];
-  const consumedElementIndexes = new Set<number>();
 
   for (let lineIndex = 0; lineIndex < lines.length; ) {
     if (lines[lineIndex] !== '## Tone') {
-      output.push(lines[lineIndex]);
+      const line = lines[lineIndex];
+      if (PERSONA_ELEMENT_PATTERN.test(line) || line === PERSONA_END_ELEMENT) {
+        throw new Error(
+          `${sourceName} has a persona element outside a Tone section.`
+        );
+      }
+
+      output.push(line);
       lineIndex += 1;
       continue;
     }
@@ -43,7 +46,7 @@ export function generatePersonaSections(
     let sectionEnd = lineIndex + 1;
     while (
       sectionEnd < lines.length &&
-      lines[sectionEnd].startsWith(SECTION_HEADING_PREFIX) === false
+      lines[sectionEnd].startsWith('## ') === false
     ) {
       sectionEnd += 1;
     }
@@ -88,8 +91,6 @@ export function generatePersonaSections(
       );
     }
 
-    consumedElementIndexes.add(startIndex);
-    consumedElementIndexes.add(endIndex);
     output.push(
       ...lines.slice(lineIndex, startIndex + 1),
       ...persona.split('\n'),
@@ -99,17 +100,5 @@ export function generatePersonaSections(
     lineIndex = sectionEnd;
   }
 
-  for (const [lineIndex, line] of lines.entries()) {
-    if (
-      (PERSONA_ELEMENT_PATTERN.test(line) || line === PERSONA_END_ELEMENT) &&
-      consumedElementIndexes.has(lineIndex) === false
-    ) {
-      throw new Error(
-        `${sourceName} has a persona element outside a Tone section.`
-      );
-    }
-  }
-
-  const generated = output.join('\n').trimEnd();
-  return hasTrailingNewline ? `${generated}\n` : generated;
+  return output.join('\n');
 }
