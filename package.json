@@ -4,7 +4,9 @@
   "type": "module",
   "scripts": {
     "lint": "oxlint --fix",
-    "test": "oxlint --fix && vitest run",
+    "ai-sync": "./bin/symlinks/ai-sync",
+    "ai-sync:check": "./bin/symlinks/ai-sync --check",
+    "test": "oxlint --fix && vitest run && npm run ai-sync:check",
     "test:watch": "vitest",
     "format": "oxfmt"
   },
