@@ -2,8 +2,9 @@
   "global": {
     "agentPresenceBadgesEnabled": true,
     "analyticsEnabled": false,
+    "appVisibility": "dock",
     "appearanceMode": "light",
-    "autoUpdateAgentIntegrationsEnabled": false,
+    "autoUpdateAgentIntegrationsEnabled": true,
     "automatedActionPolicy": "cliOnly",
     "confirmQuitMode": "auto",
     "copyIgnoredOnWorktreeCreate": false,
@@ -18,6 +19,7 @@
     "inAppNotificationsEnabled": true,
     "moveNotifiedWorktreeToTop": false,
     "muteNotificationsForActiveSurface": true,
+    "notificationRetentionLimit": 200,
     "notificationSound": "never",
     "promptForWorktreeCreation": true,
     "pullRequestMergeStrategy": "squash",
@@ -117,6 +119,14 @@
       "scripts": [],
       "setupScript": ""
     },
+    "\/Users\/sapegia\/_\/squirrelsong\/": {
+      "archiveScript": "",
+      "deleteScript": "",
+      "openActionID": "auto",
+      "runScript": "",
+      "scripts": [],
+      "setupScript": ""
+    },
     "\/Users\/sapegia\/dotfiles\/": {
       "archiveScript": "",
       "deleteScript": "",
@@ -140,6 +150,7 @@
     "\/Users\/sapegia\/_\/kurush\/",
     "\/Users\/sapegia\/_\/sapegin.me\/",
     "\/Users\/sapegia\/_\/raccoon-vscode\/",
-    "\/Users\/sapegia\/_\/raccoon-toolbox\/"
+    "\/Users\/sapegia\/_\/raccoon-toolbox\/",
+    "\/Users\/sapegia\/_\/squirrelsong\/"
   ]
 }
