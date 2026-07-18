@@ -92,8 +92,6 @@ const messages = [
   'Whispering to the bits…',
   'Tickling the stack…',
   'Massaging the heap…',
-  'Appeasing the garbage collector…',
-  'Summoning semicolons…',
   'Herding pointers…',
   'Untangling spaghetti…',
   'Polishing the algorithms…',
@@ -238,6 +236,7 @@ const messages = [
   'Transgressing…',
   'Signing code with blood…',
   'Burrowing…',
+  'Seasoning with salt and pepper…',
 ];
 
 function pickRandom(): string {
