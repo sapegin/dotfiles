@@ -1,358 +1,362 @@
 {
-	"workbench.colorCustomizations": {
-		// Hide warnings and other distractions from overview ruler (scroll bar)
-		"editorOverviewRuler.bracketMatchForeground": "#ffffff00",
-		"editorOverviewRuler.infoForeground": "#ffffff00",
-		"editorOverviewRuler.warningForeground": "#ffffff00",
-		"editorOverviewRuler.wordHighlightForeground": "#ffffff00",
-		"editorOverviewRuler.wordHighlightTextForeground": "#ffffff00",
+  "workbench.colorCustomizations": {
+    // Hide warnings and other distractions from overview ruler (scroll bar)
+    "editorOverviewRuler.bracketMatchForeground": "#ffffff00",
+    "editorOverviewRuler.infoForeground": "#ffffff00",
+    "editorOverviewRuler.warningForeground": "#ffffff00",
+    "editorOverviewRuler.wordHighlightForeground": "#ffffff00",
+    "editorOverviewRuler.wordHighlightTextForeground": "#ffffff00",
 
-		// Hide command guide in the terminal (vertical bar that appear on the left
-		// side of the command on hover)
-		"notebook.inactiveFocusedCellBorder": "#ffffff00",
+    // Hide command guide in the terminal (vertical bar that appear on the left
+    // side of the command on hover)
+    "notebook.inactiveFocusedCellBorder": "#ffffff00",
 
-		// The foreground color of a chat edited file in the edited file list
-		"chat.editedFileForeground": "#f0f"
-	},
+    // The foreground color of a chat edited file in the edited file list
+    "chat.editedFileForeground": "#f0f"
+  },
 
-	// Internal
-	"accessibility.underlineLinks": true,
-	"breadcrumbs.enabled": false,
-	"breadcrumbs.filePath": "off",
-	"comments.maxHeight": false,
-	"comments.openView": "never",
-	"comments.visible": false,
-	"diffEditor.experimental.showMoves": true,
-	"diffEditor.codeLens": true,
-	"editor.acceptSuggestionOnCommitCharacter": false,
-	"editor.acceptSuggestionOnEnter": "off",
-	"editor.accessibilitySupport": "off",
-	"editor.autoClosingBrackets": "never",
-	"editor.autoClosingComments": "never",
-	"editor.autoClosingQuotes": "never",
-	"editor.autoIndent": "advanced",
-	"editor.autoSurround": "never",
-	"editor.bracketPairColorization.enabled": false,
-	"editor.codeActionsOnSave": {
-		"source.organizeImports": "never",
-		"source.fixAll": "explicit"
-	},
-	"editor.copyWithSyntaxHighlighting": false,
-	"editor.cursorStyle": "line",
-	"editor.cursorWidth": 2,
-	"editor.cursorBlinking": "solid",
-	// Always use indentation from EditorConfig/Prettier instead of file own
-	// indentation
-	"editor.detectIndentation": false,
-	"editor.defaultFormatter": "esbenp.prettier-vscode",
-	// Don't copy a line to clipboard when nothing is selected
-	"editor.emptySelectionClipboard": false,
-	"editor.editContext": true,
-	"editor.find.addExtraSpaceOnTop": false,
-	// Don't use words under cursor to seed find, only selection
-	"editor.find.seedSearchStringFromSelection": "selection",
-	"editor.folding": false,
-	"editor.fontFamily": "MonoLisa, \"Symbols Nerd Font Mono\"",
-	// Enable contextual alternative but disable ligatures
-	"editor.fontLigatures": "'calt' on, 'liga' off",
-	"editor.fontSize": 17,
-	"editor.formatOnSave": true,
-	"editor.glyphMargin": false,
-	"editor.gotoLocation.multipleDeclarations": "goto",
-	"editor.gotoLocation.multipleDefinitions": "goto",
-	"editor.gotoLocation.multipleImplementations": "goto",
-	"editor.gotoLocation.multipleReferences": "goto",
-	"editor.gotoLocation.multipleTypeDefinitions": "goto",
-	"editor.guides.indentation": true,
-	"editor.guides.highlightActiveIndentation": true,
-	"editor.hideCursorInOverviewRuler": true,
-	"editor.inlayHints.padding": true,
-	"editor.inlineSuggest.suppressSuggestions": true,
-	"editor.lineDecorationsWidth": 32, // Undocumented left padding
-	"editor.lineHeight": 1.6,
-	"editor.lineNumbers": "off",
-	"editor.linkedEditing": true,
-	"editor.minimap.enabled": false,
-	"editor.occurrencesHighlight": "off",
-	"editor.overviewRulerBorder": false,
-	"editor.quickSuggestions": { "strings": "on" },
-	"editor.pasteAs.preferences": ["text.updateImports"],
-	"editor.renderLineHighlight": "none",
-	"editor.renderWhitespace": "selection",
-	"editor.roundedSelection": false,
-	"editor.rulers": [80],
-	"editor.semanticHighlighting.enabled": true,
-	"editor.showFoldingControls": "never",
-	"editor.snippetSuggestions": "bottom",
-	"editor.stickyScroll.enabled": true,
-	"editor.stickyScroll.maxLineCount": 3,
-	"editor.suggest.snippetsPreventQuickSuggestions": false,
-	"editor.suggestSelection": "first",
-	"editor.tabCompletion": "on",
-	"editor.unfoldOnClickAfterEndOfLine": true,
-	"editor.wordBasedSuggestions": "off",
-	"editor.wordWrap": "on",
-	"explorer.compactFolders": false,
-	"explorer.confirmDelete": false,
-	"explorer.confirmDragAndDrop": false,
-	"explorer.decorations.badges": false,
-	"explorer.decorations.colors": false,
-	"explorer.fileNesting.enabled": false,
-	"explorer.openEditors.visible": 1,
-	// Delay auto updates to 7 days
-	"extensions.autoUpdateDelay": 168,
-	"extensions.ignoreRecommendations": true,
-	"files.associations": {
-		"*.js.snap": "javascript",
-		".prettierrc": "json"
-	},
-	"files.autoSave": "afterDelay",
-	"files.autoSaveWhenNoErrors": true,
-	"files.autoSaveWorkspaceFilesOnly": true,
-	"files.defaultLanguage": "markdown",
-	"files.exclude": {
-		// Show node_modules but don't show anything inside
-		"**/node_modules/**/*": true,
-		"**/package-lock.json": true,
-		"**/pnpm-lock.yaml": true,
-		"**/yarn.lock": true
-	},
-	"files.hotExit": "onExitAndWindowClose",
-	"git.blame.editorDecoration.enabled": false,
-	"git.closeDiffOnOperation": true,
-	"git.confirmSync": false,
-	"git.enableSmartCommit": true,
-	"git.mergeEditor": true,
-	"git.openRepositoryInParentFolders": "always",
-	"files.simpleDialog.enable": true,
-	"json.schemaDownload.trustedDomains": {
-		"https://developer.microsoft.com/json-schemas/": true,
-		"https://json-schema.org/": true,
-		"https://json.schemastore.org/": true,
-		"https://raw.githubusercontent.com": true,
-		"https://schemastore.azurewebsites.net/": true,
-		"https://www.schemastore.org/": true
-	},
-	"merge-conflict.autoNavigateNextConflict.enabled": true,
-	"outline.problems.badges": false,
-	"outline.showVariables": false,
-	"problems.autoReveal": false,
-	"problems.decorations.enabled": false,
-	"search.decorations.badges": false,
-	"search.seedOnFocus": true,
-	"search.useParentIgnoreFiles": true,
-	"scm.diffDecorations": "gutter",
-	"scm.diffDecorationsGutterPattern": { "modified": false },
-	"scm.diffDecorationsIgnoreTrimWhitespace": "true",
-	"scm.inputFontFamily": "editor",
-	"scm.inputFontSize": 16,
-	"scm.inputMinLineCount": 2,
-	"scm.repositories.selectionMode": "single",
-	"search.exclude": {
-		"**/node_modules": true,
-		"**/package-lock.json": true,
-		"**/pnpm-lock.yaml": true,
-		"**/yarn.lock": true
-	},
-	"security.promptForLocalFileProtocolHandling": false,
-	"task.problemMatchers.neverPrompt": { "npm": true },
-	"telemetry.telemetryLevel": "off",
-	"terminal.external.osxExec": "Ghostty.app",
-	// Run tasks in interactive shell, otherwise some things (like pnpm installed
-	// using corepack) aren't working
-	"terminal.integrated.automationProfile.osx": {
-		"path": "/opt/homebrew/bin/zsh",
-		"args": ["-i"]
-	},
-	"terminal.integrated.commandsToSkipShell": ["workbench.action.closePanel"],
-	"terminal.integrated.copyOnSelection": true,
-	"terminal.integrated.cursorStyle": "line",
-	"terminal.integrated.cursorStyleInactive": "line",
-	"terminal.integrated.cursorWidth": 2,
-	"terminal.integrated.drawBoldTextInBrightColors": false,
-	"terminal.integrated.enablePersistentSessions": false,
-	"terminal.integrated.fontSize": 15,
-	"terminal.integrated.hideOnLastClosed": false,
-	"terminal.integrated.hideOnStartup": "always",
-	"terminal.integrated.initialHint": false,
-	"terminal.integrated.lineHeight": 1.1,
-	"terminal.integrated.minimumContrastRatio": 1,
-	"terminal.integrated.shellIntegration.decorationsEnabled": "never",
-	"terminal.integrated.shellIntegration.showCommandGuide": false,
-	"terminal.integrated.stickyScroll.enabled": false,
-	"terminal.integrated.suggest.enabled": false,
-	"terminal.integrated.suggest.inlineSuggestion": "off",
-	"terminal.integrated.suggest.quickSuggestions": {
-		"commands": "off",
-		"arguments": "on",
-		"unknown": "off"
-	},
-	"terminal.integrated.tabs.enabled": false,
-	"terminal.integrated.tabs.enableAnimation": false,
-	"terminal.integrated.tabs.showActions": "never",
-	"terminal.integrated.tabStopWidth": 2,
-	"window.commandCenter": false,
-	"window.newWindowDimensions": "inherit",
-	"window.openFilesInNewWindow": "off",
-	"window.openFoldersInNewWindow": "off",
-	"window.restoreWindows": "all",
-	"window.title": "${activeEditorShort}",
-	"window.zoomLevel": 0.15,
-	"workbench.activityBar.location": "hidden",
-	"workbench.browser.showInTitleBar": false,
-	"workbench.colorTheme": "Squirrelsong Light (Dark Deep Purple Terminal)",
-	"workbench.commandPalette.preserveInput": false,
-	"workbench.editor.customLabels.enabled": true,
-	"workbench.editor.customLabels.patterns": {
-		"**/index.*": "${dirname}/${filename}.${extname}"
-	},
-	"workbench.editor.decorations.badges": false,
-	"workbench.editor.editorActionsLocation": "titleBar",
-	"workbench.editor.empty.hint": "hidden",
-	"workbench.editor.showTabs": "none",
-	"workbench.editorAssociations": {
-		// Don't open SVG files as preview
-		"*.svg": "default"
-	},
-	"workbench.enableExperiments": false,
-	"workbench.fontAliasing": "auto",
-	"workbench.iconTheme": "squirrelppuccin-icons-light",
-	"workbench.layoutControl.enabled": false,
-	"workbench.navigationControl.enabled": false,
-	"workbench.reduceMotion": "on",
-	"workbench.settings.enableNaturalLanguageSearch": false,
-	"workbench.sideBar.location": "right",
-	"workbench.startupEditor": "none",
-	"workbench.tips.enabled": false,
-	"workbench.tree.indent": 12,
-	"zenMode.centerLayout": true,
-	"zenMode.fullScreen": false,
-	"zenMode.showTabs": "none",
+  // Internal
+  "accessibility.underlineLinks": true,
+  "breadcrumbs.enabled": false,
+  "breadcrumbs.filePath": "off",
+  "comments.maxHeight": false,
+  "comments.openView": "never",
+  "comments.visible": false,
+  "diffEditor.experimental.showMoves": true,
+  "diffEditor.codeLens": true,
+  "editor.acceptSuggestionOnCommitCharacter": false,
+  "editor.acceptSuggestionOnEnter": "off",
+  "editor.accessibilitySupport": "off",
+  "editor.autoClosingBrackets": "never",
+  "editor.autoClosingComments": "never",
+  "editor.autoClosingQuotes": "never",
+  "editor.autoIndent": "advanced",
+  "editor.autoSurround": "never",
+  "editor.bracketPairColorization.enabled": false,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "never",
+    "source.fixAll": "explicit"
+  },
+  "editor.colorDecorators": false,
+  "editor.copyWithSyntaxHighlighting": false,
+  "editor.cursorStyle": "line",
+  "editor.cursorWidth": 2,
+  "editor.cursorBlinking": "solid",
+  // Always use indentation from EditorConfig/Prettier instead of file own
+  // indentation
+  "editor.detectIndentation": false,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  // Don't copy a line to clipboard when nothing is selected
+  "editor.emptySelectionClipboard": false,
+  "editor.editContext": true,
+  "editor.find.addExtraSpaceOnTop": false,
+  // Don't use words under cursor to seed find, only selection
+  "editor.find.seedSearchStringFromSelection": "selection",
+  "editor.folding": false,
+  "editor.fontFamily": "MonoLisa, \"Symbols Nerd Font Mono\"",
+  // Enable contextual alternative but disable ligatures
+  "editor.fontLigatures": "'calt' on, 'liga' off",
+  "editor.fontSize": 17,
+  "editor.formatOnSave": true,
+  "editor.glyphMargin": false,
+  "editor.gotoLocation.multipleDeclarations": "goto",
+  "editor.gotoLocation.multipleDefinitions": "goto",
+  "editor.gotoLocation.multipleImplementations": "goto",
+  "editor.gotoLocation.multipleReferences": "goto",
+  "editor.gotoLocation.multipleTypeDefinitions": "goto",
+  "editor.guides.indentation": true,
+  "editor.guides.highlightActiveIndentation": true,
+  "editor.hideCursorInOverviewRuler": true,
+  "editor.inlayHints.padding": true,
+  "editor.inlineSuggest.suppressSuggestions": true,
+  "editor.lineDecorationsWidth": 32, // Undocumented left padding
+  "editor.lineHeight": 1.6,
+  "editor.lineNumbers": "off",
+  "editor.linkedEditing": true,
+  "editor.minimap.enabled": false,
+  "editor.occurrencesHighlight": "off",
+  "editor.overviewRulerBorder": false,
+  "editor.quickSuggestions": { "strings": "on" },
+  "editor.pasteAs.preferences": ["text.updateImports"],
+  "editor.renderLineHighlight": "none",
+  "editor.renderWhitespace": "selection",
+  "editor.roundedSelection": false,
+  "editor.rulers": [80],
+  "editor.scrollbar.horizontalScrollbarSize": 6,
+  "editor.scrollbar.verticalScrollbarSize": 6,
+  "editor.semanticHighlighting.enabled": true,
+  "editor.showFoldingControls": "never",
+  "editor.snippetSuggestions": "bottom",
+  "editor.stickyScroll.enabled": true,
+  "editor.stickyScroll.maxLineCount": 3,
+  "editor.suggest.snippetsPreventQuickSuggestions": false,
+  "editor.suggestSelection": "first",
+  "editor.tabCompletion": "on",
+  "editor.unfoldOnClickAfterEndOfLine": true,
+  "editor.wordBasedSuggestions": "off",
+  "editor.wordWrap": "on",
+  "explorer.compactFolders": false,
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false,
+  "explorer.decorations.badges": false,
+  "explorer.decorations.colors": false,
+  "explorer.fileNesting.enabled": false,
+  "explorer.openEditors.visible": 1,
+  // Delay auto updates to 7 days
+  "extensions.autoUpdateDelay": 168,
+  "extensions.ignoreRecommendations": true,
+  "files.associations": {
+    "*.js.snap": "javascript",
+    ".prettierrc": "json"
+  },
+  "files.autoSave": "afterDelay",
+  "files.autoSaveWhenNoErrors": true,
+  "files.autoSaveWorkspaceFilesOnly": true,
+  "files.defaultLanguage": "markdown",
+  "files.exclude": {
+    // Show node_modules but don't show anything inside
+    "**/node_modules/**/*": true,
+    "**/package-lock.json": true,
+    "**/pnpm-lock.yaml": true,
+    "**/yarn.lock": true
+  },
+  "files.hotExit": "onExitAndWindowClose",
+  "git.blame.editorDecoration.enabled": false,
+  "git.closeDiffOnOperation": true,
+  "git.confirmSync": false,
+  "git.enableSmartCommit": true,
+  "git.mergeEditor": true,
+  "git.openRepositoryInParentFolders": "always",
+  "files.simpleDialog.enable": true,
+  "json.schemaDownload.trustedDomains": {
+    "https://developer.microsoft.com/json-schemas/": true,
+    "https://json-schema.org/": true,
+    "https://json.schemastore.org/": true,
+    "https://raw.githubusercontent.com": true,
+    "https://schemastore.azurewebsites.net/": true,
+    "https://www.schemastore.org/": true
+  },
+  "merge-conflict.autoNavigateNextConflict.enabled": true,
+  "outline.problems.badges": false,
+  "outline.showVariables": false,
+  "problems.autoReveal": false,
+  "problems.decorations.enabled": false,
+  "search.decorations.badges": false,
+  "search.seedOnFocus": true,
+  "search.useParentIgnoreFiles": true,
+  "scm.diffDecorations": "gutter",
+  "scm.diffDecorationsGutterPattern": { "modified": false },
+  "scm.diffDecorationsIgnoreTrimWhitespace": "true",
+  "scm.inputFontFamily": "editor",
+  "scm.inputFontSize": 16,
+  "scm.inputMinLineCount": 2,
+  "scm.repositories.selectionMode": "single",
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/package-lock.json": true,
+    "**/pnpm-lock.yaml": true,
+    "**/yarn.lock": true
+  },
+  "security.promptForLocalFileProtocolHandling": false,
+  "task.problemMatchers.neverPrompt": { "npm": true },
+  "telemetry.telemetryLevel": "off",
+  "terminal.external.osxExec": "Ghostty.app",
+  // Run tasks in interactive shell, otherwise some things (like pnpm installed
+  // using corepack) aren't working
+  "terminal.integrated.automationProfile.osx": {
+    "path": "/opt/homebrew/bin/zsh",
+    "args": ["-i"]
+  },
+  "terminal.integrated.commandsToSkipShell": ["workbench.action.closePanel"],
+  "terminal.integrated.copyOnSelection": true,
+  "terminal.integrated.cursorStyle": "line",
+  "terminal.integrated.cursorStyleInactive": "line",
+  "terminal.integrated.cursorWidth": 2,
+  "terminal.integrated.drawBoldTextInBrightColors": false,
+  "terminal.integrated.enablePersistentSessions": false,
+  "terminal.integrated.fontSize": 15,
+  "terminal.integrated.hideOnLastClosed": false,
+  "terminal.integrated.hideOnStartup": "always",
+  "terminal.integrated.initialHint": false,
+  "terminal.integrated.lineHeight": 1.1,
+  "terminal.integrated.minimumContrastRatio": 1,
+  "terminal.integrated.shellIntegration.decorationsEnabled": "never",
+  "terminal.integrated.shellIntegration.showCommandGuide": false,
+  "terminal.integrated.stickyScroll.enabled": false,
+  "terminal.integrated.suggest.enabled": false,
+  "terminal.integrated.suggest.inlineSuggestion": "off",
+  "terminal.integrated.suggest.quickSuggestions": {
+    "commands": "off",
+    "arguments": "on",
+    "unknown": "off"
+  },
+  "terminal.integrated.tabs.enabled": false,
+  "terminal.integrated.tabs.enableAnimation": false,
+  "terminal.integrated.tabs.showActions": "never",
+  "terminal.integrated.tabStopWidth": 2,
+  "window.commandCenter": false,
+  "window.newWindowDimensions": "inherit",
+  "window.openFilesInNewWindow": "off",
+  "window.openFoldersInNewWindow": "off",
+  "window.restoreWindows": "all",
+  "window.title": "${activeEditorShort}",
+  "window.zoomLevel": 0.15,
+  "workbench.activityBar.location": "hidden",
+  "workbench.browser.showInTitleBar": false,
+  "workbench.colorTheme": "Squirrelsong Light (Dark Terminal)",
+  "workbench.commandPalette.preserveInput": false,
+  "workbench.editor.customLabels.enabled": true,
+  "workbench.editor.customLabels.patterns": {
+    "**/index.*": "${dirname}/${filename}.${extname}"
+  },
+  "workbench.editor.decorations.badges": false,
+  "workbench.editor.editorActionsLocation": "titleBar",
+  "workbench.editor.empty.hint": "hidden",
+  "workbench.editor.showTabs": "none",
+  "workbench.editorAssociations": {
+    // Don't open SVG files as preview
+    "*.svg": "default"
+  },
+  "workbench.enableExperiments": false,
+  "workbench.experimental.modernUI": true,
+  "workbench.fontAliasing": "auto",
+  "workbench.iconTheme": "squirrelppuccin-icons-light",
+  "workbench.layoutControl.enabled": false,
+  "workbench.navigationControl.enabled": false,
+  "workbench.reduceMotion": "on",
+  "workbench.settings.enableNaturalLanguageSearch": false,
+  "workbench.sideBar.location": "right",
+  "workbench.startupEditor": "none",
+  "workbench.tips.enabled": false,
+  "workbench.tree.indent": 12,
+  "zenMode.centerLayout": true,
+  "zenMode.fullScreen": false,
+  "zenMode.showTabs": "none",
 
-	// Plugins
-	"catppuccin-icons.hidesExplorerArrows": true,
-	"chat.agent.thinkingStyle": "collapsed",
-	"chat.checkpoints.enabled": false,
-	"chat.disableAIFeatures": true,
-	"chat.editor.fontSize": 15,
-	"chat.fontSize": 16,
-	"chat.tools.terminal.autoApprove": {
-		"npm run typecheck": true,
-		"npm run dev": true,
-		"npm run lint": true,
-		"npm run test": true,
-		"npm start": true,
-		"npm test": true,
-		"npm install": true,
-		"npm run format": true,
-		"npm t": true,
-		"npm run build": true
-	},
-	"chat.viewSessions.enabled": false,
-	"color-highlight.markerType": "underline",
-	"color-highlight.markRuler": false,
-	"color-highlight.matchWords": false,
-	"color-highlight.sass.includePaths": [],
-	"prettier.requireConfig": true,
-	"prettier.useEditorConfig": false,
-	"eslint.rules.customizations": [
-		{ "rule": "*", "fixable": true, "severity": "off" }
-	],
-	"eslint.run": "onSave",
-	"eslint.useESLintClass": true,
-	"eslint.validate": [
-		"javascript",
-		"javascriptreact",
-		"typescript",
-		"typescriptreact",
-		"html",
-		"astro"
-	],
-	"emmet.excludeLanguages": ["markdown"],
-	"emmet.showSuggestionsAsSnippets": true,
-	"emmet.triggerExpansionOnTab": true,
-	"chatgpt.commentCodeLensEnabled": false,
-	"chatgpt.composerEnterBehavior": "cmdIfMultiline",
-	"chatgpt.followUpQueueMode": "steer",
-	"cSpell.blockCheckingWhenLineLengthGreaterThan": 50000,
-	"cSpell.spellCheckDelayMs": 500,
-	"cSpell.enabledFileTypes": {
-		"*": true,
-		"markdown": true,
-		"shellscript": true
-	},
-	"cSpell.enabledNotifications": {
-		"Average Word Length too Long": false,
-		"Lines too Long": false,
-		"Maximum Word Length Exceeded": false
-	},
-	"cSpell.customDictionaries": {
-		"dotfiles": {
-			"description": "Words I use in various projects",
-			"path": "~/dotfiles/cspell.txt",
-			// "Add Word to User Dictionary" command will add words to this file
-			"addWords": true
-		}
-	},
-	"donations.disablePrompt": true,
-	"github.copilot.editor.enableAutoCompletions": false,
-	"github.copilot.enable": {
-		"*": false,
-		"plaintext": false,
-		"markdown": false,
-		"scminput": false
-	},
-	"github.copilot.chat.reviewSelection.enabled": true,
-	"github.copilot.nextEditSuggestions.enabled": false,
-	"githubPullRequests.defaultMergeMethod": "squash",
-	"githubPullRequests.pullPullRequestBranchBeforeCheckout": "pullAndMergeBase",
-	"inlineChat.enableV2": true,
-	// Disable insanely annoying hints "Cmd+I to continue with Copilot"
-	"inlineChat.lineNaturalLanguageHint": false,
-	"tailwindCSS.emmetCompletions": false,
-	"typos.diagnosticSeverity": "Information",
-	"profileGenerator": [
-		{
-			"id": "68899a47",
-			"name": "Zen Mode Supreme",
-			"values": {
-				"editor.fontSize": 21,
-				"editor.lineHeight": 2,
-				"editor.rulers": [],
-				"editor.stickyScroll.enabled": false,
-				"scm.diffDecorations": "none",
-				"workbench.colorCustomizations": {
-					"editor.background": "#f7f6f9",
-					"editor.foreground": "#4c4b4e",
-					"titleBar.activeBackground": "#f7f6f9",
-					"titleBar.inactiveBackground": "#f7f6f9"
-				}
-			}
-		}
-	],
+  // Plugins
+  "catppuccin-icons.hidesExplorerArrows": true,
+  "chat.agent.thinkingStyle": "collapsed",
+  "chat.checkpoints.enabled": false,
+  "chat.disableAIFeatures": true,
+  "chat.editor.fontSize": 15,
+  "chat.fontSize": 16,
+  "chat.tools.terminal.autoApprove": {
+    "npm run typecheck": true,
+    "npm run dev": true,
+    "npm run lint": true,
+    "npm run test": true,
+    "npm start": true,
+    "npm test": true,
+    "npm install": true,
+    "npm run format": true,
+    "npm t": true,
+    "npm run build": true
+  },
+  "chat.viewSessions.enabled": false,
+  "color-highlight.markerType": "underline",
+  "color-highlight.markRuler": false,
+  "color-highlight.matchWords": false,
+  "color-highlight.sass.includePaths": [],
+  "prettier.requireConfig": true,
+  "prettier.useEditorConfig": false,
+  "eslint.rules.customizations": [
+    { "rule": "*", "fixable": true, "severity": "off" }
+  ],
+  "eslint.run": "onSave",
+  "eslint.useESLintClass": true,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "html",
+    "astro"
+  ],
+  "emmet.excludeLanguages": ["markdown"],
+  "emmet.showSuggestionsAsSnippets": true,
+  "emmet.triggerExpansionOnTab": true,
+  "chatgpt.commentCodeLensEnabled": false,
+  "chatgpt.composerEnterBehavior": "cmdIfMultiline",
+  "chatgpt.followUpQueueMode": "steer",
+  "cSpell.blockCheckingWhenLineLengthGreaterThan": 50000,
+  "cSpell.spellCheckDelayMs": 500,
+  "cSpell.enabledFileTypes": {
+    "*": true,
+    "markdown": true,
+    "shellscript": true
+  },
+  "cSpell.enabledNotifications": {
+    "Average Word Length too Long": false,
+    "Lines too Long": false,
+    "Maximum Word Length Exceeded": false
+  },
+  "cSpell.customDictionaries": {
+    "dotfiles": {
+      "description": "Words I use in various projects",
+      "path": "~/dotfiles/cspell.txt",
+      // "Add Word to User Dictionary" command will add words to this file
+      "addWords": true
+    }
+  },
+  "donations.disablePrompt": true,
+  "github.copilot.editor.enableAutoCompletions": false,
+  "github.copilot.enable": {
+    "*": false,
+    "plaintext": false,
+    "markdown": false,
+    "scminput": false
+  },
+  "github.copilot.chat.reviewSelection.enabled": true,
+  "github.copilot.nextEditSuggestions.enabled": false,
+  "githubPullRequests.defaultMergeMethod": "squash",
+  "githubPullRequests.pullPullRequestBranchBeforeCheckout": "pullAndMergeBase",
+  "inlineChat.enableV2": true,
+  // Disable insanely annoying hints "Cmd+I to continue with Copilot"
+  "inlineChat.lineNaturalLanguageHint": false,
+  "tailwindCSS.emmetCompletions": false,
+  "typos.diagnosticSeverity": "Information",
+  "profileGenerator": [
+    {
+      "id": "68899a47",
+      "name": "Zen Mode Supreme",
+      "values": {
+        "editor.fontSize": 21,
+        "editor.lineHeight": 2,
+        "editor.rulers": [],
+        "editor.stickyScroll.enabled": false,
+        "scm.diffDecorations": "none",
+        "workbench.colorCustomizations": {
+          "editor.background": "#f7f6f9",
+          "editor.foreground": "#4c4b4e",
+          "titleBar.activeBackground": "#f7f6f9",
+          "titleBar.inactiveBackground": "#f7f6f9"
+        }
+      }
+    }
+  ],
 
-	// File types
-	"js/ts.autoClosingTags.enabled": false,
-	"js/ts.tsdk.promptToUseWorkspaceVersion": true,
-	"js/ts.format.enabled": false,
-	"js/ts.preferences.importModuleSpecifier": "relative",
-	"js/ts.preferences.jsxAttributeCompletionStyle": "none",
-	"js/ts.preferences.preferTypeOnlyAutoImports": true,
-	"js/ts.preferGoToSourceDefinition": true,
-	"js/ts.updateImportsOnFileMove.enabled": "always",
-	"js/ts.validate.enabled": true,
-	"js/ts.workspaceSymbols.scope": "currentProject",
-	"html.format.wrapLineLength": 0,
-	"html.format.enable": false,
-	"html.autoClosingTags": false,
-	"html.autoCreateQuotes": false,
-	"[latex]": {
-		"editor.defaultFormatter": "mathematic.vscode-latex"
-	},
-	"[scminput]": {
-		"editor.rulers": [72],
-		"editor.wordWrap": "wordWrapColumn",
-		"editor.wordWrapColumn": 72
-	},
-	"workbench.statusBar.visible": false
+  // File types
+  "js/ts.autoClosingTags.enabled": false,
+  "js/ts.tsdk.promptToUseWorkspaceVersion": true,
+  "js/ts.format.enabled": false,
+  "js/ts.preferences.importModuleSpecifier": "relative",
+  "js/ts.preferences.jsxAttributeCompletionStyle": "none",
+  "js/ts.preferences.preferTypeOnlyAutoImports": true,
+  "js/ts.preferGoToSourceDefinition": true,
+  "js/ts.updateImportsOnFileMove.enabled": "always",
+  "js/ts.validate.enabled": true,
+  "js/ts.workspaceSymbols.scope": "currentProject",
+  "html.format.wrapLineLength": 0,
+  "html.format.enable": false,
+  "html.autoClosingTags": false,
+  "html.autoCreateQuotes": false,
+  "[latex]": {
+    "editor.defaultFormatter": "mathematic.vscode-latex"
+  },
+  "[scminput]": {
+    "editor.rulers": [72],
+    "editor.wordWrap": "wordWrapColumn",
+    "editor.wordWrapColumn": 72
+  },
+  "workbench.statusBar.visible": false
 }
