@@ -159,11 +159,11 @@
   /**
    * Code editing and navigation
    */
-  {
-    "comment": "Switch to the previously active editor",
-    "key": "shift shift",
-    "command": "workbench.action.openPreviousRecentlyUsedEditor"
-  },
+  //   {
+  //     "comment": "Switch to the previously active editor",
+  //     "key": "shift shift",
+  //     "command": "workbench.action.openPreviousRecentlyUsedEditor"
+  //   },
   {
     "comment": "Go to line",
     "key": "cmd+k cmd+g",
@@ -444,17 +444,6 @@
     "key": "shift+cmd+n",
     "command": "explorer.newFolder",
     "when": "explorerViewletVisible && filesExplorerFocus && !inputFocus"
-  },
-
-  /**
-   * Copilot
-   */
-  {
-    // Prevents accidental submitting by pressing Enter
-    "comment": "Submit Copilot prompt",
-    "key": "cmd+enter",
-    "command": "workbench.action.chat.submit",
-    "when": "chatInputHasText && inChatInput && !chatSessionRequestInProgress || chatPromptFileAttached && inChatInput && !chatSessionRequestInProgress"
   },
 
   /**

@@ -64,35 +64,10 @@
    * AI agents
    */
 
-  // Codex config
-  {
-    "source": "$DOTFILES_DIR/tilde/.codex/config.toml",
-    "destination": "~/.codex/config.toml"
-  },
-  // Codex base prompt
-  {
-    "source": "$DOTFILES_DIR/ai/AGENTS.md",
-    "destination": "~/.codex/AGENTS.md"
-  },
   // Skills (used by Pi, Cursor)
   {
     "source": "$DOTFILES_DIR/ai/skills/*",
     "destination": "~/.agents/skills/"
-  },
-  // Codex skills
-  {
-    "source": "$DOTFILES_DIR/ai/skills/*",
-    "destination": "~/.codex/skills"
-  },
-  // Amp skills
-  {
-    "source": "$DOTFILES_DIR/ai/skills/*",
-    "destination": "~/.config/agents/skills"
-  },
-  // Copilot base prompt
-  {
-    "source": "$DOTFILES_DIR/ai/AGENTS.md",
-    "destination": "~/.copilot/instructions/base.instructions.md"
   },
   // Pi configs
   {
@@ -174,15 +149,6 @@
   {
     "source": "$THEMES_DIR/Ghostty/Squirrelsong *",
     "destination": "$DOTFILES_DIR/tilde/.config/ghostty/themes/"
-  },
-  // Amp
-  {
-    "source": "$THEMES_DIR/Amp/squirrelsong-light/colors.toml",
-    "destination": "$DOTFILES_DIR/tilde/.config/amp/themes/squirrelsong-light/"
-  },
-  {
-    "source": "$THEMES_DIR/Amp/squirrelsong-dark/colors.toml",
-    "destination": "$DOTFILES_DIR/tilde/.config/amp/themes/squirrelsong-dark/"
   },
 
   /**

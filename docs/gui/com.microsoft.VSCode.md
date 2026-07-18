@@ -1,7 +1,8 @@
 ## Navigation and search
 
-- **Cmd+E:** open recent files
-- **Cmd+G:** go to line
+- **Cmd+O:** open recent files
+- **Cmd+Y:** list symbols in the file
+- **Cmd+K,G:** go to line
 - **F7:** jump to the next occurrence of the name
 - **F12:** go to definition
 - **Cmd+F:** find in the current file
@@ -11,27 +12,30 @@
 
 ## UI
 
-- **Cmd+B**: toggle sidebar
-- **Cmd+J**: toggle bottom panel
-- **Cmd+`**: toggle terminal
-- **Cmd+Shift+E:** open file explorer
+- **Cmd+]**: toggle sidebar
+- **Cmd+\\**: toggle bottom panel
+- **Cmd+T**: open terminal
+- **Cmd+G,G:** open Git panel
+- **Cmd+K,E:** open file explorer
+- **Cmd+K,X:** open extensions
 
 ## Editing
 
-- **Cmd+Y:** delete current line
+- **Cmd+E:** delete current line
 - **Cmd+D:** duplicate selection / current line below
-- **Cmd+Alt+↑:** move current line up
-- **Cmd+Alt+↓:** move current line down
-- **Ctrl+G:** add next matching selection
+- **Ctrl+↑:** move current line up
+- **Ctrl+↓:** move current line down
+- **F2:** add next matching selection
 - **Alt+↓:** add cursor below
 
 ## Refactoring
 
-- **Shift+F6:** rename symbol
+- **F6:** rename symbol
+- **Shift+F6:** rename file
+- **F8:** delete file
 - **Cmd+F2:** change all occurrences
 - **Alt+Enter:** quick fix or refactor
-- **Cmd+I:** Open inline Copilot
 
 ## Debugging
 
-- **Cmd+R:** run task
+- **Cmd+U:** run task

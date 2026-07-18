@@ -58,14 +58,14 @@ describe(stripJsonComments, () => {
   test('preserves /* inside strings', () => {
     const input = `{
   "source": "~/dotfiles/ai/skills/*",
-  "destination": "~/.codex/skills"
+  "destination": "~/.agents/skills"
 }`;
     const output = stripJsonComments(input);
 
     expect(output).toBe(input);
     expect(JSON.parse(output)).toStrictEqual({
       source: '~/dotfiles/ai/skills/*',
-      destination: '~/.codex/skills',
+      destination: '~/.agents/skills',
     });
   });
 
