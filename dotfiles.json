@@ -127,6 +127,17 @@
     "destination": "~/murder/.obsidian/themes/Squirrelsong/",
     "mode": "sync"
   },
+  // Handbook shared assets (source of truth in dotfiles)
+  {
+    "source": "$THEMES_DIR/CSS/squirrelsong.css",
+    "destination": "$DOTFILES_DIR/pretty-html/_assets/squirrelsong.css",
+    "mode": "sync"
+  },
+  {
+    "source": "$DOTFILES_DIR/pretty-html/_assets/",
+    "destination": "~/murder/zz-handbook/_assets/",
+    "mode": "sync"
+  },
 
   /**
    * Squirrelsong color themes

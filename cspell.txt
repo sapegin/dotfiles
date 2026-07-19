@@ -76,6 +76,7 @@ restic
 résumé
 rubberduck
 rubberducking
+sandboxed
 Sapegin
 Shazam
 shortcutting
@@ -84,6 +85,7 @@ signup
 Squirrelsong
 stuffses
 Styleguidist
+stylesheet
 subclassing
 Supacode
 tacocat

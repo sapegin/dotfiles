@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pretty HTML — example</title>
+    <script>
+      document.documentElement.classList.add(
+        matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+      );
+    </script>
+    <link rel="stylesheet" href="_assets/doc.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Pretty HTML example</h1>
+      <p>
+        Handbook pages are glorified Markdown: prose, semantic custom elements,
+        and lazy runtime enhancement. One stylesheet, one components script.
+      </p>
+
+      <ss-callout variant="remember">
+        <code>margin: auto</code> only centers block boxes horizontally when the
+        element has an explicit width.
+      </ss-callout>
+
+      <h2>Syntax highlighting</h2>
+      <p>
+        Raw source inside <code>&lt;ss-code&gt;</code>; highlight.js runs on
+        first use.
+      </p>
+
+      <ss-code language="css">
+        .container { display: grid; place-items: center; min-height: 12rem; }
+      </ss-code>
+
+      <ss-callout variant="prefer">
+        For most layouts, use Grid or Flexbox centering instead of absolute
+        positioning.
+      </ss-callout>
+
+      <h2>Live demo</h2>
+      <ss-demo>
+        <style>
+          body {
+            font-family: system-ui, sans-serif;
+            margin: 1rem;
+          }
+          .box {
+            display: grid;
+            place-items: center;
+            width: 8rem;
+            height: 8rem;
+            border: 2px solid #806f9b;
+            border-radius: 0.5rem;
+          }
+        </style>
+        <div class="box">Centered</div>
+      </ss-demo>
+
+      <h2>Diagram</h2>
+      <ss-diagram>
+        flowchart LR A[Block box] --> B[Flex or Grid] B --> C[Centered content]
+      </ss-diagram>
+
+      <ss-callout variant="gotcha">
+        Absolute centering with <code>transform</code> removes the element from
+        normal flow — children won’t expand the parent.
+      </ss-callout>
+
+      <ss-resources>
+        <ul>
+          <li>
+            <a
+              href="https://developer.mozilla.org/en-US/docs/Web/CSS/place-items"
+              >MDN: place-items</a
+            >
+          </li>
+          <li>
+            <a
+              href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_grid_layout/Box_alignment"
+              >MDN: Box alignment in Grid</a
+            >
+          </li>
+        </ul>
+      </ss-resources>
+    </main>
+    <script src="_assets/components.js"></script>
+  </body>
+</html>

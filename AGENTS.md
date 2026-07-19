@@ -7,3 +7,5 @@ Never symlink files into the Obsidian vault (`~/murder`) or other iCloud paths â
 New tools are written in TypeScript and located at `src/bin/`. Each TypeScript tool should have a matching symlink in `bin/symlinks/` that points to the shared `bin/_ts` runner (example: `src/bin/j.ts` and `bin/symlinks/j` â†’ `_ts`). Keep non-TypeScript tools as regular executable scripts in `bin/`.
 
 Shared utility functions should have concise comments explaining their purpose.
+
+Ephemeral pretty-html explainers live in `$DOTFILES_DIR/pretty-html/pages/` (gitignored). Long-term handbook pages live in `~/murder/zz-handbook/`. Shared assets are `$DOTFILES_DIR/pretty-html/_assets/` (git-tracked).

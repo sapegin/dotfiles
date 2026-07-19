@@ -1,0 +1,331 @@
+@import url('./squirrelsong.css');
+
+/* Pretty HTML layout and components */
+
+html {
+  color-scheme: light dark;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--text-background);
+  color: var(--text-foreground);
+  font-family: 'Iosevka Custom', 'Iosevka', ui-monospace, monospace;
+  font-size: 18px;
+  line-height: 1.65;
+}
+
+main {
+  box-sizing: border-box;
+  max-width: 50rem;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  color: var(--title-foreground);
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+h1 {
+  font-size: 1.75rem;
+  margin: 0 0 1.5rem;
+}
+
+h2 {
+  font-size: 1.25rem;
+  margin: 2.25rem 0 0.75rem;
+}
+
+h3 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.5rem;
+}
+
+p,
+ul,
+ol {
+  margin: 0 0 1rem;
+}
+
+ul,
+ol {
+  padding-left: 1.4rem;
+}
+
+a {
+  color: var(--link-foreground);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.15em;
+}
+
+a:hover {
+  color: var(--link-hover-foreground);
+}
+
+code:not(.hljs *) {
+  background: color-mix(in srgb, var(--title-foreground) 5%, transparent);
+  border-radius: 0.2em;
+  font-size: 0.92em;
+  padding: 0.1em 0.35em;
+}
+
+/* Callouts */
+
+ss-callout {
+  display: block;
+  border: 1px solid var(--info-border);
+  border-radius: 0.35rem;
+  margin: 1.25rem 0;
+  padding: 0.85rem 1rem 0.85rem 0.9rem;
+}
+
+ss-callout::before {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.35rem;
+  text-transform: uppercase;
+}
+
+ss-callout[variant='remember'] {
+  background: var(--warning-background);
+  border-color: var(--warning-border);
+  color: var(--warning-foreground);
+}
+
+ss-callout[variant='remember']::before {
+  content: 'Remember';
+}
+
+ss-callout[variant='gotcha'] {
+  background: var(--error-background);
+  border-color: var(--error-border);
+  color: var(--error-foreground);
+}
+
+ss-callout[variant='gotcha']::before {
+  content: 'Gotcha';
+}
+
+ss-callout[variant='prefer'] {
+  background: var(--success-background);
+  border-color: var(--success-border);
+  color: var(--success-foreground);
+}
+
+ss-callout[variant='prefer']::before {
+  content: 'Prefer';
+}
+
+ss-callout[variant='avoid'] {
+  background: var(--error-background);
+  border-color: var(--error-border);
+  color: var(--error-foreground);
+}
+
+ss-callout[variant='avoid']::before {
+  content: 'Avoid';
+}
+
+ss-callout[variant='info'] {
+  background: var(--info-background);
+  border-color: var(--info-border);
+  color: var(--info-foreground);
+}
+
+ss-callout[variant='info']::before {
+  content: 'Note';
+}
+
+/* Code blocks */
+
+ss-code {
+  display: block;
+  margin: 1rem 0 1.25rem;
+}
+
+ss-code:not([data-highlighted]) {
+  background: var(--text-background);
+  border: 1px solid var(--light-border);
+  border-radius: 0.35rem;
+  box-sizing: border-box;
+  font-size: 0.92em;
+  overflow-x: auto;
+  padding: 0.85rem 1rem;
+  white-space: pre-wrap;
+}
+
+ss-code[data-highlight-error] {
+  border-color: var(--error-border);
+}
+
+ss-code pre {
+  background: var(--ui-background);
+  border: 1px solid var(--light-border);
+  border-radius: 0.35rem;
+  margin: 0;
+  overflow-x: auto;
+  padding: 0.85rem 1rem;
+}
+
+ss-code code.hljs {
+  font-family: 'Monolisa', 'Iosevka Custom', 'Iosevka', ui-monospace, monospace;
+  background: transparent;
+  display: block;
+  font-size: 1.1rem;
+  line-height: 1.5;
+  padding: 0;
+}
+
+/* highlight.js → Squirrelsong code tokens */
+
+.hljs {
+  color: var(--text-foreground);
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: var(--code-comment);
+  font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-built_in,
+.hljs-name {
+  color: var(--code-keyword);
+}
+
+.hljs-string,
+.hljs-char,
+.hljs-regexp,
+.hljs-addition {
+  color: var(--code-string);
+}
+
+.hljs-number,
+.hljs-literal {
+  color: var(--code-value);
+}
+
+.hljs-title,
+.hljs-title.class_,
+.hljs-title.function_,
+.hljs-section {
+  color: var(--code-function);
+}
+
+.hljs-type,
+.hljs-class .hljs-title {
+  color: var(--code-type);
+}
+
+.hljs-variable,
+.hljs-template-variable,
+.hljs-attribute {
+  color: var(--code-variable);
+}
+
+.hljs-property,
+.hljs-attr {
+  color: var(--code-property);
+}
+
+.hljs-operator {
+  color: var(--code-operator);
+}
+
+.hljs-punctuation {
+  color: var(--code-punctuation);
+}
+
+.hljs-meta,
+.hljs-meta .hljs-keyword {
+  color: var(--code-at-rule);
+}
+
+.hljs-tag,
+.hljs-selector-id,
+.hljs-selector-class {
+  color: var(--code-tag-name);
+}
+
+.hljs-deletion {
+  color: var(--code-deleted);
+}
+
+/* Diagrams */
+
+ss-diagram {
+  display: block;
+  margin: 1.25rem 0 1.5rem;
+}
+
+ss-diagram svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* Live demos */
+
+ss-demo {
+  display: block;
+  margin: 1.25rem 0 1.5rem;
+}
+
+ss-demo iframe {
+  background: var(--text-background);
+  border: 1px solid var(--light-border);
+  border-radius: 0.35rem;
+  box-sizing: border-box;
+  display: block;
+  height: 0;
+  overflow: hidden;
+  width: 100%;
+}
+
+/* Resource links */
+
+ss-resources {
+  display: block;
+  border-top: 1px solid var(--light-border);
+  margin-top: 2.5rem;
+  padding-top: 1.25rem;
+}
+
+ss-resources::before {
+  color: var(--secondary-text-foreground);
+  content: 'Further reading';
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.65rem;
+  text-transform: uppercase;
+}
+
+ss-resources ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+ss-resources li {
+  margin: 0 0 0.45rem;
+}
+
+ss-resources li::before {
+  color: var(--icon);
+  content: '→ ';
+}

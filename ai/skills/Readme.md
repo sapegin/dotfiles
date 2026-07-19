@@ -11,7 +11,9 @@ AI agent skills. Invoke with `/<name>`.
 | [grill-in-code](grill-in-code/SKILL.md) | Stress-test a plan against the codebase, tests, and existing docs before implementation. |
 | [grill-me](grill-me/SKILL.md) | Interview the user relentlessly about a plan, decision, or design until reaching shared understanding. |
 | [librarian](librarian/SKILL.md) | Research open-source libraries with evidence-backed answers and GitHub permalinks. |
+| [pretty-html](pretty-html/SKILL.md) | Create and update standalone HTML documents with syntax highlighting, diagrams, and live demos. |
 | [review-code](review-code/SKILL.md) | Review code changes. |
+| [teach](teach/SKILL.md) | Teach user something, add or update topics in the personal handbook. |
 | [web-fetch](web-fetch/SKILL.md) | Fetch web pages as Markdown. |
 | [web-search](web-search/SKILL.md) | Search the web using DuckDuckGo. |
 | [write](write/SKILL.md) | Write or rewrite specs, letters, articles, documentation, messages, and other prose in the user’s voice. |
