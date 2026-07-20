@@ -86,7 +86,7 @@ ss-callout {
   border: 1px solid var(--info-border);
   border-radius: 0.35rem;
   margin: 1.25rem 0;
-  padding: 0.85rem 1rem 0.85rem 0.9rem;
+  padding: 0.85rem 1rem;
 }
 
 ss-callout::before {
@@ -155,36 +155,29 @@ ss-code {
   margin: 1rem 0 1.25rem;
 }
 
-ss-code:not([data-highlighted]) {
-  background: var(--text-background);
-  border: 1px solid var(--light-border);
-  border-radius: 0.35rem;
-  box-sizing: border-box;
-  font-size: 0.92em;
-  overflow-x: auto;
-  padding: 0.85rem 1rem;
-  white-space: pre-wrap;
-}
-
-ss-code[data-highlight-error] {
-  border-color: var(--error-border);
-}
-
-ss-code pre {
+ss-code > pre {
   background: var(--ui-background);
   border: 1px solid var(--light-border);
   border-radius: 0.35rem;
+  box-sizing: border-box;
+  font-family: 'Monolisa', 'Iosevka Custom', 'Iosevka', ui-monospace, monospace;
+  font-size: 1.1rem;
+  line-height: 1.5;
   margin: 0;
   overflow-x: auto;
   padding: 0.85rem 1rem;
 }
 
+ss-code[data-highlight-error] > pre {
+  border-color: var(--error-border);
+}
+
 ss-code code.hljs {
-  font-family: 'Monolisa', 'Iosevka Custom', 'Iosevka', ui-monospace, monospace;
+  font-family: inherit;
   background: transparent;
   display: block;
-  font-size: 1.1rem;
-  line-height: 1.5;
+  font-size: inherit;
+  line-height: inherit;
   padding: 0;
 }
 

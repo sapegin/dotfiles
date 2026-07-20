@@ -98,28 +98,6 @@
 		return mermaidReady;
 	}
 
-	// Remove common leading whitespace from indented source blocks.
-	function dedent(text) {
-		const lines = text.replace(/^\n/, '').replace(/\n$/, '').split('\n');
-		let indent = null;
-		for (const line of lines) {
-			if (!line.trim()) {
-				continue;
-			}
-			const match = line.match(/^(\s*)/);
-			const size = match ? match[1].length : 0;
-			indent = indent === null ? size : Math.min(indent, size);
-		}
-		if (!indent) {
-			return lines.join('\n');
-		}
-		return lines
-			.map(function (line) {
-				return line.slice(indent);
-			})
-			.join('\n');
-	}
-
 	function highlightSource(source, language) {
 		if (language && globalThis.hljs.getLanguage(language)) {
 			return globalThis.hljs.highlight(source, { language });
@@ -127,14 +105,21 @@
 		return globalThis.hljs.highlightAuto(source);
 	}
 
-	// Raw source in textContent; highlight.js runs on connect.
+	// Prefer a direct <pre> child (semantic + Oxfmt-safe); fall back to text
+	// content.
+	function rawSourceFromElement(element) {
+		const pre = element.querySelector(':scope > pre');
+		return (pre ? pre.textContent : element.textContent).trim();
+	}
+
+	// Raw source in <pre> or textContent; highlight.js runs on connect.
 	class SsCode extends HTMLElement {
 		async connectedCallback() {
 			if (this.dataset.highlighted) {
 				return;
 			}
 			const language = this.getAttribute('language') ?? '';
-			const source = dedent(this.textContent);
+			const source = rawSourceFromElement(this);
 			try {
 				await ensureHighlightJs();
 				if (!globalThis.hljs) {
@@ -157,13 +142,13 @@
 		}
 	}
 
-	// Mermaid source in textContent; rendered on connect.
+	// Mermaid source in <pre> or textContent; rendered on connect.
 	class SsDiagram extends HTMLElement {
 		async connectedCallback() {
 			if (this.dataset.rendered) {
 				return;
 			}
-			const source = this.textContent.trim();
+			const source = rawSourceFromElement(this);
 			if (!source) {
 				return;
 			}
@@ -233,12 +218,10 @@
 				});
 			}
 
-			// HTML is indented in source files; dedent before srcdoc injection.
-			const source = dedent(this.innerHTML);
 			const iframe = document.createElement('iframe');
 			iframe.setAttribute('sandbox', 'allow-scripts');
 			iframe.setAttribute('scrolling', 'no');
-			iframe.srcdoc = wrapSrcdoc(source);
+			iframe.srcdoc = wrapSrcdoc(this.innerHTML);
 			this.replaceChildren(iframe);
 			this.dataset.built = 'true';
 		}

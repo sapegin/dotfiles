@@ -77,22 +77,32 @@ Aside boxes for facts easy to forget. Variants: `remember`, `gotcha`, `prefer`, 
 
 ### `<ss-code language="…">`
 
-Raw source text; highlight.js loads lazily on first `<ss-code>`.
+Put raw source in a **`<pre>`** child (semantic preformatted text; Oxfmt leaves `<pre>` alone). Leading and trailing whitespace on the `<pre>` contents are trimmed. highlight.js loads lazily on first `<ss-code>`. Plain text without `<pre>` still works but is easy for formatters to break.
 
 ```html
 <ss-code language="css">
-  .box { display: grid; place-items: center; }
+  <pre>
+.box {
+  display: grid;
+  place-items: center;
+}
+  </pre>
 </ss-code>
 ```
 
-Do not hand-write `<pre class="hljs">` markup.
+Do not hand-write highlighted `<pre class="hljs">` markup — the component replaces content after highlight.js runs.
 
 ### `<ss-diagram>`
 
-Mermaid source as text content; rendered at runtime on first diagram.
+Mermaid source in a **`<pre>`** child; rendered at runtime on first diagram. Leading and trailing whitespace on the `<pre>` contents are trimmed.
 
 ```html
-<ss-diagram> flowchart LR A --> B --> C </ss-diagram>
+<ss-diagram>
+  <pre>
+flowchart LR
+  A --> B --> C
+  </pre>
+</ss-diagram>
 ```
 
 ### `<ss-demo>`
@@ -126,6 +136,7 @@ Prefer official or high-trust sources (MDN, specs, vendor docs).
 
 ## Authoring rules
 
+- Wrap `<ss-code>` / `<ss-diagram>` source in `<pre>`.
 - **Glorified Markdown** — HTML carries text and semantic markup only. No inline `<script>` in authored content except the one-line theme bootstrap in `<head>`. No pre-rendered SVG, no duplicated library code.
 - **Reuse components** — read `$DOTFILES_DIR/pretty-html/_assets/` before inventing new patterns. Add reusable widgets to `components.js` and styles to `doc.css`.
 - **Do not edit** `squirrelsong.css` — it syncs from `$THEMES_DIR/CSS/squirrelsong.css`.
