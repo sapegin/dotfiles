@@ -77,10 +77,11 @@ css:
 
 Each handbook page is scannable reference written in raccoon voice, not a sequential lesson:
 
-1. Short intro — what this doc covers.
-2. Sections (`<h2>`) per technique or subtopic.
-3. Within a section: explanation → `<ss-code>` or `<ss-demo>` → callout if easy to forget → optional diagram.
-4. End with `<ss-resources>` for further reading.
+1. Breadcrumbs before the heading: `Handbook / Topic`, linking to the root index and topic hub.
+2. Short intro — what this doc covers.
+3. Sections (`<h2>`) per technique or subtopic.
+4. Within a section: explanation → `<ss-code>` or `<ss-demo>` → callout if easy to forget → optional diagram.
+5. End with `<ss-resources>` for further reading.
 
 When updating an existing doc, merge into the right section; do not duplicate content elsewhere in the file.
 
@@ -92,7 +93,7 @@ Link from docs with a normal anchor: `<a href="../glossary.html#pure-function">p
 
 ## Topic hub
 
-When creating a new topic, add `<topic>/index.html` — title, one-line description, unordered list linking to each doc in that topic.
+When creating a new topic, add `<topic>/index.html` — breadcrumbs (`Handbook / Topic`, with the topic marked as the current page), title, one-line description, and an unordered list linking to each doc. The root `index.html` links all topic hubs and the glossary.
 
 ## Guardrails
 

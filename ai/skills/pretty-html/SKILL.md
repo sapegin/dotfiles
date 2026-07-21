@@ -54,6 +54,11 @@ Copy from [example.html](../../../pretty-html/example.html). Every page needs:
   </head>
   <body>
     <main>
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="../index.html">Handbook</a>
+        <span aria-hidden="true">/</span>
+        <a href="index.html">CSS</a>
+      </nav>
       <!-- content -->
     </main>
     <script src="../_assets/components.js"></script>
@@ -136,6 +141,7 @@ Prefer official or high-trust sources (MDN, specs, vendor docs).
 
 ## Authoring rules
 
+- Add a `<nav class="breadcrumbs" aria-label="Breadcrumb">` before page content. Handbook topic documents link to the root handbook index and their topic hub; topic hubs mark the topic name with `aria-current="page"`.
 - Wrap `<ss-code>` / `<ss-diagram>` source in `<pre>`.
 - **Glorified Markdown** — HTML carries text and semantic markup only. No inline `<script>` in authored content except the one-line theme bootstrap in `<head>`. No pre-rendered SVG, no duplicated library code.
 - **Reuse components** — read `$DOTFILES_DIR/pretty-html/_assets/` before inventing new patterns. Add reusable widgets to `components.js` and styles to `doc.css`.
