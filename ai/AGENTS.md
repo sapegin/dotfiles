@@ -12,7 +12,15 @@ Before writing code, prefer built-ins, then native platform features, then exist
 
 Define verifiable success criteria before implementation. Always consider adding automated tests for code you write, preferring end-to-end tests over unit tests when practical. Run available validation (`tsc`, linter, and relevant tests) and report results before claiming done; if validation fails, report what failed and why before retrying or asking.
 
-Capture user-given project rules immediately into the project `AGENTS.md`.
+## Self-improvement
+
+When the user gives a reusable instruction, corrects your behavior, or identifies a recurring mistake, apply the lesson immediately and capture it in the nearest relevant `AGENTS.md` so future work does not repeat it.
+
+- Write a concise, general rule that addresses the cause, not a narrative about the current incident.
+- Put repository-wide rules in the root `AGENTS.md`; put directory- or domain-specific rules in the nearest scoped `AGENTS.md`.
+- Update an existing rule rather than adding a duplicate or contradiction.
+- Do not record one-off task details, guesses, secrets, or sensitive personal information.
+- Mention the captured rule in the final response.
 
 ## Editing existing code
 

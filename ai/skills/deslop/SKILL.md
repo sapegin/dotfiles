@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 Check the requested target or current changes for AI-generated slop.
 
-Read and follow [guidelines for JavaScript/TypeScript](../_references/JavaScript.md).
+For JavaScript or TypeScript targets, read and follow [guidelines for JavaScript/TypeScript](../_references/JavaScript.md).
 
 ## Target
 
