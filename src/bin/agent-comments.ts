@@ -29,15 +29,15 @@ const execFileAsync = promisify(execFile);
 
 // Comment leaders for the common languages: `//`, `#`, `/*`, `/**`, `*`
 // (block continuation), `<!--`, `--` (SQL/Lua/Haskell), `;` (Lisp/ini),
-// `%` (LaTeX/Erlang), and `'` (VB/VBA).
-const COMMENT_LEADER = String.raw`^\s*(?:#+|//+|/\*+|<!--+|--+|;+|%+|\*+|'+)`;
+// `%` (LaTeX/Erlang), and `'` (VB/VBA), optionally inside a JSX expression.
+const COMMENT_LEADER = String.raw`^\s*(?:\{\s*)?(?:#+|//+|/\*+|<!--+|--+|;+|%+|\*+|'+)`;
 
 // Pattern handed to ripgrep to find candidate lines.
 const SEARCH_PATTERN = `${COMMENT_LEADER}\\s*AI:`;
 
 // Capture the message and optional block/HTML comment terminators on the same line.
 const EXTRACT_PATTERN = new RegExp(
-  `${COMMENT_LEADER}\\s*AI:[ \\t]?(.+?)(?:\\s*(?:\\*/|-->))?\\s*$`
+  `${COMMENT_LEADER}\\s*AI:[ \\t]?(.+?)(?:\\s*(?:\\*/|-->)\\s*\\}?)?\\s*$`
 );
 
 interface RipgrepMatch {
