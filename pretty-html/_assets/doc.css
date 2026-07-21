@@ -27,6 +27,19 @@ main {
   padding: 2rem 1.5rem;
 }
 
+.breadcrumbs {
+  align-items: center;
+  color: var(--secondary-text-foreground);
+  display: flex;
+  font-size: 0.8rem;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.breadcrumbs [aria-current='page'] {
+  color: var(--text-foreground);
+}
+
 h1,
 h2,
 h3,
@@ -72,6 +85,24 @@ a:hover {
   color: var(--link-hover-foreground);
 }
 
+table {
+  font-size: 0.9rem;
+}
+
+tbody td,
+tbody th {
+  padding-bottom: 0.75rem;
+}
+
+td,
+th {
+  vertical-align: top;
+}
+
+th {
+  text-align: left;
+}
+
 code:not(.hljs *) {
   background: color-mix(in srgb, var(--title-foreground) 5%, transparent);
   border-radius: 0.2em;
@@ -96,6 +127,14 @@ ss-callout::before {
   letter-spacing: 0.04em;
   margin-bottom: 0.35rem;
   text-transform: uppercase;
+}
+
+ss-callout a {
+  color: inherit;
+}
+
+ss-callout a:hover {
+  color: var(--active-foreground);
 }
 
 ss-callout[variant='remember'] {
@@ -268,6 +307,7 @@ ss-diagram {
 ss-diagram svg {
   display: block;
   max-width: 100%;
+  margin-inline: auto;
 }
 
 /* Live demos */
