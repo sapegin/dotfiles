@@ -8,3 +8,7 @@ Keep each `SKILL.md` self-contained enough to route and begin the task, but keep
 - Instructions required for every invocation belong in `SKILL.md`. Do not move essential rules into an optional reference merely to shorten the skill.
 - If a reference is required for every invocation but is too detailed for `SKILL.md`, say so explicitly and load only that reference.
 - Apply the same rules when one skill delegates to another: load the other skill only when its workflow is needed.
+
+## Deterministic operations
+
+Prefer simple scripts for deterministic operations that may otherwise burn a lot of tokens and produce inconsistent results (examples: src/bin/agent-comments.ts, src/bin/branch-diff.ts).

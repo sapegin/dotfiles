@@ -1,4 +1,4 @@
-import { execFileSync, execSync } from 'node:child_process';
+import { execFileSync, execSync, spawnSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { tildify } from './files.ts';
@@ -25,6 +25,31 @@ export function getCurrentBranch(): string | undefined {
     encoding: 'utf8',
   }).trim();
   return branch || undefined;
+}
+
+/** Returns the root of the current Git repository. */
+export function getGitRepoRoot(cwd?: string): string {
+  return execFileSync('git', ['rev-parse', '--show-toplevel'], {
+    cwd,
+    encoding: 'utf8',
+  }).trim();
+}
+
+/** Returns the local main or master branch, preferring main. */
+export function getBaseBranch(cwd?: string): 'main' | 'master' {
+  for (const branch of ['main', 'master'] as const) {
+    if (
+      spawnSync(
+        'git',
+        ['show-ref', '--verify', '--quiet', `refs/heads/${branch}`],
+        { cwd }
+      ).status === 0
+    ) {
+      return branch;
+    }
+  }
+
+  throw new Error('Cannot find a local main or master branch.');
 }
 
 /**
@@ -93,7 +118,10 @@ export function getExecExitCode(error: unknown): number {
  * Runs a Git command, forwarding stdio. Exits with Git's status code on failure
  * without printing a Node stack trace.
  */
-export function runGit(args: string[], options?: { cwd?: string }): void {
+export function runGit(
+  args: readonly string[],
+  options?: { cwd?: string }
+): void {
   try {
     execFileSync('git', args, { stdio: 'inherit', ...options });
   } catch (error) {

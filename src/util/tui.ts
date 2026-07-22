@@ -74,7 +74,7 @@ function isCtrlCAbort(error: unknown): boolean {
 }
 
 export async function run(
-  main: () => Promise<void>,
+  main: () => void | Promise<void>,
   options: RunMainOptions = {}
 ): Promise<void> {
   try {

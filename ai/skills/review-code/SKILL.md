@@ -18,10 +18,7 @@ Accept zero or one argument:
 /skill:review-code [<file-path> | <commit-sha>]
 ```
 
-- If the argument is an existing file path, review that file as it currently exists. Inspect its relevant diff or history when useful, and read callers or related files needed to verify findings.
-- Otherwise, if the argument resolves to a commit SHA, review exactly the changes introduced by that single commit. Do not silently expand it into a commit range.
-- If no argument is given, review uncommitted changes when any exist; otherwise compare the current branch against its base branch.
-- Prefer an existing file path when a token could be interpreted as either target. If the argument is invalid, ambiguous, or contains multiple targets, ask the user to clarify instead of guessing.
+Pass the argument exactly as supplied to `branch-diff`, or run `branch-diff` without one. Treat its output as the complete review target; if it fails, ask the user to clarify.
 
 ## Tone
 
