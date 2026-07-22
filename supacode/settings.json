@@ -6,6 +6,7 @@
     "appearanceMode": "light",
     "autoUpdateAgentIntegrationsEnabled": true,
     "automatedActionPolicy": "cliOnly",
+    "confirmCloseSurface": true,
     "confirmQuitMode": "auto",
     "copyIgnoredOnWorktreeCreate": false,
     "copyUntrackedOnWorktreeCreate": false,
@@ -151,6 +152,7 @@
     "\/Users\/sapegia\/_\/sapegin.me\/",
     "\/Users\/sapegia\/_\/raccoon-vscode\/",
     "\/Users\/sapegia\/_\/raccoon-toolbox\/",
-    "\/Users\/sapegia\/_\/squirrelsong\/"
+    "\/Users\/sapegia\/_\/squirrelsong\/",
+    "\/Users\/sapegia\/Library\/Mobile Documents\/iCloud~md~obsidian\/Documents\/Murder\/"
   ]
 }
