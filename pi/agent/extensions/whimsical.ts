@@ -85,13 +85,6 @@ const messages = [
   'Struggling…',
 
   // Long
-  'Consulting the void…',
-  'Asking the electrons…',
-  'Bribing the compiler…',
-  'Negotiating with entropy…',
-  'Whispering to the bits…',
-  'Tickling the stack…',
-  'Massaging the heap…',
   'Herding pointers…',
   'Untangling spaghetti…',
   'Polishing the algorithms…',
