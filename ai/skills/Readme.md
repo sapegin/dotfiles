@@ -14,6 +14,7 @@ AI agent skills. Invoke with `/<name>`.
 | [pretty-html](pretty-html/SKILL.md) | Create and update standalone HTML documents with syntax highlighting, diagrams, and live demos. |
 | [review-code](review-code/SKILL.md) | Review code changes. |
 | [teach](teach/SKILL.md) | Teach user something, add or update topics in the personal handbook. |
+| [to-spec](to-spec/SKILL.md) | Turn the current conversation into a spec file. |
 | [web-fetch](web-fetch/SKILL.md) | Fetch web pages as Markdown. |
 | [web-search](web-search/SKILL.md) | Search the web using DuckDuckGo. |
 | [write](write/SKILL.md) | Write or rewrite specs, letters, articles, documentation, messages, and other prose in the user’s voice. |
