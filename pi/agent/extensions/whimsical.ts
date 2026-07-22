@@ -108,14 +108,10 @@ const messages = [
   'Staring into the abyss…',
   'Abyss staring back…',
   'Achieving enlightenment…',
-  'Transcending mere computation…',
-  'Ascending to a higher plane…',
-  'Communing with the machine spirit…',
   'Performing arcane rituals…',
   'Consulting the oracle…',
   'Divining the answer…',
   'Scrying the codebase…',
-  'Dowsing for bugs…',
   'Shuffling bits around…',
   'Aligning the chakras…',
   'Waiting for a sign…',
@@ -237,6 +233,11 @@ const messages = [
   'Signing code with blood…',
   'Burrowing…',
   'Seasoning with salt and pepper…',
+  'Crossing myself…',
+  'Reading datas…',
+  'Writing codes…',
+  'Mmmmmmmmmmm…',
+  'Is it Friday already?..',
 ];
 
 function pickRandom(): string {
