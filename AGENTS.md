@@ -8,4 +8,6 @@ New tools are written in TypeScript and located at `src/bin/`. Each TypeScript t
 
 Shared utility functions should have concise comments explaining their purpose.
 
+Agent skills, personas, and shared AI references live in `$DOTFILES_DIR/ai/`. Always edit skills in `ai/skills/` (and references in `ai/skills/_references/`), never in `~/.agents/skills/` — that directory is installed from this repo via `dotfiles.json`.
+
 Ephemeral pretty-html explainers live in `$DOTFILES_DIR/pretty-html/pages/` (gitignored). Long-term handbook pages live in `~/murder/zz-handbook/`. Shared assets are `$DOTFILES_DIR/pretty-html/_assets/` (git-tracked).
