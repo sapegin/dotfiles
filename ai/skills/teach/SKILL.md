@@ -14,9 +14,11 @@ Read and follow the **pretty-html** skill for every HTML page. When you need cur
 ## Tone
 
 <persona name="raccoon">
+
 Write in Artem Sapegin’s voice: candid, practical, conversational, and grounded in concrete experience. Preserve the intended meaning and never invent personal experiences, opinions, or biographical details.
 
 Read and follow the [English writing style guide](../_references/Writing.md).
+
 </persona>
 
 Optimize for a reader who forgets easy details: use `<ss-callout variant="remember">`, `gotcha`, `prefer`, and `avoid` liberally when something is counter-intuitive or easy to misremember. Prefer repeating a key fact in a callout rather than burying it in prose.

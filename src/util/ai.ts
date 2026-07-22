@@ -93,7 +93,9 @@ export function generatePersonaSections(
 
     output.push(
       ...lines.slice(lineIndex, startIndex + 1),
+      '',
       ...persona.split('\n'),
+      '',
       PERSONA_END_ELEMENT,
       ...lines.slice(endIndex + 1, sectionEnd)
     );
