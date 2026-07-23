@@ -23,7 +23,6 @@ import {
   assertObsidianVault,
   doesAttachmentExist,
   formatNoteHeading,
-  moveToTrash,
   needsOptimization,
   openObsidianPath,
   optimizeImage,
@@ -94,25 +93,28 @@ async function importPhoto(
     return undefined;
   }
 
-  const attachmentPath = path.join(dirs.obsidianAttachments, attachmentName);
+  const desktopDir = path.dirname(sourcePath);
+  let workingPath = sourcePath;
+  if (attachmentName !== originalBasename) {
+    workingPath = path.join(desktopDir, attachmentName);
+    await fs.rename(sourcePath, workingPath);
+  }
 
-  await fs.mkdir(dirs.obsidianAttachments, { recursive: true });
-  await atomicWrite(attachmentPath, (tempFile) =>
-    fs.copyFile(sourcePath, tempFile)
-  );
-
-  let filename = path.basename(attachmentPath).normalize('NFC');
-  const optimization = await needsOptimization(attachmentPath);
+  let filename = attachmentName.normalize('NFC');
+  const optimization = await needsOptimization(workingPath);
   if (optimization !== undefined) {
-    const result = await optimizeImage(attachmentPath, optimization, {
+    const result = await optimizeImage(workingPath, optimization, {
       onSkip: (message) => log.warn(message),
     });
     if (result !== undefined) {
       filename = result.newFilename;
+      workingPath = path.join(desktopDir, filename);
     }
   }
 
-  await moveToTrash(sourcePath);
+  const attachmentPath = path.join(dirs.obsidianAttachments, filename);
+  await fs.mkdir(path.dirname(attachmentPath), { recursive: true });
+  await fs.rename(workingPath, attachmentPath);
 
   return {
     filename,
