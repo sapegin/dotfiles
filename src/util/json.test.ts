@@ -13,10 +13,12 @@ describe(stripJsonComments, () => {
 }`;
     const output = stripJsonComments(input);
 
-    expect(output).toBe(`{
-
-  "a": 1
-}`);
+    expect(output).toMatchInlineSnapshot(`
+      "{
+                          
+        "a": 1                    
+      }"
+    `);
     expect(output).toHaveLength(input.length);
     expect(JSON.parse(output)).toStrictEqual({ a: 1 });
   });
@@ -28,10 +30,12 @@ describe(stripJsonComments, () => {
 }`;
     const output = stripJsonComments(input);
 
-    expect(output).toBe(`{
-
-  "a": 1
-}`);
+    expect(output).toMatchInlineSnapshot(`
+      "{
+                   
+        "a": 1
+      }"
+    `);
     expect(output).toHaveLength(input.length);
     expect(JSON.parse(output)).toStrictEqual({ a: 1 });
   });
@@ -45,12 +49,14 @@ describe(stripJsonComments, () => {
 }`;
     const output = stripJsonComments(input);
 
-    expect(output).toBe(`{
-
-
-
-  "a": 1
-}`);
+    expect(output).toMatchInlineSnapshot(`
+      "{
+          
+                    
+           
+        "a": 1
+      }"
+    `);
     expect(output).toHaveLength(input.length);
     expect(JSON.parse(output)).toStrictEqual({ a: 1 });
   });
