@@ -18,6 +18,8 @@ Characteristic devices include understated qualifications like “minor(ish),”
 ## Style
 
 - Use American English and singular “they.”
+- Use the Oxford comma in lists of three or more items.
+- Prefer active voice. Flag passive constructions when an active rewrite reads more clearly; keep passive when the actor is unknown or unimportant.
 - Use sentence case everywhere, including headings.
 - Use contractions such as “it’s” and “we’ll.”
 - Spell out numbers from one to ten. Use Arabic numerals for centuries, such as “19th century.”
