@@ -4,9 +4,8 @@
 
 // oxlint-disable unicorn/no-nested-ternary
 import os from 'node:os';
-import { stripVTControlCharacters } from 'node:util';
+import path from 'node:path';
 import {
-  AssistantMessageComponent,
   type ExtensionAPI,
   type ExtensionContext,
   type Theme,
@@ -19,6 +18,7 @@ import {
   createLsToolDefinition,
   createReadToolDefinition,
   createWriteToolDefinition,
+  generateDiffString,
   highlightCode,
 } from '@earendil-works/pi-coding-agent';
 import {
@@ -28,77 +28,32 @@ import {
   visibleWidth,
 } from '@earendil-works/pi-tui';
 
-/** Diff summary stats. */
 export interface DiffStats {
   added: number;
   removed: number;
 }
 
-/**
- * Tokenize text the same way the `diff` package's `diffLines` does:
- * split on newlines, drop the trailing empty segment when the string
- * ends with a newline, and keep each line's terminator on the token.
- */
-function tokenizeLines(value: string): string[] {
-  const linesAndNewlines = value.split(/(\n|\r\n)/);
-
-  if (linesAndNewlines.at(-1) === '') {
-    linesAndNewlines.pop();
-  }
-
-  return linesAndNewlines.reduce<string[]>((lines, line, index) => {
-    if (index % 2 === 1) {
-      const lastIndex = lines.length - 1;
-      return [...lines.slice(0, lastIndex), `${lines[lastIndex]}${line}`];
-    }
-
-    return [...lines, line];
-  }, []);
-}
-
-function longestCommonSubsequenceLength(
-  oldLines: readonly string[],
-  newLines: readonly string[]
-): number {
-  const previous = Array.from({ length: newLines.length + 1 }, () => 0);
-  const current = Array.from({ length: newLines.length + 1 }, () => 0);
-
-  for (const oldLine of oldLines) {
-    for (const [index, newLine] of newLines.entries()) {
-      const column = index + 1;
-      current[column] =
-        oldLine === newLine
-          ? previous[index] + 1
-          : Math.max(previous[column], current[index]);
-    }
-
-    previous.splice(0, previous.length, ...current);
-    current.fill(0);
-  }
-
-  return previous[newLines.length] ?? 0;
-}
-
-/** Count added and removed lines between two strings. */
 export function getLineDiffStats(
   oldContent: string,
   newContent: string
 ): DiffStats {
-  const oldLines = tokenizeLines(oldContent);
-  const newLines = tokenizeLines(newContent);
-  const unchanged = longestCommonSubsequenceLength(oldLines, newLines);
-
+  const lines = generateDiffString(oldContent, newContent, 0).diff.split('\n');
   return {
-    added: newLines.length - unchanged,
-    removed: oldLines.length - unchanged,
+    added: lines.filter((line) => line.startsWith('+')).length,
+    removed: lines.filter((line) => line.startsWith('-')).length,
   };
 }
 
-/** Visual status of a tool execution, used to color the frame chrome. */
 export type FrameStatus = 'pending' | 'success' | 'error';
 
-function tildify(filepath: string) {
-  return filepath.replace(os.homedir(), '~');
+function tildify(filepath: string): string {
+  const homeDirectory = os.homedir();
+  if (filepath === homeDirectory) {
+    return '~';
+  }
+  return filepath.startsWith(`${homeDirectory}${path.sep}`)
+    ? `~${filepath.slice(homeDirectory.length)}`
+    : filepath;
 }
 
 function formatContextWindowTokens(count: number): string {
@@ -112,8 +67,15 @@ function formatContextWindowTokens(count: number): string {
 }
 
 function rightPadLine(left: string, right: string, width: number): string {
-  const padding = Math.max(1, width - visibleWidth(left) - visibleWidth(right));
-  return truncateToWidth(`${left}${' '.repeat(padding)}${right}`, width);
+  const rightWidth = visibleWidth(right);
+  if (rightWidth >= width) {
+    return truncateToWidth(right, width);
+  }
+
+  const maxLeftWidth = width - rightWidth - 1;
+  const leftToDisplay = truncateToWidth(left, maxLeftWidth, '…');
+  const padding = width - visibleWidth(leftToDisplay) - rightWidth;
+  return `${leftToDisplay}${' '.repeat(padding)}${right}`;
 }
 
 type ToolSet = ReturnType<typeof createToolSet>;
@@ -145,30 +107,35 @@ function getToolSet(cwd: string): ToolSet {
 
 function getSessionCost(ctx: ExtensionContext): number {
   return ctx.sessionManager.getEntries().reduce((total, entry) => {
-    if (entry.type !== 'message' || entry.message.role !== 'assistant') {
-      return total;
+    if (entry.type === 'message' && entry.message.role === 'assistant') {
+      return total + entry.message.usage.cost.total;
     }
-    return total + entry.message.usage.cost.total;
+    if (entry.type === 'message' && entry.message.role === 'toolResult') {
+      return total + (entry.message.usage?.cost.total ?? 0);
+    }
+    if (entry.type === 'branch_summary' || entry.type === 'compaction') {
+      return total + (entry.usage?.cost.total ?? 0);
+    }
+    return total;
   }, 0);
 }
 
-function formatContextUsageLabel(
-  ctx: ExtensionContext,
-  autoCompactEnabled: boolean
-): { label: string; percent: number | null } {
+function formatContextUsageLabel(ctx: ExtensionContext): {
+  label: string;
+  percent: number | null;
+} {
   const contextUsage = ctx.getContextUsage();
   const contextWindow =
     contextUsage?.contextWindow ?? ctx.model?.contextWindow ?? 0;
   const contextPercent = contextUsage?.percent ?? null;
-  const autoIndicator = autoCompactEnabled ? ' (auto)' : '';
   const windowLabel = formatContextWindowTokens(contextWindow);
 
   if (contextPercent === null) {
-    return { label: `?/${windowLabel}${autoIndicator}`, percent: null };
+    return { label: `?/${windowLabel}`, percent: null };
   }
 
   return {
-    label: `${Math.round(contextPercent)}%/${windowLabel}${autoIndicator}`,
+    label: `${Math.round(contextPercent)}%/${windowLabel}`,
     percent: contextPercent,
   };
 }
@@ -177,8 +144,7 @@ export function renderPrettyFooter(
   ctx: ExtensionContext,
   pi: ExtensionAPI,
   theme: Theme,
-  width: number,
-  autoCompactEnabled: boolean
+  width: number
 ): string[] {
   const cwd = tildify(ctx.sessionManager.getCwd());
 
@@ -186,16 +152,14 @@ export function renderPrettyFooter(
   const thinkingLevel = pi.getThinkingLevel();
   const modelText = ctx.model?.reasoning
     ? thinkingLevel === 'off'
-      ? `${modelName}/thinking off`
-      : `${modelName}/${thinkingLevel}`
+      ? `${modelName} (thinking off)`
+      : `${modelName} (${thinkingLevel})`
     : modelName;
 
   const totalCost = getSessionCost(ctx);
-  const usingSubscription =
-    ctx.model === undefined ? false : ctx.modelRegistry.isUsingOAuth(ctx.model);
   const { label: contextLabel, percent: contextPercent } =
-    formatContextUsageLabel(ctx, autoCompactEnabled);
-  const costText = `$${totalCost.toFixed(2)}${usingSubscription ? ' (sub)' : ''}`;
+    formatContextUsageLabel(ctx);
+  const costText = `$${totalCost.toFixed(2)}`;
 
   const statsText =
     (contextPercent ?? 0) > 90
@@ -237,7 +201,7 @@ function registerFooter(pi: ExtensionAPI): void {
             return [];
           }
 
-          return renderPrettyFooter(activeCtx, pi, theme, width, true);
+          return renderPrettyFooter(activeCtx, pi, theme, width);
         },
       };
     });
@@ -258,15 +222,6 @@ function registerFooter(pi: ExtensionAPI): void {
   });
 }
 
-export const MESSAGE_SEPARATOR =
-  ' ─────────────────── 8< ─────────────────── 8< ───────────────────';
-
-export function dimMessageSeparatorLine(theme: Theme, line: string): string {
-  return stripVTControlCharacters(line).trim() === MESSAGE_SEPARATOR.trim()
-    ? theme.fg('dim', line)
-    : line;
-}
-
 interface PatchableUserMessage {
   text: string;
   render(width: number): string[];
@@ -285,14 +240,14 @@ export function formatUserPrompt(
   width: number
 ): string {
   const singleLine = text.replaceAll(/\s+/g, ' ').trim();
-  if (!singleLine) {
+  if (singleLine === '') {
     return '';
   }
 
   return truncateToWidth(
     theme.fg('dim', theme.italic(` ${singleLine}`)),
     width,
-    '…'
+    theme.fg('dim', theme.italic('…'))
   );
 }
 
@@ -313,12 +268,7 @@ function registerUserPrompt(pi: ExtensionAPI): void {
     }
 
     const prompt = formatUserPrompt(activeTheme, this.text, width);
-    if (!prompt) {
-      return [];
-    }
-
-    const separator = activeTheme.fg('dim', MESSAGE_SEPARATOR.slice(0, width));
-    return [separator, '', prompt];
+    return prompt === '' ? [] : [prompt];
   };
 
   prototype.piPrettyOriginalRender = originalRender;
@@ -329,6 +279,7 @@ function registerUserPrompt(pi: ExtensionAPI): void {
   });
 
   pi.on('session_shutdown', () => {
+    activeTheme = undefined;
     if (prototype.render === renderUserPrompt) {
       prototype.render = originalRender;
       delete prototype.piPrettyOriginalRender;
@@ -336,8 +287,57 @@ function registerUserPrompt(pi: ExtensionAPI): void {
   });
 }
 
-function getTextComponent(ctx: { lastComponent?: Component }) {
-  return (ctx.lastComponent as Text | undefined) ?? new Text('', 0, 0);
+type WidthAwareTextFormatter = (width: number) => string;
+
+class WidthAwareText implements Component {
+  private formatter: WidthAwareTextFormatter = () => '';
+
+  public setText(formatter: WidthAwareTextFormatter): void {
+    this.formatter = formatter;
+  }
+
+  public render(width: number): string[] {
+    const text = this.formatter(width);
+    return text === '' ? [] : text.split('\n');
+  }
+
+  public invalidate(): void {}
+}
+
+function getTextComponent(ctx: { lastComponent?: Component }): WidthAwareText {
+  return (
+    (ctx.lastComponent as WidthAwareText | undefined) ?? new WidthAwareText()
+  );
+}
+
+const TURN_SEPARATOR_ENTRY = 'pretty-turn-separator';
+
+function formatTurnSeparator(width: number): string {
+  const marker = ' 8< ──────── 8< ';
+  const ruleWidth = width - marker.length;
+  const leftWidth = Math.floor(ruleWidth / 2);
+  const rightWidth = ruleWidth - leftWidth;
+  return `${'─'.repeat(leftWidth)}${marker}${'─'.repeat(rightWidth)}`;
+}
+
+function registerTurnSeparator(pi: ExtensionAPI): void {
+  pi.registerEntryRenderer(TURN_SEPARATOR_ENTRY, (_entry, _options, theme) => {
+    const separator = new WidthAwareText();
+    separator.setText((width) => theme.fg('dim', formatTurnSeparator(width)));
+    return separator;
+  });
+
+  pi.on('before_agent_start', (_event, ctx) => {
+    const hasPreviousTurn = ctx.sessionManager
+      .getBranch()
+      .some(
+        (entry) =>
+          entry.type === 'message' && entry.message.role === 'assistant'
+      );
+    if (hasPreviousTurn) {
+      pi.appendEntry(TURN_SEPARATOR_ENTRY);
+    }
+  });
 }
 
 function toolIcon(theme: Theme, status: FrameStatus): string {
@@ -375,7 +375,8 @@ function formatSkillInvocation(
   return truncateToWidth(heading, width, '…');
 }
 
-// Pi has no skill-invocation renderer hook, so patch the built-in component and restore it on shutdown.
+// Pi has no skill-invocation renderer hook, so patch the built-in component and
+// restore it on shutdown.
 function registerSkillInvocation(pi: ExtensionAPI): void {
   const prototype =
     SkillInvocationMessageComponent.prototype as unknown as PatchableSkillInvocationPrototype;
@@ -409,10 +410,6 @@ function registerSkillInvocation(pi: ExtensionAPI): void {
   });
 }
 
-function frameWidth(): number {
-  return process.stdout.columns;
-}
-
 function firstLine(text: string): string {
   return text.replace(/\n$/, '').split('\n')[0];
 }
@@ -425,10 +422,14 @@ export function countLines(text: string): number {
   return text.replace(/\n$/, '').split('\n').length;
 }
 
-function formatError(theme: Theme, message: string): string {
+function formatItemCount(count: number): string {
+  return `${count} ${count === 1 ? 'item' : 'items'}`;
+}
+
+function formatError(theme: Theme, message: string, width: number): string {
   const truncatedMessage = truncateToWidth(
     firstLine(message),
-    frameWidth() - 4,
+    Math.max(0, width - 4),
     '…'
   );
   return `   ${theme.fg('dim', truncatedMessage)} `;
@@ -452,7 +453,6 @@ export function getFrameStatus(ctx: {
   return 'success';
 }
 
-/** Compact `+N -M` summary string with diff fg colors. */
 function summarizeDiff(theme: Theme, added: number, removed: number): string {
   const parts: string[] = [];
   if (added > 0) {
@@ -470,160 +470,6 @@ function summarizeAll(theme: Theme, diffs: DiffStats[]): string {
   return summarizeDiff(theme, added, removed);
 }
 
-/**
- * After tools run, Pi emits a separate assistant message for the user-facing
- * reply. Prepend the visual separator so it is distinct from the thinking and
- * tool output above.
- */
-const REPLY_SEPARATOR = `${MESSAGE_SEPARATOR}\n\n`;
-
-let pendingReplySeparator = false;
-
-function isAssistantMessage(message: { role: string }): message is {
-  role: 'assistant';
-  content: { type: string; text?: string }[];
-} {
-  return (
-    message.role === 'assistant' &&
-    'content' in message &&
-    Array.isArray(message.content)
-  );
-}
-
-function hasToolCalls(message: {
-  content: readonly { type: string }[];
-}): boolean {
-  return message.content.some((block) => block.type === 'toolCall');
-}
-
-function firstTextBlockIndex(message: {
-  content: readonly { type: string; text?: string }[];
-}): number {
-  return message.content.findIndex(
-    (block) => block.type === 'text' && block.text?.trim()
-  );
-}
-
-function isReplySeparatorCandidate(message: {
-  role: 'assistant';
-  content: readonly { type: string; text?: string }[];
-}): boolean {
-  return (
-    pendingReplySeparator &&
-    !hasToolCalls(message) &&
-    firstTextBlockIndex(message) !== -1
-  );
-}
-
-/** Mutate a streaming message copy before the UI renders it. */
-function applyReplySeparatorInPlace(message: {
-  role: 'assistant';
-  content: { type: string; text?: string }[];
-}): void {
-  if (!isReplySeparatorCandidate(message)) {
-    return;
-  }
-
-  const index = firstTextBlockIndex(message);
-  const textBlock = message.content[index];
-  if (textBlock.type !== 'text' || !textBlock.text) {
-    return;
-  }
-
-  if (textBlock.text.startsWith(REPLY_SEPARATOR)) {
-    return;
-  }
-
-  textBlock.text = `${REPLY_SEPARATOR}${textBlock.text.trimStart()}`;
-}
-
-interface PatchableAssistantMessage {
-  render(width: number): string[];
-}
-
-type PatchableAssistantMessagePrototype = PatchableAssistantMessage & {
-  piPrettyOriginalRender?: (
-    this: PatchableAssistantMessage,
-    width: number
-  ) => string[];
-};
-
-// Color the injected separator after Markdown renders it, keeping ANSI codes out of message content.
-function registerAssistantSeparatorColor(pi: ExtensionAPI): void {
-  const prototype =
-    AssistantMessageComponent.prototype as unknown as PatchableAssistantMessagePrototype;
-  // oxlint-disable-next-line typescript/unbound-method -- Rebound explicitly with Function.call.
-  const originalRender = prototype.piPrettyOriginalRender ?? prototype.render;
-  let activeTheme: Theme | undefined;
-
-  const renderAssistantMessage = function (
-    this: PatchableAssistantMessage,
-    width: number
-  ): string[] {
-    const lines = originalRender.call(this, width);
-    const theme = activeTheme;
-    return theme
-      ? lines.map((line) => dimMessageSeparatorLine(theme, line))
-      : lines;
-  };
-
-  prototype.piPrettyOriginalRender = originalRender;
-  prototype.render = renderAssistantMessage;
-
-  pi.on('session_start', (_event, ctx) => {
-    activeTheme = ctx.ui.theme;
-  });
-
-  pi.on('session_shutdown', () => {
-    if (prototype.render === renderAssistantMessage) {
-      prototype.render = originalRender;
-      delete prototype.piPrettyOriginalRender;
-    }
-  });
-}
-
-function registerReplySeparator(pi: ExtensionAPI): void {
-  pi.on('agent_start', () => {
-    pendingReplySeparator = false;
-  });
-
-  pi.on('turn_end', (event) => {
-    if (event.toolResults.length > 0) {
-      pendingReplySeparator = true;
-    }
-  });
-
-  // Pi emits a fresh shallow copy on each token; prepend the rule every update.
-  pi.on('message_start', (event) => {
-    if (!isAssistantMessage(event.message)) {
-      return;
-    }
-
-    applyReplySeparatorInPlace(event.message);
-  });
-
-  pi.on('message_update', (event) => {
-    if (!isAssistantMessage(event.message)) {
-      return;
-    }
-
-    applyReplySeparatorInPlace(event.message);
-  });
-
-  // Final paint uses the canonical message, not the streaming copies above.
-  pi.on('message_end', (event) => {
-    if (!isAssistantMessage(event.message)) {
-      return;
-    }
-
-    applyReplySeparatorInPlace(event.message);
-
-    if (isReplySeparatorCandidate(event.message)) {
-      pendingReplySeparator = false;
-    }
-  });
-}
-
 export default function pretty(pi: ExtensionAPI) {
   const cwd = process.cwd();
   registerRead(pi, cwd);
@@ -633,10 +479,9 @@ export default function pretty(pi: ExtensionAPI) {
   registerLs(pi, cwd);
   registerWrite(pi, cwd);
   registerEdit(pi, cwd);
-  registerReplySeparator(pi);
-  registerAssistantSeparatorColor(pi);
   registerSkillInvocation(pi);
   registerUserPrompt(pi);
+  registerTurnSeparator(pi);
   registerFooter(pi);
 }
 
@@ -646,15 +491,40 @@ function basicToolHeading(
   status: FrameStatus,
   extra?: string,
   error?: string
-) {
-  const maxWidth = frameWidth() - (extra ? extra.length + 1 : 0) - 4;
-  const titleToDisplay = truncateToWidth(titleAnsi, maxWidth, '…');
-  const heading = [toolIcon(theme, status), titleToDisplay, extra]
-    .filter(Boolean)
-    .join(' ');
-  return [` ${heading}`, error ? formatError(theme, error) : undefined]
-    .filter(Boolean)
-    .join('\n');
+): WidthAwareTextFormatter {
+  return (width) => {
+    const extraWidth = extra ? visibleWidth(extra) + 1 : 0;
+    const maxTitleWidth = Math.max(0, width - extraWidth - 4);
+    const titleToDisplay = truncateToWidth(titleAnsi, maxTitleWidth, '…');
+    const heading = [toolIcon(theme, status), titleToDisplay, extra]
+      .filter(Boolean)
+      .join(' ');
+    return [` ${heading}`, error ? formatError(theme, error, width) : undefined]
+      .filter(Boolean)
+      .join('\n');
+  };
+}
+
+function renderPendingToolCall({
+  ctx,
+  theme,
+  title,
+}: {
+  ctx: {
+    executionStarted: boolean;
+    isPartial: boolean;
+    lastComponent?: Component;
+  };
+  theme: Theme;
+  title: () => string;
+}): WidthAwareText {
+  const text = getTextComponent(ctx);
+  text.setText(
+    ctx.executionStarted && ctx.isPartial
+      ? basicToolHeading(theme, title(), 'pending')
+      : () => ''
+  );
+  return text;
 }
 
 function formatReadError(message: string) {
@@ -679,8 +549,12 @@ function registerRead(pi: ExtensionAPI, cwd: string): void {
         ctx
       );
     },
-    renderCall() {
-      return new Text('', 0, 0);
+    renderCall(args, theme, ctx) {
+      return renderPendingToolCall({
+        ctx,
+        theme,
+        title: () => toolTitle(theme, 'Read', tildify(args.path)),
+      });
     },
     renderResult(result, _options, theme, ctx) {
       const text = getTextComponent(ctx);
@@ -718,8 +592,12 @@ function registerFind(pi: ExtensionAPI, cwd: string): void {
         ctx
       );
     },
-    renderCall() {
-      return new Text('', 0, 0);
+    renderCall(args, theme, ctx) {
+      return renderPendingToolCall({
+        ctx,
+        theme,
+        title: () => toolTitle(theme, 'Find', args.pattern),
+      });
     },
     renderResult(result, _options, theme, ctx) {
       const text = getTextComponent(ctx);
@@ -733,9 +611,12 @@ function registerFind(pi: ExtensionAPI, cwd: string): void {
           theme,
           toolTitle(theme, 'Find', pattern),
           getFrameStatus(ctx),
-          ctx.isPartial
+          ctx.isPartial || ctx.isError
             ? undefined
-            : theme.fg('dim', theme.italic(`${countLines(content)} items`)),
+            : theme.fg(
+                'dim',
+                theme.italic(formatItemCount(countLines(content)))
+              ),
           ctx.isError ? content : undefined
         )
       );
@@ -759,8 +640,12 @@ function registerGrep(pi: ExtensionAPI, cwd: string): void {
         ctx
       );
     },
-    renderCall() {
-      return new Text('', 0, 0);
+    renderCall(args, theme, ctx) {
+      return renderPendingToolCall({
+        ctx,
+        theme,
+        title: () => toolTitle(theme, 'Grep', args.pattern),
+      });
     },
     renderResult(result, _options, theme, ctx) {
       const text = getTextComponent(ctx);
@@ -774,9 +659,12 @@ function registerGrep(pi: ExtensionAPI, cwd: string): void {
           theme,
           toolTitle(theme, 'Grep', pattern),
           getFrameStatus(ctx),
-          ctx.isPartial
+          ctx.isPartial || ctx.isError
             ? undefined
-            : theme.fg('dim', theme.italic(`${countLines(content)} items`)),
+            : theme.fg(
+                'dim',
+                theme.italic(formatItemCount(countLines(content)))
+              ),
           ctx.isError ? content : undefined
         )
       );
@@ -800,8 +688,12 @@ function registerLs(pi: ExtensionAPI, cwd: string): void {
         ctx
       );
     },
-    renderCall() {
-      return new Text('', 0, 0);
+    renderCall(args, theme, ctx) {
+      return renderPendingToolCall({
+        ctx,
+        theme,
+        title: () => toolTitle(theme, 'List', tildify(args.path ?? '')),
+      });
     },
     renderResult(result, _options, theme, ctx) {
       const text = getTextComponent(ctx);
@@ -815,9 +707,12 @@ function registerLs(pi: ExtensionAPI, cwd: string): void {
           theme,
           toolTitle(theme, 'List', root),
           getFrameStatus(ctx),
-          ctx.isPartial
+          ctx.isPartial || ctx.isError
             ? undefined
-            : theme.fg('dim', theme.italic(`${countLines(content)} items`)),
+            : theme.fg(
+                'dim',
+                theme.italic(formatItemCount(countLines(content)))
+              ),
           ctx.isError ? content : undefined
         )
       );
@@ -886,8 +781,12 @@ function registerWrite(pi: ExtensionAPI, cwd: string): void {
         ctx
       );
     },
-    renderCall() {
-      return new Text('', 0, 0);
+    renderCall(args, theme, ctx) {
+      return renderPendingToolCall({
+        ctx,
+        theme,
+        title: () => toolTitle(theme, 'Write', tildify(args.path)),
+      });
     },
     renderResult(result, _options, theme, ctx) {
       const text = getTextComponent(ctx);
@@ -902,9 +801,9 @@ function registerWrite(pi: ExtensionAPI, cwd: string): void {
           theme,
           toolTitle(theme, 'Write', tildify(filepath)),
           getFrameStatus(ctx),
-          ctx.isPartial
-            ? theme.fg('success', `+${content.split('\n').length}`)
-            : undefined,
+          ctx.isPartial || ctx.isError
+            ? undefined
+            : theme.fg('success', `+${countLines(content)}`),
           ctx.isError ? output : undefined
         )
       );
@@ -928,17 +827,25 @@ function registerEdit(pi: ExtensionAPI, cwd: string): void {
         ctx
       );
     },
-    renderCall() {
-      return new Text('', 0, 0);
+    renderCall(args, theme, ctx) {
+      return renderPendingToolCall({
+        ctx,
+        theme,
+        title: () => toolTitle(theme, 'Edit', tildify(args.path)),
+      });
     },
     renderResult(result, _options, theme, ctx) {
       const text = getTextComponent(ctx);
 
       const filepath = ctx.args.path;
-      const stats = ctx.args.edits.map((edit) =>
-        getLineDiffStats(edit.oldText, edit.newText)
-      );
-      const summary = summarizeAll(theme, stats);
+      const summary = ctx.isError
+        ? undefined
+        : summarizeAll(
+            theme,
+            ctx.args.edits.map((edit) =>
+              getLineDiffStats(edit.oldText, edit.newText)
+            )
+          );
       const error =
         result.content[0]?.type === 'text' ? result.content[0].text : undefined;
 
@@ -947,7 +854,7 @@ function registerEdit(pi: ExtensionAPI, cwd: string): void {
           theme,
           toolTitle(theme, 'Edit', tildify(filepath)),
           getFrameStatus(ctx),
-          ctx.isError ? undefined : summary,
+          summary,
           ctx.isError ? error : undefined
         )
       );
@@ -962,19 +869,24 @@ function bashSummary(
   running: boolean,
   isError?: boolean
 ): { status: FrameStatus; text?: string } {
-  if (running) {
+  if (running && !isError) {
     return { status: 'pending' };
   }
-  if (/timed out|timeout/i.test(output)) {
+  if (!isError) {
+    return { status: 'success' };
+  }
+
+  const statusLine = output.trimEnd().split('\n').at(-1) ?? '';
+  if (/^Command timed out after \d+ seconds$/i.test(statusLine)) {
     return { status: 'error', text: 'Timed out' };
   }
-  if (/aborted|cancelled|canceled/i.test(output)) {
+  if (/^Command aborted$/i.test(statusLine)) {
     return { status: 'error', text: 'Aborted' };
   }
-  const match = output.match(/exit(?: code)?:?\s*(\d+)/i);
-  // oxlint-disable-next-line unicorn/no-nested-ternary
-  const exitCode = match ? Number(match[1]) : isError ? 1 : 0;
-  return exitCode === 0
-    ? { status: 'success' }
-    : { status: 'error', text: `Exit code ${exitCode}` };
+
+  const exitMatch = statusLine.match(/^Command exited with code (\d+)$/i);
+  return {
+    status: 'error',
+    text: exitMatch ? `Exit code ${exitMatch[1]}` : 'Failed',
+  };
 }

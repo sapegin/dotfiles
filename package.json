@@ -15,8 +15,8 @@
     "yaml": "2.9.0"
   },
   "devDependencies": {
-    "@earendil-works/pi-coding-agent": "0.80.3",
-    "@earendil-works/pi-tui": "0.80.3",
+    "@earendil-works/pi-coding-agent": "0.81.1",
+    "@earendil-works/pi-tui": "0.81.1",
     "@types/node": "24.10.1",
     "oxfmt": "0.57.0",
     "oxlint": "1.72.0",
