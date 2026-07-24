@@ -13,8 +13,8 @@ Shared instructions, personas, and skills for AI agents (Pi and Cursor). Run `do
 
 Canonical personas live in [`personas/`](./personas/):
 
-- `poe`: dry nineteenth-century scholar
-- `ramsay`: severe code reviewer
+- `poe`: dry 19th century scholar
+- `ramsay`: blunt Gordon Ramsay voice
 - `raccoon`: Artem Sapegin’s writing voice
 
 Assign a persona to a generated tone section with a marker:
