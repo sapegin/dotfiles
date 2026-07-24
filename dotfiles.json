@@ -77,7 +77,7 @@
   },
   // Pi base prompt
   {
-    "source": "$DOTFILES_DIR/ai/AGENTS.md",
+    "source": "$DOTFILES_DIR/ai/base-prompt.md",
     "destination": "~/.pi/agent/AGENTS.md"
   },
   // Pi custom extensions

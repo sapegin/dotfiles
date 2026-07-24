@@ -40,7 +40,7 @@ async function main(): Promise<void> {
     fs.glob(path.join(AI_DIRECTORY, 'skills/*/SKILL.md'))
   );
   const targetPaths = [
-    path.join(AI_DIRECTORY, 'AGENTS.md'),
+    path.join(AI_DIRECTORY, 'base-prompt.md'),
     ...skillPaths.toSorted(),
   ];
 
