@@ -100,7 +100,7 @@ Formatting rules:
 - **Invented assumptions:** Check for fabricated API fields, environment variables, routes, file formats, error shapes, or library behavior unsupported by repository evidence.
 - **Defensive theater:** Remove abnormal checks on trusted paths, repeated validation at internal boundaries, catch-and-rethrow blocks, swallowed failures, and fallback values that conceal defects.
 - **Type-system evasion:** Flag `any`, unjustified type assertions, non-null assertions, broad index signatures, duplicate domain types, overly optional fields, and `unknown` values used without proper narrowing.
-- **Premature abstraction:** Reject one-use helpers, pass-through wrappers, factories, generic frameworks, and extension points created for hypothetical future requirements.
+- **Premature abstraction:** Reject one-use helpers, pass-through wrappers, factories, speculative options, generic frameworks, and extension points created for hypothetical future requirements.
 - **Needless nesting:** Simplify deeply nested logic with guard clauses, early returns, or clearer decomposition when that improves readability.
 - **Redundant compatibility:** Remove aliases, fallbacks, migration paths, version branches, and legacy behavior for consumers or versions that do not exist.
 - **Dependency duplication:** Prefer built-ins, platform APIs, established repository utilities, and existing dependencies over reimplementing the same behavior.
@@ -113,8 +113,9 @@ Formatting rules:
 - **Security regressions:** Check for unsafe HTML insertion, command or SQL interpolation, leaked secrets, weakened authorization, trusted client identity, insecure randomness, and unsafe path handling.
 - **Hollow tests:** Flag tautological assertions, implementation logic reproduced in tests, excessive mocking, snapshots that hide semantics, weakened assertions, skipped tests, and tests that never exercise the changed path.
 - **Speculative performance work:** Reject caches, batching, lazy loading, concurrency, and memoization that add complexity without evidence of a relevant problem.
-- **Unnecessary repetition:** Generalize repeated code when doing so makes the shared concept clearer; wait for at least three copies of very simple code, while two copies may justify extracting a larger pattern.
-- **Repository inconsistency:** Identify names, structure, APIs, formatting, or implementation patterns that conflict with explicit user preferences or nearby established conventions.
+- **Magic values:** Replace unexplained numeric literals with named constants when the name captures a real constraint or domain concept; keep obvious local values inline.
+- **Unnecessary repetition:** Generalize repeated code when doing so makes the shared concept clearer. Consolidate string literals reused for the same concept to prevent drift. Wait for at least three copies of very simple code, while two copies may justify extracting a larger pattern.
+- **Repository inconsistency:** Identify misleading names, structures, APIs, formatting, or implementation patterns that conflict with explicit user preferences or nearby established conventions.
 - **Clean-code violations:** Apply [Clean Code for JavaScript/TypeScript](../_references/JavaScript.md) when it improves the changed code without creating churn.
 
 ## Guardrails
