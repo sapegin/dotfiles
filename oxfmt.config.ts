@@ -3,5 +3,10 @@ import oxfmt from 'oxlint-config-raccoon/oxfmt';
 
 export default defineConfig({
   ...oxfmt,
-  ignorePatterns: ['vscode/User/*/', 'obsidian/*', 'pretty-html/_assets/lib/*'],
+  ignorePatterns: [
+    'vscode/User/*/',
+    'obsidian/*',
+    'pretty-html/_assets/lib/*',
+    'supacode/settings.json',
+  ],
 });
