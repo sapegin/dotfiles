@@ -17,7 +17,7 @@
 - [Git aliases](./tilde/.gitconfig).
 - [Lots of scripts](./bin).
 - [Firefox custom styles](./firefox).
-- [Brewfile](./tilde/Brewfile)
+- [Brewfile](./tilde/Brewfile).
 - Configs for lots of apps.
 - [macOS apps I use](https://github.com/sapegin/dotfiles/wiki/OS-X-Apps).
 
@@ -25,7 +25,7 @@
 
 [![Washing your code. A book on clean code for frontend developers](https://sapegin.me/images/washing-code-github.jpg)](https://sapegin.me/book/)
 
-## Related repositories
+## Related Repositories
 
 - [Raccoon Toolbox](https://github.com/sapegin/raccoon-toolbox): collection of GUI tools
 - [Raccoon VSCode](https://github.com/sapegin/raccoon-vscode): my Visual Studio Code extensions
@@ -59,7 +59,7 @@ setup/setup.sh
 - [Install additional Squirrelsong color theme](https://sapegin.me/squirrelsong/)
 - [Install MonoLisa font](https://www.monolisa.dev/)
 
-## Further customization
+## Further Customization
 
 - Add any Zsh profile customizations to `~/.zshlocal`.
 - [Add your Git username/email/etc.](./setup#separate-git-identity-for-work-repositories) to `~/.gitlocal`.
