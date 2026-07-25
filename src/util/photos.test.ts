@@ -3,11 +3,13 @@ import os from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 import {
+  comparePhotoFolderNames,
   dedupeRawJpegPairs,
   findMediaFiles,
   getDatedPhotoFilename,
   getPhotoFilenameYear,
   isVisiblePhotoFile,
+  isVisible,
 } from './photos.ts';
 
 describe(getPhotoFilenameYear, () => {
@@ -64,6 +66,31 @@ describe(isVisiblePhotoFile, () => {
     expect(isVisiblePhotoFile('/photos/.DS_Store')).toBe(false);
     expect(isVisiblePhotoFile('/photos/._IMG_0001.JPG')).toBe(false);
     expect(isVisiblePhotoFile('/photos/IMG_0001.JPG')).toBe(true);
+  });
+});
+
+describe(isVisible, () => {
+  test('rejects hidden folders', () => {
+    expect(isVisible('.hidden')).toBe(false);
+    expect(isVisible('Valencia 2026')).toBe(true);
+  });
+});
+
+describe(comparePhotoFolderNames, () => {
+  test('sorts alphabetically with newer numbers first', () => {
+    const folders = [
+      'Valencia 2025',
+      'Amsterdam',
+      'Valencia 2026',
+      'Barcelona 2024',
+    ].toSorted(comparePhotoFolderNames);
+
+    expect(folders).toStrictEqual([
+      'Amsterdam',
+      'Barcelona 2024',
+      'Valencia 2026',
+      'Valencia 2025',
+    ]);
   });
 });
 

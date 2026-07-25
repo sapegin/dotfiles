@@ -51,6 +51,52 @@ export function isVisiblePhotoFile(filePath: string): boolean {
   return path.basename(filePath).startsWith('.') === false;
 }
 
+/** Ignore hidden folders (e.g. `.dtrash`) in the photo library. */
+export function isVisible(name: string): boolean {
+  return name.startsWith('.') === false;
+}
+
+/** Split a folder name into alternating text and numeric segments. */
+function splitFolderNameSegments(name: string): (string | number)[] {
+  const segments: (string | number)[] = [];
+  for (const match of name.matchAll(/(\d+|[^\d]+)/g)) {
+    const segment = match[1];
+    segments.push(/^\d+$/.test(segment) ? Number(segment) : segment);
+  }
+  return segments;
+}
+
+/**
+ * Sort photo folders alphabetically, with numeric segments in descending order
+ * (e.g. 'Valencia 2026' before 'Valencia 2025').
+ */
+export function comparePhotoFolderNames(a: string, b: string): number {
+  const segmentsA = splitFolderNameSegments(a);
+  const segmentsB = splitFolderNameSegments(b);
+  let index = 0;
+
+  while (index < segmentsA.length && index < segmentsB.length) {
+    const segmentA = segmentsA[index];
+    const segmentB = segmentsB[index];
+    index++;
+
+    if (typeof segmentA === 'number' && typeof segmentB === 'number') {
+      const diff = segmentB - segmentA;
+      if (diff !== 0) {
+        return diff;
+      }
+      continue;
+    }
+
+    const diff = String(segmentA).localeCompare(String(segmentB));
+    if (diff !== 0) {
+      return diff;
+    }
+  }
+
+  return segmentsA.length - segmentsB.length;
+}
+
 /** Prefer RAW files over matching JPEG variants. */
 export function dedupeRawJpegPairs(filePaths: string[]): string[] {
   const byStem = new Map<string, string[]>();
@@ -84,9 +130,9 @@ export async function getPhotoFolders(): Promise<string[]> {
   try {
     const entries = await fs.readdir(dirs.photos, { withFileTypes: true });
     return entries
-      .filter((entry) => entry.isDirectory())
+      .filter((entry) => entry.isDirectory() && isVisible(entry.name))
       .map((entry) => entry.name)
-      .toSorted((a, b) => a.localeCompare(b));
+      .toSorted(comparePhotoFolderNames);
   } catch {
     return [];
   }
