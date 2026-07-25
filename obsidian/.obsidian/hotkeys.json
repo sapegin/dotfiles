@@ -252,5 +252,13 @@
       ],
       "key": ";"
     }
+  ],
+  "editor:table-row-after": [
+    {
+      "modifiers": [
+        "Shift"
+      ],
+      "key": "Enter"
+    }
   ]
 }
