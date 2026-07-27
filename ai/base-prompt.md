@@ -39,7 +39,7 @@ When the user gives a reusable instruction, corrects your behavior, or identifie
 - Match local style and conventions.
 - Do not add helpers, abstractions, or generalization for single-use code unless local style already requires it.
 - Remove only code made unused by your changes.
-- Use descriptive names in US English; avoid shortening ordinary words (`lineNum` → `lineNumber`).
+- Use descriptive names in US English. Name functions with verbs that state their action (`cheapestModel` → `getCheapestModel`). Avoid unclear abbreviations and shortened ordinary words (`lineNum` → `lineNumber`), but preserve established local and API conventions.
 - Comment code that may be confusing, don’t remove existing comments.
 - Mention unrelated issues briefly; do not change them unless asked.
 
