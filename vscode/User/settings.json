@@ -168,7 +168,6 @@
     "args": ["-i"]
   },
   "terminal.integrated.commandsToSkipShell": ["workbench.action.closePanel"],
-  "terminal.integrated.copyOnSelection": true,
   "terminal.integrated.cursorStyle": "line",
   "terminal.integrated.cursorStyleInactive": "line",
   "terminal.integrated.cursorWidth": 2,
