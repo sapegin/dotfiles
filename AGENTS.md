@@ -6,8 +6,8 @@ Never symlink files into the Obsidian vault (`~/murder`) or other iCloud paths �
 
 New tools are written in TypeScript and located at `src/bin/`. Each TypeScript tool should have a matching symlink in `bin/symlinks/` that points to the shared `bin/_ts` runner (example: `src/bin/j.ts` and `bin/symlinks/j` → `_ts`). Keep non-TypeScript tools as regular executable scripts in `bin/`.
 
-Shared utility functions should have concise comments explaining their purpose.
+Shared utility functions should have JSDoc comments explaining their purpose.
 
-Agent skills, personas, and shared AI references live in `$DOTFILES_DIR/ai/`. Always edit skills in `ai/skills/` (and references in `ai/skills/_references/`), never in `~/.agents/skills/` — that directory is installed from this repo via `dotfiles.json`.
+Agent skills, personas, and shared AI references live in `ai/`. `ai/base-prompt.md` is symlinked as the global `AGENTS.md` for agents; keep it short, generic, and broadly useful. Always edit skills in `ai/skills/` (and references in `ai/skills/_references/`), never in `~/.agents/skills/` — that directory is also symlinked.
 
-Ephemeral pretty-html explainers live in `$DOTFILES_DIR/pretty-html/pages/` (gitignored). Long-term handbook pages live in `~/murder/zz-handbook/`. Shared assets are `$DOTFILES_DIR/pretty-html/_assets/` (git-tracked).
+If I ask to write something in German or Spanish, keep all drafts and discussion in English. Only give the final text in the target language.
