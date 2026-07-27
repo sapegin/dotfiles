@@ -100,3 +100,6 @@ export HOMEBREW_NO_ENV_HINTS=1
 
 # Ripgrep config
 export RIPGREP_CONFIG_PATH="$DOTFILES_DIR/ripgrep/ripgreprc"
+
+# Disable telemetry in various tools
+export DISABLE_TELEMETRY=1
