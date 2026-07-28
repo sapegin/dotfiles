@@ -28,6 +28,8 @@ Never infer permission to implement merely because it seems like the useful next
 
 Before coding, prefer built-ins, native platform features, existing dependencies, a one-liner, and finally the minimum custom code, in that order. Do not add a dependency for a few lines of code. Preserve input validation, data-loss safeguards, and security measures.
 
+Favor the smallest solution that covers most of the real need — prefer to provide 90% of the value in 20% of the code. Resist overengineering: extra types, error classes, config maps, abstraction layers, and “just in case” branches that the caller never asked for. One regex and a plain `process.exit` beats a framework; a thrown `Error` beats a custom hierarchy unless the shape is genuinely reused. When a simpler approach has a clear trade-off, say so briefly; default to less code.
+
 Define verifiable success criteria before implementation. Consider automated tests for every code change, preferring end-to-end tests when practical. Before claiming completion, run available checks such as `tsc`, the linter, and relevant tests. If a check fails, try to fix before claiming done.
 
 ## Self-improvement

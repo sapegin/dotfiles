@@ -61,6 +61,7 @@ Omio
 omnibar
 oneliner
 outdent
+overengineering
 overpolice
 oxfmt
 oxlint
