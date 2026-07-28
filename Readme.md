@@ -7,7 +7,7 @@
 - Custom color scheme: [Squirrelsong](./colors).
 - [Custom zsh theme](./tilde/.starship.toml) with Git status, etc. using Starship.
 - [Dotfiles synchronization](./src/bin/sync-dotfiles.ts).
-- Sensible macOS defaults: [setup/macos.sh](./setup/macos.sh).
+- [Sensible macOS defaults](./bin/macos-defaults).
 - [Visual Studio Code settings synchronization](./vscode).
 - [Visual Studio Code extensions local installation](./src/bin/sync-vscode-extensions.ts).
 - [Obsidian vault config](./obsidian).
