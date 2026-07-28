@@ -4,6 +4,7 @@
     "analyticsEnabled" : false,
     "appVisibility" : "dock",
     "appearanceMode" : "light",
+    "autoDeleteArchivedWorktreesAfterDays" : 1,
     "autoUpdateAgentIntegrationsEnabled" : true,
     "automatedActionPolicy" : "cliOnly",
     "confirmCloseSurface" : true,
