@@ -159,11 +159,12 @@
   /**
    * Code editing and navigation
    */
-  //   {
-  //     "comment": "Switch to the previously active editor",
-  //     "key": "shift shift",
-  //     "command": "workbench.action.openPreviousRecentlyUsedEditor"
-  //   },
+  {
+    "comment": "Switch to the previously active editor",
+    "key": "shift+escape",
+    "command": "workbench.action.openPreviousRecentlyUsedEditor",
+    "when": "editorTextFocus"
+  },
   {
     "comment": "Go to line",
     "key": "cmd+k cmd+g",
