@@ -11,6 +11,7 @@ AI agent skills. Invoke with `/<name>`.
 | [grill-in-code](grill-in-code/SKILL.md) | Stress-test a plan against the codebase, tests, and existing docs before implementation. |
 | [grill-me](grill-me/SKILL.md) | Interview the user relentlessly about a plan, decision, or design until reaching shared understanding. |
 | [librarian](librarian/SKILL.md) | Research open-source libraries with evidence-backed answers and GitHub permalinks. |
+| [pi-insights](pi-insights/SKILL.md) | Analyze recent Pi sessions and audit instructions, tool use, validation commands, and custom skills. |
 | [pretty-html](pretty-html/SKILL.md) | Create and update standalone HTML documents with syntax highlighting, diagrams, and live demos. |
 | [review-code](review-code/SKILL.md) | Review code changes. |
 | [spellcheck](spellcheck/SKILL.md) | Proofread prose for spelling, grammar, punctuation, and clarity. |

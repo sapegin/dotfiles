@@ -6,11 +6,13 @@ Never symlink files into the Obsidian vault (`~/murder`) or other iCloud paths �
 
 New tools, including helpers used by skills, are written in TypeScript and located at `src/bin/`. Each TypeScript tool should have a matching symlink in `bin/symlinks/` that points to the shared `bin/_ts` runner (example: `src/bin/j.ts` and `bin/symlinks/j` → `_ts`). Keep non-TypeScript tools as regular executable scripts in `bin/`. Do not export functions from `src/bin/` scripts or add test-environment guards to `main()` — put testable logic in `src/util/` and test it there, or run the bin script as a subprocess (see `src/bin/branch-diff.test.ts`).
 
-CLI tools should handle expected input and subprocess failures with concise, actionable messages; do not expose stack traces for routine errors.
+For expected subprocess failures, CLI tools should usually forward the tool’s stderr unchanged instead of replacing it or adding a stack trace. Add context only when stderr is not actionable. Do not swallow or sanitize unexpected errors; let them propagate so the user sees the full diagnostic.
 
 Shared utility functions should have JSDoc comments explaining their purpose. Name `src/util/` modules after their domain (`files.ts`, `git.ts`, `tui.ts`).
 
 This repository targets the last two major macOS releases only. Do not add platform checks — assume macOS.
+
+Tools for this dotfiles repository should support the configuration actually used here. Do not add generic configuration fallbacks or compatibility branches unless requested.
 
 Agent skills, personas, and shared AI references live in `ai/`. `ai/base-prompt.md` is symlinked as the global `AGENTS.md` for agents; keep it short, generic, and broadly useful. Always edit skills in `ai/skills/` (and references in `ai/skills/_references/`), never in `~/.agents/skills/` — that directory is also symlinked.
 
