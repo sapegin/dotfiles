@@ -4,7 +4,9 @@ System configuration files are symlinked or synced from this repository using sy
 
 Never symlink files into the Obsidian vault (`~/murder`) or other iCloud paths — iCloud does not handle symlinks reliably. Use `mode: "sync"` in `dotfiles.json` instead.
 
-New tools are written in TypeScript and located at `src/bin/`. Each TypeScript tool should have a matching symlink in `bin/symlinks/` that points to the shared `bin/_ts` runner (example: `src/bin/j.ts` and `bin/symlinks/j` → `_ts`). Keep non-TypeScript tools as regular executable scripts in `bin/`. Do not export functions from `src/bin/` scripts or add test-environment guards to `main()` — put testable logic in `src/util/` and test it there, or run the bin script as a subprocess (see `src/bin/branch-diff.test.ts`).
+New tools, including helpers used by skills, are written in TypeScript and located at `src/bin/`. Each TypeScript tool should have a matching symlink in `bin/symlinks/` that points to the shared `bin/_ts` runner (example: `src/bin/j.ts` and `bin/symlinks/j` → `_ts`). Keep non-TypeScript tools as regular executable scripts in `bin/`. Do not export functions from `src/bin/` scripts or add test-environment guards to `main()` — put testable logic in `src/util/` and test it there, or run the bin script as a subprocess (see `src/bin/branch-diff.test.ts`).
+
+CLI tools should handle expected input and subprocess failures with concise, actionable messages; do not expose stack traces for routine errors.
 
 Shared utility functions should have JSDoc comments explaining their purpose. Name `src/util/` modules after their domain (`files.ts`, `git.ts`, `tui.ts`).
 
