@@ -114,7 +114,7 @@ function rollback(exitCode: number): never {
 }
 
 // Pull with rebase
-console.log(`↓ Fetching from ${remote}…`);
+console.log(`\n↓ Fetching from ${remote}…`);
 try {
   execFileSync(
     'git',
