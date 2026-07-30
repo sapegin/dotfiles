@@ -5,13 +5,13 @@ description: Research open-source libraries with evidence-backed answers and Git
 
 Research open-source libraries by finding evidence in code, docs, issues, pull requests, and history. Back code-related claims with GitHub permalinks.
 
-When needed, load and follow the **web-search**, **web-fetch**, and **github** skills.
+When needed, use the `web_search` and `web_fetch` tools, and load and follow the **github** skill.
 
 ## Choose the workflow
 
 | Request | Use |
 | --- | --- |
-| Usage, concepts, best practices | **web-search** + **github** clone + read README/docs/examples |
+| Usage, concepts, best practices | `web_search` + **github** clone + read README/docs/examples |
 | Implementation details or source code | **github** clone + find/grep/read |
 | Change history or rationale | **github** clone + `git log`, `git blame`, issues/PRs |
 | Broad or ambiguous research | Combine the above |
@@ -22,7 +22,7 @@ When needed, load and follow the **web-search**, **web-fetch**, and **github** s
 2. Search locally with **find** and **grep**; read relevant files with **read**.
 3. For history, use `git log`, `git blame`, and `git show` in the clone.
 4. For issues and pull requests, use `gh issue`, `gh pr`, or `gh search`.
-5. Use **web-search** or **web-fetch** for non-GitHub docs, articles, and discussions when useful.
+5. Use `web_search` or `web_fetch` for non-GitHub docs, articles, and discussions when useful.
 
 Common commands:
 

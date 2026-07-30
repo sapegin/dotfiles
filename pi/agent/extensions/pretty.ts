@@ -505,10 +505,12 @@ function basicToolHeading(
   };
 }
 
-function renderPendingToolCall({
+/** Render a compact tool heading while its execution is pending. */
+export function renderPrettyPendingTool({
   ctx,
   theme,
-  title,
+  name,
+  value,
 }: {
   ctx: {
     executionStarted: boolean;
@@ -516,13 +518,49 @@ function renderPendingToolCall({
     lastComponent?: Component;
   };
   theme: Theme;
-  title: () => string;
-}): WidthAwareText {
+  name: string;
+  value: string;
+}): Component {
   const text = getTextComponent(ctx);
   text.setText(
     ctx.executionStarted && ctx.isPartial
-      ? basicToolHeading(theme, title(), 'pending')
+      ? basicToolHeading(theme, toolTitle(theme, name, value), 'pending')
       : () => ''
+  );
+  return text;
+}
+
+/** Render a compact tool result with optional status, summary, and error. */
+export function renderPrettyCompletedTool({
+  ctx,
+  error,
+  extra,
+  theme,
+  name,
+  status,
+  value,
+}: {
+  ctx: {
+    isError?: boolean;
+    isPartial?: boolean;
+    lastComponent?: Component;
+  };
+  error?: string;
+  extra?: string;
+  theme: Theme;
+  name: string;
+  status?: FrameStatus;
+  value: string;
+}): Component {
+  const text = getTextComponent(ctx);
+  text.setText(
+    basicToolHeading(
+      theme,
+      toolTitle(theme, name, value),
+      status ?? getFrameStatus(ctx),
+      extra,
+      error
+    )
   );
   return text;
 }
@@ -550,30 +588,23 @@ function registerRead(pi: ExtensionAPI, cwd: string): void {
       );
     },
     renderCall(args, theme, ctx) {
-      return renderPendingToolCall({
+      return renderPrettyPendingTool({
         ctx,
         theme,
-        title: () => toolTitle(theme, 'Read', tildify(args.path)),
+        name: 'Read',
+        value: tildify(args.path),
       });
     },
     renderResult(result, _options, theme, ctx) {
-      const text = getTextComponent(ctx);
-
-      const filepath = ctx.args.path;
       const content =
         result.content[0]?.type === 'text' ? result.content[0].text : '';
-
-      text.setText(
-        basicToolHeading(
-          theme,
-          toolTitle(theme, 'Read', tildify(filepath)),
-          getFrameStatus(ctx),
-          undefined,
-          ctx.isError ? formatReadError(content) : undefined
-        )
-      );
-
-      return text;
+      return renderPrettyCompletedTool({
+        ctx,
+        error: ctx.isError ? formatReadError(content) : undefined,
+        theme,
+        name: 'Read',
+        value: tildify(ctx.args.path),
+      });
     },
   });
 }
@@ -593,35 +624,28 @@ function registerFind(pi: ExtensionAPI, cwd: string): void {
       );
     },
     renderCall(args, theme, ctx) {
-      return renderPendingToolCall({
+      return renderPrettyPendingTool({
         ctx,
         theme,
-        title: () => toolTitle(theme, 'Find', args.pattern),
+        name: 'Find',
+        value: args.pattern,
       });
     },
     renderResult(result, _options, theme, ctx) {
-      const text = getTextComponent(ctx);
-
-      const pattern = ctx.args.pattern;
       const content =
         result.content[0]?.type === 'text' ? result.content[0].text : '';
-
-      text.setText(
-        basicToolHeading(
-          theme,
-          toolTitle(theme, 'Find', pattern),
-          getFrameStatus(ctx),
-          ctx.isPartial || ctx.isError
-            ? undefined
-            : theme.fg(
-                'dim',
-                theme.italic(formatItemCount(countLines(content)))
-              ),
-          ctx.isError ? content : undefined
-        )
-      );
-
-      return text;
+      const extra =
+        ctx.isPartial || ctx.isError
+          ? undefined
+          : theme.fg('dim', theme.italic(formatItemCount(countLines(content))));
+      return renderPrettyCompletedTool({
+        ctx,
+        error: ctx.isError ? content : undefined,
+        extra,
+        theme,
+        name: 'Find',
+        value: ctx.args.pattern,
+      });
     },
   });
 }
@@ -641,35 +665,28 @@ function registerGrep(pi: ExtensionAPI, cwd: string): void {
       );
     },
     renderCall(args, theme, ctx) {
-      return renderPendingToolCall({
+      return renderPrettyPendingTool({
         ctx,
         theme,
-        title: () => toolTitle(theme, 'Grep', args.pattern),
+        name: 'Grep',
+        value: args.pattern,
       });
     },
     renderResult(result, _options, theme, ctx) {
-      const text = getTextComponent(ctx);
-
-      const pattern = ctx.args.pattern;
       const content =
         result.content[0]?.type === 'text' ? result.content[0].text : '';
-
-      text.setText(
-        basicToolHeading(
-          theme,
-          toolTitle(theme, 'Grep', pattern),
-          getFrameStatus(ctx),
-          ctx.isPartial || ctx.isError
-            ? undefined
-            : theme.fg(
-                'dim',
-                theme.italic(formatItemCount(countLines(content)))
-              ),
-          ctx.isError ? content : undefined
-        )
-      );
-
-      return text;
+      const extra =
+        ctx.isPartial || ctx.isError
+          ? undefined
+          : theme.fg('dim', theme.italic(formatItemCount(countLines(content))));
+      return renderPrettyCompletedTool({
+        ctx,
+        error: ctx.isError ? content : undefined,
+        extra,
+        theme,
+        name: 'Grep',
+        value: ctx.args.pattern,
+      });
     },
   });
 }
@@ -689,35 +706,28 @@ function registerLs(pi: ExtensionAPI, cwd: string): void {
       );
     },
     renderCall(args, theme, ctx) {
-      return renderPendingToolCall({
+      return renderPrettyPendingTool({
         ctx,
         theme,
-        title: () => toolTitle(theme, 'List', tildify(args.path ?? '')),
+        name: 'List',
+        value: tildify(args.path ?? ''),
       });
     },
     renderResult(result, _options, theme, ctx) {
-      const text = getTextComponent(ctx);
-
-      const root = tildify(ctx.args.path ?? '');
       const content =
         result.content[0]?.type === 'text' ? result.content[0].text : '';
-
-      text.setText(
-        basicToolHeading(
-          theme,
-          toolTitle(theme, 'List', root),
-          getFrameStatus(ctx),
-          ctx.isPartial || ctx.isError
-            ? undefined
-            : theme.fg(
-                'dim',
-                theme.italic(formatItemCount(countLines(content)))
-              ),
-          ctx.isError ? content : undefined
-        )
-      );
-
-      return text;
+      const extra =
+        ctx.isPartial || ctx.isError
+          ? undefined
+          : theme.fg('dim', theme.italic(formatItemCount(countLines(content))));
+      return renderPrettyCompletedTool({
+        ctx,
+        error: ctx.isError ? content : undefined,
+        extra,
+        theme,
+        name: 'List',
+        value: tildify(ctx.args.path ?? ''),
+      });
     },
   });
 }
@@ -745,24 +755,17 @@ function registerBash(pi: ExtensionAPI, cwd: string): void {
       return new Text('', 0, 0);
     },
     renderResult(result, _options, theme, ctx) {
-      const text = getTextComponent(ctx);
-
-      const command = formatBashCommand(ctx.args.command);
       const content =
         result.content[0]?.type === 'text' ? result.content[0].text : '';
       const summary = bashSummary(content, ctx.isPartial, ctx.isError);
-
-      text.setText(
-        basicToolHeading(
-          theme,
-          toolTitle(theme, 'Bash', command),
-          summary.status,
-          undefined,
-          summary.text
-        )
-      );
-
-      return text;
+      return renderPrettyCompletedTool({
+        ctx,
+        error: summary.text,
+        theme,
+        name: 'Bash',
+        status: summary.status,
+        value: formatBashCommand(ctx.args.command),
+      });
     },
   });
 }
@@ -782,33 +785,27 @@ function registerWrite(pi: ExtensionAPI, cwd: string): void {
       );
     },
     renderCall(args, theme, ctx) {
-      return renderPendingToolCall({
+      return renderPrettyPendingTool({
         ctx,
         theme,
-        title: () => toolTitle(theme, 'Write', tildify(args.path)),
+        name: 'Write',
+        value: tildify(args.path),
       });
     },
     renderResult(result, _options, theme, ctx) {
-      const text = getTextComponent(ctx);
-
-      const filepath = ctx.args.path;
-      const content = ctx.args.content;
       const output =
         result.content[0]?.type === 'text' ? result.content[0].text : '';
-
-      text.setText(
-        basicToolHeading(
-          theme,
-          toolTitle(theme, 'Write', tildify(filepath)),
-          getFrameStatus(ctx),
+      return renderPrettyCompletedTool({
+        ctx,
+        error: ctx.isError ? output : undefined,
+        extra:
           ctx.isPartial || ctx.isError
             ? undefined
-            : theme.fg('success', `+${countLines(content)}`),
-          ctx.isError ? output : undefined
-        )
-      );
-
-      return text;
+            : theme.fg('success', `+${countLines(ctx.args.content)}`),
+        theme,
+        name: 'Write',
+        value: tildify(ctx.args.path),
+      });
     },
   });
 }
@@ -828,17 +825,17 @@ function registerEdit(pi: ExtensionAPI, cwd: string): void {
       );
     },
     renderCall(args, theme, ctx) {
-      return renderPendingToolCall({
+      return renderPrettyPendingTool({
         ctx,
         theme,
-        title: () => toolTitle(theme, 'Edit', tildify(args.path)),
+        name: 'Edit',
+        value: tildify(args.path),
       });
     },
     renderResult(result, _options, theme, ctx) {
-      const text = getTextComponent(ctx);
-
-      const filepath = ctx.args.path;
-      const summary = ctx.isError
+      const error =
+        result.content[0]?.type === 'text' ? result.content[0].text : undefined;
+      const extra = ctx.isError
         ? undefined
         : summarizeAll(
             theme,
@@ -846,20 +843,14 @@ function registerEdit(pi: ExtensionAPI, cwd: string): void {
               getLineDiffStats(edit.oldText, edit.newText)
             )
           );
-      const error =
-        result.content[0]?.type === 'text' ? result.content[0].text : undefined;
-
-      text.setText(
-        basicToolHeading(
-          theme,
-          toolTitle(theme, 'Edit', tildify(filepath)),
-          getFrameStatus(ctx),
-          summary,
-          ctx.isError ? error : undefined
-        )
-      );
-
-      return text;
+      return renderPrettyCompletedTool({
+        ctx,
+        error: ctx.isError ? error : undefined,
+        extra,
+        theme,
+        name: 'Edit',
+        value: tildify(ctx.args.path),
+      });
     },
   });
 }

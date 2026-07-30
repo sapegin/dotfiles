@@ -9,7 +9,7 @@ The user wants handbook/cookbook knowledge captured as durable HTML. The handboo
 
 Handbook root in Obsidian Vault: `~/murder/zz-handbook/`
 
-Read and follow the **pretty-html** skill for every HTML page. When you need current official documentation, load and follow **web-search** and **web-fetch** skills.
+Read and follow the **pretty-html** skill for every HTML page. When you need current official documentation, use the `web_search` and `web_fetch` tools.
 
 ## Tone
 

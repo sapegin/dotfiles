@@ -3,7 +3,7 @@ name: github
 description: Work with GitHub repositories, source code, pull requests, issues, releases, Actions, and API data using the gh CLI. Use for GitHub URLs and GitHub resources.
 ---
 
-Use `gh` for GitHub resources. It uses the user’s authenticated token and is preferred over `curl`, `wget`, or **web-fetch** for GitHub URLs.
+Use `gh` for GitHub resources. It uses the user’s authenticated token and is preferred over `curl`, `wget`, or `web_fetch` for GitHub URLs.
 
 Do not use this for non-GitHub URLs, GitHub Pages sites (`*.github.io`), or local Git operations like `git commit` and `git push`.
 

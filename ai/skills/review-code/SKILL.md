@@ -8,7 +8,7 @@ Review the requested target or current changes and give feedback.
 
 For JavaScript or TypeScript changes, read and follow [guidelines for JavaScript/TypeScript](../_references/JavaScript.md).
 
-When needed, load and follow the **web-search**, **web-fetch**, and **github** skills.
+When needed, use the `web_search` and `web_fetch` tools, and load and follow the **github** skill.
 
 ## Target
 
