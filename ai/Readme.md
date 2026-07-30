@@ -33,7 +33,7 @@ Run `npm run ai-sync` to update marked sections in `ai/AGENTS.md` and `ai/skills
 
 Skills live in [`skills/`](./skills/) and follow the Agent Skills format. They are linked to `~/.agents/skills/`, which both Pi and Cursor discover as user-level skills.
 
-Some skills are derived from upstream tools (`browser`, `modern-web-guidance`) but owned in this repository — edit them here, not in installed packages. Each such skill has a `tested-with` field in its frontmatter.
+Some skills are derived from upstream tools (`browser`) but owned in this repository — edit them here, not in installed packages. Each such skill has a `tested-with` field in its frontmatter.
 
 When upgrading an upstream tool:
 

@@ -8,6 +8,8 @@ Check the requested target or current changes for AI-generated slop.
 
 For JavaScript or TypeScript targets, read and follow [guidelines for JavaScript/TypeScript](../_references/JavaScript.md).
 
+For HTML, CSS, or client-side JavaScript in the review scope, consult [\_references/web-guides/](../_references/web-guides/) when the changed code touches patterns these guides cover. Load a specific guide only when needed — browse with `find ../_references/web-guides -name '*.md' | sort`, or read by ID at `../_references/web-guides/<category>/<id>.md`.
+
 ## Target
 
 Accept zero or one argument:
@@ -109,7 +111,8 @@ Formatting rules:
 - **Misleading completeness:** Flag hard-coded sample data, placeholder success responses, silent no-op branches, and unfinished behavior presented as complete. Keep precise TODOs that document intentionally deferred functionality or known scope limitations, but resolve or flag low-effort TODOs that can be completed safely within the current change.
 - **Async hazards:** Check for floating promises, missing `await`, needless serialization, races, stale updates, absent cleanup, and ignored cancellation.
 - **Framework cargo culting:** Flag unnecessary effects, memoization without evidence, separately stored derived state, trivial custom hooks, and abstractions copied from patterns the repository does not use.
-- **Accessibility defects:** Use links for navigation and buttons for actions instead of clickable `div`/`span` elements; give form fields and icon-only or otherwise ambiguous controls accessible names or labels; preserve keyboard operation and visible focus; provide appropriate image alternative text; and prefer native HTML semantics over ARIA.
+- **Accessibility defects:** Use links for navigation and buttons for actions instead of clickable `div`/`span` elements; give form fields and icon-only or otherwise ambiguous controls accessible names or labels; preserve keyboard operation and visible focus; provide appropriate image alternative text; and prefer native HTML semantics over ARIA. Check [\_references/web-guides/accessibility/](../_references/web-guides/accessibility/) when relevant.
+- **Obsolete web patterns:** Flag libraries and hand-rolled JS where platform HTML/CSS APIs suffice (dialogs, popovers, scroll effects, forms, passkeys, etc.), outdated layout approaches, and unnecessary dependencies. Consult the matching guide under [\_references/web-guides/](../_references/web-guides/) before reporting.
 - **Security regressions:** Check for unsafe HTML insertion, command or SQL interpolation, leaked secrets, weakened authorization, trusted client identity, insecure randomness, and unsafe path handling.
 - **Hollow tests:** Flag tautological assertions, implementation logic reproduced in tests, excessive mocking, snapshots that hide semantics, weakened assertions, skipped tests, and tests that never exercise the changed path.
 - **Speculative performance work:** Reject caches, batching, lazy loading, concurrency, and memoization that add complexity without evidence of a relevant problem.
