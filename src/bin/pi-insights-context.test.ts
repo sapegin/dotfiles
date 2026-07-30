@@ -35,7 +35,7 @@ afterAll(() => {
 });
 
 describe('pi-insights-context', () => {
-  test('prints five recent prior sessions without reasoning or sensitive payloads', () => {
+  test('prints recent prior sessions without reasoning or sensitive payloads', () => {
     let currentSession = '';
     for (let index = 0; index < 7; index += 1) {
       const entries = [
@@ -117,14 +117,14 @@ describe('pi-insights-context', () => {
 
     expect(result.status).toBe(0);
     expect(result.stdout).toContain(
-      'Selected 5 most recently modified prior sessions.'
+      'Selected 6 most recently modified prior sessions.'
     );
     expect(result.stdout).toContain('request 6');
     expect(result.stdout).toContain('Tool calls: 1');
     expect(result.stdout).toContain('Tool errors: 1');
     expect(result.stdout).toContain('[Tool result: bash, success]');
+    expect(result.stdout).toContain('request 0');
     expect(result.stdout).toContain('request 1');
-    expect(result.stdout).not.toContain('request 0');
     expect(result.stdout).not.toContain('request 5');
     expect(result.stdout).not.toContain('hidden reasoning');
     expect(result.stdout).not.toContain('private-image-data');

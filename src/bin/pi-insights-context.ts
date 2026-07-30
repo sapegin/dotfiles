@@ -1,4 +1,4 @@
-// Prints a compact, redacted transcript of the 5 most recent prior Pi sessions
+// Prints a compact, redacted transcript of the most recent prior Pi sessions
 // for the pi-insights skill.
 //
 // ---
@@ -8,26 +8,22 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import {
+  isObject,
+  listSessionFiles,
+  readSessionEntries,
+  resolveSessionsDirectory,
+  type JsonObject,
+} from '../util/pi-sessions.ts';
 import { run } from '../util/tui.ts';
 
-const SESSION_COUNT = 5;
+const SESSION_COUNT = 10;
 const MAX_BLOCK_LENGTH = 2000;
 const MAX_SESSION_LENGTH = 8000;
-
-type JsonObject = Record<string, unknown>;
 
 interface TranscriptBlock {
   readonly text: string;
   readonly required: boolean;
-}
-
-interface ToolCall {
-  readonly name: string;
-  readonly arguments: unknown;
-}
-
-function isObject(value: unknown): value is JsonObject {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
 // Session text may contain credentials in prompts, commands, and tool output.
@@ -80,14 +76,6 @@ function getTextContent(content: unknown): string {
     .join('\n');
 }
 
-function getToolCalls(content: JsonObject): ToolCall[] {
-  if (content.type !== 'toolCall' || typeof content.name !== 'string') {
-    return [];
-  }
-
-  return [{ name: content.name, arguments: content.arguments }];
-}
-
 // Full edit and write payloads consume context without helping diagnose tool
 // use; their target and size are enough for this report.
 function summarizeArguments(toolName: string, value: unknown): string {
@@ -137,13 +125,14 @@ function formatMessage(message: JsonObject): TranscriptBlock[] {
           text: `[Assistant]\n${truncate(content.text)}`,
           required: false,
         });
-      } else if (content.type === 'toolCall') {
-        blocks.push(
-          ...getToolCalls(content).map((toolCall) => ({
-            text: `[Tool call: ${toolCall.name}]\n${summarizeArguments(toolCall.name, toolCall.arguments)}`,
-            required: true,
-          }))
-        );
+      } else if (
+        content.type === 'toolCall' &&
+        typeof content.name === 'string'
+      ) {
+        blocks.push({
+          text: `[Tool call: ${content.name}]\n${summarizeArguments(content.name, content.arguments)}`,
+          required: true,
+        });
       }
     }
     return blocks;
@@ -243,19 +232,7 @@ function fitTranscript(blocks: TranscriptBlock[]): string {
 }
 
 function parseSession(filePath: string): string {
-  const lines = fs.readFileSync(filePath, 'utf8').split('\n').filter(Boolean);
-  const entries = lines.map((line, index) => {
-    try {
-      const value: unknown = JSON.parse(line);
-      if (!isObject(value)) {
-        throw new Error('entry is not an object');
-      }
-      return value;
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      throw new Error(`${filePath}:${index + 1}: ${message}`);
-    }
-  });
+  const entries = readSessionEntries(filePath);
 
   const header = entries.find((entry) => entry.type === 'session');
   const sessionInfo = entries.findLast(
@@ -267,8 +244,11 @@ function parseSession(filePath: string): string {
   const toolCalls = messages.flatMap((entry) => {
     const message = entry.message as JsonObject;
     return message.role === 'assistant' && Array.isArray(message.content)
-      ? message.content.flatMap((content) =>
-          isObject(content) ? getToolCalls(content) : []
+      ? message.content.filter(
+          (content) =>
+            isObject(content) &&
+            content.type === 'toolCall' &&
+            typeof content.name === 'string'
         )
       : [];
   });
@@ -333,16 +313,8 @@ function main(): void {
   }
 
   const currentSessionPath = path.resolve(currentSession);
-
-  // This repository uses Pi's default <root>/<encoded-cwd>/<session> layout.
-  const sessionDirectory = path.dirname(path.dirname(currentSessionPath));
-  if (!fs.existsSync(sessionDirectory)) {
-    throw new Error(`Pi session directory does not exist: ${sessionDirectory}`);
-  }
-  const sessionFiles = fs
-    .readdirSync(sessionDirectory, { recursive: true, withFileTypes: true })
-    .filter((entry) => entry.isFile() && entry.name.endsWith('.jsonl'))
-    .map((entry) => path.join(entry.parentPath, entry.name))
+  const sessionDirectory = resolveSessionsDirectory();
+  const sessionFiles = listSessionFiles(sessionDirectory)
     .filter((filePath) => path.resolve(filePath) !== currentSessionPath)
     .map((filePath) => ({ filePath, mtime: fs.statSync(filePath).mtimeMs }))
     .toSorted((left, right) => right.mtime - left.mtime)
