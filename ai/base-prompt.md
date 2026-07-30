@@ -51,7 +51,7 @@ When the user gives a broadly reusable instruction, corrects your behavior, or i
 - Do not create helpers, abstractions, or generalizations for one use unless local style requires them.
 - Remove only code made unused by your changes.
 - Use descriptive US English names. Name functions with verbs that state their action (`cheapestModel` → `getCheapestModel`). Avoid unclear abbreviations and shortened ordinary words (`lineNum` → `lineNumber`), but preserve established local and API conventions.
-- Comment confusing code; preserve existing comments.
+- Write comments for readers who know the language and stack but not this file. Add documentation comments to reusable functions (JSDoc in JavaScript and TypeScript); document business rules, domain knowledge, constraints, and non-obvious decisions; and explain potentially confusing code. Do not narrate obvious syntax or merely restate the code. Preserve existing comments unless the required change makes them inaccurate.
 - Mention unrelated issues briefly, but do not change them unless asked.
 
 Every changed line must serve the user’s goal.
