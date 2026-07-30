@@ -77,7 +77,7 @@ export default function registerWebTools(pi: ExtensionAPI) {
   pi.registerTool({
     name: 'web_search',
     label: 'Web search',
-    description: `Search the web using DuckDuckGo. Use for current information, documentation, articles, and other non-GitHub resources. Returns JSON and truncates output after ${DEFAULT_MAX_LINES} lines or ${formatSize(DEFAULT_MAX_BYTES)}.`,
+    description: `Search the web using DuckDuckGo. Use for current information, documentation, articles, and other non-GitHub resources. Returns JSON.`,
     promptSnippet: 'Search the web using DuckDuckGo',
     parameters: Type.Object({
       query: Type.String({ description: 'Search query', minLength: 1 }),
@@ -146,7 +146,7 @@ export default function registerWebTools(pi: ExtensionAPI) {
   pi.registerTool({
     name: 'web_fetch',
     label: 'Web fetch',
-    description: `Fetch a web page and extract its main content as Markdown using Trafilatura. Use for non-GitHub pages; prefer the github skill for GitHub URLs. Output is truncated after ${DEFAULT_MAX_LINES} lines or ${formatSize(DEFAULT_MAX_BYTES)}.`,
+    description: `Fetch a web page and extract its main content as Markdown using Trafilatura. Use for non-GitHub pages; prefer the github skill for GitHub URLs.`,
     promptSnippet: 'Fetch a web page and extract its main content as Markdown',
     parameters: Type.Object({
       url: Type.String({ description: 'HTTP or HTTPS URL to fetch' }),
