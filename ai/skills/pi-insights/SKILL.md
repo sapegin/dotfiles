@@ -1,6 +1,6 @@
 ---
 name: pi-insights
-description: Analyze recent Pi sessions and audit instructions, tool use, validation commands, and custom skills.
+description: Analyze recent Pi sessions, audit instructions, tool use, validation commands, and custom skills, and identify repeated workflows that merit new skills.
 disable-model-invocation: true
 ---
 
@@ -12,9 +12,10 @@ Session transcripts may contain credentials, personal information, or proprietar
 
 ## Success criteria
 
-- The five most recent prior sessions are considered, or every available prior session when fewer than five exist.
+- Prior sessions are collected exclusively via `pi-insights-context`; analyze every session it returns.
 - Recommendations cite observed behavior and the current configuration governing it.
 - Tool and validation workflows receive explicit attention.
+- Repeated user-requested workflows are assessed as candidates for new skills.
 - Suggested instruction changes are minimal, correctly scoped, and not duplicates.
 - No configuration or instruction file is modified during the analysis.
 
@@ -43,6 +44,7 @@ Session transcripts may contain credentials, personal information, or proprietar
    - whether the agent delayed validation, ran destructive fix modes unnecessarily, skipped applicable checks, or repeated expensive commands without evidence;
    - whether tool failures received a useful recovery attempt instead of guessing or silently changing approach;
    - skill routing descriptions, explicit triggers, progressive disclosure, deterministic helper scripts, error handling, stale commands, and needless overlap between skills;
+   - recurring user prompts that require the same specialized context, multi-step workflow, or reference material and could be made faster or more reliable by a new skill;
    - user corrections, repeated friction, unsupported success claims, and avoidable tool calls.
 
 4. Diagnose the cause before prescribing text:
@@ -58,7 +60,7 @@ Session transcripts may contain credentials, personal information, or proprietar
    - deterministic helper: repeatable parsing or command orchestration;
    - Pi settings or extension: behavior that prompts cannot reliably enforce.
 
-   Prefer revising an existing rule over adding another. Avoid prompt bloat: if a recommendation cannot name the behavior it will change and the evidence for that behavior, omit it.
+   Prefer revising an existing rule over adding another. Recommend a new skill only for a repeated, coherent workflow that does not fit an existing skill; include a proposed name, routing description, core workflow, and why an instruction or helper alone is insufficient. Avoid prompt bloat: if a recommendation cannot name the behavior it will change and the evidence for that behavior, omit it.
 
 ## Output
 
@@ -90,9 +92,14 @@ Use this structure:
 
 **Expected effect:** A behavior that can be checked in future sessions.
 
+## New skill opportunities
+
+- For each supported candidate: proposed name, evidence of repeated user prompts, routing description, core workflow, and expected benefit.
+- If no recurring pattern merits a skill, say so plainly.
+
 ## No-change observations
 
 - Important one-off issues or model mistakes that should not become permanent instructions.
 ```
 
-Limit recommendations to the five highest-value changes, ordered by impact. Include short proposed wording or a compact diff when recommending instruction changes. If the evidence supports no durable changes, say so plainly rather than manufacturing improvements. End by asking which recommendations, if any, the user wants implemented.
+Order recommendations and new skill opportunities by impact. Include short proposed wording or a compact diff when recommending instruction changes. If the evidence supports no durable changes, say so plainly rather than manufacturing improvements. End by asking which recommendations, if any, the user wants implemented.
