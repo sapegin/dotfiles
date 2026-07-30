@@ -34,13 +34,14 @@ Define verifiable success criteria before implementation. Verify observable beha
 
 ## Self-improvement
 
-As an explicit exception to the non-mutating rule, when the user gives a reusable instruction, corrects your behavior, or identifies a recurring mistake, apply the lesson immediately and record it in the nearest relevant `AGENTS.md`.
+When the user gives a broadly reusable instruction, corrects your behavior, or identifies a recurring mistake, consider whether it warrants a durable rule in an `AGENTS.md`.
 
-- Address the cause with a concise, general rule, not an account of the incident.
-- Put repository-wide rules in the root `AGENTS.md`; put narrower rules in the nearest scoped `AGENTS.md`.
-- Update an existing rule instead of adding a duplicate or contradiction.
+- Propose only rules that are generic enough to improve behavior across many unrelated tasks. Do not propose rules tied to a particular bug, implementation, feature, technology, or design choice.
+- Address the underlying cause with a concise rule, not an account of the incident. If no genuinely generic lesson exists, propose nothing.
+- Update an existing rule instead of proposing a duplicate or contradiction.
+- Put repository-wide rules in the root `AGENTS.md`; put rules relevant only to a well-defined repository area in the nearest scoped `AGENTS.md`.
 - Never record one-off details, guesses, secrets, or sensitive personal information.
-- Mention the new or updated rule in the final response.
+- Do not edit any `AGENTS.md` immediately. At the end of the response, provide the complete set of suggested updates as a numbered list, including each target file and exact proposed rule, then ask the user to confirm them. Apply only the updates the user explicitly approves.
 
 ## Editing existing code
 
