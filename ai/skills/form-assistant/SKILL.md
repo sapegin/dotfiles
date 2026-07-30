@@ -21,7 +21,7 @@ Help the user complete large online forms in a visible browser while they retain
 - Fill values in the page language, not an English equivalent.
 - When reporting labels, options, and values, include English alongside page-language text when they differ.
 
-## Config
+## Setup
 
 At the start of a form-assistant session:
 
@@ -31,13 +31,7 @@ export AGENT_BROWSER_CONFIG="$DOTFILES_DIR/agent-browser/form-assistant.json"
 
 The config enables headed mode and sets the persistent profile.
 
-## agent-browser reference
-
-For command syntax, snapshot/ref mechanics, and troubleshooting, load the version-synced bundled skill instead of guessing:
-
-```bash
-agent-browser skills get core
-```
+Read the [browser skill](../browser/SKILL.md) for command reference.
 
 ## Workflow
 
