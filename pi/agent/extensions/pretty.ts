@@ -105,19 +105,38 @@ function getToolSet(cwd: string): ToolSet {
   return tools;
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function getUsageCost(usage: unknown): number {
+  if (!isRecord(usage) || !isRecord(usage.cost)) {
+    return 0;
+  }
+  return typeof usage.cost.total === 'number' ? usage.cost.total : 0;
+}
+
+/** Sum usage cost from a single Pi session log entry. */
+export function getEntryCost(entry: unknown): number {
+  if (!isRecord(entry)) {
+    return 0;
+  }
+  if (entry.type === 'message' && isRecord(entry.message)) {
+    const message = entry.message;
+    if (message.role === 'assistant' || message.role === 'toolResult') {
+      return getUsageCost(message.usage);
+    }
+  }
+  if (entry.type === 'branch_summary' || entry.type === 'compaction') {
+    return getUsageCost(entry.usage);
+  }
+  return 0;
+}
+
 function getSessionCost(ctx: ExtensionContext): number {
-  return ctx.sessionManager.getEntries().reduce((total, entry) => {
-    if (entry.type === 'message' && entry.message.role === 'assistant') {
-      return total + entry.message.usage.cost.total;
-    }
-    if (entry.type === 'message' && entry.message.role === 'toolResult') {
-      return total + (entry.message.usage?.cost.total ?? 0);
-    }
-    if (entry.type === 'branch_summary' || entry.type === 'compaction') {
-      return total + (entry.usage?.cost.total ?? 0);
-    }
-    return total;
-  }, 0);
+  return ctx.sessionManager
+    .getEntries()
+    .reduce((total, entry) => total + getEntryCost(entry), 0);
 }
 
 function formatContextUsageLabel(ctx: ExtensionContext): {

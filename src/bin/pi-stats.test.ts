@@ -52,6 +52,7 @@ describe('pi-stats', () => {
               arguments: { path: 'a.ts', content: 'alpha\nbeta' },
             },
           ],
+          usage: { cost: { total: 1.5 } },
         },
       },
     ]);
@@ -77,6 +78,16 @@ describe('pi-stats', () => {
               },
             },
           ],
+          usage: { cost: { total: 2.5 } },
+        },
+      },
+      {
+        type: 'message',
+        message: {
+          role: 'toolResult',
+          toolName: 'edit',
+          content: 'ok',
+          usage: { cost: { total: 0.5 } },
         },
       },
     ]);
@@ -91,11 +102,16 @@ describe('pi-stats', () => {
 
     expect(result.status).toBe(0);
     expect(result.stdout).toContain('Sessions: 2');
+    expect(result.stdout).toContain('Projects: 2');
     expect(result.stdout).toContain('Messages: 2');
+    expect(result.stdout).toContain('Tool calls: 2');
     expect(result.stdout).toContain('Lines added: 3');
     expect(result.stdout).toContain('Lines removed: 1');
     expect(result.stdout).toContain('Files edited or created: 2');
-    expect(result.stdout).toContain('Days used: 2');
+    expect(result.stdout).toContain('Days used: 2 (since 2026-06-01)');
     expect(result.stdout).toContain('Messages per day: 1');
+    expect(result.stdout).toContain('Total spent: $4.50');
+    expect(result.stdout).toContain('Daily average: $2.25');
+    expect(result.stdout).toContain('Cost per message: $2.25');
   });
 });

@@ -6,28 +6,38 @@ import path from 'node:path';
 // other way around.
 import {
   countLines,
+  getEntryCost,
   getLineDiffStats,
   type DiffStats,
 } from '../../pi/agent/extensions/pretty.ts';
 
 export type JsonObject = Record<string, unknown>;
 
-export interface SessionStats {
+interface UsageCounters {
   readonly messages: number;
+  readonly toolCalls: number;
+  readonly toolErrors: number;
   readonly linesAdded: number;
   readonly linesRemoved: number;
+}
+
+export interface SessionStats extends UsageCounters {
   readonly filePaths: readonly string[];
+  readonly cost: number;
+  readonly cwd?: string;
   readonly date?: string;
 }
 
-export interface AggregateStats {
+export interface AggregateStats extends UsageCounters {
   readonly sessions: number;
-  readonly messages: number;
-  readonly linesAdded: number;
-  readonly linesRemoved: number;
+  readonly projects: number;
   readonly filesChanged: number;
+  readonly firstDate?: string;
   readonly daysUsed: number;
   readonly messagesPerDay: number;
+  readonly totalCost: number;
+  readonly costPerDay: number;
+  readonly costPerMessage: number;
 }
 
 /** Type guard for JSON objects parsed from Pi session entries. */
@@ -52,12 +62,24 @@ export function readSessionEntries(filePath: string): JsonObject[] {
   });
 }
 
-function getSessionDate(entries: readonly JsonObject[]): string | undefined {
+function getSessionHeader(
+  entries: readonly JsonObject[]
+): JsonObject | undefined {
   const header = entries.find((entry) => entry.type === 'session');
+  return header;
+}
+
+function getSessionDate(entries: readonly JsonObject[]): string | undefined {
+  const header = getSessionHeader(entries);
   if (header && typeof header.timestamp === 'string') {
     return header.timestamp.slice(0, 10);
   }
   return undefined;
+}
+
+function getSessionCwd(entries: readonly JsonObject[]): string | undefined {
+  const header = getSessionHeader(entries);
+  return header && typeof header.cwd === 'string' ? header.cwd : undefined;
 }
 
 function collectEditStats(argumentsValue: unknown): DiffStats {
@@ -94,16 +116,28 @@ function collectWriteStats(argumentsValue: unknown): DiffStats {
 export function collectSessionStats(
   entries: readonly JsonObject[]
 ): SessionStats {
+  let toolCalls = 0;
+  let toolErrors = 0;
   let linesAdded = 0;
   let linesRemoved = 0;
+  let cost = 0;
   const filePaths = new Set<string>();
 
   for (const entry of entries) {
+    cost += getEntryCost(entry);
+
     if (entry.type !== 'message' || !isObject(entry.message)) {
       continue;
     }
-
     const message = entry.message;
+
+    if (message.role === 'toolResult') {
+      if (message.isError === true) {
+        toolErrors += 1;
+      }
+      continue;
+    }
+
     if (message.role !== 'assistant' || !Array.isArray(message.content)) {
       continue;
     }
@@ -116,6 +150,8 @@ export function collectSessionStats(
       ) {
         continue;
       }
+
+      toolCalls += 1;
 
       if (content.name === 'edit' || content.name === 'write') {
         if (
@@ -142,9 +178,13 @@ export function collectSessionStats(
         isObject(entry.message) &&
         entry.message.role === 'user'
     ).length,
+    toolCalls,
+    toolErrors,
     linesAdded,
     linesRemoved,
     filePaths: [...filePaths],
+    cost,
+    cwd: getSessionCwd(entries),
     date: getSessionDate(entries),
   };
 }
@@ -154,38 +194,62 @@ export function aggregateSessionStats(
   sessionStats: readonly SessionStats[]
 ): AggregateStats {
   const filePaths = new Set<string>();
+  const projectPaths = new Set<string>();
   const totals = sessionStats.reduce(
     (summary, stats) => {
       for (const filePath of stats.filePaths) {
         filePaths.add(filePath);
       }
+      if (stats.cwd !== undefined) {
+        projectPaths.add(stats.cwd);
+      }
       return {
         messages: summary.messages + stats.messages,
+        toolCalls: summary.toolCalls + stats.toolCalls,
+        toolErrors: summary.toolErrors + stats.toolErrors,
         linesAdded: summary.linesAdded + stats.linesAdded,
         linesRemoved: summary.linesRemoved + stats.linesRemoved,
+        totalCost: summary.totalCost + stats.cost,
       };
     },
     {
       messages: 0,
+      toolCalls: 0,
+      toolErrors: 0,
       linesAdded: 0,
       linesRemoved: 0,
+      totalCost: 0,
     }
   );
 
-  const daysUsed = new Set(
-    sessionStats.flatMap((stats) =>
-      stats.date === undefined ? [] : [stats.date]
-    )
-  ).size;
+  const dates = sessionStats
+    .flatMap((stats) => (stats.date === undefined ? [] : [stats.date]))
+    .toSorted();
+  const daysUsed = new Set(dates).size;
   const messagesPerDay =
     daysUsed === 0 ? 0 : Math.round((totals.messages / daysUsed) * 10) / 10;
+  const costPerDay =
+    daysUsed === 0 ? 0 : Math.round((totals.totalCost / daysUsed) * 100) / 100;
+  const costPerMessage =
+    totals.messages === 0
+      ? 0
+      : Math.round((totals.totalCost / totals.messages) * 100) / 100;
 
   return {
     sessions: sessionStats.length,
-    ...totals,
+    projects: projectPaths.size,
+    messages: totals.messages,
+    toolCalls: totals.toolCalls,
+    toolErrors: totals.toolErrors,
+    linesAdded: totals.linesAdded,
+    linesRemoved: totals.linesRemoved,
     filesChanged: filePaths.size,
+    firstDate: dates[0],
     daysUsed,
     messagesPerDay,
+    totalCost: totals.totalCost,
+    costPerDay,
+    costPerMessage,
   };
 }
 
