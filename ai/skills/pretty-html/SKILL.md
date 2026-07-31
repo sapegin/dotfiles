@@ -12,7 +12,7 @@ Shared assets live in `$DOTFILES_DIR/pretty-html/_assets/` (git-tracked). Handbo
 
 | Intent | Page location | Git |
 | --- | --- | --- |
-| Durable handbook reference | `~/murder/zz-handbook/<topic>/` — use the **teach** skill | Obsidian vault |
+| Durable handbook reference | `~/murder/zz-handbook/<topic>/` — use the [teach](../teach/SKILL.md) skill | Obsidian vault |
 | Temporary explainer, demo, one-off | `$DOTFILES_DIR/pretty-html/pages/` | Ignored |
 | Golden reference | `$DOTFILES_DIR/pretty-html/example.html` | Tracked |
 
@@ -158,8 +158,4 @@ open /path/to/page.html
 
 ## Sync
 
-Run dotfiles sync after changing `_assets/`. Never symlink into `~/murder` (iCloud).
-
-## Related skills
-
-The **teach** skill uses pretty-html conventions when writing handbook pages.
+Run `agent-comments` after changing `_assets/`. Never symlink into `~/murder` (iCloud).

@@ -9,7 +9,7 @@ The user wants handbook/cookbook knowledge captured as durable HTML. The handboo
 
 Handbook root in Obsidian Vault: `~/murder/zz-handbook/`
 
-Read and follow the **pretty-html** skill for every HTML page. When you need current official documentation, use the `web_search` and `web_fetch` tools.
+Read and follow the [pretty-html](../pretty-html/SKILL.md) skill for every HTML page. When you need current official documentation, use the `web_search` and `web_fetch` tools.
 
 ## Tone
 
@@ -46,7 +46,7 @@ Never symlink into `~/murder`. Never edit `_assets/` in the vault — change `$D
    - **New doc** only when someone would send a direct link to just that topic (`container-queries.html`, not `grid-template-areas.html`).
    - **New topic folder** when the domain is new — add `<topic>/index.html` hub linking its docs.
 4. **Gather sources** — prefer MDN, specifications, and official vendor docs. Cite them in `<ss-resources>` and inline where claims need backing. Do not trust parametric knowledge alone for factual claims.
-5. **Write or update HTML** — follow **pretty-html** skill. Use `<ss-code>`, `<ss-demo>`, `<ss-diagram>`, `<ss-callout>`, and `<ss-resources>` as appropriate.
+5. **Write or update HTML** — follow [pretty-html](../pretty-html/SKILL.md) skill. Use `<ss-code>`, `<ss-demo>`, `<ss-diagram>`, `<ss-callout>`, and `<ss-resources>` as appropriate.
 6. **Update `_index.yaml`** — add or refresh keywords, titles, and file paths.
 7. **Update `glossary.html`** when the question introduces a **cross-cutting concept** (e.g. pure function, polymorphism, closure). Do **not** add syntax, API names, or properties (`margin: auto`, `place-items`).
 8. **Open the page**:
