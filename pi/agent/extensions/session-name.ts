@@ -10,7 +10,7 @@ import {
 } from '@earendil-works/pi-coding-agent';
 
 const SYSTEM_PROMPT =
-  'Generate a concise 4-6 word title for this coding session. Use lowercase words only, with no punctuation, quotes, labels, or explanation.';
+  'Generate a concise 4-6 word title for this coding session in sentence case, with no punctuation, quotes, labels, or explanation.';
 
 // A 4–6-word title needs little output; 32 tokens allow tokenizer variation.
 const MAX_TOKENS = 32;
@@ -18,7 +18,7 @@ const MAX_TOKENS = 32;
 const PROMPT_MAX_CHARACTERS = 4000;
 
 function getCheapestModel(ctx: ExtensionContext) {
-  return ctx.modelRegistry 
+  return ctx.modelRegistry
     .getAvailable()
     .filter((model) => model.thinkingLevelMap?.off !== null)
     .toSorted(
@@ -75,16 +75,17 @@ async function generateSessionName(
       return;
     }
 
+    // Extract text, remove punctuation, limit the title to 6 words, and capitalize the first word.
     return response.content
       .filter((block) => block.type === 'text')
       .map((block) => block.text)
       .join(' ')
-      .toLowerCase()
       .replaceAll(/[^\p{L}\p{N}]+/gu, ' ')
       .trim()
       .split(/\s+/)
       .slice(0, 6)
-      .join(' ');
+      .join(' ')
+      .replace(/^\p{L}/u, (letter) => letter.toLocaleUpperCase());
   } finally {
     signal.removeEventListener('abort', abortSession);
     session.dispose();
@@ -94,6 +95,20 @@ async function generateSessionName(
 export default function registerSessionNameExtension(pi: ExtensionAPI) {
   let shouldGenerateName = false;
   let generationController: AbortController | undefined;
+  let titleUpdateTimeout: ReturnType<typeof setTimeout> | undefined;
+
+  const scheduleTitleUpdate = (
+    name: string | undefined,
+    ctx: ExtensionContext
+  ) => {
+    clearTimeout(titleUpdateTimeout);
+    if (!name) {
+      return;
+    }
+
+    // Pi updates its default title after session events, so run once it finishes.
+    titleUpdateTimeout = setTimeout(() => ctx.ui.setTitle(name), 0);
+  };
 
   pi.on('session_start', (_event, ctx) => {
     // Preserve explicit names and leave existing unnamed sessions unchanged.
@@ -104,6 +119,11 @@ export default function registerSessionNameExtension(pi: ExtensionAPI) {
         .some(
           (entry) => entry.type === 'message' && entry.message.role === 'user'
         );
+    scheduleTitleUpdate(pi.getSessionName(), ctx);
+  });
+
+  pi.on('session_info_changed', (event, ctx) => {
+    scheduleTitleUpdate(event.name, ctx);
   });
 
   pi.on('before_agent_start', (event, ctx) => {
@@ -138,5 +158,7 @@ export default function registerSessionNameExtension(pi: ExtensionAPI) {
   pi.on('session_shutdown', () => {
     generationController?.abort();
     generationController = undefined;
+    clearTimeout(titleUpdateTimeout);
+    titleUpdateTimeout = undefined;
   });
 }
