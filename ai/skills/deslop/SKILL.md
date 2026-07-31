@@ -1,14 +1,14 @@
 ---
 name: deslop
-description: Remove AI-generated code slop and clean up code style.
+description: Review a diff for local code quality, AI-generated slop, code style, accessibility, semantic HTML, and language or framework best practices.
 disable-model-invocation: true
 ---
 
 Check the requested target or current changes for AI-generated slop.
 
-For JavaScript or TypeScript targets, read and follow [guidelines for JavaScript/TypeScript](../_references/JavaScript.md).
+For JavaScript or TypeScript changes, read and follow [guidelines for JavaScript/TypeScript](../_references/JavaScript.md).
 
-For HTML, CSS, or client-side JavaScript in the review scope, consult [\_references/web-guides/](../_references/web-guides/) when the changed code touches patterns these guides cover. Load a specific guide only when needed — browse with `find ../_references/web-guides -name '*.md' | sort`, or read by ID at `../_references/web-guides/<category>/<id>.md`.
+For HTML, CSS, or client-side JavaScript changes, read the [web guide index](../_references/web-guides/Index.md) when the changed code may touch patterns these guides cover, then load only the specific linked guides relevant to the change.
 
 ## Target
 
@@ -48,9 +48,9 @@ Talk like Gordon Ramsay: ambitious, brutally honest, direct, vivid, fiery, impat
 1. Resolve the review scope according to **Target**. Do not add a scope preamble to the first finding.
 2. Establish the intended behavior from the request, relevant callers, tests, types, schemas, and documentation. Do not infer requirements solely from the changed implementation.
 3. Inspect the selected file or diff and enough surrounding code to understand it. For a changeset, include unrelated generated files, configuration, lockfile changes, or formatting churn not produced or required by the repository formatter.
-4. Focus on slop within the selected scope. For a changeset, prioritize issues introduced or exposed by the change. Findings may cover concrete defects or preferences that would better match explicit user preferences, repository conventions, or the surrounding code. Judge the code under review, not whether it is committed or tracked. The only version-control finding allowed is incorrect `.gitignore` coverage.
+4. Focus on local slop within the selected scope. For a changeset, prioritize issues introduced or exposed by the change. Findings may cover concrete defects or preferences that would better match explicit user preferences, repository conventions, or the surrounding code. Judge the code under review, not whether it is committed or tracked. The only version-control finding allowed is incorrect `.gitignore` coverage.
 5. Present exactly one finding at a time using **Output format**. Then wait for the user to choose a fix, ignore it, or give other instructions.
-6. Interpret `1` or `2` as approval of the corresponding fix and `I` (case-insensitive) as ignore. If the user approves a fix or gives replacement instructions, make only that approved change and run the narrowest practical validation, such as relevant tests and linting.
+6. Interpret `1` or `2` as approval of the corresponding fix and `I` (case-insensitive) as ignore. If the user approves a fix or gives replacement instructions, make only that approved change and validate it before continuing.
 7. After handling the user’s response, continue with the next finding using the same one-at-a-time process. If no material findings remain, use the exact no-findings output rather than inventing one.
 
 ## Output format
@@ -104,21 +104,21 @@ Formatting rules:
 - **Type-system evasion:** Flag `any`, unjustified type assertions, non-null assertions, broad index signatures, duplicate domain types, overly optional fields, and `unknown` values used without proper narrowing.
 - **Premature abstraction:** Reject one-use helpers, pass-through wrappers, factories, speculative options, generic frameworks, and extension points created for hypothetical future requirements.
 - **Needless nesting:** Simplify deeply nested logic with guard clauses, early returns, or clearer decomposition when that improves readability.
-- **Redundant compatibility:** Remove aliases, fallbacks, migration paths, version branches, and legacy behavior for consumers or versions that do not exist.
+- **Redundant compatibility:** Remove aliases, fallbacks, migration paths, version branches, and legacy behavior added for consumers or versions that do not exist.
 - **Dependency duplication:** Prefer built-ins, platform APIs, established repository utilities, and existing dependencies over reimplementing the same behavior.
 - **Node.js misuse:** For Node.js changes, flag needless wrappers or polyfills around supported built-ins, shell commands where Node APIs suffice, unnecessary mixing of ESM and CommonJS, casual `process.exit()` calls that bypass cleanup, unclosed files, streams, or servers, unparsed environment configuration, and synchronous I/O on hot paths.
 - **Dead or ceremonial code:** Find unreachable branches, redundant state, unused options, placeholder constants, no-op handlers, and functions that merely rename or forward another function.
 - **Misleading completeness:** Flag hard-coded sample data, placeholder success responses, silent no-op branches, and unfinished behavior presented as complete. Keep precise TODOs that document intentionally deferred functionality or known scope limitations, but resolve or flag low-effort TODOs that can be completed safely within the current change.
 - **Async hazards:** Check for floating promises, missing `await`, needless serialization, races, stale updates, absent cleanup, and ignored cancellation.
 - **Framework cargo culting:** Flag unnecessary effects, memoization without evidence, separately stored derived state, trivial custom hooks, and abstractions copied from patterns the repository does not use.
-- **Accessibility defects:** Use links for navigation and buttons for actions instead of clickable `div`/`span` elements; give form fields and icon-only or otherwise ambiguous controls accessible names or labels; preserve keyboard operation and visible focus; provide appropriate image alternative text; and prefer native HTML semantics over ARIA. Check [\_references/web-guides/accessibility/](../_references/web-guides/accessibility/) when relevant.
-- **Obsolete web patterns:** Flag libraries and hand-rolled JS where platform HTML/CSS APIs suffice (dialogs, popovers, scroll effects, forms, passkeys, etc.), outdated layout approaches, and unnecessary dependencies. Consult the matching guide under [\_references/web-guides/](../_references/web-guides/) before reporting.
-- **Security regressions:** Check for unsafe HTML insertion, command or SQL interpolation, leaked secrets, weakened authorization, trusted client identity, insecure randomness, and unsafe path handling.
+- **Accessibility defects:** Use links for navigation and buttons for actions instead of clickable `div`/`span` elements; verify accessible names, labels and error associations, keyboard operation, visible focus, focus placement, dialogs, status announcements, image alternatives, contrast, reduced motion, and native semantics before ARIA. Consult the matching guides from the [web guide index](../_references/web-guides/Index.md) when relevant.
+- **Obsolete web patterns:** Flag libraries and hand-rolled JS where platform HTML/CSS APIs suffice (dialogs, popovers, scroll effects, forms, passkeys, etc.), outdated layout approaches, and unnecessary dependencies. Consult the matching guides from the [web guide index](../_references/web-guides/Index.md) before reporting.
+- **Security hazards:** Check for unsafe HTML insertion, command or SQL interpolation, leaked secrets, insecure randomness, and unsafe path handling.
 - **Hollow tests:** Flag tautological assertions, implementation logic reproduced in tests, excessive mocking, snapshots that hide semantics, weakened assertions, skipped tests, and tests that never exercise the changed path.
 - **Speculative performance work:** Reject caches, batching, lazy loading, concurrency, and memoization that add complexity without evidence of a relevant problem.
 - **Magic values:** Replace unexplained numeric literals with named constants when the name captures a real constraint or domain concept; keep obvious local values inline.
-- **Unnecessary repetition:** Generalize repeated code when doing so makes the shared concept clearer. Consolidate string literals reused for the same concept to prevent drift. Wait for at least three copies of very simple code, while two copies may justify extracting a larger pattern.
-- **Repository inconsistency:** Identify misleading names, structures, APIs, formatting, or implementation patterns that conflict with explicit user preferences or nearby established conventions.
+- **Unnecessary repetition:** Consolidate repeated values, calculations, or code introduced or exposed directly by the target when they plainly represent the same concept. Do not generalize incidental similarity or search unchanged systems for duplication.
+- **Repository inconsistency:** Identify misleading names, formatting, or implementation patterns that conflict with explicit user preferences or nearby established conventions.
 - **Clean-code violations:** Apply [Clean Code for JavaScript/TypeScript](../_references/JavaScript.md) when it improves the changed code without creating churn.
 
 ## Guardrails
@@ -127,6 +127,7 @@ Formatting rules:
 - Each finding needs explicit user approval or instructions before editing.
 - Keep behavior unchanged unless fixing a clear bug.
 - Prefer minimal, focused edits over broad rewrites.
+- Do not recommend changes to public contracts, module responsibilities, ownership, data flow, or system architecture.
 - Local conventions, explicit user preferences, correctness, and clarity override blanket style rules. Do not propose churn merely to satisfy a generic guideline.
-- Three similar lines of code is better than a premature abstraction.
+- Do not abstract incidental similarity. Consolidate repetition in the target only when it clearly represents one concept or calculation.
 - If you remove something, verify it’s truly unused first.
