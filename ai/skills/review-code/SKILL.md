@@ -112,7 +112,7 @@ The review target may be application code, configuration, documentation, agent s
 Load only the references needed for the changes under review:
 
 - **Backend and data** — server logic, APIs, persistence, Node.js runtime, or data mutation: read [backend](references/backend.md).
-- **Frontend and UI** — user interfaces, rendering, forms, or client behavior: read [frontend](references/frontend.md).
+- **Frontend and UI** — user interfaces, rendering, forms, client behavior, or accessibility across flows: read [frontend](references/frontend.md).
 - **Security** — auth, trust boundaries, secrets, user input, or production configuration: read [security](references/security.md).
 - **Architecture and maintainability** — module boundaries, public contracts, duplication, or system design spanning multiple areas: read [architecture](references/architecture.md).
 - **Tests** — new behavior, modified test suites, or coverage gaps: read [tests](references/tests.md).
