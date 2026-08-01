@@ -9,13 +9,6 @@ Load only the guides relevant to the current task.
 - [Accessibility Coding Guidelines](accessibility/accessibility.md)
 - [Accessible Error Announcement](accessibility/accessible-error-announcement.md)
 
-## Built In AI
-
-- [Language Detection](built-in-ai/language-detection.md)
-- [Language Model](built-in-ai/language-model.md)
-- [Summarizer](built-in-ai/summarizer.md)
-- [Translator](built-in-ai/translator.md)
-
 ## CSS Layout
 
 - [CSS Layouts and Responsive Design](css-layout/css-layout.md)
@@ -46,15 +39,6 @@ Load only the guides relevant to the current task.
 ## HTML
 
 - [HTML](html/html.md)
-
-## Passkeys
-
-- [Passkey Authentication Guide](passkeys/passkey-authentication.md)
-- [Passkey Conditional Create (Post-Login Promotion)](passkeys/passkey-conditional-create.md)
-- [Passkey Management Guide](passkeys/passkey-management.md)
-- [Passkey Reauthentication Guide](passkeys/passkey-reauthentication.md)
-- [Passkey Registration Guide](passkeys/passkey-registration.md)
-- [Passkeys Orientation Guide](passkeys/passkeys.md)
 
 ## Performance
 
@@ -170,9 +154,3 @@ Load only the guides relevant to the current task.
 - [Visually Stable Font Fallbacks](user-experience/visually-stable-font-fallbacks.md)
 - [Visually Stable Mixed Fonts](user-experience/visually-stable-mixed-fonts.md)
 - [Visually Texture Content](user-experience/visually-texture-content.md)
-
-## WebMCP
-
-- [Agentic Forms](webmcp/agentic-forms.md)
-- [Agentic Javascript Tools](webmcp/agentic-javascript-tools.md)
-- [WebMCP (Web Model Context Protocol)](webmcp/webmcp.md)
