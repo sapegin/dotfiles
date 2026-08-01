@@ -23,6 +23,7 @@ customizability
 cyclomatic
 dcim
 deburr
+deslop
 discoverability
 dotfiles
 downscale
@@ -48,6 +49,7 @@ keycaps
 keymap
 leathercraft
 Lightroom
+lockfiles
 lofi
 longstringers
 lookahead
@@ -74,6 +76,8 @@ pushback
 raccoonarium
 refactorings
 renamer
+rescan
+rescanned
 restic
 résumé
 rubberduck
