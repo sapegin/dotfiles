@@ -1,5 +1,5 @@
 ---
-name: review-code
+name: review
 description: Review a diff for requirements, behavior, APIs, architecture, and maintainability across code, configuration, documentation and agent artifacts.
 disable-model-invocation: true
 ---
@@ -13,7 +13,7 @@ When needed, use the `web_search` and `web_fetch` tools, and load and follow the
 Accept zero or one argument:
 
 ```text
-/skill:review-code [<file-path> | <commit-sha>]
+/skill:review [<file-path> | <commit-sha>]
 ```
 
 Pass the argument exactly as supplied to `branch-diff`, or run `branch-diff` without one. Treat its output as the review starting point; if it fails, ask the user to clarify.
