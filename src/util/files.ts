@@ -8,6 +8,7 @@ const HOME = os.homedir();
 export const dirs = {
   home: HOME,
   dotfiles: path.resolve(import.meta.dirname, '..', '..'),
+  ai: path.resolve(import.meta.dirname, '..', '..', 'ai'),
   themes: path.join(HOME, '_', 'squirrelsong', 'themes'),
   projects: path.join(HOME, '_'),
   obsidianVault: path.join(HOME, 'murder'),

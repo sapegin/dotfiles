@@ -1,9 +1,5 @@
-// Two-way file and folder syncing utility used by bin/sync-dotfiles. For a
-// single file pair, the side with the newer mtime overwrites the other;
-// identical contents are skipped regardless of mtime. For folder pairs, files
-// present on only one side are treated as additions on that side (and
-// propagated) or deletions on the other side (reported only, never removed —
-// `src` is treated as authoritative).
+// File and folder syncing utilities. The dotfile sync is two-way and uses
+// mtimes to choose direction; source mirrors are one-way and compare contents.
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -17,7 +13,8 @@ export type SyncResult =
   | 'pushed' // `dest` newer, `src` was overwritten
   | 'added' // file only in `src`, copied to `dest`
   | 'linked' // symlink created or restored at `dest`
-  | 'deleted'; // file only in `dest`, reported but not removed
+  | 'deleted' // file only in `dest`, reported but not removed
+  | 'removed'; // file only in a mirrored `dest`, removed
 
 export interface SyncEntry {
   /** Path shown in logs (usually destination-side). */
@@ -32,7 +29,8 @@ export function didFilesChange(entries: readonly SyncEntry[]): boolean {
       result === 'pulled' ||
       result === 'pushed' ||
       result === 'added' ||
-      result === 'linked'
+      result === 'linked' ||
+      result === 'removed'
   );
 }
 
@@ -92,6 +90,33 @@ async function copyPreservingMtime(src: string, dest: string): Promise<void> {
   await fs.utimes(dest, atime, mtime);
 }
 
+async function filesAreEqual(first: string, second: string): Promise<boolean> {
+  try {
+    const [firstBuffer, secondBuffer] = await Promise.all([
+      fs.readFile(first),
+      fs.readFile(second),
+    ]);
+    return firstBuffer.equals(secondBuffer);
+  } catch {
+    return false;
+  }
+}
+
+async function removeEmptyParentDirectories(
+  filePath: string,
+  rootDirectory: string
+): Promise<void> {
+  let directory = path.dirname(filePath);
+  while (directory !== rootDirectory) {
+    const entries = await fs.readdir(directory);
+    if (entries.length > 0) {
+      return;
+    }
+    await fs.rmdir(directory);
+    directory = path.dirname(directory);
+  }
+}
+
 /** List all regular files inside `dir` as paths relative to `dir`. */
 async function listFilesRecursive(dir: string): Promise<Set<string>> {
   const files = new Set<string>();
@@ -146,6 +171,8 @@ function printResult(result: SyncResult, filepath: string): void {
     console.log(` ${shortFilepath}`);
   } else if (result === 'deleted') {
     log.warn(` ${shortFilepath}\n  ↪ Source deleted!`);
+  } else if (result === 'removed') {
+    console.log(` ${shortFilepath}`);
   }
 }
 
@@ -158,14 +185,8 @@ async function syncFileQuiet(src: string, dest: string): Promise<SyncResult> {
 
   const destMs = await mtimeMs(dest);
 
-  if (destMs !== null) {
-    const [srcBuf, destBuf] = await Promise.all([
-      fs.readFile(src),
-      fs.readFile(dest),
-    ]);
-    if (srcBuf.equals(destBuf)) {
-      return 'equal';
-    }
+  if (destMs !== null && (await filesAreEqual(src, dest))) {
+    return 'equal';
   }
 
   if (destMs === null || srcMs > destMs) {
@@ -327,6 +348,58 @@ export async function syncFolder(
       result = 'deleted';
     }
     const displayPath = path.resolve(result === 'pushed' ? srcPath : destPath);
+    printResult(result, displayPath);
+    entries.push({ path: displayPath, result });
+  }
+
+  return entries;
+}
+
+/**
+ * Mirror regular files from `src` to `dest`, treating `src` as authoritative.
+ * Identical files are skipped regardless of mtime; changed and missing files
+ * are copied from `src`, and files absent from `src` are removed from `dest`.
+ * Paths matching `ignore` are left unchanged on `dest` and are not copied from
+ * `src`.
+ */
+export async function mirrorFolder(
+  src: string,
+  dest: string,
+  ignore: readonly string[] = []
+): Promise<SyncEntry[]> {
+  const [srcFiles, destFiles] = await Promise.all([
+    listFilesRecursive(src),
+    listFilesRecursive(dest),
+  ]);
+  const allPaths = [...new Set([...srcFiles, ...destFiles])]
+    .filter((relativePath) => !isIgnored(relativePath, ignore))
+    .toSorted();
+  const entries: SyncEntry[] = [];
+
+  for (const relativePath of allPaths) {
+    const srcPath = path.join(src, relativePath);
+    const destPath = path.join(dest, relativePath);
+    const inSrc = srcFiles.has(relativePath);
+    const inDest = destFiles.has(relativePath);
+
+    let result: SyncResult;
+    if (inSrc && inDest) {
+      if (await filesAreEqual(srcPath, destPath)) {
+        result = 'equal';
+      } else {
+        await copyPreservingMtime(srcPath, destPath);
+        result = 'pulled';
+      }
+    } else if (inSrc) {
+      await copyPreservingMtime(srcPath, destPath);
+      result = 'added';
+    } else {
+      await fs.rm(destPath);
+      await removeEmptyParentDirectories(destPath, dest);
+      result = 'removed';
+    }
+
+    const displayPath = path.resolve(destPath);
     printResult(result, displayPath);
     entries.push({ path: displayPath, result });
   }

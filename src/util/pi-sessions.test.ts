@@ -1,9 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { getEntryCost } from '../../pi/agent/extensions/pretty.ts';
-import {
-  aggregateSessionStats,
-  collectSessionStats,
-} from './pi-sessions.ts';
+import { aggregateSessionStats, collectSessionStats } from './pi-sessions.ts';
 
 describe(collectSessionStats, () => {
   test('counts messages, edits, writes, and session date', () => {

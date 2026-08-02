@@ -85,10 +85,7 @@ function valuesMatch(entry: DefaultsEntry, actual: string): boolean {
         Math.abs(Number.parseFloat(actual) - Number(entry.expected)) < 0.0001
       );
     case 'string':
-      return (
-        stripQuotes(actual) ===
-        expandShellVars(String(entry.expected))
-      );
+      return stripQuotes(actual) === expandShellVars(String(entry.expected));
   }
 }
 

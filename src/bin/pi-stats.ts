@@ -32,9 +32,7 @@ function formatToolCalls(toolCalls: number, toolErrors: number): string {
     return formatNumber(toolCalls);
   }
   const errorRate =
-    toolCalls === 0
-      ? 0
-      : Math.round((toolErrors / toolCalls) * 1000) / 10;
+    toolCalls === 0 ? 0 : Math.round((toolErrors / toolCalls) * 1000) / 10;
   return `${formatNumber(toolCalls)} (${formatNumber(toolErrors)} errors, ${errorRate}%)`;
 }
 
@@ -54,7 +52,9 @@ function main(): void {
   console.log(`Sessions: ${formatNumber(stats.sessions)}`);
   console.log(`Projects: ${formatNumber(stats.projects)}`);
   console.log(`Messages: ${formatNumber(stats.messages)}`);
-  console.log(`Tool calls: ${formatToolCalls(stats.toolCalls, stats.toolErrors)}`);
+  console.log(
+    `Tool calls: ${formatToolCalls(stats.toolCalls, stats.toolErrors)}`
+  );
   console.log(`Lines added: ${formatNumber(stats.linesAdded)}`);
   console.log(`Lines removed: ${formatNumber(stats.linesRemoved)}`);
   console.log(`Files edited or created: ${formatNumber(stats.filesChanged)}`);

@@ -77,7 +77,8 @@ defaults write NSGlobalDomain AppleLanguages -array "en-US" "en"
   });
 
   test('rejects alternate type flags like -boolean', () => {
-    const source = 'defaults write com.apple.finder ShowPathbar -boolean true\n';
+    const source =
+      'defaults write com.apple.finder ShowPathbar -boolean true\n';
 
     expect(() => parseEntries(source)).toThrow('Invalid defaults type flags');
   });
