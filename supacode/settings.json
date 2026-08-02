@@ -5,7 +5,6 @@
     "appVisibility" : "dock",
     "appearanceMode" : "light",
     "autoDeleteArchivedWorktreesAfterDays" : 1,
-    "autoUpdateAgentIntegrationsEnabled" : true,
     "automatedActionPolicy" : "cliOnly",
     "confirmCloseSurface" : true,
     "confirmQuitMode" : "auto",
@@ -22,13 +21,58 @@
     "inAppNotificationsEnabled" : true,
     "moveNotifiedWorktreeToTop" : false,
     "muteNotificationsForActiveSurface" : true,
-    "notificationRetentionLimit" : 200,
+    "notificationRetentionLimit" : 100,
     "notificationSound" : "never",
     "promptForWorktreeCreation" : true,
     "pullRequestMergeStrategy" : "squash",
     "remoteSessionPersistenceEnabled" : true,
     "richAgentNotificationsEnabled" : false,
     "shortcutOverrides" : {
+      "selectTab1" : {
+        "isEnabled" : true,
+        "keyCode" : 18,
+        "modifiers" : 4
+      },
+      "selectTab2" : {
+        "isEnabled" : true,
+        "keyCode" : 19,
+        "modifiers" : 4
+      },
+      "selectTab3" : {
+        "isEnabled" : true,
+        "keyCode" : 20,
+        "modifiers" : 4
+      },
+      "selectTab4" : {
+        "isEnabled" : true,
+        "keyCode" : 21,
+        "modifiers" : 4
+      },
+      "selectTab5" : {
+        "isEnabled" : true,
+        "keyCode" : 23,
+        "modifiers" : 4
+      },
+      "selectTab6" : {
+        "isEnabled" : true,
+        "keyCode" : 22,
+        "modifiers" : 4
+      },
+      "selectTab7" : {
+        "isEnabled" : true,
+        "keyCode" : 26,
+        "modifiers" : 4
+      },
+      "selectTab8" : {
+        "isEnabled" : true,
+        "keyCode" : 28,
+        "modifiers" : 4
+      },
+      "selectTab9" : {
+        "isEnabled" : true,
+        "keyCode" : 25,
+        "modifiers" : 4
+      },
       "selectWorktree0" : {
         "isEnabled" : false,
         "keyCode" : 0,
@@ -86,7 +130,7 @@
     "terminateSessionsOnQuit" : false,
     "updateChannel" : "tip",
     "updatesAutomaticallyCheckForUpdates" : true,
-    "updatesAutomaticallyDownloadUpdates" : false
+    "updatesAutomaticallyDownloadUpdates" : true
   },
   "pinnedWorktreeIDs" : [
 
