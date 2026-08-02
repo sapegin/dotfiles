@@ -1,0 +1,5 @@
+{
+  "$schema": "https://agent-browser.dev/schema.json",
+  "headed": true,
+  "profile": "~/.form-browser/profile"
+}

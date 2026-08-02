@@ -143,22 +143,23 @@ export function createProgress({
       return;
     }
 
+    const bar = `${String(current).padStart(String(total).length)}/${total}  ${renderProgressBar(
+      current,
+      total,
+      width
+    )}`;
+    const lines = [bar, '', message];
+
     if (rendered) {
-      readline.moveCursor(stream, 0, -2);
+      readline.moveCursor(stream, 0, -lines.length);
     }
 
-    readline.clearLine(stream, 0);
-    readline.cursorTo(stream, 0);
-    stream.write(
-      `${String(current).padStart(String(total).length)}/${total}  ${renderProgressBar(
-        current,
-        total,
-        width
-      )}\n`
-    );
-    readline.clearLine(stream, 0);
-    readline.cursorTo(stream, 0);
-    stream.write(`\n${message}\n`);
+    for (const line of lines) {
+      readline.cursorTo(stream, 0);
+      readline.clearLine(stream, 0);
+      stream.write(`${line}\n`);
+    }
+
     rendered = true;
   }
 

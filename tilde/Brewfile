@@ -1,4 +1,5 @@
 # CLI tools
+brew "agent-browser" # Headless browser for AI agents
 brew "bat" # `cat` replacement
 brew "ddgr" # Duck Duck Go search
 brew "exiftool" # EXIF reader

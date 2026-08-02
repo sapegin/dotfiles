@@ -11,7 +11,7 @@ Find and fix every `AI:` comment in the current project.
 From the project root (or the path the user gave):
 
 ```bash
-~/dotfiles/bin/symlinks/agent-comments .
+agent-comments
 ```
 
 Empty output means there is nothing to fix — say so and stop.

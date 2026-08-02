@@ -19,10 +19,12 @@ Chemex
 cmux
 colocation
 copypasting
+culting
 customizability
 cyclomatic
 dcim
 deburr
+deslop
 discoverability
 dotfiles
 downscale
@@ -48,6 +50,7 @@ keycaps
 keymap
 leathercraft
 Lightroom
+lockfiles
 lofi
 longstringers
 lookahead
@@ -61,6 +64,8 @@ Omio
 omnibar
 oneliner
 outdent
+overdocumentation
+overengineering
 overpolice
 oxfmt
 oxlint
@@ -69,9 +74,12 @@ Photoshop
 pomodoro
 pomodoros
 preorder
+pushback
 raccoonarium
 refactorings
 renamer
+rescan
+rescanned
 restic
 résumé
 rubberduck

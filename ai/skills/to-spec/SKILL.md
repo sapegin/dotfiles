@@ -11,10 +11,7 @@ Take the current conversation context and codebase understanding and produce a s
 1. Explore the repo to understand the current state of the codebase, if you haven’t already.
 2. Write the spec using the template below.
 3. Choose a concise subject for the filename. Replace characters unsuitable for a filename, but preserve readable words and capitalization.
-4. Save the spec according to the first matching rule:
-   - If the project root contains a `specs` folder, save it as `specs/Subject.md`.
-   - If the project root’s parent contains a `specs` folder, save it as `../specs/Subject.md`.
-   - Otherwise, save it as `~/murder/Specs/Subject.md`.
+4. If the project root contains a `specs` folder, save the spec as `specs/the-subject.md`. Otherwise, save it as `~/murder/Specs/The subject.md`.
 
 Create only the destination file, not a missing `specs` folder. Never overwrite an existing spec; if the destination exists, choose a distinct subject. Replace `Subject` in both the filename and document heading with the chosen subject.
 
@@ -24,35 +21,25 @@ Create only the destination file, not a missing `specs` folder. Never overwrite 
 
 ## Business specification
 
-Keep this section focused on user needs, business behavior, and observable outcomes. Do not include architecture, modules, APIs, schemas, file paths, or code. A stakeholder should be able to review and approve this section without reading the technical plan.
+Include this entire section only when the work changes user-facing behavior or involves business decisions that nontechnical stakeholders should review. Omit the heading and all of its subsections for purely technical work.
 
-### Problem
+Keep this section brief. It is an overview for approval, not the technical plan translated into nontechnical language. Include only the most significant outcomes, constraints, trade-offs, scope boundaries, and unresolved questions — especially matters a stakeholder may object to or decide differently. Do not include architecture, modules, APIs, schemas, file paths, code, implementation steps, or exhaustive edge cases.
 
-The problem that the user is facing, from the user’s perspective. Explain who is affected, what prevents them from succeeding, and why solving it matters.
+### Overview
 
-### Proposed solution
+Summarize the problem, affected users, proposed outcome, and why it matters in a few short paragraphs.
 
-The solution from the user’s perspective. Describe the intended experience and outcomes rather than how they will be implemented.
+### Decisions for stakeholder review
 
-### Business requirements
-
-A numbered list of required capabilities, behaviors, business rules, and constraints. Make each requirement specific and observable. Include relevant edge cases and failure behavior without prescribing technical implementation.
-
-### Success criteria
-
-A list of measurable or directly verifiable outcomes that show the problem has been solved. Prefer user- or business-visible results over implementation milestones.
-
-### Out of scope
-
-A clear description of related behavior, use cases, and follow-up work that this spec does not cover.
+A short numbered list of consequential behavior, business rules, constraints, trade-offs, or scope boundaries that require stakeholder agreement. Omit this subsection when the overview contains everything stakeholders need to review.
 
 ### Open business questions
 
-Any unresolved questions that could change the scope, behavior, or stakeholder expectations. Write `None` when there are no open questions.
+Only unresolved questions that could materially change the scope, user experience, or stakeholder expectations. Omit this subsection when there are none.
 
 ## Technical plan
 
-This section translates the approved business specification into implementation work. Technical details belong here, not in the business specification.
+Describe the implementation work. Technical details belong here, not in the business specification.
 
 ### Implementation steps
 
@@ -78,7 +65,7 @@ Exception: if a prototype produced a snippet that encodes a decision more precis
 
 A list of testing decisions that were made. Include:
 
-- Which business requirements and success criteria each test verifies
+- Which intended behaviors and outcomes each test verifies
 - A description of what makes a good test (only test external behavior, not implementation details)
 - Which modules will be tested
 - Prior art for the tests (i.e. similar types of tests in the codebase)

@@ -330,6 +330,7 @@ async function main(): Promise<void> {
     }
   } finally {
     progress.done();
+    console.log();
     await fs.rm(tempDir, { recursive: true, force: true });
   }
 

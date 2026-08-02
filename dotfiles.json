@@ -67,7 +67,8 @@
   // Skills (used by Pi, Cursor)
   {
     "source": "$DOTFILES_DIR/ai/skills/*",
-    "destination": "~/.agents/skills/"
+    "destination": "~/.agents/skills/",
+    "ignore": ["^\\w+\\.md$"]
   },
   // Pi configs
   {

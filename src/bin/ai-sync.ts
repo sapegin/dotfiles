@@ -1,25 +1,49 @@
-// Generate marked persona sections in global AI instructions and skills.
+// Generate derived AI instructions and reference indexes.
 //
-// - Update generated persona sections:
+// - Update generated AI files:
 //
 // `ai-sync`
 //
-// - Check whether generated persona sections are current:
+// - Check whether generated AI files are current:
 //
 // `ai-sync --check`
+//
+// - Update vendored AI references, then generated files:
+//
+// `ai-sync --update`
 
+import { execFileSync } from 'node:child_process';
 import fs from 'node:fs/promises';
+import os from 'node:os';
 import path from 'node:path';
-import { generatePersonaSections, parsePersona } from '../util/ai.ts';
+import {
+  generatePersonaSections,
+  generateWebGuideIndex,
+  parsePersona,
+} from '../util/ai.ts';
 import { parseArgs } from '../util/args.ts';
 import { dirs } from '../util/files.ts';
+import { didFilesChange, mirrorFolder } from '../util/sync.ts';
 import { run } from '../util/tui.ts';
 
-const AI_DIRECTORY = path.join(dirs.dotfiles, 'ai');
+const WEB_GUIDES_DIRECTORY = path.join(
+  dirs.ai,
+  'skills/_references/web-guides'
+);
+const WEB_GUIDE_INDEX_PATH = path.join(WEB_GUIDES_DIRECTORY, 'Index.md');
+const WEB_GUIDE_REPOSITORY = 'GoogleChrome/modern-web-guidance';
+const WEB_GUIDE_SOURCE_PATH = 'skills/modern-web-guidance/guides';
+/** Paths skipped during upstream sync. */
+const WEB_GUIDE_MIRROR_IGNORE = [
+  '^built-in-ai/',
+  '^webmcp/',
+  '^passkeys/',
+  '^(?:Index|Readme)\\.md$',
+];
 
 async function loadPersonas(): Promise<ReadonlyMap<string, string>> {
   const personaPaths = await Array.fromAsync(
-    fs.glob(path.join(AI_DIRECTORY, 'personas/*.md'))
+    fs.glob(path.join(dirs.ai, 'personas/*.md'))
   );
   const personas = new Map<string, string>();
 
@@ -32,15 +56,78 @@ async function loadPersonas(): Promise<ReadonlyMap<string, string>> {
   return personas;
 }
 
+async function updateWebGuides(): Promise<void> {
+  const temporaryDirectory = await fs.mkdtemp(
+    path.join(os.tmpdir(), 'ai-sync-')
+  );
+  const repositoryDirectory = path.join(temporaryDirectory, 'repository');
+
+  try {
+    execFileSync(
+      'gh',
+      [
+        'repo',
+        'clone',
+        WEB_GUIDE_REPOSITORY,
+        repositoryDirectory,
+        '--',
+        '--depth',
+        '1',
+        '--filter=blob:none',
+        '--sparse',
+      ],
+      { stdio: 'inherit' }
+    );
+    execFileSync(
+      'git',
+      [
+        '-C',
+        repositoryDirectory,
+        'sparse-checkout',
+        'set',
+        WEB_GUIDE_SOURCE_PATH,
+      ],
+      { stdio: 'inherit' }
+    );
+
+    const sourceDirectory = path.join(
+      repositoryDirectory,
+      WEB_GUIDE_SOURCE_PATH
+    );
+    const entries = await mirrorFolder(
+      sourceDirectory,
+      WEB_GUIDES_DIRECTORY,
+      WEB_GUIDE_MIRROR_IGNORE
+    );
+    if (didFilesChange(entries)) {
+      console.log('Updated web guides.');
+    } else {
+      console.log('Web guides are already current.');
+    }
+  } finally {
+    await fs.rm(temporaryDirectory, { recursive: true, force: true });
+  }
+}
+
 async function main(): Promise<void> {
-  const args = parseArgs([{ name: 'check', type: 'boolean', default: false }]);
+  const args = parseArgs([
+    { name: 'check', type: 'boolean', default: false },
+    { name: 'update', type: 'boolean', default: false },
+  ]);
+  if (args.check && args.update) {
+    throw new Error('Cannot combine --check and --update.');
+  }
+  if (args.update) {
+    await updateWebGuides();
+  }
+
   const personas = await loadPersonas();
   const changes: { path: string; generated: string }[] = [];
   const skillPaths = await Array.fromAsync(
-    fs.glob(path.join(AI_DIRECTORY, 'skills/*/SKILL.md'))
+    fs.glob(path.join(dirs.ai, 'skills/*/SKILL.md'))
   );
   const targetPaths = [
-    path.join(AI_DIRECTORY, 'base-prompt.md'),
+    path.join(dirs.ai, 'base-prompt.md'),
     ...skillPaths.toSorted(),
   ];
 
@@ -53,14 +140,45 @@ async function main(): Promise<void> {
     }
   }
 
+  const webGuidePaths = await Array.fromAsync(
+    fs.glob(path.join(WEB_GUIDES_DIRECTORY, '**/*.md'))
+  );
+  const webGuides = await Promise.all(
+    webGuidePaths
+      .map((guidePath) => ({
+        guidePath,
+        relativePath: path.relative(WEB_GUIDES_DIRECTORY, guidePath),
+      }))
+      .filter(({ relativePath }) => path.dirname(relativePath) !== '.')
+      .map(async ({ guidePath, relativePath }) => ({
+        relativePath,
+        source: await fs.readFile(guidePath, 'utf8'),
+      }))
+  );
+  const generatedWebGuideIndex = generateWebGuideIndex(webGuides);
+  let currentWebGuideIndex = '';
+  try {
+    currentWebGuideIndex = await fs.readFile(WEB_GUIDE_INDEX_PATH, 'utf8');
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
+      throw error;
+    }
+  }
+  if (generatedWebGuideIndex !== currentWebGuideIndex) {
+    changes.push({
+      path: WEB_GUIDE_INDEX_PATH,
+      generated: generatedWebGuideIndex,
+    });
+  }
+
   if (args.check) {
     if (changes.length > 0) {
       const stalePaths = changes
         .map(({ path: targetPath }) => path.relative(dirs.dotfiles, targetPath))
         .join('\n  ');
-      throw new Error(`Generated persona sections are stale:\n  ${stalePaths}`);
+      throw new Error(`Generated AI files are stale:\n  ${stalePaths}`);
     }
-    console.log('Persona sections are current.');
+    console.log('Generated AI files are current.');
     return;
   }
 
@@ -70,7 +188,7 @@ async function main(): Promise<void> {
   }
 
   if (changes.length === 0) {
-    console.log('Persona sections are already current.');
+    console.log('Generated AI files are already current.');
   }
 }
 

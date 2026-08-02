@@ -1,0 +1,417 @@
+#!/bin/bash
+
+# macOS settings applied via defaults and related commands.
+#
+# Maintenance workflow:
+# 1. Change a setting in System Settings (or note the desired `defaults write`).
+# 2. Look up the domain/key at https://macos-defaults.com/ if needed.
+# 3. Add or update the matching block below — only when the value differs from macOS defaults.
+# 4. Run `lint-macos` to check drift and obsolete keys on this Mac.
+# 5. On another Mac, run this script to apply the same preferences.
+#
+# Note: this script should only set macOS preferences that differ from factory
+# defaults — do not duplicate values macOS already ships with.
+
+# Close any open System Settings panes, to prevent them from overriding
+# settings we’re about to change
+osascript -e 'tell application "System Settings" to quit'
+
+# Ask for the user password upfront
+sudo -v
+
+# ────────────────────────────── 8< ──────── 8< ───────────────────────────────
+# General
+
+# Disable opening and closing window animations.
+defaults write NSGlobalDomain NSAutomaticWindowAnimationsEnabled -bool false
+
+# Automatically quit printer app once the print jobs complete.
+defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
+
+# Disable the crash reporter.
+defaults write com.apple.CrashReporter DialogType -string "none"
+
+# Show control characters as ^@, ^A, … in Cocoa NSTextView fields.
+defaults write NSGlobalDomain NSTextShowsControlCharacters -bool true
+
+# Expand save panel by default.
+defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
+defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true
+
+# Save to disk (not to iCloud) by default.
+defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
+
+# Disable the sound effects on boot.
+sudo nvram SystemAudioVolume=" "
+
+# ────────────────────────────── 8< ──────── 8< ───────────────────────────────
+# General → Date & Time
+
+# Time zone: Central European (CET/CEST); closest city Berlin, Germany.
+sudo systemsetup -settimezone "Europe/Berlin" > /dev/null 2>&1
+
+# ────────────────────────────── 8< ──────── 8< ───────────────────────────────
+# General → Language & Region
+
+# Preferred languages: English (US), English, Russian.
+defaults write NSGlobalDomain AppleLanguages -array "en-US" "en-DE" "ru-DE"
+
+# Region: Germany (English UI).
+defaults write NSGlobalDomain AppleLocale -string "en_US@rg=dezzzz"
+
+# Temperature: Celsius.
+defaults write NSGlobalDomain AppleTemperatureUnit -string "Celsius"
+
+# Measurement: metric.
+defaults write NSGlobalDomain AppleMeasurementUnits -string "Centimeters"
+defaults write NSGlobalDomain AppleMetricUnits -bool true
+
+# First day of week: Monday.
+defaults write NSGlobalDomain AppleFirstWeekday -dict gregorian 2
+
+cat <<'EOF'
+
+System Settings → General → Language & Region:
+
+• Date format: DD.MM.YYYY
+• Number format: 1 234 567.89 (space grouping, period decimal)
+
+EOF
+
+# ────────────────────────────── 8< ──────── 8< ───────────────────────────────
+# Accessibility
+#
+
+# Display: reduce transparency.
+defaults write com.apple.Accessibility ReduceTransparencyEnabled -bool true
+
+# Display: dim flashing lights.
+defaults write com.apple.Accessibility PhotosensitiveMitigation -bool true
+
+# Display: show toolbar button shapes.
+defaults write com.apple.Accessibility ButtonShapesEnabled -bool true
+
+# Display: prefer horizontal text.
+defaults write com.apple.Accessibility PrefersHorizontalText -bool true
+
+# Display: reduce motion.
+defaults write com.apple.Accessibility ReduceMotionEnabled -bool true
+
+# Display: prefer non-blinking cursor in text fields.
+defaults write com.apple.Accessibility PrefersNonBlinkingCursorIndicator -bool true
+
+cat <<'EOF'
+
+System Settings → Accessibility:
+
+• Display → Pointer → Pointer size: 115%
+• Display → Pointer → Pointer outline color: #FDFDFE
+• Display → Pointer → Pointer fill color: #4C4B4E
+• Display → Text size → Settings… → Default: M (13 pt)
+• Display → Text size → Settings… → Notes: XXXL (17 pt)
+
+EOF
+
+# ────────────────────────────── 8< ──────── 8< ───────────────────────────────
+# Appearance
+
+# Theme: Graphite.
+defaults write -g AppleAquaColorVariant -int 6
+
+# Highlight color: Squirrelsong magenta (#ac9bc5).
+defaults write -g AppleHighlightColor -string '0.674510 0.607843 0.772549 Other'
+
+# Folder color: Squirrelsong blue (#80a4be).
+defaults write -g AppleIconAppearanceTintColor Other
+defaults write -g AppleIconAppearanceCustomTintColor '0.501961 0.643137 0.745098 1.000000'
+
+# Don't tint window backgrounds with wallpaper color.
+defaults write -g AppleReduceDesktopTinting -bool true
+
+# Always show scrollbars.
+defaults write NSGlobalDomain AppleShowScrollBars -string "Always"
+
+# Click in the scrollbar to jump to the spot that's clicked.
+defaults write -g AppleScrollerPagingBehavior -bool true
+
+# Set sidebar icon size to medium.
+defaults write NSGlobalDomain NSTableViewDefaultSizeMode -int 2
+
+# Disable the over-the-top focus ring animation.
+defaults write NSGlobalDomain NSUseAnimatedFocusRing -bool false
+
+# ────────────────────────────── 8< ──────── 8< ───────────────────────────────
+# Desktop & Dock
+
+# Set the icon size of Dock items (in pixels).
+defaults write com.apple.dock tilesize -int 75
+
+# Enable spring loading for all Dock items.
+defaults write com.apple.dock enable-spring-load-actions-on-all-items -bool true
+
+# Don't show indicator lights for open applications in the Dock.
+defaults write com.apple.dock show-process-indicators -bool false
+
+# Don't animate opening applications from the Dock.
+defaults write com.apple.dock launchanim -bool false
+
+# Speed up Mission Control animations.
+defaults write com.apple.dock expose-animation-duration -float 0.1
+
+# Enable the 2D Dock.
+defaults write com.apple.dock no-glass -bool true
+
+# Automatically hide and show the Dock.
+defaults write com.apple.dock autohide -bool true
+
+# Set 1 second delay when showing and hiding the Dock (to discourage using the
+# Dock).
+defaults write com.apple.dock autohide-delay -float 1
+
+# Remove animation when hiding/showing the Dock.
+defaults write com.apple.dock autohide-time-modifier -float 0
+
+# Enable Space switching on Command-Tab.
+defaults write com.apple.dock workspaces-auto-swoosh -bool true
+
+# Show only active applications in the Dock.
+defaults write com.apple.dock static-only -bool true
+
+# Wipe all (default) app icons from the Dock
+defaults write com.apple.dock persistent-apps -array
+
+# Don't show recent applications in the Dock.
+defaults write com.apple.dock show-recents -bool false
+
+# Minimize windows into their application's icon.
+defaults write com.apple.dock minimize-to-application -bool true
+
+# ────────────────────────────── 8< ──────── 8< ───────────────────────────────
+# Displays
+
+# Disable shadow in screenshots.
+defaults write com.apple.screencapture disable-shadow -bool true
+
+cat <<'EOF'
+
+System Settings → Displays:
+
+• Automatically adjust brightness: off
+• True Tone: off
+• Night Shift:
+  • Schedule: Sunset to Sunrise
+  • Color temperature: More Warm (all the way to the right)
+
+EOF
+
+# ────────────────────────────── 8< ──────── 8< ───────────────────────────────
+# Lock Screen
+
+# Require password immediately after sleep or screen saver begins.
+defaults write com.apple.screensaver askForPassword -int 1
+defaults write com.apple.screensaver askForPasswordDelay -int 0
+
+# ────────────────────────────── 8< ──────── 8< ───────────────────────────────
+# Keyboard
+
+# Disable auto-correct.
+defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
+
+# Disable automatic capitalization.
+defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
+
+# Delay until repeat: fast.
+defaults write NSGlobalDomain InitialKeyRepeat -int 15
+
+# Key repeat rate: fast.
+defaults write NSGlobalDomain KeyRepeat -int 2
+
+# Adjust keyboard brightness in low light: off.
+defaults write com.apple.BezelServices kDim -bool false
+
+# Keyboard navigation: on (Tab through all controls, not only text fields).
+defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
+
+# Automatically switch to a document's input source: on.
+defaults write com.apple.HIToolbox AppleGlobalTextInputProperties -dict TextInputGlobalPropertyPerContextInput -bool true
+
+# TODO: Modifier keys
+
+cat <<'EOF'
+
+System Settings → Keyboard:
+
+• Input sources: ABC, Russian – PC
+• Keyboard brightness: 0
+
+EOF
+
+# ────────────────────────────── 8< ──────── 8< ───────────────────────────────
+# Keyboard Shortcuts
+
+cat <<'EOF'
+
+System Settings → Keyboard → Keyboard Shortcuts:
+
+• Input sources → Select the previous input source: Ctrl+Space
+• Input sources → Select the next source in Input menu: none
+• Spotlight → Show Spotlight search field: none
+• Spotlight → Show Spotlight window: none
+
+EOF
+
+# Use F1, F2, … as standard function keys.
+defaults write NSGlobalDomain com.apple.keyboard.fnState -bool true
+
+# ────────────────────────────── 8< ──────── 8< ───────────────────────────────
+# Trackpad
+
+# Trackpad: enable tap to click for this user and for the login screen.
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+
+# Quiet click: on.
+defaults write com.apple.AppleMultitouchTrackpad ActuationStrength -int 0
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad ActuationStrength -int 0
+
+# ────────────────────────────── 8< ──────── 8< ───────────────────────────────
+# Energy
+
+# pmset: -a all sources, -b battery, -c power adapter (AC).
+
+# Enable lid wakeup
+sudo pmset -a lidwake 1
+
+# Restart automatically on power loss
+sudo pmset -a autorestart 1
+
+# Restart automatically if the computer freezes
+sudo systemsetup -setrestartfreeze on > /dev/null 2>&1
+
+# Sleep the display after 10 minutes
+sudo pmset -a displaysleep 10
+
+# Machine sleep: 10 min on battery, 30 min on AC
+sudo pmset -b sleep 10
+sudo pmset -c sleep 30
+
+# ────────────────────────────── 8< ──────── 8< ───────────────────────────────
+# Time Machine
+
+# Prevent Time Machine from prompting to use new hard drives as backup volume.
+defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
+
+# ────────────────────────────── 8< ──────── 8< ───────────────────────────────
+# Finder
+
+# Finder: allow quitting via ⌘ + Q; doing so will also hide desktop icons.
+defaults write com.apple.finder QuitMenuItem -bool true
+
+# Finder: disable window animations and Get Info animations.
+defaults write com.apple.finder DisableAllAnimations -bool true
+
+# Finder: show hidden files by default.
+defaults write com.apple.finder AppleShowAllFiles -bool true
+
+# Finder: show all filename extensions.
+defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+
+# Finder: show path bar.
+defaults write com.apple.finder ShowPathbar -bool true
+
+# Finder: allow text selection in Quick Look.
+defaults write com.apple.finder QLEnableTextSelection -bool true
+
+# When performing a search, search the current folder by default.
+defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
+
+# Disable the warning when changing a file extension.
+defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
+
+# Use list view in all Finder windows by default.
+defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
+
+# Finder: disable sounds.
+defaults write com.apple.finder FinderSounds -bool false
+
+# Avoid creating .DS_Store files on network or USB volumes.
+defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
+defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
+
+# Set Desktop as the default location for new Finder windows.
+defaults write com.apple.finder NewWindowTarget -string "PfDe"
+defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}/Desktop/"
+
+# Keep folders on top when sorting by name.
+defaults write com.apple.finder _FXSortFoldersFirst -bool true
+
+# Show the ~/Library folder.
+chflags nohidden ~/Library
+xattr -d com.apple.FinderInfo ~/Library 2>/dev/null
+
+# Show the /Volumes folder.
+sudo chflags nohidden /Volumes
+
+# ────────────────────────────── 8< ──────── 8< ───────────────────────────────
+# Safari
+#
+
+# Add a context menu item for showing the Web Inspector in web views.
+defaults write NSGlobalDomain WebKitDeveloperExtras -bool true
+
+cat <<'EOF'
+
+Safari → Settings:
+
+• General → Homepage: https://sky.morning.photos/
+• Advanced → Press Tab to highlight each item on a webpage: on
+• Advanced → Show features for web developers: on
+
+EOF
+
+# ────────────────────────────── 8< ──────── 8< ───────────────────────────────
+# Terminal
+
+# Only use UTF-8 in Terminal.app.
+defaults write com.apple.terminal StringEncodings -array 4
+
+# ────────────────────────────── 8< ──────── 8< ───────────────────────────────
+# Mac App Store
+
+# Enable the WebKit Developer Tools in the Mac App Store.
+defaults write com.apple.appstore WebKitDeveloperExtras -bool true
+
+# Enable Debug Menu in the Mac App Store.
+defaults write com.apple.appstore ShowDebugMenu -bool true
+
+# ────────────────────────────── 8< ──────── 8< ───────────────────────────────
+# Photos
+
+# Prevent Photos from opening automatically when devices are plugged in.
+defaults -currentHost write com.apple.ImageCapture disableHotPlug -bool true
+
+# ────────────────────────────── 8< ──────── 8< ───────────────────────────────
+# Messages
+
+# Disable automatic emoji substitution (i.e. use plain text smileys).
+defaults write com.apple.messageshelper.MessageController SOInputLineSettings -dict-add "automaticEmojiSubstitutionEnablediMessage" -bool false
+
+# ────────────────────────────── 8< ──────── 8< ───────────────────────────────
+# TextEdit
+
+# Use plain text mode for new TextEdit documents.
+defaults write com.apple.TextEdit RichText -int 0
+
+# Open and save files as UTF-8 in TextEdit.
+defaults write com.apple.TextEdit PlainTextEncoding -int 4
+defaults write com.apple.TextEdit PlainTextEncodingForWrite -int 4
+
+# ────────────────────────────── 8< ──────── 8< ───────────────────────────────
+# Kill affected applications
+
+for app in "Dock" "Finder" "Safari" "SystemUIServer" "Terminal" "NotificationCenter"; do
+	killall "$app" > /dev/null 2>&1
+done
+
+echo "\n🦆 Done. Note that some of these changes require a logout/restart to take effect."
