@@ -19,6 +19,7 @@ Chemex
 cmux
 colocation
 copypasting
+culting
 customizability
 cyclomatic
 dcim
@@ -63,6 +64,7 @@ Omio
 omnibar
 oneliner
 outdent
+overdocumentation
 overengineering
 overpolice
 oxfmt

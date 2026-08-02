@@ -1,4 +1,4 @@
-# Clean Code for JavaScript/TypeScript
+# Clean code for JavaScript/TypeScript
 
 ## Core principles
 

@@ -1,14 +1,10 @@
 ---
 name: deslop
-description: Review a diff for local code quality, AI-generated slop, code style, accessibility, semantic HTML, and language or framework best practices.
+description: Review a diff for local code quality, AI-generated slop, and polish in application code, configuration, documentation, and agent artifacts.
 disable-model-invocation: true
 ---
 
 Check the requested target or current changes for AI-generated slop.
-
-For JavaScript or TypeScript changes, read and follow [guidelines for JavaScript/TypeScript](../_references/JavaScript.md).
-
-For HTML, CSS, or client-side JavaScript changes, read the [web guide index](../_references/web-guides/Index.md) when the changed code may touch patterns these guides cover, then load only the specific linked guides relevant to the change.
 
 ## Target
 
@@ -47,7 +43,7 @@ Talk like Gordon Ramsay: ambitious, brutally honest, direct, vivid, fiery, impat
 
 1. Resolve the review scope according to **Target**. Do not add a scope preamble to the first finding.
 2. Establish the intended behavior from the request, relevant callers, tests, types, schemas, and documentation. Do not infer requirements solely from the changed implementation.
-3. Inspect the selected file or diff and enough surrounding code to understand it. For a changeset, include unrelated generated files, configuration, lockfile changes, or formatting churn not produced or required by the repository formatter.
+3. Inspect the selected file or diff and enough surrounding context to understand it. For a changeset, include unrelated generated files, configuration, documentation, agent skills, or formatting churn not produced or required by the repository formatter.
 4. Focus on local slop within the selected scope. For a changeset, prioritize issues introduced or exposed by the change. Findings may cover concrete defects or preferences that would better match explicit user preferences, repository conventions, or the surrounding code. Judge the code under review, not whether it is committed or tracked. The only version-control finding allowed is incorrect `.gitignore` coverage.
 5. Present exactly one finding at a time using **Output format**. Then wait for the user to choose a fix, ignore it, or give other instructions.
 6. Interpret `1` or `2` as approval of the corresponding fix and `I` (case-insensitive) as ignore. If the user approves a fix or gives replacement instructions, make only that approved change and validate it before continuing.
@@ -96,30 +92,28 @@ Formatting rules:
 
 ## Focus areas
 
-- **Comment noise:** Remove comments that narrate syntax, repeat names, over-explain obvious code, or clash with local style.
-- **Missing context:** Add concise comments when code depends on non-obvious constraints, external knowledge, workarounds, or decisions that cannot be recovered from the code alone.
-- **Unrequested scope expansion:** Flag unrelated refactors, speculative features, extra exports, new configuration, generated-file churn, unexplained lockfile changes, and formatting changes not produced or required by the repository formatter.
-- **Invented assumptions:** Check for fabricated API fields, environment variables, routes, file formats, error shapes, or library behavior unsupported by repository evidence.
-- **Defensive theater:** Remove abnormal checks on trusted paths, repeated validation at internal boundaries, catch-and-rethrow blocks, swallowed failures, and fallback values that conceal defects.
-- **Type-system evasion:** Flag `any`, unjustified type assertions, non-null assertions, broad index signatures, duplicate domain types, overly optional fields, and `unknown` values used without proper narrowing.
-- **Premature abstraction:** Reject one-use helpers, pass-through wrappers, factories, speculative options, generic frameworks, and extension points created for hypothetical future requirements.
-- **Needless nesting:** Simplify deeply nested logic with guard clauses, early returns, or clearer decomposition when that improves readability.
-- **Redundant compatibility:** Remove aliases, fallbacks, migration paths, version branches, and legacy behavior added for consumers or versions that do not exist.
-- **Dependency duplication:** Prefer built-ins, platform APIs, established repository utilities, and existing dependencies over reimplementing the same behavior.
-- **Node.js misuse:** For Node.js changes, flag needless wrappers or polyfills around supported built-ins, shell commands where Node APIs suffice, unnecessary mixing of ESM and CommonJS, casual `process.exit()` calls that bypass cleanup, unclosed files, streams, or servers, unparsed environment configuration, and synchronous I/O on hot paths.
-- **Dead or ceremonial code:** Find unreachable branches, redundant state, unused options, placeholder constants, no-op handlers, and functions that merely rename or forward another function.
-- **Misleading completeness:** Flag hard-coded sample data, placeholder success responses, silent no-op branches, and unfinished behavior presented as complete. Flag off-by-one logic, empty-collection assumptions, unchecked array indexing, and timezone/locale/date handling that ignores obvious edge cases. Flag status enums or discriminated unions with `default:` branches that silently no-op, types that represent impossible state combinations, and combinations of mutually exclusive booleans that should be a single state variable. Keep precise TODOs that document intentionally deferred functionality or known scope limitations, but resolve or flag low-effort TODOs that can be completed safely within the current change.
-- **Async hazards:** Check for floating promises, missing `await`, needless serialization, races, stale updates, absent cleanup, and ignored cancellation.
-- **Framework cargo culting:** Flag unnecessary effects, memoization without evidence, separately stored derived state, trivial custom hooks, and abstractions copied from patterns the repository does not use.
-- **Accessibility defects:** Use links for navigation and buttons for actions instead of clickable `div`/`span` elements; verify accessible names, labels and error associations, keyboard operation, visible focus, focus placement, dialogs, status announcements, image alternatives, contrast, reduced motion, and native semantics before ARIA. Consult the matching guides from the [web guide index](../_references/web-guides/Index.md) when relevant.
-- **Obsolete web patterns:** Flag libraries and hand-rolled JS where platform HTML/CSS APIs suffice (dialogs, popovers, scroll effects, forms, passkeys, etc.), outdated layout approaches, and unnecessary dependencies. Consult the matching guides from the [web guide index](../_references/web-guides/Index.md) before reporting.
-- **Security hazards:** Check for unsafe HTML insertion, command or SQL interpolation, leaked secrets, insecure randomness, and unsafe path handling.
-- **Hollow tests:** Flag tautological assertions, implementation logic reproduced in tests, excessive mocking, snapshots that hide semantics rather than assert behavior, weakened assertions, skipped tests, tests that never exercise the changed path, and tests that would still pass if the implementation were deleted or replaced with a no-op.
-- **Performance:** Flag N+1 fetch/query patterns, nested scans, or repeated `find`/`filter` inside hot loops. Reject caches, batching, lazy loading, concurrency, and memoization that add complexity without evidence of a relevant problem.
-- **Magic values:** Replace unexplained numeric literals with named constants when the name captures a real constraint or domain concept; keep obvious local values inline.
-- **Unnecessary repetition:** Consolidate repeated values, calculations, or code introduced or exposed directly by the target when they plainly represent the same concept. Do not generalize incidental similarity or search unchanged systems for duplication.
-- **Repository inconsistency:** Identify misleading names, formatting, or implementation patterns that conflict with explicit user preferences or nearby established conventions.
-- **Clean-code violations:** Apply [Clean Code for JavaScript/TypeScript](../_references/JavaScript.md) when it improves the changed code without creating churn.
+The review target may be application code, configuration, documentation, agent skills, CI definitions, or other repository artifacts. Load detailed checklists only for categories the changes touch.
+
+### Always apply
+
+- **Unrequested scope expansion:** Unrelated refactors, speculative features, extra exports, new configuration, generated-file churn, unexplained lockfile changes, and formatting changes not produced or required by the repository formatter.
+- **Invented assumptions:** Fabricated API fields, environment variables, routes, file formats, error shapes, library behavior, config keys, or documented steps unsupported by repository evidence.
+- **Repository inconsistency:** Misleading names, formatting, or implementation patterns that conflict with explicit user preferences or nearby established conventions.
+
+### Category checklists
+
+Load only the references needed for the changes under review:
+
+- **Code quality** — comments, structure, dead code, completeness, clarity: read [code-quality](references/code-quality.md).
+- **JavaScript and TypeScript** — types, async, Node.js, framework patterns: read [javascript](references/javascript.md).
+- **Frontend and web** — HTML, CSS, client JS, accessibility, obsolete patterns: read [frontend](references/frontend.md).
+- **Backend logic** — backend changes: read [backend](references/backend.md).
+- **Security** — unsafe interpolation, secrets, path handling: read [security](references/security.md).
+- **Tests** — hollow or meaningless tests: read [tests](references/tests.md).
+- **Dependencies** — duplicate deps or unnecessary packages: read [dependencies](references/dependencies.md).
+- **Configuration, documentation, and agent artifacts** — config, docs, skills, prompts, or tooling without application code: read [nocode](references/nocode.md).
+
+When a changeset spans categories, load each relevant reference.
 
 ## Guardrails
 
@@ -131,4 +125,5 @@ Formatting rules:
 - Local conventions, explicit user preferences, correctness, and clarity override blanket style rules. Do not propose churn merely to satisfy a generic guideline.
 - Do not abstract incidental similarity. Consolidate repetition in the target only when it clearly represents one concept or calculation.
 - If you remove something, verify it’s truly unused first.
+- Security findings: reference secret type and location only; never copy secret values.
 - Do not flag intentional platform conventions or documented project conventions — unless the implementation adds risk beyond the convention.

@@ -1,6 +1,6 @@
 ---
 name: review-code
-description: Review requirements, behavior, APIs, architecture, and maintainability across code, configuration, and documentation affected by a change.
+description: Review a diff for requirements, behavior, APIs, architecture, and maintainability across code, configuration, documentation and agent artifacts.
 disable-model-invocation: true
 ---
 
