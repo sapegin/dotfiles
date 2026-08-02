@@ -9,6 +9,8 @@ The [base-prompt.md](./base-prompt.md) is the source of truth for global instruc
 - **Pi:** linked to `~/.pi/agent/AGENTS.md` by `dotfiles.json`.
 - **Cursor:** global User Rules are managed in **Customize → Rules** and have no documented file-based user configuration. Project-level `AGENTS.md` files remain supported.
 
+[Raccoonarium](./raccoonarium.md) documents the personal toolchain repos (`~/_/…`) and shared implementation preferences.
+
 ## Personas
 
 Canonical personas live in [`personas/`](./personas/):

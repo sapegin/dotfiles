@@ -1,19 +1,17 @@
-System configuration files are symlinked or synced from this repository using sync-dotfiles.ts script. The sync map is in dotfiles.json. Always edit source files in this repository, never edit system files outside.
+# Dotfiles
 
-`DOTFILES_DIR` (default `~/dotfiles`) and `THEMES_DIR` (default `~/_/squirrelsong/themes`) are defined once in `zsh/dirs.zsh` and used in shell configs and `dotfiles.json` as `$DOTFILES_DIR` and `$THEMES_DIR`.
+System configs are symlinked or synced from this repo via `sync-dotfiles`; the map is in [dotfiles.json](dotfiles.json). Always edit sources here, never destinations outside the repo.
 
-Never symlink files into the Obsidian vault (`~/murder`) or other iCloud paths — iCloud does not handle symlinks reliably. Use `mode: "sync"` in `dotfiles.json` instead.
+`DOTFILES_DIR` (`~/dotfiles`) and `THEMES_DIR` (`~/_/squirrelsong/themes`) are defined in `zsh/dirs.zsh` and referenced in `dotfiles.json`.
 
-New tools, including helpers used by skills, are written in TypeScript and located at `src/bin/`. Each TypeScript tool should have a matching symlink in `bin/symlinks/` that points to the shared `bin/_ts` runner (example: `src/bin/j.ts` and `bin/symlinks/j` → `_ts`). Keep non-TypeScript tools as regular executable scripts in `bin/`. Do not export functions from `src/bin/` scripts or add test-environment guards to `main()` — put testable logic in `src/util/` and test it there, or run the bin script as a subprocess (see `src/bin/branch-diff.test.ts`).
+Never symlink into the Obsidian vault (`~/murder`) or other iCloud paths — use `mode: "sync"` in `dotfiles.json`.
 
-For expected subprocess failures, CLI tools should usually forward the tool’s stderr unchanged instead of replacing it or adding a stack trace. Add context only when stderr is not actionable. Do not swallow or sanitize unexpected errors; let them propagate so the user sees the full diagnostic.
+This repo targets the last two major macOS releases only. Do not add platform checks.
 
-Shared utility functions should have JSDoc comments explaining their purpose. Name `src/util/` modules after their domain (`files.ts`, `git.ts`, `tui.ts`).
+Tools here should match configuration actually in use. Do not add generic fallbacks unless requested.
 
-This repository targets the last two major macOS releases only. Do not add platform checks — assume macOS.
+Ecosystem context: read [raccoonarium.md](./ai/raccoonarium.md).
 
-Tools for this dotfiles repository should support the configuration actually used here. Do not add generic configuration fallbacks or compatibility branches unless requested.
+## AI configuration
 
-Agent skills, personas, and shared AI references live in `ai/`. `ai/base-prompt.md` is symlinked as the global `AGENTS.md` for agents; keep it short, generic, and broadly useful. Always edit skills in `ai/skills/` (and references in `ai/skills/_references/`), never in `~/.agents/skills/` — that directory is also symlinked.
-
-If I ask to write something in German or Spanish, keep all drafts and discussion in English. Only give the final text in the target language.
+Skills, personas, and global agent instructions live in `ai/`. Edit `ai/base-prompt.md` for global rules (all projects); edit `ai/skills/` for skills. See `ai/AGENTS.md` when changing the AI tree itself.
