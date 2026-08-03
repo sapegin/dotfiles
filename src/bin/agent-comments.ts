@@ -67,7 +67,7 @@ async function runRipgrep(directory: string): Promise<string> {
   try {
     const { stdout } = await execFileAsync(
       'rg',
-      ['--json', '--no-messages', SEARCH_PATTERN, directory],
+      ['--hidden', '--json', '--no-messages', SEARCH_PATTERN, directory],
       {
         encoding: 'utf8',
         // Ignore the user's ~/.ripgreprc, which changes output formatting.
