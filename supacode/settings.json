@@ -149,37 +149,7 @@
       ],
       "setupScript" : ""
     },
-    "\/Users\/sapegia\/_\/raccoon-toolbox\/" : {
-      "archiveScript" : "",
-      "deleteScript" : "",
-      "openActionID" : "auto",
-      "runScript" : "",
-      "scripts" : [
-
-      ],
-      "setupScript" : ""
-    },
-    "\/Users\/sapegia\/_\/raccoon-vscode\/" : {
-      "archiveScript" : "",
-      "deleteScript" : "",
-      "openActionID" : "auto",
-      "runScript" : "",
-      "scripts" : [
-
-      ],
-      "setupScript" : ""
-    },
     "\/Users\/sapegia\/_\/sapegin.me\/" : {
-      "archiveScript" : "",
-      "deleteScript" : "",
-      "openActionID" : "auto",
-      "runScript" : "",
-      "scripts" : [
-
-      ],
-      "setupScript" : ""
-    },
-    "\/Users\/sapegia\/_\/squirrelsong\/" : {
       "archiveScript" : "",
       "deleteScript" : "",
       "openActionID" : "auto",
@@ -215,9 +185,6 @@
     "\/Users\/sapegia\/dotfiles\/",
     "\/Users\/sapegia\/_\/kurush\/",
     "\/Users\/sapegia\/_\/sapegin.me\/",
-    "\/Users\/sapegia\/_\/raccoon-vscode\/",
-    "\/Users\/sapegia\/_\/raccoon-toolbox\/",
-    "\/Users\/sapegia\/_\/squirrelsong\/",
     "\/Users\/sapegia\/Library\/Mobile Documents\/iCloud~md~obsidian\/Documents\/Murder\/"
   ]
 }
