@@ -10,9 +10,9 @@ import {
 } from '@earendil-works/pi-coding-agent';
 
 const SYSTEM_PROMPT =
-  'Generate a concise 4-6 word title for this coding session in sentence case, with no punctuation, quotes, labels, or explanation.';
+  'Generate a concise 2-4 word topic title for this coding session. Use a noun phrase, not a sentence or stated intention: for example, "I’ll inspect the redirect flow" becomes "Redirect flow inspection". Use sentence case with no punctuation, quotes, labels, or explanation.';
 
-// A 4–6-word title needs little output; 32 tokens allow tokenizer variation.
+// A 2–4-word title needs little output; 32 tokens allow tokenizer variation.
 const MAX_TOKENS = 32;
 // Retain enough task context without sending large blobs of text.
 const PROMPT_MAX_CHARACTERS = 4000;
@@ -75,7 +75,7 @@ async function generateSessionName(
       return;
     }
 
-    // Extract text, remove punctuation, limit the title to 6 words, and capitalize the first word.
+    // Extract text, remove punctuation, and capitalize the first word.
     return response.content
       .filter((block) => block.type === 'text')
       .map((block) => block.text)
@@ -83,7 +83,6 @@ async function generateSessionName(
       .replaceAll(/[^\p{L}\p{N}]+/gu, ' ')
       .trim()
       .split(/\s+/)
-      .slice(0, 6)
       .join(' ')
       .replace(/^\p{L}/u, (letter) => letter.toLocaleUpperCase());
   } finally {
