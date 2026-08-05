@@ -3,6 +3,7 @@ Aeropress
 Alexa
 antipattern
 antipatterns
+apfel
 aphantasia
 artefacts
 Artem
@@ -86,6 +87,7 @@ rubberduck
 rubberducking
 sandboxed
 Sapegin
+scanability
 Shazam
 shortcutting
 signin

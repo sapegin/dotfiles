@@ -111,7 +111,8 @@ Load only the references needed for the changes under review:
 - **Security** — unsafe interpolation, secrets, path handling: read [security](references/security.md).
 - **Tests** — hollow or meaningless tests: read [tests](references/tests.md).
 - **Dependencies** — duplicate deps or unnecessary packages: read [dependencies](references/dependencies.md).
-- **Configuration, documentation, and agent artifacts** — config, docs, skills, prompts, or tooling without application code: read [nocode](references/nocode.md).
+- **Configuration and documentation** — config, docs, or tooling without application code: read [nocode](references/nocode.md).
+- **Agent skills and prompts** — skill or prompt changes: read [agent-skills](references/agent-skills.md).
 
 When a changeset spans categories, load each relevant reference.
 

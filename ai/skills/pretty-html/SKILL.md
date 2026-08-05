@@ -158,4 +158,4 @@ open /path/to/page.html
 
 ## Sync
 
-Run `agent-comments` after changing `_assets/`. Never symlink into `~/murder` (iCloud).
+Run `ai-sync` after changing `_assets/`. Never symlink into `~/murder` (iCloud).

@@ -117,7 +117,8 @@ Load only the references needed for the changes under review:
 - **Architecture and maintainability** — module boundaries, public contracts, duplication, or system design spanning multiple areas: read [architecture](references/architecture.md).
 - **Tests** — new behavior, modified test suites, or coverage gaps: read [tests](references/tests.md).
 - **Dependencies and build** — manifests, lockfiles, CI, packaging, rollout, or compatibility: read [dependencies](references/dependencies.md).
-- **Configuration, documentation, and agent artifacts** — config files, docs, skills, prompts, or tooling without application code: read [nocode](references/nocode.md).
+- **Configuration and documentation** — config files, docs, or tooling without application code: read [nocode](references/nocode.md).
+- **Agent skills and prompts** — skill or prompt changes: read [agent-skills](references/agent-skills.md).
 
 When a changeset spans categories, load each relevant reference.
 
