@@ -22,8 +22,18 @@
 
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
-import { parseArgs } from '../util/args.ts';
+import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import { run } from '../util/tui.ts';
+
+const OPTIONS = [
+  {
+    name: 'path',
+    positional: true,
+    default: '.',
+  },
+] as const;
+
+export type Options = ParsedArgs<typeof OPTIONS>;
 
 const execFileAsync = promisify(execFile);
 
@@ -115,16 +125,8 @@ async function collectComments(directory: string): Promise<Comment[]> {
   return comments;
 }
 
-const args = parseArgs([
-  {
-    name: 'path',
-    positional: true,
-    default: '.',
-  },
-]);
-
-async function main() {
-  const comments = await collectComments(args.path);
+export async function agentComments({ path }: Options): Promise<void> {
+  const comments = await collectComments(path);
 
   if (comments.length === 0) {
     return;
@@ -137,4 +139,4 @@ async function main() {
   );
 }
 
-await run(main);
+await run(import.meta.url, () => agentComments(parseArgs(OPTIONS)));

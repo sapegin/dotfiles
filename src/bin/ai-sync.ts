@@ -16,15 +16,22 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
+import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import {
   generatePersonaSections,
   generateWebGuideIndex,
   parsePersona,
-} from '../util/ai.ts';
-import { parseArgs } from '../util/args.ts';
+} from '../util/docs.ts';
 import { dirs } from '../util/files.ts';
 import { didFilesChange, mirrorFolder } from '../util/sync.ts';
 import { run } from '../util/tui.ts';
+
+const OPTIONS = [
+  { name: 'check', type: 'boolean', default: false },
+  { name: 'update', type: 'boolean', default: false },
+] as const;
+
+export type Options = ParsedArgs<typeof OPTIONS>;
 
 const WEB_GUIDES_DIRECTORY = path.join(
   dirs.ai,
@@ -109,15 +116,11 @@ async function updateWebGuides(): Promise<void> {
   }
 }
 
-async function main(): Promise<void> {
-  const args = parseArgs([
-    { name: 'check', type: 'boolean', default: false },
-    { name: 'update', type: 'boolean', default: false },
-  ]);
-  if (args.check && args.update) {
+export async function aiSync({ check, update }: Options): Promise<void> {
+  if (check && update) {
     throw new Error('Cannot combine --check and --update.');
   }
-  if (args.update) {
+  if (update) {
     await updateWebGuides();
   }
 
@@ -171,7 +174,7 @@ async function main(): Promise<void> {
     });
   }
 
-  if (args.check) {
+  if (check) {
     if (changes.length > 0) {
       const stalePaths = changes
         .map(({ path: targetPath }) => path.relative(dirs.dotfiles, targetPath))
@@ -192,4 +195,4 @@ async function main(): Promise<void> {
   }
 }
 
-await run(main);
+await run(import.meta.url, () => aiSync(parseArgs(OPTIONS)));

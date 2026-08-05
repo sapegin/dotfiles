@@ -11,21 +11,28 @@
 
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
-import { parseArgs } from '../util/args.ts';
+import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import { prettyBytes } from '../util/files.ts';
+import { run } from '../util/tui.ts';
 
-const args = parseArgs([
+const OPTIONS = [
   {
     name: 'file',
     positional: true,
     required: true,
   },
-]);
+] as const;
 
-const originalSize = fs.statSync(args.file).size;
-const gzipOutput = execFileSync('gzip', ['-c', args.file]);
-const gzipSize = gzipOutput.length;
-const ratio = (gzipSize * 100) / originalSize;
+export type Options = ParsedArgs<typeof OPTIONS>;
 
-console.log(`Original: ${prettyBytes(originalSize)}`);
-console.log(`Gzipped:  ${prettyBytes(gzipSize)} (${ratio.toFixed(2)}%)`);
+export function gz({ file }: Options): void {
+  const originalSize = fs.statSync(file).size;
+  const gzipOutput = execFileSync('gzip', ['-c', file]);
+  const gzipSize = gzipOutput.length;
+  const ratio = (gzipSize * 100) / originalSize;
+
+  console.log(`Original: ${prettyBytes(originalSize)}`);
+  console.log(`Gzipped:  ${prettyBytes(gzipSize)} (${ratio.toFixed(2)}%)`);
+}
+
+await run(import.meta.url, () => gz(parseArgs(OPTIONS)));

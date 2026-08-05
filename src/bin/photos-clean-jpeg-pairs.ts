@@ -17,7 +17,7 @@
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { parseArgs } from '../util/args.ts';
+import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import {
   dirs,
   prettyBytes,
@@ -29,12 +29,14 @@ import {
 import { findMediaFiles, getPhotoPairKey } from '../util/photos.ts';
 import { confirm, log, run } from '../util/tui.ts';
 
-const args = parseArgs([
+const OPTIONS = [
   {
     name: 'folder',
     positional: true,
   },
-]);
+] as const;
+
+export type Options = ParsedArgs<typeof OPTIONS>;
 
 interface ManualReviewItem {
   readonly reason: string;
@@ -132,11 +134,13 @@ async function findJpgJpegDuplicateRemovals(
   };
 }
 
-async function main(): Promise<void> {
+export async function photosCleanJpegPairs({
+  folder,
+}: Options): Promise<void> {
   const photosRoot =
-    args.folder === undefined
+    folder === undefined
       ? dirs.photos
-      : path.resolve(untildify(args.folder));
+      : path.resolve(untildify(folder));
 
   try {
     const stats = await fs.stat(photosRoot);
@@ -204,4 +208,4 @@ async function main(): Promise<void> {
   console.log(`Removed ${toRemove.length} files.`);
 }
 
-await run(main);
+await run(import.meta.url, () => photosCleanJpegPairs(parseArgs(OPTIONS)));

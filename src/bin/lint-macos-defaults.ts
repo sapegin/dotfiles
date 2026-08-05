@@ -11,6 +11,7 @@
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
+import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import {
   type DefaultsEntry,
   isInvalidTypeFlags,
@@ -21,6 +22,10 @@ import {
 } from '../util/defaults.ts';
 import { dirs } from '../util/files.ts';
 import { log, run } from '../util/tui.ts';
+
+const OPTIONS = [] as const;
+
+export type Options = ParsedArgs<typeof OPTIONS>;
 
 const SCRIPT_FILE = path.join(dirs.dotfiles, 'bin/macos-defaults');
 const OBSOLETE_DOMAIN_PATTERN = /Domain com\.[\w.]+\s+does not exist/;
@@ -160,7 +165,7 @@ function printInvalidTypeFlags(lines: readonly string[]): void {
   }
 }
 
-function main(): void {
+export function lintMacosDefaults(_options: Options): void {
   let entries: DefaultsEntry[];
   try {
     entries = parseEntries(fs.readFileSync(SCRIPT_FILE, 'utf8'));
@@ -190,4 +195,4 @@ function main(): void {
   console.log('\nAll checked entries match this Mac.');
 }
 
-await run(main);
+await run(import.meta.url, () => lintMacosDefaults(parseArgs(OPTIONS)));

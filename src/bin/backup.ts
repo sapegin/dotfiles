@@ -32,6 +32,7 @@
 import { execFileSync, spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
+import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import { dirs, tildify } from '../util/files.ts';
 import {
   installLaunchAgent,
@@ -40,6 +41,10 @@ import {
 import { ensureVolumeMounted } from '../util/mount.ts';
 import { formatLocalTimestamp } from '../util/time.ts';
 import { log, prompt, run } from '../util/tui.ts';
+
+const OPTIONS = [] as const;
+
+export type Options = ParsedArgs<typeof OPTIONS>;
 
 // Folders to backup
 const SOURCES = [dirs.obsidianVault, dirs.iCloud];
@@ -148,7 +153,7 @@ async function ensureResticReady(): Promise<void> {
   ensureVolumeMounted(dirs.nasStuffses);
 }
 
-async function backup(): Promise<void> {
+async function runBackup(): Promise<void> {
   await ensureResticReady();
 
   logLine('Starting backup');
@@ -200,20 +205,20 @@ function uninstall(): void {
   uninstallLaunchAgent(LABEL);
 }
 
-const cliArgs = process.argv.slice(2);
-const [command, ...restArgs] = cliArgs;
+export async function backup(_options: Options): Promise<void> {
+  const cliArgs = process.argv.slice(2);
+  const [command, ...restArgs] = cliArgs;
 
-async function main(): Promise<void> {
   if (command === 'install') {
     install();
   } else if (command === 'uninstall') {
     uninstall();
   } else if (cliArgs.length === 0) {
-    await backup();
+    await runBackup();
   } else {
     await ensureResticReady();
     restic([command, ...restArgs]);
   }
 }
 
-await run(main);
+await run(import.meta.url, () => backup(parseArgs(OPTIONS)));

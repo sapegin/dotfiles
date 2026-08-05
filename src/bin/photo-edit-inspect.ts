@@ -14,7 +14,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { parseArgs } from '../util/args.ts';
+import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import { tildify, untildify } from '../util/files.ts';
 import { run } from '../util/tui.ts';
 
@@ -22,7 +22,7 @@ const FIELD_SEPARATOR = '\u001F';
 const MAX_COMMAND_OUTPUT = 1024 * 1024 * 100;
 const MAX_TEXT_PREVIEW_LENGTH = 400;
 
-const cliArgs = parseArgs([
+const OPTIONS = [
   {
     name: 'inputPath',
     positional: true,
@@ -33,7 +33,9 @@ const cliArgs = parseArgs([
     type: 'string',
     alias: 'o',
   },
-]);
+] as const;
+
+export type Options = ParsedArgs<typeof OPTIONS>;
 
 type DecodedPayload =
   | {
@@ -391,12 +393,12 @@ async function writeReport(
   ]);
 }
 
-async function main(): Promise<void> {
-  const inputPath = path.resolve(untildify(cliArgs.inputPath));
+export async function photoEditInspect(options: Options): Promise<void> {
+  const inputPath = path.resolve(untildify(options.inputPath));
   const outputDir =
-    cliArgs.output === undefined
+    options.output === undefined
       ? undefined
-      : path.resolve(untildify(cliArgs.output));
+      : path.resolve(untildify(options.output));
   const tempDir = await fs.mkdtemp(
     path.join(os.tmpdir(), 'photo-edit-inspect-')
   );
@@ -416,4 +418,4 @@ async function main(): Promise<void> {
   }
 }
 
-await run(main);
+await run(import.meta.url, () => photoEditInspect(parseArgs(OPTIONS)));

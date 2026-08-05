@@ -8,6 +8,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import {
   isObject,
   listSessionFiles,
@@ -16,6 +17,10 @@ import {
   type JsonObject,
 } from '../util/pi-sessions.ts';
 import { run } from '../util/tui.ts';
+
+const OPTIONS = [] as const;
+
+export type Options = ParsedArgs<typeof OPTIONS>;
 
 const SESSION_COUNT = 10;
 const MAX_BLOCK_LENGTH = 2000;
@@ -304,7 +309,7 @@ function parseSession(filePath: string): string {
   ].join('\n');
 }
 
-function main(): void {
+export function piInsightsContext(_options: Options): void {
   const currentSession = process.env.PI_SESSION_FILE;
   if (!currentSession) {
     throw new Error(
@@ -333,4 +338,4 @@ function main(): void {
   );
 }
 
-await run(main);
+await run(import.meta.url, () => piInsightsContext(parseArgs(OPTIONS)));

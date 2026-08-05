@@ -11,6 +11,7 @@
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import { readExifMetadata } from '../util/exif.ts';
 import {
   atomicWrite,
@@ -30,6 +31,10 @@ import {
 import { getDatedPhotoFilename } from '../util/photos.ts';
 import { formatLocalDateTime } from '../util/time.ts';
 import { log, run } from '../util/tui.ts';
+
+const OPTIONS = [] as const;
+
+export type Options = ParsedArgs<typeof OPTIONS>;
 
 interface PendingPhoto {
   sourcePath: string;
@@ -189,7 +194,7 @@ async function importDay(photos: PendingPhoto[]): Promise<ImportedImage[]> {
   return imported;
 }
 
-async function main(): Promise<void> {
+export async function obsidianPhotosImport(_options: Options): Promise<void> {
   await assertObsidianVault();
 
   const photos = await glob(dirs.desktop, '*', exts.jpeg);
@@ -233,4 +238,6 @@ async function main(): Promise<void> {
   openObsidianPath(UNTAGGED_LOGS_PATH);
 }
 
-await run(main, { printDone: true });
+await run(import.meta.url, async () => {
+  await obsidianPhotosImport(parseArgs(OPTIONS));
+});

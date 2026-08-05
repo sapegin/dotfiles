@@ -70,9 +70,11 @@ function getToolName(): string {
 
 function showHelp(toolName: string): void {
   try {
-    execFileSync(path.join(dirs.dotfiles, 'bin/help'), [toolName], {
-      stdio: 'inherit',
-    });
+    execFileSync(
+      process.execPath,
+      [path.join(dirs.dotfiles, 'src/bin/help.ts'), toolName],
+      { stdio: 'inherit' }
+    );
   } catch {
     // The validation error above is enough when help is unavailable.
   }

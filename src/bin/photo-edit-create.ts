@@ -21,7 +21,7 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import sharp from 'sharp';
-import { parseArgs } from '../util/args.ts';
+import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import { untildify } from '../util/files.ts';
 import { run } from '../util/tui.ts';
 
@@ -63,7 +63,7 @@ interface OperationSpec {
   readonly values: readonly string[];
 }
 
-const cliArgs = parseArgs([
+const OPTIONS = [
   {
     name: 'templatePath',
     positional: true,
@@ -109,7 +109,9 @@ const cliArgs = parseArgs([
     type: 'boolean',
     default: false,
   },
-]);
+] as const;
+
+export type Options = ParsedArgs<typeof OPTIONS>;
 
 function quoteSqlString(value: string): string {
   return `'${value.replaceAll("'", "''")}'`;
@@ -270,12 +272,12 @@ function parseSetOperation(value: string): OperationSpec {
   return { name, values };
 }
 
-function getOperationSpecs(): OperationSpec[] {
-  if (cliArgs.set !== undefined) {
-    if (cliArgs.operation !== undefined || cliArgs.value !== undefined) {
+function getOperationSpecs(options: Options): OperationSpec[] {
+  if (options.set !== undefined) {
+    if (options.operation !== undefined || options.value !== undefined) {
       throw new Error('Use either --set or positional operation arguments');
     }
-    const operations = cliArgs.set
+    const operations = options.set
       .split(';')
       .filter(Boolean)
       .map(parseSetOperation);
@@ -285,17 +287,17 @@ function getOperationSpecs(): OperationSpec[] {
     return operations;
   }
 
-  if (cliArgs.operation === undefined || cliArgs.value === undefined) {
+  if (options.operation === undefined || options.value === undefined) {
     throw new Error('Missing operation and value');
   }
   return [
     {
-      name: cliArgs.operation,
+      name: options.operation,
       values: [
-        cliArgs.value,
-        cliArgs.value2,
-        cliArgs.value3,
-        cliArgs.value4,
+        options.value,
+        options.value2,
+        options.value3,
+        options.value4,
       ].filter((value): value is string => value !== undefined),
     },
   ];
@@ -909,9 +911,9 @@ async function writeArchive(root: string, outputPath: string, force: boolean) {
   );
 }
 
-async function main(): Promise<void> {
-  const templatePath = path.resolve(untildify(cliArgs.templatePath));
-  const outputPath = path.resolve(untildify(cliArgs.output));
+export async function photoEditCreate(options: Options): Promise<void> {
+  const templatePath = path.resolve(untildify(options.templatePath));
+  const outputPath = path.resolve(untildify(options.output));
   const tempDir = await fs.mkdtemp(
     path.join(os.tmpdir(), 'photo-edit-create-')
   );
@@ -919,14 +921,14 @@ async function main(): Promise<void> {
   try {
     const unpackedRoot = await unpackPhotoEdit(templatePath, tempDir);
     const databasePath = await locateMetadataInfo(unpackedRoot);
-    if (cliArgs.raw !== undefined) {
+    if (options.raw !== undefined) {
       await applyRawBootstrap(
         databasePath,
-        path.resolve(untildify(cliArgs.raw)),
+        path.resolve(untildify(options.raw)),
         tempDir
       );
     }
-    const operations = getOperationSpecs();
+    const operations = getOperationSpecs(options);
     assertSingleGeometryOperation(operations);
     const quickLookOperations = [];
     for (const operation of operations) {
@@ -938,10 +940,10 @@ async function main(): Promise<void> {
       (operation) => operation !== undefined
     );
     await updateQuickLook(unpackedRoot, quickLookOperation);
-    await writeArchive(unpackedRoot, outputPath, cliArgs.force);
+    await writeArchive(unpackedRoot, outputPath, options.force);
   } finally {
     await fs.rm(tempDir, { recursive: true, force: true });
   }
 }
 
-await run(main);
+await run(import.meta.url, () => photoEditCreate(parseArgs(OPTIONS)));

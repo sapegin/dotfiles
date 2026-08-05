@@ -8,9 +8,10 @@
 
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
-import { parseArgs } from '../util/args.ts';
+import { parseArgs, type ParsedArgs } from '../util/args.ts';
+import { run } from '../util/tui.ts';
 
-const args = parseArgs([
+const OPTIONS = [
   {
     name: 'message',
     alias: 'm',
@@ -21,20 +22,26 @@ const args = parseArgs([
     positional: true,
     default: '.',
   },
-]);
+] as const;
 
-if (args.dir !== '.') {
-  fs.mkdirSync(args.dir, { recursive: true });
-  process.chdir(args.dir);
+export type Options = ParsedArgs<typeof OPTIONS>;
+
+export function gitSetup({ message, dir }: Options): void {
+  if (dir !== '.') {
+    fs.mkdirSync(dir, { recursive: true });
+    process.chdir(dir);
+  }
+
+  if (fs.existsSync('.git')) {
+    console.error('.git directory already exists, aborting');
+    process.exit(1);
+  }
+
+  execFileSync('git', ['init'], { stdio: 'inherit' });
+  execFileSync('git', ['add', '.'], { stdio: 'inherit' });
+  execFileSync('git', ['commit', '--allow-empty', '-m', message], {
+    stdio: 'inherit',
+  });
 }
 
-if (fs.existsSync('.git')) {
-  console.error('.git directory already exists, aborting');
-  process.exit(1);
-}
-
-execFileSync('git', ['init'], { stdio: 'inherit' });
-execFileSync('git', ['add', '.'], { stdio: 'inherit' });
-execFileSync('git', ['commit', '--allow-empty', '-m', args.message], {
-  stdio: 'inherit',
-});
+await run(import.meta.url, () => gitSetup(parseArgs(OPTIONS)));

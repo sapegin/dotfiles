@@ -14,7 +14,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { parseArgs } from '../util/args.ts';
+import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import { untildify } from '../util/files.ts';
 import { run } from '../util/tui.ts';
 
@@ -26,7 +26,7 @@ const IGNORED_PATHS = new Set([
   'versionSpecificInfo.imageMetadata.versionSpecificInfo.xmpData',
 ]);
 
-const cliArgs = parseArgs([
+const OPTIONS = [
   {
     name: 'beforePath',
     positional: true,
@@ -37,7 +37,9 @@ const cliArgs = parseArgs([
     positional: true,
     required: true,
   },
-]);
+] as const;
+
+export type Options = ParsedArgs<typeof OPTIONS>;
 
 type DecodedValue =
   | null
@@ -585,9 +587,9 @@ async function diffPhotoEdits(
   return changesByTable.flat();
 }
 
-async function main(): Promise<void> {
-  const beforePath = path.resolve(untildify(cliArgs.beforePath));
-  const afterPath = path.resolve(untildify(cliArgs.afterPath));
+export async function photoEditDiff(options: Options): Promise<void> {
+  const beforePath = path.resolve(untildify(options.beforePath));
+  const afterPath = path.resolve(untildify(options.afterPath));
   const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'photo-edit-diff-'));
   try {
     const changes = await diffPhotoEdits(beforePath, afterPath, tempDir);
@@ -597,4 +599,4 @@ async function main(): Promise<void> {
   }
 }
 
-await run(main);
+await run(import.meta.url, () => photoEditDiff(parseArgs(OPTIONS)));

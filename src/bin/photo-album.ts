@@ -8,10 +8,15 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import sharp from 'sharp';
+import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import { readExifMetadata } from '../util/exif.ts';
 import { dirs, exts, glob } from '../util/files.ts';
 import { IMPORT_DATE_PREFIX } from '../util/photos.ts';
 import { run } from '../util/tui.ts';
+
+const OPTIONS = [] as const;
+
+export type Options = ParsedArgs<typeof OPTIONS>;
 
 const SOURCE_DIR = path.join(dirs.pictures, 'JunkyardPhotoAlbum');
 const OUTPUT_DIR = path.join(dirs.documents, 'JunkyardPhotoAlbum');
@@ -669,7 +674,7 @@ ${yearsHtml}
   return createHTMLPage('Junkyard photo album', bodyContent, additionalCSS);
 }
 
-async function main(): Promise<void> {
+export async function photoAlbum(_options: Options): Promise<void> {
   console.log('Reading images…');
   const images = await getAllImages();
 
@@ -708,4 +713,4 @@ async function main(): Promise<void> {
   console.log(`Index: ${INDEX_FILE}`);
 }
 
-await run(main);
+await run(import.meta.url, () => photoAlbum(parseArgs(OPTIONS)));

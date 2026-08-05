@@ -14,8 +14,8 @@
 // https://github.com/sapegin/dotfiles
 
 import { execFileSync, execSync } from 'node:child_process';
-import { parseArgs } from '../util/args.ts';
-import { log } from '../util/tui.ts';
+import { parseArgs, type ParsedArgs } from '../util/args.ts';
+import { log, run } from '../util/tui.ts';
 
 function getStaleBranches(): string[] {
   const output = execSync('git branch -vv', { encoding: 'utf8' });
@@ -26,31 +26,37 @@ function getStaleBranches(): string[] {
     .filter(Boolean);
 }
 
-const args = parseArgs([
+const OPTIONS = [
   {
     name: 'force',
     type: 'boolean',
     default: false,
   },
-]);
+] as const;
 
-if (args.force === false) {
-  const branches = getStaleBranches();
-  for (const branch of branches) {
-    console.log(branch);
+export type Options = ParsedArgs<typeof OPTIONS>;
+
+export function gitCleanup({ force }: Options): void {
+  if (force === false) {
+    const branches = getStaleBranches();
+    for (const branch of branches) {
+      console.log(branch);
+    }
+    process.exit(1);
   }
-  process.exit(1);
+
+  log.heading('\nDeleting unreachable objects…\n');
+  execFileSync('git', ['prune'], { stdio: 'inherit' });
+
+  log.heading('\nDeleting stale remote-tracking branches…\n');
+  execFileSync('git', ['remote', 'prune', 'origin'], { stdio: 'inherit' });
+  console.log('Done.');
+
+  log.heading('\nDeleting branches with no longer existing remote branches…\n');
+  const staleBranches = getStaleBranches();
+  if (staleBranches.length > 0) {
+    execFileSync('git', ['branch', '-D', ...staleBranches], { stdio: 'inherit' });
+  }
 }
 
-log.heading('\nDeleting unreachable objects…\n');
-execFileSync('git', ['prune'], { stdio: 'inherit' });
-
-log.heading('\nDeleting stale remote-tracking branches…\n');
-execFileSync('git', ['remote', 'prune', 'origin'], { stdio: 'inherit' });
-console.log('Done.');
-
-log.heading('\nDeleting branches with no longer existing remote branches…\n');
-const staleBranches = getStaleBranches();
-if (staleBranches.length > 0) {
-  execFileSync('git', ['branch', '-D', ...staleBranches], { stdio: 'inherit' });
-}
+await run(import.meta.url, () => gitCleanup(parseArgs(OPTIONS)));

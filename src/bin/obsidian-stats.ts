@@ -10,8 +10,13 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import YAML from 'yaml';
+import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import { dirs, exts, glob } from '../util/files.ts';
 import { run } from '../util/tui.ts';
+
+const OPTIONS = [] as const;
+
+export type Options = ParsedArgs<typeof OPTIONS>;
 
 const OUTPUT_FILE = path.join(dirs.documents, 'MurderStats.html');
 
@@ -1588,7 +1593,7 @@ function generateUnresolvedWikilinksSection(
   return html;
 }
 
-async function main(): Promise<void> {
+export async function obsidianStats(_options: Options): Promise<void> {
   console.log('Scanning vault files...');
   const allNotes = await getAllNoteNames();
   console.log(`Found ${allNotes.size} files in vault`);
@@ -1735,4 +1740,4 @@ async function main(): Promise<void> {
   console.log(`Stats generated at: ${OUTPUT_FILE}`);
 }
 
-await run(main);
+await run(import.meta.url, () => obsidianStats(parseArgs(OPTIONS)));

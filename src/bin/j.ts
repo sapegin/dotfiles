@@ -13,23 +13,30 @@
 // License: MIT
 // https://github.com/sapegin/dotfiles
 
-import { parseArgs } from '../util/args.ts';
+import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import { searchProjects } from '../util/projectsSearch.ts';
+import { run } from '../util/tui.ts';
 
-const args = parseArgs([
+const OPTIONS = [
   {
     name: 'query',
     positional: true,
     required: true,
   },
-]);
+] as const;
 
-const results = searchProjects(args.query);
+export type Options = ParsedArgs<typeof OPTIONS>;
 
-if (results.length === 0) {
-  console.log('Repository not found');
-  process.exit(1);
+export function j({ query }: Options): void {
+  const results = searchProjects(query);
+
+  if (results.length === 0) {
+    console.log('Repository not found');
+    process.exit(1);
+  }
+
+  console.log(results[0]);
+  process.exit(0);
 }
 
-console.log(results[0]);
-process.exit(0);
+await run(import.meta.url, () => j(parseArgs(OPTIONS)));

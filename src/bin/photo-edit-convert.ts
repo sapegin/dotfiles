@@ -12,7 +12,7 @@
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { parseArgs } from '../util/args.ts';
+import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import { untildify } from '../util/files.ts';
 import { run } from '../util/tui.ts';
 
@@ -34,7 +34,7 @@ interface Operation {
   readonly values: readonly string[];
 }
 
-const cliArgs = parseArgs([
+const OPTIONS = [
   {
     name: 'rawPath',
     positional: true,
@@ -64,7 +64,9 @@ const cliArgs = parseArgs([
     type: 'boolean',
     default: false,
   },
-]);
+] as const;
+
+export type Options = ParsedArgs<typeof OPTIONS>;
 
 function replaceExtension(filePath: string, extension: string): string {
   return filePath.replace(/\.[^.]+$/, extension);
@@ -230,15 +232,15 @@ function assertSingleGeometryOperation(operations: readonly Operation[]) {
   }
 }
 
-async function main(): Promise<void> {
-  const rawPath = path.resolve(untildify(cliArgs.rawPath));
+export async function photoEditConvert(options: Options): Promise<void> {
+  const rawPath = path.resolve(untildify(options.rawPath));
   const xmpPath = path.resolve(
-    untildify(cliArgs.xmp ?? replaceExtension(rawPath, '.xmp'))
+    untildify(options.xmp ?? replaceExtension(rawPath, '.xmp'))
   );
   const outputPath = path.resolve(
-    untildify(cliArgs.output ?? replaceExtension(rawPath, '.photo-edit'))
+    untildify(options.output ?? replaceExtension(rawPath, '.photo-edit'))
   );
-  const templatePath = path.resolve(untildify(cliArgs.template));
+  const templatePath = path.resolve(untildify(options.template));
   const xmp = await fs.readFile(xmpPath, 'utf8');
   const operations = getOperations(parseXmpAdjustments(xmp));
   if (operations.length === 0) {
@@ -247,7 +249,7 @@ async function main(): Promise<void> {
   assertSingleGeometryOperation(operations);
 
   const setValue = getSetValue(operations);
-  if (cliArgs['dry-run']) {
+  if (options['dry-run']) {
     console.log(setValue);
     return;
   }
@@ -265,10 +267,10 @@ async function main(): Promise<void> {
     '--set',
     setValue,
   ];
-  if (cliArgs.force) {
+  if (options.force) {
     args.unshift('--force');
   }
   execFileSync(toolPath, args, { stdio: 'inherit' });
 }
 
-await run(main);
+await run(import.meta.url, () => photoEditConvert(parseArgs(OPTIONS)));

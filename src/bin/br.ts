@@ -25,9 +25,9 @@
 // https://github.com/sapegin/dotfiles
 
 import { execFileSync, execSync, spawnSync } from 'node:child_process';
-import { parseArgs } from '../util/args.ts';
+import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import { getUpstreamTracking, runGit, runPull } from '../util/git.ts';
-import { select } from '../util/tui.ts';
+import { run, select } from '../util/tui.ts';
 
 const remote = 'origin';
 
@@ -75,7 +75,7 @@ function runGitSwitch(args: string[]): void {
   runGit(['switch', ...args]);
 }
 
-const args = parseArgs([
+const OPTIONS = [
   {
     name: 'delete',
     alias: 'd',
@@ -92,13 +92,20 @@ const args = parseArgs([
     name: 'branch',
     positional: true,
   },
-]);
+] as const;
 
-// oxlint-disable-next-line unicorn/no-nested-ternary
-const deleteFlag = args.forceDelete ? '-D' : args.delete ? '-d' : undefined;
+export type Options = ParsedArgs<typeof OPTIONS>;
 
-// No branch given — let the user pick one from the local branches
-let branch = args.branch;
+export function br(options: Options): void {
+  // oxlint-disable-next-line unicorn/no-nested-ternary
+  const deleteFlag = options.forceDelete
+    ? '-D'
+    : options.delete
+      ? '-d'
+      : undefined;
+
+  // No branch given — let the user pick one from the local branches
+  let branch = options.branch;
 if (branch === undefined) {
   const branches = getLocalBranches();
   const selected = select(branches, 'Switch to branch:');
@@ -168,3 +175,6 @@ if (hasLocalBranch(branch)) {
   console.log(`+ Creating new local branch ${branch}…`);
   runGitSwitch(['-c', branch, '--no-track']);
 }
+}
+
+await run(import.meta.url, () => br(parseArgs(OPTIONS)));

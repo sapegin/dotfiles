@@ -16,6 +16,7 @@ import { execFileSync, execSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
+import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import { openApp, quitApp } from '../util/apps.ts';
 import { readExifMetadata } from '../util/exif.ts';
 import { copyFile, dirs, getCommonFolder, tildify } from '../util/files.ts';
@@ -30,6 +31,10 @@ import {
   pickPhotoFolder,
 } from '../util/photos.ts';
 import { confirm, createProgress, log, run } from '../util/tui.ts';
+
+const OPTIONS = [] as const;
+
+export type Options = ParsedArgs<typeof OPTIONS>;
 
 const VOLUMES_DIR = '/Volumes';
 const OFFSITE_BACKUP_DIR = path.join(dirs.nasPhotos, 'Backup');
@@ -213,7 +218,7 @@ function ejectCard(cardVolume: string): void {
 }
 
 /** Run the interactive camera card import flow. */
-async function main(): Promise<void> {
+export async function photosImport(_options: Options): Promise<void> {
   ensureVolumeMounted(dirs.nasPhotos);
 
   console.log('Looking for card…');
@@ -358,4 +363,4 @@ async function main(): Promise<void> {
   }
 }
 
-await run(main);
+await run(import.meta.url, () => photosImport(parseArgs(OPTIONS)));

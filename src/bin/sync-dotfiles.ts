@@ -1,5 +1,4 @@
-// Makes symlinks (or two-way syncs) for dotfiles based on dotfiles.json
-// at the repo root, e.g. ~/dotfiles/tilde/.bashrc → ~/.bashrc.
+// Makes symlinks (or two-way syncs) for dotfiles based on dotfiles.json at the repo root, e.g. ~/dotfiles/tilde/.bashrc → ~/.bashrc.
 //
 // ---
 // Author: Artem Sapegin, sapegin.me
@@ -9,6 +8,7 @@
 import { execSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import { dirs, expandPath } from '../util/files.ts';
 import { findGitRoot, pullIfClean } from '../util/git.ts';
 import { stripJsonComments } from '../util/json.ts';
@@ -35,6 +35,10 @@ export interface DotfileEntry {
   /** Shell command to run after the entry has synced. */
   runAfter?: string;
 }
+
+const OPTIONS = [] as const;
+
+export type Options = ParsedArgs<typeof OPTIONS>;
 
 const CONFIG_FILE = path.join(dirs.dotfiles, 'dotfiles.json');
 /** Always-on ignore patterns, merged with each entry's `ignore`. */
@@ -161,7 +165,7 @@ async function syncEntry(entry: DotfileEntry): Promise<void> {
   runAfterCommand(entry, results);
 }
 
-async function main() {
+export async function syncDotfiles(_options: Options): Promise<void> {
   console.log('Syncing dotfiles…\n');
   const entries = await readConfig();
   for (const entry of entries) {
@@ -169,4 +173,6 @@ async function main() {
   }
 }
 
-await run(main, { printDone: true });
+await run(import.meta.url, async () => {
+  await syncDotfiles(parseArgs(OPTIONS));
+});

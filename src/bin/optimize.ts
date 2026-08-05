@@ -24,14 +24,11 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import sharp from 'sharp';
-import { parseArgs } from '../util/args.ts';
+import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import { prettyBytes } from '../util/files.ts';
 import { run, theme } from '../util/tui.ts';
 
-const EFFORT_LEVEL = 8;
-const MINIMUM_SAVINGS_BYTES = 10 * 1024;
-
-const args = parseArgs([
+const OPTIONS = [
   {
     name: 'pattern',
     positional: true,
@@ -50,7 +47,12 @@ const args = parseArgs([
     max: 100,
     default: 50,
   },
-]);
+] as const;
+
+export type Options = ParsedArgs<typeof OPTIONS>;
+
+const EFFORT_LEVEL = 8;
+const MINIMUM_SAVINGS_BYTES = 10 * 1024;
 
 function getAvifPath(filePath: string): string {
   const directory = path.dirname(filePath);
@@ -107,11 +109,15 @@ async function convertFile(
   }
 }
 
-async function main(): Promise<void> {
-  const files = await Array.fromAsync(fs.glob(args.pattern));
+export async function optimize({
+  pattern,
+  force,
+  quality,
+}: Options): Promise<void> {
+  const files = await Array.fromAsync(fs.glob(pattern));
   for (const imagePath of files) {
-    await convertFile(imagePath, args.force, args.quality);
+    await convertFile(imagePath, force, quality);
   }
 }
 
-await run(main);
+await run(import.meta.url, () => optimize(parseArgs(OPTIONS)));

@@ -5,6 +5,7 @@
 // License: MIT
 // https://github.com/sapegin/dotfiles
 
+import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import {
   aggregateSessionStats,
   collectSessionStats,
@@ -13,6 +14,10 @@ import {
   resolveSessionsDirectory,
 } from '../util/pi-sessions.ts';
 import { run } from '../util/tui.ts';
+
+const OPTIONS = [] as const;
+
+export type Options = ParsedArgs<typeof OPTIONS>;
 
 function formatNumber(value: number): string {
   return value.toLocaleString('en-US');
@@ -36,7 +41,7 @@ function formatToolCalls(toolCalls: number, toolErrors: number): string {
   return `${formatNumber(toolCalls)} (${formatNumber(toolErrors)} errors, ${errorRate}%)`;
 }
 
-function main(): void {
+export function piStats(_options: Options): void {
   const sessionsDirectory = resolveSessionsDirectory();
   const sessionFiles = listSessionFiles(sessionsDirectory);
   if (sessionFiles.length === 0) {
@@ -65,4 +70,4 @@ function main(): void {
   console.log(`Cost per message: ${formatMoney(stats.costPerMessage)}`);
 }
 
-await run(main);
+await run(import.meta.url, () => piStats(parseArgs(OPTIONS)));

@@ -11,8 +11,13 @@ import { execSync } from 'node:child_process';
 import crypto from 'node:crypto';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import { atomicCopy, dirs } from '../util/files.ts';
 import { log, run } from '../util/tui.ts';
+
+const OPTIONS = [] as const;
+
+export type Options = ParsedArgs<typeof OPTIONS>;
 
 const PLUGINS_REPO = path.join(dirs.projects, 'raccoon-obsidian');
 const PLUGINS_DIR = path.join(PLUGINS_REPO, 'plugins');
@@ -157,7 +162,7 @@ async function installPlugin(
   return targetDir;
 }
 
-async function main(): Promise<void> {
+export async function syncObsidianPlugins(_options: Options): Promise<void> {
   if ((await doesPathExist(PLUGINS_REPO)) === false) {
     log.error(`✕ Repo not found: ${PLUGINS_REPO}`);
     process.exit(1);
@@ -226,4 +231,6 @@ async function main(): Promise<void> {
   );
 }
 
-await run(main, { printDone: true });
+await run(import.meta.url, async () => {
+  await syncObsidianPlugins(parseArgs(OPTIONS));
+});

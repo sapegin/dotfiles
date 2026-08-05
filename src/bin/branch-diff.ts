@@ -10,7 +10,7 @@
 import { execFileSync, spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { parseArgs } from '../util/args.ts';
+import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import {
   getBaseBranch,
   getCurrentBranch,
@@ -18,6 +18,10 @@ import {
   runGit,
 } from '../util/git.ts';
 import { run } from '../util/tui.ts';
+
+const OPTIONS = [{ name: 'target', positional: true }] as const;
+
+export type Options = ParsedArgs<typeof OPTIONS>;
 
 function getFilePath(repoRoot: string, target: string): string | undefined {
   const filePath = path.isAbsolute(target)
@@ -78,8 +82,7 @@ function printMainChanges(repoRoot: string): void {
   }
 }
 
-function main(): void {
-  const { target } = parseArgs([{ name: 'target', positional: true }]);
+export function branchDiff({ target }: Options): void {
   const repoRoot = getGitRepoRoot();
 
   if (target !== undefined) {
@@ -116,4 +119,4 @@ function main(): void {
   runGit(['diff', `${baseBranch}...${currentBranch}`], { cwd: repoRoot });
 }
 
-await run(main);
+await run(import.meta.url, () => branchDiff(parseArgs(OPTIONS)));

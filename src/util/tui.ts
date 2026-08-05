@@ -1,6 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import readline from 'node:readline';
 import readlinePromise from 'node:readline/promises';
+import { pathToFileURL } from 'node:url';
 
 type Style = (value: string) => string;
 
@@ -53,9 +54,11 @@ function logWithStyle(
   write(message, ...rest);
 }
 
-interface RunMainOptions {
-  /** Print a shared success message after `main()` finishes. */
-  printDone?: boolean;
+function isCliEntryPoint(moduleUrl: string): boolean {
+  if (process.argv.length < 2) {
+    return false;
+  }
+  return moduleUrl === pathToFileURL(process.argv[1]).href;
 }
 
 function getErrorStack(error: unknown): string {
@@ -73,15 +76,17 @@ function isCtrlCAbort(error: unknown): boolean {
   );
 }
 
+/** Runs `main` when `entry` is the process entry point; no-ops on import. */
 export async function run(
-  main: () => void | Promise<void>,
-  options: RunMainOptions = {}
+  entry: string,
+  main: () => void | Promise<void>
 ): Promise<void> {
+  if (isCliEntryPoint(entry) === false) {
+    return;
+  }
+
   try {
     await main();
-    if (options.printDone === true) {
-      console.log('\nDone 🦆');
-    }
   } catch (error) {
     // Ctrl+C is an intentional abort, so don't print a stack trace for it.
     if (isCtrlCAbort(error)) {

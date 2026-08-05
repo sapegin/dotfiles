@@ -13,47 +13,53 @@
 // License: MIT
 // https://github.com/sapegin/dotfiles
 
-import { parseArgs } from '../util/args.ts';
+import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import {
   assertGitRepo,
   getCurrentBranch,
   getUpstreamTracking,
   runGit,
 } from '../util/git.ts';
-import { log } from '../util/tui.ts';
+import { log, run } from '../util/tui.ts';
 
-const args = parseArgs([
+const OPTIONS = [
   {
     name: 'branch',
     positional: true,
     required: true,
   },
-]);
+] as const;
 
-assertGitRepo();
+export type Options = ParsedArgs<typeof OPTIONS>;
 
-const currentBranch = getCurrentBranch();
+export function merge({ branch }: Options): void {
+  assertGitRepo();
 
-if (currentBranch === undefined) {
-  log.error(
-    "✕ You're not on a branch (detached HEAD). Check out a branch first."
-  );
-  process.exit(1);
+  const currentBranch = getCurrentBranch();
+
+  if (currentBranch === undefined) {
+    log.error(
+      "✕ You're not on a branch (detached HEAD). Check out a branch first."
+    );
+    process.exit(1);
+  }
+
+  const remote = 'origin';
+  const tracking = getUpstreamTracking();
+
+  if (tracking?.startsWith(`${remote}/`)) {
+    console.log('↑ This branch exists remotely, not rebasing');
+  } else {
+    console.log(
+      ` Local-only branch, rebasing ${branch} onto ${currentBranch} first…`
+    );
+    runGit(['switch', branch]);
+    runGit(['rebase', currentBranch]);
+  }
+
+  console.log(` Merge ${branch} into ${currentBranch}`);
+  runGit(['switch', currentBranch]);
+  runGit(['merge', branch]);
 }
 
-const remote = 'origin';
-const tracking = getUpstreamTracking();
-
-if (tracking?.startsWith(`${remote}/`)) {
-  console.log('↑ This branch exists remotely, not rebasing');
-} else {
-  console.log(
-    ` Local-only branch, rebasing ${args.branch} onto ${currentBranch} first…`
-  );
-  runGit(['switch', args.branch]);
-  runGit(['rebase', currentBranch]);
-}
-
-console.log(` Merge ${args.branch} into ${currentBranch}`);
-runGit(['switch', currentBranch]);
-runGit(['merge', args.branch]);
+await run(import.meta.url, () => merge(parseArgs(OPTIONS)));

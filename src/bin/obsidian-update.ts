@@ -17,6 +17,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { setTimeout } from 'node:timers/promises';
 import YAML from 'yaml';
+import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import {
   dirs,
   glob,
@@ -40,6 +41,10 @@ import {
   parseLocalDateTime,
 } from '../util/time.ts';
 import { log, run } from '../util/tui.ts';
+
+const OPTIONS = [] as const;
+
+export type Options = ParsedArgs<typeof OPTIONS>;
 
 const FRONTMATTER_FIELDS = [
   'address',
@@ -887,7 +892,7 @@ async function checkICloudSync(): Promise<void> {
   }
 }
 
-async function main(): Promise<void> {
+export async function obsidianUpdate(_options: Options): Promise<void> {
   try {
     await fs.access(dirs.obsidianVault);
   } catch {
@@ -939,4 +944,6 @@ async function main(): Promise<void> {
   }
 }
 
-await run(main, { printDone: true });
+await run(import.meta.url, async () => {
+  await obsidianUpdate(parseArgs(OPTIONS));
+});

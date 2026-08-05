@@ -12,9 +12,14 @@ import { execSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
+import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import { dirs, untildify } from '../util/files.ts';
 import { pullIfClean } from '../util/git.ts';
 import { log, run } from '../util/tui.ts';
+
+const OPTIONS = [] as const;
+
+export type Options = ParsedArgs<typeof OPTIONS>;
 
 interface SourceConfig {
   // Path to the repo (may start with `~`)
@@ -124,7 +129,7 @@ async function processSource(
   }
 }
 
-async function main(): Promise<void> {
+export async function syncVscodeExtensions(_options: Options): Promise<void> {
   for (const source of SOURCES) {
     if ((await doesPathExist(untildify(source.repo))) === false) {
       log.error(`✕ Repo not found: ${source.repo}`);
@@ -148,4 +153,6 @@ async function main(): Promise<void> {
   }
 }
 
-await run(main, { printDone: true });
+await run(import.meta.url, async () => {
+  await syncVscodeExtensions(parseArgs(OPTIONS));
+});

@@ -20,16 +20,16 @@
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { parseArgs } from '../util/args.ts';
+import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import { dirs } from '../util/files.ts';
-import { log } from '../util/tui.ts';
+import { log, run } from '../util/tui.ts';
 
 const PA11Y_CONFIG_FILE = path.join(
   dirs.dotfiles,
   'accessibility/pa11y-ci.json'
 );
 
-const args = parseArgs([
+const OPTIONS = [
   {
     name: 'url',
     positional: true,
@@ -44,7 +44,9 @@ const args = parseArgs([
     default: 'pa11y',
     values: ['pa11y', 'axe'],
   },
-]);
+] as const;
+
+export type Options = ParsedArgs<typeof OPTIONS>;
 
 function fail(message: string): never {
   log.error(message);
@@ -82,43 +84,47 @@ function getUrlsToScan(
   return urls;
 }
 
-const urls = getUrlsToScan(args.url, args.file);
+export function lintAccessibility(options: Options): void {
+  const urls = getUrlsToScan(options.url, options.file);
 
-for (const pageUrl of urls) {
-  let parsedUrl: URL;
-  try {
-    parsedUrl = new URL(pageUrl);
-  } catch {
-    fail(`Invalid URL: ${pageUrl}`);
+  for (const pageUrl of urls) {
+    let parsedUrl: URL;
+    try {
+      parsedUrl = new URL(pageUrl);
+    } catch {
+      fail(`Invalid URL: ${pageUrl}`);
+    }
+
+    if (parsedUrl.protocol !== 'http:' && parsedUrl.protocol !== 'https:') {
+      fail(`Only HTTP(S) URLs are supported: ${pageUrl}`);
+    }
   }
 
-  if (parsedUrl.protocol !== 'http:' && parsedUrl.protocol !== 'https:') {
-    fail(`Only HTTP(S) URLs are supported: ${pageUrl}`);
+  const result = spawnSync(
+    'npm',
+    options.backend === 'axe'
+      ? ['exec', '--yes', '--package', '@axe-core/cli', '--', 'axe', ...urls]
+      : [
+          'exec',
+          '--yes',
+          '--package',
+          'pa11y-ci',
+          '--',
+          'pa11y-ci',
+          '--config',
+          PA11Y_CONFIG_FILE,
+          ...urls,
+        ],
+    {
+      stdio: 'inherit',
+    }
+  );
+
+  if (result.error !== undefined) {
+    fail(`Could not run npm: ${result.error.message}`);
   }
+
+  process.exit(result.status ?? 1);
 }
 
-const result = spawnSync(
-  'npm',
-  args.backend === 'axe'
-    ? ['exec', '--yes', '--package', '@axe-core/cli', '--', 'axe', ...urls]
-    : [
-        'exec',
-        '--yes',
-        '--package',
-        'pa11y-ci',
-        '--',
-        'pa11y-ci',
-        '--config',
-        PA11Y_CONFIG_FILE,
-        ...urls,
-      ],
-  {
-    stdio: 'inherit',
-  }
-);
-
-if (result.error !== undefined) {
-  fail(`Could not run npm: ${result.error.message}`);
-}
-
-process.exit(result.status ?? 1);
+await run(import.meta.url, () => lintAccessibility(parseArgs(OPTIONS)));

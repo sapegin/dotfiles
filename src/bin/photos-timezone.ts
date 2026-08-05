@@ -11,11 +11,16 @@
 
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
+import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import { readExifMetadata } from '../util/exif.ts';
 import { tildify } from '../util/files.ts';
 import { findMediaFiles, pickPhotoFolder } from '../util/photos.ts';
 import { getPhotoTimezoneShiftMinutes, getTimeZones } from '../util/time.ts';
 import { confirm, log, run, select } from '../util/tui.ts';
+
+const OPTIONS = [] as const;
+
+export type Options = ParsedArgs<typeof OPTIONS>;
 
 const execFileAsync = promisify(execFile);
 const BATCH_SIZE = 100;
@@ -77,7 +82,7 @@ async function applyShift(
   }
 }
 
-async function main(): Promise<void> {
+export async function photosTimezone(_options: Options): Promise<void> {
   const targetTimeZone = select(getTimeZones(), 'Target timezone');
   if (targetTimeZone === undefined) {
     log.warn('Cancelled.');
@@ -157,4 +162,4 @@ async function main(): Promise<void> {
   console.log(`Adjusted ${photoShifts.length} files.`);
 }
 
-await run(main);
+await run(import.meta.url, () => photosTimezone(parseArgs(OPTIONS)));

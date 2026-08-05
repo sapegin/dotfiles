@@ -16,8 +16,12 @@
 import { spawn, spawnSync } from 'node:child_process';
 import { once } from 'node:events';
 import readline from 'node:readline';
-import { parseArgs } from '../util/args.ts';
+import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import { log, run, select } from '../util/tui.ts';
+
+const OPTIONS = [{ name: 'pullRequest', positional: true }] as const;
+
+export type Options = ParsedArgs<typeof OPTIONS>;
 
 interface Check {
   readonly name: string;
@@ -195,11 +199,9 @@ function showRunHeader(details: RunDetails): void {
   console.log(details.url);
 }
 
-async function main(): Promise<void> {
-  const { pullRequest: pullRequestArgument } = parseArgs([
-    { name: 'pullRequest', positional: true },
-  ]);
-
+export async function gitCiLogs({
+  pullRequest: pullRequestArgument,
+}: Options): Promise<void> {
   if (
     pullRequestArgument !== undefined &&
     /^[1-9]\d*$/.test(pullRequestArgument) === false
@@ -297,4 +299,4 @@ async function main(): Promise<void> {
   }
 }
 
-await run(main);
+await run(import.meta.url, () => gitCiLogs(parseArgs(OPTIONS)));

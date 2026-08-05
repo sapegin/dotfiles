@@ -10,7 +10,8 @@
 // https://github.com/sapegin/dotfiles
 
 import { execFileSync } from 'node:child_process';
-import { parseArgs } from '../util/args.ts';
+import { parseArgs, type ParsedArgs } from '../util/args.ts';
+import { run } from '../util/tui.ts';
 
 interface ExifToolOutput {
   DateTimeOriginal?: string;
@@ -26,13 +27,15 @@ interface ExifToolOutput {
   ImageDescription?: string;
 }
 
-const args = parseArgs([
+const OPTIONS = [
   {
     name: 'file',
     positional: true,
     required: true,
   },
-]);
+] as const;
+
+export type Options = ParsedArgs<typeof OPTIONS>;
 
 const TAGS = [
   '-DateTimeOriginal',
@@ -48,57 +51,61 @@ const TAGS = [
   '-ImageDescription',
 ];
 
-const result = execFileSync('exiftool', ['-j', ...TAGS, args.file], {
-  encoding: 'utf8',
-});
-const [data = {}] = JSON.parse(result) as ExifToolOutput[];
+export function exif({ file }: Options): void {
+  const result = execFileSync('exiftool', ['-j', ...TAGS, file], {
+    encoding: 'utf8',
+  });
+  const [data = {}] = JSON.parse(result) as ExifToolOutput[];
 
-// Date
-const dateStr =
-  data.DateTimeOriginal ?? data.GPSDateTime ?? data.FileModifyDate;
-if (dateStr !== undefined) {
-  const formatted = dateStr.replace(
-    /^(\d{4}):(\d{2}):(\d{2}) (\d{2}):(\d{2}).*/,
-    '$1-$2-$3_$4$5'
-  );
-  console.log(`Date: ${formatted}`);
-}
-
-// GPS
-if (data.GPSPosition !== undefined) {
-  const match = data.GPSPosition.match(
-    /([\d.]+) deg ([\d.]+)' ([\d.]+)" ([NS]), ([\d.]+) deg ([\d.]+)' ([\d.]+)" ([EW])/
-  );
-  if (match !== null) {
-    const lat =
-      (Number(match[1]) + Number(match[2]) / 60 + Number(match[3]) / 3600) *
-      (match[4] === 'S' ? -1 : 1);
-    const lon =
-      (Number(match[5]) + Number(match[6]) / 60 + Number(match[7]) / 3600) *
-      (match[8] === 'W' ? -1 : 1);
-    console.log(
-      `GPS: https://www.google.com/maps?q=${lat.toFixed(6)},${lon.toFixed(6)}`
+  // Date
+  const dateStr =
+    data.DateTimeOriginal ?? data.GPSDateTime ?? data.FileModifyDate;
+  if (dateStr !== undefined) {
+    const formatted = dateStr.replace(
+      /^(\d{4}):(\d{2}):(\d{2}) (\d{2}):(\d{2}).*/,
+      '$1-$2-$3_$4$5'
     );
+    console.log(`Date: ${formatted}`);
+  }
+
+  // GPS
+  if (data.GPSPosition !== undefined) {
+    const match = data.GPSPosition.match(
+      /([\d.]+) deg ([\d.]+)' ([\d.]+)" ([NS]), ([\d.]+) deg ([\d.]+)' ([\d.]+)" ([EW])/
+    );
+    if (match !== null) {
+      const lat =
+        (Number(match[1]) + Number(match[2]) / 60 + Number(match[3]) / 3600) *
+        (match[4] === 'S' ? -1 : 1);
+      const lon =
+        (Number(match[5]) + Number(match[6]) / 60 + Number(match[7]) / 3600) *
+        (match[8] === 'W' ? -1 : 1);
+      console.log(
+        `GPS: https://www.google.com/maps?q=${lat.toFixed(6)},${lon.toFixed(6)}`
+      );
+    }
+  }
+
+  // Location
+  const locationParts = [
+    data['Sub-location'],
+    data.City,
+    data.State,
+    data.Country,
+  ].filter((part): part is string => part !== undefined);
+  if (locationParts.length > 0) {
+    console.log(`Location: ${locationParts.join(', ')}`);
+  }
+
+  // Title & caption
+  const title = data.Title;
+  const caption = data['Caption-Abstract'] ?? data.ImageDescription;
+  if (title !== undefined) {
+    console.log(`Title: ${title}`);
+  }
+  if (caption !== undefined) {
+    console.log(`Caption: ${caption}`);
   }
 }
 
-// Location
-const locationParts = [
-  data['Sub-location'],
-  data.City,
-  data.State,
-  data.Country,
-].filter((part): part is string => part !== undefined);
-if (locationParts.length > 0) {
-  console.log(`Location: ${locationParts.join(', ')}`);
-}
-
-// Title & caption
-const title = data.Title;
-const caption = data['Caption-Abstract'] ?? data.ImageDescription;
-if (title !== undefined) {
-  console.log(`Title: ${title}`);
-}
-if (caption !== undefined) {
-  console.log(`Caption: ${caption}`);
-}
+await run(import.meta.url, () => exif(parseArgs(OPTIONS)));
