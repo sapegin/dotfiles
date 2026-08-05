@@ -1,7 +1,8 @@
 ---
 name: browser
 description: Interact with websites using agent-browser — navigate, click, fill, extract text, screenshot, log in, and test web apps. Use when the user asks to browse a site, automate browser actions, check a page in browser, scrape rendered content, or verify UI behavior.
-tested-with: agent-browser 0.33.1
+metadata:
+  tested-with: agent-browser 0.33.1
 ---
 
 Use `agent-browser` for browser automation. Prefer it over `curl`, `web_fetch`, or guessing DOM structure when the task needs a real page, JavaScript, login state, or interaction.

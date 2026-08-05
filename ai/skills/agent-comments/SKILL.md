@@ -42,7 +42,7 @@ Prefer fixing comments in dependency order when one fix clearly unblocks another
 
 ## Verify
 
-Re-run `agent-comments` after all fixes. Repeat the fix loop until the scanner reports no comments.
+Re-run `agent-comments` after all fixes. Repeat the fix loop until the scanner reports no comments or every remaining comment has been deliberately skipped. If skipped comments remain, report that the scanner is still non-empty and why each comment was retained.
 
 Then run the project’s usual validation (`tsc`, linter, tests) when available. Fix failures caused by your changes.
 

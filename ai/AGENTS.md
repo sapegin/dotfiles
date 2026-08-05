@@ -25,5 +25,3 @@ Run `npm run ai-sync` to update marked persona blocks here and in `ai/skills/*/S
 ## Skills
 
 Skills live in `skills/` and are symlinked to `~/.agents/skills/`. Always edit skills here (and references in `skills/_references/`), never in `~/.agents/skills/`. Follow [skills/AGENTS.md](./skills/AGENTS.md) when authoring skills.
-
-Some skills are derived from upstream tools but owned here — edit them in this repo, not in installed packages. When upgrading an upstream tool: read its changelog, smoke-test documented commands, update the skill text if flags changed, bump `tested-with` in frontmatter.

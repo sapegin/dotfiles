@@ -60,11 +60,13 @@ Get the current clone SHA:
 cd /tmp/pi-github-repos/owner/repo && git rev-parse HEAD
 ```
 
-Get a tag SHA when answering version-specific questions:
+Resolve a tag to its commit SHA when answering version-specific questions:
 
 ```bash
-gh api repos/owner/repo/git/refs/tags/v1.0.0 --jq '.object.sha'
+gh api repos/owner/repo/commits/v1.0.0 --jq '.sha'
 ```
+
+Do not use the tag ref’s `.object.sha`; annotated tags return a tag-object SHA rather than the commit needed for a source permalink.
 
 ## Answer rules
 

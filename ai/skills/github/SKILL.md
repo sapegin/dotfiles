@@ -28,7 +28,14 @@ mkdir -p /tmp/pi-github-repos/owner
 gh repo clone owner/repo /tmp/pi-github-repos/owner/repo -- --depth 1
 ```
 
-Reuse `/tmp/pi-github-repos/owner/repo` when it already exists. Search cloned repos with `find`, `grep`, `read`, `ls`, and `bash`.
+Reuse `/tmp/pi-github-repos/owner/repo` when it already exists, but fetch and check out the requested revision before relying on its contents. For the latest default-branch revision:
+
+```bash
+git -C /tmp/pi-github-repos/owner/repo fetch --depth 1 origin HEAD
+git -C /tmp/pi-github-repos/owner/repo checkout --detach FETCH_HEAD
+```
+
+Replace `HEAD` with a requested tag or branch when researching a specific version. Fetch enough additional history for `git log` or `git blame`; a depth-one clone is insufficient for historical research. Search cloned repos with `find`, `grep`, `read`, `ls`, and `bash`.
 
 ## Common commands
 

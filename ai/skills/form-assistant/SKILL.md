@@ -38,7 +38,7 @@ Read the [browser skill](../browser/SKILL.md) for command reference.
 1. Ask whether the user wants to open a URL or use the current browser page.
 2. Run `agent-browser open` when needed. The user logs in, completes 2FA or CAPTCHA, and navigates manually.
 3. Run `agent-browser snapshot -i -c --json`, explain visible fields including protected ones, and never echo password values.
-4. Collect missing information available context, files or ask the user in English.
-5. Fill only approved refs with page-language values using the appropriate `agent-browser` command for the control type.
+4. Collect missing information from available context, files or ask the user in English.
+5. Fill only approved refs with page-language values using the appropriate `agent-browser` command for the control type. If an interaction changes the page, re-run `agent-browser snapshot -i -c --json` and remap the remaining approved fields by label before the next ref interaction.
 6. Report agent-browser results accurately, including failures and stale refs after page changes.
 7. Let the user review, correct values manually, navigate, and submit.

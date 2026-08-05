@@ -1,11 +1,8 @@
 // Collects code comments addressed to an AI agent in a codebase.
 //
 // Scans all non-binary files (respecting .gitignore) for comments that start
-// with `AI:` in any common comment style (`//`, `#`, `/* */`, `<!-- -->`, …)
-// and prints each one with its file and line number:
-//
-//   some/folder/file.ts:34
-//   Rename to someOtherFunction()
+// with `AI:` in any common comment style and prints each one with its file and
+// line number.
 //
 // - Scan the current directory:
 //

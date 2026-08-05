@@ -8,7 +8,7 @@ Create lightweight HTML pages backed by shared assets in `$DOTFILES_DIR/pretty-h
 
 ## Paths
 
-Shared assets live in `$DOTFILES_DIR/pretty-html/_assets/` (git-tracked). Handbook pages in the vault use a synced copy at `~/murder/zz-handbook/_assets/` — run dotfiles sync after changing assets (see Sync).
+Shared assets live in `$DOTFILES_DIR/pretty-html/_assets/` (git-tracked). Handbook pages in the vault use a synced copy at `~/murder/zz-handbook/_assets/` — see Sync after changing assets.
 
 | Intent | Page location | Git |
 | --- | --- | --- |
@@ -146,7 +146,7 @@ Prefer official or high-trust sources (MDN, specs, vendor docs).
 - **Glorified Markdown** — HTML carries text and semantic markup only. No inline `<script>` in authored content except the one-line theme bootstrap in `<head>`. No pre-rendered SVG, no duplicated library code.
 - **Reuse components** — read `$DOTFILES_DIR/pretty-html/_assets/` before inventing new patterns. Add reusable widgets to `components.js` and styles to `doc.css`.
 - **Do not edit** `squirrelsong.css` — it syncs from `$THEMES_DIR/CSS/squirrelsong.css`.
-- **Vendored libs** live in `_assets/lib/` (highlight.js, mermaid). Pin new versions there when upgrading und update `VERSIONS` file.
+- **Vendored libs** live in `_assets/lib/` (highlight.js, Mermaid). Pin new versions there when upgrading and update `_assets/lib/versions.json`.
 
 ## After writing or updating a page
 
@@ -158,4 +158,4 @@ open /path/to/page.html
 
 ## Sync
 
-Run `ai-sync` after changing `_assets/`. Never symlink into `~/murder` (iCloud).
+Run `sync-dotfiles` after changing `_assets/`. Never symlink into `~/murder` (iCloud).
