@@ -139,16 +139,6 @@
 
   ],
   "repositories" : {
-    "\/Users\/sapegia\/_\/kurush\/" : {
-      "archiveScript" : "",
-      "deleteScript" : "",
-      "openActionID" : "auto",
-      "runScript" : "",
-      "scripts" : [
-
-      ],
-      "setupScript" : ""
-    },
     "\/Users\/sapegia\/_\/sapegin.me\/" : {
       "archiveScript" : "",
       "deleteScript" : "",
@@ -183,7 +173,6 @@
   "repositoryRoots" : [
     "\/Users\/sapegia\/umg\/dg_stage_web\/",
     "\/Users\/sapegia\/dotfiles\/",
-    "\/Users\/sapegia\/_\/kurush\/",
     "\/Users\/sapegia\/_\/sapegin.me\/",
     "\/Users\/sapegia\/Library\/Mobile Documents\/iCloud~md~obsidian\/Documents\/Murder\/"
   ]
