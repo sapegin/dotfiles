@@ -2,6 +2,7 @@ import type nodeFs from 'node:fs';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
+import { confirm } from './tui.ts';
 
 const HOME = os.homedir();
 
@@ -18,8 +19,11 @@ export const dirs = {
   obsidianTrash: path.join(HOME, '.obsidian-trash'),
   obsidianBackup: path.join(HOME, '.obsidian-backup'),
   iCloud: path.join(HOME, 'cloud'),
+  iCloudInbox: path.join(HOME, 'cloud', 'Inbox'),
+  iCloudDocuments: path.join(HOME, 'cloud', 'Documents'),
   documents: path.join(HOME, 'Documents'),
   desktop: path.join(HOME, 'Desktop'),
+  downloads: path.join(HOME, 'Downloads'),
   pictures: path.join(HOME, 'Pictures'),
   photos: path.join(HOME, 'Pictures', 'Photos'),
   nasPhotos: '/Volumes/Photos',
@@ -77,6 +81,20 @@ export const exts = {
 
 export function tildify(filepath: string): string {
   return filepath.replace(HOME, '~');
+}
+
+/**
+ * Returns whether writing to `filePath` should proceed.
+ * Prompts when the path already exists.
+ */
+export async function confirmOverwriteFile(filePath: string): Promise<boolean> {
+  try {
+    await fs.access(filePath);
+  } catch {
+    return true;
+  }
+
+  return confirm(`File already exists: ${tildify(filePath)}. Overwrite?`);
 }
 
 export function untildify(input: string): string {

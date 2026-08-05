@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# This runner lets executable symlinks launch matching TypeScript files from
+# src/bin/. For example, bin/symlinks/pull -> ../_ts runs src/bin/pull.ts.
+
+set -euo pipefail
+
+name="$(basename "$0")"
+repo_dir="$(cd -P "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+exec node "$repo_dir/src/bin/${name}.ts" "$@"

@@ -20,7 +20,7 @@ import {
   didFilesChange,
   type SyncEntry,
 } from '../util/sync.ts';
-import { confirm, log, run } from '../util/tui.ts';
+import { log, run } from '../util/tui.ts';
 
 // TODO: Add --verbose mode that shows all files including ignored ones and ones that didn't need sync
 
@@ -158,7 +158,7 @@ async function syncEntry(entry: DotfileEntry): Promise<void> {
     if (mode === 'sync') {
       results.push(await syncFile(sourcePath, destinationPath));
     } else {
-      results.push(await syncLink(sourcePath, destinationPath, confirm));
+      results.push(await syncLink(sourcePath, destinationPath));
     }
   }
 

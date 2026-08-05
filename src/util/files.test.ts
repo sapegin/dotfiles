@@ -1,8 +1,9 @@
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { afterEach, beforeEach, describe, expect, test } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import {
+  confirmOverwriteFile,
   exts,
   expandPath,
   getCommonFolder,
@@ -12,6 +13,7 @@ import {
   hasExtension,
   stripExtensions,
 } from './files.ts';
+import * as tui from './tui.ts';
 
 describe(hasExtension, () => {
   test('matches regardless of case', () => {
@@ -140,5 +142,47 @@ describe(glob, () => {
       'b.MD',
       path.join('sub', 'd.md'),
     ]);
+  });
+});
+
+describe(confirmOverwriteFile, () => {
+  let tmpDir: string;
+
+  beforeEach(async () => {
+    tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), 'files-overwrite-'));
+  });
+
+  afterEach(async () => {
+    vi.restoreAllMocks();
+    await fs.rm(tmpDir, { recursive: true, force: true });
+  });
+
+  test('allows write when the file does not exist', async () => {
+    const filePath = path.join(tmpDir, 'missing.html');
+    const confirm = vi.spyOn(tui, 'confirm');
+
+    await expect(confirmOverwriteFile(filePath)).resolves.toBe(true);
+    expect(confirm).not.toHaveBeenCalled();
+  });
+
+  test('prompts when the file already exists', async () => {
+    const filePath = path.join(tmpDir, 'existing.html');
+    await fs.writeFile(filePath, 'old');
+    const confirm = vi
+      .spyOn(tui, 'confirm')
+      .mockResolvedValue(true);
+
+    await expect(confirmOverwriteFile(filePath)).resolves.toBe(true);
+    expect(confirm).toHaveBeenCalledWith(
+      `File already exists: ${filePath.replace(os.homedir(), '~')}. Overwrite?`
+    );
+  });
+
+  test('returns false when the user declines', async () => {
+    const filePath = path.join(tmpDir, 'existing.html');
+    await fs.writeFile(filePath, 'old');
+    vi.spyOn(tui, 'confirm').mockResolvedValue(false);
+
+    await expect(confirmOverwriteFile(filePath)).resolves.toBe(false);
   });
 });

@@ -3,7 +3,7 @@
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { tildify } from './files.ts';
+import { tildify, confirmOverwriteFile } from './files.ts';
 import { log } from './tui.ts';
 
 export type SyncResult =
@@ -258,13 +258,9 @@ async function isBrokenSymlink(
 
 /**
  * Create a symlink from `dest` → `src`. Existing correct links are skipped;
- * broken links are restored silently; other paths require `confirmOverwrite`.
+ * broken links are restored silently; other paths prompt before overwrite.
  */
-export async function syncLink(
-  src: string,
-  dest: string,
-  confirmOverwrite: (message: string) => Promise<boolean>
-): Promise<SyncEntry> {
+export async function syncLink(src: string, dest: string): Promise<SyncEntry> {
   const displayPath = path.resolve(dest);
 
   if ((await mtimeMs(src)) === null) {
@@ -285,9 +281,7 @@ export async function syncLink(
     }
 
     if ((await isBrokenSymlink(dest, destinationLstat)) === false) {
-      const shouldOverwrite = await confirmOverwrite(
-        `File already exists: ${dest}. Overwrite?`
-      );
+      const shouldOverwrite = await confirmOverwriteFile(dest);
       if (shouldOverwrite === false) {
         return { path: displayPath, result: 'equal' };
       }
