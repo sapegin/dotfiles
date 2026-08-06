@@ -1,3 +1,5 @@
+import { capitalizeFirst } from '../../util/text.ts';
+
 /**
  * A script for Alfred to generate one sentence of European Hipster Ipsum.
  *
@@ -222,7 +224,7 @@ function getHipsumSentence(words) {
   }
 
   const sentence = sentenceWords.join(' ');
-  return sentence.charAt(0).toUpperCase() + sentence.slice(1) + '.';
+  return `${capitalizeFirst(sentence)}.`;
 }
 
 // --------- 8< --------- 8< --------- 8< ---------

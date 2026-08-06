@@ -12,6 +12,7 @@ import path from 'node:path';
 import YAML from 'yaml';
 import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import { dirs, exts, glob } from '../util/files.ts';
+import { capitalizeFirst } from '../util/text.ts';
 import { run } from '../util/tui.ts';
 
 const OPTIONS = [] as const;
@@ -175,8 +176,7 @@ function normalizeWikilink(wikilink: string): string {
   if (pipeIndex !== -1) {
     normalized = normalized.slice(0, pipeIndex);
   }
-  // Capitalize the first letter
-  return normalized.charAt(0).toUpperCase() + normalized.slice(1);
+  return capitalizeFirst(normalized);
 }
 
 function getCityNameFromAddress(address: string): string | undefined {
