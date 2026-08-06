@@ -4,6 +4,8 @@ Alexa
 antipattern
 antipatterns
 apfel
+docling
+ocrmac
 aphantasia
 artefacts
 Artem

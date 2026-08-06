@@ -76,6 +76,12 @@ npm install -g npm-upgrade
 npm install
 echo
 
+# Python CLI tools (uv)
+echo "Installing Python CLI tools…"
+uv tool install docling
+uv pip install --python "$HOME/.local/share/uv/tools/docling/bin/python" ocrmac
+echo
+
 # fzf, fuzzy finder
 echo "Configuring fzf…"
 $(brew --prefix)/opt/fzf/install

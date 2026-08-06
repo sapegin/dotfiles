@@ -19,6 +19,9 @@ eval "$(/opt/homebrew/bin/fnm env --shell zsh)"
 # Unversioned symlinks for Homebrew’s python, python-config, pip etc. binaries
 _prepend_path "$(brew --prefix python)/libexec/bin"
 
+# uv tool binaries
+_prepend_path "$HOME/.local/bin"
+
 # Dotfiles binaries
 _prepend_path "$DOTFILES_DIR/bin/lib"
 _prepend_path "$DOTFILES_DIR/bin"
