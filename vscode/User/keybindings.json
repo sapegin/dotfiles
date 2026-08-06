@@ -323,6 +323,16 @@
     "key": "cmd+k cmd+b",
     "command": "git.checkout"
   },
+  {
+    "comment": "Previous change within the file",
+    "key": "shift+cmd+up",
+    "command": "workbench.action.compareEditor.previousChange"
+  },
+  {
+    "comment": "Next change within the file",
+    "key": "shift+cmd+down",
+    "command": "workbench.action.compareEditor.nextChange"
+  }
 
   /**
    * Tasks and debugger
@@ -1157,5 +1167,25 @@
     "key": "cmd+k cmd+b",
     "command": "-editor.action.setSelectionAnchor",
     "when": "editorTextFocus"
+  },
+  {
+    "key": "shift+cmd+down",
+    "command": "-cursorBottomSelect",
+    "when": "textInputFocus"
+  },
+  {
+    "key": "shift+cmd+down",
+    "command": "-workbench.action.terminal.selectToNextCommand",
+    "when": "terminalFocus && terminalHasBeenCreated || terminalFocus && terminalProcessSupported"
+  },
+  {
+    "key": "shift+cmd+up",
+    "command": "-workbench.action.terminal.selectToPreviousCommand",
+    "when": "terminalFocus && terminalHasBeenCreated || terminalFocus && terminalProcessSupported"
+  },
+  {
+    "key": "shift+cmd+up",
+    "command": "-cursorTopSelect",
+    "when": "textInputFocus"
   }
 ]
