@@ -4,6 +4,18 @@ import path from 'node:path';
 import { tildify } from './files.ts';
 import { log } from './tui.ts';
 
+export interface GitLogEntry {
+  readonly date: string;
+  readonly subject: string;
+}
+
+export interface BranchGitLog {
+  readonly branch: string;
+  readonly commits: readonly GitLogEntry[];
+}
+
+const LOG_FORMAT = '%ad%x09%s';
+
 /**
  * Exits with code 1 if the current directory is not inside a Git repository.
  */
@@ -63,6 +75,178 @@ export function getGitConfig(key: string): string | undefined {
   } catch {
     return undefined;
   }
+}
+
+/** Returns the configured Git author string, preferring email over name. */
+export function getGitAuthor(): string {
+  const email = getGitConfig('user.email');
+  if (email !== undefined) {
+    return email;
+  }
+
+  const name = getGitConfig('user.name');
+  if (name !== undefined) {
+    return name;
+  }
+
+  throw new Error('Git user.name and user.email are not configured.');
+}
+
+/** Parses `git log` lines formatted with tab-separated date and subject. */
+export function parseGitLog(output: string): GitLogEntry[] {
+  if (output.trim() === '') {
+    return [];
+  }
+
+  return output.split('\n').map((line) => {
+    const [date = '', ...subjectParts] = line.split('\t');
+    return {
+      date,
+      subject: subjectParts.join('\t'),
+    };
+  });
+}
+
+function runGitLog(
+  repoRoot: string,
+  args: readonly string[]
+): GitLogEntry[] {
+  const output = execFileSync('git', ['log', ...args], {
+    cwd: repoRoot,
+    encoding: 'utf8',
+  }).trim();
+  return parseGitLog(output);
+}
+
+/** Returns local branch names sorted by most recent commit first. */
+export function getLocalBranches(repoRoot: string): string[] {
+  return execFileSync(
+    'git',
+    [
+      'for-each-ref',
+      '--sort=-committerdate',
+      'refs/heads/',
+      '--format=%(refname:short)',
+    ],
+    { cwd: repoRoot, encoding: 'utf8' }
+  )
+    .split('\n')
+    .filter(Boolean);
+}
+
+/** Returns the user's commits on the base branch within the last `days` days. */
+export function getMainCommits(
+  repoRoot: string,
+  options: { readonly days: number; readonly author: string; readonly baseBranch: string }
+): GitLogEntry[] {
+  return runGitLog(repoRoot, [
+    options.baseBranch,
+    `--since=${options.days} days ago`,
+    `--author=${options.author}`,
+    `--format=${LOG_FORMAT}`,
+    '--date=short',
+  ]);
+}
+
+/** Returns recent commits by `author` on `branch` that are not yet on `baseBranch`. */
+export function getBranchCommits(
+  repoRoot: string,
+  branch: string,
+  options: {
+    readonly days: number;
+    readonly author: string;
+    readonly baseBranch: string;
+  }
+): GitLogEntry[] {
+  return runGitLog(repoRoot, [
+    `${options.baseBranch}..${branch}`,
+    `--since=${options.days} days ago`,
+    `--author=${options.author}`,
+    '--no-merges',
+    `--format=${LOG_FORMAT}`,
+    '--date=short',
+  ]);
+}
+
+/** Returns commit subjects and stats for recent unpushed branch work. */
+export function getBranchChangeLog(
+  repoRoot: string,
+  branch: string,
+  options: {
+    readonly days: number;
+    readonly author: string;
+    readonly baseBranch: string;
+  }
+): string {
+  return execFileSync(
+    'git',
+    [
+      'log',
+      `${options.baseBranch}..${branch}`,
+      `--since=${options.days} days ago`,
+      `--author=${options.author}`,
+      '--no-merges',
+      '--no-color',
+      '--format=%s',
+      '--stat',
+    ],
+    { cwd: repoRoot, encoding: 'utf8' }
+  ).trim();
+}
+
+/**
+ * Returns whether `branch` is merged into `baseBranch` — either by history
+ * or because both tips produce the same tree (e.g. after a squash merge).
+ */
+export function isBranchMerged(
+  repoRoot: string,
+  branch: string,
+  baseBranch: string
+): boolean {
+  if (
+    spawnSync('git', ['merge-base', '--is-ancestor', branch, baseBranch], {
+      cwd: repoRoot,
+    }).status === 0
+  ) {
+    return true;
+  }
+
+  return (
+    spawnSync('git', ['diff', '--quiet', baseBranch, branch], {
+      cwd: repoRoot,
+    }).status === 0
+  );
+}
+
+/**
+ * Returns local branches other than the base branch that have commits by the
+ * author within the last `days` days that are not yet merged into the base branch.
+ */
+export function getBranchesWithChanges(
+  repoRoot: string,
+  options: {
+    readonly days: number;
+    readonly author: string;
+    readonly baseBranch: string;
+  }
+): BranchGitLog[] {
+  const branches = getLocalBranches(repoRoot).filter(
+    (branch) => branch !== options.baseBranch
+  );
+
+  const result: BranchGitLog[] = [];
+  for (const branch of branches) {
+    if (isBranchMerged(repoRoot, branch, options.baseBranch)) {
+      continue;
+    }
+
+    const commits = getBranchCommits(repoRoot, branch, options);
+    if (commits.length > 0) {
+      result.push({ branch, commits });
+    }
+  }
+
+  return result;
 }
 
 /**
