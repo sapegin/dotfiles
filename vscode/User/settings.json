@@ -33,9 +33,13 @@
   "editor.autoIndent": "advanced",
   "editor.autoSurround": "never",
   "editor.bracketPairColorization.enabled": false,
+  // TypeScript's fixAll deletes unreachable code on save (TS7027). Mid-edit
+  // syntax errors make valid code look unreachable, so chunks vanish on each
+  // Cmd+S. Use provider-specific fixes instead (e.g. source.fixAll.oxc).
   "editor.codeActionsOnSave": {
     "source.organizeImports": "never",
-    "source.fixAll": "explicit"
+    "source.removeUnusedImports": "explicit",
+    "source.fixAll": "never"
   },
   "editor.colorDecorators": false,
   "editor.copyWithSyntaxHighlighting": false,
