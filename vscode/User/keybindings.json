@@ -308,11 +308,6 @@
     "when": "focusedView == workbench.scm"
   },
   {
-    "comment": "View all Changes",
-    "key": "cmd+g cmd+c",
-    "command": "git.viewChanges"
-  },
-  {
     "comment": "Create commit on Enter to match other apps (Shift+Enter to create new line)",
     "key": "enter",
     "command": "scm.acceptInput",
@@ -323,16 +318,6 @@
     "key": "cmd+k cmd+b",
     "command": "git.checkout"
   },
-  {
-    "comment": "Previous change within the file",
-    "key": "shift+cmd+up",
-    "command": "workbench.action.compareEditor.previousChange"
-  },
-  {
-    "comment": "Next change within the file",
-    "key": "shift+cmd+down",
-    "command": "workbench.action.compareEditor.nextChange"
-  }
 
   /**
    * Tasks and debugger
@@ -1187,5 +1172,15 @@
     "key": "shift+cmd+up",
     "command": "-cursorTopSelect",
     "when": "textInputFocus"
+  },
+  {
+    "key": "alt+f5",
+    "command": "-multiDiffEditor.goToNextChange",
+    "when": "activeEditor == 'multiDiffEditor'"
+  },
+  {
+    "key": "shift+alt+f5",
+    "command": "-multiDiffEditor.goToPreviousChange",
+    "when": "activeEditor == 'multiDiffEditor'"
   }
 ]
