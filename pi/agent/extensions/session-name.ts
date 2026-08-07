@@ -10,10 +10,13 @@ import {
 } from '@earendil-works/pi-coding-agent';
 
 const SYSTEM_PROMPT =
-  'Generate a concise 2-4 word topic title for this coding session. Use a noun phrase, not a sentence or stated intention: for example, "I’ll inspect the redirect flow" becomes "Redirect flow inspection". Use sentence case with no punctuation, quotes, labels, or explanation.';
+  'Return exactly one line containing a concise 2-4 word topic title for this agent session. Use a noun phrase, not a sentence or stated intention: for example, "Redirect flow inspection". Use sentence case with no quotes, labels, or explanation.';
 
 // A 2–4-word title needs little output; 32 tokens allow tokenizer variation.
 const MAX_TOKENS = 32;
+// Pi has no session-name limit, but we limit names to 100 characters just in
+// case the model output is too long.
+const SESSION_NAME_MAX_CHARACTERS = 100;
 // Retain enough task context without sending large blobs of text.
 const PROMPT_MAX_CHARACTERS = 4000;
 
@@ -22,12 +25,33 @@ function getCheapestModel(ctx: ExtensionContext) {
     .getAvailable()
     .filter((model) => model.thinkingLevelMap?.off !== null)
     .toSorted(
-      (leftModel, rightModel) =>
-        leftModel.cost.input +
-        leftModel.cost.output -
-        (rightModel.cost.input + rightModel.cost.output)
+      // Compare only input cost as output length is insignificant
+      (leftModel, rightModel) => leftModel.cost.input - rightModel.cost.input
     )
     .at(0);
+}
+
+/** Extracts a valid title from the model's response without rewriting it. */
+export function normalizeSessionName(response: string) {
+  // Ignore any preamble and use the model's final non-empty line.
+  const title = response
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .findLast(Boolean);
+
+  // Cut the title if it's too long.
+  return title?.slice(0, SESSION_NAME_MAX_CHARACTERS);
+}
+
+function getTextContent(content: string | { type: string; text?: string }[]) {
+  if (typeof content === 'string') {
+    return content;
+  }
+
+  return content
+    .filter((block) => block.type === 'text')
+    .map((block) => block.text ?? '')
+    .join('\n');
 }
 
 async function generateSessionName(
@@ -75,16 +99,7 @@ async function generateSessionName(
       return;
     }
 
-    // Extract text, remove punctuation, and capitalize the first word.
-    return response.content
-      .filter((block) => block.type === 'text')
-      .map((block) => block.text)
-      .join(' ')
-      .replaceAll(/[^\p{L}\p{N}]+/gu, ' ')
-      .trim()
-      .split(/\s+/)
-      .join(' ')
-      .replace(/^\p{L}/u, (letter) => letter.toLocaleUpperCase());
+    return normalizeSessionName(getTextContent(response.content));
   } finally {
     signal.removeEventListener('abort', abortSession);
     session.dispose();
@@ -125,19 +140,24 @@ export default function registerSessionNameExtension(pi: ExtensionAPI) {
     scheduleTitleUpdate(event.name, ctx);
   });
 
-  pi.on('before_agent_start', (event, ctx) => {
-    if (!shouldGenerateName) {
+  pi.on('message_start', (event, ctx) => {
+    if (!shouldGenerateName || event.message.role !== 'user') {
       return;
     }
     shouldGenerateName = false;
+    const prompt = getTextContent(event.message.content);
+    if (!prompt.trim()) {
+      return;
+    }
+
     const currentGenerationController = new AbortController();
     generationController = currentGenerationController;
 
-    // Start naming in the background so the user's request proceeds immediately.
+    // Start naming from the actual user message without delaying the main agent.
     void (async () => {
       try {
         const generatedName = await generateSessionName(
-          event.prompt,
+          prompt,
           ctx,
           currentGenerationController.signal
         );
