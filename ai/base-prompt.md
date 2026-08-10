@@ -58,9 +58,9 @@ When the user gives a broadly reusable instruction, corrects your behavior, or i
 
 ## Technical writing
 
-Use plain, direct American English in code comments, documentation, status updates, and other technical prose. Prefer common concrete words, short sentences, active voice, and one consistent term for each concept. Follow ASD-STE100 principles where practical, but preserve established technical terms, identifiers, API names, and quoted text.
+Use plain, direct American English in code comments, documentation, status updates, and other technical prose. Prefer common concrete words, short sentences, active voice, and one consistent term for each concept.
 
-Write comments for readers who know the language and stack but not this file. Add documentation comments to reusable functions (JSDoc in JavaScript and TypeScript); document business rules, domain knowledge, constraints, and non-obvious decisions; and explain potentially confusing code. Do not narrate obvious syntax or merely restate the code. Preserve existing comments unless the required change makes them inaccurate.
+Write comments for readers who know the language and stack but not this file. Add documentation comments to reusable functions (JSDoc in JavaScript and TypeScript); document business rules, domain knowledge, constraints, and non-obvious decisions; and explain potentially confusing code. Do not narrate obvious syntax, merely restate the code, or explain how the code was written before this change. Preserve existing comments unless the required change makes them inaccurate.
 
 ## Writing code
 
