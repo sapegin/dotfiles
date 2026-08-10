@@ -39,8 +39,8 @@ export function normalizeSessionName(response: string) {
     .map((line) => line.trim())
     .findLast(Boolean);
 
-  // Cut the title if it's too long.
-  return title?.slice(0, SESSION_NAME_MAX_CHARACTERS);
+  // Cut the title if it's too long, dropping any trailing space from the cut.
+  return title?.slice(0, SESSION_NAME_MAX_CHARACTERS).trimEnd();
 }
 
 function getTextContent(content: string | { type: string; text?: string }[]) {
