@@ -34,8 +34,9 @@ interface NumberDefinition<
   readonly max?: number;
 }
 
-interface RestDefinition<Name extends string = string>
-  extends BaseDefinition<Name> {
+interface RestDefinition<
+  Name extends string = string,
+> extends BaseDefinition<Name> {
   readonly rest: true;
 }
 
@@ -56,13 +57,14 @@ type ArgValue<Definition extends ArgDefinition> =
           ? Value
           : string;
 
-type ParsedValue<Definition extends ArgDefinition> = Definition extends RestDefinition
-  ? string[]
-  : Definition extends
-  | { readonly required: true }
-  | { readonly default: unknown }
-  ? ArgValue<Definition>
-  : ArgValue<Definition> | undefined;
+type ParsedValue<Definition extends ArgDefinition> =
+  Definition extends RestDefinition
+    ? string[]
+    : Definition extends
+          | { readonly required: true }
+          | { readonly default: unknown }
+      ? ArgValue<Definition>
+      : ArgValue<Definition> | undefined;
 
 export type ParsedArgs<Definitions extends readonly ArgDefinition[]> = {
   readonly [Definition in Definitions[number] as Definition['name']]: ParsedValue<Definition>;
@@ -88,7 +90,9 @@ function isPositionalDefinition(definition: ArgDefinition): boolean {
   return definition.positional === true || isRestDefinition(definition);
 }
 
-function isRestDefinition(definition: ArgDefinition): definition is RestDefinition {
+function isRestDefinition(
+  definition: ArgDefinition
+): definition is RestDefinition {
   return 'rest' in definition;
 }
 
@@ -193,12 +197,7 @@ export function parseArgs<const Definitions extends readonly ArgDefinition[]>(
   args = process.argv.slice(2)
 ): ParsedArgs<Definitions> {
   const toolName = getToolName();
-  if (
-    args.includes('--help') ||
-    args.includes('-h') ||
-    // AI: This will show help for all scripts that work without arguments
-    (args.length === 0 && definitions.length === 0)
-  ) {
+  if (args.includes('--help') || args.includes('-h')) {
     showHelp([toolName]);
     process.exit(0);
   }
@@ -237,7 +236,10 @@ export function parseArgs<const Definitions extends readonly ArgDefinition[]>(
     fail(error instanceof Error ? error.message : String(error), toolName);
   }
 
-  if (restIndex === -1 && parsed.positionals.length > positionalDefinitions.length) {
+  if (
+    restIndex === -1 &&
+    parsed.positionals.length > positionalDefinitions.length
+  ) {
     fail(
       `Unexpected argument: ${parsed.positionals[positionalDefinitions.length]}`,
       toolName

@@ -98,7 +98,9 @@ function runTranslateLocally(model: string, text?: string): void {
     throw result.error;
   }
   if (result.status !== 0) {
-    throw new Error(`translateLocally exited with status ${result.status ?? 1}`);
+    throw new Error(
+      `translateLocally exited with status ${result.status ?? 1}`
+    );
   }
 }
 

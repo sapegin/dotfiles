@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import fsPromises from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { exts } from './files.ts';
+import { exts, getStem } from './files.ts';
 
 export interface CallApfelOptions {
   /** Path passed to apfel `-f`. */
@@ -92,9 +92,7 @@ export interface ExtractDocumentOptions {
 
 /** Return the markdown sidecar path for a document's OCR output. */
 export function getMarkdownSidecarPath(sourcePath: string): string {
-  const directory = path.dirname(sourcePath);
-  const basename = path.basename(sourcePath, path.extname(sourcePath));
-  return path.join(directory, `${basename}.md`);
+  return path.join(path.dirname(sourcePath), `${getStem(sourcePath)}.md`);
 }
 
 /** Whether Docling can extract text from this file type. */
@@ -145,7 +143,7 @@ export async function extractDocument(
   }
 
   const tempDir = await fsPromises.mkdtemp(path.join(os.tmpdir(), 'docling-'));
-  const basename = path.basename(absoluteSource, path.extname(absoluteSource));
+  const basename = getStem(absoluteSource);
 
   try {
     try {

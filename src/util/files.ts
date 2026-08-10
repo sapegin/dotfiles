@@ -2,7 +2,7 @@ import type nodeFs from 'node:fs';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { confirm } from './tui.ts';
+import { confirm, log } from './tui.ts';
 
 const HOME = os.homedir();
 
@@ -147,6 +147,11 @@ export function hasExtension(
   return extensions.includes(path.extname(filePath).toLowerCase());
 }
 
+/** Return the filename stem: basename without its extension. */
+export function getStem(filePath: string): string {
+  return path.basename(filePath, path.extname(filePath));
+}
+
 /**
  * Strip all trailing known extensions from `filename` case-insensitively,
  * including stacked.
@@ -241,6 +246,64 @@ export async function copyFile(
     await fs.unlink(destinationPath);
     throw new Error(`Size mismatch after copy: ${path.basename(sourcePath)}`);
   }
+}
+
+/** Move a file, creating parent folders when needed. Prompts on overwrite. */
+export async function moveFile(
+  sourcePath: string,
+  destinationPath: string
+): Promise<'moved' | 'skipped' | 'failed'> {
+  if ((await confirmOverwriteFile(destinationPath)) === false) {
+    return 'skipped';
+  }
+  try {
+    await fs.mkdir(path.dirname(destinationPath), { recursive: true });
+    await fs.rename(sourcePath, destinationPath);
+    return 'moved';
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error);
+    log.warn(`Move failed: ${tildify(sourcePath)}\n${detail}`);
+    return 'failed';
+  }
+}
+
+/** Move a primary file and an optional same-stem sidecar together. */
+export async function moveFilePair(
+  sourcePath: string,
+  destinationPath: string,
+  sidecarExtension?: string
+): Promise<'moved' | 'skipped' | 'failed'> {
+  const primaryResult = await moveFile(sourcePath, destinationPath);
+  if (primaryResult !== 'moved') {
+    return primaryResult;
+  }
+
+  const sidecarSource = path.join(
+    path.dirname(sourcePath),
+    `${getStem(sourcePath)}${sidecarExtension}`
+  );
+  try {
+    await fs.access(sidecarSource);
+  } catch {
+    return primaryResult;
+  }
+
+  const sidecarDestination = path.join(
+    path.dirname(destinationPath),
+    `${getStem(destinationPath)}${sidecarExtension}`
+  );
+  return moveFile(sidecarSource, sidecarDestination);
+}
+
+const INVALID_FILENAME_CHARS = /[\\/:*?"<>|]/g;
+
+/** Make a string safe for macOS filenames. */
+export function toFilename(title: string): string {
+  return title
+    .replace(INVALID_FILENAME_CHARS, ' ')
+    .replaceAll(/\s+/g, ' ')
+    .replaceAll(/\.+$/g, '')
+    .trim();
 }
 
 /**

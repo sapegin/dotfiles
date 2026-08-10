@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { dirs, exts, glob, hasExtension } from './files.ts';
+import { dirs, exts, getStem, glob, hasExtension } from './files.ts';
 import { prompt, select } from './tui.ts';
 
 export const IMPORT_DATE_PREFIX = /^(\d{4}-\d{2}-\d{2})_/;
@@ -34,15 +34,13 @@ export function getPhotoFilenameDate(filename: string): string | undefined {
  * - '2026-07-03_1234_Artem_Sapegin.jpg' → '1234'
  */
 export function getPhotoFilenameSuffix(filename: string): string | undefined {
-  const stem = path
-    .basename(filename, path.extname(filename))
-    .replace(IMPORT_DATE_PREFIX, '');
+  const stem = getStem(filename).replace(IMPORT_DATE_PREFIX, '');
   return stem.match(/^(\d+)/)?.[1] ?? stem.match(/(\d+)$/)?.[1];
 }
 
 /** Return key to group RAW/JPEG variants by folder and filename stem. */
 export function getPhotoPairKey(filePath: string): string {
-  const stem = path.parse(filePath).name.toLowerCase();
+  const stem = getStem(filePath).toLowerCase();
   return `${path.dirname(filePath)}/${stem}`;
 }
 
@@ -187,7 +185,7 @@ export function getDatedPhotoFilename(
 
   // Mobile photos are prefixed with year only
   if (UNPREFIXED_IPHONE_PHOTO.test(originalBasename)) {
-    return `${year}_${path.basename(originalBasename, path.extname(originalBasename))}${ext}`;
+    return `${year}_${getStem(originalBasename)}${ext}`;
   }
 
   // Camera photos are prefixed with full year

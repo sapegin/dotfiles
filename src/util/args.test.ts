@@ -95,4 +95,10 @@ describe(parseArgs, () => {
 
     expect(args.args).toStrictEqual([]);
   });
+
+  test('returns empty parsed args for tools with no options and no argv', () => {
+    const args = parseArgs([], []);
+
+    expect(args).toStrictEqual({});
+  });
 });

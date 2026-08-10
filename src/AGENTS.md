@@ -20,7 +20,7 @@ export function gitStandup(options: Options): void {
 await run(import.meta.url, () => gitStandup(parseArgs(OPTIONS)));
 ```
 
-If there are no arguments, set `OPTIONS = [] as const`; `parseArgs()` shows help on empty argv and on `--help`.
+If there are no arguments, set `OPTIONS = [] as const`. `parseArgs()` shows help on `--help` / `-h`.
 
 Use `{ name: 'args', rest: true }` to collect remaining positional arguments after any fixed positionals. `rest` implies `positional`; the value is always a `string[]`, empty when no arguments match.
 

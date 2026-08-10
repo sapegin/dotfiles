@@ -78,7 +78,9 @@ function isCtrlCAbort(error: unknown): boolean {
 }
 
 /** True when a subprocess failed because the executable was not found. */
-export function isMissingBinary(error: unknown): error is NodeJS.ErrnoException {
+export function isMissingBinary(
+  error: unknown
+): error is NodeJS.ErrnoException {
   if (typeof error !== 'object' || error === null || !('code' in error)) {
     return false;
   }
@@ -291,13 +293,19 @@ export async function confirm(
 /** Let the user choose one item with fzf; return undefined when cancelled. */
 export function select(
   items: readonly string[],
-  query: string
+  query: string,
+  defaultQuery = ''
 ): string | undefined {
+  const args = ['--reverse', '--prompt', `${query} `];
+  if (defaultQuery.length > 0) {
+    args.push('--query', defaultQuery);
+  }
   try {
-    return execFileSync('fzf', ['--reverse', '--prompt', `${query} `], {
+    const selected = execFileSync('fzf', args, {
       input: items.join('\n'),
       encoding: 'utf8',
     }).trim();
+    return selected.length === 0 ? undefined : selected;
   } catch {
     return undefined;
   }
