@@ -87,6 +87,7 @@ Formatting rules:
 - Use the field names `Location` and `Fixes` exactly as shown. Format labels in bold.
 - Use repository-relative paths and precise line references. Join line ranges with an hyphen, for example `src/file.ts:10-14`.
 - Keep the explanation focused on one issue. State the observed behavior, evidence, and practical consequence; do not pad it with a review summary or generic praise.
+- Do not use second-person pronouns or attribute the code, decisions, or defects to the user. Refer to the code, change, implementation, or named symbols instead.
 - Offer one or two numbered fixes only, with the preferred and smallest viable fix first.
 - Do not add headings, preambles, conclusions, or choice text outside the template.
 

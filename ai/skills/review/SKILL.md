@@ -70,10 +70,6 @@ Location: {comma-separated file paths with line or line-range references}
 
 {focused explanation of the defect with concise evidence and optional fenced code, diff blocks, or quote of the specification line that establishes the expected behavior or scope}
 
-Trigger: {concrete trigger}
-
-Impact: {impact}
-
 Recommendation: {best coherent recommendation with scope proportionate to its benefit}
 
 (F)ix, (i)gnore, or tell what to do.
@@ -90,9 +86,10 @@ Formatting rules:
 - Ordered finding by severity: blocker, high, medium, low, then suggestion.
 - Number findings consecutively from 1 for the review session.
 - Format the title as a level-three Markdown heading so it renders bold and visually distinct. Keep it factual and specific.
-- Use the field names `Location`, `Trigger`, `Impact`, `Recommendation` exactly as shown. Format labels in bold.
+- Use the field names `Location` and `Recommendation` exactly as shown. Format labels in bold.
 - Use repository-relative paths and precise line references. Join line ranges with an hyphen, for example `src/file.ts:10-14`.
 - Keep the explanation focused on one issue. State the observed behavior, evidence, and practical consequence; do not pad it with a review summary or generic praise.
+- Do not use second-person pronouns or attribute the code, decisions, or defects to the user. Refer to the code, change, implementation, or named symbols instead.
 - Offer one recommendation only. Prefer the best coherent design over the smallest patch, and make its scope proportionate to the demonstrated benefit.
 - Do not add headings, preambles, conclusions, or choice text outside the template.
 - State confidence only when uncertainty is material, and do not present guesses as facts.
