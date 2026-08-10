@@ -10,80 +10,16 @@
 // License: MIT
 // https://github.com/sapegin/dotfiles
 
-import { execFileSync } from 'node:child_process';
-import fs from 'node:fs';
-import os from 'node:os';
-import path from 'node:path';
-import { dirs } from '../util/files.ts';
+import { parseArgs, type ParsedArgs } from '../util/args.ts';
+import { showHelp } from '../util/help.ts';
+import { run } from '../util/tui.ts';
 
-const BIN_DIR = path.join(dirs.dotfiles, 'bin');
-const BIN_TS_DIR = path.join(dirs.dotfiles, 'src/bin');
-const DOCS_DIR = path.join(dirs.dotfiles, 'docs');
-const CONFIG = path.join(dirs.dotfiles, 'tilde/.tlrc.toml');
+const OPTIONS = [{ name: 'args', rest: true }] as const;
 
-function getSourceFilepath(name: string): string | undefined {
-  const binTsFilePath = path.join(BIN_TS_DIR, `${name}.ts`);
-  if (fs.existsSync(binTsFilePath)) {
-    return binTsFilePath;
-  }
+export type Options = ParsedArgs<typeof OPTIONS>;
 
-  const binFilePath = path.join(BIN_DIR, name);
-  if (fs.existsSync(binFilePath)) {
-    return binFilePath;
-  }
+export function help({ args }: Options): void {
+  showHelp(args);
 }
 
-function getDocs(source: string, name: string): string {
-  const commentRaw = source.match(/((?:(?:\/\/|#)\s+[^\n]+\n)+)/m);
-  if (commentRaw === null) {
-    return '';
-  }
-
-  const comment = commentRaw[1].replaceAll(/(^|\n)(?:\/\/|#)\s*/gm, '\n');
-
-  const [docs] = comment.split('---');
-
-  return `# ${name}\n\n> ${docs.trim()}`;
-}
-
-function getTldrMd(query: string): string | undefined {
-  const mdFilePath = path.join(DOCS_DIR, `${query}.md`);
-  if (fs.existsSync(mdFilePath)) {
-    return mdFilePath;
-  }
-
-  const sourceFilepath = getSourceFilepath(query);
-  if (sourceFilepath === undefined) {
-    return undefined;
-  }
-
-  const source = fs.readFileSync(sourceFilepath, 'utf8');
-  const docs = getDocs(source, query);
-
-  if (docs === '') {
-    return undefined;
-  }
-
-  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dotfiles-'));
-  const tempMdFile = path.join(tempDir, `${query}.md`);
-  fs.writeFileSync(tempMdFile, docs);
-
-  return tempMdFile;
-}
-
-function runTldr(args: readonly string[]): void {
-  execFileSync('tldr', ['--config', CONFIG, ...args], { stdio: 'inherit' });
-}
-
-const [query, ...restArgs] = process.argv.slice(2);
-
-if (query) {
-  const md = getTldrMd(query);
-  if (md === undefined) {
-    runTldr([query, ...restArgs]);
-  } else {
-    runTldr(['--render', md]);
-  }
-} else {
-  runTldr(['--render', path.join(DOCS_DIR, 'Readme.md')]);
-}
+await run(import.meta.url, () => help(parseArgs(OPTIONS)));

@@ -121,9 +121,9 @@ defaults write -g AppleAquaColorVariant -int 6
 # Highlight color: Squirrelsong magenta (#ac9bc5).
 defaults write -g AppleHighlightColor -string '0.674510 0.607843 0.772549 Other'
 
-# Folder color: Squirrelsong blue (#80a4be).
+# Folder color: Squirrelsong blueDim (#bfd1de).
 defaults write -g AppleIconAppearanceTintColor Other
-defaults write -g AppleIconAppearanceCustomTintColor '0.501961 0.643137 0.745098 1.000000'
+defaults write -g AppleIconAppearanceCustomTintColor '0.680360 0.866502 1.000000 0.940000'
 
 # Don't tint window backgrounds with wallpaper color.
 defaults write -g AppleReduceDesktopTinting -bool true

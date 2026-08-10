@@ -20,8 +20,10 @@ export function gitStandup(options: Options): void {
 await run(import.meta.url, () => gitStandup(parseArgs(OPTIONS)));
 ```
 
-If there are no arguments, set `OPTIONS = [] as const`, `parseArgs()` enables the `--help` argument even if there are no other options.
+If there are no arguments, set `OPTIONS = [] as const`; `parseArgs()` shows help on empty argv and on `--help`.
 
-`run()` no-ops on import when `entry` is set, so tests can import `./bin/foo.ts` safely. Test exported functions with typed options; use subprocess for end-to-end CLI checks (see `./bin/git-standup.test.ts`).
+Use `{ name: 'args', rest: true }` to collect remaining positional arguments after any fixed positionals. `rest` implies `positional`; the value is always a `string[]`, empty when no arguments match.
+
+`run()` no-ops on import when `entry` is set, so tests can import `./bin/foo.ts` safely. It also turns spawn `ENOENT` errors into `{command} is not installed` before exiting. Test exported functions with typed options; use subprocess for end-to-end CLI checks (see `./bin/git-standup.test.ts`).
 
 For expected subprocess failures, forward stderr unchanged; add context only when stderr is not actionable. Let unexpected errors propagate.

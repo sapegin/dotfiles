@@ -12,6 +12,12 @@ Tools here should match configuration actually in use. Do not add generic fallba
 
 Ecosystem context: read [raccoonarium.md](./ai/raccoonarium.md).
 
+## CLI tools
+
+New command-line tools are **TypeScript** in [`src/bin/`](./src/bin/), exposed on `$PATH` via [`bin/symlinks/`](./bin/symlinks/) → [`bin/_ts`](./bin/_ts). Read [src/AGENTS.md](./src/AGENTS.md) before adding or changing a tool.
+
+Executable scripts in [`bin/`](./bin/) are for non-TypeScript tools only (shell setup, macOS defaults, legacy helpers).
+
 ## AI configuration
 
 Skills, personas, and global agent instructions live in `ai/`. Edit `ai/base-prompt.md` for global rules (all projects); edit `ai/skills/` for skills. See `ai/AGENTS.md` when changing the AI tree itself.

@@ -70,4 +70,29 @@ describe(parseArgs, () => {
 
     expect(args.force).toBe(false);
   });
+
+  test('collects remaining positionals in a rest argument', () => {
+    const args = parseArgs(
+      [
+        {
+          name: 'command',
+          positional: true,
+          required: true,
+        },
+        { name: 'rest', rest: true },
+      ],
+      ['de', 'Hello', 'world']
+    );
+
+    expect(args).toStrictEqual({
+      command: 'de',
+      rest: ['Hello', 'world'],
+    });
+  });
+
+  test('defaults a rest argument to an empty array', () => {
+    const args = parseArgs([{ name: 'args', rest: true }], []);
+
+    expect(args.args).toStrictEqual([]);
+  });
 });

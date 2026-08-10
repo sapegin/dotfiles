@@ -1,7 +1,6 @@
-import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 import { parseArgs as parseNodeArgs } from 'node:util';
-import { dirs } from './files.ts';
+import { showHelp } from './help.ts';
 import { log } from './tui.ts';
 
 interface BaseDefinition<Name extends string> {
@@ -35,21 +34,31 @@ interface NumberDefinition<
   readonly max?: number;
 }
 
+interface RestDefinition<Name extends string = string>
+  extends BaseDefinition<Name> {
+  readonly rest: true;
+}
+
 type ArgDefinition<Name extends string = string> =
   | StringDefinition<Name>
   | BooleanDefinition<Name>
-  | NumberDefinition<Name>;
+  | NumberDefinition<Name>
+  | RestDefinition<Name>;
 
 type ArgValue<Definition extends ArgDefinition> =
-  Definition extends BooleanDefinition
-    ? boolean
-    : Definition extends NumberDefinition
-      ? number
-      : Definition extends { readonly values: readonly (infer Value)[] }
-        ? Value
-        : string;
+  Definition extends RestDefinition
+    ? string[]
+    : Definition extends BooleanDefinition
+      ? boolean
+      : Definition extends NumberDefinition
+        ? number
+        : Definition extends { readonly values: readonly (infer Value)[] }
+          ? Value
+          : string;
 
-type ParsedValue<Definition extends ArgDefinition> = Definition extends
+type ParsedValue<Definition extends ArgDefinition> = Definition extends RestDefinition
+  ? string[]
+  : Definition extends
   | { readonly required: true }
   | { readonly default: unknown }
   ? ArgValue<Definition>
@@ -68,27 +77,19 @@ function getToolName(): string {
   return path.basename(process.argv[1]).replace(/\.(?:js|ts)$/, '');
 }
 
-function showHelp(toolName: string): void {
-  try {
-    execFileSync(
-      process.execPath,
-      [path.join(dirs.dotfiles, 'src/bin/help.ts'), toolName],
-      { stdio: 'inherit' }
-    );
-  } catch {
-    // The validation error above is enough when help is unavailable.
-  }
-}
-
 function fail(message: string, toolName: string): never {
   log.error(message);
   console.error();
-  showHelp(toolName);
+  showHelp([toolName]);
   process.exit(1);
 }
 
 function isPositionalDefinition(definition: ArgDefinition): boolean {
-  return definition.positional === true;
+  return definition.positional === true || isRestDefinition(definition);
+}
+
+function isRestDefinition(definition: ArgDefinition): definition is RestDefinition {
+  return 'rest' in definition;
 }
 
 function parseStringValue(
@@ -143,7 +144,10 @@ function getNativeOptions(
     }
 
     const option = {
-      type: definition.type === 'boolean' ? 'boolean' : 'string',
+      type:
+        'type' in definition && definition.type === 'boolean'
+          ? 'boolean'
+          : 'string',
       ...(definition.alias?.length === 1 ? { short: definition.alias } : {}),
     } as const;
     options[definition.name] = option;
@@ -189,16 +193,26 @@ export function parseArgs<const Definitions extends readonly ArgDefinition[]>(
   args = process.argv.slice(2)
 ): ParsedArgs<Definitions> {
   const toolName = getToolName();
-  if (args.includes('--help') || args.includes('-h')) {
-    showHelp(toolName);
+  if (
+    args.includes('--help') ||
+    args.includes('-h') ||
+    // AI: This will show help for all scripts that work without arguments
+    (args.length === 0 && definitions.length === 0)
+  ) {
+    showHelp([toolName]);
     process.exit(0);
   }
 
   const positionalDefinitions = definitions.filter(isPositionalDefinition);
+  const restIndex = positionalDefinitions.findIndex(isRestDefinition);
   const definitionsByOptionName = new Map<string, ArgDefinition>();
   const values: Record<string, unknown> = {};
 
   for (const definition of definitions) {
+    if (isRestDefinition(definition)) {
+      values[definition.name] = [];
+      continue;
+    }
     if ('default' in definition) {
       values[definition.name] = definition.default;
     }
@@ -223,20 +237,29 @@ export function parseArgs<const Definitions extends readonly ArgDefinition[]>(
     fail(error instanceof Error ? error.message : String(error), toolName);
   }
 
-  if (parsed.positionals.length > positionalDefinitions.length) {
+  if (restIndex === -1 && parsed.positionals.length > positionalDefinitions.length) {
     fail(
       `Unexpected argument: ${parsed.positionals[positionalDefinitions.length]}`,
       toolName
     );
   }
 
-  for (const [index, value] of parsed.positionals.entries()) {
-    const definition = positionalDefinitions[index];
-    if (definition.type === 'boolean') {
+  for (const [index, definition] of positionalDefinitions.entries()) {
+    if (isRestDefinition(definition)) {
+      values[definition.name] = parsed.positionals.slice(index);
+      break;
+    }
+
+    const value = parsed.positionals.at(index);
+    if (value === undefined) {
+      continue;
+    }
+
+    if ('type' in definition && definition.type === 'boolean') {
       fail(`Argument ${definition.name} cannot be a boolean`, toolName);
     }
     values[definition.name] = parseFlagValue(
-      definition,
+      definition as StringDefinition | NumberDefinition,
       definition.name,
       value,
       toolName
@@ -253,14 +276,14 @@ export function parseArgs<const Definitions extends readonly ArgDefinition[]>(
       token.name,
       toolName
     );
-    if (definition.type === 'boolean') {
+    if ('type' in definition && definition.type === 'boolean') {
       values[definition.name] = token.rawName.startsWith('--no-') === false;
     } else {
       if (token.value === undefined) {
         fail(`Missing value for --${definition.name}`, toolName);
       }
       values[definition.name] = parseFlagValue(
-        definition,
+        definition as StringDefinition | NumberDefinition,
         definition.name,
         token.value,
         toolName

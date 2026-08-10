@@ -1,4 +1,5 @@
 import { execFileSync } from 'node:child_process';
+import path from 'node:path';
 import readline from 'node:readline';
 import readlinePromise from 'node:readline/promises';
 import { pathToFileURL } from 'node:url';
@@ -76,6 +77,33 @@ function isCtrlCAbort(error: unknown): boolean {
   );
 }
 
+/** True when a subprocess failed because the executable was not found. */
+export function isMissingBinary(error: unknown): error is NodeJS.ErrnoException {
+  if (typeof error !== 'object' || error === null || !('code' in error)) {
+    return false;
+  }
+
+  const errno = error as NodeJS.ErrnoException;
+  return (
+    errno.code === 'ENOENT' &&
+    typeof errno.syscall === 'string' &&
+    errno.syscall.startsWith('spawn')
+  );
+}
+
+export function missingBinaryMessage(error: NodeJS.ErrnoException): string {
+  if (typeof error.path === 'string') {
+    return `${path.basename(error.path)} is not installed`;
+  }
+
+  const match = error.syscall?.match(/^spawn\w*\s+(\S+)/);
+  if (match?.[1] !== undefined) {
+    return `${path.basename(match[1])} is not installed`;
+  }
+
+  return 'Command is not installed';
+}
+
 /** Runs `main` when `entry` is the process entry point; no-ops on import. */
 export async function run(
   entry: string,
@@ -94,7 +122,11 @@ export async function run(
     }
 
     console.log();
-    log.error(getErrorStack(error));
+    if (isMissingBinary(error)) {
+      log.error(missingBinaryMessage(error));
+    } else {
+      log.error(getErrorStack(error));
+    }
     process.exit(1);
   }
 }
@@ -192,6 +224,53 @@ export async function prompt(question: string): Promise<string> {
     return await rl.question(question);
   } finally {
     rl.close();
+  }
+}
+
+/**
+ * Like `prompt`, but prefills the line and returns `undefined` when the user
+ * presses Escape.
+ */
+export async function promptEditable(
+  question: string,
+  defaultValue: string
+): Promise<string | undefined> {
+  readline.emitKeypressEvents(process.stdin);
+  const stdin = process.stdin as NodeJS.ReadStream & { isRaw?: boolean };
+  const wasRaw = stdin.isRaw === true;
+  if (stdin.isTTY) {
+    stdin.setRawMode(true);
+  }
+
+  const rl = readlinePromise.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+    escapeCodeTimeout: 0,
+  });
+
+  const controller = new AbortController();
+  const onKeypress = (_str: string, key: readline.Key): void => {
+    if (key.name === 'escape') {
+      controller.abort();
+    }
+  };
+  rl.on('keypress', onKeypress);
+
+  try {
+    const answerPromise = rl.question(question, { signal: controller.signal });
+    rl.write(defaultValue);
+    return await answerPromise;
+  } catch (error) {
+    if (error instanceof Error && error.name === 'AbortError') {
+      return undefined;
+    }
+    throw error;
+  } finally {
+    rl.off('keypress', onKeypress);
+    rl.close();
+    if (stdin.isTTY) {
+      stdin.setRawMode(wasRaw);
+    }
   }
 }
 
