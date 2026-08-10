@@ -106,75 +106,75 @@ export function br(options: Options): void {
 
   // No branch given — let the user pick one from the local branches
   let branch = options.branch;
-if (branch === undefined) {
-  const branches = getLocalBranches();
-  const selected = select(branches, 'Switch to branch:');
-  if (selected === undefined) {
+  if (branch === undefined) {
+    const branches = getLocalBranches();
+    const selected = select(branches, 'Switch to branch:');
+    if (selected === undefined) {
+      process.exit(0);
+    }
+    branch = selected;
+  }
+
+  // Switch to a previous branch
+  if (branch === '-') {
+    runGitSwitch(['-']);
+    const currentBranch = execSync('git rev-parse --abbrev-ref HEAD', {
+      encoding: 'utf8',
+    }).trim();
+    tryPull(currentBranch);
     process.exit(0);
   }
-  branch = selected;
-}
 
-// Switch to a previous branch
-if (branch === '-') {
-  runGitSwitch(['-']);
-  const currentBranch = execSync('git rev-parse --abbrev-ref HEAD', {
-    encoding: 'utf8',
-  }).trim();
-  tryPull(currentBranch);
-  process.exit(0);
-}
-
-// Attempt to use main when master was requested (and vice versa)
-if (branch === 'master' && hasLocalBranch('main')) {
-  runGitSwitch(['main']);
-  console.log('This repository uses main branch, not master');
-  tryPull('main');
-  process.exit(0);
-}
-if (branch === 'main' && hasLocalBranch('master')) {
-  runGitSwitch(['master']);
-  console.log('This repository uses master branch, not main');
-  tryPull('master');
-  process.exit(0);
-}
-
-// Delete branch
-if (deleteFlag !== undefined) {
-  console.log(`✕ Removing local branch ${branch}…`);
-  runGit(['branch', deleteFlag, branch]);
-  process.exit(0);
-}
-
-if (hasLocalBranch(branch)) {
-  // Local branch exists — switch to it
-  console.log(` Switching to existing local branch ${branch}…`);
-  runGitSwitch([branch]);
-
-  if (hasRemoteBranch(branch)) {
-    // Fix tracking if needed
-    const tracking = getUpstreamTracking(branch);
-
-    if (!tracking?.startsWith(`${remote}/`)) {
-      console.log(
-        '⚙ Your local branch is not tracking the corresponding remote branch, fixing…'
-      );
-      runGit(['branch', '--set-upstream-to', `${remote}/${branch}`, branch]);
-    }
+  // Attempt to use main when master was requested (and vice versa)
+  if (branch === 'master' && hasLocalBranch('main')) {
+    runGitSwitch(['main']);
+    console.log('This repository uses main branch, not master');
+    tryPull('main');
+    process.exit(0);
+  }
+  if (branch === 'main' && hasLocalBranch('master')) {
+    runGitSwitch(['master']);
+    console.log('This repository uses master branch, not main');
+    tryPull('master');
+    process.exit(0);
   }
 
-  tryPull(branch);
-} else if (hasRemoteBranch(branch)) {
-  // No local branch, but remote exists — fetch and switch
-  console.log(`↓ Fetching remote branch ${branch}…`);
-  runGit(['fetch', remote, branch]);
-  console.log();
-  runGitSwitch(['-c', branch, '--track', `${remote}/${branch}`]);
-} else {
-  // No local or remote branch — create a new one
-  console.log(`+ Creating new local branch ${branch}…`);
-  runGitSwitch(['-c', branch, '--no-track']);
-}
+  // Delete branch
+  if (deleteFlag !== undefined) {
+    console.log(`✕ Removing local branch ${branch}…`);
+    runGit(['branch', deleteFlag, branch]);
+    process.exit(0);
+  }
+
+  if (hasLocalBranch(branch)) {
+    // Local branch exists — switch to it
+    console.log(` Switching to existing local branch ${branch}…`);
+    runGitSwitch([branch]);
+
+    if (hasRemoteBranch(branch)) {
+      // Fix tracking if needed
+      const tracking = getUpstreamTracking(branch);
+
+      if (!tracking?.startsWith(`${remote}/`)) {
+        console.log(
+          '⚙ Your local branch is not tracking the corresponding remote branch, fixing…'
+        );
+        runGit(['branch', '--set-upstream-to', `${remote}/${branch}`, branch]);
+      }
+    }
+
+    tryPull(branch);
+  } else if (hasRemoteBranch(branch)) {
+    // No local branch, but remote exists — fetch and switch
+    console.log(`↓ Fetching remote branch ${branch}…`);
+    runGit(['fetch', remote, branch]);
+    console.log();
+    runGitSwitch(['-c', branch, '--track', `${remote}/${branch}`]);
+  } else {
+    // No local or remote branch — create a new one
+    console.log(`+ Creating new local branch ${branch}…`);
+    runGitSwitch(['-c', branch, '--no-track']);
+  }
 }
 
 await run(import.meta.url, () => br(parseArgs(OPTIONS)));

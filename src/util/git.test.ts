@@ -62,15 +62,17 @@ describe('standup git queries', () => {
       baseBranch: 'main',
     };
 
-    expect(getMainCommits(repoRoot, options).some(
-      (commit) => commit.subject === 'Main change'
-    )).toBe(true);
+    expect(
+      getMainCommits(repoRoot, options).some(
+        (commit) => commit.subject === 'Main change'
+      )
+    ).toBe(true);
 
     const branches = getBranchesWithChanges(repoRoot, options);
     expect(branches.some((entry) => entry.branch === 'feature')).toBe(true);
-    expect(branches.find((entry) => entry.branch === 'feature')?.commits).toStrictEqual([
-      expect.objectContaining({ subject: 'Feature change' }),
-    ]);
+    expect(
+      branches.find((entry) => entry.branch === 'feature')?.commits
+    ).toStrictEqual([expect.objectContaining({ subject: 'Feature change' })]);
   });
 
   test('builds branch change logs from recent unpushed commits', () => {

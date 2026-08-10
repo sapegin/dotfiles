@@ -134,13 +134,9 @@ async function findJpgJpegDuplicateRemovals(
   };
 }
 
-export async function photosCleanJpegPairs({
-  folder,
-}: Options): Promise<void> {
+export async function photosCleanJpegPairs({ folder }: Options): Promise<void> {
   const photosRoot =
-    folder === undefined
-      ? dirs.photos
-      : path.resolve(untildify(folder));
+    folder === undefined ? dirs.photos : path.resolve(untildify(folder));
 
   try {
     const stats = await fs.stat(photosRoot);

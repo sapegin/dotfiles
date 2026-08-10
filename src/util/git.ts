@@ -107,10 +107,7 @@ export function parseGitLog(output: string): GitLogEntry[] {
   });
 }
 
-function runGitLog(
-  repoRoot: string,
-  args: readonly string[]
-): GitLogEntry[] {
+function runGitLog(repoRoot: string, args: readonly string[]): GitLogEntry[] {
   const output = execFileSync('git', ['log', ...args], {
     cwd: repoRoot,
     encoding: 'utf8',
@@ -137,7 +134,11 @@ export function getLocalBranches(repoRoot: string): string[] {
 /** Returns the user's commits on the base branch within the last `days` days. */
 export function getMainCommits(
   repoRoot: string,
-  options: { readonly days: number; readonly author: string; readonly baseBranch: string }
+  options: {
+    readonly days: number;
+    readonly author: string;
+    readonly baseBranch: string;
+  }
 ): GitLogEntry[] {
   return runGitLog(repoRoot, [
     options.baseBranch,
@@ -148,7 +149,10 @@ export function getMainCommits(
   ]);
 }
 
-/** Returns recent commits by `author` on `branch` that are not yet on `baseBranch`. */
+/**
+ * Returns recent commits by `author` on `branch` that are not yet on
+ * `baseBranch`.
+ */
 export function getBranchCommits(
   repoRoot: string,
   branch: string,
@@ -220,7 +224,8 @@ export function isBranchMerged(
 
 /**
  * Returns local branches other than the base branch that have commits by the
- * author within the last `days` days that are not yet merged into the base branch.
+ * author within the last `days` days that are not yet merged into the base
+ * branch.
  */
 export function getBranchesWithChanges(
   repoRoot: string,

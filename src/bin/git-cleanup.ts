@@ -55,7 +55,9 @@ export function gitCleanup({ force }: Options): void {
   log.heading('\nDeleting branches with no longer existing remote branches…\n');
   const staleBranches = getStaleBranches();
   if (staleBranches.length > 0) {
-    execFileSync('git', ['branch', '-D', ...staleBranches], { stdio: 'inherit' });
+    execFileSync('git', ['branch', '-D', ...staleBranches], {
+      stdio: 'inherit',
+    });
   }
 }
 
