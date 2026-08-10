@@ -6,6 +6,7 @@
     "appearanceMode" : "light",
     "autoDeleteArchivedWorktreesAfterDays" : 1,
     "automatedActionPolicy" : "cliOnly",
+    "automaticRepositoryRefreshEnabled" : true,
     "confirmCloseSurface" : true,
     "confirmQuitMode" : "auto",
     "copyIgnoredOnWorktreeCreate" : false,
