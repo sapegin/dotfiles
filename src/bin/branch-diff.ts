@@ -24,9 +24,10 @@ const OPTIONS = [{ name: 'target', positional: true }] as const;
 export type Options = ParsedArgs<typeof OPTIONS>;
 
 function getFilePath(repoRoot: string, target: string): string | undefined {
-  const filePath = path.isAbsolute(target)
-    ? target
-    : path.resolve(repoRoot, target);
+  const targetPath = target.startsWith('@') ? target.slice(1) : target;
+  const filePath = path.isAbsolute(targetPath)
+    ? targetPath
+    : path.resolve(repoRoot, targetPath);
 
   try {
     return fs.statSync(filePath).isFile() ? filePath : undefined;

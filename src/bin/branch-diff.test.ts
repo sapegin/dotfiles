@@ -44,6 +44,7 @@ describe('branch-diff', () => {
     expect(branchDiff()).toContain('+feature');
     expect(branchDiff()).not.toContain('current source');
     expect(branchDiff('example.txt')).toContain('+current source');
+    expect(branchDiff('@example.txt')).toContain('+current source');
     expect(branchDiff(path.join(repoRoot, 'example.txt'))).toContain(
       '+current source'
     );
