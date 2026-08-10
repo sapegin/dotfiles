@@ -15,8 +15,8 @@ brew "git" # The Git
 brew "lazygit" # Git client
 brew "macos-trash" # `rm` replacement with MacOS trash support
 brew "node" # Fallback Node.js version
-brew "ripgrep" # `grep` replacement
 brew "restic" # Incremental backups
+brew "ripgrep" # `grep` replacement
 brew "starship" # Prompt manager
 brew "supacode" # Terminal for AI agents
 brew "syntax-highlight" # Quick look with syntax highlighting
@@ -42,11 +42,10 @@ cask "firefox@developer-edition"
 cask "ghostty" # Terminal emulator
 cask "github" # GitHub Desktop
 cask "google-chrome" # Browser for testing
+cask "harper-desktop" # Spell checker
 cask "hyperkey" # Maps Caps Lock to Super key
-cask "jordanbaird-ice" # Hides menu bar icons
 cask "kap" # Video screen recording
 cask "keka" # Archive reader
-cask "languagetool-desktop" # Spell checker
 cask "nimble-commander" # File manager
 cask "notion" # Collaborative notes
 cask "numi" # Calculator
@@ -56,6 +55,7 @@ cask "polypane" # Responsive design and accessibility testing
 cask "quitter" # Quit apps after certain time
 cask "replacicon" # Custom app icons
 cask "telegram" # Chat
+cask "thaw" # Hides menu bar icons
 cask "visual-studio-code" # Main code editor
 cask "whatsapp" # Another chat
 
@@ -66,10 +66,11 @@ cask "font-sf-pro" # Apple SF Pro
 # Visual Studio Code extensions
 # My own extensions are installed locally from a monorepo
 vscode "astro-build.astro-vscode"
-vscode "dbaeumer.vscode-eslint"
+vscode "bradlc.vscode-tailwindcss"
 vscode "editorconfig.editorconfig"
 vscode "esbenp.prettier-vscode"
 vscode "nicksp.reveal-on-github"
+vscode "oxc.oxc-vscode"
 vscode "streetsidesoftware.code-spell-checker"
 vscode "tekumara.typos-vscode"
 
