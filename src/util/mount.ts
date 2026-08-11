@@ -1,4 +1,4 @@
-import { execFileSync, spawnSync } from 'node:child_process';
+import { execFileSync, execSync, spawnSync } from 'node:child_process';
 import path from 'node:path';
 import { log } from './tui.ts';
 
@@ -25,7 +25,7 @@ export function ensureVolumeMounted(
     return;
   }
 
-  log.heading('Mounting backup share…');
+  log.heading(`Mounting ${mountPoint}…`);
 
   // `mount volume` uses Keychain credentials and creates the /Volumes mount
   // point itself.
@@ -35,4 +35,12 @@ export function ensureVolumeMounted(
   if (isVolumeMounted(mountPoint) === false) {
     throw new Error(`Failed to mount ${shareUrl}`);
   }
+}
+
+/** Eject the camera card after a successful or empty import. */
+export function ejectCard(cardVolume: string): void {
+  console.log(`Ejecting card…`);
+  execSync(`diskutil eject ${JSON.stringify(cardVolume)}`, {
+    stdio: 'inherit',
+  });
 }

@@ -5,22 +5,22 @@
 // - Copies and renames each new file
 // - Copies files to NAS backup folder
 // - Skips already imported files by matching number suffixes and capture dates
-// - Ejects the card when done and opens copied photos in Photomator
+// - Ejects the card when done and opens the destination folder in Lightroom Classic
 //
 // ---
 // Author: Artem Sapegin, sapegin.me
 // License: MIT
 // https://github.com/sapegin/dotfiles
 
-import { execFileSync, execSync } from 'node:child_process';
+import { execFileSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { openApp, quitApp } from '../util/apps.ts';
+import { openApp } from '../util/apps.ts';
 import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import { readExifMetadata } from '../util/exif.ts';
 import { copyFile, dirs, getCommonFolder, tildify } from '../util/files.ts';
-import { ensureVolumeMounted } from '../util/mount.ts';
+import { ejectCard, ensureVolumeMounted } from '../util/mount.ts';
 import {
   dedupeRawJpegPairs,
   findMediaFiles,
@@ -38,7 +38,6 @@ export type Options = ParsedArgs<typeof OPTIONS>;
 
 const VOLUMES_DIR = '/Volumes';
 const OFFSITE_BACKUP_DIR = path.join(dirs.nasPhotos, 'Backup');
-const PHOTOMATOR_BUNDLE_ID = 'com.pixelmatorteam.pixelmator.touch.x.photo';
 
 /**
  * Check whether two import dates are close enough to be the same capture.
@@ -187,36 +186,6 @@ async function importPhoto(
   return path.basename(destinationPath);
 }
 
-/**
- * Open a folder in Photomator's Files browser.
- *
- * Photomator remembers its last mode (Photos or Files) and, when handed a
- * folder in Photos mode, imports the photos into the Apple Photos library
- * instead of browsing them as local files. Forcing the persisted browser mode
- * to Files avoids that. The mode is only read on launch, so a running instance
- * is quit first (its edits are non-destructive, saved to sidecar files), so it
- * doesn't overwrite the preference on exit and so the relaunch honours it.
- */
-async function openFolderInPhotomator(folder: string): Promise<void> {
-  await quitApp('Photomator');
-
-  execFileSync('defaults', [
-    'write',
-    PHOTOMATOR_BUNDLE_ID,
-    'PhotoKitSelectedBrowserMode',
-    'files',
-  ]);
-  openApp('Photomator', [folder]);
-}
-
-/** Eject the camera card after a successful or empty import. */
-function ejectCard(cardVolume: string): void {
-  console.log(`Ejecting card…`);
-  execSync(`diskutil eject ${JSON.stringify(cardVolume)}`, {
-    stdio: 'inherit',
-  });
-}
-
 /** Run the interactive camera card import flow. */
 export async function photosImport(_options: Options): Promise<void> {
   ensureVolumeMounted(dirs.nasPhotos);
@@ -356,11 +325,7 @@ export async function photosImport(_options: Options): Promise<void> {
     process.exit(1);
   }
 
-  try {
-    await openFolderInPhotomator(destinationDir);
-  } catch {
-    log.warn('Could not open Photomator.');
-  }
+  openApp('Adobe Lightroom Classic', [destinationDir]);
 }
 
 await run(import.meta.url, () => photosImport(parseArgs(OPTIONS)));
