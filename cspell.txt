@@ -4,8 +4,6 @@ Alexa
 antipattern
 antipatterns
 apfel
-docling
-ocrmac
 aphantasia
 artefacts
 Artem
@@ -17,10 +15,12 @@ autofixing
 automations
 blockquotes
 bouldering
+callsite
 Catppuccin
 Chemex
 cmux
 colocation
+contentful
 copypasting
 culting
 customizability
@@ -29,6 +29,7 @@ dcim
 deburr
 deslop
 discoverability
+docling
 dotfiles
 downscale
 downscales
@@ -62,6 +63,7 @@ meteo
 microlibraries
 microlibrary
 neurodiverse
+ocrmac
 okayish
 Omio
 omnibar

@@ -1,6 +1,8 @@
 # Frontend and UI
 
-For UI changes that may touch accessibility patterns, read the [Accessibility Coding Guidelines](../../_references/web-guides/accessibility/accessibility.md).
+For UI changes that may touch accessibility patterns, read the [Accessibility Coding Guidelines](../../_references/modern-web-guidance/accessibility/accessibility.md).
+
+For React components, Next.js pages, or client rendering changes, read the [React best practices index](../../_references/react-best-practices/Index.md), then load only the specific linked rules relevant to the change. Raise performance findings only when the changed path has a plausible frequency, scale, or user-visible cost.
 
 ## Accessibility
 

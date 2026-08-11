@@ -1,6 +1,8 @@
 # Frontend and web
 
-For HTML, CSS, or client-side JavaScript changes, read the [web guide index](../../_references/web-guides/Index.md) when the changed code may touch patterns these guides cover, then load only the specific linked guides relevant to the change.
+For HTML, CSS, or client-side JavaScript changes, read the [web guide index](../../_references/modern-web-guidance/Index.md) when the changed code may touch patterns these guides cover, then load only the specific linked guides relevant to the change.
+
+For React components, Next.js pages, or client rendering changes, read the [React best practices index](../../_references/react-best-practices/Index.md), then load only the specific linked rules relevant to the change. Raise performance findings only when the changed path has a plausible frequency or user-visible cost; do not prescribe memoization, caching, or concurrency without evidence.
 
 ## Accessibility defects
 

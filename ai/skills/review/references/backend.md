@@ -1,5 +1,7 @@
 # Backend and data
 
+For React Server Components, Server Actions, or Next.js route handlers, read the [React best practices index](../../_references/react-best-practices/Index.md), then load only the specific linked rules relevant to the change.
+
 ## Behavioral correctness
 
 Logic errors, wrong assumptions, incorrect conditions or defaults, boundary and off-by-one mistakes, ordering assumptions, duplicate operations, partial failures, and subtle changes in business or user-visible behavior. Consider empty input, repeated actions, locale, currency, dates, time zones, and other relevant edge cases. State machines with unhandled status branches or `default:` paths that silently no-op.
