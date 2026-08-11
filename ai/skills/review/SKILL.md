@@ -108,8 +108,8 @@ The review target may be application code, configuration, documentation, agent s
 
 Load only the references needed for the changes under review:
 
-- **Backend and data** — server logic, APIs, persistence, Node.js runtime, or data mutation: read [backend](references/backend.md).
-- **Frontend and UI** — user interfaces, rendering, forms, client behavior, or accessibility across flows: read [frontend](references/frontend.md).
+- **Backend and data** — server logic, APIs, persistence, Node.js runtime, or data mutation: read [backend](references/backend.md). For React Server Components, Server Actions, or Next.js route handlers, also read the [React best practices index](../_references/react-best-practices/Index.md), then load only the specific linked rules relevant to the change.
+- **Frontend and UI** — user interfaces, rendering, forms, client behavior, or accessibility across flows: read [frontend](references/frontend.md). For HTML, CSS, or client-side JavaScript changes, also read the [modern web guidance index](../_references/modern-web-guidance/Index.md). For React components, Next.js pages, or client rendering changes, also read the [React best practices index](../_references/react-best-practices/Index.md). Load only the specific linked guides and rules relevant to the change.
 - **Security** — auth, trust boundaries, secrets, user input, or production configuration: read [security](references/security.md).
 - **Architecture and maintainability** — module boundaries, public contracts, duplication, or system design spanning multiple areas: read [architecture](references/architecture.md).
 - **Tests** — new behavior, modified test suites, or coverage gaps: read [tests](references/tests.md).

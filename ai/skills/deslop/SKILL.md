@@ -107,8 +107,8 @@ Load only the references needed for the changes under review:
 
 - **Code quality** — comments, structure, dead code, completeness, clarity: read [code-quality](references/code-quality.md).
 - **JavaScript and TypeScript** — types, async, Node.js, framework patterns: read [javascript](references/javascript.md).
-- **Frontend and web** — HTML, CSS, client JS, accessibility, obsolete patterns: read [frontend](references/frontend.md).
-- **Backend logic** — backend changes: read [backend](references/backend.md).
+- **Frontend and web** — HTML, CSS, client JS, accessibility, obsolete patterns: read [frontend](references/frontend.md). For HTML, CSS, or client-side JavaScript changes, also read the [modern web guidance index](../_references/modern-web-guidance/Index.md). For React components, Next.js pages, or client rendering changes, also read the [React best practices index](../_references/react-best-practices/Index.md). Load only the specific linked guides and rules relevant to the change.
+- **Backend logic** — backend changes: read [backend](references/backend.md). For React Server Components, Server Actions, or Next.js route handlers, also read the [React best practices index](../_references/react-best-practices/Index.md), then load only the specific linked rules relevant to the change.
 - **Security** — unsafe interpolation, secrets, path handling: read [security](references/security.md).
 - **Tests** — hollow or meaningless tests: read [tests](references/tests.md).
 - **Dependencies** — duplicate deps or unnecessary packages: read [dependencies](references/dependencies.md).
