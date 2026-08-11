@@ -4,14 +4,12 @@ description: Stress-test a plan against the codebase, tests, and existing docs b
 disable-model-invocation: true
 ---
 
-Interview the user until the plan is technically correct and understood. Ask one question at a time, and include your recommended answer.
+Before beginning, read [the shared grilling process](../_references/Grilling.md) and follow it for every invocation.
 
-Inspect code, tests, types, schemas, configs, contracts, agent instructions, and relevant docs before asking what the repo can answer. Treat code and tests as primary evidence; docs may be stale.
+Treat code and tests as primary evidence; docs may be stale.
 
 ## Rules
 
-- Write gathered task context to `Context.md` in the repo root.
-- Do not write implementation code without explicit user approval.
 - Update existing docs only to fix incorrect or unclear information already there.
 - Do not add new docs unless the user explicitly asks.
 

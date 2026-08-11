@@ -8,10 +8,11 @@ Take the current conversation context and codebase understanding and produce a s
 
 ## Process
 
-1. Explore the repo to understand the current state of the codebase, if you haven’t already.
-2. Write the spec using the template below.
-3. Choose a concise `Subject` for the filename and document heading.
-4. If the project root contains a `specs` folder, save the spec as `specs/<subject-slug>.md`, where `<subject-slug>` is the lowercase kebab-case form of `Subject`. Otherwise, save it as `~/murder/Specs/<Subject>.md`, replacing characters unsuitable for a filename while preserving readable words and capitalization.
+1. If a relevant `Context.md` exists in the current working directory, read it as working material. Treat the conversation as authoritative when they differ.
+2. Explore the repo to understand the current state of the codebase, if you haven’t already.
+3. Write the spec using the template below.
+4. Choose a concise `Subject` for the filename and document heading.
+5. If the project root contains a `specs` folder, save the spec as `specs/<subject-slug>.md`, where `<subject-slug>` is the lowercase kebab-case form of `Subject`. Otherwise, save it as `~/murder/Specs/<Subject>.md`, replacing characters unsuitable for a filename while preserving readable words and capitalization.
 
 Create only the destination file, not a missing `specs` folder. Never overwrite an existing spec; if the destination exists, preserve `Subject` and append a numeric suffix such as `-2` before the filename extension. Replace the filename placeholder and the `Subject` heading with the chosen forms.
 
