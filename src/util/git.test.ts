@@ -7,6 +7,7 @@ import {
   getBranchChangeLog,
   getBranchesWithChanges,
   getBranchCommits,
+  getCurrentBranch,
   getMainCommits,
   isBranchMerged,
   parseGitLog,
@@ -30,6 +31,12 @@ beforeAll(() => {
 
 afterAll(() => {
   fs.rmSync(repoRoot, { recursive: true, force: true });
+});
+
+describe(getCurrentBranch, () => {
+  test('returns the current branch', () => {
+    expect(getCurrentBranch(repoRoot)).toBe('main');
+  });
 });
 
 describe(parseGitLog, () => {

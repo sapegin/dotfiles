@@ -14,6 +14,7 @@ AI agent skills. Invoke with `/<name>`.
 | [grill-in-code](grill-in-code/SKILL.md) | Stress-test a plan against the codebase, tests, and existing docs before implementation. |
 | [grill-me](grill-me/SKILL.md) | Interview the user relentlessly about a plan, decision, or design until reaching shared understanding. |
 | [librarian](librarian/SKILL.md) | Research open-source libraries with evidence-backed answers and GitHub permalinks. |
+| [later](later/SKILL.md) | Capture a contextual idea or task in the Obsidian Later inbox. |
 | [pi-insights](pi-insights/SKILL.md) | Analyze recent Pi sessions and audit instructions, tool use, validation commands, and custom skills. |
 | [pretty-html](pretty-html/SKILL.md) | Create and update standalone HTML documents with syntax highlighting, diagrams, and live demos. |
 | [review](review/SKILL.md) | Review a diff for requirements, behavior, APIs, architecture, and maintainability across code, configuration, documentation and agent artifacts. |

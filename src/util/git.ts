@@ -32,8 +32,9 @@ export function assertGitRepo(): void {
 /**
  * Returns the current branch name, or undefined when in detached HEAD state.
  */
-export function getCurrentBranch(): string | undefined {
+export function getCurrentBranch(cwd?: string): string | undefined {
   const branch = execSync('git branch --show-current', {
+    cwd,
     encoding: 'utf8',
   }).trim();
   return branch || undefined;
