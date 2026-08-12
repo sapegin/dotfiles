@@ -45,10 +45,18 @@ import sessionName, { normalizeSessionName } from './session-name.ts';
 
 type EventHandler = (event: any, ctx: ExtensionContext) => unknown;
 
-function setupExtension() {
+function setupExtension(branchName?: string) {
   const handlers = new Map<string, EventHandler[]>();
   let sessionNameValue: string | undefined;
   const pi = {
+    exec: vi.fn<ExtensionAPI['exec']>(() =>
+      Promise.resolve({
+        code: branchName ? 0 : 128,
+        killed: false,
+        stderr: '',
+        stdout: branchName ? `${branchName}\n` : '',
+      })
+    ),
     getSessionName: () => sessionNameValue,
     on(event: string, handler: EventHandler) {
       handlers.set(event, [...(handlers.get(event) ?? []), handler]);
@@ -142,6 +150,32 @@ describe('session name extension', () => {
         expect.objectContaining({ id: 'cheap-input' })
       );
       expect(extension.getSessionName()).toBe('Error mapping review');
+    });
+  });
+
+  test('includes raw skill input and appends the Git branch', async () => {
+    const extension = setupExtension('feature/auth-errors');
+    extension.emit('session_start', {});
+    extension.emit('input', {
+      text: '/skill:deslop src/auth.ts',
+    });
+    extension.emit('message_start', {
+      message: {
+        role: 'user',
+        content: 'Check the requested target for AI-generated slop.',
+      },
+    });
+
+    await vi.waitFor(() => {
+      expect(agentSessionMocks.prompt).toHaveBeenCalledExactlyOnceWith(
+        'User input before command expansion:\n' +
+          '/skill:deslop src/auth.ts\n\n' +
+          'Expanded task:\n' +
+          'Check the requested target for AI-generated slop.'
+      );
+      expect(extension.getSessionName()).toBe(
+        'Error mapping review on feature/auth-errors'
+      );
     });
   });
 });

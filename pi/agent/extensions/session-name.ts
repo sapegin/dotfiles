@@ -19,6 +19,7 @@ const MAX_TOKENS = 32;
 const SESSION_NAME_MAX_CHARACTERS = 100;
 // Retain enough task context without sending large blobs of text.
 const PROMPT_MAX_CHARACTERS = 4000;
+const GIT_BRANCH_TIMEOUT_MS = 1000;
 
 function getCheapestModel(ctx: ExtensionContext) {
   return ctx.modelRegistry
@@ -52,6 +53,41 @@ function getTextContent(content: string | { type: string; text?: string }[]) {
     .filter((block) => block.type === 'text')
     .map((block) => block.text ?? '')
     .join('\n');
+}
+
+function getNamingPrompt(rawInput: string | undefined, expandedPrompt: string) {
+  if (!rawInput || rawInput === expandedPrompt) {
+    return expandedPrompt;
+  }
+
+  return `User input before command expansion:\n${rawInput}\n\nExpanded task:\n${expandedPrompt}`;
+}
+
+async function getGitBranch(
+  pi: ExtensionAPI,
+  ctx: ExtensionContext,
+  signal: AbortSignal
+) {
+  try {
+    const result = await pi.exec('git', ['branch', '--show-current'], {
+      cwd: ctx.cwd,
+      signal,
+      timeout: GIT_BRANCH_TIMEOUT_MS,
+    });
+    if (result.code === 0) {
+      return result.stdout.trim() || undefined;
+    }
+  } catch {
+    // Naming still works outside Git repositories or when Git is unavailable.
+  }
+}
+
+function addBranchToSessionName(name: string, branch: string | undefined) {
+  if (!branch) {
+    return name;
+  }
+
+  return `${name} on ${branch}`.slice(0, SESSION_NAME_MAX_CHARACTERS).trimEnd();
 }
 
 async function generateSessionName(
@@ -108,6 +144,7 @@ async function generateSessionName(
 
 export default function registerSessionNameExtension(pi: ExtensionAPI) {
   let shouldGenerateName = false;
+  let rawNamingInput: string | undefined;
   let generationController: AbortController | undefined;
   let titleUpdateTimeout: ReturnType<typeof setTimeout> | undefined;
 
@@ -133,7 +170,14 @@ export default function registerSessionNameExtension(pi: ExtensionAPI) {
         .some(
           (entry) => entry.type === 'message' && entry.message.role === 'user'
         );
+    rawNamingInput = undefined;
     scheduleTitleUpdate(pi.getSessionName(), ctx);
+  });
+
+  pi.on('input', (event) => {
+    if (shouldGenerateName && !rawNamingInput && event.text.trim()) {
+      rawNamingInput = event.text;
+    }
   });
 
   pi.on('session_info_changed', (event, ctx) => {
@@ -145,10 +189,12 @@ export default function registerSessionNameExtension(pi: ExtensionAPI) {
       return;
     }
     shouldGenerateName = false;
-    const prompt = getTextContent(event.message.content);
-    if (!prompt.trim()) {
+    const expandedPrompt = getTextContent(event.message.content);
+    if (!expandedPrompt.trim()) {
       return;
     }
+    const prompt = getNamingPrompt(rawNamingInput, expandedPrompt);
+    rawNamingInput = undefined;
 
     const currentGenerationController = new AbortController();
     generationController = currentGenerationController;
@@ -156,17 +202,16 @@ export default function registerSessionNameExtension(pi: ExtensionAPI) {
     // Start naming from the actual user message without delaying the main agent.
     void (async () => {
       try {
-        const generatedName = await generateSessionName(
-          prompt,
-          ctx,
-          currentGenerationController.signal
-        );
+        const [generatedName, branch] = await Promise.all([
+          generateSessionName(prompt, ctx, currentGenerationController.signal),
+          getGitBranch(pi, ctx, currentGenerationController.signal),
+        ]);
         if (
           generatedName &&
           !currentGenerationController.signal.aborted &&
           !pi.getSessionName()
         ) {
-          pi.setSessionName(generatedName);
+          pi.setSessionName(addBranchToSessionName(generatedName, branch));
         }
       } catch {
         // Keep Pi's default first-prompt title if background naming fails.
