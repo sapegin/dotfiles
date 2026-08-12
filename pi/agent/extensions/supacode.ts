@@ -1,10 +1,10 @@
 /**
  * Supacode + Pi integration extension.
  *
- * Reports agent lifecycle and notifications to Supacode by emitting OSC 3008
- * escape sequences to the controlling terminal. The sequences are inert in any
- * terminal that does not handle OSC 3008, and reach Supacode over SSH too (no
- * local socket needed), matching the Claude / Codex / Kiro hook integrations.
+ * Reports agent lifecycle to Supacode with OSC 3008 and requests attention with
+ * a generic OSC 9 terminal notification. The sequences are inert in any
+ * terminal that does not handle them, and reach Supacode over SSH too (no local
+ * socket needed), matching the notification channel used by terminal agents.
  *
  * Required env var (injected automatically by Supacode on every surface):
  * SUPACODE_SURFACE_ID  present only on a Supacode surface; absence is the
@@ -16,17 +16,12 @@
  * Hook event mapping:
  * extension load      -> session_start  (agent presence badge)
  * Pi agent_start      -> busy
- * Pi agent_end        -> idle + notification with last_assistant_message
+ * Pi agent_settled    -> idle + generic input-needed notification
  * Pi session_shutdown -> session_end + idle (defensive activity reset)
  */
 
 import nodeFs from 'node:fs';
 import { type ExtensionAPI } from '@earendil-works/pi-coding-agent';
-
-interface NotifyContent {
-  title?: string;
-  body?: string;
-}
 
 const AGENT = 'pi';
 
@@ -107,56 +102,8 @@ function emitPresence(event: string): void {
   writeToTerminal(`\u001B]3008;${action}=${AGENT};${meta}\u001B\\`);
 }
 
-// JSON-escape (minus the surrounding quotes) so the wire matches the shell
-// awk path, byte-cap to the same budget, then base64. App-side
-// decodeNotifyValue reverses both and tolerates a mid-escape cut.
-function notifyField(value: string, budget: number): string {
-  const escaped = JSON.stringify(value).slice(1, -1);
-  const buf = Buffer.from(escaped, 'utf8');
-  const capped = buf.length > budget ? buf.subarray(0, budget) : buf;
-  return capped.toString('base64');
-}
-
-function emitNotification(content: NotifyContent): void {
-  const meta =
-    `kind=notify` +
-    `;title=${notifyField(content.title ?? '', 160)}` +
-    `;body=${notifyField(content.body ?? '', 1000)}`;
-  writeToTerminal(`\u001B]3008;start=${AGENT};${meta}\u001B\\`);
-}
-
-function lastAssistantText(ctx: {
-  sessionManager: { getEntries(): any[] };
-}): string | undefined {
-  const entries = ctx.sessionManager.getEntries();
-  for (let i = entries.length - 1; i >= 0; i--) {
-    const entry = entries[i];
-    if (entry.type !== 'message') {
-      continue;
-    }
-    if (entry.message.role !== 'assistant') {
-      continue;
-    }
-
-    const content = entry.message.content;
-    if (!Array.isArray(content)) {
-      continue;
-    }
-
-    const text = content
-      .filter(
-        (c: { type: string; text?: string }) =>
-          c.type === 'text' && typeof c.text === 'string'
-      )
-      .map((c: { text: string }) => c.text)
-      .join('')
-      .trim();
-
-    if (text.length > 0) {
-      return text;
-    }
-  }
-  return undefined;
+function emitInputNeededNotification(): void {
+  writeToTerminal(`\u001B]9;Pi needs your input\u001B\\`);
 }
 
 export default function supacode(pi: ExtensionAPI) {
@@ -173,11 +120,11 @@ export default function supacode(pi: ExtensionAPI) {
     emitPresence('busy');
   });
 
-  pi.on('agent_end', (_event, ctx) => {
-    // Atomic state-set: `idle` overwrites whatever was running on the
-    // Supacode side (turn-level Stop equivalent).
+  pi.on('agent_settled', (_event, _ctx) => {
+    // Wait until retries, compaction, and queued continuations have finished;
+    // only then is Pi actually waiting for the user's next input.
     emitPresence('idle');
-    emitNotification({ body: lastAssistantText(ctx) });
+    emitInputNeededNotification();
   });
 
   pi.on('session_shutdown', (_event, _ctx) => {
