@@ -18,6 +18,7 @@ AI agent skills. Invoke with `/<name>`.
 | [pi-insights](pi-insights/SKILL.md) | Analyze recent Pi sessions and audit instructions, tool use, validation commands, and custom skills. |
 | [pretty-html](pretty-html/SKILL.md) | Create and update standalone HTML documents with syntax highlighting, diagrams, and live demos. |
 | [review](review/SKILL.md) | Review a diff for requirements, behavior, APIs, architecture, and maintainability across code, configuration, documentation and agent artifacts. |
+| [sentry](sentry/SKILL.md) | Investigate a Sentry issue, trace it into the current codebase, and assess its cause, impact, and suggest the smallest fix. |
 | [skills-audit](skills-audit/SKILL.md) | Audit every local skill for predictable behavior, sound structure, and prompt quality. |
 | [spellcheck](spellcheck/SKILL.md) | Proofread prose for spelling, grammar, punctuation, and clarity. |
 | [teach](teach/SKILL.md) | Teach user something, add or update topics in the personal handbook. |

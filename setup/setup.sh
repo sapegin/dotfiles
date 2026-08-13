@@ -76,6 +76,11 @@ npm install -g npm-upgrade
 npm install
 echo
 
+# Sentry CLI
+echo "Installing Sentry CLI…"
+curl https://cli.sentry.dev/install -fsS | bash
+echo
+
 # Python CLI tools (uv)
 echo "Installing Python CLI tools…"
 uv tool install docling
@@ -89,9 +94,9 @@ echo
 
 # Sync dotfiles
 echo "Syncing dotfiles…"
-node "bin/lib/sync-dotfiles.ts"
+node "bin/symlinks/sync-dotfiles"
 
 echo
-echo "󰇥 All done! Now, open a new terminal for the changes to take effect."
+echo "🦆 All done! Now, open a new terminal for the changes to take effect."
 
 bin/nyan

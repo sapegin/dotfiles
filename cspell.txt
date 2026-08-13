@@ -35,6 +35,7 @@ downscale
 downscales
 exif
 exiftool
+fieldset
 flexbox
 Formik
 frontends
@@ -111,6 +112,7 @@ themable
 timeboxing
 todos
 trackpad
+undeployed
 ungluing
 unlisten
 unrequested
