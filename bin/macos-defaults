@@ -414,4 +414,5 @@ for app in "Dock" "Finder" "Safari" "SystemUIServer" "Terminal" "NotificationCen
 	killall "$app" > /dev/null 2>&1
 done
 
-echo "\n🦆 Done. Note that some of these changes require a logout/restart to take effect."
+echo
+echo "🦆 Done. Note that some of these changes require a logout/restart to take effect."
