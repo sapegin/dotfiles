@@ -31,7 +31,7 @@ Return only the pull request description:
 2. One paragraph of 1–3 sentences explaining what changed and why, if known.
 3. Short bullet list of notable changes.
 
-Do not include review findings, risk analysis, test plans, checklists, or implementation trivia unless asked.
+Do not include review findings, risk analysis, test plans, checklists, or implementation trivia unless asked. Do not mention added or updated tests, including test coverage, in the summary or notable changes.
 
 Example:
 
