@@ -17,11 +17,13 @@
  * extension load      -> session_start  (agent presence badge)
  * Pi agent_start      -> busy
  * Pi agent_settled    -> idle + generic input-needed notification
+ * permission request  -> generic input-needed notification
  * Pi session_shutdown -> session_end + idle (defensive activity reset)
  */
 
 import nodeFs from 'node:fs';
 import { type ExtensionAPI } from '@earendil-works/pi-coding-agent';
+import { permissionRequiredEvent } from './block-destructive-operations.ts';
 
 const AGENT = 'pi';
 
@@ -124,6 +126,10 @@ export default function supacode(pi: ExtensionAPI) {
     // Wait until retries, compaction, and queued continuations have finished;
     // only then is Pi actually waiting for the user's next input.
     emitPresence('idle');
+    emitInputNeededNotification();
+  });
+
+  pi.events.on(permissionRequiredEvent, () => {
     emitInputNeededNotification();
   });
 
