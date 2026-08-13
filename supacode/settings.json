@@ -8,6 +8,7 @@
     "automatedActionPolicy" : "cliOnly",
     "automaticRepositoryRefreshEnabled" : true,
     "confirmCloseSurface" : true,
+    "confirmCloseTab" : "busy",
     "confirmQuitMode" : "auto",
     "copyIgnoredOnWorktreeCreate" : false,
     "copyUntrackedOnWorktreeCreate" : false,
@@ -26,7 +27,7 @@
     "notificationSound" : "never",
     "promptForWorktreeCreation" : true,
     "pullRequestMergeStrategy" : "squash",
-    "remoteSessionPersistenceEnabled" : true,
+    "remoteSessionPersistenceEnabled" : false,
     "richAgentNotificationsEnabled" : false,
     "shortcutOverrides" : {
       "selectTab1" : {
