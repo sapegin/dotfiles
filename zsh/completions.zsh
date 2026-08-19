@@ -17,8 +17,10 @@ fi
 # Menu-like autocompletion selection
 zmodload -i zsh/complist
 
-# Menu selection: open on 2+ matches, type to filter (interactive mode)
-zstyle ':completion:*' menu select=2 interactive
+# Menu selection: open on 2+ matches and cycle with Tab or Shift+Tab
+zstyle ':completion:*' menu select=2
+bindkey -M menuselect '^I' menu-complete
+bindkey -M menuselect '^[[Z' reverse-menu-complete
 # Never dump matches to the terminal; the menu handles display
 zstyle ':completion:*' list-max -1
 # Git checkout: skip remotes, working-tree files, and commit hashes.
