@@ -45,7 +45,7 @@ Fetch failing CI logs, identify the root causes, and make the smallest code chan
 
 Report concisely:
 
-- Which CI runs or checks failed.
+- Which CI runs or checks failed. For test failures, report failed test file paths and test names when available; never report only shard or result-consolidation check names.
 - The root cause of each failure.
 - Files changed to fix them.
 - Local validation commands run and their results.
