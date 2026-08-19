@@ -4,6 +4,10 @@ Ecosystem context: read [raccoonarium.md](../raccoonarium.md).
 
 [base-prompt.md](../base-prompt.md) is already present in the agent context whenever a skill runs. Do not repeat its general instructions in `SKILL.md`; include only task-specific guidance. Skill instructions must not contradict or weaken the base prompt.
 
+## Instruction structure
+
+State each specific requirement once, preferably as an observable outcome or output contract. Let the model infer routine steps needed to produce that result. Prescribe a method only when it is non-obvious, required for correctness, or guards against a demonstrated failure mode.
+
 ## Progressive disclosure
 
 Keep each `SKILL.md` self-contained enough to route and begin the task, but keep detailed or specialized material in reference files.
