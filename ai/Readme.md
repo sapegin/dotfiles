@@ -16,7 +16,6 @@ The [base-prompt.md](./base-prompt.md) is the source of truth for global instruc
 Canonical personas live in [`personas/`](./personas/):
 
 - `poe`: dry 19th century scholar
-- `ramsay`: blunt Gordon Ramsay voice
 - `raccoon`: Artem Sapegin’s writing voice
 
 Assign a persona to a generated tone section with a marker:
@@ -24,7 +23,7 @@ Assign a persona to a generated tone section with a marker:
 ```markdown
 ## Tone
 
-<persona name="ramsay">
+<persona name="raccoon">
 Generated instructions appear here.
 </persona>
 ```

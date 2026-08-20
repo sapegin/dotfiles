@@ -15,7 +15,7 @@ Canonical personas live in `ai/personas/`. Assign a persona to a generated tone 
 ```markdown
 ## Tone
 
-<persona name="ramsay">
+<persona name="raccoon">
 Generated instructions appear here.
 </persona>
 ```
