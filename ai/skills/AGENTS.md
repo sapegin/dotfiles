@@ -1,24 +1,5 @@
 Ecosystem context: read [raccoonarium.md](../raccoonarium.md).
 
-## Base prompt
+## Skill authoring
 
-[base-prompt.md](../base-prompt.md) is already present in the agent context whenever a skill runs. Do not repeat its general instructions in `SKILL.md`; include only task-specific guidance. Skill instructions must not contradict or weaken the base prompt.
-
-## Instruction structure
-
-State each specific requirement once, preferably as an observable outcome or output contract. Let the model infer routine steps needed to produce that result. Prescribe a method only when it is non-obvious, required for correctness, or guards against a demonstrated failure mode.
-
-## Progressive disclosure
-
-Keep each `SKILL.md` self-contained enough to route and begin the task, but keep detailed or specialized material in reference files.
-
-- Load a reference only when the current task reaches the step, file type, language, platform, or decision that requires it. Do not load every linked reference when the skill starts.
-- State the trigger beside each reference link, for example: “For JavaScript or TypeScript changes, read…”.
-- Load only the specific referenced file needed; do not scan an entire reference directory.
-- Instructions required for every invocation belong in `SKILL.md`. Do not move essential rules into an optional reference merely to shorten the skill.
-- If a reference is required for every invocation but is too detailed for `SKILL.md`, say so explicitly and load only that reference.
-- Apply the same rules when one skill delegates to another: load the other skill only when its workflow is needed.
-
-## Deterministic operations
-
-Prefer simple scripts for deterministic operations that may otherwise burn a lot of tokens and produce inconsistent results (examples: src/bin/agent-comments.ts, src/bin/branch-diff.ts).
+Read and follow [Skill authoring and review](./_references/skill-authoring.md) when creating, changing, or auditing skills. It is the source of truth for skill structure and prompt quality.
