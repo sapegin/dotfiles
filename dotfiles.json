@@ -88,7 +88,7 @@
     "ignore": ["\\.test\\.ts$"]
   },
 
-  /**
+  /*
    * Obsidian (iCloud vault — sync copies only, never symlinks)
    */
 
@@ -114,7 +114,8 @@
   {
     "source": "~/murder/zz-templates/",
     "destination": "$DOTFILES_DIR/obsidian/zz-templates",
-    "mode": "sync"
+    "mode": "sync",
+    "ignore": ["^clipper/"]
   },
   // Obsidian bases backup
   {

@@ -10,6 +10,6 @@ Copy `user.js` and `chrome/` folder to [Firefox profile folder](https://support.
 - [Blank Sky New Tab Page](https://addons.mozilla.org/firefox/addon/blank-sky-new-tab-page/)
 - [Ecosia](https://addons.mozilla.org/firefox/addon/ecosia-the-green-search/)
 - [LanguageTool](https://addons.mozilla.org/firefox/addon/languagetool/)
-- [Obsidian Web Clipper](https://addons.mozilla.org/firefox/addon/web-clipper-obsidian/)
+- [Obsidian Web Clipper](https://addons.mozilla.org/firefox/addon/web-clipper-obsidian/) ([templates](../obsidian-clipper/))
 - [Squirrelsong Light theme](https://addons.mozilla.org/firefox/addon/squirrelsong-light/)
 - [uBlock Origin](https://addons.mozilla.org/firefox/addon/ublock-origin/)
