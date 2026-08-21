@@ -1,0 +1,38 @@
+{
+	"schemaVersion": "0.1.0",
+	"name": "Kindle",
+	"behavior": "create",
+	"noteNameFormat": "{{selector:h3.kp-notebook-selectable.kp-notebook-metadata|first}}",
+	"path": "References/Books",
+	"noteContentFormat": "# {{selector:h3.kp-notebook-selectable.kp-notebook-metadata|first}}\n\n## Highlights ({{selector:.kp-notebook-highlight|length}})\n\n{{selector:.kp-notebook-highlight|map:item => \"> ${item}\"|template:\"${str}\"|join:\"\\n\\n\"}}",
+	"properties": [
+		{
+			"name": "author",
+			"value": "{{selector:p.kp-notebook-selectable.kp-notebook-metadata.a-spacing-none|first|wikilink}}",
+			"type": "multitext"
+		},
+		{
+			"name": "image",
+			"value": "{{selector:img.kp-notebook-cover-image-border?src|first}}",
+			"type": "text"
+		},
+		{
+			"name": "source",
+			"value": "{{url}}",
+			"type": "text"
+		},
+		{
+			"name": "created",
+			"value": "{{date}}",
+			"type": "date"
+		},
+		{
+			"name": "tags",
+			"value": "books",
+			"type": "multitext"
+		}
+	],
+	"triggers": [
+		"/^https:\\/\\/read\\.amazon\\.[^/]+\\/notebook/"
+	]
+}
