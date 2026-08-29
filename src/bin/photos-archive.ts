@@ -41,9 +41,7 @@ async function findVisibleFiles(root: string): Promise<string[]> {
   return entries
     .filter((entry) => entry.isFile())
     .map((entry) => path.join(entry.parentPath, entry.name))
-    .filter((filePath) =>
-      isVisibleRelativePath(path.relative(root, filePath))
-    )
+    .filter((filePath) => isVisibleRelativePath(path.relative(root, filePath)))
     .toSorted((a, b) => a.localeCompare(b));
 }
 
@@ -96,14 +94,8 @@ export async function photosArchive(_options: Options): Promise<void> {
     }
   }
 
-  console.log();
-  console.log(`Source:   ${tildify(sourceDir)}`);
-  console.log(`NAS:      ${tildify(nasDir)}`);
-  console.log(`Archived: ${tildify(archiveDir)}`);
-  console.log(`Files:    ${files.length}`);
-
   if (
-    (await confirm(`Archive ${folderName} (${files.length} files)?`, false)) ===
+    (await confirm(`Archive to ${nasDir} (${files.length} files)?`, false)) ===
     false
   ) {
     process.exit(1);
