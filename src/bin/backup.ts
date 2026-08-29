@@ -1,4 +1,4 @@
-// Unattended restic backup to the Synology NAS.
+// Unattended backups: Mac → Synology NAS (restic), then NAS → external drive (rsync).
 //
 // - Run a backup now:
 //
@@ -29,165 +29,118 @@
 // License: MIT
 // https://github.com/sapegin/dotfiles
 
-import { execFileSync, spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { parseArgs, type ParsedArgs } from '../util/args.ts';
-import { dirs, tildify } from '../util/files.ts';
+import {
+  ensureResticReady,
+  runRestic,
+  runResticBackup,
+  runVolumeMirrors,
+  type ResticConfig,
+} from '../util/backup.ts';
+import { dirs } from '../util/files.ts';
 import {
   installLaunchAgent,
   uninstallLaunchAgent,
 } from '../util/launchAgent.ts';
-import { ensureVolumeMounted } from '../util/mount.ts';
 import { formatLocalTimestamp } from '../util/time.ts';
-import { log, prompt, run } from '../util/tui.ts';
+import { run } from '../util/tui.ts';
 
 const OPTIONS = [{ name: 'args', rest: true }] as const;
 
 export type Options = ParsedArgs<typeof OPTIONS>;
 
-// Folders to backup
-const SOURCES = [dirs.obsidianVault, dirs.iCloud];
+const RESTIC_CONFIG: ResticConfig = {
+  repository: path.join(dirs.nasStuffses, 'Backups/restic'),
+  passwordFile: path.join(dirs.home, '.config/restic/password'),
+};
 
-// Glob patterns excluded from every source. Restic matches each pattern against
-// a file's absolute path on whole path components, so a slash-free name like
-// `.obsidian` excludes any directory named exactly `.obsidian` (and its
-// contents) at any depth, but not, say, `.obsidian-backup`. A leading slash
-// would anchor the pattern to the root instead.
-const EXCLUDES = [
+const RESTIC_SOURCES = [dirs.obsidianVault, dirs.iCloud];
+
+// Restic matches each pattern against a file's absolute path on whole path
+// components, so a slash-free name like `.obsidian` excludes any directory
+// named exactly `.obsidian` at any depth. A leading `/` would anchor to the
+// root.
+const RESTIC_EXCLUDES = [
   '.obsidian', // Synced separately via dotfiles
   '.trash', // Obsidian trash
-];
+] as const;
 
-const RESTIC_REPOSITORY = path.join(dirs.nasStuffses, 'Backups/restic');
-const RESTIC_PASSWORD_FILE = path.join(dirs.home, '.config/restic/password');
+const NAS_MIRROR_EXCLUDES = [
+  '.DS_Store',
+  '@eaDir',
+  '#recycle',
+  '.@__thumb',
+  'Thumbs.db',
+  '.TemporaryItems',
+] as const;
 
-// Retention policy: keep last 7 daily, 4 weekly, 12 monthly and 5 yearly backup
-const KEEP_DAILY = 7;
-const KEEP_WEEKLY = 4;
-const KEEP_MONTHLY = 12;
-const KEEP_YEARLY = 5;
+const NAS_MIRROR_JOBS = [
+  {
+    source: dirs.nasPhotos,
+    destination: path.join(dirs.nasBackupDrive, 'Photos'),
+    excludes: [...NAS_MIRROR_EXCLUDES, 'Backup/Imports'],
+  },
+  {
+    source: dirs.nasStuffses,
+    destination: path.join(dirs.nasBackupDrive, 'Stuffses'),
+    excludes: NAS_MIRROR_EXCLUDES,
+  },
+] as const;
 
-// Backup time: 3am every day
 const BACKUP_HOUR = 3;
 const BACKUP_MINUTE = 0;
 
-// LaunchAgent
 const LABEL = 'me.sapegin.backup';
 const PROGRAM = path.join(dirs.dotfiles, 'bin/symlinks/backup');
 const LOG_FILE = path.join(dirs.home, 'Library/Logs/backup.log');
 const ERR_FILE = path.join(dirs.home, 'Library/Logs/backup.err');
-
-const resticEnv = {
-  ...process.env,
-  RESTIC_REPOSITORY,
-  RESTIC_PASSWORD_FILE,
-};
 
 function logLine(message: string): void {
   // Nightly runs capture stdout into ~/Library/Logs/backup.log via launchd.
   console.log(`${formatLocalTimestamp(new Date())} ${message}`);
 }
 
-function restic(args: readonly string[]): void {
-  execFileSync('restic', args, { stdio: 'inherit', env: resticEnv });
+function formatError(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
 }
 
-function isResticInstalled(): boolean {
-  try {
-    execFileSync('restic', ['version'], { stdio: 'ignore' });
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-function isRepositoryInitialized(): boolean {
-  const result = spawnSync('restic', ['cat', 'config'], {
-    stdio: 'ignore',
-    env: resticEnv,
-  });
-  return result.status === 0;
-}
-
-/**
- * Prompt for a new repository password and store it with private permissions.
- */
-async function createPasswordFile(): Promise<void> {
-  log.heading('No restic password found — let’s create one.');
-  console.log(`
-This password encrypts the whole repository. Store a copy somewhere safe:
-if you lose it, the backups are unrecoverable.
-`);
-
-  const password = await prompt('New password: ');
-  if (password.length === 0) {
-    throw new Error('Password must not be empty');
-  }
-  if ((await prompt('Repeat password: ')) !== password) {
-    throw new Error('Passwords do not match');
-  }
-
-  fs.mkdirSync(path.dirname(RESTIC_PASSWORD_FILE), { recursive: true });
-  fs.writeFileSync(RESTIC_PASSWORD_FILE, password, { mode: 0o600 });
-  fs.chmodSync(RESTIC_PASSWORD_FILE, 0o600);
-  log.heading(`Saved password to ${tildify(RESTIC_PASSWORD_FILE)}`);
-}
-
-async function ensureResticReady(): Promise<void> {
-  if (isResticInstalled() === false) {
-    throw new Error('restic is not installed: brew install restic');
-  }
-
-  // Create the password file interactively on first run; refuse to prompt when
-  // there is no terminal (e.g. the nightly LaunchAgent).
-  if (fs.existsSync(RESTIC_PASSWORD_FILE) === false) {
-    if (process.stdin.isTTY !== true) {
-      throw new Error(
-        `Password file is missing: ${tildify(RESTIC_PASSWORD_FILE)}. Run \`backup\` once in a terminal to create it.`
-      );
-    }
-    await createPasswordFile();
-  }
-
-  ensureVolumeMounted(dirs.nasStuffses);
-}
-
-async function runBackup(): Promise<void> {
-  await ensureResticReady();
-
+async function runBackup(): Promise<boolean> {
   logLine('Starting backup');
 
-  // Step 4: initialize the repository once, on first run.
-  if (isRepositoryInitialized() === false) {
-    log.heading('Initializing repository…');
-    restic(['init']);
+  let resticFailed = false;
+  let nasMirrorFailed = false;
+
+  try {
+    await runResticBackup(
+      RESTIC_CONFIG,
+      RESTIC_SOURCES,
+      RESTIC_EXCLUDES,
+      // Restic stores symlinks without following them; the Obsidian vault is a
+      // symlink into iCloud.
+      fs.realpathSync,
+      dirs.nasStuffses,
+      'backup',
+      logLine
+    );
+  } catch (error) {
+    resticFailed = true;
+    logLine(`Restic failed: ${formatError(error)}`);
   }
 
-  // Step 5: back up all sources. Resolve symlinks first: restic stores a
-  // symlink as just the link without descending into it, and the Obsidian vault
-  // is a symlink into iCloud.
-  restic([
-    'backup',
-    ...SOURCES.map((source) => fs.realpathSync(source)),
-    ...EXCLUDES.flatMap((pattern) => ['--exclude', pattern]),
-  ]);
+  if (
+    runVolumeMirrors(dirs.nasBackupDrive, NAS_MIRROR_JOBS, logLine) === false
+  ) {
+    nasMirrorFailed = true;
+  }
 
-  // Step 6: apply the retention policy and reclaim unused data.
-  restic([
-    'forget',
-    '--keep-daily',
-    String(KEEP_DAILY),
-    '--keep-weekly',
-    String(KEEP_WEEKLY),
-    '--keep-monthly',
-    String(KEEP_MONTHLY),
-    '--keep-yearly',
-    String(KEEP_YEARLY),
-    '--prune',
-  ]);
+  if (resticFailed || nasMirrorFailed) {
+    return false;
+  }
 
   logLine('Backup completed');
+  return true;
 }
 
 function install(): void {
@@ -213,10 +166,12 @@ export async function backup(options: Options): Promise<void> {
   } else if (command === 'uninstall') {
     uninstall();
   } else if (options.args.length === 0) {
-    await runBackup();
+    if ((await runBackup()) === false) {
+      process.exit(1);
+    }
   } else {
-    await ensureResticReady();
-    restic([command, ...restArgs]);
+    await ensureResticReady(RESTIC_CONFIG, 'backup', dirs.nasStuffses);
+    runRestic([command, ...restArgs], RESTIC_CONFIG);
   }
 }
 

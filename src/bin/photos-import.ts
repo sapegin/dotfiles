@@ -37,7 +37,7 @@ const OPTIONS = [] as const;
 export type Options = ParsedArgs<typeof OPTIONS>;
 
 const VOLUMES_DIR = '/Volumes';
-const OFFSITE_BACKUP_DIR = path.join(dirs.nasPhotos, 'Backup');
+const OFFSITE_BACKUP_DIR = path.join(dirs.nasPhotos, 'Backup/Imports');
 
 /**
  * Check whether two import dates are close enough to be the same capture.
