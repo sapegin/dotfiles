@@ -146,8 +146,6 @@ export async function photosArchive(_options: Options): Promise<void> {
     console.log(`NAS:    ${tildify(nasDir)}`);
     process.exit(1);
   }
-
-  console.log(`Archived ${folderName} to ${tildify(archiveDir)}.`);
 }
 
 await run(import.meta.url, () => photosArchive(parseArgs(OPTIONS)));
