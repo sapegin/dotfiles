@@ -46,7 +46,7 @@ export function getPhotoPairKey(filePath: string): string {
 
 /** Ignore hidden macOS and dotfiles when scanning photo folders. */
 export function isVisiblePhotoFile(filePath: string): boolean {
-  return path.basename(filePath).startsWith('.') === false;
+  return isVisible(path.basename(filePath));
 }
 
 /** Ignore hidden folders (e.g. `.dtrash`) in the photo library. */
