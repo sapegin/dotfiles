@@ -16,6 +16,7 @@
 import { execFileSync, execSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
+import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import {
   assertGitRepo,
   getCurrentBranch,
@@ -23,7 +24,11 @@ import {
   getGitConfig,
   runGit,
 } from '../util/git.ts';
-import { log } from '../util/tui.ts';
+import { log, run } from '../util/tui.ts';
+
+const OPTIONS = [] as const;
+
+export type Options = ParsedArgs<typeof OPTIONS>;
 
 // TODO: We can just assume it's installed if the project uses it
 function commandExists(cmd: string): boolean {
@@ -61,101 +66,109 @@ function hasChanged(filename: string): boolean {
   return getChangedFiles().some((f) => f.includes(filename));
 }
 
-assertGitRepo();
+export function pull(_options: Options): void {
+  assertGitRepo();
 
-const branch = getCurrentBranch();
+  const branch = getCurrentBranch();
 
-if (branch === undefined) {
-  log.error(
-    "✕ You're not on a branch (detached HEAD). Check out a branch first."
-  );
-  process.exit(1);
-}
-
-const remote = getGitConfig(`branch.${branch}.remote`) ?? 'origin';
-const mergeRef =
-  getGitConfig(`branch.${branch}.merge`) ?? `refs/heads/${branch}`;
-const remoteBranch = mergeRef.split('/').slice(2).join('/');
-
-// Stash local changes including untracked; compare refs/stash before/after to
-// detect whether anything was actually stashed (more robust than parsing output)
-const stashBefore = execSync(
-  'git rev-parse --verify --quiet refs/stash || true',
-  {
-    shell: '/bin/bash',
-    encoding: 'utf8',
+  if (branch === undefined) {
+    log.error(
+      "✕ You're not on a branch (detached HEAD). Check out a branch first."
+    );
+    process.exit(1);
   }
-).trim();
 
-runGit(['stash', '--include-untracked']);
+  const remote = getGitConfig(`branch.${branch}.remote`) ?? 'origin';
+  const mergeRef =
+    getGitConfig(`branch.${branch}.merge`) ?? `refs/heads/${branch}`;
+  const remoteBranch = mergeRef.split('/').slice(2).join('/');
 
-const stashAfter = execSync(
-  'git rev-parse --verify --quiet refs/stash || true',
-  {
-    shell: '/bin/bash',
-    encoding: 'utf8',
+  // Stash local changes including untracked; compare refs/stash before/after to
+  // detect whether anything was actually stashed (more robust than parsing output)
+  const stashBefore = execSync(
+    'git rev-parse --verify --quiet refs/stash || true',
+    {
+      shell: '/bin/bash',
+      encoding: 'utf8',
+    }
+  ).trim();
+
+  runGit(['stash', '--include-untracked']);
+
+  const stashAfter = execSync(
+    'git rev-parse --verify --quiet refs/stash || true',
+    {
+      shell: '/bin/bash',
+      encoding: 'utf8',
+    }
+  ).trim();
+
+  const stashed = stashBefore !== stashAfter;
+
+  function unstash(): void {
+    if (stashed) {
+      console.log('󰦛 Restoring tree from stash…');
+      runGit(['stash', 'pop']);
+    }
   }
-).trim();
 
-const stashed = stashBefore !== stashAfter;
-
-function unstash(): void {
-  if (stashed) {
-    console.log('󰦛 Restoring tree from stash…');
-    runGit(['stash', 'pop']);
+  function rollback(exitCode: number): never {
+    console.log();
+    log.error('Something went wrong, rolling back…');
+    unstash();
+    process.exit(exitCode);
   }
-}
 
-function rollback(exitCode: number): never {
-  console.log();
-  log.error('Something went wrong, rolling back…');
+  // Pull with rebase
+  console.log(`\n↓ Fetching from ${remote}…`);
+  try {
+    execFileSync(
+      'git',
+      [
+        'pull',
+        '--rebase',
+        '--prune',
+        '--recurse-submodules',
+        '--jobs=10',
+        remote,
+        remoteBranch,
+      ],
+      { stdio: 'inherit' }
+    );
+  } catch (error) {
+    rollback(getExecExitCode(error));
+  }
+
   unstash();
-  process.exit(exitCode);
+
+  // Install Node.js packages with pnpm if available, otherwise fall back to npm
+  if (
+    commandExists('pnpm') &&
+    fileExistsInRepo('pnpm-lock.yaml') &&
+    (hasChanged('pnpm-lock.yaml') || hasChanged('package.json'))
+  ) {
+    console.log();
+    console.log(' Installing packages with pnpm…');
+    const lockFile = getChangedFiles().find((f) => f.includes('pnpm-lock.yaml'));
+    const packageFile = getChangedFiles().find((f) =>
+      f.includes('package.json')
+    );
+    const changedFile = lockFile ?? packageFile;
+    const installDir = changedFile
+      ? path.join(process.cwd(), getBaseDir(), path.dirname(changedFile))
+      : process.cwd();
+    execFileSync('pnpm', ['install'], { stdio: 'inherit', cwd: installDir });
+  } else if (commandExists('npm') && hasChanged('package.json')) {
+    console.log();
+    console.log(' Installing packages with npm…');
+    const packageFile = getChangedFiles().find((f) =>
+      f.includes('package.json')
+    );
+    const installDir = packageFile
+      ? path.join(process.cwd(), getBaseDir(), path.dirname(packageFile))
+      : process.cwd();
+    execFileSync('npm', ['install'], { stdio: 'inherit', cwd: installDir });
+  }
 }
 
-// Pull with rebase
-console.log(`\n↓ Fetching from ${remote}…`);
-try {
-  execFileSync(
-    'git',
-    [
-      'pull',
-      '--rebase',
-      '--prune',
-      '--recurse-submodules',
-      '--jobs=10',
-      remote,
-      remoteBranch,
-    ],
-    { stdio: 'inherit' }
-  );
-} catch (error) {
-  rollback(getExecExitCode(error));
-}
-
-unstash();
-
-// Install Node.js packages with pnpm if available, otherwise fall back to npm
-if (
-  commandExists('pnpm') &&
-  fileExistsInRepo('pnpm-lock.yaml') &&
-  (hasChanged('pnpm-lock.yaml') || hasChanged('package.json'))
-) {
-  console.log();
-  console.log(' Installing packages with pnpm…');
-  const lockFile = getChangedFiles().find((f) => f.includes('pnpm-lock.yaml'));
-  const packageFile = getChangedFiles().find((f) => f.includes('package.json'));
-  const changedFile = lockFile ?? packageFile;
-  const installDir = changedFile
-    ? path.join(process.cwd(), getBaseDir(), path.dirname(changedFile))
-    : process.cwd();
-  execFileSync('pnpm', ['install'], { stdio: 'inherit', cwd: installDir });
-} else if (commandExists('npm') && hasChanged('package.json')) {
-  console.log();
-  console.log(' Installing packages with npm…');
-  const packageFile = getChangedFiles().find((f) => f.includes('package.json'));
-  const installDir = packageFile
-    ? path.join(process.cwd(), getBaseDir(), path.dirname(packageFile))
-    : process.cwd();
-  execFileSync('npm', ['install'], { stdio: 'inherit', cwd: installDir });
-}
+await run(import.meta.url, () => pull(parseArgs(OPTIONS)));

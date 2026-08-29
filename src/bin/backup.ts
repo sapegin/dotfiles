@@ -42,7 +42,7 @@ import { ensureVolumeMounted } from '../util/mount.ts';
 import { formatLocalTimestamp } from '../util/time.ts';
 import { log, prompt, run } from '../util/tui.ts';
 
-const OPTIONS = [] as const;
+const OPTIONS = [{ name: 'args', rest: true }] as const;
 
 export type Options = ParsedArgs<typeof OPTIONS>;
 
@@ -205,15 +205,14 @@ function uninstall(): void {
   uninstallLaunchAgent(LABEL);
 }
 
-export async function backup(_options: Options): Promise<void> {
-  const cliArgs = process.argv.slice(2);
-  const [command, ...restArgs] = cliArgs;
+export async function backup(options: Options): Promise<void> {
+  const [command, ...restArgs] = options.args;
 
   if (command === 'install') {
     install();
   } else if (command === 'uninstall') {
     uninstall();
-  } else if (cliArgs.length === 0) {
+  } else if (options.args.length === 0) {
     await runBackup();
   } else {
     await ensureResticReady();

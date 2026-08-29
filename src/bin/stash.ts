@@ -12,13 +12,21 @@
 // License: MIT
 // https://github.com/sapegin/dotfiles
 
+import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import { runGit } from '../util/git.ts';
+import { run } from '../util/tui.ts';
 
-const args = process.argv.slice(2);
+const OPTIONS = [{ name: 'args', rest: true }] as const;
 
-if (args.length === 0) {
-  console.log(' Stashing changes…');
-  runGit(['stash', '--include-untracked']);
-} else {
-  runGit(['stash', ...args]);
+export type Options = ParsedArgs<typeof OPTIONS>;
+
+export function stash({ args }: Options): void {
+  if (args.length === 0) {
+    console.log(' Stashing changes…');
+    runGit(['stash', '--include-untracked']);
+  } else {
+    runGit(['stash', ...args]);
+  }
 }
+
+await run(import.meta.url, () => stash(parseArgs(OPTIONS)));
