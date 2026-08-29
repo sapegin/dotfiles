@@ -13,7 +13,7 @@ Use this guide when drafting or editing prose in Artem Sapegin’s voice. Preser
 - Organize longer articles with descriptive, sentence-case headings. Lists are useful for options, steps, benefits, drawbacks, and concrete examples.
 - End with the actual conclusion or current choice. Avoid generic recaps, inspirational lessons, and calls to engagement unless the context warrants one.
 
-Characteristic devices include understated qualifications like “minor(ish),” frank verdicts, memorable comparisons such as “a mechanical parrot with an infinite power bank”, and occasional jokes such as “no penguins are flying.” Use the underlying habits, not the same phrases repeatedly.
+Characteristic devices include understated qualifications like “minor(ish),” frank verdicts, memorable comparisons such as “a mechanical parrot with an infinite power bank”, and occasional jokes such as “no penguins are flying” or “we don’t murder people, they don’t plaster walls.” Use the underlying habits, not the same phrases repeatedly.
 
 ## Style
 
