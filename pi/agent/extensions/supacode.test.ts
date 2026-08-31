@@ -36,7 +36,6 @@ vi.mock(import('node:fs'), async (importOriginal) => {
   };
 });
 
-import { permissionRequiredEvent } from './block-destructive-operations.ts';
 import supacode from './supacode.ts';
 
 type Handler = (...args: unknown[]) => unknown;
@@ -44,16 +43,9 @@ type Handler = (...args: unknown[]) => unknown;
 function setupExtension() {
   const eventHandlers = new Map<string, Handler[]>();
   const pi = {
-    events: {
-      emit: vi.fn<(event: string, data: unknown) => void>(),
-      on(event: string, handler: Handler) {
-        eventHandlers.set(event, [
-          ...(eventHandlers.get(event) ?? []),
-          handler,
-        ]);
-      },
+    on(event: string, handler: Handler) {
+      eventHandlers.set(event, [...(eventHandlers.get(event) ?? []), handler]);
     },
-    on: vi.fn<(event: string, handler: Handler) => void>(),
   } as unknown as ExtensionAPI;
 
   supacode(pi);
@@ -78,10 +70,10 @@ describe('supacode extension', () => {
     vi.unstubAllEnvs();
   });
 
-  test('requests attention when destructive-operation permission is required', () => {
+  test('requests attention when an extension UI prompt starts', () => {
     const extension = setupExtension();
 
-    extension.emit(permissionRequiredEvent);
+    extension.emit('ui_prompt_start');
 
     expect(terminalMock.writes).toStrictEqual([
       '\u001B]9;Pi needs your input\u001B\\',

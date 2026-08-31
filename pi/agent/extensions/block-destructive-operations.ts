@@ -15,9 +15,6 @@ const choiceAllow = 'Allow';
 const choiceDeny = 'Deny, provide reason';
 const choiceRanManually = 'Continue, I ran the command myself';
 
-export const permissionRequiredEvent =
-  'block-destructive-operations:permission-required';
-
 export default function blockDestructiveOperations(pi: ExtensionAPI) {
   pi.on('tool_call', async (event, ctx) => {
     if (!isToolCallEventType('bash', event)) {
@@ -36,7 +33,6 @@ export default function blockDestructiveOperations(pi: ExtensionAPI) {
       };
     }
 
-    pi.events.emit(permissionRequiredEvent, undefined);
     const choice = await ctx.ui.select(
       `Permission required\n\nMy Lord, I wish to run this dangerous command:\n\n${event.input.command}`,
       [choiceAllow, choiceDeny, choiceRanManually]
