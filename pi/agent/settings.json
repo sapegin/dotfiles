@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "0.84.1",
+  "lastChangelogVersion": "0.84.4",
   "defaultProvider": "openai-codex",
   "defaultModel": "gpt-5.6-sol",
   "defaultThinkingLevel": "medium",
@@ -8,5 +8,6 @@
   "enableSkillCommands": true,
   "theme": "squirrelsong",
   "doubleEscapeAction": "none",
-  "tuiMode": "fullscreen"
+  "tuiMode": "fullscreen",
+  "fullscreenCopyOnSelect": false
 }
