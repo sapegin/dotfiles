@@ -4,7 +4,7 @@ Prioritize issues introduced or exposed by the diff.
 
 ## Comments
 
-- **Comment noise:** Remove comments that narrate syntax, repeat names, or over-explain obvious code. Do not flag JSDoc on exported functions, methods, or types — brief exported API docs are intentional, even when they restate the name.
+- **Comment noise:** Remove comments that narrate syntax, repeat names, or over-explain obvious code. Keep JSDoc-style comments that describe functions when they are an existing file or project convention, even when a brief description restates the function name. Do not flag JSDoc on exported functions, methods, or types — brief exported API docs are intentional, even when they restate the name.
 - **Missing context:** Add concise comments when code depends on non-obvious constraints, external knowledge, workarounds, or decisions that cannot be recovered from the code alone.
 - **TODO comments:** Keep precise TODOs that document intentionally deferred functionality or known scope limitations; resolve or flag low-effort TODOs that can be completed safely within the current change.
 
