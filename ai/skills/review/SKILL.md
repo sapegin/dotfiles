@@ -79,7 +79,7 @@ The review target may be application code, configuration, documentation, agent s
 ### Always apply
 
 - **Requirements and intent:** Verify that the affected system satisfies the request, specification, product intent, and relevant business rules. Find missing, partial, incorrect, or unrequested behavior, and question implementations that satisfy the literal patch while solving the wrong problem.
-- **Scope discipline:** Flag unrelated changes, abandoned-refactor debris, unexplained behavior changes, generated-file churn, accidental public exports, and conditions or data preparation repeated downstream when they belong at a clear boundary.
+- **Scope discipline:** Flag unrelated changes, abandoned-refactor debris, unexplained behavior changes, generated-file churn, accidental public exports, and conditions or data preparation repeated downstream when they belong at a clear boundary. Treat `AGENTS.md` changes that document conventions or durable guidance relevant to the changed system as related; do not require a separate change merely because the guidance applies to future work.
 
 ### Category checklists
 
