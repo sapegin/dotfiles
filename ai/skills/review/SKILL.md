@@ -18,11 +18,13 @@ Accept zero or one argument:
 
 Pass the argument exactly as supplied to `branch-diff`, or run `branch-diff` without one. Treat its output as the review starting point; if it fails, ask the user to clarify.
 
+Use any specification or ticket supplied earlier in the conversation as explicit requirements. Treat implementation descriptions, including pull request descriptions, as context rather than requirements unless they explicitly record an approved requirement change. If requirement sources conflict and no approved decision resolves the conflict, ask the user to clarify before reporting findings.
+
 ## Process
 
-1. Resolve the review scope according to **Target**. Do not add a scope preamble to the first finding.
-2. Establish intended behavior from the request, issue, commit or pull request description, relevant callers, tests, types, schemas, designs, and documentation. Do not infer requirements solely from the changed implementation.
-3. Compare the diff against the specification and check explicitly for: requirements that are missing or only partially implemented; behavior introduced by the diff that the specification did not request (scope creep); and requirements that appear implemented but whose implementation is incorrect. Quote the relevant specification line for every such finding.
+1. Resolve the review target according to **Target** and identify explicit requirements already supplied in the conversation. Do not add a scope preamble to the first finding.
+2. Establish intended behavior from the explicit requirements, request, issue, approved decisions, relevant callers, tests, types, schemas, designs, and documentation. Use commit and pull request descriptions as supporting implementation context. Do not infer requirements solely from the changed implementation.
+3. Compare the diff against the specification and check explicitly for requirements that are missing, only partially implemented, implemented incorrectly, or not meaningfully tested. Quote the relevant specification line for every such finding.
 4. Inspect the selected file or complete changeset and the affected system. Include relevant unchanged source, tests, dependencies, generated files, configuration, documentation, agent skills, migrations, assets, and public contracts. Follow the design as far as needed for a sound review without auditing unrelated systems.
 5. Trace relevant values and behavior through callers, consumers, state owners, API boundaries, persistence, and side effects. Look for intent mismatches, unexplained product or business-logic changes, misplaced responsibilities, and poor boundaries.
 6. Report material issues throughout the affected system, including issues in unchanged files that the target exposes or that a coherent design improvement should address. Judge the code under review, not whether it is committed or tracked. The only version-control finding allowed is incorrect `.gitignore` coverage.
@@ -78,8 +80,7 @@ The review target may be application code, configuration, documentation, agent s
 
 ### Always apply
 
-- **Requirements and intent:** Verify that the affected system satisfies the request, specification, product intent, and relevant business rules. Find missing, partial, incorrect, or unrequested behavior, and question implementations that satisfy the literal patch while solving the wrong problem.
-- **Scope discipline:** Flag unrelated changes, abandoned-refactor debris, unexplained behavior changes, generated-file churn, accidental public exports, and conditions or data preparation repeated downstream when they belong at a clear boundary. Treat `AGENTS.md` changes that document conventions or durable guidance relevant to the changed system as related; do not require a separate change merely because the guidance applies to future work.
+- **Requirements and intent:** Verify that the affected system satisfies the request, specification, product intent, and relevant business rules. Find missing, partial, incorrect, or untested requirements, and question implementations that satisfy the literal patch while solving the wrong problem.
 
 ### Category checklists
 
