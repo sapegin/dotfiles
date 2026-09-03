@@ -70,7 +70,9 @@ Formatting rules:
 
 ## Focus areas
 
-The review target may be application code, configuration, documentation, agent skills, CI definitions, or other repository artifacts. Load detailed checklists only for categories the changes touch.
+The review target may be application code, configuration, documentation, agent skills, CI definitions, or other repository artifacts. Load detailed checklists only for categories the target covers.
+
+When category references are loaded for embedded code in Markdown articles or documentation, treat each fenced or inline example as the review target. Apply the same criteria to the example and its stated context; do not require a diff or repository changeset.
 
 ### Always apply
 
@@ -80,7 +82,7 @@ The review target may be application code, configuration, documentation, agent s
 
 ### Category checklists
 
-Load only the references needed for the changes under review:
+Load only the references needed for the topics the review target covers:
 
 - **Code quality** — comments, structure, dead code, completeness, clarity: read [code-quality](references/code-quality.md).
 - **JavaScript and TypeScript** — types, async, Node.js, framework patterns: read [javascript](references/javascript.md).

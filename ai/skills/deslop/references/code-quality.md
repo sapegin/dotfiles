@@ -1,6 +1,6 @@
 # Code quality
 
-Prioritize issues introduced or exposed by the diff.
+Apply to the code under review. For diffs, prioritize issues introduced or exposed by the change.
 
 ## Comments
 
@@ -24,4 +24,4 @@ Prioritize issues introduced or exposed by the diff.
 
 - **Magic values:** Replace unexplained numeric literals with named constants when the name captures a real constraint or domain concept; keep obvious local values inline.
 - **Unnecessary repetition:** Consolidate repeated values, calculations, or code introduced or exposed directly by the target when they plainly represent the same concept. Do not generalize incidental similarity or search unchanged systems for duplication.
-- **Clean-code violations:** Apply [Clean code for JavaScript/TypeScript](../../_references/JavaScript.md) when it improves the changed code without creating churn.
+- **Clean-code violations:** Apply [Clean code for JavaScript/TypeScript](../../_references/JavaScript.md) when it improves the code under review without creating churn.

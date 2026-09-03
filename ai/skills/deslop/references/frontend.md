@@ -2,7 +2,7 @@
 
 ## Performance
 
-Raise performance findings only when the changed path has a plausible frequency or user-visible cost; do not prescribe memoization, caching, or concurrency without evidence.
+Raise performance findings only when the reviewed code path has a plausible frequency or user-visible cost; do not prescribe memoization, caching, or concurrency without evidence.
 
 ## Accessibility defects
 
