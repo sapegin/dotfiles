@@ -7,7 +7,5 @@
   "enableInstallTelemetry": false,
   "enableSkillCommands": true,
   "theme": "squirrelsong",
-  "doubleEscapeAction": "none",
-  "tuiMode": "fullscreen",
-  "fullscreenCopyOnSelect": false
+  "doubleEscapeAction": "none"
 }
