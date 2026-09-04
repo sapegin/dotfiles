@@ -82,7 +82,7 @@ Use this structure. Replace only the placeholders.
 
 Formatting rules:
 
-- Number findings consecutively from 1 within each section.
+- Number findings consecutively across all finding sections, starting at 1. Do not restart numbering or use letter prefixes.
 - Omit empty sections entirely.
 - Keep each finding focused on one issue.
 - Cite authoritative sources in **Evidence** when the finding depends on external facts.
@@ -93,10 +93,10 @@ Formatting rules:
 When any finding section has entries, add:
 
 ```text
-Fix (C1, M2), fix (all), or tell what to do.
+Fix (1, 3), fix (all), or tell what to do.
 ```
 
-Interpret `C1, M2` as approval to apply those corrections. Prefixes: `C` correctness, `M` modernity, `B` best practices. Interpret `all` as approval to apply every recommendation.
+Interpret `1, 3` as approval to apply those corrections. Interpret `all` as approval to apply every recommendation.
 
 **File mode:** edit the file in place on approval; confirm which passages changed. **Text mode:** reprint only the corrected passages unless the user asks for the full article.
 
