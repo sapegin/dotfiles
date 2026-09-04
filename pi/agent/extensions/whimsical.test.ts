@@ -14,6 +14,8 @@ function setupExtension() {
   const setWorkingIndicator =
     vi.fn<(options?: WorkingIndicatorOptions) => void>();
   const setWorkingMessage = vi.fn<(message?: string) => void>();
+  const setEditorComponent =
+    vi.fn<ExtensionContext['ui']['setEditorComponent']>();
   const theme = {
     bold: (text: string) => `<bold>${text}</bold>`,
     fg: (color: string, text: string) => `<${color}>${text}</${color}>`,
@@ -22,6 +24,7 @@ function setupExtension() {
     ui: {
       setWorkingIndicator,
       setWorkingMessage,
+      setEditorComponent,
       theme,
     },
   } as unknown as ExtensionContext;
@@ -33,7 +36,13 @@ function setupExtension() {
 
   Whimsical(pi);
 
-  return { ctx, handlers, setWorkingIndicator, setWorkingMessage };
+  return {
+    ctx,
+    handlers,
+    setEditorComponent,
+    setWorkingIndicator,
+    setWorkingMessage,
+  };
 }
 
 function runHandler(
@@ -54,6 +63,16 @@ afterEach(() => {
 });
 
 describe(Whimsical, () => {
+  test('uses a custom editor for the standalone working row', () => {
+    const { ctx, handlers, setEditorComponent } = setupExtension();
+
+    runHandler(handlers, 'session_start', ctx);
+
+    expect(setEditorComponent).toHaveBeenCalledExactlyOnceWith(
+      expect.any(Function)
+    );
+  });
+
   test('installs the spinner and animates the working message', () => {
     vi.useFakeTimers();
     const { ctx, handlers, setWorkingIndicator, setWorkingMessage } =

@@ -1,4 +1,5 @@
 import {
+  CustomEditor,
   type ExtensionAPI,
   type ExtensionContext,
   type Theme,
@@ -250,6 +251,14 @@ function glidingMessage(
 
 export default function Whimsical(pi: ExtensionAPI) {
   let animationTimer: ReturnType<typeof setInterval> | undefined;
+
+  // Disable extremely annoying thinking indicator inlined in the text box top
+  // border and moves it back to separate line.
+  pi.on('session_start', (_event, ctx) => {
+    ctx.ui.setEditorComponent(
+      (tui, theme, keybindings) => new CustomEditor(tui, theme, keybindings)
+    );
+  });
 
   const stopAnimation = (): void => {
     if (!animationTimer) {
