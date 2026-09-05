@@ -354,6 +354,27 @@ xattr -d com.apple.FinderInfo ~/Library 2>/dev/null
 sudo chflags nohidden /Volumes
 
 # ────────────────────────────── 8< ──────── 8< ───────────────────────────────
+# Window corner radius
+
+# Per-app override for macOS window corner radius (default ~26 on Tahoe; 10 ≈ Sequoia).
+defaults write org.mozilla.firefox NSConvolutionOverride1 -float 10
+defaults write org.mozilla.firefoxdeveloperedition NSConvolutionOverride1 -float 10
+defaults write com.microsoft.Outlook NSConvolutionOverride1 -float 10
+defaults write com.microsoft.VSCode NSConvolutionOverride1 -float 10
+defaults write md.obsidian NSConvolutionOverride1 -float 10
+defaults write com.mitchellh.ghostty NSConvolutionOverride1 -float 10
+defaults write app.supabit.supacode NSConvolutionOverride1 -float 10
+defaults write com.tinyspeck.slackmacgap NSConvolutionOverride1 -float 10
+defaults write com.apple.finder NSConvolutionOverride1 -float 10
+defaults write com.apple.Music NSConvolutionOverride1 -float 10
+defaults write ru.keepcoder.Telegram NSConvolutionOverride1 -float 10
+defaults write com.github.GitHubClient NSConvolutionOverride1 -float 10
+defaults write com.adobe.LightroomClassicCC7 NSConvolutionOverride1 -float 10
+defaults write com.kapeli.dashdoc NSConvolutionOverride1 -float 10
+defaults write com.figma.Desktop NSConvolutionOverride1 -float 10
+defaults write us.zoom.xos NSConvolutionOverride1 -float 10
+
+# ────────────────────────────── 8< ──────── 8< ───────────────────────────────
 # Safari
 #
 
@@ -410,7 +431,28 @@ defaults write com.apple.TextEdit PlainTextEncodingForWrite -int 4
 # ────────────────────────────── 8< ──────── 8< ───────────────────────────────
 # Kill affected applications
 
-for app in "Dock" "Finder" "Safari" "SystemUIServer" "Terminal" "NotificationCenter"; do
+for app in \
+	"Adobe Lightroom Classic" \
+	"Code" \
+	"Dash" \
+	"Dock" \
+	"Figma" \
+	"Finder" \
+	"firefox" \
+	"ghostty" \
+	"GitHub Desktop" \
+	"Microsoft Outlook" \
+	"Music" \
+	"NotificationCenter" \
+	"Obsidian" \
+	"Safari" \
+	"Slack" \
+	"supacode" \
+	"SystemUIServer" \
+	"Telegram" \
+	"Terminal" \
+	"zoom.us"
+do
 	killall "$app" > /dev/null 2>&1
 done
 
