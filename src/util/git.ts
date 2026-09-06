@@ -40,6 +40,14 @@ export function getCurrentBranch(cwd?: string): string | undefined {
   return branch || undefined;
 }
 
+/** Returns the short commit hash at HEAD. */
+export function getShortCommit(cwd?: string): string {
+  return execFileSync('git', ['rev-parse', '--short', 'HEAD'], {
+    cwd,
+    encoding: 'utf8',
+  }).trim();
+}
+
 /** Returns the root of the current Git repository. */
 export function getGitRepoRoot(cwd?: string): string {
   return execFileSync('git', ['rev-parse', '--show-toplevel'], {
