@@ -79,7 +79,7 @@ describe(later, () => {
       );
 
       await expect(fs.readFile(laterFile, 'utf8')).resolves.toContain(
-        `\`2026-07-05_1009\` · \`example-repo\` · \`${commit}\``
+        `2026-07-05_1009 — example-repo on ${commit}`
       );
     } finally {
       git('switch', 'main');

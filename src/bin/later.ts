@@ -9,7 +9,11 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import { dirs } from '../util/files.ts';
-import { getCurrentBranch, getGitRepoRoot } from '../util/git.ts';
+import {
+  getCurrentBranch,
+  getGitRepoRoot,
+  getShortCommit,
+} from '../util/git.ts';
 import { formatLocalDateTime } from '../util/time.ts';
 import { run } from '../util/tui.ts';
 
@@ -38,8 +42,9 @@ export async function later(
   const repositoryRoot = getGitRepoRoot(cwd);
   const repository = path.basename(repositoryRoot);
   const branch = getCurrentBranch(cwd);
+  const ref = branch ?? getShortCommit(cwd);
   const timestamp = formatLocalDateTime(now);
-  const entry = `## ${heading}\n\n${timestamp} — ${repository} on ${branch}\n\n${paragraph}`;
+  const entry = `## ${heading}\n\n${timestamp} — ${repository} on ${ref}\n\n${paragraph}`;
 
   let content = '';
   try {
