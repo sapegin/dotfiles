@@ -2,6 +2,7 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import sharp from 'sharp';
+import YAML from 'yaml';
 import {
   dirs,
   prettyBytes,
@@ -10,6 +11,7 @@ import {
   stripExtensions,
   atomicWrite,
 } from './files.ts';
+import { formatLocalDateTime } from './time.ts';
 import { log } from './tui.ts';
 
 export const MAX_DIMENSION = 2048;
@@ -53,6 +55,21 @@ export async function assertObsidianVault(): Promise<void> {
 export function openObsidianPath(relativePath: string): void {
   const uri = `obsidian://open?vault=${encodeURIComponent(OBSIDIAN_VAULT_NAME)}&file=${encodeURIComponent(relativePath)}`;
   execFileSync('open', [uri]);
+}
+
+/**
+ * Resolve a daily note file from its basename.
+ *
+ * - `2026-07-05_1021` → ~/murder/Log/2026/2026-07-05_1021.md
+ */
+export function getNotePath(noteBasename: string): string {
+  const year = noteBasename.slice(0, 4);
+  return path.join(dirs.obsidianDailyNotes, year, `${noteBasename}.md`);
+}
+
+/** Resolve a daily note file from a timestamp. */
+export function getDailyNotePath(datetime: Date): string {
+  return getNotePath(formatLocalDateTime(datetime));
 }
 
 /**
@@ -341,14 +358,92 @@ export function stripImageWikilinks(body: string): string {
     .trimEnd();
 }
 
-/** Split YAML frontmatter from Markdown body. Returns raw frontmatter text. */
-export function parseFrontmatter(content: string): {
-  frontmatter: string | undefined;
+/** Parsed YAML frontmatter for vault notes. */
+export interface VaultFrontmatter {
+  address?: string;
+  aliases?: string[];
+  author?: string;
+  born?: string;
+  cast?: string;
+  coordinates?: string;
+  created?: string;
+  deadline?: string;
+  description?: string;
+  director?: string;
+  image?: string;
+  keywords?: string;
+  location?: string;
+  published?: string;
+  rating?: string;
+  refs?: string;
+  slug?: string;
+  source?: string;
+  sputniks?: string;
+  status?: string;
+  tags?: string[];
+  time?: string;
+  'title-english'?: string;
+  weather?: string;
+  year?: string;
+  yields?: string;
+}
+
+const STRING_ARRAY_FIELDS = ['aliases', 'tags'] as const;
+
+function normalizeStringArray(value: unknown): string[] | undefined {
+  if (value === undefined || value === null || value === '') {
+    return undefined;
+  }
+
+  if (typeof value === 'string') {
+    return [value];
+  }
+
+  if (Array.isArray(value)) {
+    const strings = value.filter(
+      (item): item is string => typeof item === 'string'
+    );
+    return strings.length > 0 ? strings : undefined;
+  }
+
+  return undefined;
+}
+
+function normalizeFrontmatter<T extends object>(raw: unknown): T {
+  if (raw === null || typeof raw !== 'object' || Array.isArray(raw)) {
+    return {} as T;
+  }
+
+  const record = { ...(raw as Record<string, unknown>) };
+
+  for (const key of STRING_ARRAY_FIELDS) {
+    if (key in record) {
+      record[key] = normalizeStringArray(record[key]);
+    }
+  }
+
+  return record as T;
+}
+
+/**
+ * Split YAML frontmatter from Markdown body and parse it into an object.
+ * Scalar YAML lists such as `tags` and `aliases` are coerced to `string[]`.
+ */
+export function parseFrontmatter<T extends object>(
+  content: string
+): {
+  frontmatter: T;
   body: string;
+  hasFrontmatter: boolean;
 } {
   const match = content.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
   if (match === null) {
-    return { frontmatter: undefined, body: content };
+    return { frontmatter: {} as T, body: content, hasFrontmatter: false };
   }
-  return { frontmatter: match[1], body: match[2] };
+
+  return {
+    frontmatter: normalizeFrontmatter<T>(YAML.parse(match[1]) ?? {}),
+    body: match[2],
+    hasFrontmatter: true,
+  };
 }

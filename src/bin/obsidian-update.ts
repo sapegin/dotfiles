@@ -28,11 +28,15 @@ import {
 } from '../util/files.ts';
 import {
   doesAttachmentExist,
+  formatNoteHeading,
   getMarkdownImages,
+  getNotePath,
   moveToTrash,
   needsOptimization,
   optimizeImage,
+  parseFrontmatter,
   replaceMarkdownImageReferences,
+  type VaultFrontmatter,
 } from '../util/obsidian.ts';
 import { getDatedPhotoFilename } from '../util/photos.ts';
 import {
@@ -110,16 +114,6 @@ const WMO_WEATHER_CODES_NIGHT: Record<number, string> = {
   0: 'clear',
   1: 'mainly clear',
 };
-
-interface Frontmatter {
-  image?: string;
-  location?: string;
-  coordinates?: string;
-  weather?: string;
-  tags?: string[];
-  description?: string;
-  [key: string]: unknown;
-}
 
 interface WeatherResponse {
   hourly: {
@@ -360,25 +354,9 @@ async function optimizeImages(
   return renamedFiles;
 }
 
-function parseFrontmatter(content: string): {
-  frontmatter: Frontmatter;
-  body: string;
-} {
-  const match = content.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
-  if (!match) {
-    return { frontmatter: {}, body: content };
-  }
-
-  const frontmatterText = match[1];
-  const body = match[2];
-  const frontmatter = (YAML.parse(frontmatterText) ?? {}) as Frontmatter;
-
-  return { frontmatter, body };
-}
-
-function serializeFrontmatter(frontmatter: Frontmatter): string {
+function serializeFrontmatter(frontmatter: VaultFrontmatter): string {
   // Remove empty (undefined, null, '') values, and sort fields
-  const cleanFrontmatter: Frontmatter = Object.fromEntries(
+  const cleanFrontmatter: VaultFrontmatter = Object.fromEntries(
     Object.entries(frontmatter)
       .filter(
         ([, value]) => value !== undefined && value !== null && value !== ''
@@ -432,7 +410,7 @@ function getExcerpt(body: string): string {
 }
 
 interface UpdateNoteArgs {
-  frontmatter: Frontmatter;
+  frontmatter: VaultFrontmatter;
   body: string;
   file: string;
   allNotes: string[];
@@ -441,7 +419,7 @@ interface UpdateNoteArgs {
 }
 
 interface UpdateNoteResult {
-  newFrontmatter: Frontmatter;
+  newFrontmatter: VaultFrontmatter;
   newBody: string;
   newFile: string;
 }
@@ -454,7 +432,7 @@ async function updateNote({
   renamedFiles,
   attachmentNames,
 }: UpdateNoteArgs): Promise<UpdateNoteResult> {
-  const newFrontmatter: Frontmatter = { ...frontmatter };
+  const newFrontmatter: VaultFrontmatter = { ...frontmatter };
   let newBody = body;
   let newFile = file;
 
@@ -552,16 +530,15 @@ async function updateNote({
   // Journal notes
   if (file.includes('Log/')) {
     // Detect incorrect log folder (e.g. 2026/2004-01-03_1134.md)
-    const folderMatch = file.match(/Log\/(\d{4})\//);
-    const dateMatch = basename.match(/^(\d{4})-/);
-    if (folderMatch && dateMatch && folderMatch[1] !== dateMatch[1]) {
+    const canonicalPath = getNotePath(basename);
+    if (file !== canonicalPath && parseLocalDateTime(basename) !== undefined) {
+      const wrongYear = path
+        .relative(dirs.obsidianDailyNotes, file)
+        .split(path.sep)[0];
       console.log(
-        `Wrong folder: ${basename} is in ${folderMatch[1]}/ but should be in ${dateMatch[1]}/`
+        `Wrong folder: ${basename} is in ${wrongYear}/ but should be in ${basename.slice(0, 4)}/`
       );
-      newFile = newFile.replace(
-        `Log/${folderMatch[1]}/`,
-        `Log/${dateMatch[1]}/`
-      );
+      newFile = canonicalPath;
     }
 
     // Set description
@@ -570,7 +547,7 @@ async function updateNote({
     const { location } = frontmatter;
 
     // Update location field
-    if (typeof location === 'string' && location.startsWith('[[') === false) {
+    if (location?.startsWith('[[') === false) {
       // Link notes about places if they exist in the vault
       const locationNote = allNotes.find(
         (notePath) =>
@@ -583,7 +560,7 @@ async function updateNote({
     }
 
     // Get the coordinates from linked location note
-    if (typeof location === 'string') {
+    if (location) {
       const locationName = unwrapWikilink(location);
 
       const locationNotePath = allNotes.find(
@@ -596,7 +573,7 @@ async function updateNote({
         try {
           const locationContent = await fs.readFile(locationNotePath, 'utf8');
           const { frontmatter: locationFrontmatter } =
-            parseFrontmatter(locationContent);
+            parseFrontmatter<VaultFrontmatter>(locationContent);
           if (locationFrontmatter.coordinates) {
             newFrontmatter.coordinates = locationFrontmatter.coordinates;
           }
@@ -644,14 +621,7 @@ async function updateNote({
     }
 
     // Update top-level headers
-    const newDate = date
-      ? date.toLocaleDateString('en-US', {
-          weekday: 'long',
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        })
-      : basename;
+    const newDate = date ? formatNoteHeading(date) : basename;
 
     if (newBody.trim().startsWith('# ') === false) {
       newBody = `# ${newDate}\n${newBody}`;
@@ -697,7 +667,7 @@ async function updateNotes(renamedFiles: Map<string, string>): Promise<void> {
   for (const file of allNotes) {
     try {
       const content = await fs.readFile(file, 'utf8');
-      const { frontmatter, body } = parseFrontmatter(content);
+      const { frontmatter, body } = parseFrontmatter<VaultFrontmatter>(content);
 
       const { newFrontmatter, newBody, newFile } = await updateNote({
         frontmatter,

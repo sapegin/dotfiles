@@ -9,10 +9,11 @@
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import YAML from 'yaml';
 import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import { dirs, exts, glob } from '../util/files.ts';
+import { parseFrontmatter, type VaultFrontmatter } from '../util/obsidian.ts';
 import { capitalizeFirst } from '../util/text.ts';
+import { formatLocalDate, parseLocalDateTime } from '../util/time.ts';
 import { run } from '../util/tui.ts';
 
 const OPTIONS = [] as const;
@@ -55,8 +56,6 @@ type LocationType = 'home' | 'office' | 'other';
 
 interface PlaceInfo {
   locationType: LocationType;
-  icon: string;
-  color: string;
   cityName?: string;
 }
 
@@ -82,8 +81,6 @@ interface NoteWithCoords {
   lat: number;
   lon: number;
   placeName: string;
-  icon: string;
-  color: string;
 }
 
 interface ExtremeNote {
@@ -246,22 +243,14 @@ async function getPlaceInfo(locationName: string): Promise<PlaceInfo> {
 
   const defaultInfo: PlaceInfo = {
     locationType: 'other',
-    icon: 'map-pin',
-    color: 'silver',
   };
 
   try {
     const locationContent = await fs.readFile(locationFilePath, 'utf8');
-    const frontmatterMatch = locationContent.match(/^---\n([\s\S]*?)\n---/);
+    const { frontmatter, hasFrontmatter } =
+      parseFrontmatter<VaultFrontmatter>(locationContent);
 
-    if (frontmatterMatch) {
-      const frontmatter = YAML.parse(frontmatterMatch[1]) as Record<
-        string,
-        unknown
-      > | null;
-      const icon = frontmatter?.icon;
-      const color = frontmatter?.color;
-      const address = frontmatter?.address;
+    if (hasFrontmatter) {
       let locationType: LocationType = 'other';
       if (locationContent.includes('dwellings')) {
         locationType = 'home';
@@ -270,12 +259,9 @@ async function getPlaceInfo(locationName: string): Promise<PlaceInfo> {
       }
       const info: PlaceInfo = {
         locationType,
-        icon: typeof icon === 'string' ? icon : 'map-pin',
-        color: typeof color === 'string' ? color : 'silver',
-        cityName:
-          typeof address === 'string'
-            ? getCityNameFromAddress(address)
-            : undefined,
+        cityName: frontmatter.address
+          ? getCityNameFromAddress(frontmatter.address)
+          : undefined,
       };
       placeInfoCache.set(locationName, info);
       return info;
@@ -307,13 +293,11 @@ async function getDailyNotes(allNotes: Set<string>): Promise<DailyNotesData> {
   let maxDate = new Date(0);
 
   for (const file of files) {
-    const basename = path.basename(file);
-    const match = basename.match(/^(\d{4}-\d{2}-\d{2})_(\d{2})(\d{2})\.md$/);
-    if (match) {
-      const dateStr = match[1];
-      const hours = Number.parseInt(match[2], 10);
-      const minutes = Number.parseInt(match[3], 10);
-      const timeInMinutes = hours * 60 + minutes;
+    const noteBasename = path.basename(file, '.md');
+    const datetime = parseLocalDateTime(noteBasename);
+    if (datetime !== undefined) {
+      const dateStr = formatLocalDate(datetime);
+      const timeInMinutes = datetime.getHours() * 60 + datetime.getMinutes();
       const count = notes.get(dateStr) ?? 0;
       notes.set(dateStr, count + 1);
 
@@ -329,10 +313,8 @@ async function getDailyNotes(allNotes: Set<string>): Promise<DailyNotesData> {
 
       // Read content and parse frontmatter
       const content = await fs.readFile(file, 'utf8');
-      const frontmatterMatch = content.match(/^---\n([\s\S]*?)\n---/);
-      const body = frontmatterMatch
-        ? content.slice(frontmatterMatch[0].length)
-        : content;
+      const { frontmatter, body, hasFrontmatter } =
+        parseFrontmatter<VaultFrontmatter>(content);
       const year = date.getFullYear();
 
       // Extract tags from body
@@ -357,46 +339,33 @@ async function getDailyNotes(allNotes: Set<string>): Promise<DailyNotesData> {
         }
       }
 
-      if (frontmatterMatch) {
+      if (hasFrontmatter) {
         try {
-          const frontmatter = YAML.parse(frontmatterMatch[1]) as Record<
-            string,
-            unknown
-          > | null;
-
           // Extract tags from frontmatter
-          if (frontmatter?.tags) {
-            const fmTags = Array.isArray(frontmatter.tags)
-              ? frontmatter.tags
-              : [frontmatter.tags];
-            for (const tag of fmTags) {
-              if (tag && typeof tag === 'string') {
-                incrementYearMap(tagStats, year, tag);
-              }
+          if (frontmatter.tags) {
+            for (const tag of frontmatter.tags) {
+              incrementYearMap(tagStats, year, tag);
             }
           }
 
-          // Extract wikilinks from all frontmatter fields (except location)
-          if (frontmatter) {
-            for (const [key, value] of Object.entries(frontmatter)) {
-              if (key === 'location') {
-                continue;
-              }
-              if (typeof value === 'string') {
-                const fmWikilinks = value.match(WIKILINK_REGEX);
-                if (fmWikilinks) {
-                  for (const link of fmWikilinks) {
-                    const cleanLink = normalizeWikilink(link);
-                    incrementYearMap(wikilinkStats, year, cleanLink);
+          for (const [key, value] of Object.entries(frontmatter) as [
+            keyof VaultFrontmatter,
+            VaultFrontmatter[keyof VaultFrontmatter],
+          ][]) {
+            if (key === 'location' || key === 'tags' || key === 'aliases') {
+              continue;
+            }
+            if (typeof value !== 'string') {
+              continue;
+            }
+            const fmWikilinks = value.match(WIKILINK_REGEX);
+            if (fmWikilinks) {
+              for (const link of fmWikilinks) {
+                const cleanLink = normalizeWikilink(link);
+                incrementYearMap(wikilinkStats, year, cleanLink);
 
-                    if (!allNotes.has(cleanLink)) {
-                      incrementYearMap(
-                        unresolvedWikilinkStats,
-                        year,
-                        cleanLink
-                      );
-                    }
-                  }
+                if (!allNotes.has(cleanLink)) {
+                  incrementYearMap(unresolvedWikilinkStats, year, cleanLink);
                 }
               }
             }
@@ -407,7 +376,7 @@ async function getDailyNotes(allNotes: Set<string>): Promise<DailyNotesData> {
           let cleanLocationName: string | null = null;
           let cityName: string | undefined;
           let placeInfo: PlaceInfo | null = null;
-          if (typeof frontmatter?.location === 'string') {
+          if (frontmatter.location) {
             const location = frontmatter.location;
             // Extract location name from wiki link format [[Location]] or plain text
             const wikiLinkMatch = location.match(/\[\[([^\]]+)\]\]/);
@@ -444,7 +413,7 @@ async function getDailyNotes(allNotes: Set<string>): Promise<DailyNotesData> {
           }
 
           // Extract weather
-          if (typeof frontmatter?.weather === 'string') {
+          if (frontmatter.weather) {
             const weatherMatch = frontmatter.weather.match(
               /(-?\d+)°C(?:, (.+))?/
             );
@@ -464,31 +433,16 @@ async function getDailyNotes(allNotes: Set<string>): Promise<DailyNotesData> {
           }
 
           // Extract coordinates
-          if (typeof frontmatter?.coordinates === 'string') {
+          if (frontmatter.coordinates) {
             const [lat, lon] = frontmatter.coordinates
               .split(',')
               .map((c) => Number.parseFloat(c.trim()));
 
             if (!Number.isNaN(lat) && !Number.isNaN(lon)) {
-              let icon = 'map-pin';
-              let color = 'silver';
-              let placeName = 'Unknown location';
-
-              if (placeInfo) {
-                icon = placeInfo.icon;
-                color = placeInfo.color;
-              }
-
-              if (locationName) {
-                placeName = locationName;
-              }
-
               notesWithCoords.push({
                 lat,
                 lon,
-                placeName,
-                icon,
-                color,
+                placeName: locationName ?? 'Unknown location',
               });
             }
           }
@@ -1359,10 +1313,10 @@ interface GroupedLocation {
   lat: number;
   lon: number;
   placeName: string;
-  icon: string;
-  color: string;
   count: number;
 }
+
+const MAP_MARKER_COLOR = '#9a7eb4';
 
 function generateLocationMap(notes: NoteWithCoords[]): string {
   // Group notes by coordinates for display
@@ -1377,8 +1331,6 @@ function generateLocationMap(notes: NoteWithCoords[]): string {
         lat: note.lat,
         lon: note.lon,
         placeName: note.placeName,
-        icon: note.icon,
-        color: note.color,
         count: 1,
       });
     }
@@ -1393,7 +1345,6 @@ function generateLocationMap(notes: NoteWithCoords[]): string {
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
-<script src="https://unpkg.com/lucide@latest"></script>
 <style>
 	.custom-marker {
 		display: flex;
@@ -1406,11 +1357,6 @@ function generateLocationMap(notes: NoteWithCoords[]): string {
 		box-shadow: 0 2px 4px rgba(0,0,0,0.3);
 		transform: rotate(-45deg);
 		border: 2px solid white;
-	}
-	.custom-marker svg {
-		transform: rotate(45deg);
-		width: 20px;
-		height: 20px;
 	}
 </style>
 <script>
@@ -1451,52 +1397,13 @@ function generateLocationMap(notes: NoteWithCoords[]): string {
 		}
 	});
 
-	// Convert kebab-case to PascalCase for Lucide icon names
-	function toPascalCase(str) {
-		return str.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join('');
-	}
-
-	// Get Lucide icon SVG
-	function getIconSvg(iconName) {
-		try {
-			const pascalName = toPascalCase(iconName);
-			const iconFunc = lucide[pascalName];
-			if (!iconFunc) {
-				console.warn('Icon not found:', iconName, pascalName);
-				return '';
-			}
-
-			// Create a temporary element to render the icon
-			const temp = document.createElement('div');
-			temp.innerHTML = '<i data-lucide="' + iconName + '"></i>';
-			document.body.appendChild(temp);
-			lucide.createIcons({ icons: { [pascalName]: iconFunc }, nameAttr: 'data-lucide' });
-			const svg = temp.querySelector('svg');
-			const svgString = svg ? svg.outerHTML : '';
-			document.body.removeChild(temp);
-			return svgString;
-		} catch (e) {
-			console.error('Error getting icon:', iconName, e);
-			return '';
-		}
-	}
-
 	// Add all notes as individual markers with shared popup content per location
 	for (const note of allNotes) {
 		const key = \`\${note.lat},\${note.lon}\`;
 		const locInfo = locationInfo.get(key);
 
-		let iconHtml;
-		if (note.icon === 'map-pin') {
-			// No icon, just colored background
-			iconHtml = \`<div class="custom-marker" style="background-color: \${note.color};"></div>\`;
-		} else {
-			const iconSvg = getIconSvg(note.icon);
-			iconHtml = \`<div class="custom-marker" style="background-color: \${note.color};">\${iconSvg}</div>\`;
-		}
-
 		const customIcon = L.divIcon({
-			html: iconHtml,
+			html: \`<div class="custom-marker" style="background-color: ${MAP_MARKER_COLOR};"></div>\`,
 			className: '',
 			iconSize: [32, 32],
 			iconAnchor: [16, 32],
