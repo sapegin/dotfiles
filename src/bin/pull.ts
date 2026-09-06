@@ -149,7 +149,9 @@ export function pull(_options: Options): void {
   ) {
     console.log();
     console.log(' Installing packages with pnpm…');
-    const lockFile = getChangedFiles().find((f) => f.includes('pnpm-lock.yaml'));
+    const lockFile = getChangedFiles().find((f) =>
+      f.includes('pnpm-lock.yaml')
+    );
     const packageFile = getChangedFiles().find((f) =>
       f.includes('package.json')
     );

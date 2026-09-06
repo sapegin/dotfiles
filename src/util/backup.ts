@@ -65,10 +65,7 @@ function isResticRepositoryInitialized(config: ResticConfig): boolean {
   return result.status === 0;
 }
 
-export function runRestic(
-  args: readonly string[],
-  config: ResticConfig
-): void {
+export function runRestic(args: readonly string[], config: ResticConfig): void {
   execFileSync('restic', args, {
     stdio: 'inherit',
     env: getResticEnv(config),
@@ -130,7 +127,10 @@ if you lose it, the backups are unrecoverable.
   log.heading(`Saved password to ${tildify(passwordFile)}`);
 }
 
-/** Verify restic is installed, the password file exists, and the repo volume is mounted. */
+/**
+ * Verify restic is installed, the password file exists, and the repo volume is
+ * mounted.
+ */
 export async function ensureResticReady(
   config: ResticConfig,
   commandName: string,

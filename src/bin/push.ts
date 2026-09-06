@@ -64,7 +64,9 @@ export function push({ args }: Options): void {
   console.log();
 
   if (result.status !== 0) {
-    log.error(`Alas! The push has met with unforeseen resistance!\n\n${output}`);
+    log.error(
+      `Alas! The push has met with unforeseen resistance!\n\n${output}`
+    );
     process.exit(result.status ?? 1);
   } else if (output.includes('Everything up-to-date')) {
     console.log('✓ Git says everything is up-to-date!');
