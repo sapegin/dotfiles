@@ -103,6 +103,11 @@
     0 0 0 0.5px var(--gray140), 0 1px 3px rgba(0, 0, 0, 0.1) !important;
 }
 
+/* Hide the very annoying "title changed" dot on pinned tabs */
+.tab-stack > .tab-content[pinned][titlechanged] {
+  background-image: none !important;
+}
+
 /* Make the playing icon less obtrusive on pinned tabs */
 .tab-icon-overlay {
   #tabbrowser-tabs[orient='vertical']:not([expanded]) &:not([crashed]),
