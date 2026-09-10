@@ -11,7 +11,10 @@ import {
   vi,
 } from 'vitest';
 import { type ExifMetadata } from '../util/exif.ts';
-import { type ImageDimensions } from '../util/obsidian.ts';
+import {
+  type ImageDimensions,
+  type OptimizeResult,
+} from '../util/obsidian.ts';
 import { type Options } from './obsidian-photos-import.ts';
 
 const testEnv = vi.hoisted(() => ({
@@ -25,6 +28,26 @@ const testEnv = vi.hoisted(() => ({
 const exifByBasename = vi.hoisted(() => new Map<string, ExifMetadata>());
 const openObsidianPath = vi.hoisted(() =>
   vi.fn<(relativePath: string) => void>()
+);
+const moveToTrash = vi.hoisted(() =>
+  vi.fn<(filePath: string) => Promise<void>>().mockResolvedValue(undefined)
+);
+const needsOptimization = vi.hoisted(() =>
+  vi.fn<
+    (
+      imagePath: string,
+      onError?: (message: string) => void
+    ) => Promise<ImageDimensions | undefined>
+  >().mockResolvedValue(undefined)
+);
+const optimizeImage = vi.hoisted(() =>
+  vi.fn<
+    (
+      imagePath: string,
+      optimization: ImageDimensions,
+      options?: { onSkip?: (message: string) => void; moveToTrash?: unknown }
+    ) => Promise<OptimizeResult | undefined>
+  >().mockResolvedValue(undefined)
 );
 
 vi.mock(import('../util/files.ts'), async (importOriginal) => {
@@ -55,14 +78,9 @@ vi.mock(import('../util/obsidian.ts'), async (importOriginal) => {
   return {
     ...original,
     openObsidianPath,
-    needsOptimization: vi
-      .fn<
-        (
-          imagePath: string,
-          onError?: (message: string) => void
-        ) => Promise<ImageDimensions | undefined>
-      >()
-      .mockResolvedValue(undefined),
+    moveToTrash,
+    needsOptimization,
+    optimizeImage,
   };
 });
 
@@ -130,6 +148,12 @@ beforeAll(async () => {
 beforeEach(async () => {
   exifByBasename.clear();
   openObsidianPath.mockClear();
+  moveToTrash.mockReset();
+  moveToTrash.mockResolvedValue(undefined);
+  needsOptimization.mockReset();
+  needsOptimization.mockResolvedValue(undefined);
+  optimizeImage.mockReset();
+  optimizeImage.mockResolvedValue(undefined);
   await clearDesktop();
   await clearAttachments();
   await resetNote();
@@ -161,7 +185,7 @@ describe('obsidianPhotosImport single-note mode', () => {
     await writeDesktopPhoto('2026_IMG_0002.jpg');
     await writeDesktopPhoto('2026_IMG_0001.jpg');
 
-    await obsidianPhotosImport({ note: NOTE_BASENAME });
+    await obsidianPhotosImport({ note: NOTE_BASENAME, replace: false });
 
     await expect(fs.readFile(NOTE_PATH(), 'utf8')).resolves.toBe(
       '# Sunday, September 1, 2026\n\nExisting entry\n\n' +
@@ -189,7 +213,7 @@ describe('obsidianPhotosImport single-note mode', () => {
     await writeDesktopPhoto('2026_IMG_0001.jpg');
     await writeDesktopPhoto('2026_IMG_0002.jpg');
 
-    await obsidianPhotosImport({ note: NOTE_BASENAME });
+    await obsidianPhotosImport({ note: NOTE_BASENAME, replace: false });
 
     await expect(fs.readFile(NOTE_PATH(), 'utf8')).resolves.toBe(
       '# Sunday, September 1, 2026\n\nExisting entry\n\n![[2026_IMG_0002.jpg]]\n'
@@ -197,6 +221,75 @@ describe('obsidianPhotosImport single-note mode', () => {
     await expect(
       fs.readFile(path.join(testEnv.attachments, '2026_IMG_0001.jpg'), 'utf8')
     ).resolves.toBe('existing');
+  });
+
+  test('updates note wikilinks when replace converts an attachment to AVIF', async () => {
+    const photoBasename = '2026_IMG_0001.jpg';
+    const avifBasename = '2026_IMG_0001.avif';
+
+    await resetNote(`# Sunday, September 1, 2026\n\n![[${photoBasename}]]\n`);
+    await fs.writeFile(
+      path.join(testEnv.attachments, photoBasename),
+      'existing'
+    );
+    setExif(photoBasename, new Date(2026, 8, 1, 10, 0));
+    await writeDesktopPhoto(photoBasename);
+
+    needsOptimization.mockResolvedValue({ width: 4000, height: 3000 });
+    optimizeImage.mockImplementation(async (imagePath) => {
+      const avifPath = path.join(path.dirname(imagePath), avifBasename);
+      await fs.writeFile(avifPath, 'avif');
+      return {
+        oldFilename: photoBasename,
+        newFilename: avifBasename,
+      };
+    });
+    moveToTrash.mockImplementation(async (filePath) => {
+      await fs.rm(filePath);
+    });
+
+    await obsidianPhotosImport({ note: NOTE_BASENAME, replace: true });
+
+    await expect(fs.readFile(NOTE_PATH(), 'utf8')).resolves.toBe(
+      `# Sunday, September 1, 2026\n\n![[${avifBasename}]]\n`
+    );
+    await expect(
+      fs.readFile(path.join(testEnv.attachments, avifBasename), 'utf8')
+    ).resolves.toBe('avif');
+    await expect(
+      fs.access(path.join(testEnv.attachments, photoBasename))
+    ).rejects.toThrow();
+    expect(moveToTrash).toHaveBeenCalledWith(
+      path.join(testEnv.attachments, photoBasename)
+    );
+  });
+
+  test('replaces existing attachments without duplicating note links', async () => {
+    await resetNote(
+      '# Sunday, September 1, 2026\n\n![[2026_IMG_0001.jpg]]\n'
+    );
+    await fs.writeFile(
+      path.join(testEnv.attachments, '2026_IMG_0001.jpg'),
+      'existing'
+    );
+    setExif('2026_IMG_0001.jpg', new Date(2026, 8, 1, 10, 0));
+    setExif('2026_IMG_0002.jpg', new Date(2026, 8, 1, 12, 26));
+    await writeDesktopPhoto('2026_IMG_0001.jpg');
+    await writeDesktopPhoto('2026_IMG_0002.jpg');
+
+    await obsidianPhotosImport({ note: NOTE_BASENAME, replace: true });
+
+    await expect(fs.readFile(NOTE_PATH(), 'utf8')).resolves.toBe(
+      '# Sunday, September 1, 2026\n\n' +
+        '![[2026_IMG_0001.jpg]]\n\n' +
+        '![[2026_IMG_0002.jpg]]\n'
+    );
+    await expect(
+      fs.readFile(path.join(testEnv.attachments, '2026_IMG_0001.jpg'), 'utf8')
+    ).resolves.toBe('jpeg');
+    expect(moveToTrash).toHaveBeenCalledWith(
+      path.join(testEnv.attachments, '2026_IMG_0001.jpg')
+    );
   });
 
   test('exits when the note name is invalid', async () => {
@@ -207,9 +300,9 @@ describe('obsidianPhotosImport single-note mode', () => {
     setExif('2026_IMG_0001.jpg', new Date(2026, 8, 1, 10, 0));
     await writeDesktopPhoto('2026_IMG_0001.jpg');
 
-    await expect(obsidianPhotosImport({ note: 'not-a-note' })).rejects.toThrow(
-      'process.exit:1'
-    );
+    await expect(
+      obsidianPhotosImport({ note: 'not-a-note', replace: false })
+    ).rejects.toThrow('process.exit:1');
     exit.mockRestore();
   });
 
@@ -222,9 +315,9 @@ describe('obsidianPhotosImport single-note mode', () => {
     setExif('2026_IMG_0001.jpg', new Date(2026, 8, 1, 10, 0));
     await writeDesktopPhoto('2026_IMG_0001.jpg');
 
-    await expect(obsidianPhotosImport({ note: NOTE_BASENAME })).rejects.toThrow(
-      'process.exit:1'
-    );
+    await expect(
+      obsidianPhotosImport({ note: NOTE_BASENAME, replace: false })
+    ).rejects.toThrow('process.exit:1');
     exit.mockRestore();
   });
 });
@@ -250,7 +343,10 @@ describe('obsidianPhotosImport default mode', () => {
     await writeDesktopPhoto('2026_IMG_0002.jpg');
     await writeDesktopPhoto('2026_IMG_0001.jpg');
 
-    const defaultOptions = { note: undefined } satisfies Options;
+    const defaultOptions = {
+      note: undefined,
+      replace: false,
+    } satisfies Options;
     await obsidianPhotosImport(defaultOptions);
 
     await expect(fs.readFile(dailyNotePath, 'utf8')).resolves.toBe(

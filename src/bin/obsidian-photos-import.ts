@@ -8,6 +8,10 @@
 //
 // `obsidian-photos-import 2026-09-01_1226`
 //
+// Replace attachments that already exist in the vault:
+//
+// `obsidian-photos-import --replace 2026-09-01_1226`
+//
 // ---
 // Author: Artem Sapegin, sapegin.me
 // License: MIT
@@ -29,16 +33,22 @@ import {
   doesAttachmentExist,
   formatNoteHeading,
   getDailyNotePath,
+  getMarkdownImages,
   getNotePath,
+  moveToTrash,
   needsOptimization,
   openObsidianPath,
   optimizeImage,
+  replaceMarkdownImageReferences,
 } from '../util/obsidian.ts';
 import { getDatedPhotoFilename } from '../util/photos.ts';
 import { formatLocalDateTime, parseLocalDateTime } from '../util/time.ts';
 import { log, run } from '../util/tui.ts';
 
-const OPTIONS = [{ name: 'note', positional: true }] as const;
+const OPTIONS = [
+  { name: 'note', positional: true },
+  { name: 'replace', type: 'boolean', default: false },
+] as const;
 
 export type Options = ParsedArgs<typeof OPTIONS>;
 
@@ -52,6 +62,16 @@ interface PendingPhoto {
 interface ImportedImage {
   filename: string;
   datetime: Date;
+  previousFilename?: string;
+}
+
+interface ImportOptions {
+  replace: boolean;
+}
+
+interface WriteNoteOptions {
+  headingDate?: Date;
+  replace?: boolean;
 }
 
 const UNTAGGED_LOGS_PATH = 'zz-bases/Untagged logs.base';
@@ -86,8 +106,10 @@ async function readPendingPhoto(
 }
 
 async function importPhoto(
-  pending: PendingPhoto
+  pending: PendingPhoto,
+  options: ImportOptions
 ): Promise<ImportedImage | undefined> {
+  const { replace } = options;
   const originalBasename = path.basename(pending.sourcePath);
   const { attachmentName, datetime, sourcePath } = pending;
   const avifName = `${stripExtensions(attachmentName)}.avif`;
@@ -98,7 +120,7 @@ async function importPhoto(
     existingName = attachmentName;
   }
 
-  if (existingName !== undefined) {
+  if (existingName !== undefined && replace === false) {
     log.warn(`Skipping ${originalBasename}: ${existingName} already exists`);
     return undefined;
   }
@@ -124,20 +146,32 @@ async function importPhoto(
 
   const attachmentPath = path.join(dirs.obsidianAttachments, filename);
   await fs.mkdir(path.dirname(attachmentPath), { recursive: true });
+
+  if (replace && existingName !== undefined) {
+    await moveToTrash(path.join(dirs.obsidianAttachments, existingName));
+  }
+
   await fs.rename(workingPath, attachmentPath);
 
   return {
     filename,
     datetime,
+    previousFilename:
+      existingName !== undefined && existingName !== filename
+        ? existingName
+        : undefined,
   };
 }
 
-async function importPhotos(photos: PendingPhoto[]): Promise<ImportedImage[]> {
+async function importPhotos(
+  photos: PendingPhoto[],
+  options: ImportOptions
+): Promise<ImportedImage[]> {
   const imported: ImportedImage[] = [];
 
   for (const photo of sortPhotos(photos)) {
     console.log(`Importing ${path.basename(photo.sourcePath)}…`);
-    const result = await importPhoto(photo);
+    const result = await importPhoto(photo, options);
     if (result !== undefined) {
       imported.push(result);
     }
@@ -168,16 +202,50 @@ ${buildImageLinks(importedImages)}
 `;
 }
 
+function appendImageLinks(
+  noteBody: string,
+  imported: ImportedImage[],
+  options: ImportOptions
+): string {
+  let body = noteBody;
+
+  if (options.replace) {
+    for (const image of imported) {
+      if (image.previousFilename !== undefined) {
+        body = replaceMarkdownImageReferences(
+          body,
+          image.previousFilename,
+          image.filename
+        );
+      }
+    }
+
+    const existingImages = new Set(getMarkdownImages(body));
+    const toAppend = imported.filter(
+      (image) => existingImages.has(image.filename) === false
+    );
+
+    if (toAppend.length === 0) {
+      return `${body.trimEnd()}\n`;
+    }
+
+    return `${body.trimEnd()}\n\n${buildImageLinks(toAppend)}\n`;
+  }
+
+  return `${body.trimEnd()}\n\n${buildImageLinks(imported)}\n`;
+}
+
 /** Create a daily note when `headingDate` is set; otherwise append image links. */
 async function writeNote(
   notePath: string,
   imported: ImportedImage[],
-  headingDate?: Date
+  options: WriteNoteOptions = {}
 ): Promise<void> {
+  const { headingDate, replace = false } = options;
   let content: string;
   if (headingDate === undefined) {
     const existing = await fs.readFile(notePath, 'utf8');
-    content = `${existing.trimEnd()}\n\n${buildImageLinks(imported)}\n`;
+    content = appendImageLinks(existing, imported, { replace });
   } else {
     content = buildDailyNoteContent(imported, headingDate);
   }
@@ -194,10 +262,13 @@ async function writeNote(
   );
 }
 
-async function importDay(photos: PendingPhoto[]): Promise<ImportedImage[]> {
+async function importDay(
+  photos: PendingPhoto[],
+  options: ImportOptions
+): Promise<ImportedImage[]> {
   const sortedPhotos = sortPhotos(photos);
   const notePath = getDailyNotePath(sortedPhotos[0].datetime);
-  const imported = await importPhotos(photos);
+  const imported = await importPhotos(photos, options);
 
   if (imported.length === 0) {
     log.warn(
@@ -217,7 +288,9 @@ async function importDay(photos: PendingPhoto[]): Promise<ImportedImage[]> {
   await writeNote(
     notePath,
     imported,
-    noteExists ? undefined : sortedPhotos[0].datetime
+    noteExists
+      ? { replace: options.replace }
+      : { headingDate: sortedPhotos[0].datetime }
   );
   return imported;
 }
@@ -265,12 +338,13 @@ export async function obsidianPhotosImport(options: Options): Promise<void> {
   }
 
   let importedCount = 0;
+  const importOptions: ImportOptions = { replace: options.replace };
 
   if (options.note !== undefined) {
     const notePath = await assertExistingNote(options.note);
 
     console.log();
-    const imported = await importPhotos(pendingPhotos);
+    const imported = await importPhotos(pendingPhotos, importOptions);
     importedCount = imported.length;
 
     if (importedCount === 0) {
@@ -278,7 +352,7 @@ export async function obsidianPhotosImport(options: Options): Promise<void> {
       return;
     }
 
-    await writeNote(notePath, imported);
+    await writeNote(notePath, imported, { replace: options.replace });
     openObsidianPath(path.relative(dirs.obsidianVault, notePath));
     return;
   }
@@ -293,7 +367,7 @@ export async function obsidianPhotosImport(options: Options): Promise<void> {
 
   for (const dayPhotos of photosByDate.values()) {
     console.log();
-    const dayImported = await importDay(dayPhotos);
+    const dayImported = await importDay(dayPhotos, importOptions);
     importedCount += dayImported.length;
   }
 
