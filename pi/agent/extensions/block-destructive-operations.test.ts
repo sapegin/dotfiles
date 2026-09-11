@@ -1,5 +1,15 @@
-import { describe, expect, test } from 'vitest';
-import { getDestructiveReason } from './block-destructive-operations.ts';
+import { execFile as execFileCallback } from 'node:child_process';
+import fs from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
+import { promisify } from 'node:util';
+import { afterEach, beforeEach, describe, expect, test } from 'vitest';
+import {
+  getDestructiveReason,
+  isSafeProjectRm,
+} from './block-destructive-operations.ts';
+
+const execFile = promisify(execFileCallback);
 
 describe(getDestructiveReason, () => {
   test.each([
@@ -76,5 +86,151 @@ describe(getDestructiveReason, () => {
     'rg "find . -delete" docs',
   ])('allows %s', (command) => {
     expect(getDestructiveReason(command)).toBeUndefined();
+  });
+});
+
+describe(isSafeProjectRm, () => {
+  let repositoryPath: string;
+
+  const executor = {
+    async exec(command: string, args: string[]) {
+      try {
+        const result = await execFile(command, args);
+        return { code: 0, stdout: result.stdout };
+      } catch (error) {
+        const result = error as { code?: number; stdout?: string };
+        return { code: result.code ?? 1, stdout: result.stdout ?? '' };
+      }
+    },
+  };
+
+  beforeEach(async () => {
+    repositoryPath = await fs.mkdtemp(
+      path.join(os.tmpdir(), 'safe-project-rm-')
+    );
+    await execFile('git', ['init', '--quiet', repositoryPath]);
+    await fs.writeFile(path.join(repositoryPath, 'tracked.txt'), 'original\n');
+    await fs.mkdir(path.join(repositoryPath, 'nested'));
+    await fs.writeFile(
+      path.join(repositoryPath, 'nested', 'tracked.txt'),
+      'nested\n'
+    );
+    await execFile('git', [
+      '-C',
+      repositoryPath,
+      'add',
+      'tracked.txt',
+      'nested/tracked.txt',
+    ]);
+  });
+
+  afterEach(async () => {
+    await fs.rm(repositoryPath, { recursive: true, force: true });
+  });
+
+  test.each(['rm tracked.txt', 'rm -f tracked.txt', 'rm -- tracked.txt'])(
+    'allows %s for a tracked, unchanged file',
+    async (command) => {
+      await expect(
+        isSafeProjectRm(executor, repositoryPath, command)
+      ).resolves.toBe(true);
+    }
+  );
+
+  test('allows a tracked file beneath a nested project directory', async () => {
+    await expect(
+      isSafeProjectRm(
+        executor,
+        path.join(repositoryPath, 'nested'),
+        'rm tracked.txt'
+      )
+    ).resolves.toBe(true);
+  });
+
+  test.each([
+    'rm -rf tracked.txt',
+    'rm ../tracked.txt',
+    'rm "$TARGET"',
+    'rm *.txt',
+    'rm tracked.txt\vnested/tracked.txt',
+    'rm tracked.txt && echo removed',
+    'cd nested && rm tracked.txt',
+  ])('rejects ambiguous command %s', async (command) => {
+    await expect(
+      isSafeProjectRm(executor, repositoryPath, command)
+    ).resolves.toBe(false);
+  });
+
+  test('rejects an untracked file', async () => {
+    await fs.writeFile(
+      path.join(repositoryPath, 'untracked.txt'),
+      'untracked\n'
+    );
+
+    await expect(
+      isSafeProjectRm(executor, repositoryPath, 'rm untracked.txt')
+    ).resolves.toBe(false);
+  });
+
+  test('treats Git pathspec syntax as a literal path', async () => {
+    await fs.mkdir(path.join(repositoryPath, ':'));
+    await fs.writeFile(
+      path.join(repositoryPath, ':', 'tracked.txt'),
+      'untracked\n'
+    );
+
+    await expect(
+      isSafeProjectRm(executor, repositoryPath, 'rm :/tracked.txt')
+    ).resolves.toBe(false);
+  });
+
+  test('rejects a modified tracked file', async () => {
+    await fs.writeFile(path.join(repositoryPath, 'tracked.txt'), 'modified\n');
+
+    await expect(
+      isSafeProjectRm(executor, repositoryPath, 'rm tracked.txt')
+    ).resolves.toBe(false);
+  });
+
+  test.each(['--assume-unchanged', '--skip-worktree'])(
+    'rejects a modified file marked %s',
+    async (indexOption) => {
+      await execFile('git', [
+        '-C',
+        repositoryPath,
+        'update-index',
+        indexOption,
+        'tracked.txt',
+      ]);
+      await fs.writeFile(
+        path.join(repositoryPath, 'tracked.txt'),
+        'modified\n'
+      );
+
+      await expect(
+        isSafeProjectRm(executor, repositoryPath, 'rm tracked.txt')
+      ).resolves.toBe(false);
+    }
+  );
+
+  test('rejects directories', async () => {
+    await expect(
+      isSafeProjectRm(executor, repositoryPath, 'rm nested')
+    ).resolves.toBe(false);
+  });
+
+  test('rejects files outside a Git worktree', async () => {
+    const directoryPath = await fs.mkdtemp(
+      path.join(os.tmpdir(), 'unsafe-project-rm-')
+    );
+    await fs.writeFile(path.join(directoryPath, 'file.txt'), 'content\n');
+
+    try {
+      await expect(
+        isSafeProjectRm(executor, directoryPath, 'rm file.txt')
+      ).resolves.toBe(false);
+    } finally {
+      await fs.rm(directoryPath, { recursive: true, force: true });
+    }
   });
 });

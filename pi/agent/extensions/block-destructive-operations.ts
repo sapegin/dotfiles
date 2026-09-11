@@ -1,15 +1,13 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
 import {
   isToolCallEventType,
   type ExtensionAPI,
 } from '@earendil-works/pi-coding-agent';
 
 /**
- * Pi extension that asks for permission before running destructive shell
- * commands.
- *
- * It intercepts bash tool calls, checks the full command text against a small
- * deny-list of destructive Git and filesystem patterns, and blocks execution
- * unless the user explicitly allows it.
+ * Gates destructive shell commands, except simple removal of tracked, unchanged
+ * project files.
  */
 const choiceAllow = 'Allow';
 const choiceDeny = 'Deny, provide reason';
@@ -23,6 +21,15 @@ export default function blockDestructiveOperations(pi: ExtensionAPI) {
 
     const reason = getDestructiveReason(event.input.command);
     if (!reason) {
+      return;
+    }
+
+    // This preflight check can race sibling file mutations. That is an accepted
+    // compromise to avoid overriding Bash execution and its mutation queue.
+    if (
+      reason === 'rm' &&
+      (await isSafeProjectRm(pi, ctx.cwd, event.input.command, ctx.signal))
+    ) {
       return;
     }
 
@@ -70,6 +77,148 @@ export default function blockDestructiveOperations(pi: ExtensionAPI) {
   });
 }
 
+interface CommandExecutor {
+  exec(
+    command: string,
+    args: string[],
+    options?: { signal?: AbortSignal }
+  ): Promise<{ code: number; stdout: string }>;
+}
+
+/**
+ * Returns whether a deliberately limited `rm` command only removes tracked,
+ * unchanged files beneath the current project directory.
+ */
+export async function isSafeProjectRm(
+  executor: CommandExecutor,
+  cwd: string,
+  command: string,
+  signal?: AbortSignal
+) {
+  const targets = parseSimpleRmTargets(command);
+  if (!targets) {
+    return false;
+  }
+
+  const projectRoot = await fs.realpath(cwd).catch(() => undefined);
+  if (!projectRoot) {
+    return false;
+  }
+
+  const gitRootResult = await executor.exec(
+    'git',
+    ['-C', projectRoot, 'rev-parse', '--show-toplevel'],
+    { signal }
+  );
+  if (gitRootResult.code !== 0) {
+    return false;
+  }
+
+  const gitRoot = await fs
+    .realpath(gitRootResult.stdout.trim())
+    .catch(() => undefined);
+  if (!gitRoot || !isWithinDirectory(projectRoot, gitRoot)) {
+    return false;
+  }
+
+  for (const target of targets) {
+    const targetPath = path.resolve(projectRoot, target);
+    if (!isWithinDirectory(targetPath, projectRoot)) {
+      return false;
+    }
+
+    const targetStats = await fs.lstat(targetPath).catch(() => undefined);
+    if (
+      !targetStats ||
+      (!targetStats.isFile() && !targetStats.isSymbolicLink())
+    ) {
+      return false;
+    }
+
+    const realParent = await fs
+      .realpath(path.dirname(targetPath))
+      .catch(() => undefined);
+    if (!realParent || !isWithinDirectory(realParent, projectRoot)) {
+      return false;
+    }
+
+    const gitPath = path.relative(gitRoot, targetPath);
+    const trackedResult = await executor.exec(
+      'git',
+      [
+        '-C',
+        gitRoot,
+        '--literal-pathspecs',
+        'ls-files',
+        '-v',
+        '--error-unmatch',
+        '--',
+        gitPath,
+      ],
+      { signal }
+    );
+    if (trackedResult.code !== 0 || !trackedResult.stdout.startsWith('H ')) {
+      return false;
+    }
+
+    const unchangedResult = await executor.exec(
+      'git',
+      [
+        '-C',
+        gitRoot,
+        '--literal-pathspecs',
+        'diff',
+        '--quiet',
+        '--no-ext-diff',
+        '--',
+        gitPath,
+      ],
+      { signal }
+    );
+    if (unchangedResult.code !== 0) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function parseSimpleRmTargets(command: string) {
+  if (/[^\S ]|['"`\\$*?[\]{}~;|&<>()]/u.test(command)) {
+    return undefined;
+  }
+
+  const tokens = command.trim().split(/ +/);
+  if (tokens.shift() !== 'rm') {
+    return undefined;
+  }
+
+  const targets: string[] = [];
+  let optionsEnded = false;
+  for (const token of tokens) {
+    if (!optionsEnded && token === '--') {
+      optionsEnded = true;
+    } else if (!optionsEnded && token === '-f') {
+      continue;
+    } else if (!optionsEnded && token.startsWith('-')) {
+      return undefined;
+    } else if (path.isAbsolute(token) || token.split(/[\\/]/).includes('..')) {
+      return undefined;
+    } else {
+      targets.push(token);
+    }
+  }
+
+  return targets.length === 0 ? undefined : targets;
+}
+
+function isWithinDirectory(candidatePath: string, directory: string) {
+  return (
+    candidatePath === directory ||
+    candidatePath.startsWith(`${directory}${path.sep}`)
+  );
+}
+
 export function getDestructiveReason(command: string) {
   const lowerCommand = command.toLowerCase();
   const strippedCommand = lowerCommand.trimStart();
@@ -81,9 +230,7 @@ export function getDestructiveReason(command: string) {
   const patterns: {
     regex: RegExp;
     reason: string;
-    exceptions?: RegExp[];
     skipForEchoRg?: boolean;
-    caseSensitive?: boolean;
   }[] = [
     {
       regex: /(^|[^\w])\\?r\\?m(\s|$)/,
@@ -158,22 +305,12 @@ export function getDestructiveReason(command: string) {
     },
   ];
 
-  for (const {
-    regex,
-    reason,
-    exceptions,
-    skipForEchoRg,
-    caseSensitive,
-  } of patterns) {
+  for (const { regex, reason, skipForEchoRg } of patterns) {
     if (skipForEchoRg && isEchoOrRg) {
       continue;
     }
 
-    const target = caseSensitive ? command : lowerCommand;
-    if (
-      regex.test(target) &&
-      !exceptions?.some((exception) => exception.test(target))
-    ) {
+    if (regex.test(lowerCommand)) {
       return reason;
     }
   }
