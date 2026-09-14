@@ -17,13 +17,7 @@ import { execFileSync, execSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { parseArgs, type ParsedArgs } from '../util/args.ts';
-import {
-  assertGitRepo,
-  getCurrentBranch,
-  getExecExitCode,
-  getGitConfig,
-  runGit,
-} from '../util/git.ts';
+import { assertGitRepo, getCurrentBranch, getGitConfig } from '../util/git.ts';
 import { log, run } from '../util/tui.ts';
 
 const OPTIONS = [] as const;
@@ -83,63 +77,22 @@ export function pull(_options: Options): void {
     getGitConfig(`branch.${branch}.merge`) ?? `refs/heads/${branch}`;
   const remoteBranch = mergeRef.split('/').slice(2).join('/');
 
-  // Stash local changes including untracked; compare refs/stash before/after to
-  // detect whether anything was actually stashed (more robust than parsing output)
-  const stashBefore = execSync(
-    'git rev-parse --verify --quiet refs/stash || true',
-    {
-      shell: '/bin/bash',
-      encoding: 'utf8',
-    }
-  ).trim();
-
-  runGit(['stash', '--include-untracked']);
-
-  const stashAfter = execSync(
-    'git rev-parse --verify --quiet refs/stash || true',
-    {
-      shell: '/bin/bash',
-      encoding: 'utf8',
-    }
-  ).trim();
-
-  const stashed = stashBefore !== stashAfter;
-
-  function unstash(): void {
-    if (stashed) {
-      console.log('󰦛 Restoring tree from stash…');
-      runGit(['stash', 'pop']);
-    }
-  }
-
-  function rollback(exitCode: number): never {
-    console.log();
-    log.error('Something went wrong, rolling back…');
-    unstash();
-    process.exit(exitCode);
-  }
-
   // Pull with rebase
   console.log(`\n↓ Fetching from ${remote}…`);
-  try {
-    execFileSync(
-      'git',
-      [
-        'pull',
-        '--rebase',
-        '--prune',
-        '--recurse-submodules',
-        '--jobs=10',
-        remote,
-        remoteBranch,
-      ],
-      { stdio: 'inherit' }
-    );
-  } catch (error) {
-    rollback(getExecExitCode(error));
-  }
-
-  unstash();
+  execFileSync(
+    'git',
+    [
+      'pull',
+      '--rebase',
+      '--autostash',
+      '--prune',
+      '--recurse-submodules',
+      '--jobs=10',
+      remote,
+      remoteBranch,
+    ],
+    { stdio: 'inherit' }
+  );
 
   // Install Node.js packages with pnpm if available, otherwise fall back to npm
   if (

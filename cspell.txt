@@ -13,6 +13,7 @@ autofixable
 autofixed
 autofixing
 automations
+autostash
 blockquotes
 bouldering
 callsite

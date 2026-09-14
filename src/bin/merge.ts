@@ -54,12 +54,12 @@ export function merge({ branch }: Options): void {
       ` Local-only branch, rebasing ${branch} onto ${currentBranch} first…`
     );
     runGit(['switch', branch]);
-    runGit(['rebase', currentBranch]);
+    runGit(['rebase', '--autostash', currentBranch]);
   }
 
   console.log(` Merge ${branch} into ${currentBranch}`);
   runGit(['switch', currentBranch]);
-  runGit(['merge', branch]);
+  runGit(['merge', '--autostash', branch]);
 }
 
 await run(import.meta.url, () => merge(parseArgs(OPTIONS)));
