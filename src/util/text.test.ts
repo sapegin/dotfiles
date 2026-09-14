@@ -1,10 +1,16 @@
 import { describe, expect, test } from 'vitest';
-import { capitalizeFirst, toSentenceCase } from './text.ts';
+import { capitalizeFirst, toKebabCase, toSentenceCase } from './text.ts';
 
 describe(capitalizeFirst, () => {
   test('capitalizes only the first character', () => {
     expect(capitalizeFirst('my note')).toBe('My note');
     expect(capitalizeFirst('My Note')).toBe('My Note');
+  });
+});
+
+describe(toKebabCase, () => {
+  test('lowercases words and joins them with dashes', () => {
+    expect(toKebabCase('Foo Bar')).toBe('foo-bar');
   });
 });
 

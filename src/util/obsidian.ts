@@ -1,4 +1,5 @@
 import { execFileSync } from 'node:child_process';
+import fsSync from 'node:fs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import sharp from 'sharp';
@@ -446,4 +447,187 @@ export function parseFrontmatter<T extends object>(
     body: match[2],
     hasFrontmatter: true,
   };
+}
+
+/** Matches wikilinks: [[target]] or [[target|label]] */
+const WIKILINK_REGEXP = /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/;
+
+type FrontmatterValue = string | string[] | undefined;
+
+/** Return true when srcPath is newer than destPath, or destPath does not exist. */
+export function isNewer(srcPath: string, destPath: string): boolean {
+  if (fsSync.existsSync(destPath) === false) {
+    return true;
+  }
+
+  const srcMtime = fsSync.statSync(srcPath).mtimeMs;
+  const destMtime = fsSync.statSync(destPath).mtimeMs;
+  return srcMtime > destMtime;
+}
+
+export function extractTitle(content: string): string {
+  const match = content.match(/^# (.+)$/m);
+  return match ? match[1].trim() : '';
+}
+
+export function stripTitle(content: string): string {
+  return content.replace(/^\s*# .+\n\n?/, '');
+}
+
+/** Drop private notes after the first horizontal rule (`---` or `***`). */
+export function stripPrivateNotes(content: string): string {
+  const lines = content.split('\n');
+  const publicLines: string[] = [];
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (trimmed === '---' || trimmed === '***') {
+      break;
+    }
+
+    publicLines.push(line);
+  }
+
+  return publicLines.join('\n').trim();
+}
+
+export function getAllWikilinks(markdown: string): string[] {
+  const matches = markdown.matchAll(new RegExp(WIKILINK_REGEXP.source, 'g'));
+  return [...matches].map((match) => match[1]);
+}
+
+export function resolveWikilinks(
+  text: string,
+  slugMap: Map<string, string>,
+  toUrl: (slug: string) => string
+): string {
+  return text.replaceAll(
+    new RegExp(WIKILINK_REGEXP.source, 'g'),
+    (_match, target: string, label?: string) => {
+      const slug = slugMap.get(target);
+      if (slug) {
+        return `[${label ?? target}](${toUrl(slug)})`;
+      }
+
+      return label ?? target;
+    }
+  );
+}
+
+export function formatMarkdownImage(publicPath: string, alt?: string): string {
+  if (alt === undefined || alt.length === 0) {
+    return `![](${publicPath})`;
+  }
+
+  return `![${alt}](${publicPath})`;
+}
+
+export function parsePublishedDate(
+  published: string | Date | undefined
+): string | undefined {
+  if (published instanceof Date) {
+    return published.toISOString().slice(0, 10);
+  }
+
+  if (typeof published === 'string' && published.trim().length > 0) {
+    return published;
+  }
+
+  return undefined;
+}
+
+export function formatPublishedDate(
+  published: string | Date | undefined
+): string {
+  const date = parsePublishedDate(published);
+
+  if (date === undefined) {
+    throw new Error('Missing published date');
+  }
+
+  return date;
+}
+
+function formatYamlSingleQuotedString(value: string): string {
+  return `'${value.replaceAll("'", "''")}'`;
+}
+
+export function formatMarkdown(
+  frontmatter: Record<string, FrontmatterValue>,
+  body: string
+): string {
+  const lines = ['---'];
+
+  for (const [key, value] of Object.entries(frontmatter)) {
+    if (value === undefined) {
+      continue;
+    }
+
+    if (Array.isArray(value)) {
+      lines.push(`${key}:`);
+      for (const item of value) {
+        lines.push(`  - ${item}`);
+      }
+      continue;
+    }
+
+    if (key === 'description') {
+      const trimmed = value.trim();
+      if (trimmed.length === 0) {
+        continue;
+      }
+
+      lines.push(`description: ${formatYamlSingleQuotedString(trimmed)}`);
+      continue;
+    }
+
+    if (key === 'title') {
+      lines.push(`title: ${JSON.stringify(value)}`);
+      continue;
+    }
+
+    lines.push(`${key}: ${value}`);
+  }
+
+  lines.push('---', '', body.trim(), '');
+
+  return lines.join('\n');
+}
+
+export function hasTag(frontmatter: { tags?: unknown }, tag: string): boolean {
+  return Array.isArray(frontmatter.tags) && frontmatter.tags.includes(tag);
+}
+
+export function readNoteFile<T extends object>(
+  filePath: string,
+  getSlug: (frontmatter: T, baseName: string) => string
+) {
+  const rawMarkdown = fsSync.readFileSync(filePath, 'utf8').trimStart();
+  const { frontmatter, body } = parseFrontmatter<T>(rawMarkdown);
+  const baseName = path.basename(filePath, '.md');
+  const slug = getSlug(frontmatter, baseName);
+
+  return { frontmatter, content: body, baseName, slug, filePath };
+}
+
+/** Split note body into `##` sections, dropping private notes from each section. */
+export function parseSections(content: string): Map<string, string> {
+  const sections = new Map<string, string>();
+  const parts = content.split(/^## /m);
+
+  for (let index = 1; index < parts.length; index++) {
+    const newlineIndex = parts[index].indexOf('\n');
+    if (newlineIndex !== -1) {
+      const heading = parts[index].slice(0, newlineIndex).trim();
+      const body = stripPrivateNotes(parts[index].slice(newlineIndex + 1));
+      sections.set(heading, body);
+    }
+  }
+
+  return sections;
+}
+
+/** Return the first image attachment referenced in Markdown or wikilink syntax. */
+export function getFirstImageAttachment(content: string): string | undefined {
+  return getMarkdownImages(content)[0];
 }

@@ -13,3 +13,13 @@ export function toSentenceCase(text: string): string {
   }
   return capitalizeFirst(text.toLowerCase());
 }
+
+/** Convert the given text to kebab-case. */
+export function toKebabCase(text: string): string {
+  return text
+    .trim()
+    .toLowerCase()
+    .replaceAll(/['’]+/g, '')
+    .replaceAll(/[^a-z0-9]+/g, '-')
+    .replaceAll(/^-+|-+$/g, '');
+}

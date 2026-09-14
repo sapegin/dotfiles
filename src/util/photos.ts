@@ -6,7 +6,13 @@ import { prompt, select } from './tui.ts';
 export const IMPORT_DATE_PREFIX = /^(\d{4}-\d{2}-\d{2})_/;
 const NEW_FOLDER_OPTION = '+ New folder…';
 const ATTACHMENT_YEAR_PREFIX = /^(\d{4})(?:-\d{2}-\d{2}_|_IMG_)/i;
+// Strips `YYYY_IMG_` from stems; ATTACHMENT_YEAR_PREFIX only extracts the year.
+const PREFIXED_IPHONE_PHOTO = /^\d{4}_IMG_/i;
 const UNPREFIXED_IPHONE_PHOTO = /^IMG_\d{4}\./i;
+// Legacy Canon body prefixes in exported filenames — rename these files eventually.
+const LEGACY_CANON_BODY_SUFFIX = /^(?:5D|20D)_(\d+)/i;
+const LEGACY_20D_EMBEDDED = /20D_(\d{4}-\d{2}-\d{2})_([\d-]+)/i;
+const UNSUPPORTED_RICOH_PHOTO = /^_R/i;
 
 /**
  * Read year prefix from photo names:
@@ -32,9 +38,24 @@ export function getPhotoFilenameDate(filename: string): string | undefined {
  *
  * - '_MG_1234.CR2' → '1234'.
  * - '2026-07-03_1234_Artem_Sapegin.jpg' → '1234'
+ * - '2026_IMG_9488.jpeg' → '9488'
+ * - '2009-09-18_5D_1357_Artem_Sapegin.jpg' → '1357'
  */
 export function getPhotoFilenameSuffix(filename: string): string | undefined {
-  const stem = getStem(filename).replace(IMPORT_DATE_PREFIX, '');
+  const stem = getStem(filename)
+    .replace(IMPORT_DATE_PREFIX, '')
+    .replace(PREFIXED_IPHONE_PHOTO, '');
+
+  const canonMatch = stem.match(LEGACY_CANON_BODY_SUFFIX);
+  if (canonMatch) {
+    return canonMatch[1];
+  }
+
+  const embedded20D = stem.match(LEGACY_20D_EMBEDDED);
+  if (embedded20D) {
+    return embedded20D[2].split('-').at(-1);
+  }
+
   return stem.match(/^(\d+)/)?.[1] ?? stem.match(/(\d+)$/)?.[1];
 }
 
@@ -163,6 +184,29 @@ export async function pickPhotoFolder(
   }
 
   return path.join(dirs.photos, choice);
+}
+
+/**
+ * Build a photo content slug from a filename:
+ *
+ * - `2026_IMG_9488.jpeg` → `2026-9488`
+ * - `2026-02-12_7842_Artem_Sapegin.jpg` → `2026-7842`
+ * - `2009-09-18_5D_1357_Artem_Sapegin.jpg` → `2009-1357`
+ */
+export function getPhotoSlug(filename: string): string | undefined {
+  const basename = path.basename(filename);
+
+  if (UNSUPPORTED_RICOH_PHOTO.test(basename)) {
+    return undefined;
+  }
+
+  const suffix = getPhotoFilenameSuffix(filename);
+  const year = getPhotoFilenameYear(filename);
+  if (suffix === undefined || year === undefined) {
+    return undefined;
+  }
+
+  return `${year}-${suffix}`;
 }
 
 /**

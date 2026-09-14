@@ -21,6 +21,7 @@ export const dirs = {
   iCloud: path.join(HOME, 'cloud'),
   iCloudInbox: path.join(HOME, 'cloud', 'Inbox'),
   iCloudDocuments: path.join(HOME, 'cloud', 'Documents'),
+  iCloudWebPhotos: path.join(HOME, 'cloud', 'Pictures/photos'),
   documents: path.join(HOME, 'Documents'),
   desktop: path.join(HOME, 'Desktop'),
   downloads: path.join(HOME, 'Downloads'),

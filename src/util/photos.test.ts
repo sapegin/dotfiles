@@ -7,10 +7,58 @@ import {
   dedupeRawJpegPairs,
   findMediaFiles,
   getDatedPhotoFilename,
+  getPhotoSlug,
+  getPhotoFilenameSuffix,
   getPhotoFilenameYear,
   isVisiblePhotoFile,
   isVisible,
 } from './photos.ts';
+
+describe(getPhotoFilenameSuffix, () => {
+  test('reads the iPhone number from year-prefixed attachment names', () => {
+    expect(getPhotoFilenameSuffix('2026_IMG_9488.jpeg')).toBe('9488');
+  });
+
+  test('reads the numeric suffix from camera filenames', () => {
+    expect(
+      getPhotoFilenameSuffix('2026-02-22_7859_Artem_Sapegin.jpg')
+    ).toBe('7859');
+  });
+
+  test('reads the frame number from legacy Canon 5D exports', () => {
+    expect(
+      getPhotoFilenameSuffix('2009-09-18_5D_1357_Artem_Sapegin.jpg')
+    ).toBe('1357');
+  });
+
+  test('reads the frame number from legacy Canon 20D exports', () => {
+    expect(
+      getPhotoFilenameSuffix('Sapegin_Artem_20D_2007-02-12_272-7262.jpg')
+    ).toBe('7262');
+  });
+});
+
+describe(getPhotoSlug, () => {
+  test('combines year and suffix for iPhone attachment names', () => {
+    expect(getPhotoSlug('2026_IMG_9488.jpeg')).toBe('2026-9488');
+  });
+
+  test('combines year and suffix for dated camera exports', () => {
+    expect(getPhotoSlug('2026-02-12_7842_Artem_Sapegin.jpg')).toBe(
+      '2026-7842'
+    );
+  });
+
+  test('combines year and suffix for legacy Canon 5D exports', () => {
+    expect(getPhotoSlug('2009-09-18_5D_1357_Artem_Sapegin.jpg')).toBe(
+      '2009-1357'
+    );
+  });
+
+  test('does not support Ricoh scanner filenames', () => {
+    expect(getPhotoSlug('_R002116.jpg')).toBeUndefined();
+  });
+});
 
 describe(getPhotoFilenameYear, () => {
   test('reads year from iPhone attachment names', () => {

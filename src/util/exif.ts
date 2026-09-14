@@ -11,6 +11,9 @@ interface ExifToolOutput {
   ImageWidth?: unknown;
   ImageHeight?: unknown;
   Make?: unknown;
+  ObjectName?: unknown;
+  'Caption-Abstract'?: unknown;
+  Keywords?: unknown;
   Rating?: unknown;
 }
 
@@ -31,6 +34,9 @@ export interface ExifMetadata {
   imageWidth?: number;
   imageHeight?: number;
   make?: string;
+  title?: string;
+  caption?: string;
+  keywords?: string[];
   rating?: number;
 }
 
@@ -92,6 +98,25 @@ function parseExifDate(
   };
 }
 
+function optionalStringArray(value: unknown): string[] {
+  if (value === undefined || value === null) {
+    return [];
+  }
+
+  if (typeof value === 'string') {
+    return value
+      .split(',')
+      .map((item) => item.trim())
+      .filter((item) => item.length > 0);
+  }
+
+  if (Array.isArray(value)) {
+    return value.filter((item): item is string => typeof item === 'string');
+  }
+
+  return [];
+}
+
 export async function readExifMetadata(
   filePath: string
 ): Promise<ExifMetadata> {
@@ -106,6 +131,9 @@ export async function readExifMetadata(
       '-ImageWidth',
       '-ImageHeight',
       '-Make',
+      '-ObjectName',
+      '-Caption-Abstract',
+      '-Keywords',
       '-Rating',
       filePath,
     ],
@@ -125,6 +153,9 @@ export async function readExifMetadata(
     imageWidth: optionalNumber(metadata.ImageWidth),
     imageHeight: optionalNumber(metadata.ImageHeight),
     make: optionalString(metadata.Make),
+    title: optionalString(metadata.ObjectName),
+    caption: optionalString(metadata['Caption-Abstract']),
+    keywords: optionalStringArray(metadata.Keywords),
     rating: optionalNumber(metadata.Rating),
   };
 }
