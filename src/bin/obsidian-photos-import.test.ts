@@ -258,7 +258,7 @@ describe('obsidianPhotosImport single-note mode', () => {
     ).resolves.toBe('avif');
     await expect(
       fs.access(path.join(testEnv.attachments, photoBasename))
-    ).rejects.toThrow();
+    ).rejects.toThrow(/ENOENT/);
     expect(moveToTrash).toHaveBeenCalledWith(
       path.join(testEnv.attachments, photoBasename)
     );
