@@ -70,16 +70,34 @@ export function getGitRepoRoot(cwd?: string): string {
   }).trim();
 }
 
+/** Returns whether a local branch exists. */
+export function hasLocalBranch(name: string, cwd?: string): boolean {
+  return (
+    spawnSync('git', ['show-ref', '--verify', '--quiet', `refs/heads/${name}`], {
+      cwd,
+    }).status === 0
+  );
+}
+
+/** Returns whether a remote-tracking branch exists. */
+export function hasRemoteBranch(
+  name: string,
+  remote = 'origin',
+  cwd?: string
+): boolean {
+  return (
+    spawnSync(
+      'git',
+      ['show-ref', '--verify', '--quiet', `refs/remotes/${remote}/${name}`],
+      { cwd }
+    ).status === 0
+  );
+}
+
 /** Returns the local main or master branch, preferring main. */
 export function getBaseBranch(cwd?: string): 'main' | 'master' {
   for (const branch of ['main', 'master'] as const) {
-    if (
-      spawnSync(
-        'git',
-        ['show-ref', '--verify', '--quiet', `refs/heads/${branch}`],
-        { cwd }
-      ).status === 0
-    ) {
+    if (hasLocalBranch(branch, cwd)) {
       return branch;
     }
   }
@@ -97,6 +115,33 @@ export function getGitConfig(key: string): string | undefined {
     );
   } catch {
     return undefined;
+  }
+}
+
+/** Returns the configured upstream remote and branch for a local branch. */
+export function getBranchUpstream(
+  branch: string,
+  cwd?: string
+): {
+  readonly remote: string;
+  readonly remoteBranch: string;
+} {
+  try {
+    const upstream = execFileSync(
+      'git',
+      ['rev-parse', '--abbrev-ref', `${branch}@{upstream}`],
+      { cwd, encoding: 'utf8' }
+    ).trim();
+    const slash = upstream.indexOf('/');
+    if (slash === -1) {
+      return { remote: 'origin', remoteBranch: branch };
+    }
+    return {
+      remote: upstream.slice(0, slash),
+      remoteBranch: upstream.slice(slash + 1),
+    };
+  } catch {
+    return { remote: 'origin', remoteBranch: branch };
   }
 }
 
@@ -139,7 +184,7 @@ function runGitLog(repoRoot: string, args: readonly string[]): GitLogEntry[] {
 }
 
 /** Returns local branch names sorted by most recent commit first. */
-export function getLocalBranches(repoRoot: string): string[] {
+export function getLocalBranches(cwd = process.cwd()): string[] {
   return execFileSync(
     'git',
     [
@@ -148,7 +193,7 @@ export function getLocalBranches(repoRoot: string): string[] {
       'refs/heads/',
       '--format=%(refname:short)',
     ],
-    { cwd: repoRoot, encoding: 'utf8' }
+    { cwd, encoding: 'utf8' }
   )
     .split('\n')
     .filter(Boolean);

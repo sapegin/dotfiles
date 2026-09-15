@@ -18,7 +18,7 @@ import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import {
   assertCurrentBranch,
   assertGitRepo,
-  getGitConfig,
+  getBranchUpstream,
 } from '../util/git.ts';
 import { log, run } from '../util/tui.ts';
 
@@ -33,10 +33,7 @@ export function push({ args }: Options): void {
 
   let pushArgs: string[];
   if (args.length === 0) {
-    const remote = getGitConfig(`branch.${branch}.remote`) ?? 'origin';
-    const mergeRef =
-      getGitConfig(`branch.${branch}.merge`) ?? `refs/heads/${branch}`;
-    const remoteBranch = mergeRef.split('/').slice(2).join('/');
+    const { remote, remoteBranch } = getBranchUpstream(branch);
     pushArgs = [remote, remoteBranch];
   } else {
     pushArgs = args;

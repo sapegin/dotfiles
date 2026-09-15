@@ -20,7 +20,7 @@ import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import {
   assertCurrentBranch,
   assertGitRepo,
-  getGitConfig,
+  getBranchUpstream,
 } from '../util/git.ts';
 import { run } from '../util/tui.ts';
 
@@ -69,10 +69,7 @@ export function pull(_options: Options): void {
 
   const branch = assertCurrentBranch();
 
-  const remote = getGitConfig(`branch.${branch}.remote`) ?? 'origin';
-  const mergeRef =
-    getGitConfig(`branch.${branch}.merge`) ?? `refs/heads/${branch}`;
-  const remoteBranch = mergeRef.split('/').slice(2).join('/');
+  const { remote, remoteBranch } = getBranchUpstream(branch);
 
   // Pull with rebase
   console.log(`\n↓ Fetching from ${remote}…`);

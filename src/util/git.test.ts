@@ -6,10 +6,14 @@ import { afterAll, beforeAll, describe, expect, test, vi } from 'vitest';
 import {
   assertCurrentBranch,
   getBranchChangeLog,
+  getBranchUpstream,
   getBranchesWithChanges,
   getBranchCommits,
   getCurrentBranch,
+  getLocalBranches,
   getMainCommits,
+  hasLocalBranch,
+  hasRemoteBranch,
   isBranchMerged,
   parseGitLog,
 } from './git.ts';
@@ -60,6 +64,48 @@ describe(assertCurrentBranch, () => {
       exit.mockRestore();
       git('switch', 'main');
     }
+  });
+});
+
+describe(getBranchUpstream, () => {
+  test('falls back to origin and the branch name without upstream', () => {
+    expect(getBranchUpstream('main', repoRoot)).toStrictEqual({
+      remote: 'origin',
+      remoteBranch: 'main',
+    });
+  });
+
+  test('reads a configured upstream from Git', () => {
+    git('remote', 'add', 'origin', repoRoot);
+    git('fetch', 'origin');
+    git('branch', '--set-upstream-to', 'origin/main', 'main');
+
+    expect(getBranchUpstream('main', repoRoot)).toStrictEqual({
+      remote: 'origin',
+      remoteBranch: 'main',
+    });
+  });
+});
+
+describe(hasLocalBranch, () => {
+  test('returns true for an existing local branch', () => {
+    expect(hasLocalBranch('main', repoRoot)).toBe(true);
+  });
+
+  test('returns false for a missing local branch', () => {
+    expect(hasLocalBranch('missing', repoRoot)).toBe(false);
+  });
+});
+
+describe(hasRemoteBranch, () => {
+  test('returns false when no remote branch exists', () => {
+    expect(hasRemoteBranch('missing', 'origin', repoRoot)).toBe(false);
+  });
+});
+
+describe(getLocalBranches, () => {
+  test('lists local branches for a repository', () => {
+    expect(getLocalBranches(repoRoot)).toContain('main');
   });
 });
 

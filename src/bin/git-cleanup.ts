@@ -13,8 +13,9 @@
 // License: MIT
 // https://github.com/sapegin/dotfiles
 
-import { execFileSync, execSync } from 'node:child_process';
+import { execSync } from 'node:child_process';
 import { parseArgs, type ParsedArgs } from '../util/args.ts';
+import { assertGitRepo, runGit } from '../util/git.ts';
 import { log, run } from '../util/tui.ts';
 
 function getStaleBranches(): string[] {
@@ -37,6 +38,8 @@ const OPTIONS = [
 export type Options = ParsedArgs<typeof OPTIONS>;
 
 export function gitCleanup({ force }: Options): void {
+  assertGitRepo();
+
   if (force === false) {
     const branches = getStaleBranches();
     for (const branch of branches) {
@@ -46,18 +49,16 @@ export function gitCleanup({ force }: Options): void {
   }
 
   log.heading('\nDeleting unreachable objects…\n');
-  execFileSync('git', ['prune'], { stdio: 'inherit' });
+  runGit(['prune']);
 
   log.heading('\nDeleting stale remote-tracking branches…\n');
-  execFileSync('git', ['remote', 'prune', 'origin'], { stdio: 'inherit' });
+  runGit(['remote', 'prune', 'origin']);
   console.log('Done.');
 
   log.heading('\nDeleting branches with no longer existing remote branches…\n');
   const staleBranches = getStaleBranches();
   if (staleBranches.length > 0) {
-    execFileSync('git', ['branch', '-D', ...staleBranches], {
-      stdio: 'inherit',
-    });
+    runGit(['branch', '-D', ...staleBranches]);
   }
 }
 

@@ -24,46 +24,19 @@
 // License: MIT
 // https://github.com/sapegin/dotfiles
 
-import { execFileSync, execSync, spawnSync } from 'node:child_process';
 import { parseArgs, type ParsedArgs } from '../util/args.ts';
-import { getUpstreamTracking, runGit, runPull } from '../util/git.ts';
+import {
+  assertCurrentBranch,
+  getLocalBranches,
+  getUpstreamTracking,
+  hasLocalBranch,
+  hasRemoteBranch,
+  runGit,
+  runPull,
+} from '../util/git.ts';
 import { run, select } from '../util/tui.ts';
 
 const remote = 'origin';
-
-// Lists local branches sorted by most recently updated first.
-function getLocalBranches(): string[] {
-  return execFileSync(
-    'git',
-    [
-      'for-each-ref',
-      '--sort=-committerdate',
-      'refs/heads/',
-      '--format=%(refname:short)',
-    ],
-    { encoding: 'utf8' }
-  )
-    .split('\n')
-    .filter((line) => line.length > 0);
-}
-
-function hasLocalBranch(name: string): boolean {
-  return (
-    spawnSync('git', ['show-ref', '--verify', '--quiet', `refs/heads/${name}`])
-      .status === 0
-  );
-}
-
-function hasRemoteBranch(name: string): boolean {
-  return (
-    spawnSync('git', [
-      'show-ref',
-      '--verify',
-      '--quiet',
-      `refs/remotes/${remote}/${name}`,
-    ]).status === 0
-  );
-}
 
 function tryPull(branch: string): void {
   if (hasRemoteBranch(branch)) {
@@ -118,10 +91,7 @@ export function br(options: Options): void {
   // Switch to a previous branch
   if (branch === '-') {
     runGitSwitch(['-']);
-    const currentBranch = execSync('git rev-parse --abbrev-ref HEAD', {
-      encoding: 'utf8',
-    }).trim();
-    tryPull(currentBranch);
+    tryPull(assertCurrentBranch());
     process.exit(0);
   }
 
