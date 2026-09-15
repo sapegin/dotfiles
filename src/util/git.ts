@@ -40,6 +40,20 @@ export function getCurrentBranch(cwd?: string): string | undefined {
   return branch || undefined;
 }
 
+/**
+ * Returns the current branch name, or exits with code 1 in detached HEAD state.
+ */
+export function assertCurrentBranch(cwd?: string): string {
+  const branch = getCurrentBranch(cwd);
+  if (branch === undefined) {
+    log.error(
+      '✕ You’re not on a branch (detached HEAD). Check out a branch first.'
+    );
+    process.exit(1);
+  }
+  return branch;
+}
+
 /** Returns the short commit hash at HEAD. */
 export function getShortCommit(cwd?: string): string {
   return execFileSync('git', ['rev-parse', '--short', 'HEAD'], {

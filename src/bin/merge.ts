@@ -15,12 +15,12 @@
 
 import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import {
+  assertCurrentBranch,
   assertGitRepo,
-  getCurrentBranch,
   getUpstreamTracking,
   runGit,
 } from '../util/git.ts';
-import { log, run } from '../util/tui.ts';
+import { run } from '../util/tui.ts';
 
 const OPTIONS = [
   {
@@ -35,14 +35,7 @@ export type Options = ParsedArgs<typeof OPTIONS>;
 export function merge({ branch }: Options): void {
   assertGitRepo();
 
-  const currentBranch = getCurrentBranch();
-
-  if (currentBranch === undefined) {
-    log.error(
-      "✕ You're not on a branch (detached HEAD). Check out a branch first."
-    );
-    process.exit(1);
-  }
+  const currentBranch = assertCurrentBranch();
 
   const remote = 'origin';
   const tracking = getUpstreamTracking();

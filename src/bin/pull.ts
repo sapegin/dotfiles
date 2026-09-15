@@ -17,8 +17,12 @@ import { execFileSync, execSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { parseArgs, type ParsedArgs } from '../util/args.ts';
-import { assertGitRepo, getCurrentBranch, getGitConfig } from '../util/git.ts';
-import { log, run } from '../util/tui.ts';
+import {
+  assertCurrentBranch,
+  assertGitRepo,
+  getGitConfig,
+} from '../util/git.ts';
+import { run } from '../util/tui.ts';
 
 const OPTIONS = [] as const;
 
@@ -63,14 +67,7 @@ function hasChanged(filename: string): boolean {
 export function pull(_options: Options): void {
   assertGitRepo();
 
-  const branch = getCurrentBranch();
-
-  if (branch === undefined) {
-    log.error(
-      "✕ You're not on a branch (detached HEAD). Check out a branch first."
-    );
-    process.exit(1);
-  }
+  const branch = assertCurrentBranch();
 
   const remote = getGitConfig(`branch.${branch}.remote`) ?? 'origin';
   const mergeRef =

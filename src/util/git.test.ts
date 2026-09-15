@@ -2,8 +2,9 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { afterAll, beforeAll, describe, expect, test } from 'vitest';
+import { afterAll, beforeAll, describe, expect, test, vi } from 'vitest';
 import {
+  assertCurrentBranch,
   getBranchChangeLog,
   getBranchesWithChanges,
   getBranchCommits,
@@ -36,6 +37,29 @@ afterAll(() => {
 describe(getCurrentBranch, () => {
   test('returns the current branch', () => {
     expect(getCurrentBranch(repoRoot)).toBe('main');
+  });
+});
+
+describe(assertCurrentBranch, () => {
+  test('returns the current branch', () => {
+    expect(assertCurrentBranch(repoRoot)).toBe('main');
+  });
+
+  test('exits in detached HEAD state', () => {
+    const commit = git('rev-parse', 'HEAD');
+    git('switch', '--detach', commit);
+
+    const exit = vi.spyOn(process, 'exit').mockImplementation(() => {
+      throw new Error('exit');
+    });
+
+    try {
+      expect(() => assertCurrentBranch(repoRoot)).toThrow('exit');
+      expect(exit).toHaveBeenCalledWith(1);
+    } finally {
+      exit.mockRestore();
+      git('switch', 'main');
+    }
   });
 });
 

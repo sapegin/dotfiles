@@ -15,7 +15,11 @@
 
 import { spawnSync } from 'node:child_process';
 import { parseArgs, type ParsedArgs } from '../util/args.ts';
-import { assertGitRepo, getCurrentBranch, getGitConfig } from '../util/git.ts';
+import {
+  assertCurrentBranch,
+  assertGitRepo,
+  getGitConfig,
+} from '../util/git.ts';
 import { log, run } from '../util/tui.ts';
 
 const OPTIONS = [{ name: 'args', rest: true }] as const;
@@ -25,15 +29,7 @@ export type Options = ParsedArgs<typeof OPTIONS>;
 export function push({ args }: Options): void {
   assertGitRepo();
 
-  const branch = getCurrentBranch();
-
-  // TODO: This can also go to git.ts -- used three times
-  if (branch === undefined) {
-    log.error(
-      "✕ You're not on a branch (detached HEAD). Check out a branch first."
-    );
-    process.exit(1);
-  }
+  const branch = assertCurrentBranch();
 
   let pushArgs: string[];
   if (args.length === 0) {
