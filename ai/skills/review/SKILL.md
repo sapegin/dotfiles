@@ -57,7 +57,7 @@ Recommendation: {best coherent recommendation with scope proportionate to its be
 Use this exact output when no material findings remain:
 
 ```text
-Right. Nothing else worth touching.
+Huzzah! Nothing else warrants attention.
 ```
 
 Formatting rules:

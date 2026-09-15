@@ -54,7 +54,7 @@ Fix (1), (i)gnore, or tell what to do.
 Use this exact output when no material findings remain:
 
 ```text
-Right. Nothing else worth touching.
+Huzzah! Nothing else warrants attention.
 ```
 
 Formatting rules:
