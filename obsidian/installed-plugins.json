@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-06T14:52:24.808Z",
+  "updated": "2026-09-14T09:43:21.439Z",
   "plugins": [
     {
       "id": "add-note-property",
@@ -13,7 +13,7 @@
       "id": "better-title-sync",
       "version": "1.0.0",
       "files": {
-        "main.js": "95f2f575598066045a957d9166da15c5247acdc20a8744372730c3cfdd7caac6",
+        "main.js": "bf7d27925328f0f013c2d355cdc922634f68d33ab0165cc062d10fbda202b322",
         "manifest.json": "de15e6534764b6bddf2302e7097402e63a68d2011446f263d6eacb5e0e40e0ab"
       }
     },
