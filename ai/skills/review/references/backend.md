@@ -20,13 +20,15 @@ Transaction boundaries, atomicity, idempotency, schema and data migration orderi
 
 Unhandled null values, exceptions, and error-as-data variants; swallowed failures; false success; indefinite loading or waiting; unsafe retries; lost user input; partial state left after failure; unhelpful fallbacks; and errors without a practical recovery path.
 
+Inspect every added or modified `try/catch` and identify what can fail and why recovery belongs at that layer. Prefer propagation when the current scope cannot fully recover while preserving correctness. Flag fallback returns such as `null`, `[]`, or `false`, logging-and-continuing, and other handling that conceals failure. Parsing and decoding failures, especially JSON failures, should propagate unless compatibility behavior is explicit and tested. HTTP routes, CLI entrypoints, and supervisors may translate errors, but must not report false success or silently degrade. Compare errors using stable codes or identifiers, never message text.
+
 ## Side effects and resources
 
 Files, network calls, database operations, subprocesses, routing, storage, analytics, timers, subscriptions, event listeners, cleanup, cancellation, signals, and shutdown behavior. Paths, encodings, resource ownership, repeated execution, and cleanup or cancellation across every completion, error, and superseded-work path.
 
 ## Node.js runtime
 
-Compatibility with the supported Node version and module system; environment-variable parsing; process exit codes, signals, and shutdown; file, stream, and server cleanup; stream errors; child-process arguments and exit handling; and whether synchronous I/O is appropriate for the execution path.
+Compatibility with the supported Node version and module system; environment-variable parsing; process exit codes, signals, and shutdown; file, stream, and server cleanup; stream errors and backpressure; child-process arguments and exit handling; and whether synchronous I/O is appropriate for the execution path. For streams, queues, and producer-consumer paths, verify that producers respect consumer capacity and that overload cannot cause unbounded buffering or resource growth.
 
 ## Performance and scale
 

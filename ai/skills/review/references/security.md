@@ -22,6 +22,8 @@ Request bodies without schema validation, file uploads without type/size/storage
 
 SQL or shell operations assembled from untrusted input, HTML sinks fed by user-controlled content (XSS), dynamic execution APIs used with runtime input, filesystem paths derived from request data (path traversal), unsafe HTML or URLs, redirects, insecure randomness, untrusted deserialization, client-controlled identity, cross-origin messaging, and file uploads.
 
+Require parameterized queries whenever SQL includes untrusted values. Constrain redirect destinations derived from untrusted input to trusted origins. Protect fetches of user-supplied URLs against local, private, link-local, and metadata destinations, including DNS rebinding and changes between resolution and connection. Prefer context-specific escaping over lossy sanitization for HTML output.
+
 ## Dependencies
 
 Run the ecosystem audit command when dependency risk is in scope (`npm audit`, etc.); report only critical/high advisories affecting reachable runtime or build paths.
