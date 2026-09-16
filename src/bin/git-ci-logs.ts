@@ -31,7 +31,91 @@ interface Check {
   readonly workflow?: string;
 }
 
-const ghEnvironment = { ...process.env, GH_PAGER: 'cat' };
+const baseGhEnvironment = { ...process.env, GH_PAGER: 'cat' };
+let ghEnvironment = baseGhEnvironment;
+
+interface GhAccount {
+  readonly active: boolean;
+  readonly host: string;
+  readonly login: string;
+  readonly state: string;
+}
+
+interface GhAuthStatus {
+  readonly hosts: Readonly<Record<string, readonly GhAccount[]>>;
+}
+
+function selectGhAccount(): void {
+  if (
+    process.env.GH_TOKEN !== undefined ||
+    process.env.GH_ENTERPRISE_TOKEN !== undefined
+  ) {
+    return;
+  }
+
+  const repository = spawnSync(
+    'gh',
+    ['repo', 'view', '--json', 'nameWithOwner'],
+    {
+      encoding: 'utf8',
+      env: baseGhEnvironment,
+    }
+  );
+  if (
+    repository.status === 0 ||
+    repository.stderr.includes('Could not resolve to a Repository') === false
+  ) {
+    return;
+  }
+
+  const authStatus = spawnSync('gh', ['auth', 'status', '--json', 'hosts'], {
+    encoding: 'utf8',
+    env: baseGhEnvironment,
+  });
+  if (authStatus.status !== 0) {
+    return;
+  }
+
+  let accounts: readonly GhAccount[];
+  try {
+    const status = JSON.parse(authStatus.stdout) as GhAuthStatus;
+    accounts = Object.values(status.hosts).flat();
+  } catch {
+    return;
+  }
+
+  for (const account of accounts) {
+    if (account.active || account.state !== 'success') {
+      continue;
+    }
+
+    const token = spawnSync(
+      'gh',
+      ['auth', 'token', '--hostname', account.host, '--user', account.login],
+      { encoding: 'utf8', env: baseGhEnvironment }
+    );
+    if (token.status !== 0 || token.stdout.trim() === '') {
+      continue;
+    }
+
+    const candidateEnvironment = {
+      ...baseGhEnvironment,
+      GH_HOST: account.host,
+      ...(account.host === 'github.com'
+        ? { GH_TOKEN: token.stdout.trim() }
+        : { GH_ENTERPRISE_TOKEN: token.stdout.trim() }),
+    };
+    const candidateRepository = spawnSync(
+      'gh',
+      ['repo', 'view', '--json', 'nameWithOwner'],
+      { encoding: 'utf8', env: candidateEnvironment }
+    );
+    if (candidateRepository.status === 0) {
+      ghEnvironment = candidateEnvironment;
+      return;
+    }
+  }
+}
 
 function fail(message: string, details?: string): never {
   log.error(message);
@@ -210,6 +294,8 @@ export async function gitCiLogs({
       `Pull request number must be a positive integer: ${pullRequestArgument}`
     );
   }
+
+  selectGhAccount();
 
   const pullRequest =
     pullRequestArgument ??

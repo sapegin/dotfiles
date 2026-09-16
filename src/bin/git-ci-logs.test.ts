@@ -39,6 +39,19 @@ printf '%s\\n' "$*" >> "$GH_CALLS"
 if [[ $GH_PAGER != cat ]]; then
   printf 'GH_PAGER must be disabled\\n' >&2
   exit 98
+elif [[ $1 == repo && $2 == view ]]; then
+  if [[ $TEST_GH_FALLBACK == 1 && $GH_TOKEN != work-token ]]; then
+    printf "GraphQL: Could not resolve to a Repository with the name 'acme/repo'. (repository)\\n" >&2
+    exit 1
+  fi
+  printf 'acme/repo\\n'
+elif [[ $1 == auth && $2 == status ]]; then
+  printf '{"hosts":{"github.com":[{"active":true,"host":"github.com","login":"personal","state":"success"},{"active":false,"host":"github.com","login":"work","state":"success"}]}}\\n'
+elif [[ $1 == auth && $2 == token && $6 == work ]]; then
+  printf 'work-token\\n'
+elif [[ $TEST_GH_FALLBACK == 1 && $GH_TOKEN != work-token ]]; then
+  printf 'work token was not selected\\n' >&2
+  exit 97
 elif [[ $1 == pr && $2 == view && $3 == --json ]]; then
   printf '42\\n'
 elif [[ $1 == pr && $2 == view && $3 == 5901 ]]; then
@@ -151,6 +164,15 @@ describe('git-ci-logs', () => {
     expect(fs.readFileSync(callsPath, 'utf8')).toContain(
       'pr view --json number --jq .number'
     );
+  });
+
+  test('uses another authenticated account when the active account lacks access', () => {
+    fs.writeFileSync(callsPath, '');
+
+    expect(gitCiLogs('17', { TEST_GH_FALLBACK: '1' })).toContain('PR #17');
+    const calls = fs.readFileSync(callsPath, 'utf8');
+    expect(calls).toContain('auth status --json hosts');
+    expect(calls).toContain('auth token --hostname github.com --user work');
   });
 
   test('reports a missing pull request without a stack trace', () => {
