@@ -73,9 +73,13 @@ export function getGitRepoRoot(cwd?: string): string {
 /** Returns whether a local branch exists. */
 export function hasLocalBranch(name: string, cwd?: string): boolean {
   return (
-    spawnSync('git', ['show-ref', '--verify', '--quiet', `refs/heads/${name}`], {
-      cwd,
-    }).status === 0
+    spawnSync(
+      'git',
+      ['show-ref', '--verify', '--quiet', `refs/heads/${name}`],
+      {
+        cwd,
+      }
+    ).status === 0
   );
 }
 
@@ -126,23 +130,24 @@ export function getBranchUpstream(
   readonly remote: string;
   readonly remoteBranch: string;
 } {
-  try {
-    const upstream = execFileSync(
-      'git',
-      ['rev-parse', '--abbrev-ref', `${branch}@{upstream}`],
-      { cwd, encoding: 'utf8' }
-    ).trim();
-    const slash = upstream.indexOf('/');
-    if (slash === -1) {
-      return { remote: 'origin', remoteBranch: branch };
-    }
-    return {
-      remote: upstream.slice(0, slash),
-      remoteBranch: upstream.slice(slash + 1),
-    };
-  } catch {
+  const result = spawnSync(
+    'git',
+    ['rev-parse', '--abbrev-ref', `${branch}@{upstream}`],
+    { cwd, encoding: 'utf8' }
+  );
+  if (result.status !== 0) {
     return { remote: 'origin', remoteBranch: branch };
   }
+
+  const upstream = result.stdout.trim();
+  const slash = upstream.indexOf('/');
+  if (slash === -1) {
+    return { remote: 'origin', remoteBranch: branch };
+  }
+  return {
+    remote: upstream.slice(0, slash),
+    remoteBranch: upstream.slice(slash + 1),
+  };
 }
 
 /** Returns the configured Git author string, preferring email over name. */
