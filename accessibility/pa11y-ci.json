@@ -1,5 +1,8 @@
 {
   "defaults": {
+    "chromeLaunchConfig": {
+      "channel": "chrome"
+    },
     "hideElements": "iframe[name=\"__cmpLocator\"], iframe[name=\"__uspapiLocator\"], iframe[name=\"__tcfapiLocator\"]"
   }
 }

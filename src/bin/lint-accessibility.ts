@@ -13,6 +13,11 @@
 // `lint-accessibility --backend axe http://localhost:3000/`
 //
 // ---
+//
+// Installation:
+// npm install -g pa11y-ci
+//
+// ---
 // Author: Artem Sapegin, sapegin.me
 // License: MIT
 // https://github.com/sapegin/dotfiles
