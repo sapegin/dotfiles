@@ -108,7 +108,17 @@ export function lintAccessibility(options: Options): void {
   const result = spawnSync(
     'npm',
     options.backend === 'axe'
-      ? ['exec', '--yes', '--package', '@axe-core/cli', '--', 'axe', ...urls]
+      ? [
+          'exec',
+          '--yes',
+          '--package',
+          '@axe-core/cli',
+          '--',
+          'axe',
+          '--load-delay',
+          '1000',
+          ...urls,
+        ]
       : [
           'exec',
           '--yes',

@@ -1,0 +1,35 @@
+{
+  "$schema": "https://www.raycast.com/schemas/extension.json",
+  "name": "bookmarks",
+  "description": "Search bookmarks and open them in the browser",
+  "license": "MIT",
+  "author": "sapegin",
+  "scripts": {
+    "build": "ray build -e dist -o dist",
+    "dev": "ray develop"
+  },
+  "dependencies": {
+    "@raycast/api": "1.103.0"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.1",
+    "@types/react": "19.0.12",
+    "typescript": "6.0.3"
+  },
+  "icon": "command-icon.png",
+  "commands": [
+    {
+      "name": "search-bookmarks",
+      "title": "Search bookmarks",
+      "description": "Search bookmarks and open a link in the default browser",
+      "mode": "view",
+      "keywords": [
+        "bookmark",
+        "link",
+        "browser",
+        "web"
+      ]
+    }
+  ],
+  "title": "Bookmarks"
+}

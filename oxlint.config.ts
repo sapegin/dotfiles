@@ -18,5 +18,6 @@ export default defineConfig({
     'obsidian/*',
     'pretty-html/_assets/lib/*',
     'tinycast/**/dist/**',
+    'tinycast/**/raycast-env.d.ts',
   ],
 });
