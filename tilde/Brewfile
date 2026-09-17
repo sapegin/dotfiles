@@ -1,3 +1,5 @@
+brew trust --tap abue-ammar/tinycast
+
 # CLI tools
 brew "agent-browser" # Headless browser for AI agents
 brew "bat" # `cat` replacement
@@ -19,7 +21,6 @@ brew "restic" # Incremental backups
 brew "ripgrep" # `grep` replacement
 brew "starship" # Prompt manager
 brew "supacode" # Terminal for AI agents
-brew "syntax-highlight" # Quick look with syntax highlighting
 brew "tlrc" # `man` replacement
 brew "trafilatura" # Download web pages as text or Markdown
 brew "typos-cli" # Fix typos
@@ -28,6 +29,8 @@ brew "zsh-patina" # Syntax highlighting for zsh
 brew "zsh" # Shell
 
 # GUI apps
+brew "abue-ammar/tinycast"
+brew "syntax-highlight" # Quick look with syntax highlighting
 cask "adobe-creative-cloud" # Lightroom & Photoshop
 cask "affinity" # Image editor
 cask "alfred" # App launcher

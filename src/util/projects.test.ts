@@ -1,10 +1,6 @@
 import path from 'node:path';
 import { describe, expect, test } from 'vitest';
-import {
-  fuzzyfy,
-  scoreProjectMatch,
-  searchProjects,
-} from './projectsSearch.ts';
+import { fuzzyfy, scoreProjectMatch, searchProjects } from './projects.ts';
 
 describe(fuzzyfy, () => {
   test('inserts wildcards between alphanumeric characters', () => {

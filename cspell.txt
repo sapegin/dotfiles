@@ -115,6 +115,7 @@ Tauri
 textlint
 themable
 timeboxing
+Tinycast
 todos
 trackpad
 undeployed

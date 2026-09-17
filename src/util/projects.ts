@@ -2,13 +2,22 @@
  * Collects project folder paths and ranks them by fuzzy search with word-initial
  * abbreviation priority.
  *
- * Used by `j` (cd to best match) and Alfred’s project-folders script filter.
+ * Used by `j` and `tinycast/project-opener`.
  */
 
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
-import { parseEnv } from 'node:util';
-import { untildify } from './files.ts';
+
+const HOME = os.homedir();
+
+// Can't import files.ts here as it breaks in Tinycast
+function untildify(input: string): string {
+  if (input.startsWith('~/')) {
+    return path.join(HOME, input.slice(2));
+  }
+  return input;
+}
 
 // Abbreviation bonuses beat fuzzy-only matches; keep them far above
 // length/index tie-breakers.
@@ -20,14 +29,42 @@ import { untildify } from './files.ts';
 const ABBREVIATION_PREFIX_BONUS = 10_000;
 const ABBREVIATION_SUBSEQUENCE_BONUS = 5000;
 
-function getProjectEnv() {
+/** `WORK_PROJECTS_DIR` from `~/.env`. Tinycast’s runtime has no `util.parseEnv`. */
+function workProjectsDirFromEnv(): string | undefined {
   const envFile = untildify('~/.env');
-  return fs.existsSync(envFile)
-    ? parseEnv(fs.readFileSync(envFile, 'utf8'))
-    : {};
+  if (fs.existsSync(envFile) === false) {
+    return undefined;
+  }
+
+  const prefix = 'WORK_PROJECTS_DIR=';
+  for (const line of fs.readFileSync(envFile, 'utf8').split('\n')) {
+    const trimmed = line.trim();
+    if (trimmed.length === 0 || trimmed.startsWith('#')) {
+      continue;
+    }
+
+    const assignment = trimmed.startsWith('export ')
+      ? trimmed.slice('export '.length).trim()
+      : trimmed;
+    if (assignment.startsWith(prefix) === false) {
+      continue;
+    }
+
+    let value = assignment.slice(prefix.length).trim();
+    if (
+      (value.startsWith('"') && value.endsWith('"')) ||
+      (value.startsWith("'") && value.endsWith("'"))
+    ) {
+      value = value.slice(1, -1);
+    }
+
+    return value.length === 0 ? undefined : value;
+  }
+
+  return undefined;
 }
 
-const env = getProjectEnv();
+const workProjectsDir = workProjectsDirFromEnv();
 
 // Each entry is either a fixed path (`~/dotfiles`) or a parent directory (`~/_/*`).
 // Array order is search/display priority.
@@ -36,12 +73,14 @@ const PROJECT_SOURCES: string[] = [
   '~/murder',
   '~/dotfiles',
   '~/_/*',
-  ...(env.WORK_PROJECTS_DIR === undefined
-    ? []
-    : [`${env.WORK_PROJECTS_DIR}/*`]),
+  ...(workProjectsDir === undefined ? [] : [`${workProjectsDir}/*`]),
 ];
 
 function getDirs(directory: string): string[] {
+  if (fs.existsSync(directory) === false) {
+    return [];
+  }
+
   return fs
     .readdirSync(directory, { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
@@ -111,14 +150,6 @@ function scoreAbbreviation(name: string, query: string): number {
   }
 
   return 0;
-}
-
-/**
- * Normalized folder name for Alfred’s `match` field (when Alfred filtering is
- * disabled).
- */
-export function getProjectMatchText(projectPath: string): string {
-  return normalizeName(path.basename(projectPath));
 }
 
 export function scoreProjectMatch(

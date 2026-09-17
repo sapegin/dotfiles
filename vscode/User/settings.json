@@ -137,7 +137,10 @@
     "https://json-schema.org/": true,
     "https://json.schemastore.org/": true,
     "https://raw.githubusercontent.com": true,
+    "https://raw.githubusercontent.com/devcontainers/spec/": true,
+    "https://raw.githubusercontent.com/microsoft/vscode/": true,
     "https://schemastore.azurewebsites.net/": true,
+    "https://www.raycast.com": true,
     "https://www.schemastore.org/": true
   },
   "merge-conflict.autoNavigateNextConflict.enabled": true,

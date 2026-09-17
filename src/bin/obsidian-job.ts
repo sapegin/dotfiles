@@ -11,39 +11,27 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { setTimeout } from 'node:timers/promises';
-import { parseArgs } from '../../util/args.ts';
-import { atomicWrite, dirs } from '../../util/files.ts';
-import { openObsidianPath } from '../../util/obsidian.ts';
-import { formatLocalDate } from '../../util/time.ts';
+import { parseArgs, type ParsedArgs } from '../util/args.ts';
+import { atomicWrite, dirs } from '../util/files.ts';
+import { openObsidianPath } from '../util/obsidian.ts';
+import { formatLocalDate } from '../util/time.ts';
+import { run } from '../util/tui.ts';
 
-const JOBS_DIR = path.join(dirs.obsidianVault, 'Jobs/Applications');
-const OPEN_DELAY_MS = 500;
-
-const args = parseArgs([
+const OPTIONS = [
   {
     name: 'title',
     positional: true,
   },
-]);
+] as const;
 
-const title = args.title?.trim() ?? '';
+export type Options = ParsedArgs<typeof OPTIONS>;
 
-if (title === '') {
-  process.exit(0);
-}
+const JOBS_DIR = path.join(dirs.obsidianVault, 'Jobs/Applications');
+const OPEN_DELAY_MS = 500;
 
 function sanitizeFileName(name: string): string {
   return name.replaceAll(/[/\\:*?"<>|]/g, '').trim();
 }
-
-const fileName = sanitizeFileName(title);
-
-if (fileName === '') {
-  process.exit(0);
-}
-
-const notePath = path.join(JOBS_DIR, `${fileName}.md`);
-const noteRelativePath = path.join('Jobs/Applications', `${fileName}.md`);
 
 function buildNoteContent(noteTitle: string, date: string): string {
   return `---
@@ -59,7 +47,23 @@ tags:
 `;
 }
 
-try {
+/** Create a job application note in the vault and open it in Obsidian. */
+export async function obsidianJob(options: Options): Promise<void> {
+  const title = options.title?.trim() ?? '';
+
+  if (title === '') {
+    return;
+  }
+
+  const fileName = sanitizeFileName(title);
+
+  if (fileName === '') {
+    return;
+  }
+
+  const notePath = path.join(JOBS_DIR, `${fileName}.md`);
+  const noteRelativePath = path.join('Jobs/Applications', `${fileName}.md`);
+
   try {
     await fs.access(notePath);
     console.error(`Note already exists: ${notePath}`);
@@ -77,7 +81,6 @@ try {
   await setTimeout(OPEN_DELAY_MS);
 
   openObsidianPath(noteRelativePath);
-} catch (error) {
-  console.error(error);
-  process.exit(1);
 }
+
+await run(import.meta.url, () => obsidianJob(parseArgs(OPTIONS)));

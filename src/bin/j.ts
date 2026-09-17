@@ -14,7 +14,7 @@
 // https://github.com/sapegin/dotfiles
 
 import { parseArgs, type ParsedArgs } from '../util/args.ts';
-import { searchProjects } from '../util/projectsSearch.ts';
+import { searchProjects } from '../util/projects.ts';
 import { run } from '../util/tui.ts';
 
 const OPTIONS = [
