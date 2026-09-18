@@ -34,13 +34,15 @@ import {
   runGit,
   runPull,
 } from '../util/git.ts';
-import { run, select } from '../util/tui.ts';
+import { log, run, select } from '../util/tui.ts';
 
 const remote = 'origin';
 
 function tryPull(branch: string): void {
-  if (hasRemoteBranch(branch)) {
-    runPull();
+  if (hasRemoteBranch(branch) && !runPull()) {
+    log.warn(
+      `\n Could not update from ${remote}; continuing with local branch ${branch}.`
+    );
   }
 }
 

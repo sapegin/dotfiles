@@ -21,6 +21,7 @@ import {
   assertCurrentBranch,
   assertGitRepo,
   getBranchUpstream,
+  getExecExitCode,
 } from '../util/git.ts';
 import { run } from '../util/tui.ts';
 
@@ -73,20 +74,24 @@ export function pull(_options: Options): void {
 
   // Pull with rebase
   console.log(`\n↓ Fetching from ${remote}…`);
-  execFileSync(
-    'git',
-    [
-      'pull',
-      '--rebase',
-      '--autostash',
-      '--prune',
-      '--recurse-submodules',
-      '--jobs=10',
-      remote,
-      remoteBranch,
-    ],
-    { stdio: 'inherit' }
-  );
+  try {
+    execFileSync(
+      'git',
+      [
+        'pull',
+        '--rebase',
+        '--autostash',
+        '--prune',
+        '--recurse-submodules',
+        '--jobs=10',
+        remote,
+        remoteBranch,
+      ],
+      { stdio: 'inherit' }
+    );
+  } catch (error) {
+    process.exit(getExecExitCode(error));
+  }
 
   // Install Node.js packages with pnpm if available, otherwise fall back to npm
   if (

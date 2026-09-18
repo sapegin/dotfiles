@@ -392,14 +392,15 @@ export function runGit(
 }
 
 /**
- * Runs the `pull` helper script. Exits on failure without a Node stack trace;
- * pull prints its own errors.
+ * Runs the `pull` helper script and returns whether it succeeded. The helper
+ * prints its own errors.
  */
-export function runPull(): void {
+export function runPull(): boolean {
   try {
     execFileSync('pull', { stdio: 'inherit' });
+    return true;
   } catch {
-    process.exit(1);
+    return false;
   }
 }
 
