@@ -36,7 +36,7 @@ Apply every check below. Flag only real issues — skip sentences that need no c
 - Unclear antecedents (`it`, `this`, `that`, `which`)
 - Dangling or misplaced modifiers
 - Redundant or wordy phrasing
-- Commonly confused words (`its`/`it's`, `affect`/`effect`, `than`/`then`)
+- Commonly confused words (`its`/`it’s`, `affect`/`effect`, `than`/`then`)
 - Heading and list-item consistency (sentence case, matching fragment vs sentence style)
 - Weak or vague openers (`There is`, `It is`, `In order to`) when a direct rewrite is clearer
 - Misplaced only/just/simply/easily that understate difficulty
@@ -73,29 +73,20 @@ Apply every check below. Flag only real issues — skip sentences that need no c
 Use this structure for every finding. Replace only the placeholders.
 
 ```md
-1. {original sentence}
+## {finding number}. {brief explanation aimed at improving the user’s understanding}
+
+{original sentence}
 
 →
 
 {corrected sentence}
-
-_{brief explanation aimed at improving the user's understanding}_
-
-2. {original sentence}
-
-→
-
-{corrected sentence}
-
-_{explanation}_
 ```
 
 Formatting rules:
 
-- Number findings consecutively from 1 for the session.
-- Quote the **exact** original sentence or list item — enough context to locate it, not the whole paragraph unless the issue spans it.
+- Number findings consecutively from 1 for the session, followed by the explanation.
+- Quote the **exact** original sentence or list item below the explanation — enough context to locate it, not the whole paragraph unless the issue spans it.
 - Show the corrected version on its own line after a standalone `→`.
-- Put the explanation on the next line in italics using `_..._`.
 - Separate findings with a blank line.
 - Do not add a summary table, preamble, or reconstructed full text during the review step.
 - If there are no findings, reply exactly: `No corrections needed.`
