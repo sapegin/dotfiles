@@ -21,4 +21,4 @@ npm install
 npm config set min-release-age 3
 
 echo "The min-release-age value restored to:"
-pnpm config get min-release-age
+npm config get min-release-age

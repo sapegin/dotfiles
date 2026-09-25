@@ -10,13 +10,12 @@
 // https://github.com/sapegin/dotfiles
 
 import { execSync } from 'node:child_process';
+import type nodeFs from 'node:fs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { dirs } from '../util/files.ts';
 
 // TODO: Merge with clean-node-versions
-
-type Stats = Awaited<ReturnType<typeof fs.stat>>;
 
 const MAX_DAYS = 30;
 const IGNORE = [
@@ -47,8 +46,8 @@ function getFolderSize(folderPath: string): number {
   );
 }
 
-function getFolderAgeInDays(stats: Stats): number {
-  return differenceInDays(Date.now(), Number(stats.mtimeMs));
+function getFolderAgeInDays(stats: nodeFs.Stats): number {
+  return differenceInDays(Date.now(), stats.mtime.getTime());
 }
 
 function formatSize(kilobytes: number): string {
@@ -69,7 +68,7 @@ function summ(items: readonly number[]): number {
   return items.reduce((total, item) => total + item, 0);
 }
 
-async function safeStat(filepath: string): Promise<Stats | undefined> {
+async function safeStat(filepath: string): Promise<nodeFs.Stats | undefined> {
   try {
     return await fs.stat(filepath);
   } catch (error) {

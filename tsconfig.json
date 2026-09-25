@@ -3,7 +3,7 @@
     "target": "es2024",
     "module": "nodenext",
     "moduleResolution": "nodenext",
-    "lib": ["ESNext"],
+    "lib": ["ESNext", "ESNext.Temporal"],
     "strict": true,
     "noEmit": true,
     "skipLibCheck": true,

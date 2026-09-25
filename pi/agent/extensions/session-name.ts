@@ -122,7 +122,13 @@ async function generateSessionName(
     resourceLoader,
     sessionManager: SessionManager.inMemory(ctx.cwd),
   });
-  const abortSession = () => void session.abort();
+  const abortSession = async () => {
+    try {
+      await session.abort();
+    } catch {
+      // Ignore errors while tearing down after signal abort.
+    }
+  };
   signal.addEventListener('abort', abortSession, { once: true });
 
   try {
