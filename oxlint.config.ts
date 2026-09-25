@@ -14,10 +14,10 @@ export default defineConfig({
     'unicorn/no-process-exit': 'off',
   },
   ignorePatterns: [
-    'vscode/*',
     'obsidian/*',
     'pretty-html/_assets/lib/*',
     'tinycast/**/dist/**',
     'tinycast/**/raycast-env.d.ts',
+    'vscode/*',
   ],
 });

@@ -7,7 +7,7 @@
 
 /* eslint-disable @typescript-eslint/ban-types */
 
-interface ExtensionPreferences {}
+type ExtensionPreferences = {}
 
 /** Preferences accessible in all the extension's commands */
 declare type Preferences = ExtensionPreferences
@@ -19,6 +19,6 @@ declare namespace Preferences {
 
 declare namespace Arguments {
   /** Arguments passed to the `open-project` command */
-  export interface OpenProject {}
+  export type OpenProject = {}
 }
 

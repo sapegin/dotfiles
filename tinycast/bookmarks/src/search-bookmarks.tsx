@@ -74,10 +74,7 @@ export default function SearchBookmarks() {
           icon={Icon.Globe}
           actions={
             <ActionPanel>
-              <Action
-                title="Open"
-                onAction={() => openBookmark(bookmark)}
-              />
+              <Action title="Open" onAction={() => openBookmark(bookmark)} />
               <Action
                 title="Copy URL"
                 icon={Icon.Clipboard}
