@@ -15,6 +15,19 @@ function pad2(value: number): string {
   return String(value).padStart(2, '0');
 }
 
+/** ICS all-day `DTSTART;VALUE=DATE` (`YYYYMMDD`, RFC 5545). */
+export function formatIcsDate(date: Temporal.PlainDate): string {
+  return `${date.year}${pad2(date.month)}${pad2(date.day)}`;
+}
+
+/** ICS UTC `DTSTAMP` / `LAST-MODIFIED` (`YYYYMMDDTHHMMSSZ`). */
+export function formatIcsTimestamp(date: Date): string {
+  return date
+    .toISOString()
+    .replaceAll(/[-:]/g, '')
+    .replace(/\.\d{3}Z$/, 'Z');
+}
+
 /** Format local date as `YYYY-MM-DD`. */
 export function formatLocalDate(date: Date): string {
   return [

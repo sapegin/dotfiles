@@ -22,6 +22,8 @@ await run(import.meta.url, () => gitStandup(parseArgs(OPTIONS)));
 
 If there are no arguments, set `OPTIONS = [] as const`. `parseArgs()` shows help on `--help` / `-h`.
 
+Add CLI flags only when the user asks for them or a real use case in this repo needs them (e.g. `--dry-run` for a script that has side effects). Do not add override switches for paths, accounts, or behavior “just in case”; hardcode or read config from the agreed source instead.
+
 Use `{ name: 'args', rest: true }` to collect remaining positional arguments after any fixed positionals. `rest` implies `positional`; the value is always a `string[]`, empty when no arguments match.
 
 `run()` no-ops on import when `entry` is set, so tests can import `./bin/foo.ts` safely. It also turns spawn `ENOENT` errors into `{command} is not installed` before exiting. Test exported functions with typed options; use subprocess for end-to-end CLI checks (see `./bin/git-standup.test.ts`).

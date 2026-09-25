@@ -6,6 +6,7 @@ import {
   getMarkdownImages,
   getNotePath,
   parseFrontmatter,
+  parseSections,
   replaceMarkdownImageReferences,
   resolveWikilinks,
   stripImageWikilinks,
@@ -131,13 +132,47 @@ tags: daily
 
 describe(stripPrivateNotes, () => {
   test('keeps content before the first horizontal rule', () => {
-    expect(
-      stripPrivateNotes('Public\n\n---\n\nPrivate notes')
-    ).toBe('Public');
+    expect(stripPrivateNotes('Public\n\n---\n\nPrivate notes')).toBe('Public');
   });
 
   test('stops at *** rules too', () => {
     expect(stripPrivateNotes('Public\n\n***\n\nPrivate')).toBe('Public');
+  });
+});
+
+describe(parseSections, () => {
+  test('splits level-2 sections after note-wide private strip', () => {
+    const sections = parseSections(
+      [
+        '## Ingredients',
+        'flour',
+        '',
+        '---',
+        'secret',
+        '',
+        '## Steps',
+        'mix',
+      ].join('\n')
+    );
+
+    expect(sections.get('Ingredients')).toBe('flour');
+    expect(sections.has('Steps')).toBe(false);
+  });
+
+  test('splits level-3 sections', () => {
+    const sections = parseSections(
+      [
+        '### January 1 — Test',
+        'body',
+        '',
+        '### February 2 — Other',
+        'more',
+      ].join('\n'),
+      3
+    );
+
+    expect(sections.get('January 1 — Test')).toBe('body');
+    expect(sections.get('February 2 — Other')).toBe('more');
   });
 });
 
@@ -151,7 +186,11 @@ describe(resolveWikilinks, () => {
   test('resolves known wikilinks to URLs', () => {
     const slugMap = new Map([['Foo', 'foo']]);
     expect(
-      resolveWikilinks('See [[Foo]] and [[Bar|label]]', slugMap, (slug) => `/blog/${slug}/`)
+      resolveWikilinks(
+        'See [[Foo]] and [[Bar|label]]',
+        slugMap,
+        (slug) => `/blog/${slug}/`
+      )
     ).toBe('See [Foo](/blog/foo/) and label');
   });
 });

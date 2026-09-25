@@ -452,6 +452,20 @@ export function parseFrontmatter<T extends object>(
 /** Matches wikilinks: [[target]] or [[target|label]] */
 const WIKILINK_REGEXP = /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/;
 
+/**
+ * Replace wikilinks with display text (`[[Page|Label]]` → `Label`, `[[Page]]` →
+ * `Page`).
+ */
+export function wikilinksToPlainText(markdown: string): string {
+  return markdown
+    .replaceAll(
+      new RegExp(WIKILINK_REGEXP.source, 'g'),
+      (_match, target: string, label?: string) =>
+        label !== undefined && label !== '' ? label : target
+    )
+    .trim();
+}
+
 type FrontmatterValue = string | string[] | undefined;
 
 /** Return true when srcPath is newer than destPath, or destPath does not exist. */
@@ -610,16 +624,25 @@ export function readNoteFile<T extends object>(
   return { frontmatter, content: body, baseName, slug, filePath };
 }
 
-/** Split note body into `##` sections, dropping private notes from each section. */
-export function parseSections(content: string): Map<string, string> {
+/**
+ * Split note body into Markdown sections at `headingLevel` (`2` → `##`, `3` →
+ * `###`). Private notes (after the first `---` / `***`) are stripped from the
+ * whole body before splitting.
+ */
+export function parseSections(
+  content: string,
+  headingLevel = 2
+): Map<string, string> {
   const sections = new Map<string, string>();
-  const parts = content.split(/^## /m);
+  const publicContent = stripPrivateNotes(content);
+  const marker = `${'#'.repeat(headingLevel)} `;
+  const parts = publicContent.split(new RegExp(`^${marker}`, 'm'));
 
   for (let index = 1; index < parts.length; index++) {
     const newlineIndex = parts[index].indexOf('\n');
     if (newlineIndex !== -1) {
       const heading = parts[index].slice(0, newlineIndex).trim();
-      const body = stripPrivateNotes(parts[index].slice(newlineIndex + 1));
+      const body = parts[index].slice(newlineIndex + 1).trim();
       sections.set(heading, body);
     }
   }
