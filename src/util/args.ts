@@ -67,7 +67,9 @@ type ParsedValue<Definition extends ArgDefinition> =
       : ArgValue<Definition> | undefined;
 
 export type ParsedArgs<Definitions extends readonly ArgDefinition[]> = {
-  readonly [Definition in Definitions[number] as Definition['name']]: ParsedValue<Definition>;
+  readonly [
+    Definition in Definitions[number] as Definition['name']
+  ]: ParsedValue<Definition>;
 };
 
 interface NativeOptionConfig {

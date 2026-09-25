@@ -96,9 +96,10 @@ function stubRequire(id: string): unknown {
 /**
  * Load main.js into a sandboxed module with stubbed `require('obsidian')` (and
  * other esbuild-externals), then verify:
- * - the code parses
- * - the default export is a class
- * - the class prototype defines `onload`
+ *
+ * - The code parses
+ * - The default export is a class
+ * - The class prototype defines `onload`
  */
 async function smokeTest(
   pluginDir: string,

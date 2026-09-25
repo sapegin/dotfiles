@@ -57,7 +57,7 @@ export function generatePersonaSections(
   const lines = source.split('\n');
   const output: string[] = [];
 
-  for (let lineIndex = 0; lineIndex < lines.length; ) {
+  for (let lineIndex = 0; lineIndex < lines.length;) {
     if (lines[lineIndex] !== '## Tone') {
       const line = lines[lineIndex];
       if (PERSONA_ELEMENT_PATTERN.test(line) || line === PERSONA_END_ELEMENT) {
