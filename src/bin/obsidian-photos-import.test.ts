@@ -11,10 +11,7 @@ import {
   vi,
 } from 'vitest';
 import { type ExifMetadata } from '../util/exif.ts';
-import {
-  type ImageDimensions,
-  type OptimizeResult,
-} from '../util/obsidian.ts';
+import { type ImageDimensions, type OptimizeResult } from '../util/obsidian.ts';
 import { type Options } from './obsidian-photos-import.ts';
 
 const testEnv = vi.hoisted(() => ({
@@ -33,21 +30,25 @@ const moveToTrash = vi.hoisted(() =>
   vi.fn<(filePath: string) => Promise<void>>().mockResolvedValue(undefined)
 );
 const needsOptimization = vi.hoisted(() =>
-  vi.fn<
-    (
-      imagePath: string,
-      onError?: (message: string) => void
-    ) => Promise<ImageDimensions | undefined>
-  >().mockResolvedValue(undefined)
+  vi
+    .fn<
+      (
+        imagePath: string,
+        onError?: (message: string) => void
+      ) => Promise<ImageDimensions | undefined>
+    >()
+    .mockResolvedValue(undefined)
 );
 const optimizeImage = vi.hoisted(() =>
-  vi.fn<
-    (
-      imagePath: string,
-      optimization: ImageDimensions,
-      options?: { onSkip?: (message: string) => void; moveToTrash?: unknown }
-    ) => Promise<OptimizeResult | undefined>
-  >().mockResolvedValue(undefined)
+  vi
+    .fn<
+      (
+        imagePath: string,
+        optimization: ImageDimensions,
+        options?: { onSkip?: (message: string) => void; moveToTrash?: unknown }
+      ) => Promise<OptimizeResult | undefined>
+    >()
+    .mockResolvedValue(undefined)
 );
 
 vi.mock(import('../util/files.ts'), async (importOriginal) => {
@@ -265,9 +266,7 @@ describe('obsidianPhotosImport single-note mode', () => {
   });
 
   test('replaces existing attachments without duplicating note links', async () => {
-    await resetNote(
-      '# Sunday, September 1, 2026\n\n![[2026_IMG_0001.jpg]]\n'
-    );
+    await resetNote('# Sunday, September 1, 2026\n\n![[2026_IMG_0001.jpg]]\n');
     await fs.writeFile(
       path.join(testEnv.attachments, '2026_IMG_0001.jpg'),
       'existing'

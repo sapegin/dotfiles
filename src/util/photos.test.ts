@@ -20,15 +20,15 @@ describe(getPhotoFilenameSuffix, () => {
   });
 
   test('reads the numeric suffix from camera filenames', () => {
-    expect(
-      getPhotoFilenameSuffix('2026-02-22_7859_Artem_Sapegin.jpg')
-    ).toBe('7859');
+    expect(getPhotoFilenameSuffix('2026-02-22_7859_Artem_Sapegin.jpg')).toBe(
+      '7859'
+    );
   });
 
   test('reads the frame number from legacy Canon 5D exports', () => {
-    expect(
-      getPhotoFilenameSuffix('2009-09-18_5D_1357_Artem_Sapegin.jpg')
-    ).toBe('1357');
+    expect(getPhotoFilenameSuffix('2009-09-18_5D_1357_Artem_Sapegin.jpg')).toBe(
+      '1357'
+    );
   });
 
   test('reads the frame number from legacy Canon 20D exports', () => {
@@ -44,9 +44,7 @@ describe(getPhotoSlug, () => {
   });
 
   test('combines year and suffix for dated camera exports', () => {
-    expect(getPhotoSlug('2026-02-12_7842_Artem_Sapegin.jpg')).toBe(
-      '2026-7842'
-    );
+    expect(getPhotoSlug('2026-02-12_7842_Artem_Sapegin.jpg')).toBe('2026-7842');
   });
 
   test('combines year and suffix for legacy Canon 5D exports', () => {

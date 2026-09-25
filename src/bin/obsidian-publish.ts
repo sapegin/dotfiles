@@ -9,11 +9,11 @@
 // https://github.com/sapegin/dotfiles
 
 import path from 'node:path';
+import { publishRecipes } from '../publish/recipes.ts';
+import { publishSite } from '../publish/site.ts';
 import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import { dirs } from '../util/files.ts';
 import { assertObsidianVault } from '../util/obsidian.ts';
-import { publishRecipes } from '../publish/recipes.ts';
-import { publishSite } from '../publish/site.ts';
 import { run } from '../util/tui.ts';
 
 const SITE_NAMES = ['site', 'recipes'] as const;
