@@ -2,6 +2,7 @@ filters:
   and:
     - file.folder == "Food"
     - file.tags.contains("recipes")
+    - status != "abandoned"
 views:
   - type: cards
     name: Cards
