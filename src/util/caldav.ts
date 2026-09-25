@@ -15,6 +15,8 @@
  *   normalized schedule and text only.
  * - For `RRULE:FREQ=YEARLY` events, compare month and day on `DTSTART` only; the
  *   anchor year in the stored event may differ from the year we write.
+ * - Weekly events use `RRULE:FREQ=WEEKLY;BYDAY=…` with an all-day anchor
+ *   `DTSTART` on that weekday.
  * - Omit empty `DESCRIPTION` lines when building ICS; Fastmail often drops them
  *   on the way back, which would otherwise look like a diff.
  */
@@ -31,12 +33,14 @@ export interface CalDavCredentials {
   readonly password: string;
 }
 
+type CalendarEventRecurrence = 'none' | 'yearly' | 'weekly';
+
 export interface CalendarEventPayload {
   readonly uid: string;
   readonly summary: string;
   readonly description: string;
   readonly start: Temporal.PlainDate;
-  readonly yearly: boolean;
+  readonly recurrence: CalendarEventRecurrence;
 }
 
 export interface SyncCalendarEventsOptions {
@@ -84,8 +88,11 @@ export function buildCalendarObjectIcs(
     `DTSTART;VALUE=DATE:${formatIcsDate(event.start)}`,
   ];
 
-  if (event.yearly) {
+  if (event.recurrence === 'yearly') {
     lines.push('RRULE:FREQ=YEARLY');
+  } else if (event.recurrence === 'weekly') {
+    const byDay = icsByDayFromPlainDate(event.start);
+    lines.push(`RRULE:FREQ=WEEKLY;BYDAY=${byDay}`);
   }
 
   lines.push(`SUMMARY:${escapeIcsText(event.summary)}`);
@@ -129,8 +136,27 @@ function icsPropertyValue(line: string): string {
   return unescapeIcsPropertyValue(line.slice(index + 1));
 }
 
+/** ISO weekday `1` (Mon) … `7` (Sun) → RFC 5545 `BYDAY` token. */
+function icsByDayFromPlainDate(date: Temporal.PlainDate): string {
+  const tokens = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'] as const;
+  return tokens[date.dayOfWeek - 1];
+}
+
 function isYearlyEvent(icsData: string): boolean {
   return /^RRULE[^\n]*FREQ=YEARLY/m.test(unfoldIcsLines(icsData));
+}
+
+function normalizeRruleLine(line: string): string {
+  if (line.includes('FREQ=YEARLY')) {
+    return 'RRULE:FREQ=YEARLY';
+  }
+  if (line.includes('FREQ=WEEKLY')) {
+    const byDay = line.match(/BYDAY=([A-Z]{2})/)?.[1];
+    return byDay === undefined
+      ? 'RRULE:FREQ=WEEKLY'
+      : `RRULE:FREQ=WEEKLY;BYDAY=${byDay}`;
+  }
+  return line;
 }
 
 const CONTENT_PROPERTY_NAMES = [
@@ -173,9 +199,7 @@ export function veventContentFingerprint(icsData: string): string {
       }
 
       if (line.startsWith('RRULE')) {
-        properties.push(
-          line.includes('FREQ=YEARLY') ? 'RRULE:FREQ=YEARLY' : line
-        );
+        properties.push(normalizeRruleLine(line));
         break;
       }
 

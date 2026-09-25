@@ -9,7 +9,7 @@ describe(buildCalendarObjectIcs, () => {
         summary: 'Birthday',
         description: 'Cake',
         start: Temporal.PlainDate.from({ year: 2021, month: 5, day: 12 }),
-        yearly: true,
+        recurrence: 'yearly',
       },
       new Date('2026-01-01T12:00:00.000Z')
     );
@@ -18,6 +18,19 @@ describe(buildCalendarObjectIcs, () => {
     expect(ics).toContain('DTSTART;VALUE=DATE:20210512');
     expect(ics).toContain('RRULE:FREQ=YEARLY');
     expect(ics).toContain('SUMMARY:Birthday');
+  });
+
+  test('builds a weekly all-day event', () => {
+    const ics = buildCalendarObjectIcs({
+      uid: 'weekly@example.com',
+      summary: 'Trash night',
+      description: '',
+      start: Temporal.PlainDate.from({ year: 2021, month: 1, day: 4 }),
+      recurrence: 'weekly',
+    });
+
+    expect(ics).toContain('RRULE:FREQ=WEEKLY;BYDAY=MO');
+    expect(ics).toContain('DTSTART;VALUE=DATE:20210104');
   });
 });
 
@@ -28,7 +41,7 @@ describe(veventContentFingerprint, () => {
       summary: 'Maslenitsa',
       description: 'Food',
       start: Temporal.PlainDate.from({ year: 2026, month: 3, day: 2 }),
-      yearly: false,
+      recurrence: 'none',
     });
     const remote =
       'BEGIN:VEVENT\nUID:a@b\nDTSTART;TZID=Europe/Berlin;VALUE=DATE:20260302\nSUMMARY:Maslenitsa\nDESCRIPTION:Food\nEND:VEVENT';
@@ -43,12 +56,27 @@ describe(veventContentFingerprint, () => {
       summary: 'Pati birthday',
       description: '',
       start: Temporal.PlainDate.from({ year: 2021, month: 1, day: 13 }),
-      yearly: true,
+      recurrence: 'yearly',
     });
     const y2000 =
       'BEGIN:VEVENT\nUID:a@b\nDTSTART;VALUE=DATE:20000113\nRRULE:FREQ=YEARLY\nSUMMARY:Pati birthday\nEND:VEVENT';
     expect(veventContentFingerprint(y2021)).toBe(
       veventContentFingerprint(y2000)
+    );
+  });
+
+  test('normalizes weekly RRULE with BYDAY', () => {
+    const local = buildCalendarObjectIcs({
+      uid: 'a@b',
+      summary: 'Trash',
+      description: '',
+      start: Temporal.PlainDate.from({ year: 2021, month: 1, day: 4 }),
+      recurrence: 'weekly',
+    });
+    const remote =
+      'BEGIN:VEVENT\nUID:a@b\nDTSTART;VALUE=DATE:20210104\nRRULE:FREQ=WEEKLY;BYDAY=MO;WKST=SU\nSUMMARY:Trash\nEND:VEVENT';
+    expect(veventContentFingerprint(local)).toBe(
+      veventContentFingerprint(remote)
     );
   });
 

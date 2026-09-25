@@ -21,8 +21,8 @@
 //   calendar: Settings → Calendars → Edit & share → Publish → Full event
 //   details, then subscribe to the ICS URL in the other app (read-only feed).
 //
-// - Use `### Month D — Title` headings, such as `### January 13 — Pati
-//   birthday`. Body text becomes the event description.
+// - Use `### Month D — Title` for yearly events or `### Monday — Title` for
+//   weekly events. Body text becomes the event description.
 //
 // - Preview without writing to Fastmail:
 //
@@ -76,14 +76,42 @@ const UID_DOMAIN = 'calendar-update.sapegin.local';
 const JUNKYARD_CALENDAR_START_YEAR = 2021;
 
 /**
- * Junkyard calendar note H3 titles: `Month D — Event name`
- * (em dash, en dash, or hyphen between day and title).
+ * Junkyard calendar H3 titles:
  *
- * Examples:
+ * - `Month D — Event name` → yearly all-day (`RRULE:FREQ=YEARLY`)
+ * - `Monday — Trash night` → weekly all-day (`RRULE:FREQ=WEEKLY`)
  *
- * - `January 13 — Pati birthday`;
+ * Date form is tried first (`Date.parse` on the date + anchor year); otherwise
+ * a leading English weekday name selects weekly recurrence.
  */
 const FIXED_HEADING = /^(?<date>[A-Za-z]+\s+\d{1,2})\s+[—–-]\s+(?<title>.+)$/u;
+
+const WEEKDAYS = [
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+  'Sunday',
+] as const;
+
+const WEEKLY_HEADING = new RegExp(
+  `^(?<weekday>${WEEKDAYS.join('|')})\\s+[—–-]\\s+(?<title>.+)$`,
+  'iu'
+);
+
+const WEEKDAY_START: Temporal.PlainDate[] = WEEKDAYS.map((_, index) => {
+  let date = Temporal.PlainDate.from({
+    year: JUNKYARD_CALENDAR_START_YEAR,
+    month: 1,
+    day: 1,
+  });
+  while (date.dayOfWeek !== index + 1) {
+    date = date.add({ days: 1 });
+  }
+  return date;
+});
 
 const OPTIONS = [{ name: 'dry-run', type: 'boolean', default: false }] as const;
 
@@ -106,25 +134,44 @@ function uidForMaslenitsa(year: number): string {
   return `junkyard-maslenitsa-${year}@${UID_DOMAIN}`;
 }
 
-function parseFixedHeading(
-  heading: string
-): { start: Temporal.PlainDate; title: string } | undefined {
-  const match = heading.match(FIXED_HEADING);
-  if (match?.groups === undefined) {
-    return undefined;
+interface ParsedEventHeading {
+  start: Temporal.PlainDate;
+  title: string;
+  recurrence: 'yearly' | 'weekly';
+}
+
+function parseEventHeading(heading: string): ParsedEventHeading | undefined {
+  const fixed = heading.match(FIXED_HEADING);
+  if (fixed?.groups !== undefined) {
+    const parsed = Date.parse(
+      `${fixed.groups.date}, ${JUNKYARD_CALENDAR_START_YEAR}`
+    );
+    if (!Number.isNaN(parsed)) {
+      return {
+        start: Temporal.PlainDate.from(formatLocalDate(new Date(parsed))),
+        title: fixed.groups.title.trim(),
+        recurrence: 'yearly',
+      };
+    }
   }
 
-  const parsed = Date.parse(
-    `${match.groups.date}, ${JUNKYARD_CALENDAR_START_YEAR}`
-  );
-  if (Number.isNaN(parsed)) {
-    return undefined;
+  const weekly = heading.match(WEEKLY_HEADING);
+  const weeklyGroups = weekly?.groups;
+  if (weeklyGroups !== undefined) {
+    const index = WEEKDAYS.findIndex(
+      (day) => day.toLowerCase() === weeklyGroups.weekday.toLowerCase()
+    );
+    if (index === -1) {
+      return undefined;
+    }
+    return {
+      start: WEEKDAY_START[index],
+      title: weeklyGroups.title.trim(),
+      recurrence: 'weekly',
+    };
   }
 
-  return {
-    start: Temporal.PlainDate.from(formatLocalDate(new Date(parsed))),
-    title: match.groups.title.trim(),
-  };
+  return undefined;
 }
 
 export function buildDesiredEvents(
@@ -146,23 +193,34 @@ export function buildDesiredEvents(
           summary: 'Maslenitsa',
           description: wikilinksToPlainText(body),
           start,
-          yearly: false,
+          recurrence: 'none',
         });
       }
       continue;
     }
 
-    const fixed = parseFixedHeading(heading);
-    if (fixed === undefined) {
+    const parsed = parseEventHeading(heading);
+    if (parsed === undefined) {
       continue;
     }
 
+    let uid: string;
+    if (parsed.recurrence === 'weekly') {
+      const weekdayLabel = WEEKDAYS.at(parsed.start.dayOfWeek - 1);
+      if (weekdayLabel === undefined) {
+        continue;
+      }
+      uid = `junkyard-weekly-${toKebabCase(weekdayLabel)}-${toKebabCase(parsed.title)}@${UID_DOMAIN}`;
+    } else {
+      uid = uidForFixedEvent(parsed.start, parsed.title);
+    }
+
     events.push({
-      uid: uidForFixedEvent(fixed.start, fixed.title),
-      summary: fixed.title,
+      uid,
+      summary: parsed.title,
       description: wikilinksToPlainText(body),
-      start: fixed.start,
-      yearly: true,
+      start: parsed.start,
+      recurrence: parsed.recurrence,
     });
   }
 
