@@ -21,6 +21,11 @@ import {
 
 const execFile = promisify(execFileCallback);
 
+// All actions dismiss Tinycast without awaiting `closeMainWindow()` so the
+// window animates out while the action runs; awaiting would serialize the close
+// before slow work, and closing after the action would leave the list visible
+// for the whole operation making the action feel slower.
+
 /** Open a path in Visual Studio Code; optional 1-based line for `-g`. */
 async function openInVSCode(
   filePath: string,
@@ -70,22 +75,21 @@ export default function SearchBookmarks() {
           actions={
             <ActionPanel>
               <Action
-                title="Open in browser"
+                title="Open"
                 onAction={() => openBookmark(bookmark)}
               />
               <Action
                 title="Copy URL"
                 icon={Icon.Clipboard}
-                onAction={() => Clipboard.copy(bookmark.url)}
+                onAction={() => copyBookmarkUrl(bookmark.url)}
               />
               <Action
-                title="Edit bookmark in Visual Studio Code"
+                title="Edit line"
                 icon={Icon.Pencil}
-                shortcut={{ modifiers: ['opt'], key: 'return' }}
                 onAction={() => editBookmarkLine(bookmark)}
               />
               <Action
-                title="Edit bookmarks file"
+                title="Edit file"
                 icon={Icon.Document}
                 onAction={() => editBookmarksFile()}
               />
@@ -98,7 +102,7 @@ export default function SearchBookmarks() {
 }
 
 async function openBookmark(bookmark: Bookmark): Promise<void> {
-  await closeMainWindow();
+  void closeMainWindow();
   try {
     await open(bookmark.url);
   } catch (error) {
@@ -110,12 +114,25 @@ async function openBookmark(bookmark: Bookmark): Promise<void> {
   }
 }
 
+async function copyBookmarkUrl(url: string): Promise<void> {
+  void closeMainWindow();
+  try {
+    await Clipboard.copy(url);
+  } catch (error) {
+    await showToast({
+      style: Toast.Style.Failure,
+      title: 'Could not copy URL',
+      message: error instanceof Error ? error.message : String(error),
+    });
+  }
+}
+
 async function editBookmarkLine(bookmark: Bookmark): Promise<void> {
-  await closeMainWindow();
+  void closeMainWindow();
   await openInVSCode(BOOKMARKS_FILE, bookmark.titleLineNumber);
 }
 
 async function editBookmarksFile(): Promise<void> {
-  await closeMainWindow();
+  void closeMainWindow();
   await openInVSCode(BOOKMARKS_FILE);
 }

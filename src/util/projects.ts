@@ -12,6 +12,10 @@ import path from 'node:path';
 const HOME = os.homedir();
 
 // Can't import files.ts here as it breaks in Tinycast
+export function tildify(filepath: string): string {
+  return filepath.replace(HOME, '~');
+}
+
 function untildify(input: string): string {
   if (input.startsWith('~/')) {
     return path.join(HOME, input.slice(2));
