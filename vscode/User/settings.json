@@ -180,6 +180,7 @@
   "terminal.integrated.cursorWidth": 2,
   "terminal.integrated.drawBoldTextInBrightColors": false,
   "terminal.integrated.enablePersistentSessions": false,
+  "terminal.integrated.fontRendering": "grayscale",
   "terminal.integrated.fontSize": 15,
   "terminal.integrated.hideOnLastClosed": false,
   "terminal.integrated.hideOnStartup": "always",
