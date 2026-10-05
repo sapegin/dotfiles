@@ -30,7 +30,8 @@ import {
   getLocalBranches,
   getUpstreamTracking,
   hasLocalBranch,
-  hasRemoteBranch,
+  hasBranchOnRemote,
+  hasRemoteTrackingBranch,
   runGit,
   runPull,
 } from '../util/git.ts';
@@ -39,7 +40,7 @@ import { log, run, select } from '../util/tui.ts';
 const remote = 'origin';
 
 function tryPull(branch: string): void {
-  if (hasRemoteBranch(branch) && !runPull()) {
+  if (hasRemoteTrackingBranch(branch) && !runPull()) {
     log.warn(
       `\n Could not update from ${remote}; continuing with local branch ${branch}.`
     );
@@ -123,7 +124,7 @@ export function br(options: Options): void {
     console.log(` Switching to existing local branch ${branch}…`);
     runGitSwitch([branch]);
 
-    if (hasRemoteBranch(branch)) {
+    if (hasRemoteTrackingBranch(branch)) {
       // Fix tracking if needed
       const tracking = getUpstreamTracking(branch);
 
@@ -136,7 +137,10 @@ export function br(options: Options): void {
     }
 
     tryPull(branch);
-  } else if (hasRemoteBranch(branch)) {
+  } else if (
+    hasRemoteTrackingBranch(branch) ||
+    hasBranchOnRemote(branch)
+  ) {
     // No local branch, but remote exists — fetch and switch
     console.log(`↓ Fetching remote branch ${branch}…`);
     runGit(['fetch', remote, branch]);

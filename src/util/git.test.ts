@@ -13,7 +13,8 @@ import {
   getLocalBranches,
   getMainCommits,
   hasLocalBranch,
-  hasRemoteBranch,
+  hasBranchOnRemote,
+  hasRemoteTrackingBranch,
   isBranchMerged,
   parseGitLog,
 } from './git.ts';
@@ -97,9 +98,19 @@ describe(hasLocalBranch, () => {
   });
 });
 
-describe(hasRemoteBranch, () => {
-  test('returns false when no remote branch exists', () => {
-    expect(hasRemoteBranch('missing', 'origin', repoRoot)).toBe(false);
+describe(hasRemoteTrackingBranch, () => {
+  test('returns false when no remote-tracking ref exists', () => {
+    expect(hasRemoteTrackingBranch('missing', 'origin', repoRoot)).toBe(false);
+  });
+});
+
+describe(hasBranchOnRemote, () => {
+  test('returns true when the remote has the branch', () => {
+    expect(hasBranchOnRemote('main', 'origin', repoRoot)).toBe(true);
+  });
+
+  test('returns false when the remote does not have the branch', () => {
+    expect(hasBranchOnRemote('missing', 'origin', repoRoot)).toBe(false);
   });
 });
 

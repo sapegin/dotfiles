@@ -83,8 +83,8 @@ export function hasLocalBranch(name: string, cwd?: string): boolean {
   );
 }
 
-/** Returns whether a remote-tracking branch exists. */
-export function hasRemoteBranch(
+/** Returns whether a local remote-tracking ref exists (e.g. after `git fetch`). */
+export function hasRemoteTrackingBranch(
   name: string,
   remote = 'origin',
   cwd?: string
@@ -94,6 +94,21 @@ export function hasRemoteBranch(
       'git',
       ['show-ref', '--verify', '--quiet', `refs/remotes/${remote}/${name}`],
       { cwd }
+    ).status === 0
+  );
+}
+
+/** Returns whether the remote has this branch (queries the server via `ls-remote`). */
+export function hasBranchOnRemote(
+  name: string,
+  remote = 'origin',
+  cwd?: string
+): boolean {
+  return (
+    spawnSync(
+      'git',
+      ['ls-remote', '--exit-code', '--heads', remote, name],
+      { cwd, stdio: 'ignore' }
     ).status === 0
   );
 }
