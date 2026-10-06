@@ -64,9 +64,7 @@ describe('br CLI', () => {
 
     expect(result.status).toBe(0);
     expect(git('branch', '--show-current')).toBe('feature');
-    expect(git('rev-parse', 'HEAD')).toBe(
-      git('rev-parse', 'origin/feature')
-    );
+    expect(git('rev-parse', 'HEAD')).toBe(git('rev-parse', 'origin/feature'));
     expect(result.stdout).toContain('Fetching remote branch feature');
   });
 

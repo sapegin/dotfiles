@@ -98,18 +98,20 @@ export function hasRemoteTrackingBranch(
   );
 }
 
-/** Returns whether the remote has this branch (queries the server via `ls-remote`). */
+/**
+ * Returns whether the remote has this branch (queries the server via
+ * `ls-remote`).
+ */
 export function hasBranchOnRemote(
   name: string,
   remote = 'origin',
   cwd?: string
 ): boolean {
   return (
-    spawnSync(
-      'git',
-      ['ls-remote', '--exit-code', '--heads', remote, name],
-      { cwd, stdio: 'ignore' }
-    ).status === 0
+    spawnSync('git', ['ls-remote', '--exit-code', '--heads', remote, name], {
+      cwd,
+      stdio: 'ignore',
+    }).status === 0
   );
 }
 

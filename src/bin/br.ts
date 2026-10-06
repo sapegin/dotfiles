@@ -137,10 +137,7 @@ export function br(options: Options): void {
     }
 
     tryPull(branch);
-  } else if (
-    hasRemoteTrackingBranch(branch) ||
-    hasBranchOnRemote(branch)
-  ) {
+  } else if (hasRemoteTrackingBranch(branch) || hasBranchOnRemote(branch)) {
     // No local branch, but remote exists — fetch and switch
     console.log(`↓ Fetching remote branch ${branch}…`);
     runGit(['fetch', remote, branch]);

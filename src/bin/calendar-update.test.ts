@@ -48,7 +48,8 @@ describe(buildDesiredEvents, () => {
       start: Temporal.PlainDate.from({ year: 2021, month: 1, day: 13 }),
     });
     const maslenitsa2026 = events.find(
-      (event) => event.uid === 'junkyard-maslenitsa-2026@calendar-update.sapegin.local'
+      (event) =>
+        event.uid === 'junkyard-maslenitsa-2026@calendar-update.sapegin.local'
     );
     expect(maslenitsa2026).toMatchObject({
       summary: 'Maslenitsa',
