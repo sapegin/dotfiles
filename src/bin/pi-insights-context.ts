@@ -48,12 +48,22 @@ function redact(value: string): string {
     .replaceAll(/[A-Za-z\d+/=_-]{300,}/g, '[REDACTED LONG VALUE]');
 }
 
-function truncate(value: string, maximum = MAX_BLOCK_LENGTH): string {
+function truncate(
+  value: string,
+  maximum = MAX_BLOCK_LENGTH,
+  retainEnd = false
+): string {
   const clean = redact(value).replaceAll('\u0000', '');
   if (clean.length <= maximum) {
     return clean;
   }
-  return `${clean.slice(0, maximum)}\n… [${clean.length - maximum} characters omitted]`;
+  const omission = `\n… [${clean.length - maximum} characters omitted]\n`;
+  if (retainEnd) {
+    // Test runners often put the actionable assertion after a long banner.
+    const startLength = Math.floor(maximum / 2);
+    return `${clean.slice(0, startLength)}${omission}${clean.slice(-(maximum - startLength))}`;
+  }
+  return `${clean.slice(0, maximum)}${omission.trimEnd()}`;
 }
 
 function getTextContent(content: unknown): string {
@@ -155,7 +165,11 @@ function formatMessage(message: JsonObject): TranscriptBlock[] {
       ];
     }
 
-    const output = truncate(getTextContent(message.content));
+    const output = truncate(
+      getTextContent(message.content),
+      MAX_BLOCK_LENGTH,
+      isError
+    );
     if (isError) {
       return [
         {

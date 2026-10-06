@@ -35,6 +35,51 @@ afterAll(() => {
 });
 
 describe('pi-insights-context', () => {
+  test('retains the start and assertion at the end of long redacted errors', () => {
+    const filePath = writeSession('long-error', 8, [
+      {
+        type: 'session',
+        cwd: '/project',
+        timestamp: '2026-01-09T00:00:00.000Z',
+      },
+      {
+        type: 'message',
+        message: {
+          role: 'toolResult',
+          toolName: 'bash',
+          isError: true,
+          content: [
+            {
+              type: 'text',
+              text: `Cypress runner banner\n${'startup output\n'.repeat(400)}PASSWORD=private-value\nAssertionError: expected announcement to be visible`,
+            },
+          ],
+        },
+      },
+    ]);
+    const result = spawnSync(process.execPath, [scriptPath], {
+      encoding: 'utf8',
+      env: {
+        ...process.env,
+        PI_SESSION_FILE: path.join(path.dirname(filePath), 'current.jsonl'),
+      },
+    });
+
+    expect(result.status).toBe(0);
+    expect(result.stdout).toContain('Cypress runner banner');
+    expect(result.stdout).toContain('characters omitted');
+    expect(result.stdout).toContain(
+      'AssertionError: expected announcement to be visible'
+    );
+    expect(result.stdout).toContain('PASSWORD=[REDACTED]');
+    expect(result.stdout).not.toContain('private-value');
+    const error = result.stdout
+      .split('[Tool result: bash, error]\n')[1]
+      .split('\n\n## ')[0];
+    expect(error.length).toBeLessThan(2100);
+    fs.rmSync(filePath);
+  });
+
   test('prints recent prior sessions without reasoning or sensitive payloads', () => {
     let currentSession = '';
     for (let index = 0; index < 7; index += 1) {
