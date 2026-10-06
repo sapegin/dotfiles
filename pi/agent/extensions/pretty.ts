@@ -6,18 +6,19 @@
 import os from 'node:os';
 import path from 'node:path';
 import {
+  type BashToolInput,
+  type EditToolInput,
   type ExtensionAPI,
   type ExtensionContext,
+  type FindToolInput,
+  type GrepToolInput,
+  type LsToolInput,
+  type ReadToolInput,
   type Theme,
+  type ToolRenderers,
+  type WriteToolInput,
   SkillInvocationMessageComponent,
   UserMessageComponent,
-  createBashToolDefinition,
-  createEditToolDefinition,
-  createFindToolDefinition,
-  createGrepToolDefinition,
-  createLsToolDefinition,
-  createReadToolDefinition,
-  createWriteToolDefinition,
   generateDiffString,
   highlightCode,
 } from '@earendil-works/pi-coding-agent';
@@ -78,33 +79,6 @@ function rightPadLine(left: string, right: string, width: number): string {
   return `${leftToDisplay}${' '.repeat(padding)}${right}`;
 }
 
-type ToolSet = ReturnType<typeof createToolSet>;
-
-const toolSets = new Map<string, ToolSet>();
-
-function createToolSet(cwd: string) {
-  return {
-    bash: createBashToolDefinition(cwd),
-    edit: createEditToolDefinition(cwd),
-    find: createFindToolDefinition(cwd),
-    grep: createGrepToolDefinition(cwd),
-    ls: createLsToolDefinition(cwd),
-    read: createReadToolDefinition(cwd),
-    write: createWriteToolDefinition(cwd),
-  };
-}
-
-function getToolSet(cwd: string): ToolSet {
-  const cached = toolSets.get(cwd);
-  if (cached) {
-    return cached;
-  }
-
-  const tools = createToolSet(cwd);
-  toolSets.set(cwd, tools);
-  return tools;
-}
-
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
@@ -127,7 +101,11 @@ export function getEntryCost(entry: unknown): number {
       return getUsageCost(message.usage);
     }
   }
-  if (entry.type === 'branch_summary' || entry.type === 'compaction') {
+  if (
+    entry.type === 'branch_summary' ||
+    entry.type === 'compaction' ||
+    entry.type === 'usage'
+  ) {
     return getUsageCost(entry.usage);
   }
   return 0;
@@ -490,14 +468,9 @@ function summarizeAll(theme: Theme, diffs: DiffStats[]): string {
 }
 
 export default function pretty(pi: ExtensionAPI) {
-  const cwd = process.cwd();
-  registerRead(pi, cwd);
-  registerFind(pi, cwd);
-  registerGrep(pi, cwd);
-  registerBash(pi, cwd);
-  registerLs(pi, cwd);
-  registerWrite(pi, cwd);
-  registerEdit(pi, cwd);
+  pi.registerToolRenderer(
+    (toolName, next) => getPrettyToolRenderers(toolName) ?? next()
+  );
   registerSkillInvocation(pi);
   registerUserPrompt(pi);
   registerTurnSeparator(pi);
@@ -584,6 +557,10 @@ export function renderPrettyCompletedTool({
   return text;
 }
 
+function getToolInput<T>(input: unknown): T {
+  return input as T;
+}
+
 function formatReadError(message: string) {
   // ENOENT: no such file or directory, access '...'
   if (message.startsWith('ENOENT')) {
@@ -592,26 +569,15 @@ function formatReadError(message: string) {
   return message;
 }
 
-function registerRead(pi: ExtensionAPI, cwd: string): void {
-  const original = getToolSet(cwd).read;
-  pi.registerTool({
-    ...original,
+function getReadRenderers(): ToolRenderers {
+  return {
     renderShell: 'self',
-    execute(toolCallId, params, signal, onUpdate, ctx) {
-      return getToolSet(ctx.cwd).read.execute(
-        toolCallId,
-        params,
-        signal,
-        onUpdate,
-        ctx
-      );
-    },
     renderCall(args, theme, ctx) {
       return renderPrettyPendingTool({
         ctx,
         theme,
         name: 'Read',
-        value: tildify(args.path),
+        value: tildify(getToolInput<ReadToolInput>(args).path),
       });
     },
     renderResult(result, _options, theme, ctx) {
@@ -622,32 +588,21 @@ function registerRead(pi: ExtensionAPI, cwd: string): void {
         error: ctx.isError ? formatReadError(content) : undefined,
         theme,
         name: 'Read',
-        value: tildify(ctx.args.path),
+        value: tildify(getToolInput<ReadToolInput>(ctx.args).path),
       });
     },
-  });
+  };
 }
 
-function registerFind(pi: ExtensionAPI, cwd: string): void {
-  const original = getToolSet(cwd).find;
-  pi.registerTool({
-    ...original,
+function getFindRenderers(): ToolRenderers {
+  return {
     renderShell: 'self',
-    execute(toolCallId, params, signal, onUpdate, ctx) {
-      return getToolSet(ctx.cwd).find.execute(
-        toolCallId,
-        params,
-        signal,
-        onUpdate,
-        ctx
-      );
-    },
     renderCall(args, theme, ctx) {
       return renderPrettyPendingTool({
         ctx,
         theme,
         name: 'Find',
-        value: args.pattern,
+        value: getToolInput<FindToolInput>(args).pattern,
       });
     },
     renderResult(result, _options, theme, ctx) {
@@ -663,32 +618,21 @@ function registerFind(pi: ExtensionAPI, cwd: string): void {
         extra,
         theme,
         name: 'Find',
-        value: ctx.args.pattern,
+        value: getToolInput<FindToolInput>(ctx.args).pattern,
       });
     },
-  });
+  };
 }
 
-function registerGrep(pi: ExtensionAPI, cwd: string): void {
-  const original = getToolSet(cwd).grep;
-  pi.registerTool({
-    ...original,
+function getGrepRenderers(): ToolRenderers {
+  return {
     renderShell: 'self',
-    execute(toolCallId, params, signal, onUpdate, ctx) {
-      return getToolSet(ctx.cwd).grep.execute(
-        toolCallId,
-        params,
-        signal,
-        onUpdate,
-        ctx
-      );
-    },
     renderCall(args, theme, ctx) {
       return renderPrettyPendingTool({
         ctx,
         theme,
         name: 'Grep',
-        value: args.pattern,
+        value: getToolInput<GrepToolInput>(args).pattern,
       });
     },
     renderResult(result, _options, theme, ctx) {
@@ -704,32 +648,21 @@ function registerGrep(pi: ExtensionAPI, cwd: string): void {
         extra,
         theme,
         name: 'Grep',
-        value: ctx.args.pattern,
+        value: getToolInput<GrepToolInput>(ctx.args).pattern,
       });
     },
-  });
+  };
 }
 
-function registerLs(pi: ExtensionAPI, cwd: string): void {
-  const original = getToolSet(cwd).ls;
-  pi.registerTool({
-    ...original,
+function getLsRenderers(): ToolRenderers {
+  return {
     renderShell: 'self',
-    execute(toolCallId, params, signal, onUpdate, ctx) {
-      return getToolSet(ctx.cwd).ls.execute(
-        toolCallId,
-        params,
-        signal,
-        onUpdate,
-        ctx
-      );
-    },
     renderCall(args, theme, ctx) {
       return renderPrettyPendingTool({
         ctx,
         theme,
         name: 'List',
-        value: tildify(args.path ?? ''),
+        value: tildify(getToolInput<LsToolInput>(args).path ?? ''),
       });
     },
     renderResult(result, _options, theme, ctx) {
@@ -745,10 +678,10 @@ function registerLs(pi: ExtensionAPI, cwd: string): void {
         extra,
         theme,
         name: 'List',
-        value: tildify(ctx.args.path ?? ''),
+        value: tildify(getToolInput<LsToolInput>(ctx.args).path ?? ''),
       });
     },
-  });
+  };
 }
 
 function formatBashCommand(command: string) {
@@ -756,20 +689,9 @@ function formatBashCommand(command: string) {
   return highlighted.join(' ↵ ');
 }
 
-function registerBash(pi: ExtensionAPI, cwd: string): void {
-  const original = getToolSet(cwd).bash;
-  pi.registerTool({
-    ...original,
+function getBashRenderers(): ToolRenderers {
+  return {
     renderShell: 'self',
-    execute(toolCallId, params, signal, onUpdate, ctx) {
-      return getToolSet(ctx.cwd).bash.execute(
-        toolCallId,
-        params,
-        signal,
-        onUpdate,
-        ctx
-      );
-    },
     renderCall() {
       return new Text('', 0, 0);
     },
@@ -783,32 +705,21 @@ function registerBash(pi: ExtensionAPI, cwd: string): void {
         theme,
         name: 'Bash',
         status: summary.status,
-        value: formatBashCommand(ctx.args.command),
+        value: formatBashCommand(getToolInput<BashToolInput>(ctx.args).command),
       });
     },
-  });
+  };
 }
 
-function registerWrite(pi: ExtensionAPI, cwd: string): void {
-  const original = getToolSet(cwd).write;
-  pi.registerTool({
-    ...original,
+function getWriteRenderers(): ToolRenderers {
+  return {
     renderShell: 'self',
-    execute(toolCallId, params, signal, onUpdate, ctx) {
-      return getToolSet(ctx.cwd).write.execute(
-        toolCallId,
-        params,
-        signal,
-        onUpdate,
-        ctx
-      );
-    },
     renderCall(args, theme, ctx) {
       return renderPrettyPendingTool({
         ctx,
         theme,
         name: 'Write',
-        value: tildify(args.path),
+        value: tildify(getToolInput<WriteToolInput>(args).path),
       });
     },
     renderResult(result, _options, theme, ctx) {
@@ -820,35 +731,27 @@ function registerWrite(pi: ExtensionAPI, cwd: string): void {
         extra:
           ctx.isPartial || ctx.isError
             ? undefined
-            : theme.fg('success', `+${countLines(ctx.args.content)}`),
+            : theme.fg(
+                'success',
+                `+${countLines(getToolInput<WriteToolInput>(ctx.args).content)}`
+              ),
         theme,
         name: 'Write',
-        value: tildify(ctx.args.path),
+        value: tildify(getToolInput<WriteToolInput>(ctx.args).path),
       });
     },
-  });
+  };
 }
 
-function registerEdit(pi: ExtensionAPI, cwd: string): void {
-  const original = getToolSet(cwd).edit;
-  pi.registerTool({
-    ...original,
+function getEditRenderers(): ToolRenderers {
+  return {
     renderShell: 'self',
-    execute(toolCallId, params, signal, onUpdate, ctx) {
-      return getToolSet(ctx.cwd).edit.execute(
-        toolCallId,
-        params,
-        signal,
-        onUpdate,
-        ctx
-      );
-    },
     renderCall(args, theme, ctx) {
       return renderPrettyPendingTool({
         ctx,
         theme,
         name: 'Edit',
-        value: tildify(args.path),
+        value: tildify(getToolInput<EditToolInput>(args).path),
       });
     },
     renderResult(result, _options, theme, ctx) {
@@ -858,7 +761,7 @@ function registerEdit(pi: ExtensionAPI, cwd: string): void {
         ? undefined
         : summarizeAll(
             theme,
-            ctx.args.edits.map((edit) =>
+            getToolInput<EditToolInput>(ctx.args).edits.map((edit) =>
               getLineDiffStats(edit.oldText, edit.newText)
             )
           );
@@ -868,10 +771,31 @@ function registerEdit(pi: ExtensionAPI, cwd: string): void {
         extra,
         theme,
         name: 'Edit',
-        value: tildify(ctx.args.path),
+        value: tildify(getToolInput<EditToolInput>(ctx.args).path),
       });
     },
-  });
+  };
+}
+
+function getPrettyToolRenderers(toolName: string): ToolRenderers | undefined {
+  switch (toolName) {
+    case 'bash':
+      return getBashRenderers();
+    case 'edit':
+      return getEditRenderers();
+    case 'find':
+      return getFindRenderers();
+    case 'grep':
+      return getGrepRenderers();
+    case 'ls':
+      return getLsRenderers();
+    case 'read':
+      return getReadRenderers();
+    case 'write':
+      return getWriteRenderers();
+    default:
+      return undefined;
+  }
 }
 
 function bashSummary(

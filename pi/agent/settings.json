@@ -1,11 +1,22 @@
 {
-  "lastChangelogVersion": "0.85.1",
-  "defaultProvider": "openai-codex",
+  "lastChangelogVersion": "1.0.4",
   "defaultModel": "gpt-5.6-sol",
+  "defaultProvider": "openai-codex",
   "defaultThinkingLevel": "medium",
-  "quietStartup": true,
+  "defaultTools": [
+    "+grep",
+    "+find",
+    "+ls",
+    "+codemode"
+  ],
+  "doubleEscapeAction": "none",
   "enableInstallTelemetry": false,
   "enableSkillCommands": true,
+  "quietStartup": true,
+  "skills": [
+    "~/dotfiles/ai/skills",
+    "!skills/**"
+  ],
   "theme": "squirrelsong",
-  "doubleEscapeAction": "none"
+  "tuiMode": "regular"
 }

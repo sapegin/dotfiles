@@ -255,6 +255,9 @@ export default function Whimsical(pi: ExtensionAPI) {
   // Disable extremely annoying thinking indicator inlined in the text box top
   // border and moves it back to separate line.
   pi.on('session_start', (_event, ctx) => {
+    if (ctx.mode !== 'tui') {
+      return;
+    }
     ctx.ui.setEditorComponent(
       (tui, theme, keybindings) => new CustomEditor(tui, theme, keybindings)
     );
@@ -270,12 +273,18 @@ export default function Whimsical(pi: ExtensionAPI) {
 
   const resetWorkingUi = (ctx: ExtensionContext): void => {
     stopAnimation();
+    if (ctx.mode !== 'tui') {
+      return;
+    }
     ctx.ui.setWorkingIndicator();
     ctx.ui.setWorkingMessage();
   };
 
   pi.on('turn_start', (_event, ctx) => {
     stopAnimation();
+    if (ctx.mode !== 'tui') {
+      return;
+    }
     const message = pickRandom();
     const characters = Array.from(
       GRAPHEME_SEGMENTER.segment(message),

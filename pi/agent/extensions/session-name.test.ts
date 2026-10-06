@@ -10,37 +10,6 @@ const agentSessionMocks = vi.hoisted(() => ({
   responseText: 'Error mapping review',
 }));
 
-vi.mock(import('@earendil-works/pi-coding-agent'), async (importOriginal) => {
-  const actual = await importOriginal();
-
-  return {
-    ...actual,
-    createAgentSession: (
-      options: Parameters<typeof actual.createAgentSession>[0]
-    ) => {
-      agentSessionMocks.model(options?.model);
-      const messages: unknown[] = [];
-      const session = {
-        abort: vi.fn<() => void>(),
-        dispose: vi.fn<() => void>(),
-        messages,
-        prompt(prompt: string) {
-          agentSessionMocks.prompt(prompt);
-          messages.push({
-            role: 'assistant',
-            content: [{ type: 'text', text: agentSessionMocks.responseText }],
-          });
-          return Promise.resolve();
-        },
-      };
-
-      return Promise.resolve({ session }) as unknown as ReturnType<
-        typeof actual.createAgentSession
-      >;
-    },
-  };
-});
-
 import sessionName, { normalizeSessionName } from './session-name.ts';
 
 type EventHandler = (event: any, ctx: ExtensionContext) => unknown;
@@ -82,6 +51,23 @@ function setupExtension(branchName?: string) {
           thinkingLevelMap: { off: 0 },
         },
       ],
+      streamSimple(
+        model: unknown,
+        context: { messages: { content: unknown }[] }
+      ) {
+        agentSessionMocks.model(model);
+        const content = context.messages.at(-1)?.content;
+        if (typeof content === 'string') {
+          agentSessionMocks.prompt(content);
+        }
+        return {
+          result: () =>
+            Promise.resolve({
+              role: 'assistant',
+              content: [{ type: 'text', text: agentSessionMocks.responseText }],
+            }),
+        };
+      },
     },
     sessionManager: { getEntries: () => [] },
     ui: { setTitle: vi.fn<(title: string) => void>() },

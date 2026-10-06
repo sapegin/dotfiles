@@ -1,7 +1,5 @@
-import { execFile } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { promisify } from 'node:util';
 import {
   isEditToolResult,
   isWriteToolResult,
@@ -9,8 +7,6 @@ import {
   type ExtensionContext,
   type ToolResultEvent,
 } from '@earendil-works/pi-coding-agent';
-
-const execFileAsync = promisify(execFile);
 
 const oxlintFixCommand = ['oxlint', '--fix', '--quiet'] as const;
 const oxlintCheckCommand = ['oxlint', '--quiet'] as const;
@@ -36,11 +32,12 @@ export default function lintFormatOnWrite(pi: ExtensionAPI) {
       oxlintFixCommand,
       filePath,
       repositoryRoot,
-      ctx
+      ctx,
+      pi
     );
     const lintFixErrors = formatLintErrors(lintFixResult);
     if (!lintFixErrors) {
-      await runCommand(oxfmtCommand, filePath, repositoryRoot, ctx);
+      await runCommand(oxfmtCommand, filePath, repositoryRoot, ctx, pi);
       return;
     }
 
@@ -48,18 +45,20 @@ export default function lintFormatOnWrite(pi: ExtensionAPI) {
       oxlintCheckCommand,
       filePath,
       repositoryRoot,
-      ctx
+      ctx,
+      pi
     );
     const lintCheckErrors = formatLintErrors(lintCheckResult);
     if (!lintCheckErrors) {
-      await runCommand(oxfmtCommand, filePath, repositoryRoot, ctx);
+      await runCommand(oxfmtCommand, filePath, repositoryRoot, ctx, pi);
       return;
     }
 
     return {
       content: [...event.content, { type: 'text', text: lintCheckErrors }],
-      details: event.details,
-      isError: event.isError,
+      ...(event.structuredContent === undefined
+        ? {}
+        : { structuredContent: event.structuredContent }),
     };
   });
 }
@@ -97,74 +96,45 @@ function findRepositoryRoot(startPath: string) {
 }
 
 interface CommandResult {
-  command: readonly string[];
   exitCode: number | null;
   stdout: string;
   stderr: string;
-  error?: string;
 }
 
 async function runCommand(
   command: readonly string[],
   filePath: string,
   cwd: string,
-  ctx: ExtensionContext
+  ctx: ExtensionContext,
+  pi: ExtensionAPI
 ): Promise<CommandResult> {
   try {
     const relativeFilePath = path.relative(cwd, filePath);
-    const { stdout, stderr } = await execFileAsync(
-      command[0],
-      [...command.slice(1), relativeFilePath],
-      {
-        cwd,
-        env: getCommandEnv(cwd),
-        signal: ctx.signal,
-      }
+    const result = await pi.exec(
+      '/usr/bin/env',
+      [
+        `PATH=${getCommandPath(cwd)}`,
+        command[0],
+        ...command.slice(1),
+        relativeFilePath,
+      ],
+      { cwd, signal: ctx.signal }
     );
 
-    return { command, exitCode: 0, stdout, stderr };
-  } catch (error) {
-    if (isExecFileError(error)) {
-      return {
-        command,
-        exitCode: typeof error.code === 'number' ? error.code : null,
-        stdout: stringifyOutput(error.stdout),
-        stderr: stringifyOutput(error.stderr),
-        error: error.message,
-      };
-    }
-
     return {
-      command,
-      exitCode: null,
-      stdout: '',
-      stderr: '',
-      error: error instanceof Error ? error.message : String(error),
+      exitCode: result.code,
+      stdout: result.stdout,
+      stderr: result.stderr,
     };
+  } catch {
+    return { exitCode: null, stdout: '', stderr: '' };
   }
 }
 
-type ExecFileError = Error & {
-  code?: number | string;
-  stdout?: string | Buffer;
-  stderr?: string | Buffer;
-};
-
-function isExecFileError(error: unknown): error is ExecFileError {
-  return error instanceof Error;
-}
-
-function stringifyOutput(output: string | Buffer | undefined) {
-  return Buffer.isBuffer(output) ? output.toString('utf8') : (output ?? '');
-}
-
-function getCommandEnv(cwd: string): NodeJS.ProcessEnv {
-  return {
-    ...process.env,
-    PATH: [...getNodeModulesBinPaths(cwd), process.env.PATH]
-      .filter(Boolean)
-      .join(path.delimiter),
-  };
+function getCommandPath(cwd: string) {
+  return [...getNodeModulesBinPaths(cwd), process.env.PATH]
+    .filter(Boolean)
+    .join(path.delimiter);
 }
 
 function getNodeModulesBinPaths(cwd: string) {

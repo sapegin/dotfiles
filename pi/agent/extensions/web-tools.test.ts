@@ -65,6 +65,16 @@ describe('web tools', () => {
     });
 
     expect([...tools.keys()]).toStrictEqual(['web_search', 'web_fetch']);
+    for (const tool of tools.values()) {
+      expect(tool).toMatchObject({
+        annotations: {
+          destructiveHint: false,
+          idempotentHint: true,
+          openWorldHint: true,
+          readOnlyHint: true,
+        },
+      });
+    }
   });
 
   test('renders both tools like Pretty internal tools', () => {

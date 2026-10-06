@@ -14,7 +14,7 @@
  * so the app's liveness sweep can reap a crashed agent.
  *
  * Hook event mapping:
- * extension load      -> session_start  (agent presence badge)
+ * Pi session_start    -> session_start  (agent presence badge)
  * Pi agent_start      -> busy
  * Pi agent_settled    -> idle + generic input-needed notification
  * Pi UI prompt        -> generic input-needed notification
@@ -113,9 +113,9 @@ export default function supacode(pi: ExtensionAPI) {
     return;
   }
 
-  // Extension load = agent process running. Pi has no equivalent of
-  // Claude's SessionStart hook, so we fire it ourselves.
-  emitPresence('session_start');
+  pi.on('session_start', (_event, _ctx) => {
+    emitPresence('session_start');
+  });
 
   pi.on('agent_start', (_event, _ctx) => {
     emitPresence('busy');

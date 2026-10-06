@@ -62,12 +62,24 @@ function setupExtension() {
 
 describe('supacode extension', () => {
   beforeEach(() => {
+    vi.stubEnv('SUPACODE_SOCKET_PATH', '');
     vi.stubEnv('SUPACODE_SURFACE_ID', 'surface-1');
     terminalMock.writes.length = 0;
   });
 
   afterEach(() => {
     vi.unstubAllEnvs();
+  });
+
+  test('reports presence only after a session starts', () => {
+    const extension = setupExtension();
+
+    expect(terminalMock.writes).toStrictEqual([]);
+    extension.emit('session_start');
+
+    expect(terminalMock.writes).toStrictEqual([
+      '\u001B]3008;start=pi;event=session_start\u001B\\',
+    ]);
   });
 
   test('requests attention when an extension UI prompt starts', () => {

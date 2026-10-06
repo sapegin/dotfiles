@@ -1,12 +1,12 @@
-import fs from 'node:fs/promises';
 import os from 'node:os';
-import path from 'node:path';
 import { stripVTControlCharacters } from 'node:util';
 import {
   type ExtensionAPI,
   type ExtensionContext,
   SkillInvocationMessageComponent,
   type Theme,
+  type ToolRendererResolver,
+  type ToolRenderers,
   UserMessageComponent,
 } from '@earendil-works/pi-coding-agent';
 import { describe, expect, test } from 'vitest';
@@ -41,7 +41,8 @@ function setupPrettyExtension() {
   const entries: { customType: string; data?: unknown }[] = [];
   const entryRenderers = new Map<string, EntryRenderer>();
   const handlers = new Map<string, EventHandler[]>();
-  const tools = new Map<string, unknown>();
+  const rendererResolvers: ToolRendererResolver[] = [];
+  const replacedTools: string[] = [];
   const pi = {
     appendEntry(customType: string, data?: unknown) {
       entries.push({ customType, data });
@@ -54,11 +55,28 @@ function setupPrettyExtension() {
       entryRenderers.set(customType, renderer);
     },
     registerTool(tool: { name: string }) {
-      tools.set(tool.name, tool);
+      replacedTools.push(tool.name);
+    },
+    registerToolRenderer(resolver: ToolRendererResolver) {
+      rendererResolvers.push(resolver);
     },
   } as unknown as ExtensionAPI;
 
   pretty(pi);
+
+  const resolveToolRenderers = (
+    toolName: string,
+    index = 0
+  ): ToolRenderers | undefined =>
+    rendererResolvers[index]?.(toolName, () =>
+      resolveToolRenderers(toolName, index + 1)
+    );
+  const tools = new Map(
+    ['bash', 'edit', 'find', 'grep', 'ls', 'read', 'write'].map((toolName) => [
+      toolName,
+      resolveToolRenderers(toolName),
+    ])
+  );
 
   const emit = (
     event: string,
@@ -76,7 +94,15 @@ function setupPrettyExtension() {
     emit('session_shutdown', {}, ctx);
   };
 
-  return { emit, entries, entryRenderers, shutdown, start, tools };
+  return {
+    emit,
+    entries,
+    entryRenderers,
+    replacedTools,
+    shutdown,
+    start,
+    tools,
+  };
 }
 
 describe(formatUserPrompt, () => {
@@ -255,6 +281,7 @@ describe(renderPrettyFooter, () => {
       },
       { type: 'branch_summary', usage: { cost: { total: 3 } } },
       { type: 'compaction', usage: { cost: { total: 4 } } },
+      { type: 'usage', usage: { cost: { total: 5 } } },
     ];
     const ctx = {
       sessionManager: {
@@ -280,56 +307,25 @@ describe(renderPrettyFooter, () => {
 
     const footer = renderPrettyFooter(ctx, pi, plainTheme, 100).join('');
 
-    expect(footer).toContain('$10.00');
+    expect(footer).toContain('$15.00');
   });
 });
 
-describe('tool execution', () => {
-  test('resolves relative read paths against each execution context', async () => {
-    interface CapturedReadTool {
-      execute(
-        toolCallId: string,
-        params: { path: string },
-        signal: AbortSignal | undefined,
-        onUpdate: undefined,
-        ctx: ExtensionContext
-      ): Promise<{ content: { type: string; text?: string }[] }>;
-    }
+describe('tool rendering', () => {
+  test('registers renderers without replacing built-in tools', () => {
+    const { replacedTools, tools } = setupPrettyExtension();
 
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), 'pretty-tools-'));
-    const firstCwd = path.join(root, 'first');
-    const secondCwd = path.join(root, 'second');
-    const { shutdown, tools } = setupPrettyExtension();
-
-    try {
-      await Promise.all([fs.mkdir(firstCwd), fs.mkdir(secondCwd)]);
-      await Promise.all([
-        fs.writeFile(path.join(firstCwd, 'value.txt'), 'first'),
-        fs.writeFile(path.join(secondCwd, 'value.txt'), 'second'),
-      ]);
-      const readTool = tools.get('read') as CapturedReadTool;
-
-      const firstResult = await readTool.execute(
-        'first-read',
-        { path: 'value.txt' },
-        undefined,
-        undefined,
-        createExtensionContext(firstCwd)
-      );
-      const secondResult = await readTool.execute(
-        'second-read',
-        { path: 'value.txt' },
-        undefined,
-        undefined,
-        createExtensionContext(secondCwd)
-      );
-
-      expect(firstResult.content[0]?.text).toBe('first');
-      expect(secondResult.content[0]?.text).toBe('second');
-    } finally {
-      shutdown(createExtensionContext(firstCwd));
-      await fs.rm(root, { force: true, recursive: true });
-    }
+    expect(replacedTools).toStrictEqual([]);
+    expect([...tools.keys()]).toStrictEqual([
+      'bash',
+      'edit',
+      'find',
+      'grep',
+      'ls',
+      'read',
+      'write',
+    ]);
+    expect([...tools.values()].every(Boolean)).toBe(true);
   });
 
   test('shows non-streaming tools while execution is pending', () => {

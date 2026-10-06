@@ -9,7 +9,7 @@ import Whimsical from './whimsical.ts';
 
 type EventHandler = (event: unknown, ctx: ExtensionContext) => unknown;
 
-function setupExtension() {
+function setupExtension(mode: ExtensionContext['mode'] = 'tui') {
   const handlers = new Map<string, EventHandler>();
   const setWorkingIndicator =
     vi.fn<(options?: WorkingIndicatorOptions) => void>();
@@ -21,6 +21,7 @@ function setupExtension() {
     fg: (color: string, text: string) => `<${color}>${text}</${color}>`,
   } as Theme;
   const ctx = {
+    mode,
     ui: {
       setWorkingIndicator,
       setWorkingMessage,
@@ -71,6 +72,23 @@ describe(Whimsical, () => {
     expect(setEditorComponent).toHaveBeenCalledExactlyOnceWith(
       expect.any(Function)
     );
+  });
+
+  test('does not install terminal UI outside TUI mode', () => {
+    const {
+      ctx,
+      handlers,
+      setEditorComponent,
+      setWorkingIndicator,
+      setWorkingMessage,
+    } = setupExtension('print');
+
+    runHandler(handlers, 'session_start', ctx);
+    runHandler(handlers, 'turn_start', ctx);
+
+    expect(setEditorComponent).not.toHaveBeenCalled();
+    expect(setWorkingIndicator).not.toHaveBeenCalled();
+    expect(setWorkingMessage).not.toHaveBeenCalled();
   });
 
   test('installs the spinner and animates the working message', () => {

@@ -1,10 +1,6 @@
 /** Names new sessions from their first prompt without delaying the main agent. */
 
 import {
-  createAgentSession,
-  DefaultResourceLoader,
-  getAgentDir,
-  SessionManager,
   type ExtensionAPI,
   type ExtensionContext,
 } from '@earendil-works/pi-coding-agent';
@@ -100,52 +96,32 @@ async function generateSessionName(
     return;
   }
 
-  // Keep the naming request isolated from project context, tools, and extensions.
-  const resourceLoader = new DefaultResourceLoader({
-    cwd: ctx.cwd,
-    agentDir: getAgentDir(),
-    noExtensions: true,
-    noSkills: true,
-    noPromptTemplates: true,
-    noThemes: true,
-    noContextFiles: true,
-    systemPrompt: SYSTEM_PROMPT,
-    appendSystemPrompt: [],
-  });
-  await resourceLoader.reload();
-
-  const { session } = await createAgentSession({
-    cwd: ctx.cwd,
-    model: { ...model, maxTokens: MAX_TOKENS },
-    thinkingLevel: 'off',
-    noTools: 'all',
-    resourceLoader,
-    sessionManager: SessionManager.inMemory(ctx.cwd),
-  });
-  const abortSession = async () => {
-    try {
-      await session.abort();
-    } catch {
-      // Ignore errors while tearing down after signal abort.
-    }
-  };
-  signal.addEventListener('abort', abortSession, { once: true });
-
-  try {
-    if (signal.aborted) {
-      return;
-    }
-    await session.prompt(prompt.slice(0, PROMPT_MAX_CHARACTERS));
-    const response = session.messages.at(-1);
-    if (response?.role !== 'assistant') {
-      return;
-    }
-
-    return normalizeSessionName(getTextContent(response.content));
-  } finally {
-    signal.removeEventListener('abort', abortSession);
-    session.dispose();
+  if (signal.aborted) {
+    return;
   }
+
+  // Keep the naming request isolated from project context, tools, and extensions.
+  const response = await ctx.modelRegistry
+    .streamSimple(
+      model,
+      {
+        systemPrompt: SYSTEM_PROMPT,
+        messages: [
+          {
+            role: 'user',
+            content: prompt.slice(0, PROMPT_MAX_CHARACTERS),
+            timestamp: Date.now(),
+          },
+        ],
+      },
+      {
+        maxTokens: MAX_TOKENS,
+        signal,
+      }
+    )
+    .result();
+
+  return normalizeSessionName(getTextContent(response.content));
 }
 
 export default function registerSessionNameExtension(pi: ExtensionAPI) {
