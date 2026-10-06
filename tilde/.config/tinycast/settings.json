@@ -1,0 +1,162 @@
+{
+  "general": {
+    "showInMenuBar": true,
+    "popToRootSeconds": 0,
+    "escapeKeyBehavior": "navigateBackOrClose",
+    "autoSwitchInputSource": "com.apple.keylayout.ABC",
+    "supportReminders": true
+  },
+  "appearance": {
+    "theme": "system",
+    "interfaceSize": "large",
+    "compactMode": true,
+    "showFavoritesInCompactMode": false,
+    "followCursorAcrossDisplays": true,
+    "dragToReposition": false
+  },
+  "hyperKey": {
+    "key": "capsLock",
+    "includesShift": false,
+    "quickPress": "none"
+  },
+  "calculator": {
+    "numberStyle": "system"
+  },
+  "search": {
+    "showsSuggestions": true,
+    "sensitivity": "medium"
+  },
+  "applications": {
+    "searchScopes": [
+      "/Applications",
+      "/Applications/Utilities",
+      "/System/Applications",
+      "/System/Applications/Utilities",
+      "/System/Library/CoreServices/Applications",
+      "/System/Volumes/Preboot/Cryptexes/App/System/Applications",
+      "/System/Library/CoreServices/Finder.app",
+      "~/Applications"
+    ]
+  },
+  "commands": {
+    "enabled": true,
+    "showInLauncher": true
+  },
+  "quicklinks": {
+    "enabled": false,
+    "showInLauncher": true,
+    "opensNewWindow": false,
+    "selectionFallback": "ask",
+    "confirmsBeforeDelete": true
+  },
+  "appleShortcuts": {
+    "enabled": false
+  },
+  "ai": {
+    "enabled": false,
+    "webSearch": false,
+    "systemPrompt": "",
+    "systemPromptEnabled": true,
+    "retentionDays": "forever",
+    "opensTo": "recent",
+    "newChatAfterMinutes": 5,
+    "toolRounds": 25
+  },
+  "quickActions": {
+    "targetLanguage": ""
+  },
+  "fileSearch": {
+    "enabled": true,
+    "scopes": ["~"],
+    "ignorePatterns": []
+  },
+  "notes": {
+    "enabled": false,
+    "rendersMarkdown": true,
+    "showsFormattingBar": true,
+    "folder": null
+  },
+  "snippets": {
+    "showInLauncher": false,
+    "folder": null
+  },
+  "navigation": {
+    "enabled": false,
+    "menuSearchShowsAppleMenu": false,
+    "menuSearchDisabledApps": []
+  },
+  "windowManagement": {
+    "enabled": true,
+    "showInLauncher": false,
+    "gap": 0,
+    "cycle": "off",
+    "layoutsShowInLauncher": true,
+    "roomsShowInLauncher": true,
+    "shortcuts": {
+      "left-half": "hyper+left",
+      "right-half": "hyper+right",
+      "top-half": null,
+      "bottom-half": null,
+      "top-left-quarter": null,
+      "top-right-quarter": null,
+      "bottom-left-quarter": null,
+      "bottom-right-quarter": null,
+      "first-three-fourths": null,
+      "last-three-fourths": null,
+      "first-third": null,
+      "center-third": null,
+      "last-third": null,
+      "first-two-thirds": null,
+      "last-two-thirds": null,
+      "maximize": "hyper+up",
+      "almost-maximize": null,
+      "reasonable-size": null,
+      "maximize-height": null,
+      "maximize-width": null,
+      "center": null,
+      "center-half": null,
+      "center-two-thirds": null,
+      "make-larger": null,
+      "make-smaller": null,
+      "restore": null,
+      "move-left": null,
+      "move-right": null,
+      "move-up": null,
+      "move-down": null,
+      "next-display": null,
+      "previous-display": null,
+      "toggle-fullscreen": null,
+      "previous-space": null,
+      "next-space": null
+    },
+    "customSizes": [],
+    "layouts": [],
+    "rooms": []
+  },
+  "clipboard": {
+    "enabled": false,
+    "retentionDays": 90,
+    "defaultAction": "paste",
+    "disabledApps": ["com.apple.keychainaccess", "com.apple.Passwords"]
+  },
+  "emoji": {
+    "skinTone": "mediumLight",
+    "gridColumns": 8
+  },
+  "calendar": {
+    "showInLauncher": true,
+    "launcherLimit": 5,
+    "span": "todayAndTomorrow",
+    "joinWindowMinutes": 5,
+    "autoJoinConfirms": true,
+    "meetingBrowser": null,
+    "menuBar": "disabled",
+    "menuBarUpcomingEvents": "today",
+    "menuBarLinkedEventsOnly": true,
+    "menuBarHidesWhenEmpty": false,
+    "hideCurrentEventAfterMinutes": "never"
+  },
+  "extensions": {
+    "showInLauncher": true
+  }
+}

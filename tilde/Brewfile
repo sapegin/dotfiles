@@ -29,11 +29,10 @@ brew "zsh-patina" # Syntax highlighting for zsh
 brew "zsh" # Shell
 
 # GUI apps
-brew "abue-ammar/tinycast"
+brew "abue-ammar/tinycast" # App launcher
 brew "syntax-highlight" # Quick look with syntax highlighting
 cask "adobe-creative-cloud" # Lightroom & Photoshop
 cask "affinity" # Image editor
-cask "alfred" # App launcher
 cask "bruno" # REST/GraphQL API client
 cask "choosy" # Browser selector
 cask "cleanshot" # Screenshots
@@ -46,7 +45,6 @@ cask "ghostty" # Terminal emulator
 cask "github" # GitHub Desktop
 cask "google-chrome" # Browser for testing
 cask "harper-desktop" # Spell checker
-cask "hyperkey" # Maps Caps Lock to Super key
 cask "kap" # Video screen recording
 cask "keka" # Archive reader
 cask "nimble-commander" # File manager
@@ -55,7 +53,6 @@ cask "numi" # Calculator
 cask "obsidian" # Note taking
 cask "optimage" # Image optimization
 cask "polypane" # Responsive design and accessibility testing
-cask "quitter" # Quit apps after certain time
 cask "replacicon" # Custom app icons
 cask "telegram" # Chat
 cask "thaw" # Hides menu bar icons
