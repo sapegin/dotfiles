@@ -12,6 +12,16 @@ Tools here should match configuration actually in use. Do not add generic fallba
 
 Ecosystem context: read [raccoonarium.md](./ai/raccoonarium.md).
 
+## Commands
+
+Use npm and the following commands:
+
+```sh
+npm test # Full verification suite
+npm exec -- vitest run <test-path> # Focused test
+npm run lint:fix # Autofix lint errors and format code
+```
+
 ## CLI tools
 
 New command-line tools are **TypeScript** in [`src/bin/`](./src/bin/), exposed on `$PATH` via [`bin/symlinks/`](./bin/symlinks/) → [`bin/_ts`](./bin/_ts). Read [src/AGENTS.md](./src/AGENTS.md) before adding or changing a tool.
