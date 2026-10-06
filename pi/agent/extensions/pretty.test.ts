@@ -37,7 +37,7 @@ function createExtensionContext(cwd: string): ExtensionContext {
   } as unknown as ExtensionContext;
 }
 
-function setupPrettyExtension() {
+function setupPrettyExtension(fallback?: ToolRenderers) {
   const entries: { customType: string; data?: unknown }[] = [];
   const entryRenderers = new Map<string, EntryRenderer>();
   const handlers = new Map<string, EventHandler[]>();
@@ -70,22 +70,23 @@ function setupPrettyExtension() {
   ): ToolRenderers | undefined =>
     rendererResolvers[index]?.(toolName, () =>
       resolveToolRenderers(toolName, index + 1)
-    );
+    ) ?? fallback;
   const tools = new Map(
-    ['bash', 'edit', 'find', 'grep', 'ls', 'read', 'write'].map((toolName) => [
-      toolName,
-      resolveToolRenderers(toolName),
-    ])
+    ['bash', 'codemode', 'edit', 'find', 'grep', 'ls', 'read', 'write'].map(
+      (toolName) => [toolName, resolveToolRenderers(toolName)]
+    )
   );
 
   const emit = (
     event: string,
     payload: unknown,
     ctx: ExtensionContext
-  ): void => {
+  ): unknown => {
+    let result: unknown;
     for (const handler of handlers.get(event) ?? []) {
-      handler(payload, ctx);
+      result = handler(payload, ctx) ?? result;
     }
+    return result;
   };
   const start = (ctx: ExtensionContext): void => {
     emit('session_start', {}, ctx);
@@ -99,6 +100,7 @@ function setupPrettyExtension() {
     entries,
     entryRenderers,
     replacedTools,
+    resolveToolRenderers,
     shutdown,
     start,
     tools,
@@ -318,6 +320,7 @@ describe('tool rendering', () => {
     expect(replacedTools).toStrictEqual([]);
     expect([...tools.keys()]).toStrictEqual([
       'bash',
+      'codemode',
       'edit',
       'find',
       'grep',
@@ -326,6 +329,918 @@ describe('tool rendering', () => {
       'write',
     ]);
     expect([...tools.values()].every(Boolean)).toBe(true);
+  });
+
+  test.each([
+    {
+      name: 'grep',
+      args: JSON.stringify({
+        pattern: 'Renderer|getTools\\(',
+        path: 'node_modules',
+        limit: 25,
+      }),
+      expected: 'Grep Renderer|getTools\\(',
+    },
+    {
+      name: 'bash',
+      args: JSON.stringify({ command: 'echo "hello"\npwd', timeout: 30 }),
+      expected: 'Bash echo "hello" ↵ pwd',
+    },
+    {
+      name: 'bash',
+      args: '{"command":"npm exec -- oxfmt --write pi/agent/extensions/pretty.ts...',
+      expected:
+        'Bash npm exec -- oxfmt --write pi/agent/extensions/pretty.ts...',
+    },
+    {
+      name: 'grep',
+      args: '{"pattern":"Renderer|getTools\\\\(","path":"node_modules/@earendil...',
+      expected: 'Grep Renderer|getTools\\(',
+    },
+    {
+      name: 'read',
+      args: JSON.stringify({ path: `${os.homedir()}/file.ts`, limit: 200 }),
+      expected: 'Read ~/file.ts',
+    },
+    {
+      name: 'write',
+      args: JSON.stringify({ path: 'file.ts', content: 'secret contents' }),
+      expected: 'Write file.ts',
+    },
+    {
+      name: 'edit',
+      args: JSON.stringify({ path: 'file.ts', edits: [] }),
+      expected: 'Edit file.ts',
+    },
+    {
+      name: 'ls',
+      args: JSON.stringify({ path: '.', limit: 20 }),
+      expected: 'List .',
+    },
+    {
+      name: 'find',
+      args: JSON.stringify({ pattern: '*.ts', path: 'src' }),
+      expected: 'Find *.ts',
+    },
+  ])(
+    'formats $name preview with only its main field',
+    ({ name, args, expected }) => {
+      const { shutdown, tools } = setupPrettyExtension();
+      const ctx = createExtensionContext(process.cwd());
+      try {
+        const component = tools.get('codemode')?.renderResult?.(
+          {
+            content: [],
+            details: { calls: [{ id: 'parent/1', name, args, status: 'ok' }] },
+          },
+          { expanded: false, isPartial: false },
+          plainTheme,
+          {
+            args: { code: 'await tools.read({path:"file.ts"});' },
+            toolCallId: 'parent',
+            isPartial: false,
+            isError: false,
+          } as Parameters<NonNullable<ToolRenderers['renderResult']>>[3]
+        );
+        expect(
+          component?.render(200).map(stripVTControlCharacters).at(-1)
+        ).toBe(` ✓ ${expected}`);
+        expect(
+          component
+            ?.render(30)
+            .every((line) => stripVTControlCharacters(line).length <= 30)
+        ).toBe(true);
+      } finally {
+        shutdown(ctx);
+      }
+    }
+  );
+
+  test('leaves custom renderers and their codemode previews intact', () => {
+    const fallback: ToolRenderers = {
+      renderCall: () => ({
+        render: () => ['existing custom renderer'],
+        invalidate() {},
+      }),
+    };
+    const { emit, resolveToolRenderers, shutdown, tools } =
+      setupPrettyExtension(fallback);
+    const ctx = createExtensionContext(process.cwd());
+    try {
+      expect(resolveToolRenderers('custom')).toBe(fallback);
+      emit(
+        'tool_execution_start',
+        {
+          toolCallId: 'parent/1',
+          parentToolCallId: 'parent',
+          toolName: 'custom',
+          args: { query: 'needle' },
+        },
+        ctx
+      );
+      emit(
+        'tool_result',
+        {
+          toolCallId: 'parent/1',
+          parentToolCallId: 'parent',
+          toolName: 'custom',
+          input: { query: 'needle' },
+          content: [],
+          isError: false,
+        },
+        ctx
+      );
+      expect(
+        emit(
+          'tool_result',
+          { toolCallId: 'parent', toolName: 'codemode', details: {} },
+          ctx
+        )
+      ).toBeUndefined();
+      const component = tools.get('codemode')?.renderResult?.(
+        {
+          content: [],
+          details: {
+            calls: [
+              {
+                id: 'parent/1',
+                name: 'custom',
+                args: '{"query":"needle"}',
+                status: 'ok',
+              },
+            ],
+          },
+        },
+        { expanded: false, isPartial: false },
+        plainTheme,
+        {
+          args: { code: 'await tools.custom({query:"needle"});' },
+          toolCallId: 'parent',
+          isPartial: false,
+          isError: false,
+        } as Parameters<NonNullable<ToolRenderers['renderResult']>>[3]
+      );
+      expect(component?.render(80).map(stripVTControlCharacters).at(-1)).toBe(
+        ' ✓ Custom {"query":"needle"}'
+      );
+    } finally {
+      shutdown(ctx);
+    }
+  });
+
+  test.each([
+    { name: 'read', args: { path: 'file.ts' } },
+    { name: 'find', args: { pattern: '*.ts' } },
+    { name: 'grep', args: { pattern: 'needle' } },
+    { name: 'ls', args: { path: '.' } },
+    { name: 'write', args: { path: 'file.ts', content: 'text' } },
+    { name: 'edit', args: { path: 'file.ts', edits: [] } },
+    { name: 'bash', args: { command: 'echo hello' } },
+  ])('matches pending direct and nested $name rows', ({ name, args }) => {
+    const { emit, shutdown, tools } = setupPrettyExtension();
+    const ctx = createExtensionContext(process.cwd());
+    type RenderContext = Parameters<
+      NonNullable<ToolRenderers['renderResult']>
+    >[3];
+    const renderContext = {
+      args,
+      toolCallId: 'parent/1',
+      executionStarted: true,
+      isPartial: true,
+      isError: false,
+    } as RenderContext;
+    try {
+      emit(
+        'tool_execution_start',
+        {
+          toolCallId: 'parent/1',
+          parentToolCallId: 'parent',
+          toolName: name,
+          args,
+        },
+        ctx
+      );
+      const direct = tools
+        .get(name)
+        ?.renderCall?.(args, plainTheme, renderContext);
+      const nested = tools
+        .get('codemode')
+        ?.renderResult?.(
+          { content: [], details: { calls: [] } },
+          { expanded: false, isPartial: true },
+          plainTheme,
+          {
+            ...renderContext,
+            args: { code: 'await tools.read({path:"file.ts"});' },
+            toolCallId: 'parent',
+          }
+        );
+      expect(direct).toBeDefined();
+      for (const width of [30, 80]) {
+        expect(nested?.render(width).slice(1)).toStrictEqual(
+          direct?.render(width)
+        );
+      }
+    } finally {
+      shutdown(ctx);
+    }
+  });
+
+  test.each([false, true])(
+    'matches streaming Bash rows through completion (error: %s)',
+    (isError) => {
+      const { emit, shutdown, tools } = setupPrettyExtension();
+      const ctx = createExtensionContext(process.cwd());
+      type RenderContext = Parameters<
+        NonNullable<ToolRenderers['renderResult']>
+      >[3];
+      const args = { command: 'echo ready; sleep 30' };
+      let redraws = 0;
+      const renderContext = {
+        args,
+        toolCallId: 'parent/1',
+        executionStarted: true,
+        isPartial: true,
+        isError: false,
+      } as RenderContext;
+      const parentContext = {
+        ...renderContext,
+        args: { code: 'await tools.bash({command:"echo ready; sleep 30"});' },
+        toolCallId: 'parent',
+        invalidate() {
+          redraws += 1;
+        },
+      };
+      try {
+        emit(
+          'tool_execution_start',
+          {
+            toolCallId: 'parent/1',
+            parentToolCallId: 'parent',
+            toolName: 'bash',
+            args,
+          },
+          ctx
+        );
+        const parent = tools
+          .get('codemode')
+          ?.renderResult?.(
+            { content: [], details: { calls: [] } },
+            { expanded: false, isPartial: true },
+            plainTheme,
+            parentContext
+          );
+        expect(parent?.render(80).slice(1)).toStrictEqual([]);
+        for (const content of [
+          [],
+          [{ type: 'text' as const, text: 'ready'.repeat(10_000) }],
+        ]) {
+          const partialResult = { content, details: undefined };
+          emit(
+            'tool_execution_update',
+            {
+              toolCallId: 'parent/1',
+              parentToolCallId: 'parent',
+              toolName: 'bash',
+              args,
+              partialResult,
+            },
+            ctx
+          );
+          const direct = tools
+            .get('bash')
+            ?.renderResult?.(
+              partialResult,
+              { expanded: false, isPartial: true },
+              plainTheme,
+              renderContext
+            );
+          expect(direct).toBeDefined();
+          for (const width of [30, 80]) {
+            expect(parent?.render(width).slice(1)).toStrictEqual(
+              direct?.render(width)
+            );
+          }
+          expect(
+            parent?.render(80).map(stripVTControlCharacters).at(-1)
+          ).toContain('∙ Bash');
+        }
+        expect(redraws).toBe(2);
+        const result = {
+          content: [
+            {
+              type: 'text' as const,
+              text: isError
+                ? 'Command exited with code 7'
+                : 'ready'.repeat(10_000),
+            },
+          ],
+          details: undefined,
+        };
+        emit(
+          'tool_result',
+          {
+            toolCallId: 'parent/1',
+            parentToolCallId: 'parent',
+            toolName: 'bash',
+            input: args,
+            ...result,
+            isError,
+          },
+          ctx
+        );
+        const completed = tools
+          .get('bash')
+          ?.renderResult?.(
+            result,
+            { expanded: false, isPartial: false },
+            plainTheme,
+            { ...renderContext, isPartial: false, isError }
+          );
+        expect(parent?.render(80).slice(1)).toStrictEqual(
+          completed?.render(80)
+        );
+        const saved = emit(
+          'tool_result',
+          {
+            toolCallId: 'parent',
+            toolName: 'codemode',
+            details: { calls: [] },
+          },
+          ctx
+        ) as { details: unknown };
+        expect(saved.details).toStrictEqual({
+          calls: [],
+          prettySummaries: [
+            {
+              id: 'parent/1',
+              name: 'bash',
+              value: args.command,
+              status: isError ? 'error' : 'success',
+              error: isError ? 'Exit code 7' : undefined,
+            },
+          ],
+        });
+        emit(
+          'tool_execution_start',
+          {
+            toolCallId: 'parent/2',
+            parentToolCallId: 'parent',
+            toolName: 'bash',
+            args,
+          },
+          ctx
+        );
+        emit(
+          'tool_execution_update',
+          {
+            toolCallId: 'parent/2',
+            parentToolCallId: 'parent',
+            toolName: 'bash',
+            args,
+            partialResult: { content: [], details: undefined },
+          },
+          ctx
+        );
+        expect(redraws).toBe(2);
+      } finally {
+        shutdown(ctx);
+      }
+    }
+  );
+
+  test.each([
+    {
+      scriptError: 'Error: Path not found: /missing',
+      nestedError: 'Path not found: /missing',
+      previewError: 'Path not found: /missing',
+      duplicate: true,
+      withSummary: true,
+    },
+    {
+      scriptError: 'Error: ENOENT: missing file',
+      nestedError: 'File not found',
+      previewError: 'ENOENT: missing file',
+      duplicate: true,
+      withSummary: true,
+    },
+    {
+      scriptError: 'Error: Path not found: /missing',
+      nestedError: 'Path not found: /missing',
+      previewError: 'Path not found: /missing',
+      duplicate: true,
+      withSummary: false,
+    },
+    {
+      scriptError: 'Error: script logic broke',
+      nestedError: 'Path not found: /missing',
+      previewError: 'Path not found: /missing',
+      duplicate: false,
+      withSummary: true,
+    },
+    {
+      scriptError: 'TypeError: Path not found: /missing',
+      nestedError: 'Path not found: /missing',
+      previewError: 'Path not found: /missing',
+      duplicate: false,
+      withSummary: true,
+    },
+  ])(
+    'deduplicates only repeated script errors: $scriptError (summary: $withSummary)',
+    ({ scriptError, nestedError, previewError, duplicate, withSummary }) => {
+      const { shutdown, tools } = setupPrettyExtension();
+      const ctx = createExtensionContext(process.cwd());
+      try {
+        for (const expanded of [false, true]) {
+          const component = tools.get('codemode')?.renderResult?.(
+            {
+              content: [
+                {
+                  type: 'text',
+                  text: 'Script failed\nWall time 0.1 seconds\nOutput:\n',
+                },
+                {
+                  type: 'text',
+                  text: `Script error:\n${scriptError}\n    at script (eval:1)\n\nTool calls made before the failure (they are not undone): grep (error)`,
+                },
+              ],
+              details: {
+                calls: [
+                  {
+                    id: 'parent/1',
+                    name: 'grep',
+                    args: '{"pattern":"needle"}',
+                    status: 'error',
+                    error: previewError,
+                  },
+                ],
+                prettySummaries: withSummary
+                  ? [
+                      {
+                        id: 'parent/1',
+                        name: 'grep',
+                        value: 'needle',
+                        status: 'error',
+                        error: nestedError,
+                      },
+                    ]
+                  : undefined,
+              },
+            },
+            { expanded, isPartial: false },
+            plainTheme,
+            {
+              args: { code: 'text("script should stay hidden");' },
+              toolCallId: 'parent',
+              isPartial: false,
+              isError: true,
+            } as Parameters<NonNullable<ToolRenderers['renderResult']>>[3]
+          );
+          expect(
+            component
+              ?.render(100)
+              .map((line) => stripVTControlCharacters(line).trim())
+          ).toStrictEqual([
+            '✕ Codemode',
+            ...(duplicate ? [] : [scriptError]),
+            '✕ Grep needle',
+            withSummary ? nestedError : previewError,
+          ]);
+        }
+      } finally {
+        shutdown(ctx);
+      }
+    }
+  );
+
+  test('keeps codemode compact while pending and reports script errors', () => {
+    const { emit, shutdown, tools } = setupPrettyExtension();
+    const ctx = createExtensionContext(process.cwd());
+    const tool = tools.get('codemode');
+    type RenderContext = Parameters<
+      NonNullable<ToolRenderers['renderResult']>
+    >[3];
+    const renderContext = {
+      args: {
+        code: '// @options: {"max_output_tokens": 5000}\ntext(await tools.read({path:"package.json"}));',
+      },
+      toolCallId: 'parent',
+      executionStarted: true,
+      isPartial: true,
+      isError: false,
+    } as RenderContext;
+    try {
+      emit(
+        'tool_execution_start',
+        {
+          toolCallId: 'parent/1',
+          parentToolCallId: 'parent',
+          toolName: 'read',
+          args: { path: 'package.json' },
+        },
+        ctx
+      );
+      expect(
+        tool
+          ?.renderCall?.(renderContext.args, plainTheme, renderContext)
+          .render(80)
+      ).toStrictEqual([]);
+      const pending = tool?.renderResult?.(
+        {
+          content: [],
+          details: {
+            calls: [
+              {
+                id: 'parent/?',
+                name: 'read',
+                args: '{"path":"package.json"}',
+                status: 'running',
+              },
+            ],
+          },
+        },
+        { expanded: false, isPartial: true },
+        plainTheme,
+        renderContext
+      );
+      const pendingLines = pending?.render(80).map(stripVTControlCharacters);
+      expect(pendingLines?.[0]).toBe(' ∙ Codemode');
+      expect(pendingLines?.slice(1)).toStrictEqual([' ∙ Read package.json']);
+      expect(pendingLines?.join('\n')).not.toContain('@options');
+      expect(
+        pending
+          ?.render(20)
+          .every((line) => stripVTControlCharacters(line).length <= 20)
+      ).toBe(true);
+      const failed = tool?.renderResult?.(
+        {
+          content: [
+            {
+              type: 'text',
+              text: 'Script failed\nWall time 0.1 seconds\nOutput:\n\nScript error:\nboom',
+            },
+          ],
+          details: undefined,
+        },
+        { expanded: false, isPartial: false },
+        plainTheme,
+        {
+          ...renderContext,
+          toolCallId: 'failed',
+          isPartial: false,
+          isError: true,
+        }
+      );
+      expect(
+        failed?.render(80).map(stripVTControlCharacters).join('\n')
+      ).toContain('✕ Codemode');
+      expect(
+        failed?.render(80).map(stripVTControlCharacters).at(-1)?.trim()
+      ).toBe('boom');
+    } finally {
+      shutdown(ctx);
+    }
+  });
+
+  test('uses execution events rather than placeholders for repeated built-in rows', () => {
+    const { emit, shutdown, tools } = setupPrettyExtension();
+    const ctx = createExtensionContext(process.cwd());
+    let redraws = 0;
+    try {
+      for (const toolCallId of ['parent/1', 'parent/2']) {
+        emit(
+          'tool_execution_start',
+          {
+            toolCallId,
+            parentToolCallId: 'parent',
+            toolName: 'read',
+            args: { path: 'file.ts' },
+          },
+          ctx
+        );
+      }
+      emit(
+        'tool_result',
+        {
+          toolCallId: 'parent/1',
+          parentToolCallId: 'parent',
+          toolName: 'read',
+          input: { path: 'file.ts' },
+          content: [],
+          isError: false,
+        },
+        ctx
+      );
+      const component = tools.get('codemode')?.renderResult?.(
+        {
+          content: [],
+          details: {
+            calls: [
+              {
+                id: 'parent/?',
+                name: 'read',
+                args: '{"path":"file.ts"}',
+                status: 'running',
+              },
+              {
+                id: 'parent/1',
+                name: 'read',
+                args: '{"path":"file.ts"}',
+                status: 'ok',
+              },
+              {
+                id: 'parent/?',
+                name: 'read',
+                args: '{"path":"file.ts"}',
+                status: 'running',
+              },
+              {
+                id: 'parent/?',
+                name: 'grep',
+                args: '{"pattern":"needle"}',
+                status: 'running',
+              },
+              {
+                id: 'parent/custom/1',
+                name: 'custom',
+                args: '{"query":"needle"}',
+                status: 'ok',
+              },
+              {
+                id: 'parent/model/1',
+                name: 'models.classify',
+                args: 'provider/model',
+                status: 'ok',
+                cost: 0.02,
+              },
+            ],
+          },
+        },
+        { expanded: false, isPartial: true },
+        plainTheme,
+        {
+          args: { code: 'await Promise.all(calls);' },
+          toolCallId: 'parent',
+          isPartial: true,
+          isError: false,
+          invalidate() {
+            redraws += 1;
+          },
+        } as Parameters<NonNullable<ToolRenderers['renderResult']>>[3]
+      );
+      expect(
+        component?.render(80).map(stripVTControlCharacters).slice(1)
+      ).toStrictEqual([
+        ' ✓ Read file.ts',
+        ' ∙ Read file.ts',
+        ' ✓ Custom {"query":"needle"}',
+        ' ✓ Models.classify provider/model $0.02',
+      ]);
+      emit(
+        'tool_execution_start',
+        {
+          toolCallId: 'parent/3',
+          parentToolCallId: 'parent',
+          toolName: 'read',
+          args: { path: 'other.ts' },
+        },
+        ctx
+      );
+      emit(
+        'tool_execution_start',
+        {
+          toolCallId: 'parent/4',
+          parentToolCallId: 'parent',
+          toolName: 'grep',
+          args: { pattern: 'needle' },
+        },
+        ctx
+      );
+      expect(redraws).toBe(2);
+      expect(
+        component?.render(80).map(stripVTControlCharacters).slice(1)
+      ).toStrictEqual([
+        ' ✓ Read file.ts',
+        ' ∙ Read file.ts',
+        ' ∙ Read other.ts',
+        ' ∙ Grep needle',
+        ' ✓ Custom {"query":"needle"}',
+        ' ✓ Models.classify provider/model $0.02',
+      ]);
+    } finally {
+      shutdown(ctx);
+    }
+  });
+
+  test('renders nested results like direct calls after resume', () => {
+    const { emit, shutdown, tools } = setupPrettyExtension();
+    const ctx = createExtensionContext(process.cwd());
+    const cases = [
+      {
+        name: 'read',
+        args: { path: 'package.json' },
+        output: 'large file contents'.repeat(10_000),
+      },
+      {
+        name: 'bash',
+        args: { command: 'echo hello' },
+        output: 'hello'.repeat(10_000),
+      },
+      { name: 'find', args: { pattern: '*.ts' }, output: 'a.ts\nb.ts' },
+      { name: 'grep', args: { pattern: 'needle' }, output: 'a.ts:1:needle' },
+      { name: 'ls', args: { path: '.' }, output: 'a.ts' },
+      {
+        name: 'write',
+        args: { path: 'a.ts', content: `${'one'.repeat(10_000)}\ntwo` },
+        output: 'Written',
+      },
+      {
+        name: 'edit',
+        args: {
+          path: 'a.ts',
+          edits: [
+            { oldText: 'old'.repeat(10_000), newText: 'new'.repeat(10_000) },
+          ],
+        },
+        output: 'Edited',
+      },
+      {
+        name: 'read',
+        args: { path: '/missing' },
+        output: 'ENOENT: not found',
+        isError: true,
+      },
+      {
+        name: 'bash',
+        args: { command: 'exit 7' },
+        output: 'Command exited with code 7',
+        isError: true,
+      },
+    ];
+    type RenderContext = Parameters<
+      NonNullable<ToolRenderers['renderResult']>
+    >[3];
+    try {
+      const directComponents: { render(width: number): string[] }[] = [];
+      for (const [index, call] of cases.entries()) {
+        const toolCallId = `parent/${index}`;
+        const result = {
+          content: [{ type: 'text' as const, text: call.output }],
+          details: { unusedPayload: 'unused result details'.repeat(10_000) },
+        };
+        emit(
+          'tool_execution_start',
+          {
+            toolCallId,
+            parentToolCallId: 'parent',
+            toolName: call.name,
+            args: call.args,
+          },
+          ctx
+        );
+        emit(
+          'tool_result',
+          {
+            toolCallId,
+            parentToolCallId: 'parent',
+            toolName: call.name,
+            input: call.args,
+            ...result,
+            isError: call.isError ?? false,
+          },
+          ctx
+        );
+        const component = tools
+          .get(call.name)
+          ?.renderResult?.(
+            result,
+            { expanded: false, isPartial: false },
+            plainTheme,
+            {
+              args: call.args,
+              toolCallId,
+              isPartial: false,
+              isError: call.isError ?? false,
+            } as RenderContext
+          );
+        expect(component).toBeDefined();
+        if (component) {
+          directComponents.push(component);
+        }
+      }
+      const saved = emit(
+        'tool_result',
+        { toolName: 'codemode', toolCallId: 'parent', details: { calls: [] } },
+        ctx
+      ) as { details: unknown };
+      expect(saved.details).toStrictEqual({
+        calls: [],
+        prettySummaries: [
+          {
+            id: 'parent/0',
+            name: 'read',
+            value: 'package.json',
+            status: 'success',
+          },
+          {
+            id: 'parent/1',
+            name: 'bash',
+            value: 'echo hello',
+            status: 'success',
+            error: undefined,
+          },
+          {
+            id: 'parent/2',
+            name: 'find',
+            value: '*.ts',
+            status: 'success',
+            count: 2,
+          },
+          {
+            id: 'parent/3',
+            name: 'grep',
+            value: 'needle',
+            status: 'success',
+            count: 1,
+          },
+          {
+            id: 'parent/4',
+            name: 'ls',
+            value: '.',
+            status: 'success',
+            count: 1,
+          },
+          {
+            id: 'parent/5',
+            name: 'write',
+            value: 'a.ts',
+            status: 'success',
+            diff: { added: 2, removed: 0 },
+          },
+          {
+            id: 'parent/6',
+            name: 'edit',
+            value: 'a.ts',
+            status: 'success',
+            diff: { added: 1, removed: 1 },
+          },
+          {
+            id: 'parent/7',
+            name: 'read',
+            value: '/missing',
+            status: 'error',
+            error: 'File not found',
+          },
+          {
+            id: 'parent/8',
+            name: 'bash',
+            value: 'exit 7',
+            status: 'error',
+            error: 'Exit code 7',
+          },
+        ],
+      });
+      expect(JSON.stringify(saved.details).length).toBeLessThan(2048);
+      shutdown(ctx);
+      const resumed = setupPrettyExtension();
+      try {
+        for (const { expanded, width } of [false, true].flatMap((isExpanded) =>
+          [30, 80, 160].map((renderWidth) => ({
+            expanded: isExpanded,
+            width: renderWidth,
+          }))
+        )) {
+          const component = resumed.tools.get('codemode')?.renderResult?.(
+            {
+              content: [{ type: 'text', text: 'verbose JSON output' }],
+              details: saved.details,
+            },
+            { expanded, isPartial: false },
+            plainTheme,
+            {
+              args: {
+                code: 'text(await tools.read({path:"package.json"}));',
+              },
+              toolCallId: 'parent',
+              isPartial: false,
+              isError: false,
+            } as RenderContext
+          );
+          const lines = component?.render(width).map(stripVTControlCharacters);
+          expect(lines?.[0]).toBe(' ✓ Codemode');
+          expect(lines?.slice(1)).toStrictEqual(
+            directComponents
+              .flatMap((direct) => direct.render(width))
+              .map(stripVTControlCharacters)
+          );
+          expect(lines?.join('\n')).not.toContain('verbose JSON output');
+        }
+      } finally {
+        resumed.shutdown(ctx);
+      }
+    } finally {
+      shutdown(ctx);
+    }
   });
 
   test('shows non-streaming tools while execution is pending', () => {

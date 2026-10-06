@@ -6,14 +6,10 @@
 import os from 'node:os';
 import path from 'node:path';
 import {
-  type BashToolInput,
+  type CodemodeToolDetails,
   type EditToolInput,
   type ExtensionAPI,
   type ExtensionContext,
-  type FindToolInput,
-  type GrepToolInput,
-  type LsToolInput,
-  type ReadToolInput,
   type Theme,
   type ToolRenderers,
   type WriteToolInput,
@@ -461,15 +457,12 @@ function summarizeDiff(theme: Theme, added: number, removed: number): string {
   return parts.length > 0 ? parts.join(' ') : theme.fg('dim', 'no changes');
 }
 
-function summarizeAll(theme: Theme, diffs: DiffStats[]): string {
-  const added = diffs.reduce((total, diff) => total + diff.added, 0);
-  const removed = diffs.reduce((total, diff) => total + diff.removed, 0);
-  return summarizeDiff(theme, added, removed);
-}
-
 export default function pretty(pi: ExtensionAPI) {
-  pi.registerToolRenderer(
-    (toolName, next) => getPrettyToolRenderers(toolName) ?? next()
+  const codemodeRenderers = registerCodemode(pi);
+  pi.registerToolRenderer((toolName, next) =>
+    toolName === 'codemode'
+      ? codemodeRenderers
+      : (getPrettyToolRenderers(toolName) ?? next())
   );
   registerSkillInvocation(pi);
   registerUserPrompt(pi);
@@ -569,119 +562,88 @@ function formatReadError(message: string) {
   return message;
 }
 
-function getReadRenderers(): ToolRenderers {
-  return {
-    renderShell: 'self',
-    renderCall(args, theme, ctx) {
-      return renderPrettyPendingTool({
-        ctx,
-        theme,
-        name: 'Read',
-        value: tildify(getToolInput<ReadToolInput>(args).path),
-      });
-    },
-    renderResult(result, _options, theme, ctx) {
-      const content =
-        result.content[0]?.type === 'text' ? result.content[0].text : '';
-      return renderPrettyCompletedTool({
-        ctx,
-        error: ctx.isError ? formatReadError(content) : undefined,
-        theme,
-        name: 'Read',
-        value: tildify(getToolInput<ReadToolInput>(ctx.args).path),
-      });
-    },
-  };
+interface PrettyToolSummary {
+  name: string;
+  value: string;
+  status: FrameStatus;
+  error?: string;
+  count?: number;
+  diff?: DiffStats;
 }
 
-function getFindRenderers(): ToolRenderers {
-  return {
-    renderShell: 'self',
-    renderCall(args, theme, ctx) {
-      return renderPrettyPendingTool({
-        ctx,
-        theme,
-        name: 'Find',
-        value: getToolInput<FindToolInput>(args).pattern,
-      });
-    },
-    renderResult(result, _options, theme, ctx) {
-      const content =
-        result.content[0]?.type === 'text' ? result.content[0].text : '';
-      const extra =
-        ctx.isPartial || ctx.isError
-          ? undefined
-          : theme.fg('dim', theme.italic(formatItemCount(countLines(content))));
-      return renderPrettyCompletedTool({
-        ctx,
-        error: ctx.isError ? content : undefined,
-        extra,
-        theme,
-        name: 'Find',
-        value: getToolInput<FindToolInput>(ctx.args).pattern,
-      });
-    },
-  };
+interface PrettyNestedCall extends PrettyToolSummary {
+  id: string;
 }
 
-function getGrepRenderers(): ToolRenderers {
-  return {
-    renderShell: 'self',
-    renderCall(args, theme, ctx) {
-      return renderPrettyPendingTool({
-        ctx,
-        theme,
-        name: 'Grep',
-        value: getToolInput<GrepToolInput>(args).pattern,
-      });
-    },
-    renderResult(result, _options, theme, ctx) {
-      const content =
-        result.content[0]?.type === 'text' ? result.content[0].text : '';
-      const extra =
-        ctx.isPartial || ctx.isError
-          ? undefined
-          : theme.fg('dim', theme.italic(formatItemCount(countLines(content))));
-      return renderPrettyCompletedTool({
-        ctx,
-        error: ctx.isError ? content : undefined,
-        extra,
-        theme,
-        name: 'Grep',
-        value: getToolInput<GrepToolInput>(ctx.args).pattern,
-      });
-    },
-  };
+/** Select the main argument shared by direct calls and codemode previews. */
+function getPrettyToolField(
+  name: string
+): 'command' | 'pattern' | 'path' | undefined {
+  switch (name) {
+    case 'bash':
+      return 'command';
+    case 'grep':
+    case 'find':
+      return 'pattern';
+    case 'read':
+    case 'write':
+    case 'edit':
+    case 'ls':
+      return 'path';
+    default:
+      return undefined;
+  }
 }
 
-function getLsRenderers(): ToolRenderers {
-  return {
-    renderShell: 'self',
-    renderCall(args, theme, ctx) {
-      return renderPrettyPendingTool({
-        ctx,
-        theme,
-        name: 'List',
-        value: tildify(getToolInput<LsToolInput>(args).path ?? ''),
-      });
-    },
-    renderResult(result, _options, theme, ctx) {
-      const content =
-        result.content[0]?.type === 'text' ? result.content[0].text : '';
-      const extra =
-        ctx.isPartial || ctx.isError
-          ? undefined
-          : theme.fg('dim', theme.italic(formatItemCount(countLines(content))));
-      return renderPrettyCompletedTool({
-        ctx,
-        error: ctx.isError ? content : undefined,
-        extra,
-        theme,
-        name: 'List',
-        value: tildify(getToolInput<LsToolInput>(ctx.args).path ?? ''),
-      });
-    },
+/** Extract theme-independent display data without retaining tool payloads. */
+function getPrettyToolSummary(
+  name: string,
+  args: unknown,
+  output: string | undefined,
+  ctx: { isPartial?: boolean; isError?: boolean }
+): PrettyToolSummary | undefined {
+  const field = getPrettyToolField(name);
+  if (!field) {
+    return undefined;
+  }
+  const value = getToolInput<Record<string, unknown>>(args)[field];
+  const summary: PrettyToolSummary = {
+    name,
+    value: typeof value === 'string' ? value : '',
+    status: getFrameStatus(ctx),
   };
+  if (output === undefined) {
+    return summary;
+  }
+  if (name === 'bash') {
+    const bash = bashSummary(output, ctx.isPartial ?? false, ctx.isError);
+    summary.status = bash.status;
+    summary.error = bash.text;
+  } else if (ctx.isError) {
+    summary.error = firstLine(
+      name === 'read' ? formatReadError(output) : output
+    ).slice(0, 500);
+  } else if (name === 'edit') {
+    summary.diff = getToolInput<EditToolInput>(args)
+      .edits.map((edit) => getLineDiffStats(edit.oldText, edit.newText))
+      .reduce(
+        (total, diff) => ({
+          added: total.added + diff.added,
+          removed: total.removed + diff.removed,
+        }),
+        { added: 0, removed: 0 }
+      );
+  } else if (!ctx.isPartial) {
+    if (['find', 'grep', 'ls'].includes(name)) {
+      summary.count = countLines(output);
+    } else if (name === 'write') {
+      summary.diff = {
+        added: countLines(getToolInput<WriteToolInput>(args).content),
+        removed: 0,
+      };
+    }
+  }
+  return summary;
 }
 
 function formatBashCommand(command: string) {
@@ -689,113 +651,276 @@ function formatBashCommand(command: string) {
   return highlighted.join(' ↵ ');
 }
 
-function getBashRenderers(): ToolRenderers {
+/** Format the shared heading fields, including preview-only calls. */
+function formatPrettyToolTitle(
+  theme: Theme,
+  toolName: string,
+  value: string
+): string {
+  const name =
+    toolName === 'ls'
+      ? 'List'
+      : toolName.charAt(0).toUpperCase() + toolName.slice(1);
+  const field = getPrettyToolField(toolName);
+  return toolTitle(
+    theme,
+    name,
+    field === 'command'
+      ? formatBashCommand(value)
+      : field === 'path'
+        ? tildify(value)
+        : value
+  );
+}
+
+/** Apply the active theme to the same compact data for direct and nested rows. */
+function formatPrettyToolSummary(
+  theme: Theme,
+  summary: PrettyToolSummary
+): WidthAwareTextFormatter {
+  const extra =
+    summary.count === undefined
+      ? summary.diff
+        ? summary.name === 'write'
+          ? theme.fg('success', `+${summary.diff.added}`)
+          : summarizeDiff(theme, summary.diff.added, summary.diff.removed)
+        : undefined
+      : theme.fg('dim', theme.italic(formatItemCount(summary.count)));
+  return basicToolHeading(
+    theme,
+    formatPrettyToolTitle(theme, summary.name, summary.value),
+    summary.status,
+    extra,
+    summary.error
+  );
+}
+
+function getPrettyToolRenderers(toolName: string): ToolRenderers | undefined {
+  if (!getPrettyToolField(toolName)) {
+    return undefined;
+  }
+  return {
+    renderShell: 'self',
+    renderCall(args, theme, ctx) {
+      const text = getTextComponent(ctx);
+      const summary = getPrettyToolSummary(toolName, args, undefined, {
+        isPartial: true,
+      });
+      text.setText(
+        toolName !== 'bash' && ctx.executionStarted && ctx.isPartial && summary
+          ? formatPrettyToolSummary(theme, summary)
+          : () => ''
+      );
+      return text;
+    },
+    renderResult(result, _options, theme, ctx) {
+      const output =
+        result.content[0]?.type === 'text' ? result.content[0].text : '';
+      const summary = getPrettyToolSummary(toolName, ctx.args, output, ctx);
+      const text = getTextComponent(ctx);
+      text.setText(
+        summary ? formatPrettyToolSummary(theme, summary) : () => ''
+      );
+      return text;
+    },
+  };
+}
+
+/** Format a nested call preview, including JSON cut off inside its main field. */
+function formatNestedToolTitle(
+  theme: Theme,
+  name: string,
+  args: string
+): string {
+  const field = getPrettyToolField(name);
+  if (!field) {
+    return formatPrettyToolTitle(theme, name, args);
+  }
+
+  // Codemode cuts argument previews at 200 characters, so parsing the whole JSON
+  // fails for long commands. Match the string field without requiring its closing quote.
+  const match = args.match(
+    new RegExp(String.raw`"${field}"\s*:\s*"((?:\\.|[^"\\])*)`)
+  );
+  let value = '';
+  if (match) {
+    try {
+      value = JSON.parse(`"${match[1]}"`) as string;
+    } catch {
+      // A preview can end in the middle of a Unicode escape.
+      value = match[1];
+    }
+  }
+  return formatPrettyToolTitle(theme, name, value);
+}
+
+/** Keep only nested display summaries so compact rows survive session resume. */
+function registerCodemode(pi: ExtensionAPI): ToolRenderers {
+  const calls = new Map<string, PrettyNestedCall[]>();
+  const streamingCalls = new WeakSet<PrettyNestedCall>();
+  const invalidateParents = new Map<string, () => void>();
+  pi.on('tool_execution_update', (event) => {
+    if (!event.parentToolCallId || event.toolName !== 'bash') {
+      return;
+    }
+    const call = calls
+      .get(event.parentToolCallId)
+      ?.find((nested) => nested.id === event.toolCallId);
+    if (call) {
+      streamingCalls.add(call);
+      invalidateParents.get(event.parentToolCallId)?.();
+    }
+  });
+  pi.on('tool_execution_start', (event) => {
+    if (!event.parentToolCallId) {
+      return;
+    }
+    const summary = getPrettyToolSummary(
+      event.toolName,
+      event.args,
+      undefined,
+      { isPartial: true }
+    );
+    if (!summary) {
+      return;
+    }
+    const nested = calls.get(event.parentToolCallId) ?? [];
+    nested.push({ id: event.toolCallId, ...summary });
+    calls.set(event.parentToolCallId, nested);
+    invalidateParents.get(event.parentToolCallId)?.();
+  });
+  pi.on('tool_result', (event) => {
+    if (event.parentToolCallId) {
+      const call = calls
+        .get(event.parentToolCallId)
+        ?.find((nested) => nested.id === event.toolCallId);
+      if (call) {
+        const output =
+          event.content[0]?.type === 'text' ? event.content[0].text : '';
+        const summary = getPrettyToolSummary(
+          event.toolName,
+          event.input,
+          output,
+          { isError: event.isError }
+        );
+        if (summary) {
+          Object.assign(call, summary);
+        }
+      }
+    } else {
+      const prettyCalls = calls.get(event.toolCallId);
+      calls.delete(event.toolCallId);
+      invalidateParents.delete(event.toolCallId);
+      if (event.toolName === 'codemode' && prettyCalls) {
+        return {
+          details: {
+            ...(isRecord(event.details) ? event.details : {}),
+            prettySummaries: prettyCalls,
+          },
+        };
+      }
+    }
+  });
+  pi.on('session_start', () => {
+    calls.clear();
+    invalidateParents.clear();
+  });
+  pi.on('session_shutdown', () => {
+    calls.clear();
+    invalidateParents.clear();
+  });
+
   return {
     renderShell: 'self',
     renderCall() {
       return new Text('', 0, 0);
     },
     renderResult(result, _options, theme, ctx) {
-      const content =
-        result.content[0]?.type === 'text' ? result.content[0].text : '';
-      const summary = bashSummary(content, ctx.isPartial, ctx.isError);
-      return renderPrettyCompletedTool({
-        ctx,
-        error: summary.text,
-        theme,
-        name: 'Bash',
-        status: summary.status,
-        value: formatBashCommand(getToolInput<BashToolInput>(ctx.args).command),
-      });
-    },
-  };
-}
-
-function getWriteRenderers(): ToolRenderers {
-  return {
-    renderShell: 'self',
-    renderCall(args, theme, ctx) {
-      return renderPrettyPendingTool({
-        ctx,
-        theme,
-        name: 'Write',
-        value: tildify(getToolInput<WriteToolInput>(args).path),
-      });
-    },
-    renderResult(result, _options, theme, ctx) {
-      const output =
-        result.content[0]?.type === 'text' ? result.content[0].text : '';
-      return renderPrettyCompletedTool({
-        ctx,
-        error: ctx.isError ? output : undefined,
-        extra:
-          ctx.isPartial || ctx.isError
-            ? undefined
-            : theme.fg(
-                'success',
-                `+${countLines(getToolInput<WriteToolInput>(ctx.args).content)}`
-              ),
-        theme,
-        name: 'Write',
-        value: tildify(getToolInput<WriteToolInput>(ctx.args).path),
-      });
-    },
-  };
-}
-
-function getEditRenderers(): ToolRenderers {
-  return {
-    renderShell: 'self',
-    renderCall(args, theme, ctx) {
-      return renderPrettyPendingTool({
-        ctx,
-        theme,
-        name: 'Edit',
-        value: tildify(getToolInput<EditToolInput>(args).path),
-      });
-    },
-    renderResult(result, _options, theme, ctx) {
-      const error =
-        result.content[0]?.type === 'text' ? result.content[0].text : undefined;
-      const extra = ctx.isError
-        ? undefined
-        : summarizeAll(
-            theme,
-            getToolInput<EditToolInput>(ctx.args).edits.map((edit) =>
-              getLineDiffStats(edit.oldText, edit.newText)
-            )
+      if (ctx.isPartial) {
+        invalidateParents.set(ctx.toolCallId, ctx.invalidate);
+        if (!calls.has(ctx.toolCallId)) {
+          calls.set(ctx.toolCallId, []);
+        }
+      }
+      const details = result.details as
+        | (CodemodeToolDetails & { prettySummaries?: PrettyNestedCall[] })
+        | undefined;
+      const text = getTextComponent(ctx);
+      const error = result.content
+        .filter((item) => item.type === 'text')
+        .map((item) => item.text)
+        .join('\n');
+      const scriptError = ctx.isError
+        ? firstLine(error.split('Script error:').at(-1)?.trim() ?? '')
+        : undefined;
+      text.setText((width) => {
+        const nested = details?.prettySummaries ?? calls.get(ctx.toolCallId);
+        // An unhandled nested rejection adds "Error:" to the same message.
+        const duplicateError =
+          scriptError &&
+          [
+            ...(nested ?? []).filter((call) => call.status === 'error'),
+            ...(details?.calls ?? []).filter(
+              (call) => call.status === 'error' || call.status === 'cancelled'
+            ),
+          ].some(
+            (call) =>
+              call.error &&
+              firstLine(call.error.trim()).replace(/^Error:\s*/, '') ===
+                scriptError.replace(/^Error:\s*/, '')
           );
-      return renderPrettyCompletedTool({
-        ctx,
-        error: ctx.isError ? error : undefined,
-        extra,
-        theme,
-        name: 'Edit',
-        value: tildify(getToolInput<EditToolInput>(ctx.args).path),
+        const heading = basicToolHeading(
+          theme,
+          theme.fg('toolTitle', theme.bold('Codemode')),
+          getFrameStatus(ctx),
+          undefined,
+          duplicateError ? undefined : scriptError
+        );
+        const rows = (nested ?? []).map((call) => {
+          if (
+            call.name === 'bash' &&
+            call.status === 'pending' &&
+            ctx.isPartial &&
+            !streamingCalls.has(call)
+          ) {
+            return '';
+          }
+          const aborted = call.status === 'pending' && !ctx.isPartial;
+          return formatPrettyToolSummary(
+            theme,
+            aborted
+              ? {
+                  ...call,
+                  status: 'error',
+                  error: call.name === 'bash' ? 'Aborted' : 'Command aborted',
+                }
+              : call
+          )(width);
+        });
+        // Captured events own built-in rows; previews cover other tools and older logs.
+        for (const call of details?.calls ?? []) {
+          if (nested && getPrettyToolField(call.name)) {
+            continue;
+          }
+          rows.push(
+            basicToolHeading(
+              theme,
+              formatNestedToolTitle(theme, call.name, call.args),
+              call.status === 'running'
+                ? 'pending'
+                : call.status === 'ok'
+                  ? 'success'
+                  : 'error',
+              call.cost ? `$${call.cost.toFixed(2)}` : undefined,
+              call.error
+            )(width)
+          );
+        }
+        return [heading(width), ...rows].filter(Boolean).join('\n');
       });
+      return text;
     },
   };
-}
-
-function getPrettyToolRenderers(toolName: string): ToolRenderers | undefined {
-  switch (toolName) {
-    case 'bash':
-      return getBashRenderers();
-    case 'edit':
-      return getEditRenderers();
-    case 'find':
-      return getFindRenderers();
-    case 'grep':
-      return getGrepRenderers();
-    case 'ls':
-      return getLsRenderers();
-    case 'read':
-      return getReadRenderers();
-    case 'write':
-      return getWriteRenderers();
-    default:
-      return undefined;
-  }
 }
 
 function bashSummary(
