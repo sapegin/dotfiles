@@ -43,7 +43,11 @@ Session transcripts may contain credentials, personal information, or proprietar
    - command working directories, arguments, timeouts, retries, parallel calls, and avoidable shell pipelines;
    - whether the agent delayed validation, ran destructive fix modes unnecessarily, skipped applicable checks, or repeated expensive commands without evidence;
    - whether tool failures received a useful recovery attempt instead of guessing or silently changing approach;
+   - navigation friction, hidden file relationships, missing logs, and unavailable read-only information that materially delayed or weakened the work;
+   - whether a demonstrated mistake is mechanically detectable; prefer an existing or new automated check over an agent instruction when practical;
    - skill routing descriptions, explicit triggers, progressive disclosure, deterministic helper scripts, error handling, stale commands, and needless overlap between skills;
+   - duplicated, contradictory, stale, or behaviorally inert instructions;
+   - whether judgment-heavy standards belong in [review](../review/SKILL.md) or [deslop](../deslop/SKILL.md) skills rather than in implementation context;
    - recurring user prompts that require the same specialized context, multi-step workflow, or reference material and could be made faster or more reliable by a new skill;
    - user corrections, repeated friction, unsupported success claims, and avoidable tool calls.
 
@@ -51,12 +55,16 @@ Session transcripts may contain credentials, personal information, or proprietar
    - Distinguish a model mistake from missing or misleading instructions, a broken helper, an unsuitable skill description, and a project configuration problem.
    - Prefer evidence recurring across two sessions. A single session may justify a finding only when it contains explicit user correction, a concrete failure, a security issue, or a costly mistake.
    - Do not infer failure merely because a command is absent; establish that the task required it.
+   - Do not recommend a new instruction when a deterministic check can reliably prevent the observed failure.
    - Credit behavior that already works. Do not recommend instructions for a problem the current setup already addresses.
 
 5. Place each proposed change at the narrowest durable scope:
    - global base prompt: cross-project behavior;
    - project `AGENTS.md`: repository-specific commands and conventions;
    - skill: specialized routing or workflow;
+   - automated guardrail: mechanically detectable violations;
+   - documentation or navigation pointer: stable information that was difficult to discover;
+   - read-only information integration: logs or service state repeatedly needed for diagnosis;
    - deterministic helper: repeatable parsing or command orchestration;
    - Pi settings or extension: behavior that prompts cannot reliably enforce.
 
