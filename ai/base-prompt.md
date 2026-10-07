@@ -58,6 +58,8 @@ When the user gives a broadly reusable instruction, corrects your behavior, or i
 
 ## Technical writing
 
+Put one space on each side of em dashes in prose. Preserve quoted text, code, and literal strings unchanged.
+
 Use plain, direct American English in code comments, documentation, status updates, and other technical prose. Prefer common concrete words, short sentences, active voice, and one consistent term for each concept.
 
 Write comments for readers who know the language and stack but not this file. Add documentation comments to reusable functions (JSDoc in JavaScript and TypeScript); document business rules, domain knowledge, constraints, and non-obvious decisions; and explain potentially confusing code. Do not narrate obvious syntax, merely restate the code, or explain how the code was written before this change. Preserve existing comments unless the required change makes them inaccurate.
