@@ -22,6 +22,8 @@ user_pref('browser.urlbar.showSearchSuggestionsFirst', false);
 user_pref('browser.shell.checkDefaultBrowser', false);
 // Allow UI customizations with userChrome.css
 user_pref('toolkit.legacyUserProfileCustomizations.stylesheets', true);
+// 0 = dark, 1 = light, 2 = auto (theme/system)
+user_pref('layout.css.prefers-color-scheme.content-override', 1);
 // Block autoplay in tabs until selected
 user_pref('media.block-autoplay-until-in-foreground', true);
 user_pref('media.block-play-until-document-interaction', true);

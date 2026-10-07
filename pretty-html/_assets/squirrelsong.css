@@ -33,6 +33,12 @@
   --text-background: #fdfdfe;
   --ui-background: #f7f6f9;
   --secondary-ui-background: #e8e5eb;
+  --titlebar-background: #e8e5eb;
+  --tab-inactive-foreground: #78737d;
+  --tab-active-foreground: #4c4b4e;
+  --tab-inactive-hover-background: #dbd7e0;
+  --tab-active-background: #f7f6f9;
+  --tab-border: #c9c4cf;
   --active-background: #dbd7e0;
   --hover-background: #e8e5eb;
   --line-highlight-background: #f7f6f9;
@@ -136,6 +142,12 @@
   --text-background: #271e38;
   --ui-background: #36294d;
   --secondary-ui-background: #453461;
+  --titlebar-background: #453461;
+  --tab-inactive-foreground: #9a7eb4;
+  --tab-active-foreground: #bea3d9;
+  --tab-inactive-hover-background: #503f6e;
+  --tab-active-background: #36294d;
+  --tab-border: #644e88;
   --active-background: #503f6e;
   --hover-background: #453461;
   --line-highlight-background: #36294d;

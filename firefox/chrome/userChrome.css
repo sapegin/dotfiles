@@ -9,6 +9,7 @@
   --gray100: #8c8792;
   --gray110: #9c96a2;
   --gray180: #fdfdfe;
+  --gray170: #f7f6f9;
   --gray140: #c9c4cf;
   --gray150: #dbd7e0;
   --gray160: #e8e5eb;
@@ -28,6 +29,13 @@
   --secondaryButtonBackground: var(--gray160);
   --secondaryButtonHoverBackground: var(--gray150);
   --hoverBackground: var(--gray160);
+  --titlebarBackground: var(--gray160);
+  --tabInactiveForeground: var(--gray090);
+  --tabActiveForeground: var(--gray060);
+  --tabInactiveHoverBackground: var(--gray150);
+  --tabActiveBackground: var(--gray170);
+  --tabBorder: var(--gray140);
+  --border: var(--gray140);
   --focusBorder: var(--gray090);
   --accent: var(--gray060);
 
@@ -76,6 +84,33 @@
   --button-background-color-active: var(
     --secondaryButtonHoverBackground
   ) !important;
+  --button-border-color: var(--border) !important;
+  --button-border-color-hover: var(--border) !important;
+  --button-border-color-active: var(--border) !important;
+
+  /* Toolbar icon buttons */
+  --toolbarbutton-background-color: transparent !important;
+  --toolbarbutton-outline: none !important;
+  --toolbarbutton-outline-color: transparent !important;
+  --toolbarbutton-outline-color-hover: transparent !important;
+  --toolbarbutton-outline-color-active: transparent !important;
+  --toolbarbutton-outline-color-selected: transparent !important;
+  --toolbarbutton-background-color-hover: var(--hoverBackground) !important;
+  --toolbarbutton-background-color-active: var(
+    --secondaryButtonHoverBackground
+  ) !important;
+  --button-background-color-toolbar: transparent !important;
+  --button-border-color-toolbar: transparent !important;
+  --button-background-color-toolbar-hover: var(--hoverBackground) !important;
+  --button-background-color-toolbar-active: var(
+    --secondaryButtonHoverBackground
+  ) !important;
+  --button-background-color-ghost: transparent !important;
+  --button-border-color-ghost: transparent !important;
+  --button-background-color-ghost-hover: var(--hoverBackground) !important;
+  --button-background-color-ghost-active: var(
+    --secondaryButtonHoverBackground
+  ) !important;
 
   /* Focus outlines */
   --focus-outline-color: var(--focusBorder) !important;
@@ -94,13 +129,115 @@
   --attention-dot-color: var(--accent) !important;
 
   /* Sane border radii */
+  --border-radius-xsmall: 4px !important;
+  --border-radius-small: 4px !important;
   --border-radius-medium: 4px !important;
   --border-radius-large: 8px !important;
+  --border-radius-xlarge: 12px !important;
+  --border-radius-xxlarge: 12px !important;
+
+  --tab-border-radius: 4px !important;
+  --toolbarbutton-border-radius: 4px !important;
+  --button-border-radius: 4px !important;
+  --panel-border-radius: 12px !important;
+  --panel-menuitem-border-radius: 4px !important;
+  --arrowpanel-border-radius: 12px !important;
+  --arrowpanel-menuitem-border-radius: 4px !important;
+  --urlbarView-row-border-radius: 4px !important;
+  --input-border-radius: var(--tab-border-radius) !important;
+  --input-search-border-radius: var(--tab-border-radius) !important;
+  --input-background-color: var(--gray180) !important;
+  --input-text-color: var(--textForeground) !important;
+  --input-border-color: var(--border) !important;
 
   /* Tabs */
-  --tab-selected-outline-color: transparent !important;
-  --tab-selected-shadow:
-    0 0 0 0.5px var(--gray140), 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+  --tab-box-shadow-selected:
+    0 0 0 0.5px var(--tabBorder), 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+  --tab-strip-end-gap: 8px;
+}
+
+/* Don't render the rightmost tab dangerously close to the window border */
+#TabsToolbar
+  #tabbrowser-tabs[orient='horizontal']
+  > #tabbrowser-arrowscrollbox {
+  padding-inline-end: var(--tab-strip-end-gap) !important;
+}
+#TabsToolbar #tabbrowser-tabs[orient='horizontal'] .tabbrowser-tab:last-child {
+  margin-inline-end: var(--tab-strip-end-gap) !important;
+}
+:root[tabsintitlebar] #TabsToolbar {
+  padding-inline-end: var(--tab-strip-end-gap) !important;
+}
+
+/* Title bar (tabs + traffic lights) */
+#TabsToolbar,
+.titlebar-background {
+  background-color: var(--titlebarBackground) !important;
+}
+
+/* Match tab radius on omnibar, toolbar controls, and in-page UI widgets */
+:is(#urlbar-background, .urlbar-background),
+#urlbar .urlbar-input-container,
+#searchbar .searchbar-textbox,
+#urlbar-searchmode-switcher,
+.urlbar-page-action,
+#identity-box,
+#tracking-protection-icon-container,
+.textbox-input,
+input:not([type='image']),
+textarea {
+  border-radius: var(--tab-border-radius) !important;
+}
+
+/* Vertical tab strip + launcher */
+#sidebar-container {
+  --border-radius-large: var(--tab-border-radius) !important;
+}
+
+#sidebar-container sidebar-main {
+  --button-border-radius: var(--tab-border-radius) !important;
+}
+
+#tabbrowser-tabs[orient='vertical'] .tab-group-label-hover-highlight {
+  border-radius: var(--tab-border-radius) !important;
+  border-end-start-radius: var(--tab-border-radius) !important;
+}
+
+#tabbrowser-tabs[orient='vertical'] tab-split-view-wrapper {
+  border-radius: var(--tab-border-radius) !important;
+}
+
+menulist,
+select {
+  border-radius: var(--tab-border-radius) !important;
+}
+
+.tab-background {
+  border-radius: var(--tab-border-radius) !important;
+}
+
+.tabbrowser-tab:not([pinned]):hover
+  > .tab-stack
+  > .tab-background:not([selected], [multiselected]) {
+  background-color: var(--tabInactiveHoverBackground) !important;
+  background-image: none !important;
+}
+
+/* Nova selected-tab gradient border uses layered backgrounds; replace with shadow */
+.tab-background:is([selected], [multiselected]) {
+  background: var(--tabActiveBackground) !important;
+  background-clip: border-box !important;
+  box-shadow: var(--tab-box-shadow-selected) !important;
+  outline: none !important;
+  border-color: transparent !important;
+}
+
+.tabbrowser-tab:not([selected]):not([multiselected]) .tab-label {
+  color: var(--tabInactiveForeground) !important;
+}
+
+.tabbrowser-tab:is([selected], [multiselected]) .tab-label {
+  color: var(--tabActiveForeground) !important;
 }
 
 /* Hide the very annoying "title changed" dot on pinned tabs */
@@ -110,36 +247,88 @@
 
 /* Make the playing icon less obtrusive on pinned tabs */
 .tab-icon-overlay {
-  #tabbrowser-tabs[orient='vertical']:not([expanded]) &:not([crashed]),
-  &[pinned]:not([crashed]) {
-    &:is([soundplaying], [muted], [activemedia-blocked]) {
-      height: 12px !important;
-      width: 12px !important;
-      opacity: 0.4 !important;
-      inset-inline-end: -13px !important;
-      top: -9px !important;
-      background-color: var(--tab-icon-overlay-fill) !important;
-      fill: var(--tab-icon-overlay-stroke) !important;
-    }
+  #tabbrowser-tabs[orient='horizontal']
+    &[pinned]:not([crashed]):is([soundplaying], [muted], [activemedia-blocked]),
+  #tabbrowser-tabs[orient='vertical']:not([expanded])
+    &:not([crashed]):is([soundplaying], [muted], [activemedia-blocked]) {
+    display: revert !important;
+    padding: 0 !important;
+    top: -6px !important;
+    inset-inline-end: -8px !important;
+    box-shadow: none !important;
+    outline: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    opacity: 1 !important;
+    -moz-context-properties: fill, stroke !important;
+    fill: var(--gray090) !important;
+    color: var(--gray090) !important;
+  }
+
+  #tabbrowser-tabs[orient='horizontal']
+    &[pinned]:not([crashed]):is(
+      [soundplaying],
+      [muted],
+      [activemedia-blocked]
+    ) {
+    width: 10px !important;
+    height: 10px !important;
+    transform: translateX(5px) translateY(-1px) scale(0.85) !important;
+    transform-origin: center !important;
+  }
+
+  #tabbrowser-tabs[orient='horizontal']
+    &[pinned]:not([crashed]):is(
+      [soundplaying],
+      [muted],
+      [activemedia-blocked]
+    ):is(:hover, :hover:active),
+  #tabbrowser-tabs[orient='vertical']:not([expanded])
+    &:not([crashed]):is([soundplaying], [muted], [activemedia-blocked]):is(
+      :hover,
+      :hover:active
+    ) {
+    background-color: transparent !important;
+    background-image: none !important;
+    outline: none !important;
+    border: none !important;
+    box-shadow: none !important;
   }
 }
 
-/* Always show tab close button on hover and never otherwise */
-.tabbrowser-tab .tab-close-button {
-  opacity: 0;
+/* Tabs: close on tab hover only; hover fill on tab and close */
+.tabbrowser-tab:not([pinned]) .tab-close-button {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  --close-button-extra-background: transparent !important;
   transition:
     opacity 0.15s ease-in,
-    color 0.15s ease-in;
+    visibility 0.15s ease-in,
+    color 0.15s ease-in,
+    background-color 0.15s ease-in;
 }
-.tabbrowser-tab .tab-close-button.close-icon {
+
+.tabbrowser-tab:not([pinned]):hover .tab-close-button {
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: revert !important;
+}
+
+.tabbrowser-tab:not([pinned]) .tab-close-button.close-icon {
   color: var(--gray100) !important;
 }
-.tabbrowser-tab:not([pinned]):hover .tab-close-button {
-  opacity: 1;
-}
-.tabbrowser-tab:not([pinned]) .tab-close-button.close-icon:hover {
+
+.tabbrowser-tab:not([pinned])
+  .tab-close-button.close-icon:is(:hover, :hover:active) {
   color: var(--gray060) !important;
-  background-color: var(--gray150) !important;
+  background-color: var(--tabInactiveHoverBackground) !important;
+  background-image: none !important;
+  --close-button-extra-background: var(--tabInactiveHoverBackground) !important;
 }
 
 /* Make the protection icon in the address bar grayscale */
