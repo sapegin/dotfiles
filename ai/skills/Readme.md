@@ -8,6 +8,7 @@ AI agent skills. Invoke with `/<name>`.
 | [browser](browser/SKILL.md) | Interact with web pages using agent-browser |
 | [deslop](deslop/SKILL.md) | Review a diff for local code quality, AI-generated slop, and polish in application code, configuration, documentation, and agent artifacts |
 | [dependabot](dependabot/SKILL.md) | Read, triage, and fix GitHub Dependabot alerts using the gh CLI |
+| [deps-upgrade](deps-upgrade/SKILL.md) | Upgrade npm or pnpm dependencies |
 | [fix-pr-ci](fix-pr-ci/SKILL.md) | Analyze and fix CI failures for current pull request |
 | [form-assistant](form-assistant/SKILL.md) | Assist with large online forms in a visible browser |
 | [github](github/SKILL.md) | Work with GitHub repositories, source code, pull requests, issues, releases, Actions, and API data using the gh CLI |

@@ -4,8 +4,6 @@ description: Read, summarize, triage, and fix GitHub Dependabot alerts.
 disable-model-invocation: true
 ---
 
-# Dependabot
-
 Read [the GitHub skill](../github/SKILL.md) before using GitHub.
 
 ## Read alerts
