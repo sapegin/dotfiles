@@ -24,10 +24,12 @@
   --buttonForeground: var(--gray180);
   --buttonBackground: var(--gray100);
   --buttonHoverBackground: var(--gray090);
+  --buttonBorder: var(--gray150);
   --buttonDisabledBackground: var(--gray150);
   --secondaryButtonForeground: var(--gray080);
   --secondaryButtonBackground: var(--gray160);
   --secondaryButtonHoverBackground: var(--gray150);
+  --secondaryButtonBorder: var(--gray140);
   --hoverBackground: var(--gray160);
   --titlebarBackground: var(--gray160);
   --tabInactiveForeground: var(--gray090);
@@ -84,9 +86,9 @@
   --button-background-color-active: var(
     --secondaryButtonHoverBackground
   ) !important;
-  --button-border-color: var(--border) !important;
-  --button-border-color-hover: var(--border) !important;
-  --button-border-color-active: var(--border) !important;
+  --button-border-color: var(--secondaryButtonBorder) !important;
+  --button-border-color-hover: var(--secondaryButtonBorder) !important;
+  --button-border-color-active: var(--secondaryButtonBorder) !important;
 
   /* Toolbar icon buttons */
   --toolbarbutton-background-color: transparent !important;
