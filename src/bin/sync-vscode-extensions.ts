@@ -13,7 +13,7 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { parseArgs, type ParsedArgs } from '../util/args.ts';
-import { dirs, untildify } from '../util/files.ts';
+import { dirs, doesPathExist, untildify } from '../util/files.ts';
 import { pullIfClean } from '../util/git.ts';
 import { log, run } from '../util/tui.ts';
 
@@ -58,15 +58,6 @@ interface ExtensionPackageJson {
   version: string;
   publisher: string;
   main?: string;
-}
-
-async function doesPathExist(fullPath: string): Promise<boolean> {
-  try {
-    await fs.access(fullPath);
-    return true;
-  } catch {
-    return false;
-  }
 }
 
 async function readJson<T>(filePath: string): Promise<T> {

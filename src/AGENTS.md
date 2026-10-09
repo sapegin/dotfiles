@@ -26,6 +26,8 @@ Add CLI flags only when the user asks for them or a real use case in this repo n
 
 Use `{ name: 'args', rest: true }` to collect remaining positional arguments after any fixed positionals. `rest` implies `positional`; the value is always a `string[]`, empty when no arguments match.
 
-`run()` no-ops on import when `entry` is set, so tests can import `./bin/foo.ts` safely. It also turns spawn `ENOENT` errors into `{command} is not installed` before exiting. Test exported functions with typed options; use subprocess for end-to-end CLI checks (see `./bin/git-standup.test.ts`).
+`run()` no-ops on import when `entry` is set, so tests can import `./bin/foo.ts` safely. Expected failures exit without a stack trace: throw `UserError` from `./util/tui.ts` for bad args, missing paths, and similar checks, or let spawn `ENOENT` propagate (`run()` prints `{command} is not installed`). Do not use `log.error` + `process.exit` for those. Any other error is treated as a bug and prints a stack trace. Test exported functions with typed options; use subprocess for end-to-end CLI checks (see `./bin/git-standup.test.ts`).
 
 For expected subprocess failures, forward stderr unchanged; add context only when stderr is not actionable. Let unexpected errors propagate.
+
+Reuse helpers from `./util/` instead of copying them into `./bin/`. For example, use `doesPathExist()` from `./util/files.ts` — do not add a local copy in a script.

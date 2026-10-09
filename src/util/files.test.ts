@@ -1,9 +1,11 @@
+import fsSync from 'node:fs';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import {
   confirmOverwriteFile,
+  doesPathExist,
   exts,
   expandPath,
   getCommonFolder,
@@ -36,6 +38,16 @@ describe(getStem, () => {
   test('returns basename without extension', () => {
     expect(getStem('/Inbox/scan.pdf')).toBe('scan');
     expect(getStem('Contract 2024.pdf')).toBe('Contract 2024');
+  });
+});
+
+describe(doesPathExist, () => {
+  test('returns true for an existing path and false for a missing one', async () => {
+    const existing = path.join(os.tmpdir(), `does-path-exist-${process.pid}`);
+    await fs.writeFile(existing, '');
+    await expect(doesPathExist(existing)).resolves.toBe(true);
+    await expect(doesPathExist(`${existing}-missing`)).resolves.toBe(false);
+    await fs.unlink(existing);
   });
 });
 

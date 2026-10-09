@@ -1,7 +1,15 @@
 import { expect, test } from 'vitest';
-import { isMissingBinary, missingBinaryMessage } from './tui.ts';
+import { getMissingBinaryMessage, UserError } from './tui.ts';
 
-test('isMissingBinary matches spawn ENOENT only', () => {
+test('userError is an Error with a stable name', () => {
+  const error = new UserError('Unknown app: foo');
+  expect(error).toBeInstanceOf(Error);
+  expect(error).toBeInstanceOf(UserError);
+  expect(error.name).toBe('UserError');
+  expect(error.message).toBe('Unknown app: foo');
+});
+
+test('getMissingBinaryMessage matches spawn ENOENT only', () => {
   const spawnError = {
     code: 'ENOENT',
     syscall:
@@ -9,20 +17,22 @@ test('isMissingBinary matches spawn ENOENT only', () => {
     path: '/Applications/translateLocally.app/Contents/MacOS/translateLocally',
   } as NodeJS.ErrnoException;
 
-  expect(isMissingBinary(spawnError)).toBe(true);
+  expect(getMissingBinaryMessage(spawnError)).toBe(
+    'translateLocally is not installed'
+  );
 
   expect(
-    isMissingBinary({
+    getMissingBinaryMessage({
       code: 'ENOENT',
       syscall: 'open',
       path: '/Users/me/config.json',
     } as NodeJS.ErrnoException)
-  ).toBe(false);
+  ).toBeUndefined();
 });
 
-test('missingBinaryMessage uses the executable basename', () => {
+test('getMissingBinaryMessage uses the executable basename from syscall', () => {
   expect(
-    missingBinaryMessage({
+    getMissingBinaryMessage({
       code: 'ENOENT',
       syscall: 'spawnSync gh ENOENT',
       path: '/opt/homebrew/bin/gh',

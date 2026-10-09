@@ -12,7 +12,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { parseArgs, type ParsedArgs } from '../util/args.ts';
-import { atomicCopy, dirs } from '../util/files.ts';
+import { atomicCopy, dirs, doesPathExist } from '../util/files.ts';
 import { log, run } from '../util/tui.ts';
 
 const OPTIONS = [] as const;
@@ -47,15 +47,6 @@ interface InstalledPlugin {
 interface InstallManifest {
   updated: string;
   plugins: InstalledPlugin[];
-}
-
-async function doesPathExist(fullPath: string): Promise<boolean> {
-  try {
-    await fs.access(fullPath);
-    return true;
-  } catch {
-    return false;
-  }
 }
 
 async function readJson<T>(filePath: string): Promise<T> {

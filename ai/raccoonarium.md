@@ -26,6 +26,7 @@ When a task spans repos, edit each repo in place; run the matching dotfiles sync
 | `oxlint-config-raccoon` | Publish npm package; bump `package.json` in dotfiles and other consumers |
 | `raccoon-obsidian` plugin | Plugin source in monorepo; run `sync-obsidian-plugins` from dotfiles; manifest at `obsidian/installed-plugins.json` |
 | `raccoon-vscode` extension | Extension source in monorepo; run `sync-vscode-extensions` from dotfiles |
+| `raccoon-toolbox` Mac app | App source in repo; run `app-install raccoon-toolbox` from dotfiles |
 | `squirrelsong` theme | Theme source in repo; may affect VS Code extension packaging via the same sync script |
 | New CLI need | Add to `tilde/Brewfile` first; wire into a dotfiles script second |
 

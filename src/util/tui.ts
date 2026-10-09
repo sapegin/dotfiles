@@ -62,6 +62,18 @@ function isCliEntryPoint(moduleUrl: string): boolean {
   return moduleUrl === pathToFileURL(process.argv[1]).href;
 }
 
+/**
+ * Expected CLI failure the script throws explicitly (bad args, missing paths).
+ * `run()` also treats spawn `ENOENT` as expected; everything else is a bug and
+ * gets a stack trace.
+ */
+export class UserError extends Error {
+  public constructor(message: string) {
+    super(message);
+    this.name = 'UserError';
+  }
+}
+
 function getErrorStack(error: unknown): string {
   return error instanceof Error
     ? (error.stack ?? error.message)
@@ -77,10 +89,7 @@ function isCtrlCAbort(error: unknown): boolean {
   );
 }
 
-/** True when a subprocess failed because the executable was not found. */
-export function isMissingBinary(
-  error: unknown
-): error is NodeJS.ErrnoException {
+function isMissingBinaryError(error: unknown): error is NodeJS.ErrnoException {
   if (typeof error !== 'object' || error === null || !('code' in error)) {
     return false;
   }
@@ -93,7 +102,12 @@ export function isMissingBinary(
   );
 }
 
-export function missingBinaryMessage(error: NodeJS.ErrnoException): string {
+/** User-facing message when spawn failed because the executable was not found. */
+export function getMissingBinaryMessage(error: unknown): string | undefined {
+  if (isMissingBinaryError(error) === false) {
+    return undefined;
+  }
+
   if (typeof error.path === 'string') {
     return `${path.basename(error.path)} is not installed`;
   }
@@ -124,10 +138,15 @@ export async function run(
     }
 
     console.log();
-    if (isMissingBinary(error)) {
-      log.error(missingBinaryMessage(error));
+    if (error instanceof UserError) {
+      log.error(`✕ ${error.message}`);
     } else {
-      log.error(getErrorStack(error));
+      const missingBinary = getMissingBinaryMessage(error);
+      if (missingBinary === undefined) {
+        log.error(getErrorStack(error));
+      } else {
+        log.error(`✕ ${missingBinary}`);
+      }
     }
     process.exit(1);
   }

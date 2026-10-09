@@ -71,5 +71,5 @@ Write comments for readers who know the language and stack but not this file. Ad
 - Match local style and conventions.
 - Do not create helpers, abstractions, or generalizations for one use unless local style requires them.
 - Remove only code made unused by your changes.
-- Use descriptive US English names. Name functions with verbs that state their action (`cheapestModel` → `getCheapestModel`). Avoid unclear abbreviations and shortened ordinary words (`lineNum` → `lineNumber`), but preserve established local and API conventions.
+- Use descriptive US English names. Functions start with a verb that states the action (`cheapestModel` → `getCheapestModel`, `macApps` → `resolveMacApps`). A noun phrase names a value, not an action — use it for variables only. Avoid unclear abbreviations and shortened ordinary words (`lineNum` → `lineNumber`), but preserve established local and API conventions. Prefer inlining over a one-use helper when the logic is a simple branch and inlining does not introduce extra mutation or reassignment.
 - Mention unrelated issues briefly, but do not change them unless asked.

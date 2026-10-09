@@ -85,6 +85,16 @@ export function tildify(filepath: string): string {
   return filepath.replace(HOME, '~');
 }
 
+/** Returns whether `filePath` exists and is accessible to this process. */
+export async function doesPathExist(filePath: string): Promise<boolean> {
+  try {
+    await fs.access(filePath);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 /**
  * Returns whether writing to `filePath` should proceed.
  * Prompts when the path already exists.
