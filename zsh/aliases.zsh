@@ -35,7 +35,8 @@ command -v eza > /dev/null 2>&1 && alias tree="ls --tree"
 command -v fd > /dev/null 2>&1 && alias find="fd"
 
 # trash: https://github.com/sindresorhus/macos-trash
-command -v trash > /dev/null 2>&1 && alias rm="trash"
+# Use absolute path as `trash` points to a built-in tool in non-interactive shells
+command -v /opt/homebrew/bin/trash > /dev/null 2>&1 && alias rm="/opt/homebrew/bin/trash"
 
 # Download file and save it with filename of remote file
 alias get="curl -O -L"
