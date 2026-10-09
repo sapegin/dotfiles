@@ -241,6 +241,25 @@ export function glob(...args: unknown[]): Promise<string[]> {
 }
 
 /**
+ * Return whether two files have identical contents. False when either path is
+ * missing or the bytes differ.
+ */
+export async function areFilesEqual(
+  firstPath: string,
+  secondPath: string
+): Promise<boolean> {
+  try {
+    const [first, second] = await Promise.all([
+      fs.readFile(firstPath),
+      fs.readFile(secondPath),
+    ]);
+    return first.equals(second);
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Copy a file, create parent folders, and reject partial writes by comparing
  * size.
  */
@@ -392,4 +411,54 @@ export async function atomicCopy(
   await atomicWrite(destinationFile, (tempFile) =>
     fs.copyFile(sourceFile, tempFile)
   );
+}
+
+type WriteFileIfDifferentResult = 'created' | 'updated' | 'unchanged';
+
+function printWriteFileIfDifferentResult(
+  result: Exclude<WriteFileIfDifferentResult, 'unchanged'>,
+  filePath: string,
+  label?: string
+): void {
+  const shortFilepath = tildify(filePath);
+  const headline = label ?? shortFilepath;
+  const marker = result === 'created' ? '+' : '↻';
+
+  console.log(`${marker} ${headline}`);
+  if (label !== undefined) {
+    console.log(`  ↪ ${shortFilepath}`);
+  }
+}
+
+/**
+ * Atomically write UTF-8 content when the file is missing or contents differ.
+ * Prints a summary for `'created'` and `'updated'`; nothing when unchanged.
+ */
+export async function writeFileIfDifferent(
+  filePath: string,
+  content: string,
+  label?: string
+): Promise<WriteFileIfDifferentResult> {
+  let exists = false;
+  try {
+    await fs.access(filePath);
+    exists = true;
+  } catch {
+    exists = false;
+  }
+
+  if (exists) {
+    const existingContent = await fs.readFile(filePath, 'utf8');
+    if (existingContent === content) {
+      return 'unchanged';
+    }
+  }
+
+  await atomicWrite(filePath, (tempFile) =>
+    fs.writeFile(tempFile, content, 'utf8')
+  );
+
+  const result = exists ? 'updated' : 'created';
+  printWriteFileIfDifferentResult(result, filePath, label);
+  return result;
 }

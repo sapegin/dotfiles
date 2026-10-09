@@ -17,6 +17,8 @@ import {
   parseGlobArgs,
   stripExtensions,
   toFilename,
+  areFilesEqual,
+  writeFileIfDifferent,
 } from './files.ts';
 import * as tui from './tui.ts';
 
@@ -355,5 +357,61 @@ describe(confirmOverwriteFile, () => {
     vi.spyOn(tui, 'confirm').mockResolvedValue(false);
 
     await expect(confirmOverwriteFile(filePath)).resolves.toBe(false);
+  });
+});
+
+describe(areFilesEqual, () => {
+  test('returns true when file contents match', async () => {
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'files-equal-'));
+    const firstPath = path.join(dir, 'a.bin');
+    const secondPath = path.join(dir, 'b.bin');
+
+    await fs.writeFile(firstPath, 'same');
+    await fs.writeFile(secondPath, 'same');
+    await expect(areFilesEqual(firstPath, secondPath)).resolves.toBe(true);
+
+    await fs.writeFile(secondPath, 'different');
+    await expect(areFilesEqual(firstPath, secondPath)).resolves.toBe(false);
+    await expect(
+      areFilesEqual(firstPath, path.join(dir, 'missing'))
+    ).resolves.toBe(false);
+  });
+});
+
+describe(writeFileIfDifferent, () => {
+  test('writes when the file is missing or contents differ', async () => {
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'files-content-'));
+    const filePath = path.join(dir, 'out.json');
+
+    await expect(writeFileIfDifferent(filePath, '{"a":1}')).resolves.toBe(
+      'created'
+    );
+    expect(fsSync.readFileSync(filePath, 'utf8')).toBe('{"a":1}');
+
+    await expect(writeFileIfDifferent(filePath, '{"a":1}')).resolves.toBe(
+      'unchanged'
+    );
+    await expect(writeFileIfDifferent(filePath, '{"a":2}')).resolves.toBe(
+      'updated'
+    );
+    expect(fsSync.readFileSync(filePath, 'utf8')).toBe('{"a":2}');
+
+    logSpy.mockRestore();
+  });
+
+  test('prints created and updated summaries with an optional label', async () => {
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'files-content-'));
+    const filePath = path.join(dir, 'note.md');
+
+    await writeFileIfDifferent(filePath, 'v1', 'My note');
+    expect(logSpy).toHaveBeenCalledWith('+ My note');
+    expect(logSpy).toHaveBeenCalledWith(`  ↪ ${filePath}`);
+
+    await writeFileIfDifferent(filePath, 'v2', 'My note');
+    expect(logSpy).toHaveBeenCalledWith('↻ My note');
+
+    logSpy.mockRestore();
   });
 });

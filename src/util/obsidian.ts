@@ -298,6 +298,39 @@ export function getMarkdownImages(body: string): string[] {
     .filter((filePath) => hasExtension(filePath, exts.media));
 }
 
+/** Obsidian embed: `[![[file|alt]]](url)`. */
+export const LINKED_IMAGE_EMBED_PATTERN = String.raw`\[!\[\[([^\]|]+)(?:\|([^\]]*))?\]\]\]\(([^)]+)\)`;
+
+/**
+ * Obsidian embed: `![[file|alt]]`, excluding the inner embed in
+ * {@link LINKED_IMAGE_EMBED_PATTERN}.
+ */
+export const STANDALONE_IMAGE_EMBED_PATTERN = String.raw`(?<!\[)!\[\[([^\]|]+)(?:\|([^\]]*))?\]\]`;
+
+/**
+ * Return attachment basenames from Obsidian linked and standalone image embeds.
+ * {@link getMarkdownImages} also covers standalone `![[…]]` and `![…](…)` when
+ * the target has a media extension; use this for linked `[![[…]]](…)` embeds
+ * and when every embed basename is needed regardless of extension.
+ */
+export function getObsidianImageEmbedFilenames(body: string): string[] {
+  const filenames = new Set<string>();
+
+  for (const match of body.matchAll(
+    new RegExp(LINKED_IMAGE_EMBED_PATTERN, 'g')
+  )) {
+    filenames.add(match[1]);
+  }
+
+  for (const match of body.matchAll(
+    new RegExp(STANDALONE_IMAGE_EMBED_PATTERN, 'g')
+  )) {
+    filenames.add(match[1]);
+  }
+
+  return [...filenames];
+}
+
 /** Replace plain or URL-encoded filename occurrences inside an image target. */
 function replaceTargetFilename(
   target: string,
@@ -372,7 +405,7 @@ export interface VaultFrontmatter {
   description?: string;
   director?: string;
   image?: string;
-  keywords?: string;
+  keywords?: string[];
   location?: string;
   published?: string;
   rating?: string;
@@ -389,7 +422,7 @@ export interface VaultFrontmatter {
   yields?: string;
 }
 
-const STRING_ARRAY_FIELDS = ['aliases', 'tags'] as const;
+const STRING_ARRAY_FIELDS = ['aliases', 'keywords', 'tags'] as const;
 
 function normalizeStringArray(value: unknown): string[] | undefined {
   if (value === undefined || value === null || value === '') {
@@ -427,8 +460,9 @@ function normalizeFrontmatter<T extends object>(raw: unknown): T {
 }
 
 /**
- * Split YAML frontmatter from Markdown body and parse it into an object.
- * Scalar YAML lists such as `tags` and `aliases` are coerced to `string[]`.
+ * Split YAML frontmatter from Markdown body and parse it into an object. Scalar
+ * YAML lists such as `tags`, `aliases`, and `keywords` are coerced to
+ * `string[]`.
  */
 export function parseFrontmatter<T extends object>(
   content: string

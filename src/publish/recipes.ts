@@ -1,15 +1,18 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';
-import { dirs } from '../util/files.ts';
 import {
-  AVIF_QUALITY,
+  copyFile,
+  dirs,
+  areFilesEqual,
+  writeFileIfDifferent,
+} from '../util/files.ts';
+import {
   extractTitle,
   formatPublishedDate,
   getAllWikilinks,
   parsePublishedDate,
   getFirstImageAttachment,
-  isNewer,
   parseSections,
   readNoteFile,
   resolveWikilinks,
@@ -61,43 +64,65 @@ function readRecipeFile(filePath: string) {
   return readNoteFile<VaultFrontmatter>(filePath, getSlug);
 }
 
-async function copyImages(repoRoot: string, markdown: string, slug: string) {
+function getPublishedImageUrls(slug: string): {
+  imageUrl: string;
+  thumbnailUrl: string;
+} {
+  return {
+    imageUrl: `/images/recipes/${slug}.avif`,
+    thumbnailUrl: `/images/recipes/${slug}_thumb.avif`,
+  };
+}
+
+async function syncRecipeImages(
+  repoRoot: string,
+  filename: string | undefined,
+  slug: string
+): Promise<{
+  imageUrl?: string;
+  thumbnailUrl?: string;
+  imagesUpdated: boolean;
+}> {
   const imagesOutputDir = path.join(
     repoRoot,
     'sites/tacohuaco/public/images/recipes'
   );
-  const filename = getFirstImageAttachment(markdown);
+
   if (filename === undefined) {
-    return { imageUrl: undefined, thumbnailUrl: undefined };
+    return { imagesUpdated: false };
   }
 
   const srcPath = path.join(dirs.obsidianAttachments, filename);
   if (fs.existsSync(srcPath) === false) {
     log.warn(`Image not found: ${srcPath}`);
-    return { imageUrl: undefined, thumbnailUrl: undefined };
+    return { imagesUpdated: false };
   }
 
   const destPath = path.join(imagesOutputDir, `${slug}.avif`);
   const destThumbPath = path.join(imagesOutputDir, `${slug}_thumb.avif`);
 
-  if (isNewer(srcPath, destPath)) {
+  let imagesUpdated = false;
+
+  const mainChanged = (await areFilesEqual(srcPath, destPath)) === false;
+  if (mainChanged) {
+    await copyFile(srcPath, destPath);
+    imagesUpdated = true;
+  }
+
+  if (mainChanged || fs.existsSync(destThumbPath) === false) {
     fs.mkdirSync(imagesOutputDir, { recursive: true });
-    const image = fs.readFileSync(srcPath);
-    await sharp(image).avif({ quality: AVIF_QUALITY }).toFile(destPath);
-    await sharp(image)
+    await sharp(srcPath)
       .resize({ width: THUMBNAIL_WIDTH })
       .avif({ quality: THUMBNAIL_QUALITY })
       .toFile(destThumbPath);
+    imagesUpdated = true;
   }
 
   if (fs.existsSync(destPath)) {
-    return {
-      imageUrl: `/images/recipes/${slug}.avif`,
-      thumbnailUrl: `/images/recipes/${slug}_thumb.avif`,
-    };
+    return { ...getPublishedImageUrls(slug), imagesUpdated };
   }
 
-  return { imageUrl: undefined, thumbnailUrl: undefined };
+  return { imagesUpdated };
 }
 
 /** Sync recipes from Obsidian to the tacohuaco site in the sapegin.me monorepo. */
@@ -177,11 +202,7 @@ export async function publishRecipes(repoRoot: string): Promise<void> {
     }
 
     const outputPath = path.join(outputDir, `${slug}.json`);
-    if (isNewer(filePath, outputPath) === false) {
-      continue;
-    }
-
-    console.log('👉', title);
+    const attachmentFilename = getFirstImageAttachment(content);
 
     const sections = parseSections(content);
 
@@ -203,30 +224,22 @@ export async function publishRecipes(repoRoot: string): Promise<void> {
       ? resolveWikilinks(notesMarkdown, slugMap, toUrl)
       : undefined;
 
-    const { imageUrl, thumbnailUrl } = await copyImages(
-      repoRoot,
-      content,
-      slug
-    );
-
     const tags = (frontmatter.tags ?? []).filter((tag) => tag !== 'recipes');
 
     const keywords = [
       ...(frontmatter.aliases ?? []),
-      ...(frontmatter.keywords ? [frontmatter.keywords] : []),
-    ].filter(Boolean);
+      ...(frontmatter.keywords ?? []),
+    ];
 
     const overnight = steps.includes('overnight');
 
-    const recipe: RecipeRaw = {
+    const sharedFields = {
       slug,
       createdAt: dateString,
       title,
       titleEnglish: frontmatter['title-english'] ?? undefined,
       tags,
       description,
-      imageUrl,
-      thumbnailUrl,
       ingredients,
       steps,
       keywords,
@@ -239,9 +252,25 @@ export async function publishRecipes(repoRoot: string): Promise<void> {
       usedBy: usageMap.get(slug) ?? [],
     };
 
-    const filepath = path.join(outputDir, `${slug}.json`);
-    fs.writeFileSync(filepath, JSON.stringify(recipe, null, 2));
-    console.log(`  ↪ ${filepath}`);
+    const { imagesUpdated, ...imageUrls } = await syncRecipeImages(
+      repoRoot,
+      attachmentFilename,
+      slug
+    );
+
+    if (imagesUpdated) {
+      console.log(`↻ ${title} (images)`);
+    }
+
+    const recipe: RecipeRaw = {
+      ...sharedFields,
+      ...imageUrls,
+    };
+
+    const json = JSON.stringify(recipe, null, 2);
+    if ((await writeFileIfDifferent(outputPath, json, title)) === 'unchanged') {
+      continue;
+    }
 
     count++;
   }

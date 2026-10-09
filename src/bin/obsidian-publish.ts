@@ -38,7 +38,7 @@ export async function obsidianPublish(options: Options): Promise<void> {
 
   switch (options.site) {
     case 'site':
-      publishSite(REPO_ROOT);
+      await publishSite(REPO_ROOT);
       return;
     case 'recipes':
       await publishRecipes(REPO_ROOT);

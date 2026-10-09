@@ -1,18 +1,25 @@
 import { execSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { dirs } from '../util/files.ts';
+import {
+  areFilesEqual,
+  copyFile,
+  dirs,
+  writeFileIfDifferent,
+} from '../util/files.ts';
 import {
   extractTitle,
   formatMarkdown,
   formatMarkdownImage,
   formatPublishedDate,
+  getObsidianImageEmbedFilenames,
   hasTag,
-  isNewer,
+  LINKED_IMAGE_EMBED_PATTERN,
   parseFrontmatter,
   parsePublishedDate,
   readNoteFile,
   resolveWikilinks,
+  STANDALONE_IMAGE_EMBED_PATTERN,
   stripPrivateNotes,
   stripTitle,
   type VaultFrontmatter,
@@ -30,7 +37,7 @@ function getImagePublicPath(filename: string) {
   return `/images/blog/${filename}`;
 }
 
-function copyImage(repoRoot: string, filename: string) {
+async function copyImage(repoRoot: string, filename: string): Promise<void> {
   const sourcePath = path.join(ATTACHMENTS_DIR, filename);
   if (fs.existsSync(sourcePath) === false) {
     log.warn(`Image not found: ${sourcePath}`);
@@ -42,18 +49,24 @@ function copyImage(repoRoot: string, filename: string) {
     'sites/sapegin.me/public/images/blog',
     filename
   );
-  fs.mkdirSync(path.dirname(destPath), { recursive: true });
 
-  if (isNewer(sourcePath, destPath)) {
-    fs.copyFileSync(sourcePath, destPath);
+  if ((await areFilesEqual(sourcePath, destPath)) === false) {
+    await copyFile(sourcePath, destPath);
   }
 }
 
-function resolveImageEmbeds(repoRoot: string, content: string) {
+async function syncBlogImages(
+  repoRoot: string,
+  content: string
+): Promise<void> {
+  const filenames = getObsidianImageEmbedFilenames(content);
+  await Promise.all(filenames.map((filename) => copyImage(repoRoot, filename)));
+}
+
+function resolveImageEmbeds(content: string) {
   let updated = content.replaceAll(
-    /\[!\[\[([^\]|]+)(?:\|([^\]]*))?\]\]\]\(([^)]+)\)/g,
+    new RegExp(LINKED_IMAGE_EMBED_PATTERN, 'g'),
     (_match, filename: string, alt: string | undefined, linkTarget: string) => {
-      copyImage(repoRoot, filename);
       const imageMarkdown = formatMarkdownImage(
         getImagePublicPath(filename),
         alt !== undefined && alt.length > 0 ? alt : undefined
@@ -63,9 +76,8 @@ function resolveImageEmbeds(repoRoot: string, content: string) {
   );
 
   updated = updated.replaceAll(
-    /(?<!\[)!\[\[([^\]|]+)(?:\|([^\]]*))?\]\]/g,
+    new RegExp(STANDALONE_IMAGE_EMBED_PATTERN, 'g'),
     (_match, filename: string, alt: string | undefined) => {
-      copyImage(repoRoot, filename);
       return formatMarkdownImage(
         getImagePublicPath(filename),
         alt !== undefined && alt.length > 0 ? alt : undefined
@@ -116,7 +128,7 @@ function transformMarkdown(
   return wrapEmojisInAriaHidden(
     rewriteSiteUrls(
       resolveWikilinks(
-        resolveImageEmbeds(repoRoot, content),
+        resolveImageEmbeds(content),
         slugMap,
         (slug) => `/blog/${slug}/`
       )
@@ -160,7 +172,7 @@ function runOxfmt(repoRoot: string, globs: string[]) {
 }
 
 /** Sync blog posts and blocks from Obsidian to the sapegin.me monorepo. */
-export function publishSite(repoRoot: string): void {
+export async function publishSite(repoRoot: string): Promise<void> {
   const outputDir = path.join(repoRoot, 'content/blog');
   const blocksOutputDir = path.join(repoRoot, 'content/blocks');
   const imagesDir = path.join(repoRoot, 'sites/sapegin.me/public/images/blog');
@@ -222,11 +234,8 @@ export function publishSite(repoRoot: string): void {
     }
 
     const outputPath = path.join(outputDir, `${slug}.md`);
-    if (isNewer(filePath, outputPath) === false) {
-      continue;
-    }
 
-    console.log('👉', title);
+    await syncBlogImages(repoRoot, content);
 
     const body = transformBody(repoRoot, content, slugMap);
     const outputMarkdown = formatMarkdown(
@@ -239,8 +248,13 @@ export function publishSite(repoRoot: string): void {
       body
     );
 
-    fs.writeFileSync(outputPath, outputMarkdown);
-    console.log(`  ↪ ${outputPath}`);
+    if (
+      (await writeFileIfDifferent(outputPath, outputMarkdown, title)) ===
+      'unchanged'
+    ) {
+      continue;
+    }
+
     synced++;
   }
 
@@ -297,15 +311,21 @@ export function publishSite(repoRoot: string): void {
       blockSlugs.add(slug);
 
       const outputPath = path.join(blocksOutputDir, `${slug}.md`);
-      if (isNewer(filePath, outputPath) === false) {
+
+      await syncBlogImages(repoRoot, content);
+
+      const body = transformBlockBody(repoRoot, content, slugMap);
+      const outputMarkdown = `${body.trim()}\n`;
+      if (
+        (await writeFileIfDifferent(
+          outputPath,
+          outputMarkdown,
+          `🧱 ${slug}`
+        )) === 'unchanged'
+      ) {
         continue;
       }
 
-      console.log('🧱', slug);
-
-      const body = transformBlockBody(repoRoot, content, slugMap);
-      fs.writeFileSync(outputPath, `${body.trim()}\n`);
-      console.log(`  ↪ ${outputPath}`);
       blocksSynced++;
     }
 

@@ -4,6 +4,7 @@ import { dirs } from './files.ts';
 import {
   getDailyNotePath,
   getMarkdownImages,
+  getObsidianImageEmbedFilenames,
   getNotePath,
   parseFrontmatter,
   parseSections,
@@ -33,6 +34,18 @@ describe(getMarkdownImages, () => {
     expect(getMarkdownImages('![Alt](Photos/My%20Photo.JPG)')).toStrictEqual([
       'My Photo.JPG',
     ]);
+  });
+});
+
+describe(getObsidianImageEmbedFilenames, () => {
+  test('returns basenames from linked and standalone Obsidian image embeds', () => {
+    expect(
+      getObsidianImageEmbedFilenames(
+        ['[![[linked.avif|wide]]](/blog/post/)', '![[standalone.avif]]'].join(
+          '\n'
+        )
+      )
+    ).toStrictEqual(['linked.avif', 'standalone.avif']);
   });
 });
 
@@ -124,6 +137,32 @@ tags: daily
 # Hello`)
     ).toStrictEqual({
       frontmatter: { tags: ['daily'] },
+      body: '# Hello',
+      hasFrontmatter: true,
+    });
+  });
+
+  test('coerces keywords lists and scalars to a string array', () => {
+    expect(
+      parseFrontmatter<VaultFrontmatter>(`---
+keywords:
+  - muesli bars
+  - granola
+---
+# Hello`)
+    ).toStrictEqual({
+      frontmatter: { keywords: ['muesli bars', 'granola'] },
+      body: '# Hello',
+      hasFrontmatter: true,
+    });
+
+    expect(
+      parseFrontmatter<VaultFrontmatter>(`---
+keywords: muesli bars
+---
+# Hello`)
+    ).toStrictEqual({
+      frontmatter: { keywords: ['muesli bars'] },
       body: '# Hello',
       hasFrontmatter: true,
     });

@@ -15,6 +15,7 @@ autofixing
 automations
 autostash
 backpressure
+basenames
 blockquotes
 bouldering
 callsite

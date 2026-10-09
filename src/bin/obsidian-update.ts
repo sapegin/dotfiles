@@ -520,8 +520,12 @@ async function updateNote({
     newFrontmatter.image = firstImage;
   }
 
-  // Detect misspelled note properties
+  // Detect misspelled note properties (skip `_…` hidden fields)
   for (const field in newFrontmatter) {
+    if (field.startsWith('_')) {
+      continue;
+    }
+
     if (FRONTMATTER_FIELDS.includes(field) === false) {
       printWarning(`${basename}: Invalid property name “${field}”`);
     }

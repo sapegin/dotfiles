@@ -3,7 +3,7 @@
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { tildify, confirmOverwriteFile } from './files.ts';
+import { areFilesEqual, confirmOverwriteFile, tildify } from './files.ts';
 import { log } from './tui.ts';
 
 export type SyncResult =
@@ -90,18 +90,6 @@ async function copyPreservingMtime(src: string, dest: string): Promise<void> {
   await fs.utimes(dest, atime, mtime);
 }
 
-async function filesAreEqual(first: string, second: string): Promise<boolean> {
-  try {
-    const [firstBuffer, secondBuffer] = await Promise.all([
-      fs.readFile(first),
-      fs.readFile(second),
-    ]);
-    return firstBuffer.equals(secondBuffer);
-  } catch {
-    return false;
-  }
-}
-
 async function removeEmptyParentDirectories(
   filePath: string,
   rootDirectory: string
@@ -185,7 +173,7 @@ async function syncFileQuiet(src: string, dest: string): Promise<SyncResult> {
 
   const destMs = await mtimeMs(dest);
 
-  if (destMs !== null && (await filesAreEqual(src, dest))) {
+  if (destMs !== null && (await areFilesEqual(src, dest))) {
     return 'equal';
   }
 
@@ -378,7 +366,7 @@ export async function mirrorFolder(
 
     let result: SyncResult;
     if (inSrc && inDest) {
-      if (await filesAreEqual(srcPath, destPath)) {
+      if (await areFilesEqual(srcPath, destPath)) {
         result = 'equal';
       } else {
         await copyPreservingMtime(srcPath, destPath);
