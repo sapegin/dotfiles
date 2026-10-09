@@ -10,5 +10,6 @@
   "enabledCssSnippets": [
     "images"
   ],
-  "theme": "system"
+  "theme": "system",
+  "translucency": false
 }
