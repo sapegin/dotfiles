@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-14T09:43:21.439Z",
+  "updated": "2026-10-12T10:12:47.833Z",
   "plugins": [
     {
       "id": "add-note-property",
@@ -13,7 +13,7 @@
       "id": "better-title-sync",
       "version": "1.0.0",
       "files": {
-        "main.js": "bf7d27925328f0f013c2d355cdc922634f68d33ab0165cc062d10fbda202b322",
+        "main.js": "0afb7bfbd8425d8ffe891a2fa3d9da5f98d5e91f5e7e9b047ddddbe0dd544f2a",
         "manifest.json": "de15e6534764b6bddf2302e7097402e63a68d2011446f263d6eacb5e0e40e0ab"
       }
     },
@@ -32,6 +32,15 @@
         "main.js": "8801871fe834c6b294f0c8cf1020596ad0ca4a1471255c2708d866fdc57e0762",
         "manifest.json": "aea80579d7acf6a402de4fe0a068a0f1cf358c03f645f9948e65bf32805ddbd7",
         "styles.css": "bdd58a72c03bf5e836e564fee857e99a873db08e14996d4ab9c124faf57e8804"
+      }
+    },
+    {
+      "id": "new-tab-links",
+      "version": "1.0.0",
+      "files": {
+        "main.js": "2fe29ed21bfcca0a55cc3f0fa51289b48ad6d50bb25db3ab9f99add1a1dbf7a4",
+        "manifest.json": "6048cb541b9d223caee4c683bc8e6fb4cdf867669560a1c49617780a5d03c087",
+        "styles.css": "fdca6273e686350a940eef5cc3324f9b56cb416b6fbb55d94cdb1a79cac636c5"
       }
     },
     {
