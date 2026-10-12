@@ -29,7 +29,7 @@ Return only the pull request description:
 
 1. One-line title with a [conventional commit message](https://www.conventionalcommits.org/en/v1.0.0/) type (fix, feat, chore, etc.).
 2. One paragraph of 1–3 sentences explaining what changed and why, if known.
-3. Short bullet list of notable changes.
+3. Short bullet list of notable changes. Emphasize behavioral effects, and include implementation changes that help reviewers understand the diff, such as new or updated shared components and notable refactorings. Omit low-level mechanics, such as passing a different boolean argument to a function; describe the resulting behavior instead.
 
 Do not include review findings, risk analysis, test plans, checklists, or implementation trivia unless asked. Do not mention added or updated tests, including test coverage, in the summary or notable changes.
 
@@ -40,7 +40,6 @@ feat: Add language switcher to the footer
 
 Adds a language switcher to the main and campaign footers.
 
-- Move footer-related files to a dedicated folder
-- Extract the legal links and copyright section into a reusable component
-- Add `LanguageSwitcher` to the footer and header
+- Allow users to switch languages from either footer
+- Extract the legal links and copyright section into a shared component used by both footers
 ```
