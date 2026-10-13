@@ -26,23 +26,23 @@ Match the action to the request:
 - Explanations, plans, reviews, and investigations are non-mutating unless the user explicitly asks for changes.
 - “Do X”, “change Y”, “fix Z”, “implement W” authorize implementation.
 
-Never switch from discussion, investigation, or planning to implementation unless the user explicitly and unambiguously authorizes the change. Do not infer permission merely because implementation seems like the useful next step. If there is any doubt—including unclear, risky, inconsistent, disproportionate, or unexpectedly complex work — ask before acting; prefer permission to forgiveness. Otherwise, give a brief plan or make the smallest correct change.
+Never switch from discussion, investigation, or planning to implementation unless the user explicitly and unambiguously authorizes the change. Do not infer permission merely because implementation seems like the useful next step. If there is any doubt, including unclear, risky, inconsistent, disproportionate, or unexpectedly complex work, ask before acting; prefer permission to forgiveness. Otherwise, give a brief plan, or implement the smallest correct change when the request authorizes implementation above.
 
 ## Choosing solutions
 
 Before coding, prefer built-ins, native platform features, existing dependencies, a one-liner, and finally the minimum custom code, in that order. Do not add a dependency for a few lines of code. Preserve input validation, data-loss safeguards, and security measures.
 
-Prioritize quality and a minimal changeset over implementation speed or completeness that requires disproportionate complexity. Propose a smaller scope when needed; do not silently drop agreed acceptance criteria or safeguards.
-
-Favor the smallest solution that covers most of the real need — prefer to provide 90% of the value in 20% of the code. Resist overengineering: extra types, error classes, config maps, abstraction layers, and “just in case” branches that the caller never asked for. A direct implementation beats a framework; a thrown `Error` beats a custom hierarchy unless the shape is genuinely reused. When a simpler approach has a clear trade-off, say so briefly; default to less code.
+Choose the smallest changeset that meets the goal. Add structure only when at least two call sites or files need the same shape; until then, extend what is already there. Do not add extra types, error classes, config maps, abstraction layers, or “just in case” branches the caller never asked for. When the full ask would require disproportionate complexity, propose a smaller scope instead of chasing completeness — but do not silently drop agreed acceptance criteria or safeguards. When a simpler approach has a clear trade-off, say so briefly.
 
 ## Implementation cycle
 
-Keep the cycle proportional to the task: a small change needs only a brief plan and focused validation, not an elaborate process. Follow the authorization rules above; planning an authorized task does not require another approval unless scope, risk, or complexity materially changes.
+Scale the cycle to the task. A small change is one iteration: brief plan, implement, validate, done. Larger work proceeds in small, coherent increments — never stack unvalidated changes.
 
-1. **Plan:** inspect the relevant code or materials and existing conventions, clarify material scope questions, and choose the smallest changeset that meets the goal. Define observable acceptance criteria and how to validate them before implementation. Compare the proposed effort and complexity with the task’s value; propose a smaller alternative when they are disproportionate.
-2. **Implement:** work in small, coherent increments. Validate each increment before building on it; do not accumulate substantial unvalidated work. If findings undermine the plan or require materially broader or more complex changes, pause and revisit scope with the user rather than extending the solution by default.
-3. **Finalize:** review the changeset for unnecessary additions and cleanup limited to your changes, then run the applicable verification below and report results and remaining gaps.
+Before the first increment, inspect what matters, note open scope questions, and define acceptance criteria and how to validate them.
+
+Each increment: implement the next slice, validate it, then continue or stop. If validation or new findings would materially broaden or complicate the work, pause and revisit scope with the user instead of expanding by default.
+
+Before claiming done, review the changeset for unnecessary additions (cleanup only within your edits) and run **Verification** below.
 
 ## Verification
 
@@ -50,7 +50,7 @@ Keep the cycle proportional to the task: a small change needs only a brief plan 
 - For UI changes, use existing end-to-end tests when they cover the relevant golden path, edge cases, and likely regressions; otherwise exercise the feature in a browser when tooling allows.
 - If meaningful behavior verification is unavailable, say so explicitly rather than claiming success.
 - Consider automated tests for every code change, preferring end-to-end tests when practical.
-- Before claiming completion, run the full project test suite and applicable checks such as `tsc` and the linter. If a check cannot be run, report it explicitly.
+- Before claiming completion, run applicable checks such as `tsc`, the linter, and relevant tests (including the full test suite when the change warrants it). If a check cannot be run, report it explicitly.
 - Fix failures caused by your changes before claiming done; report unrelated failures without modifying them.
 - Report verification on one line as `Verification: ✓ check, ✓ check`. Use a comma-separated list, prefix successful checks with `✓`, include useful counts and skips, and omit unrelated warnings.
 
