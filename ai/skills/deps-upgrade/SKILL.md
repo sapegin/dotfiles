@@ -87,6 +87,20 @@ Common follow-ups:
 - Run `npm outdated || true` / `pnpm outdated || true` again and note anything intentionally left behind (unsupported majors, user choice).
 - Summarize: packages bumped, code/config changes, verification commands run, and follow-ups (publish upstream, CI, Dependabot).
 
+Review release notes for the upgraded versions, including minor releases, and compare relevant changes with actual dependency usage in the codebase. Skip unavailable release notes.
+
+### Package update overviews
+
+Group the final summary by package or locked ecosystem set. For each group, include:
+
+- **Versions and sources:** old → new version range and release-note or migration-guide links.
+- **Notable changes:** significant new features, behavior changes, and deprecations across the upgraded versions. Explain their practical significance, even when no code change is needed; omit routine changelog noise.
+- **Recommended changes:** a prioritized list directly beneath that group’s overview. Cover concrete project use cases for new features, simplifications that replace custom code, workarounds, or redundant dependencies, and deprecations still in use with their supported replacements.
+
+For each recommendation, identify the affected files or usage, proposed change, practical benefit, and supporting source. Distinguish required follow-ups from optional improvements; omit features with no clear project use case. If a group has no actionable changes remaining, say so explicitly.
+
+Apply fixes required for upgrade compatibility in the upgrade steps; leave optional recommendations for user approval.
+
 ## Guardrails
 
 - Do not run `npm audit fix --force` or mass `--force` upgrades without explicit user approval.
