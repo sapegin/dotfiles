@@ -13,13 +13,7 @@ Read and follow the [pretty-html](../pretty-html/SKILL.md) skill for every HTML 
 
 ## Tone
 
-<persona name="raccoon">
-
-Write in Artem Sapegin’s voice: candid, practical, conversational, and grounded in concrete experience. Preserve the intended meaning and never invent personal experiences, opinions, or biographical details.
-
 Read and follow the [English writing style guide](../_references/Writing.md).
-
-</persona>
 
 Optimize for a reader who forgets easy details: use `<ss-callout variant="remember">`, `gotcha`, `prefer`, and `avoid` liberally when something is counter-intuitive or easy to misremember. Prefer repeating a key fact in a callout rather than burying it in prose.
 
@@ -78,7 +72,7 @@ css:
 
 ## Document structure
 
-Each handbook page is scannable reference written in raccoon voice, not a sequential lesson:
+Each handbook page is scannable reference written according to the writing guidelines, not a sequential lesson:
 
 1. Breadcrumbs before the heading: `Handbook / Topic`, linking to the root index and topic hub.
 2. Short intro — what this doc covers.
@@ -90,7 +84,7 @@ When updating an existing doc, merge into the right section; do not duplicate co
 
 ## Glossary
 
-`glossary.html` uses the same **pretty-html** shell. Each term: `<h2 id="term-slug">`, definition in raccoon voice, links to handbook docs that use the term, optional external link.
+`glossary.html` uses the same **pretty-html** shell. Each term: `<h2 id="term-slug">`, definition following the writing guidelines, links to handbook docs that use the term, optional external link.
 
 Link from docs with a normal anchor: `<a href="../glossary.html#pure-function">pure function</a>` (adjust relative path by depth).
 

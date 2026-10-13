@@ -1,14 +1,14 @@
-// Generate derived AI instructions and reference indexes.
+// Generate AI reference indexes.
 //
-// - Update generated AI files:
+// - Generate reference indexes:
 //
 // `ai-sync`
 //
-// - Check whether generated AI files are current:
+// - Check whether reference indexes are current:
 //
 // `ai-sync --check`
 //
-// - Update vendored AI references, then generated files:
+// - Update vendored AI references, then regenerate indexes:
 //
 // `ai-sync --update`
 
@@ -18,9 +18,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import {
-  generatePersonaSections,
   generateReferenceIndex,
-  parsePersona,
   type ReferenceIndexSection,
 } from '../util/docs.ts';
 import { dirs } from '../util/files.ts';
@@ -72,21 +70,6 @@ function getReferenceDirectory(sourcePath: string): string {
     REFERENCES_DIRECTORY,
     path.basename(path.dirname(sourcePath))
   );
-}
-
-async function loadPersonas(): Promise<ReadonlyMap<string, string>> {
-  const personaPaths = await Array.fromAsync(
-    fs.glob(path.join(dirs.ai, 'personas/*.md'))
-  );
-  const personas = new Map<string, string>();
-
-  for (const personaPath of personaPaths.toSorted()) {
-    const personaName = path.basename(personaPath, '.md');
-    const source = await fs.readFile(personaPath, 'utf8');
-    personas.set(personaName, parsePersona(source, personaName));
-  }
-
-  return personas;
 }
 
 function formatWebGuideWords(value: string): string {
@@ -287,24 +270,7 @@ export async function aiSync({ check, update }: Options): Promise<void> {
     }
   }
 
-  const personas = await loadPersonas();
   const changes: { path: string; generated: string }[] = [];
-  const skillPaths = await Array.fromAsync(
-    fs.glob(path.join(dirs.ai, 'skills/*/SKILL.md'))
-  );
-  const targetPaths = [
-    path.join(dirs.ai, 'base-prompt.md'),
-    ...skillPaths.toSorted(),
-  ];
-
-  for (const targetPath of targetPaths) {
-    const source = await fs.readFile(targetPath, 'utf8');
-    const relativePath = path.relative(dirs.dotfiles, targetPath);
-    const generated = generatePersonaSections(source, personas, relativePath);
-    if (generated !== source) {
-      changes.push({ path: targetPath, generated });
-    }
-  }
 
   for (const { loadIndexSections, name, sourcePath } of REFERENCE_SOURCES) {
     const directory = getReferenceDirectory(sourcePath);

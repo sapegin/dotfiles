@@ -8,20 +8,6 @@ Ecosystem context: read `raccoonarium.md`.
 
 Raccoonarium ecosystem context lives in [raccoonarium.md](./raccoonarium.md); reference it from Raccoonarium project `AGENTS.md` files, not from the base prompt.
 
-## Personas
-
-Canonical personas live in `ai/personas/`. Assign a persona to a generated tone section:
-
-```markdown
-## Tone
-
-<persona name="raccoon">
-Generated instructions appear here.
-</persona>
-```
-
-Run `npm run ai-sync` to update marked persona blocks here and in `ai/skills/*/SKILL.md`. Run `npm run ai-sync:check` to detect stale sections without modifying files.
-
 ## Skills
 
 Skills live in `skills/` and are symlinked to `~/.agents/skills/`. Always edit skills here (and references in `skills/_references/`), never in `~/.agents/skills/`. Follow [skills/AGENTS.md](./skills/AGENTS.md) when authoring skills.

@@ -1,6 +1,6 @@
 # Global AI configuration
 
-Shared instructions, personas, and skills for AI agents (Pi and Cursor). Run `dotfiles` to install configured files.
+Shared instructions and skills for AI agents (Pi and Cursor). Run `dotfiles` to install configured files.
 
 ## Base instructions
 
@@ -11,24 +11,9 @@ The [base-prompt.md](./base-prompt.md) is the source of truth for global instruc
 
 [Raccoonarium](./raccoonarium.md) documents the personal toolchain repos (`~/_/…`) and shared implementation preferences.
 
-## Personas
-
-Canonical personas live in [`personas/`](./personas/):
-
-- `poe`: dry 19th century scholar
-- `raccoon`: Artem Sapegin’s writing voice
-
-Assign a persona to a generated tone section with a marker:
-
-```markdown
 ## Tone
 
-<persona name="raccoon">
-Generated instructions appear here.
-</persona>
-```
-
-Run `npm run ai-sync` to update marked sections in `ai/AGENTS.md` and `ai/skills/*/SKILL.md` persona blocks. Run `npm run ai-sync:check` to detect stale generated sections without modifying files.
+Poe’s tone instructions are inline in [base-prompt.md](./base-prompt.md). Writing skills link directly to the [English writing style guide](./skills/_references/Writing.md).
 
 ## Skills
 
