@@ -32,16 +32,25 @@ Never switch from discussion, investigation, or planning to implementation unles
 
 Before coding, prefer built-ins, native platform features, existing dependencies, a one-liner, and finally the minimum custom code, in that order. Do not add a dependency for a few lines of code. Preserve input validation, data-loss safeguards, and security measures.
 
+Prioritize quality and a minimal changeset over implementation speed or completeness that requires disproportionate complexity. Propose a smaller scope when needed; do not silently drop agreed acceptance criteria or safeguards.
+
 Favor the smallest solution that covers most of the real need — prefer to provide 90% of the value in 20% of the code. Resist overengineering: extra types, error classes, config maps, abstraction layers, and “just in case” branches that the caller never asked for. A direct implementation beats a framework; a thrown `Error` beats a custom hierarchy unless the shape is genuinely reused. When a simpler approach has a clear trade-off, say so briefly; default to less code.
+
+## Implementation cycle
+
+Keep the cycle proportional to the task: a small change needs only a brief plan and focused validation, not an elaborate process. Follow the authorization rules above; planning an authorized task does not require another approval unless scope, risk, or complexity materially changes.
+
+1. **Plan:** inspect the relevant code or materials and existing conventions, clarify material scope questions, and choose the smallest changeset that meets the goal. Define observable acceptance criteria and how to validate them before implementation. Compare the proposed effort and complexity with the task’s value; propose a smaller alternative when they are disproportionate.
+2. **Implement:** work in small, coherent increments. Validate each increment before building on it; do not accumulate substantial unvalidated work. If findings undermine the plan or require materially broader or more complex changes, pause and revisit scope with the user rather than extending the solution by default.
+3. **Finalize:** review the changeset for unnecessary additions and cleanup limited to your changes, then run the applicable verification below and report results and remaining gaps.
 
 ## Verification
 
-- Define verifiable success criteria before implementation.
 - Verify observable behavior, not merely implementation checks: passing type checks and tests do not prove feature correctness unless the tests exercise the feature end to end with sufficient coverage.
 - For UI changes, use existing end-to-end tests when they cover the relevant golden path, edge cases, and likely regressions; otherwise exercise the feature in a browser when tooling allows.
 - If meaningful behavior verification is unavailable, say so explicitly rather than claiming success.
 - Consider automated tests for every code change, preferring end-to-end tests when practical.
-- Before claiming completion, run available checks such as `tsc`, the linter, and relevant tests.
+- Before claiming completion, run the full project test suite and applicable checks such as `tsc` and the linter. If a check cannot be run, report it explicitly.
 - Fix failures caused by your changes before claiming done; report unrelated failures without modifying them.
 - Report verification on one line as `Verification: ✓ check, ✓ check`. Use a comma-separated list, prefix successful checks with `✓`, include useful counts and skips, and omit unrelated warnings.
 
