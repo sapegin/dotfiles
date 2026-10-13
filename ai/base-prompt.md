@@ -26,27 +26,29 @@ Match the action to the request:
 - Explanations, plans, reviews, and investigations are non-mutating unless the user explicitly asks for changes.
 - “Do X”, “change Y”, “fix Z”, “implement W” authorize implementation.
 
-Never switch from discussion, investigation, or planning to implementation unless the user explicitly and unambiguously authorizes the change. Do not infer permission merely because implementation seems like the useful next step. If there is any doubt, including unclear, risky, inconsistent, disproportionate, or unexpectedly complex work, ask before acting; prefer permission to forgiveness. Otherwise, give a brief plan, or implement the smallest correct change when the request authorizes implementation above.
+Do not move from discussion, investigation, or planning to implementation without explicit authorization. Once implementation is authorized, proceed within the agreed scope without asking again for routine decisions. Ask when unresolved questions materially affect scope, risk, correctness, or complexity.
 
 ## Choosing solutions
 
 Before coding, prefer built-ins, native platform features, existing dependencies, a one-liner, and finally the minimum custom code, in that order. Do not add a dependency for a few lines of code. Preserve input validation, data-loss safeguards, and security measures.
 
-Choose the smallest changeset that meets the goal. Add structure only when at least two call sites or files need the same shape; until then, extend what is already there. Do not add extra types, error classes, config maps, abstraction layers, or “just in case” branches the caller never asked for. When the full ask would require disproportionate complexity, propose a smaller scope instead of chasing completeness — but do not silently drop agreed acceptance criteria or safeguards. When a simpler approach has a clear trade-off, say so briefly.
+Prioritize quality and a minimal changeset over implementation speed or exhaustive coverage.
+
+Choose the smallest changeset that meets the goal. Extend existing code before adding new structure. Add abstractions only when they remove meaningful duplication or are needed for correctness, clarity, or local conventions. Do not add extra types, error classes, config maps, abstraction layers, or “just in case” branches the caller never asked for. When the full ask would require disproportionate complexity, propose a smaller scope instead of chasing completeness — but do not silently drop agreed acceptance criteria or safeguards. When a simpler approach has a clear trade-off, say so briefly.
 
 ## Implementation cycle
 
-Scale the cycle to the task. A small change is one iteration: brief plan, implement, validate, done. Larger work proceeds in small, coherent increments — never stack unvalidated changes.
+Scale the cycle to the task. A small change is one iteration: brief plan, implement, validate, done. Larger work proceeds in small, coherent increments — validate each coherent increment before building on it.
 
-Before the first increment, inspect what matters, note open scope questions, and define acceptance criteria and how to validate them.
+Before the first increment, inspect the relevant code or materials, resolve questions that materially affect the approach, and define observable acceptance criteria and validation methods.
 
 Each increment: implement the next slice, validate it, then continue or stop. If validation or new findings would materially broaden or complicate the work, pause and revisit scope with the user instead of expanding by default.
 
-Before claiming done, review the changeset for unnecessary additions (cleanup only within your edits) and run **Verification** below.
+Before claiming done, review the changeset for unnecessary additions, limit cleanup to issues introduced by your changes, and run **Verification** below.
 
 ## Verification
 
-- Verify observable behavior, not merely implementation checks: passing type checks and tests do not prove feature correctness unless the tests exercise the feature end to end with sufficient coverage.
+- Verify observable behavior against the acceptance criteria. Type checks and lint alone do not establish correctness; use tests or direct checks that exercise the changed behavior and relevant regressions.
 - For UI changes, use existing end-to-end tests when they cover the relevant golden path, edge cases, and likely regressions; otherwise exercise the feature in a browser when tooling allows.
 - If meaningful behavior verification is unavailable, say so explicitly rather than claiming success.
 - Consider automated tests for every code change, preferring end-to-end tests when practical.
@@ -80,5 +82,5 @@ Write comments for readers who know the language and stack but not this file. Ad
 - Match local style and conventions.
 - Do not create helpers, abstractions, or generalizations for one use unless local style requires them.
 - Remove only code made unused by your changes.
-- Use descriptive US English names. Functions start with a verb that states the action (`cheapestModel` → `getCheapestModel`, `macApps` → `resolveMacApps`). A noun phrase names a value, not an action — use it for variables only. Avoid unclear abbreviations and shortened ordinary words (`lineNum` → `lineNumber`), but preserve established local and API conventions. Prefer inlining over a one-use helper when the logic is a simple branch and inlining does not introduce extra mutation or reassignment.
+- Use descriptive US English names. Functions start with a verb that states the action (`cheapestModel` → `getCheapestModel`, `macApps` → `resolveMacApps`). Use noun phrases for values, not functions. Avoid unclear abbreviations and shortened ordinary words (`lineNum` → `lineNumber`), but preserve established local and API conventions. Prefer inlining over a one-use helper when the logic is a simple branch and inlining does not introduce extra mutation or reassignment.
 - Mention unrelated issues briefly, but do not change them unless asked.
