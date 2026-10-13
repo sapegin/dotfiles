@@ -1,6 +1,8 @@
 {
   "general": {
+    "launcherShortcut": "cmd+space",
     "showInMenuBar": true,
+    "automaticallyCheckForUpdates": true,
     "popToRootSeconds": 0,
     "escapeKeyBehavior": "navigateBackOrClose",
     "autoSwitchInputSource": "com.apple.keylayout.ABC",
@@ -27,6 +29,7 @@
     "sensitivity": "medium"
   },
   "applications": {
+    "enabled": true,
     "searchScopes": [
       "/Applications",
       "/Applications/Utilities",
@@ -36,9 +39,178 @@
       "/System/Volumes/Preboot/Cryptexes/App/System/Applications",
       "/System/Library/CoreServices/Finder.app",
       "~/Applications"
-    ]
+    ],
+    "apps": {
+      "TeXShop": {
+        "shortcut": null,
+        "alias": null,
+        "showInLauncher": false
+      },
+      "com.apple.Chess": {
+        "shortcut": null,
+        "alias": null,
+        "showInLauncher": false
+      },
+      "com.apple.MigrateAssistant": {
+        "shortcut": null,
+        "alias": null,
+        "showInLauncher": false
+      },
+      "com.apple.Music": {
+        "shortcut": "hyper+p",
+        "alias": null,
+        "showInLauncher": true
+      },
+      "com.apple.Stickies": {
+        "shortcut": "hyper+g",
+        "alias": null,
+        "showInLauncher": true
+      },
+      "com.apple.appleseed.FeedbackAssistant": {
+        "shortcut": null,
+        "alias": null,
+        "showInLauncher": false
+      },
+      "com.apple.games": {
+        "shortcut": null,
+        "alias": null,
+        "showInLauncher": false
+      },
+      "com.apple.helpviewer": {
+        "shortcut": null,
+        "alias": null,
+        "showInLauncher": false
+      },
+      "com.apple.news": {
+        "shortcut": null,
+        "alias": null,
+        "showInLauncher": false
+      },
+      "com.cyberark.CyberArkEPM": {
+        "shortcut": null,
+        "alias": null,
+        "showInLauncher": false
+      },
+      "com.googlecode.mactlmgr.tlu": {
+        "shortcut": null,
+        "alias": null,
+        "showInLauncher": false
+      },
+      "com.microsoft.Outlook": {
+        "shortcut": "hyper+m",
+        "alias": null,
+        "showInLauncher": true
+      },
+      "com.microsoft.VSCode": {
+        "shortcut": "hyper+k",
+        "alias": null,
+        "showInLauncher": true
+      },
+      "com.mitchellh.ghostty": {
+        "shortcut": "hyper+t",
+        "alias": null,
+        "showInLauncher": true
+      },
+      "com.paloaltonetworks.cortex.app": {
+        "shortcut": null,
+        "alias": null,
+        "showInLauncher": false
+      },
+      "com.tinyspeck.slackmacgap": {
+        "shortcut": "hyper+s",
+        "alias": null,
+        "showInLauncher": true
+      },
+      "edu.hm.cs.hint.hintview": {
+        "shortcut": null,
+        "alias": null,
+        "showInLauncher": false
+      },
+      "edu.ucsd.cs.mmccrack.bibdesk": {
+        "shortcut": null,
+        "alias": null,
+        "showInLauncher": false
+      },
+      "md.obsidian": {
+        "shortcut": "hyper+n",
+        "alias": null,
+        "showInLauncher": true
+      },
+      "nl.root3.support": {
+        "shortcut": null,
+        "alias": null,
+        "showInLauncher": false
+      },
+      "org.mozilla.firefox": {
+        "shortcut": "hyper+i",
+        "alias": null,
+        "showInLauncher": true
+      },
+      "org.mozilla.firefoxdeveloperedition": {
+        "shortcut": "hyper+u",
+        "alias": null,
+        "showInLauncher": true
+      },
+      "org.sbarex.SourceCodeSyntaxHighlight": {
+        "shortcut": null,
+        "alias": null,
+        "showInLauncher": false
+      },
+      "ru.keepcoder.Telegram": {
+        "shortcut": "hyper+l",
+        "alias": null,
+        "showInLauncher": true
+      }
+    }
+  },
+  "systemSettings": {
+    "enabled": true,
+    "panes": {}
+  },
+  "systemActions": {
+    "enabled": true,
+    "actions": {
+      "lock-screen": {
+        "shortcut": "hyper+x",
+        "alias": null,
+        "showInLauncher": true
+      }
+    }
   },
   "commands": {
+    "builtInEnabled": true,
+    "builtIn": {
+      "export-settings": {
+        "shortcut": null,
+        "alias": null,
+        "showInLauncher": false
+      },
+      "import-settings": {
+        "shortcut": null,
+        "alias": null,
+        "showInLauncher": false
+      },
+      "import-from-raycast": {
+        "shortcut": null,
+        "alias": null,
+        "showInLauncher": false
+      },
+      "check-for-updates": {
+        "shortcut": null,
+        "alias": null,
+        "showInLauncher": false
+      },
+      "about": {
+        "shortcut": null,
+        "alias": null,
+        "showInLauncher": false
+      },
+      "support": {
+        "shortcut": null,
+        "alias": null,
+        "showInLauncher": false
+      }
+    },
     "enabled": true,
     "showInLauncher": true
   },
@@ -47,7 +219,8 @@
     "showInLauncher": true,
     "opensNewWindow": false,
     "selectionFallback": "ask",
-    "confirmsBeforeDelete": true
+    "confirmsBeforeDelete": true,
+    "commands": {}
   },
   "appleShortcuts": {
     "enabled": false
@@ -60,30 +233,65 @@
     "retentionDays": "forever",
     "opensTo": "recent",
     "newChatAfterMinutes": 5,
-    "toolRounds": 25
+    "toolRounds": 25,
+    "commands": {}
   },
   "quickActions": {
-    "targetLanguage": ""
+    "targetLanguage": "",
+    "commands": {}
+  },
+  "dictation": {
+    "mode": "toggle",
+    "shortcut": null,
+    "model": "redux",
+    "microphone": null,
+    "destination": "paste",
+    "adaptsCapitalization": true,
+    "releaseAfterMinutes": 1,
+    "language": null
   },
   "fileSearch": {
     "enabled": true,
-    "scopes": ["~"],
-    "ignorePatterns": []
+    "scopes": [
+      "~"
+    ],
+    "ignorePatterns": [],
+    "commands": {
+      "search-files": {
+        "shortcut": "hyper+'",
+        "alias": null,
+        "showInLauncher": true
+      }
+    }
   },
   "notes": {
     "enabled": false,
     "rendersMarkdown": true,
     "showsFormattingBar": true,
-    "folder": null
+    "folder": null,
+    "commands": {}
   },
   "snippets": {
     "showInLauncher": false,
-    "folder": null
+    "folder": null,
+    "commands": {
+      "search-snippets": {
+        "shortcut": null,
+        "alias": null,
+        "showInLauncher": false
+      },
+      "create-snippet": {
+        "shortcut": null,
+        "alias": null,
+        "showInLauncher": false
+      }
+    }
   },
   "navigation": {
     "enabled": false,
     "menuSearchShowsAppleMenu": false,
-    "menuSearchDisabledApps": []
+    "menuSearchDisabledApps": [],
+    "commands": {}
   },
   "windowManagement": {
     "enabled": true,
@@ -129,19 +337,26 @@
       "previous-space": null,
       "next-space": null
     },
+    "aliases": {},
     "customSizes": [],
     "layouts": [],
-    "rooms": []
+    "rooms": [],
+    "commands": {}
   },
   "clipboard": {
     "enabled": false,
     "retentionDays": 90,
     "defaultAction": "paste",
-    "disabledApps": ["com.apple.keychainaccess", "com.apple.Passwords"]
+    "disabledApps": [
+      "com.apple.keychainaccess",
+      "com.apple.Passwords"
+    ],
+    "commands": {}
   },
   "emoji": {
     "skinTone": "mediumLight",
-    "gridColumns": 8
+    "gridColumns": 8,
+    "commands": {}
   },
   "calendar": {
     "showInLauncher": true,
@@ -149,12 +364,14 @@
     "span": "todayAndTomorrow",
     "joinWindowMinutes": 5,
     "autoJoinConfirms": true,
+    "autoJoinNamedProvidersOnly": false,
     "meetingBrowser": null,
     "menuBar": "disabled",
     "menuBarUpcomingEvents": "today",
     "menuBarLinkedEventsOnly": true,
     "menuBarHidesWhenEmpty": false,
-    "hideCurrentEventAfterMinutes": "never"
+    "hideCurrentEventAfterMinutes": "never",
+    "commands": {}
   },
   "extensions": {
     "showInLauncher": true
