@@ -85,6 +85,11 @@ export function tildify(filepath: string): string {
   return filepath.replace(HOME, '~');
 }
 
+/** Read a UTF-8 JSON file and parse it. */
+export async function readJson<T>(filePath: string): Promise<T> {
+  return JSON.parse(await fs.readFile(filePath, 'utf8')) as T;
+}
+
 /** Returns whether `filePath` exists and is accessible to this process. */
 export async function doesPathExist(filePath: string): Promise<boolean> {
   try {

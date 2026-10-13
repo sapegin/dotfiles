@@ -12,8 +12,15 @@ import crypto from 'node:crypto';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { parseArgs, type ParsedArgs } from '../util/args.ts';
-import { atomicCopy, dirs, doesPathExist } from '../util/files.ts';
-import { log, run } from '../util/tui.ts';
+import {
+  atomicCopy,
+  atomicWrite,
+  dirs,
+  doesPathExist,
+  readJson,
+  tildify,
+} from '../util/files.ts';
+import { run, UserError } from '../util/tui.ts';
 
 const OPTIONS = [] as const;
 
@@ -21,7 +28,8 @@ export type Options = ParsedArgs<typeof OPTIONS>;
 
 const PLUGINS_REPO = path.join(dirs.projects, 'raccoon-obsidian');
 const PLUGINS_DIR = path.join(PLUGINS_REPO, 'plugins');
-const TARGET_VAULT = path.join(dirs.obsidianVault, '.obsidian/plugins');
+const VAULT_OBSIDIAN_DIR = path.join(dirs.obsidianVault, '.obsidian');
+const VAULT_PLUGINS_DIR = path.join(VAULT_OBSIDIAN_DIR, 'plugins');
 const MANIFEST_FILE = path.join(
   dirs.dotfiles,
   'obsidian/installed-plugins.json'
@@ -47,10 +55,6 @@ interface InstalledPlugin {
 interface InstallManifest {
   updated: string;
   plugins: InstalledPlugin[];
-}
-
-async function readJson<T>(filePath: string): Promise<T> {
-  return JSON.parse(await fs.readFile(filePath, 'utf8')) as T;
 }
 
 async function sha256(filePath: string): Promise<string> {
@@ -154,10 +158,46 @@ async function installPlugin(
   return targetDir;
 }
 
+/** Obsidian only runs plugins listed in community-plugins.json. */
+async function ensurePluginsEnabled(
+  vaultObsidianDir: string,
+  pluginIds: readonly string[]
+): Promise<void> {
+  if (pluginIds.length === 0) {
+    return;
+  }
+
+  const communityPath = path.join(vaultObsidianDir, 'community-plugins.json');
+  let enabled: string[] = [];
+  if (await doesPathExist(communityPath)) {
+    enabled = await readJson<string[]>(communityPath);
+  }
+
+  let changed = false;
+  for (const pluginId of pluginIds) {
+    if (enabled.includes(pluginId)) {
+      continue;
+    }
+    enabled.push(pluginId);
+    changed = true;
+  }
+  if (!changed) {
+    return;
+  }
+
+  enabled.sort((a, b) => a.localeCompare(b));
+  const content = `${JSON.stringify(enabled, null, 2)}\n`;
+  await atomicWrite(communityPath, (tempFile) =>
+    fs.writeFile(tempFile, content, 'utf8')
+  );
+}
+
 export async function syncObsidianPlugins(_options: Options): Promise<void> {
   if ((await doesPathExist(PLUGINS_REPO)) === false) {
-    log.error(`✕ Repo not found: ${PLUGINS_REPO}`);
-    process.exit(1);
+    throw new UserError(`Repo not found: ${tildify(PLUGINS_REPO)}`);
+  }
+  if ((await doesPathExist(dirs.obsidianVault)) === false) {
+    throw new UserError(`Vault not found: ${tildify(dirs.obsidianVault)}`);
   }
 
   console.log(' Building plugins…\n');
@@ -167,8 +207,7 @@ export async function syncObsidianPlugins(_options: Options): Promise<void> {
 
   const pluginDirs = await getPluginsDirectories();
   if (pluginDirs.length === 0) {
-    log.error('✕ No plugins found in', PLUGINS_DIR);
-    process.exit(1);
+    throw new UserError(`No plugins found in ${tildify(PLUGINS_DIR)}`);
   }
 
   const installedPlugins: InstalledPlugin[] = [];
@@ -189,12 +228,8 @@ export async function syncObsidianPlugins(_options: Options): Promise<void> {
     await smokeTest(pluginDir, manifest);
 
     console.log(` Installing ${manifest.id}…`);
-    if ((await doesPathExist(TARGET_VAULT)) === false) {
-      log.warn(`   Target missing, skipping: ${TARGET_VAULT}`);
-    } else {
-      const where = await installPlugin(pluginDir, manifest, TARGET_VAULT);
-      console.log(`  ↪ ${where}`);
-    }
+    const where = await installPlugin(pluginDir, manifest, VAULT_PLUGINS_DIR);
+    console.log(`  ↪ ${where}`);
 
     const files: Record<string, string> = {};
     for (const file of PLUGIN_FILES) {
@@ -210,6 +245,11 @@ export async function syncObsidianPlugins(_options: Options): Promise<void> {
       files,
     });
   }
+
+  await ensurePluginsEnabled(
+    VAULT_OBSIDIAN_DIR,
+    installedPlugins.map((plugin) => plugin.id)
+  );
 
   const installManifest: InstallManifest = {
     updated: new Date().toISOString(),

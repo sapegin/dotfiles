@@ -15,6 +15,7 @@ import {
   hasExtension,
   moveFilePair,
   parseGlobArgs,
+  readJson,
   stripExtensions,
   toFilename,
   areFilesEqual,
@@ -50,6 +51,17 @@ describe(doesPathExist, () => {
     await expect(doesPathExist(existing)).resolves.toBe(true);
     await expect(doesPathExist(`${existing}-missing`)).resolves.toBe(false);
     await fs.unlink(existing);
+  });
+});
+
+describe(readJson, () => {
+  test('parses a UTF-8 JSON file', async () => {
+    const filePath = path.join(os.tmpdir(), `read-json-${process.pid}.json`);
+    await fs.writeFile(filePath, '{"a":1}\n', 'utf8');
+    await expect(readJson<{ a: number }>(filePath)).resolves.toStrictEqual({
+      a: 1,
+    });
+    await fs.unlink(filePath);
   });
 });
 
