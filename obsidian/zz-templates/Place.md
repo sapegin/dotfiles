@@ -1,6 +1,5 @@
 ---
 tags:
-  - coffee
   - places
 ---
 # {{title}}

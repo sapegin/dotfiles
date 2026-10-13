@@ -1,4 +1,3 @@
-# Food inspiration
 filters:
   and:
     - file.folder.startsWith("Log")

@@ -1,12 +1,47 @@
 filters:
   and:
     - file.tags.contains("1up")
+formulas:
+  is_work: file.folder.startsWith("Work")
+  due_soon: note.deadline && date(note.deadline) >= now() && date(note.deadline) <= now() + '14d'
+properties:
+  formula.is_work:
+    displayName: Work
+  formula.due_soon:
+    displayName: Due soon
 views:
   - type: table
-    name: Table
+    name: Work
+    filters:
+      and:
+        - formula.is_work == true
     order:
       - file.name
       - deadline
+    sort:
+      - property: deadline
+        direction: ASC
+  - type: table
+    name: Personal
+    filters:
+      and:
+        - formula.is_work == false
+    order:
+      - file.name
+      - deadline
+      - file.folder
+    sort:
+      - property: deadline
+        direction: ASC
+  - type: table
+    name: Due in two weeks
+    filters:
+      and:
+        - formula.due_soon == true
+    order:
+      - file.name
+      - deadline
+      - file.folder
     sort:
       - property: deadline
         direction: ASC

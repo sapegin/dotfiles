@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-12T10:12:47.833Z",
+  "updated": "2026-10-13T07:57:24.371Z",
   "plugins": [
     {
       "id": "add-note-property",
@@ -29,7 +29,7 @@
       "id": "folder-emoji-icons",
       "version": "1.0.0",
       "files": {
-        "main.js": "8801871fe834c6b294f0c8cf1020596ad0ca4a1471255c2708d866fdc57e0762",
+        "main.js": "76d8defa51eb5664f3bc4db745628e0f5f4c0658b537e2c8ca1a7a074942ad93",
         "manifest.json": "aea80579d7acf6a402de4fe0a068a0f1cf358c03f645f9948e65bf32805ddbd7",
         "styles.css": "bdd58a72c03bf5e836e564fee857e99a873db08e14996d4ab9c124faf57e8804"
       }
@@ -38,9 +38,9 @@
       "id": "new-tab-links",
       "version": "1.0.0",
       "files": {
-        "main.js": "2fe29ed21bfcca0a55cc3f0fa51289b48ad6d50bb25db3ab9f99add1a1dbf7a4",
+        "main.js": "256ebb68f3270ec2cad6c9b4ad69e991c1fde3d2ca3b6782358550270bad1378",
         "manifest.json": "6048cb541b9d223caee4c683bc8e6fb4cdf867669560a1c49617780a5d03c087",
-        "styles.css": "fdca6273e686350a940eef5cc3324f9b56cb416b6fbb55d94cdb1a79cac636c5"
+        "styles.css": "3ec1e1bdf7ba987649c7596c2c6644685c63c95d06e7b94af96b75873b2ee545"
       }
     },
     {
