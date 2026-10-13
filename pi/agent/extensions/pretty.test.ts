@@ -169,10 +169,13 @@ describe('turn separator', () => {
     } as unknown as ExtensionContext;
 
     try {
-      emit('before_agent_start', {}, firstTurnContext);
+      emit('before_agent_start', { messageType: 'user' }, firstTurnContext);
       expect(entries).toHaveLength(0);
 
-      emit('before_agent_start', {}, laterTurnContext);
+      emit('before_agent_start', { messageType: 'custom' }, laterTurnContext);
+      expect(entries).toHaveLength(0);
+
+      emit('before_agent_start', { messageType: 'user' }, laterTurnContext);
       expect(entries).toStrictEqual([
         { customType: 'pretty-turn-separator', data: undefined },
       ]);

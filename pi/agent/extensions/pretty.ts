@@ -320,7 +320,10 @@ function registerTurnSeparator(pi: ExtensionAPI): void {
     return separator;
   });
 
-  pi.on('before_agent_start', (_event, ctx) => {
+  pi.on('before_agent_start', (event, ctx) => {
+    if (event.messageType !== 'user') {
+      return;
+    }
     const hasPreviousTurn = ctx.sessionManager
       .getBranch()
       .some(

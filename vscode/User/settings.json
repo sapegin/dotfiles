@@ -136,10 +136,12 @@
     "https://developer.microsoft.com/json-schemas/": true,
     "https://json-schema.org/": true,
     "https://json.schemastore.org/": true,
+    "https://pi.dev": true,
     "https://raw.githubusercontent.com": true,
     "https://raw.githubusercontent.com/devcontainers/spec/": true,
     "https://raw.githubusercontent.com/microsoft/vscode/": true,
     "https://schemastore.azurewebsites.net/": true,
+    "https://spec.openapis.org/": true,
     "https://www.raycast.com": true,
     "https://www.schemastore.org/": true
   },
