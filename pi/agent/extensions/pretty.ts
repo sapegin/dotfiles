@@ -461,6 +461,12 @@ function summarizeDiff(theme: Theme, added: number, removed: number): string {
 }
 
 export default function pretty(pi: ExtensionAPI) {
+  pi.on('session_start', (_event, ctx) => {
+    if (ctx.mode === 'tui') {
+      ctx.ui.setHiddenThinkingLabel('');
+    }
+  });
+
   const codemodeRenderers = registerCodemode(pi);
   pi.registerToolRenderer((toolName, next) =>
     toolName === 'codemode'
