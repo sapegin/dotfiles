@@ -91,13 +91,13 @@ Review release notes for the upgraded versions, including minor releases, and co
 
 ### Package update overviews
 
-Group the final summary by package or locked ecosystem set. For each group, include:
+Group the final summary by package or locked ecosystem set. Put the package name and old → new version range on the first line, then the description on a separate line beneath it. For each group, include:
 
 - **Versions and sources:** old → new version range and release-note or migration-guide links.
 - **Notable changes:** significant new features, behavior changes, and deprecations across the upgraded versions. Explain their practical significance, even when no code change is needed; omit routine changelog noise.
 - **Recommended changes:** a prioritized list directly beneath that group’s overview. Cover concrete project use cases for new features, simplifications that replace custom code, workarounds, or redundant dependencies, and deprecations still in use with their supported replacements.
 
-For each recommendation, identify the affected files or usage, proposed change, practical benefit, and supporting source. Distinguish required follow-ups from optional improvements; omit features with no clear project use case. If a group has no actionable changes remaining, say so explicitly.
+For each recommendation, identify the affected files or usage, proposed change, practical benefit, and supporting source. Distinguish required follow-ups from optional improvements; omit features with no clear project use case. If a group has no recommendations, omit its recommendations section entirely; do not print a placeholder.
 
 Apply fixes required for upgrade compatibility in the upgrade steps; leave optional recommendations for user approval.
 
