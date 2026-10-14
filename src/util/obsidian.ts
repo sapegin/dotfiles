@@ -11,6 +11,7 @@ import {
   hasExtension,
   stripExtensions,
   atomicWrite,
+  doesPathExist,
 } from './files.ts';
 import { formatLocalDateTime } from './time.ts';
 import { log } from './tui.ts';
@@ -19,7 +20,23 @@ export const MAX_DIMENSION = 2048;
 export const MAX_FILE_SIZE = 1024 * 1024;
 export const MAX_SMALL_FILE_SIZE = MAX_FILE_SIZE * 0.5;
 export const AVIF_QUALITY = 75;
+export const AVIF_SKIP_SUFFIX = '.avif-skip';
 const OBSIDIAN_VAULT_NAME = 'Murder';
+
+/** Path to the negative-cache sidecar for an attachment image. */
+export function getAvifSkipSidecarPath(imagePath: string): string {
+  return `${imagePath}${AVIF_SKIP_SUFFIX}`;
+}
+
+/**
+ * Saves an empty sidecar file as a flag that this image shouldn't be optimized
+ * (resulting AVIF is larger than source JPEG).
+ */
+async function recordAvifSkipSidecar(imagePath: string): Promise<void> {
+  await atomicWrite(getAvifSkipSidecarPath(imagePath), (tempFile) =>
+    fs.writeFile(tempFile, '')
+  );
+}
 
 // Matches Markdown images (`![Alt](photo.jpg)`) and Obsidian image wikilinks
 // (`![[photo.jpg|400]]`). Capture groups: Markdown target is 2, Obsidian
@@ -164,6 +181,10 @@ export async function needsOptimization(
   imagePath: string,
   onError?: (message: string) => void
 ): Promise<ImageDimensions | undefined> {
+  if (await doesPathExist(getAvifSkipSidecarPath(imagePath))) {
+    return undefined;
+  }
+
   const stats = await fs.stat(imagePath);
   const dimensions = await getImageDimensions(imagePath, onError);
 
@@ -232,6 +253,7 @@ export async function optimizeImage(
 
   if (optimizedStat.size >= originalStat.size) {
     await fs.unlink(avifPath);
+    await recordAvifSkipSidecar(imagePath);
     console.log(
       `Skipped ${filename} (AVIF not smaller: ${prettyBytes(optimizedStat.size)} vs ${prettyBytes(originalStat.size)})`
     );
@@ -252,6 +274,7 @@ export async function optimizeImage(
     );
   }
 
+  await fs.unlink(getAvifSkipSidecarPath(imagePath)).catch(() => {});
   await moveOriginalToTrash(imagePath);
 
   return {

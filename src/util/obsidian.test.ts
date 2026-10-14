@@ -1,10 +1,16 @@
+import fs from 'node:fs/promises';
+import os from 'node:os';
 import path from 'node:path';
-import { describe, expect, test } from 'vitest';
+import { afterEach, describe, expect, test } from 'vitest';
 import { dirs } from './files.ts';
 import {
+  AVIF_SKIP_SUFFIX,
+  getAvifSkipSidecarPath,
   getDailyNotePath,
   getMarkdownImages,
   getObsidianImageEmbedFilenames,
+  MAX_FILE_SIZE,
+  needsOptimization,
   getNotePath,
   parseFrontmatter,
   parseSections,
@@ -231,5 +237,32 @@ describe(resolveWikilinks, () => {
         (slug) => `/blog/${slug}/`
       )
     ).toBe('See [Foo](/blog/foo/) and label');
+  });
+});
+
+describe(getAvifSkipSidecarPath, () => {
+  test('appends the skip suffix to the image path', () => {
+    expect(getAvifSkipSidecarPath('/vault/photo.jpg')).toBe(
+      `/vault/photo.jpg${AVIF_SKIP_SUFFIX}`
+    );
+  });
+});
+
+describe(needsOptimization, () => {
+  let tmpDir: string;
+
+  afterEach(async () => {
+    if (tmpDir) {
+      await fs.rm(tmpDir, { recursive: true, force: true });
+    }
+  });
+
+  test('skips large files when an AVIF skip sidecar exists', async () => {
+    tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), 'obsidian-needs-opt-'));
+    const imagePath = path.join(tmpDir, 'large.jpg');
+    await fs.writeFile(imagePath, Buffer.alloc(MAX_FILE_SIZE + 1));
+    await fs.writeFile(getAvifSkipSidecarPath(imagePath), '');
+
+    await expect(needsOptimization(imagePath)).resolves.toBeUndefined();
   });
 });
