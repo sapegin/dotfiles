@@ -30,7 +30,6 @@ export async function photosPublish(_options: Options): Promise<void> {
     process.exit(1);
   }
 
-  console.log(`Repo: ${REPO_ROOT}\n`);
   await publishPhotos(REPO_ROOT);
 }
 

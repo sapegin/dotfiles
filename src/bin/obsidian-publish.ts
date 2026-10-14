@@ -34,8 +34,6 @@ const REPO_ROOT = path.join(dirs.projects, 'sapegin.me');
 export async function obsidianPublish(options: Options): Promise<void> {
   await assertObsidianVault();
 
-  console.log(`Repo: ${REPO_ROOT}\n`);
-
   switch (options.site) {
     case 'site':
       await publishSite(REPO_ROOT);

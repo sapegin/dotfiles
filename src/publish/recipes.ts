@@ -19,7 +19,7 @@ import {
   type VaultFrontmatter,
 } from '../util/obsidian.ts';
 import { toKebabCase } from '../util/text.ts';
-import { log } from '../util/tui.ts';
+import { log, UserError } from '../util/tui.ts';
 
 const VAULT_DIR = path.join(dirs.obsidianVault, 'Food');
 
@@ -33,8 +33,6 @@ interface RecipeRaw {
   titleEnglish?: string;
   tags: string[];
   description?: string;
-  imageUrl?: string;
-  thumbnailUrl?: string;
   ingredients: string;
   steps: string;
   keywords: string[];
@@ -64,42 +62,37 @@ function readRecipeFile(filePath: string) {
   return readNoteFile<VaultFrontmatter>(filePath, getSlug);
 }
 
-function getPublishedImageUrls(slug: string): {
-  imageUrl: string;
-  thumbnailUrl: string;
-} {
+function getRecipeImagePaths(imagesOutputDir: string, slug: string) {
   return {
-    imageUrl: `/images/recipes/${slug}.avif`,
-    thumbnailUrl: `/images/recipes/${slug}_thumb.avif`,
+    main: path.join(imagesOutputDir, `${slug}.avif`),
+    thumb: path.join(imagesOutputDir, `${slug}_thumb.avif`),
   };
 }
 
 async function syncRecipeImages(
   repoRoot: string,
   filename: string | undefined,
-  slug: string
-): Promise<{
-  imageUrl?: string;
-  thumbnailUrl?: string;
-  imagesUpdated: boolean;
-}> {
+  slug: string,
+  title: string
+): Promise<{ imagesUpdated: boolean }> {
   const imagesOutputDir = path.join(
     repoRoot,
     'sites/tacohuaco/public/images/recipes'
   );
 
   if (filename === undefined) {
-    return { imagesUpdated: false };
+    throw new UserError(`${title} (${slug}): no image attachment in note`);
   }
 
   const srcPath = path.join(dirs.obsidianAttachments, filename);
   if (fs.existsSync(srcPath) === false) {
-    log.warn(`Image not found: ${srcPath}`);
-    return { imagesUpdated: false };
+    throw new UserError(`${title} (${slug}): image not found: ${srcPath}`);
   }
 
-  const destPath = path.join(imagesOutputDir, `${slug}.avif`);
-  const destThumbPath = path.join(imagesOutputDir, `${slug}_thumb.avif`);
+  const { main: destPath, thumb: destThumbPath } = getRecipeImagePaths(
+    imagesOutputDir,
+    slug
+  );
 
   let imagesUpdated = false;
 
@@ -116,10 +109,6 @@ async function syncRecipeImages(
       .avif({ quality: THUMBNAIL_QUALITY })
       .toFile(destThumbPath);
     imagesUpdated = true;
-  }
-
-  if (fs.existsSync(destPath)) {
-    return { ...getPublishedImageUrls(slug), imagesUpdated };
   }
 
   return { imagesUpdated };
@@ -233,7 +222,7 @@ export async function publishRecipes(repoRoot: string): Promise<void> {
 
     const overnight = steps.includes('overnight');
 
-    const sharedFields = {
+    const recipe: RecipeRaw = {
       slug,
       createdAt: dateString,
       title,
@@ -252,23 +241,19 @@ export async function publishRecipes(repoRoot: string): Promise<void> {
       usedBy: usageMap.get(slug) ?? [],
     };
 
-    const { imagesUpdated, ...imageUrls } = await syncRecipeImages(
+    const { imagesUpdated } = await syncRecipeImages(
       repoRoot,
       attachmentFilename,
-      slug
+      slug,
+      title
     );
-
-    if (imagesUpdated) {
-      console.log(`↻ ${title} (images)`);
-    }
-
-    const recipe: RecipeRaw = {
-      ...sharedFields,
-      ...imageUrls,
-    };
 
     const json = JSON.stringify(recipe, null, 2);
     if ((await writeFileIfDifferent(outputPath, json, title)) === 'unchanged') {
+      if (imagesUpdated) {
+        console.log(`↻ ${title} (images)`);
+        count++;
+      }
       continue;
     }
 
@@ -285,8 +270,10 @@ export async function publishRecipes(repoRoot: string): Promise<void> {
     const slug = path.parse(jsonFile).name;
     if (publishedSlugs.has(slug) === false) {
       const jsonPath = path.join(outputDir, jsonFile);
-      const imagePath = path.join(imagesOutputDir, `${slug}.avif`);
-      const thumbPath = path.join(imagesOutputDir, `${slug}_thumb.avif`);
+      const { main: imagePath, thumb: thumbPath } = getRecipeImagePaths(
+        imagesOutputDir,
+        slug
+      );
 
       fs.unlinkSync(jsonPath);
       if (fs.existsSync(imagePath)) {
