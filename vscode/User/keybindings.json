@@ -318,6 +318,12 @@
     "key": "cmd+k cmd+b",
     "command": "git.checkout"
   },
+  {
+    "comment": "Stage selected file in Source Control pane",
+    "key": "alt+space",
+    "command": "git.stage",
+    "when": "focusedView == workbench.scm"
+  },
 
   /**
    * Tasks and debugger
