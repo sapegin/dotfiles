@@ -3,6 +3,7 @@ import path from 'node:path';
 import sharp from 'sharp';
 import { readExifMetadata, type ExifMetadata } from '../util/exif.ts';
 import { dirs, exts, glob } from '../util/files.ts';
+import { getPublishedImageMetadata } from '../util/image.ts';
 import { getPhotoSlug } from '../util/photos.ts';
 import { log } from '../util/tui.ts';
 
@@ -50,14 +51,6 @@ async function readStoredPhoto(
   }
 }
 
-async function getDominantColor(buffer: Buffer): Promise<string> {
-  const { dominant } = await sharp(buffer).stats();
-  const hex = [dominant.r, dominant.g, dominant.b]
-    .map((channel) => channel.toString(16).padStart(2, '0'))
-    .join('');
-  return `#${hex}`;
-}
-
 async function writeAvif(
   pipeline: ReturnType<typeof sharp>,
   outputPath: string,
@@ -68,23 +61,6 @@ async function writeAvif(
   if (size > MAX_FILE_SIZE && quality - AVIF_QUALITY_STEP >= AVIF_MIN_QUALITY) {
     await writeAvif(pipeline, outputPath, quality - AVIF_QUALITY_STEP);
   }
-}
-
-async function convertToAvif(
-  buffer: Buffer,
-  publicPhotoDir: string,
-  slug: string
-): Promise<void> {
-  await writeAvif(
-    sharp(buffer),
-    path.join(publicPhotoDir, `${slug}.avif`),
-    AVIF_QUALITY
-  );
-  await writeAvif(
-    sharp(buffer).resize({ width: THUMBNAIL_WIDTH }),
-    path.join(publicPhotoDir, `${slug}_thumb.avif`),
-    AVIF_QUALITY
-  );
 }
 
 function buildPhotoEntry({
@@ -172,11 +148,19 @@ export async function publishPhotos(repoRoot: string): Promise<void> {
       process.exit(1);
     }
 
-    // Sharp types width/height as optional; every file in the export folder has both.
-    const { width, height } = await sharp(buffer).metadata();
-
     const metadata = await readExifMetadata(filepath);
-    const color = await getDominantColor(buffer);
+
+    const avifPath = path.join(publicPhotoDir, `${slug}.avif`);
+    const thumbPath = path.join(publicPhotoDir, `${slug}_thumb.avif`);
+
+    await writeAvif(sharp(buffer), avifPath, AVIF_QUALITY);
+    await writeAvif(
+      sharp(buffer).resize({ width: THUMBNAIL_WIDTH }),
+      thumbPath,
+      AVIF_QUALITY
+    );
+
+    const { width, height, color } = await getPublishedImageMetadata(avifPath);
 
     const photo = buildPhotoEntry({
       name,
@@ -187,8 +171,6 @@ export async function publishPhotos(repoRoot: string): Promise<void> {
       color,
       metadata,
     });
-
-    await convertToAvif(buffer, publicPhotoDir, slug);
 
     await fs.writeFile(
       path.join(destDir, `${slug}.json`),

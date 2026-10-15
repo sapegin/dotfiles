@@ -7,6 +7,7 @@ import {
   areFilesEqual,
   writeFileIfDifferent,
 } from '../util/files.ts';
+import { getPublishedImageMetadata } from '../util/image.ts';
 import {
   extractTitle,
   formatPublishedDate,
@@ -43,6 +44,9 @@ interface RecipeRaw {
   yields?: string;
   source?: string;
   usedBy: string[];
+  width: number;
+  height: number;
+  color: string;
 }
 
 function toUrl(slug: string) {
@@ -74,7 +78,12 @@ async function syncRecipeImages(
   filename: string | undefined,
   slug: string,
   title: string
-): Promise<{ imagesUpdated: boolean }> {
+): Promise<{
+  imagesUpdated: boolean;
+  width: number;
+  height: number;
+  color: string;
+}> {
   const imagesOutputDir = path.join(
     repoRoot,
     'sites/tacohuaco/public/images/recipes'
@@ -111,7 +120,13 @@ async function syncRecipeImages(
     imagesUpdated = true;
   }
 
-  return { imagesUpdated };
+  try {
+    const { width, height, color } = await getPublishedImageMetadata(destPath);
+    return { imagesUpdated, width, height, color };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    throw new UserError(`${title} (${slug}): ${message}`);
+  }
 }
 
 /** Sync recipes from Obsidian to the tacohuaco site in the sapegin.me monorepo. */
@@ -222,6 +237,13 @@ export async function publishRecipes(repoRoot: string): Promise<void> {
 
     const overnight = steps.includes('overnight');
 
+    const { imagesUpdated, width, height, color } = await syncRecipeImages(
+      repoRoot,
+      attachmentFilename,
+      slug,
+      title
+    );
+
     const recipe: RecipeRaw = {
       slug,
       createdAt: dateString,
@@ -239,14 +261,10 @@ export async function publishRecipes(repoRoot: string): Promise<void> {
       yields: frontmatter.yields ?? undefined,
       source: sourceMarkdown,
       usedBy: usageMap.get(slug) ?? [],
+      width,
+      height,
+      color,
     };
-
-    const { imagesUpdated } = await syncRecipeImages(
-      repoRoot,
-      attachmentFilename,
-      slug,
-      title
-    );
 
     const json = JSON.stringify(recipe, null, 2);
     if ((await writeFileIfDifferent(outputPath, json, title)) === 'unchanged') {
