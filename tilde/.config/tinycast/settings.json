@@ -252,9 +252,7 @@
   },
   "fileSearch": {
     "enabled": true,
-    "scopes": [
-      "~"
-    ],
+    "scopes": ["~"],
     "ignorePatterns": [],
     "commands": {
       "search-files": {
@@ -347,10 +345,7 @@
     "enabled": false,
     "retentionDays": 90,
     "defaultAction": "paste",
-    "disabledApps": [
-      "com.apple.keychainaccess",
-      "com.apple.Passwords"
-    ],
+    "disabledApps": ["com.apple.keychainaccess", "com.apple.Passwords"],
     "commands": {}
   },
   "emoji": {
