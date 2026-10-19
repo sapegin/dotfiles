@@ -1,10 +1,23 @@
 import path from 'node:path';
 import { describe, expect, test } from 'vitest';
-import { fuzzyfy, scoreProjectMatch, searchProjects } from './projects.ts';
+import {
+  fuzzyfy,
+  scoreFuzzyMatch,
+  scoreProjectMatch,
+  searchProjects,
+} from './projects.ts';
 
 describe(fuzzyfy, () => {
   test('inserts wildcards between alphanumeric characters', () => {
     expect(fuzzyfy('foo')).toBe('f.*o.*o');
+  });
+});
+
+describe(scoreFuzzyMatch, () => {
+  test('prefers contiguous substring over subsequence-only fuzzy', () => {
+    expect(scoreFuzzyMatch('Photoshop', 'shop')).toBeGreaterThan(
+      scoreFuzzyMatch('Show Desktop', 'shop') ?? 0
+    );
   });
 });
 

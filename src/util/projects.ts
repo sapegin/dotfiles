@@ -2,7 +2,7 @@
  * Collects project folder paths and ranks them by fuzzy search with word-initial
  * abbreviation priority.
  *
- * Used by `j` and `tinycast/project-opener`.
+ * Used by `j`, Tinycast project-opener, and (via port) Hotdog/Pastor fuzzy rank.
  */
 
 import fs from 'node:fs';
@@ -32,6 +32,10 @@ function untildify(input: string): string {
 //   start (`dw` → `dg_stage_web`, `dsw`).
 const ABBREVIATION_PREFIX_BONUS = 10_000;
 const ABBREVIATION_SUBSEQUENCE_BONUS = 5000;
+/** Full normalized string equals query (e.g. `foo` on folder `foo`). */
+const EXACT_MATCH_BONUS = 15_000;
+/** Query appears contiguously in normalized name (`shop` in `photoshop`). */
+const CONTIGUOUS_SUBSTRING_BONUS = 7500;
 
 /** `WORK_PROJECTS_DIR` from `~/.env`. Tinycast’s runtime has no `util.parseEnv`. */
 function workProjectsDirFromEnv(): string | undefined {
@@ -156,22 +160,50 @@ function scoreAbbreviation(name: string, query: string): number {
   return 0;
 }
 
-export function scoreProjectMatch(
-  projectPath: string,
-  query: string
-): number | null {
-  const folderName = path.basename(projectPath);
-  const normalizedName = normalizeName(folderName);
+function scoreExactAndContiguous(
+  normalizedName: string,
+  normalizedQuery: string
+): number {
+  if (normalizedQuery.length === 0) {
+    return 0;
+  }
+
+  if (normalizedName === normalizedQuery) {
+    return EXACT_MATCH_BONUS;
+  }
+
+  const index = normalizedName.indexOf(normalizedQuery);
+  if (index !== -1) {
+    return CONTIGUOUS_SUBSTRING_BONUS - index;
+  }
+
+  return 0;
+}
+
+/** Fuzzy rank for any display string (palette rows, folder names, …). */
+export function scoreFuzzyMatch(name: string, query: string): number | null {
+  const normalizedName = normalizeName(name);
+  const normalizedQuery = normalizeName(query);
   const match = new RegExp(fuzzyfy(query), 'i').exec(normalizedName);
   if (match === null) {
     return null;
   }
 
-  // Higher is better: abbreviation bonus, then shorter names, then earlier
-  // fuzzy match.
+  // Higher is better: exact/contiguous, abbreviation, shorter names, earlier
+  // fuzzy index.
   return (
-    scoreAbbreviation(folderName, query) - normalizedName.length - match.index
+    scoreExactAndContiguous(normalizedName, normalizedQuery) +
+    scoreAbbreviation(name, query) -
+    normalizedName.length -
+    match.index
   );
+}
+
+export function scoreProjectMatch(
+  projectPath: string,
+  query: string
+): number | null {
+  return scoreFuzzyMatch(path.basename(projectPath), query);
 }
 
 export function searchProjects(query: string): string[] {
