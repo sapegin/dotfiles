@@ -4,7 +4,7 @@ description: Stress-test a plan against the codebase, tests, and existing docs b
 disable-model-invocation: true
 ---
 
-Before beginning, read [the shared grilling process](../_references/Grilling.md) and follow it for every invocation.
+Before beginning, read [the shared grilling process](../_references/grilling.md) and follow it for every invocation.
 
 Treat code and tests as primary evidence; docs may be stale.
 

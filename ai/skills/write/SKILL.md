@@ -7,4 +7,4 @@ Write the requested text for its intended audience and purpose. Preserve supplie
 
 ## Tone
 
-Read and follow the [English writing style guide](../_references/Writing.md).
+Read and follow the [English writing style guide](../_references/writing.md).

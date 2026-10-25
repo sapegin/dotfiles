@@ -13,7 +13,7 @@ The [base-prompt.md](./base-prompt.md) is the source of truth for global instruc
 
 ## Tone
 
-Poe’s tone instructions are inline in [base-prompt.md](./base-prompt.md). Writing skills link directly to the [English writing style guide](./skills/_references/Writing.md).
+Poe’s tone instructions are inline in [base-prompt.md](./base-prompt.md). Writing skills link directly to the [English writing style guide](./skills/_references/writing.md).
 
 ## Skills
 

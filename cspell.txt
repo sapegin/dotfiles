@@ -13,6 +13,8 @@ autofixable
 autofixed
 autofixing
 automations
+autorepeat
+autoresizing
 autostash
 backpressure
 basenames
@@ -32,6 +34,7 @@ customizability
 cyclomatic
 dcim
 deburr
+dedupe
 deslop
 discoverability
 docling
@@ -46,6 +49,7 @@ Formik
 frontends
 frontmatter
 frontmatters
+frontmost
 Ghostty
 googleable
 grayscale
@@ -88,6 +92,7 @@ pomodoros
 preorder
 pushback
 raccoonarium
+recents
 refactorings
 renamer
 rescan
@@ -108,6 +113,8 @@ stuffses
 Styleguidist
 stylesheet
 subclassing
+subrange
+subview
 Supacode
 tacocat
 Tacohuaco
@@ -116,6 +123,7 @@ Tâmia
 Tauri
 textlint
 themable
+tildified
 timeboxing
 Tinycast
 todos
@@ -124,9 +132,11 @@ undeployed
 ungluing
 unlisten
 unrequested
+unretained
 untildify
 unvalidated
 Wayfair
 wikilink
 wikilinks
+worktree
 xlarge

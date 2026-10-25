@@ -13,7 +13,7 @@ Read and follow the [pretty-html](../pretty-html/SKILL.md) skill for every HTML 
 
 ## Tone
 
-Read and follow the [English writing style guide](../_references/Writing.md).
+Read and follow the [English writing style guide](../_references/writing.md).
 
 Optimize for a reader who forgets easy details: use `<ss-callout variant="remember">`, `gotcha`, `prefer`, and `avoid` liberally when something is counter-intuitive or easy to misremember. Prefer repeating a key fact in a callout rather than burying it in prose.
 

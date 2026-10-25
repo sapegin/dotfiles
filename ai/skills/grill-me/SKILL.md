@@ -4,7 +4,7 @@ description: Interview the user relentlessly about a plan, decision, or design u
 disable-model-invocation: true
 ---
 
-Before beginning, read [the shared grilling process](../_references/Grilling.md) and follow it for every invocation.
+Before beginning, read [the shared grilling process](../_references/grilling.md) and follow it for every invocation.
 
 Treat stated goals and constraints as primary evidence; call out contradictions directly.
 

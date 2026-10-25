@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 Proofread the supplied text. Correct spelling, tense, grammar, and punctuation. Improve clarity and readability without changing meaning or voice. Never reprint the full text until the user approves fixes in text mode.
 
-Read and follow [English writing style guide](../_references/Writing.md) for punctuation, voice, typography, and other prose conventions.
+Read and follow [English writing style guide](../_references/writing.md) for punctuation, voice, typography, and other prose conventions.
 
 ## Target
 

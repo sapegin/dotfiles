@@ -84,8 +84,8 @@ When category references are loaded for embedded code in Markdown articles or do
 
 Load only the references needed for the topics the review target covers:
 
-- **Code quality** — comments, structure, dead code, completeness, clarity: read [code-quality](references/code-quality.md).
-- **JavaScript and TypeScript** — types, async, Node.js, framework patterns: read [javascript](references/javascript.md).
+- **Code quality** — structure, dead code, completeness, clarity: read [code-quality](references/code-quality.md).
+- **Clean code** — low-level code writing: load exactly one guide — [lang-javascript](references/lang-javascript.md) for JavaScript/TypeScript, [lang-python](references/lang-python.md) for Python, [lang-swift](references/lang-swift.md) for Swift, or [clean-code](references/clean-code.md) for any other language.
 - **Frontend and web** — HTML, CSS, client JS, accessibility, obsolete patterns: read [frontend](references/frontend.md). For HTML, CSS, or client-side JavaScript changes, also read the [modern web guidance index](../_references/modern-web-guidance/Index.md). For React components, Next.js pages, or client rendering changes, also read the [React best practices index](../_references/react-best-practices/Index.md). Load only the specific linked guides and rules relevant to the change.
 - **Backend logic** — backend changes: read [backend](references/backend.md). For React Server Components, Server Actions, or Next.js route handlers, also read the [React best practices index](../_references/react-best-practices/Index.md), then load only the specific linked rules relevant to the change.
 - **Security** — unsafe interpolation, secrets, path handling: read [security](references/security.md).
