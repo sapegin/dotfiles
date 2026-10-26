@@ -163,7 +163,7 @@ export async function publishRecipes(repoRoot: string): Promise<void> {
       continue;
     }
 
-    slugMap.set(baseName, slug);
+    slugMap.set(baseName.toLowerCase(), slug);
     publishedRecipes.push(filePath);
   }
 
@@ -182,7 +182,7 @@ export async function publishRecipes(repoRoot: string): Promise<void> {
 
     const allLinkTitles = getAllWikilinks(ingredientsMarkdown);
     for (const title of allLinkTitles) {
-      const refSlug = slugMap.get(title);
+      const refSlug = slugMap.get(title.toLowerCase());
       if (refSlug) {
         const slugs = usageMap.get(refSlug) ?? [];
         if (!slugs.includes(slug)) {

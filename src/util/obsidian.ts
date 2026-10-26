@@ -575,7 +575,7 @@ export function resolveWikilinks(
   return text.replaceAll(
     new RegExp(WIKILINK_REGEXP.source, 'g'),
     (_match, target: string, label?: string) => {
-      const slug = slugMap.get(target);
+      const slug = slugMap.get(target.toLowerCase());
       if (slug) {
         return `[${label ?? target}](${toUrl(slug)})`;
       }
