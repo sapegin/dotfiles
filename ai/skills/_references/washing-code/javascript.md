@@ -1,6 +1,6 @@
 # Clean code for JavaScript and TypeScript
 
-Guidance from Artem Sapegin’s [Washing your code](https://sapegin.me/book/) book, with JS/TS idioms (see also `~/_/washingcode-book/ai/Rules.md`).
+Guidance from Artem Sapegin’s [Washing your code](https://sapegin.me/book/) book, with JS/TS idioms.
 
 Prioritize readability and maintainability over cleverness or brevity. Make impossible states impossible. Use the type system to catch errors at compile time rather than runtime.
 

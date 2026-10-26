@@ -1,5 +1,7 @@
 # Washing your code
 
+Guidance from Artem Sapegin’s [Washing your code](https://sapegin.me/book/) book.
+
 ## Avoid loops
 
 Manual `for`/`while` loops with indices often hide what the code is doing to a collection.
