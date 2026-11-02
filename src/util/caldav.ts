@@ -16,7 +16,8 @@
  * - For `RRULE:FREQ=YEARLY` events, compare month and day on `DTSTART` only; the
  *   anchor year in the stored event may differ from the year we write.
  * - Weekly events use `RRULE:FREQ=WEEKLY;BYDAY=…` with an all-day anchor
- *   `DTSTART` on that weekday.
+ *   `DTSTART` on that weekday. Biweekly adds `INTERVAL=2`.
+ * - Monthly chores use `RRULE:FREQ=MONTHLY` with optional `INTERVAL` (3 / 6).
  * - Omit empty `DESCRIPTION` lines when building ICS; Fastmail often drops them
  *   on the way back, which would otherwise look like a diff.
  */
@@ -33,7 +34,14 @@ export interface CalDavCredentials {
   readonly password: string;
 }
 
-type CalendarEventRecurrence = 'none' | 'yearly' | 'weekly';
+export type CalendarEventRecurrence =
+  | 'none'
+  | 'yearly'
+  | 'weekly'
+  | 'biweekly'
+  | 'monthly'
+  | 'every-3-months'
+  | 'every-6-months';
 
 export interface CalendarEventPayload {
   readonly uid: string;
@@ -88,11 +96,9 @@ export function buildCalendarObjectIcs(
     `DTSTART;VALUE=DATE:${formatIcsDate(event.start)}`,
   ];
 
-  if (event.recurrence === 'yearly') {
-    lines.push('RRULE:FREQ=YEARLY');
-  } else if (event.recurrence === 'weekly') {
-    const byDay = icsByDayFromPlainDate(event.start);
-    lines.push(`RRULE:FREQ=WEEKLY;BYDAY=${byDay}`);
+  const rrule = getRruleForRecurrence(event.recurrence, event.start);
+  if (rrule !== undefined) {
+    lines.push(rrule);
   }
 
   lines.push(`SUMMARY:${escapeIcsText(event.summary)}`);
@@ -142,21 +148,59 @@ function icsByDayFromPlainDate(date: Temporal.PlainDate): string {
   return tokens[date.dayOfWeek - 1];
 }
 
+function getRruleForRecurrence(
+  recurrence: CalendarEventRecurrence,
+  start: Temporal.PlainDate
+): string | undefined {
+  switch (recurrence) {
+    case 'none': {
+      return undefined;
+    }
+    case 'yearly': {
+      return 'RRULE:FREQ=YEARLY';
+    }
+    case 'weekly': {
+      return `RRULE:FREQ=WEEKLY;BYDAY=${icsByDayFromPlainDate(start)}`;
+    }
+    case 'biweekly': {
+      return `RRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=${icsByDayFromPlainDate(start)}`;
+    }
+    case 'monthly': {
+      return 'RRULE:FREQ=MONTHLY';
+    }
+    case 'every-3-months': {
+      return 'RRULE:FREQ=MONTHLY;INTERVAL=3';
+    }
+    case 'every-6-months': {
+      return 'RRULE:FREQ=MONTHLY;INTERVAL=6';
+    }
+  }
+}
+
 function isYearlyEvent(icsData: string): boolean {
   return /^RRULE[^\n]*FREQ=YEARLY/m.test(unfoldIcsLines(icsData));
 }
 
+/**
+ * Normalize RRULE for fingerprinting: keep FREQ / INTERVAL / BYDAY, drop
+ * server extras such as WKST.
+ */
 function normalizeRruleLine(line: string): string {
-  if (line.includes('FREQ=YEARLY')) {
-    return 'RRULE:FREQ=YEARLY';
+  const freq = line.match(/FREQ=([A-Z]+)/)?.[1];
+  if (freq === undefined) {
+    return line;
   }
-  if (line.includes('FREQ=WEEKLY')) {
-    const byDay = line.match(/BYDAY=([A-Z]{2})/)?.[1];
-    return byDay === undefined
-      ? 'RRULE:FREQ=WEEKLY'
-      : `RRULE:FREQ=WEEKLY;BYDAY=${byDay}`;
+
+  const parts = [`FREQ=${freq}`];
+  const interval = line.match(/INTERVAL=(\d+)/)?.[1];
+  if (interval !== undefined && interval !== '1') {
+    parts.push(`INTERVAL=${interval}`);
   }
-  return line;
+  const byDay = line.match(/BYDAY=([A-Z]{2}(?:,[A-Z]{2})*)/)?.[1];
+  if (byDay !== undefined) {
+    parts.push(`BYDAY=${byDay}`);
+  }
+  return `RRULE:${parts.join(';')}`;
 }
 
 const CONTENT_PROPERTY_NAMES = [

@@ -32,6 +32,26 @@ describe(buildCalendarObjectIcs, () => {
     expect(ics).toContain('RRULE:FREQ=WEEKLY;BYDAY=MO');
     expect(ics).toContain('DTSTART;VALUE=DATE:20210104');
   });
+
+  test('builds biweekly and interval monthly events', () => {
+    const biweekly = buildCalendarObjectIcs({
+      uid: 'bi@example.com',
+      summary: 'Bathroom',
+      description: '',
+      start: Temporal.PlainDate.from({ year: 2026, month: 10, day: 2 }),
+      recurrence: 'biweekly',
+    });
+    expect(biweekly).toContain('RRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=FR');
+
+    const quarterly = buildCalendarObjectIcs({
+      uid: 'q@example.com',
+      summary: 'Oven',
+      description: '',
+      start: Temporal.PlainDate.from({ year: 2026, month: 10, day: 2 }),
+      recurrence: 'every-3-months',
+    });
+    expect(quarterly).toContain('RRULE:FREQ=MONTHLY;INTERVAL=3');
+  });
 });
 
 describe(veventContentFingerprint, () => {
@@ -75,6 +95,21 @@ describe(veventContentFingerprint, () => {
     });
     const remote =
       'BEGIN:VEVENT\nUID:a@b\nDTSTART;VALUE=DATE:20210104\nRRULE:FREQ=WEEKLY;BYDAY=MO;WKST=SU\nSUMMARY:Trash\nEND:VEVENT';
+    expect(veventContentFingerprint(local)).toBe(
+      veventContentFingerprint(remote)
+    );
+  });
+
+  test('keeps INTERVAL when fingerprinting biweekly RRULEs', () => {
+    const local = buildCalendarObjectIcs({
+      uid: 'a@b',
+      summary: 'Bathroom',
+      description: '',
+      start: Temporal.PlainDate.from({ year: 2026, month: 10, day: 2 }),
+      recurrence: 'biweekly',
+    });
+    const remote =
+      'BEGIN:VEVENT\nUID:a@b\nDTSTART;VALUE=DATE:20261002\nRRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=FR;WKST=SU\nSUMMARY:Bathroom\nEND:VEVENT';
     expect(veventContentFingerprint(local)).toBe(
       veventContentFingerprint(remote)
     );

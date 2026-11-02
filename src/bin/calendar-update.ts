@@ -1,9 +1,8 @@
-// Sync Junkyard calendar note sections to a Fastmail CalDAV calendar.
+// Sync Junkyard calendar note sections and Notion house chores to a Fastmail
+// CalDAV calendar.
 //
-// Reads `Life/Junkyard calendar.md` in the Obsidian vault, turns each `###`
-// section into CalDAV all-day events, and mirrors them to Fastmail. Events the
-// script created earlier but that are no longer in the note are removed from
-// the remote calendar.
+// Events the script created earlier but that are no longer in either source are
+// removed from the remote calendar.
 //
 // Setup:
 //
@@ -24,6 +23,10 @@
 // - Use `### Month D — Title` for yearly events or `### Monday — Title` for
 //   weekly events. Body text becomes the event description.
 //
+// - For chores: edit the Notion database, then Export → CSV and overwrite
+//   `~/cloud/Documents/chores.zip`. Rows without Start or with an unsupported
+//   Frequency are skipped.
+//
 // - Preview without writing to Fastmail:
 //
 // `calendar-update --dry-run`
@@ -40,14 +43,17 @@
 // License: MIT
 // https://github.com/sapegin/dotfiles
 
+import { execFileSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import {
   syncCalendarEvents,
   type CalendarEventPayload,
+  type CalendarEventRecurrence,
 } from '../util/caldav.ts';
 import { getMaslenitsaSunday } from '../util/calendar.ts';
+import { parseCsvRecords } from '../util/csv.ts';
 import { dirs } from '../util/files.ts';
 import {
   parseFrontmatter,
@@ -56,7 +62,7 @@ import {
 } from '../util/obsidian.ts';
 import { toKebabCase } from '../util/text.ts';
 import { formatLocalDate } from '../util/time.ts';
-import { run } from '../util/tui.ts';
+import { run, UserError } from '../util/tui.ts';
 
 const FASTMAIL_CALDAV_URL = 'https://caldav.fastmail.com/';
 
@@ -64,6 +70,22 @@ const CALENDAR_NOTE = path.join(
   dirs.obsidianVault,
   'Life/Junkyard calendar.md'
 );
+
+/** Notion database export (`Export` → CSV → zip). */
+const CHORES_ZIP = path.join(dirs.iCloudDocuments, 'chores.zip');
+
+const EVENT_PREFIX_FAMILY = '🌮';
+const EVENT_PREFIX_BIRTHDAY = '🎂';
+const EVENT_PREFIX_CHORE = '🧻';
+
+const FREQUENCY_TO_RECURRENCE = {
+  Weekly: 'weekly',
+  Biweekly: 'biweekly',
+  Monthly: 'monthly',
+  'Every 3 months': 'every-3-months',
+  'Every 6 months': 'every-6-months',
+  Yearly: 'yearly',
+} as const satisfies Record<string, CalendarEventRecurrence>;
 
 /** Stable per event; changing slug/date rules creates new UIDs, not updates. */
 const UID_DOMAIN = 'calendar-update.sapegin.local';
@@ -190,7 +212,7 @@ export function buildDesiredEvents(
         const start = getMaslenitsaSunday(year);
         events.push({
           uid: uidForMaslenitsa(year),
-          summary: 'Maslenitsa',
+          summary: `${EVENT_PREFIX_FAMILY} Maslenitsa`,
           description: wikilinksToPlainText(body),
           start,
           recurrence: 'none',
@@ -215,9 +237,12 @@ export function buildDesiredEvents(
       uid = uidForFixedEvent(parsed.start, parsed.title);
     }
 
+    const prefix = /\bbirthday\b/i.test(parsed.title)
+      ? EVENT_PREFIX_BIRTHDAY
+      : EVENT_PREFIX_FAMILY;
     events.push({
       uid,
-      summary: parsed.title,
+      summary: `${prefix} ${parsed.title}`,
       description: wikilinksToPlainText(body),
       start: parsed.start,
       recurrence: parsed.recurrence,
@@ -225,6 +250,89 @@ export function buildDesiredEvents(
   }
 
   return events;
+}
+
+function getRecurrenceForFrequency(
+  frequency: string
+): CalendarEventRecurrence | undefined {
+  if (Object.hasOwn(FREQUENCY_TO_RECURRENCE, frequency)) {
+    return FREQUENCY_TO_RECURRENCE[
+      frequency as keyof typeof FREQUENCY_TO_RECURRENCE
+    ];
+  }
+  return undefined;
+}
+
+function parseChoreStart(value: string): Temporal.PlainDate | undefined {
+  const trimmed = value.trim();
+  if (trimmed === '') {
+    return undefined;
+  }
+  const parsed = Date.parse(trimmed);
+  if (Number.isNaN(parsed)) {
+    return undefined;
+  }
+  return Temporal.PlainDate.from(formatLocalDate(new Date(parsed)));
+}
+
+/** Build CalDAV events from a Notion chores CSV export. */
+export function buildChoreEvents(
+  records: readonly Record<string, string>[]
+): CalendarEventPayload[] {
+  const events: CalendarEventPayload[] = [];
+
+  for (const record of records) {
+    const chore = record['Chore']?.trim() || '';
+    const owner = record['Owner']?.trim() || '';
+    const frequency = record['Frequency']?.trim() || '';
+    const details = record['Details']?.trim() || '';
+    const start = parseChoreStart(record['Start'] || '');
+    const recurrence = getRecurrenceForFrequency(frequency);
+
+    if (chore === '' || start === undefined || recurrence === undefined) {
+      continue;
+    }
+
+    const descriptionParts = [
+      owner === '' ? undefined : `Owner: ${owner}`,
+      details === '' ? undefined : details,
+    ].filter((part) => part !== undefined);
+
+    events.push({
+      uid: `chore-${toKebabCase(chore)}@${UID_DOMAIN}`,
+      summary: `${EVENT_PREFIX_CHORE} ${chore}`,
+      description: descriptionParts.join('\n'),
+      start,
+      recurrence,
+    });
+  }
+
+  return events;
+}
+
+/** Read the primary CSV entry from a Notion database export zip. */
+export function readChoresCsvFromZip(zipPath: string): string {
+  let listing: string;
+  try {
+    listing = execFileSync('unzip', ['-Z1', zipPath], { encoding: 'utf8' });
+  } catch {
+    throw new UserError(`Cannot read chores export: ${zipPath}`);
+  }
+
+  const entry = listing
+    .split('\n')
+    .map((line) => line.trim())
+    .find((name) => name.endsWith('.csv') && !name.includes('_all'));
+
+  if (entry === undefined) {
+    throw new UserError(`No chores CSV found in ${zipPath}`);
+  }
+
+  try {
+    return execFileSync('unzip', ['-p', zipPath, entry], { encoding: 'utf8' });
+  } catch {
+    throw new UserError(`Cannot extract ${entry} from ${zipPath}`);
+  }
 }
 
 export function formatEventLine(event: CalendarEventPayload): string {
@@ -260,7 +368,7 @@ function readSyncConfig(frontmatter: CalendarUpdateFrontmatter): {
   }
 
   if (missing.length > 0) {
-    throw new Error(
+    throw new UserError(
       `Missing frontmatter in ${CALENDAR_NOTE}: ${missing.join(', ')}`
     );
   }
@@ -272,7 +380,7 @@ function readSyncConfig(frontmatter: CalendarUpdateFrontmatter): {
   };
 }
 
-/** Sync Junkyard calendar note events to Fastmail. */
+/** Sync Junkyard note + Notion chores events to Fastmail. */
 export async function calendarUpdate(options: Options): Promise<void> {
   const rawMarkdown = await fs.readFile(CALENDAR_NOTE, 'utf8');
   const { frontmatter, body } =
@@ -280,7 +388,11 @@ export async function calendarUpdate(options: Options): Promise<void> {
   const config = readSyncConfig(frontmatter);
 
   const sections = parseSections(body, 3);
-  const events = buildDesiredEvents(sections);
+  const noteEvents = buildDesiredEvents(sections);
+  const choreEvents = buildChoreEvents(
+    parseCsvRecords(readChoresCsvFromZip(CHORES_ZIP))
+  );
+  const events = [...noteEvents, ...choreEvents];
 
   const result = await syncCalendarEvents({
     credentials: {
@@ -301,7 +413,7 @@ export async function calendarUpdate(options: Options): Promise<void> {
 
   const mode = options['dry-run'] ? 'Dry run' : 'Sync';
   console.log(
-    `${mode}: ${result.created} created, ${result.updated} updated, ${result.deleted} deleted, ${result.unchanged} unchanged (${events.length} events in note).`
+    `${mode}: ${result.created} created, ${result.updated} updated, ${result.deleted} deleted, ${result.unchanged} unchanged (${noteEvents.length} note + ${choreEvents.length} chores).`
   );
 }
 
