@@ -33,6 +33,8 @@ views:
     sort:
       - property: deadline
         direction: ASC
+      - property: file.folder
+        direction: ASC
   - type: table
     name: Due in two weeks
     filters:
