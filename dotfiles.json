@@ -54,6 +54,24 @@
     "source": "$DOTFILES_DIR/supacode/settings.json",
     "destination": "~/.supacode/"
   },
+  // Hotdog
+  {
+    "source": "$DOTFILES_DIR/hotdog/*.json",
+    "destination": "~/.config/hotdog"
+  },
+  {
+    "source": "$DOTFILES_DIR/hotdog/schemas/*",
+    "destination": "~/.config/hotdog/schemas"
+  },
+  // Pastor
+  {
+    "source": "$DOTFILES_DIR/pastor/*.json",
+    "destination": "~/.config/pastor"
+  },
+  {
+    "source": "$DOTFILES_DIR/pastor/schemas/*",
+    "destination": "~/.config/pastor/schemas"
+  },
   // Photoshop
   {
     "source": "~/Library/Mobile Documents/com~apple~CloudDocs/Apps/Adobe Photoshop 2024 Settings",

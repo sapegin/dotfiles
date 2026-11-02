@@ -8,7 +8,8 @@ Personal toolchain under `~/_/`, each a separate Git repo. Dotfiles is the hub; 
 | oxlint-config-raccoon | `~/_/oxlint-config-raccoon` | Shared Oxlint/Oxfmt configs |
 | raccoon-obsidian | `~/_/raccoon-obsidian` | Custom Obsidian plugins |
 | raccoon-vscode | `~/_/raccoon-vscode` | Custom VS Code extensions |
-| raccoon-toolbox | `~/_/raccoon-toolbox` | GUI tools (web and Mac app) |
+| raccoon-toolbox | `~/_/raccoon-toolbox` | GUI dev tools (web and Mac app) |
+| raccoon-apps | `~/_/raccoon-apps` | Native Mac apps: Hotdog launcher and Pastor terminal |
 | squirrelsong | `~/_/squirrelsong` | Color themes for all apps |
 
 When a task spans repos, edit each repo in place; run the matching dotfiles sync script when installing locally.
@@ -27,6 +28,7 @@ When a task spans repos, edit each repo in place; run the matching dotfiles sync
 | `raccoon-obsidian` plugin | Plugin source in monorepo; run `sync-obsidian-plugins` from dotfiles; manifest at `obsidian/installed-plugins.json` |
 | `raccoon-vscode` extension | Extension source in monorepo; run `sync-vscode-extensions` from dotfiles |
 | `raccoon-toolbox` Mac app | App source in repo; run `app-install raccoon-toolbox` from dotfiles |
+| `raccoon-apps` Native Mac apps | App source in repo; run `app-install hotdog` / `app-install pastor` from dotfiles |
 | `squirrelsong` theme | Theme source in repo; may affect VS Code extension packaging via the same sync script |
 | New CLI need | Add to `tilde/Brewfile` first; wire into a dotfiles script second |
 

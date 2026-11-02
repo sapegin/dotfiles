@@ -1,0 +1,243 @@
+{
+  "$schema": "./schemas/hotdog.config.schema.json",
+  "bookmarks": {
+    "palettePrefix": "b",
+    "file": "~/cloud/Documents/Bookmarks.md"
+  },
+  "projects": {
+    "palettePrefix": "j",
+    "sources": ["~/cloud", "~/murder", "~/dotfiles", "~/_/*", "~/umg/*"]
+  },
+  "contacts": {
+    "palettePrefix": "c"
+  },
+  "playlists": {
+    "palettePrefix": "p"
+  },
+  "fileSearch": {
+    "palettePrefix": "'",
+    "fdBinary": "/opt/homebrew/bin/fd",
+    "roots": [
+      "~/cloud",
+      "~/murder",
+      "~/Desktop",
+      "~/Documents",
+      "~/Downloads",
+      "~/Pictures"
+    ],
+    "excludes": []
+  },
+  "calculator": {
+    "qalcBinary": "/opt/homebrew/bin/qalc"
+  },
+  "calendar": {
+    "icalBinary": "/opt/homebrew/bin/ical",
+    "palettePrefix": "e",
+    "defaultCalendar": "artem@sapegin.me",
+    "defaultDurationMinutes": 30,
+    "defaultInvitees": ["Possum:home"]
+  },
+  "snippets": {
+    "file": "~/cloud/Documents/snippets.json"
+  },
+  "customCommands": [
+    {
+      "palettePrefix": "q",
+      "hint": "Add a quick note",
+      "command": "~/dotfiles/bin/symlinks/obsidian-quickie {query}"
+    },
+    {
+      "palettePrefix": "job",
+      "hint": "Create a job application",
+      "command": "~/dotfiles/bin/symlinks/obsidian-job {query}"
+    }
+  ],
+  "hotkeys": [
+    {
+      "id": "command.show-palette",
+      "shortcut": "cmd+space"
+    },
+    {
+      "id": "command.show-palette",
+      "query": "b ",
+      "shortcut": "hyper+shift+i"
+    },
+    {
+      "id": "command.show-palette",
+      "query": "j ",
+      "shortcut": "hyper+shift+k"
+    },
+    {
+      "id": "command.show-palette",
+      "query": "' ",
+      "shortcut": "hyper+'"
+    },
+    {
+      "id": "scratchpad.open",
+      "shortcut": "hyper+g"
+    },
+    {
+      "id": "command.open-app",
+      "bundleId": "org.mozilla.firefox",
+      "shortcut": "hyper+i"
+    },
+    {
+      "id": "command.open-app",
+      "bundleId": "org.mozilla.firefoxdeveloperedition",
+      "shortcut": "hyper+u"
+    },
+    {
+      "id": "command.open-app",
+      "bundleId": "com.microsoft.Outlook",
+      "shortcut": "hyper+m"
+    },
+    {
+      "id": "command.open-app",
+      "bundleId": "md.obsidian",
+      "shortcut": "hyper+n"
+    },
+    {
+      "id": "command.open-app",
+      "bundleId": "com.tinyspeck.slackmacgap",
+      "shortcut": "hyper+s"
+    },
+    {
+      "id": "command.open-app",
+      "bundleId": "ru.keepcoder.Telegram",
+      "shortcut": "hyper+l"
+    },
+    {
+      "id": "command.open-app",
+      "bundleId": "com.microsoft.VSCode",
+      "shortcut": "hyper+k"
+    },
+    {
+      "id": "command.open-app",
+      "bundleId": "com.apple.Music",
+      "shortcut": "hyper+p"
+    },
+    { "id": "calendar.join-meeting", "shortcut": "hyper+j" },
+    {
+      "id": "window.left-half",
+      "shortcut": "hyper+left"
+    },
+    {
+      "id": "window.right-half",
+      "shortcut": "hyper+right"
+    },
+    {
+      "id": "window.maximize",
+      "shortcut": "hyper+up"
+    },
+    {
+      "id": "snippet.expand",
+      "shortcut": "alt+-",
+      "snippetId": "typo-minus"
+    },
+    {
+      "id": "snippet.expand",
+      "shortcut": "alt+shift+-",
+      "snippetId": "typo-emdash"
+    },
+    {
+      "id": "snippet.expand",
+      "shortcut": "alt+;",
+      "snippetId": "typo-ellipsis"
+    },
+    {
+      "id": "snippet.expand",
+      "shortcut": "alt+'",
+      "snippetId": "typo-apostrophe"
+    },
+    {
+      "id": "snippet.expand",
+      "shortcut": "alt+,",
+      "snippetId": "typo-quote-en-open"
+    },
+    {
+      "id": "snippet.expand",
+      "shortcut": "alt+.",
+      "snippetId": "typo-quote-en-close"
+    },
+    {
+      "id": "snippet.expand",
+      "shortcut": "alt+shift+,",
+      "snippetId": "typo-quote-ru-open"
+    },
+    {
+      "id": "snippet.expand",
+      "shortcut": "alt+shift+.",
+      "snippetId": "typo-quote-ru-close"
+    },
+    {
+      "id": "snippet.expand",
+      "shortcut": "alt+s",
+      "snippetId": "typo-section"
+    },
+    {
+      "id": "snippet.expand",
+      "shortcut": "alt+7",
+      "snippetId": "typo-para"
+    },
+    {
+      "id": "snippet.expand",
+      "shortcut": "alt+o",
+      "snippetId": "typo-bullet"
+    },
+    {
+      "id": "snippet.expand",
+      "shortcut": "alt+d",
+      "snippetId": "typo-degree"
+    },
+    {
+      "id": "snippet.expand",
+      "shortcut": "alt+c",
+      "snippetId": "typo-copyright"
+    },
+    {
+      "id": "snippet.expand",
+      "shortcut": "alt+r",
+      "snippetId": "typo-registered"
+    },
+    {
+      "id": "snippet.expand",
+      "shortcut": "alt+9",
+      "snippetId": "typo-left"
+    },
+    {
+      "id": "snippet.expand",
+      "shortcut": "alt+0",
+      "snippetId": "typo-right"
+    },
+    {
+      "id": "snippet.expand",
+      "shortcut": "alt+6",
+      "snippetId": "typo-top"
+    },
+    {
+      "id": "snippet.expand",
+      "shortcut": "alt+v",
+      "snippetId": "typo-bottom"
+    },
+    {
+      "id": "snippet.expand",
+      "shortcut": "alt+x",
+      "snippetId": "typo-times"
+    },
+    {
+      "id": "snippet.expand",
+      "shortcut": "alt+8",
+      "snippetId": "typo-infinity"
+    },
+    {
+      "id": "snippet.expand",
+      "shortcut": "alt+4",
+      "snippetId": "typo-cent"
+    },
+    {
+      "id": "snippet.expand",
+      "shortcut": "alt+t",
+      "snippetId": "typo-trademark"
+    }
+  ]
+}

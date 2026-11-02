@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "hotdog.snippets.schema.json",
+  "title": "Hotdog snippets",
+  "description": "Snippet expansions",
+  "type": "object",
+  "required": ["snippets"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "snippets": {
+      "type": "array",
+      "description": "All snippets Hotdog may expand via hotkey",
+      "items": { "$ref": "#/$defs/snippet" }
+    }
+  },
+  "$defs": {
+    "snippet": {
+      "type": "object",
+      "required": ["id", "text"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]*$",
+          "minLength": 1,
+          "description": "Stable kebab-case ID"
+        },
+        "text": {
+          "type": "string",
+          "description": "Text pasted into the frontmost app"
+        },
+        "keyword": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Optional trigger typed in any app; longest match wins (case-insensitive)"
+        }
+      }
+    }
+  }
+}

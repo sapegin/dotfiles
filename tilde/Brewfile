@@ -15,7 +15,9 @@ brew "gh" # GitHub command-line tool
 brew "git-delta" # Diff pager for `git` and `grep` output
 brew "git" # The Git
 brew "lazygit" # Git client
-brew "macos-trash" # `rm` replacement with MacOS trash support
+brew "libqalculate" # Calculator
+brew "macos-trash" # `rm` replacement with macOS trash support
+brew "mise" # Dependency management for native macOS apps
 brew "node" # Fallback Node.js version
 brew "restic" # Incremental backups
 brew "ripgrep" # `grep` replacement

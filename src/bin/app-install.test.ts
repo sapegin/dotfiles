@@ -1,5 +1,9 @@
 import { describe, expect, test } from 'vitest';
-import { resolveMacApps } from './app-install.ts';
+import {
+  assertCanonicalHotdogInstall,
+  HOTDOG_INSTALL_PATH,
+  resolveMacApps,
+} from './app-install.ts';
 
 const RACCOON_TOOLBOX = {
   name: 'raccoon-toolbox',
@@ -9,7 +13,11 @@ const RACCOON_TOOLBOX = {
 
 describe(resolveMacApps, () => {
   test('returns all apps when no names are given', () => {
-    expect(resolveMacApps([])).toStrictEqual([RACCOON_TOOLBOX]);
+    expect(resolveMacApps([]).map((app) => app.name)).toStrictEqual([
+      'raccoon-toolbox',
+      'hotdog',
+      'pastor',
+    ]);
   });
 
   test('returns a single app by name', () => {
@@ -18,9 +26,21 @@ describe(resolveMacApps, () => {
     ]);
   });
 
+  test('resolves hotdog to raccoon-apps repo', () => {
+    expect(resolveMacApps(['hotdog'])).toMatchObject([
+      { name: 'hotdog', repo: 'raccoon-apps' },
+    ]);
+  });
+
   test('throws for an unknown app name', () => {
     expect(() => resolveMacApps(['no-such-app'])).toThrow(
       'Unknown app: no-such-app'
     );
+  });
+});
+
+describe(assertCanonicalHotdogInstall, () => {
+  test('throws when Hotdog is missing from /Applications', () => {
+    expect(() => assertCanonicalHotdogInstall()).toThrow(HOTDOG_INSTALL_PATH);
   });
 });

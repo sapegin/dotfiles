@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pastor.config.schema.json",
+  "title": "Pastor config",
+  "description": "Main config file",
+  "type": "object",
+  "required": ["shell", "gitHub"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "shell": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Login shell for new terminal tabs (absolute path, e.g. /bin/zsh)"
+    },
+    "gitHub": {
+      "type": "object",
+      "description": "GitHub integration polling (uses gh on PATH)",
+      "required": ["pullRequestPollIntervalSeconds"],
+      "additionalProperties": false,
+      "properties": {
+        "pullRequestPollIntervalSeconds": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Minimum seconds between background gh pull-request checks"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "$schema": "./schemas/pastor.config.schema.json",
+  "shell": "/bin/zsh",
+  "gitHub": {
+    "pullRequestPollIntervalSeconds": 300
+  }
+}

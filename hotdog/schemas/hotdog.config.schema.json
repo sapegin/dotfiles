@@ -1,0 +1,299 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "hotdog.config.schema.json",
+  "title": "Hotdog config",
+  "description": "Main config file",
+  "type": "object",
+  "required": [
+    "fileSearch",
+    "bookmarks",
+    "projects",
+    "contacts",
+    "playlists",
+    "calculator",
+    "calendar",
+    "customCommands",
+    "hotkeys",
+    "snippets"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "bookmarks": {
+      "type": "object",
+      "description": "Bookmark palette source (Markdown title + URL lines)",
+      "required": ["file", "palettePrefix"],
+      "additionalProperties": false,
+      "properties": {
+        "file": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Path to Bookmarks.md (~ allowed)"
+        },
+        "palettePrefix": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Palette scope sigil before a space (e.g. b for `b github`)"
+        }
+      }
+    },
+    "projects": {
+      "type": "object",
+      "description": "Project folders",
+      "required": ["sources", "palettePrefix"],
+      "additionalProperties": false,
+      "properties": {
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "Fixed folder paths or parent globs ending in /* (~ allowed)"
+        },
+        "palettePrefix": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Palette scope sigil before a space (e.g. j for `j dw`)"
+        }
+      }
+    },
+    "contacts": {
+      "type": "object",
+      "description": "Contacts search",
+      "required": ["palettePrefix"],
+      "additionalProperties": false,
+      "properties": {
+        "palettePrefix": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Palette scope sigil before a space (e.g. c for `c alice`)"
+        }
+      }
+    },
+    "playlists": {
+      "type": "object",
+      "description": "Apple Music library playlists",
+      "required": ["palettePrefix"],
+      "additionalProperties": false,
+      "properties": {
+        "palettePrefix": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Palette scope sigil before a space (e.g. p for `p chill`)"
+        }
+      }
+    },
+    "fileSearch": {
+      "type": "object",
+      "description": "File search",
+      "required": ["palettePrefix", "fdBinary", "roots", "excludes"],
+      "additionalProperties": false,
+      "properties": {
+        "palettePrefix": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Palette scope sigil before a space (e.g. ' for `' README`)"
+        },
+        "fdBinary": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Absolute fd executable path (~ allowed)"
+        },
+        "roots": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "Search roots (~ allowed); at least one folder"
+        },
+        "excludes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "Paths to omit: `~/…` or `/…` = prefix; otherwise any matching path component (e.g. `.git`, `node_modules`)."
+        }
+      }
+    },
+    "calculator": {
+      "type": "object",
+      "description": "Inline palette calculator",
+      "required": ["qalcBinary"],
+      "additionalProperties": false,
+      "properties": {
+        "qalcBinary": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Absolute qalc executable path (~ allowed)"
+        }
+      }
+    },
+    "calendar": {
+      "type": "object",
+      "description": "Calendar management",
+      "required": ["icalBinary", "palettePrefix", "defaultDurationMinutes"],
+      "additionalProperties": false,
+      "properties": {
+        "icalBinary": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Absolute ical executable path (~ allowed)"
+        },
+        "palettePrefix": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Palette scope sigil before a space"
+        },
+        "defaultCalendar": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Calendar name for `ical add -c` when set"
+        },
+        "defaultDurationMinutes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1440,
+          "description": "Default event length when the query omits an end time (minutes)"
+        },
+        "defaultInvitees": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 3
+          },
+          "description": "Default invitees (email or ContactName:label)"
+        }
+      }
+    },
+    "customCommands": {
+      "type": "array",
+      "description": "Palette prefix scopes that run shell commands with a user query",
+      "items": {
+        "type": "object",
+        "required": ["palettePrefix", "hint", "command"],
+        "additionalProperties": false,
+        "properties": {
+          "palettePrefix": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Palette scope sigil before a space (e.g. q for `q note text`)"
+          },
+          "hint": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Primary palette row title for this command"
+          },
+          "command": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Shell command template; `{query}` is replaced with a single-quoted scoped argument (~ allowed)"
+          }
+        }
+      }
+    },
+    "hotkeys": {
+      "$ref": "#/$defs/hotkeyBindings"
+    },
+    "snippets": {
+      "type": "object",
+      "description": "Snippets expansion",
+      "required": ["file"],
+      "additionalProperties": false,
+      "properties": {
+        "file": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Path to snippets JSON (~ allowed)."
+        }
+      }
+    }
+  },
+  "$defs": {
+    "hotkeyBindings": {
+      "type": "array",
+      "description": "One entry per hotkey. Same ID may appear multiple times with different shortcuts or parameters",
+      "items": { "$ref": "#/$defs/hotkeyBinding" }
+    },
+    "hotkeyBinding": {
+      "type": "object",
+      "required": ["id", "shortcut"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Command ID",
+          "enum": [
+            "command.show-palette",
+            "command.open-app",
+            "scratchpad.open",
+            "calendar.join-meeting",
+            "pastor.quake",
+            "pastor.open",
+            "snippet.expand",
+            "window.left-half",
+            "window.right-half",
+            "window.maximize"
+          ],
+          "markdownEnumDescriptions": [
+            "Open the Hotdog palette; optional query pre-fills the search field",
+            "Focus or launch an app; requires bundleId",
+            "Toggle the scratchpad window",
+            "Join the video call for the current or next calendar event (ical join)",
+            "Toggle Pastor quake terminal",
+            "Open Pastor main window at path; requires path when bound as hotkey",
+            "Paste a snippet into the frontmost app; requires snippetId",
+            "Snap front window to left half of screen",
+            "Snap front window to right half of screen",
+            "Maximize front window"
+          ]
+        },
+        "shortcut": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Chord (e.g. hyper+space, cmd+alt+j)"
+        },
+        "query": {
+          "type": "string",
+          "description": "For command.show-palette: initial palette query (e.g. j for projects)"
+        },
+        "bundleId": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Required for command.open-app: macOS bundle identifier (e.g. com.googlecode.iterm2)"
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Required for pastor.open when bound as a global hotkey: project directory (~ expanded)"
+        },
+        "snippetId": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Required for snippet.expand: id from the snippets file (config.snippets.file)"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "id": { "const": "command.open-app" } },
+            "required": ["id"]
+          },
+          "then": { "required": ["bundleId"] }
+        },
+        {
+          "if": {
+            "properties": { "id": { "const": "snippet.expand" } },
+            "required": ["id"]
+          },
+          "then": { "required": ["snippetId"] }
+        }
+      ]
+    }
+  }
+}
