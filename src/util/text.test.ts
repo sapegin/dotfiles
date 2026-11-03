@@ -1,5 +1,10 @@
 import { describe, expect, test } from 'vitest';
-import { capitalizeFirst, toKebabCase, toSentenceCase } from './text.ts';
+import {
+  capitalizeFirst,
+  toKebabCase,
+  toSentenceCase,
+  toTitleCase,
+} from './text.ts';
 
 describe(capitalizeFirst, () => {
   test('capitalizes only the first character', () => {
@@ -20,5 +25,14 @@ describe(toSentenceCase, () => {
       'Marriage registration existence certificate'
     );
     expect(toSentenceCase('Payslip 2026-04')).toBe('Payslip 2026-04');
+  });
+});
+
+describe(toTitleCase, () => {
+  test('title-cases hyphen-separated parts', () => {
+    expect(toTitleCase('berliner-fernsehturm')).toBe('Berliner Fernsehturm');
+    expect(toTitleCase('when-the-moon-goes-to-bed')).toBe(
+      'When The Moon Goes To Bed'
+    );
   });
 });

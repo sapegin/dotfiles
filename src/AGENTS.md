@@ -20,6 +20,8 @@ export function gitStandup(options: Options): void {
 await run(import.meta.url, () => gitStandup(parseArgs(OPTIONS)));
 ```
 
+Multi-file, script-specific packages (logic, templates, assets) live under `./<name>/` (e.g. `publish/`, `photo-album/`); the matching `./bin/` entry stays a thin CLI. Do not put that code in `util/` named after the script.
+
 If there are no arguments, set `OPTIONS = [] as const`. `parseArgs()` shows help on `--help` / `-h`.
 
 Add CLI flags only when the user asks for them or a real use case in this repo needs them (e.g. `--dry-run` for a script that has side effects). Do not add override switches for paths, accounts, or behavior “just in case”; hardcode or read config from the agreed source instead.

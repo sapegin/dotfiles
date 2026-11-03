@@ -15,6 +15,11 @@ interface ExifToolOutput {
   'Caption-Abstract'?: unknown;
   Keywords?: unknown;
   Rating?: unknown;
+  City?: unknown;
+  'Province-State'?: unknown;
+  State?: unknown;
+  Country?: unknown;
+  'Country-PrimaryLocationName'?: unknown;
 }
 
 interface ParsedExifDate {
@@ -38,6 +43,9 @@ export interface ExifMetadata {
   caption?: string;
   keywords?: string[];
   rating?: number;
+  city?: string;
+  state?: string;
+  country?: string;
 }
 
 function optionalString(value: unknown): string | undefined {
@@ -135,6 +143,11 @@ export async function readExifMetadata(
       '-Caption-Abstract',
       '-Keywords',
       '-Rating',
+      '-City',
+      '-Province-State',
+      '-State',
+      '-Country',
+      '-Country-PrimaryLocationName',
       filePath,
     ],
     { encoding: 'utf8' }
@@ -157,5 +170,12 @@ export async function readExifMetadata(
     caption: optionalString(metadata['Caption-Abstract']),
     keywords: optionalStringArray(metadata.Keywords),
     rating: optionalNumber(metadata.Rating),
+    city: optionalString(metadata.City),
+    state:
+      optionalString(metadata['Province-State']) ??
+      optionalString(metadata.State),
+    country:
+      optionalString(metadata.Country) ??
+      optionalString(metadata['Country-PrimaryLocationName']),
   };
 }

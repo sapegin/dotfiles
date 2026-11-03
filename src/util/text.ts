@@ -14,6 +14,15 @@ export function toSentenceCase(text: string): string {
   return capitalizeFirst(text.toLowerCase());
 }
 
+/** Title-case hyphen-separated parts: `foo-bar` → `Foo Bar`. */
+export function toTitleCase(text: string): string {
+  return text
+    .split('-')
+    .filter((part) => part.length > 0)
+    .map((part) => capitalizeFirst(part))
+    .join(' ');
+}
+
 /** Convert the given text to kebab-case. */
 export function toKebabCase(text: string): string {
   return text
