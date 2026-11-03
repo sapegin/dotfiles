@@ -28,7 +28,11 @@ function getPlistFilePath(label: string): string {
 }
 
 function getGuiDomain(): string {
-  return `gui/${process.getuid()}`;
+  const uid = process.getuid?.();
+  if (uid === undefined) {
+    throw new Error('process.getuid is not available');
+  }
+  return `gui/${uid}`;
 }
 
 function resolveProgramArguments(config: LaunchAgentConfig): readonly string[] {
@@ -93,9 +97,7 @@ export function buildLaunchAgentPlist(config: LaunchAgentConfig): string {
 \t</dict>`;
 
   if (config.errFile !== undefined && config.logFile === undefined) {
-    throw new Error(
-      `LaunchAgent ${config.label}: errFile requires logFile`
-    );
+    throw new Error(`LaunchAgent ${config.label}: errFile requires logFile`);
   }
 
   const logBlock =

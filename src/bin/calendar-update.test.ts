@@ -144,8 +144,7 @@ describe(buildChoreEvents, () => {
       {
         uid: 'chore-deep-clean-kitchen-surfaces@calendar-update.sapegin.local',
         summary: '🧻 Deep clean kitchen surfaces',
-        description:
-          'Owner: Possum\nIncludes shelves, and inside microwave',
+        description: 'Owner: Possum\nIncludes shelves, and inside microwave',
         start: Temporal.PlainDate.from({ year: 2026, month: 10, day: 2 }),
         recurrence: 'every-3-months',
       },
