@@ -115,7 +115,10 @@ function summarizeArguments(toolName: string, value: unknown): string {
   return truncate(JSON.stringify(value));
 }
 
-function formatMessage(message: JsonObject): TranscriptBlock[] {
+function formatMessage(
+  message: JsonObject,
+  retainAssistantReply = false
+): TranscriptBlock[] {
   const role = message.role;
   if (role === 'user') {
     return [
@@ -136,10 +139,12 @@ function formatMessage(message: JsonObject): TranscriptBlock[] {
         continue;
       }
       if (content.type === 'text' && typeof content.text === 'string') {
-        blocks.push({
-          text: `[Assistant]\n${truncate(content.text)}`,
-          required: false,
-        });
+        if (!retainAssistantReply) {
+          blocks.push({
+            text: `[Assistant]\n${truncate(content.text)}`,
+            required: false,
+          });
+        }
       } else if (
         content.type === 'toolCall' &&
         typeof content.name === 'string'
@@ -150,25 +155,71 @@ function formatMessage(message: JsonObject): TranscriptBlock[] {
         });
       }
     }
+    if (retainAssistantReply) {
+      blocks.push({
+        text: `[Assistant]\n${truncate(getTextContent(message.content), MAX_BLOCK_LENGTH, true)}`,
+        required: true,
+      });
+    }
     return blocks;
   }
   if (role === 'toolResult') {
     const toolName =
       typeof message.toolName === 'string' ? message.toolName : 'unknown';
     const isError = message.isError === true;
+    const nestedBlocks: TranscriptBlock[] = [];
+    const nestedCalls = isObject(message.nestedCalls)
+      ? message.nestedCalls
+      : undefined;
+    if (nestedCalls && Array.isArray(nestedCalls.calls)) {
+      // Nested results are not stored. Keep recorded statuses and errors rather
+      // than treating a successful wrapper as proof that its commands passed.
+      for (const call of nestedCalls.calls) {
+        if (!isObject(call) || typeof call.name !== 'string') {
+          continue;
+        }
+        if (call.name !== 'bash' && call.status === 'ok') {
+          continue;
+        }
+        nestedBlocks.push({
+          text: [
+            `[Nested tool: ${call.name}, ${String(call.status)}]`,
+            call.arguments === undefined
+              ? '[arguments omitted from session]'
+              : summarizeArguments(call.name, call.arguments),
+            ...(typeof call.error === 'string' ? [call.error] : []),
+          ]
+            .map((text) => truncate(text, MAX_BLOCK_LENGTH, true))
+            .join('\n'),
+          required: true,
+        });
+      }
+      if (nestedCalls.complete === false) {
+        nestedBlocks.push({
+          text: '[Nested call record incomplete]',
+          required: true,
+        });
+      }
+    } else if (toolName === 'codemode') {
+      nestedBlocks.push({
+        text: '[Nested call evidence unavailable: wrapper success does not establish command success]',
+        required: true,
+      });
+    }
     if (toolName === 'read' && !isError) {
       return [
         {
           text: '[Tool result: read, success]\n[content omitted]',
           required: true,
         },
+        ...nestedBlocks,
       ];
     }
 
     const output = truncate(
       getTextContent(message.content),
       MAX_BLOCK_LENGTH,
-      isError
+      isError || toolName === 'bash'
     );
     if (isError) {
       return [
@@ -176,6 +227,7 @@ function formatMessage(message: JsonObject): TranscriptBlock[] {
           text: `[Tool result: ${toolName}, error]\n${output}`,
           required: true,
         },
+        ...nestedBlocks,
       ];
     }
 
@@ -184,11 +236,12 @@ function formatMessage(message: JsonObject): TranscriptBlock[] {
         text: `[Tool result: ${toolName}, success]`,
         required: true,
       },
+      ...nestedBlocks,
       ...(output
         ? [
             {
               text: `[Tool output: ${toolName}]\n${output}`,
-              required: false,
+              required: toolName === 'bash',
             },
           ]
         : []),
@@ -211,12 +264,13 @@ function shorten(value: string, maximum: number): string {
   if (value.length <= maximum) {
     return value;
   }
-  return `${value.slice(0, Math.max(maximum - 1, 0))}…`;
+  const omission = '\n… [content omitted]';
+  return `${value.slice(0, Math.max(maximum - omission.length, 0))}${omission}`;
 }
 
-// Commands, user feedback, and tool outcomes survive the budget. Assistant
-// prose and successful output shrink first; required evidence may exceed the
-// soft limit.
+// Commands, user feedback, command outcomes, and the last assistant reply
+// survive the budget. Routine prose and other successful output shrink first;
+// required evidence may exceed the soft limit.
 function fitTranscript(blocks: TranscriptBlock[]): string {
   const transcript = blocks.map(({ text }) => text).join('\n\n');
   if (transcript.length <= MAX_SESSION_LENGTH) {
@@ -240,7 +294,10 @@ function fitTranscript(blocks: TranscriptBlock[]): string {
   );
 
   if (optionalBudget < 40) {
-    return requiredBlocks.map(({ text }) => text).join('\n\n');
+    return [
+      ...requiredBlocks.map(({ text }) => text),
+      `[Evidence omitted: ${optionalBlocks.length} optional blocks (routine assistant prose, other successful tool output, or summaries) to fit the session budget]`,
+    ].join('\n\n');
   }
 
   return blocks
@@ -277,12 +334,29 @@ function parseSession(filePath: string): string {
       (entry.message as JsonObject).isError === true
   );
 
+  const lastAssistantReply = messages.findLast((entry) => {
+    const message = entry.message as JsonObject;
+    return (
+      message.role === 'assistant' &&
+      Array.isArray(message.content) &&
+      message.content.some(
+        (content) =>
+          isObject(content) &&
+          content.type === 'text' &&
+          typeof content.text === 'string'
+      ) &&
+      !message.content.some(
+        (content) => isObject(content) && content.type === 'toolCall'
+      )
+    );
+  });
+
   // Include abandoned branches: failed approaches and recovery attempts are
   // useful evidence here even though Pi excludes them from the active
   // conversation branch.
   const transcript = entries.flatMap((entry) => {
     if (entry.type === 'message' && isObject(entry.message)) {
-      return formatMessage(entry.message);
+      return formatMessage(entry.message, entry === lastAssistantReply);
     }
     if (entry.type === 'compaction' && typeof entry.summary === 'string') {
       return [
