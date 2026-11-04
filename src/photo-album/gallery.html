@@ -8,6 +8,10 @@
   </head>
   <body>
     <h1><a href="/">{{title}}</a></h1>
-    <div class="gallery">{{rows}}</div>
+    <div class="gallery" id="gallery"></div>
+    <script type="application/json" id="gallery-data">
+      {{imagesJson}}
+    </script>
+    <script type="module" src="/_assets/gallery.js"></script>
   </body>
 </html>

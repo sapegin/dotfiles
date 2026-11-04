@@ -1,11 +1,16 @@
 import { describe, expect, test } from 'vitest';
 import {
   collectKnownCities,
+  createRows,
   filterByCity,
   filterBySeries,
   filterByYear,
   formatSeriesTitle,
+  getKind,
+  getMaxColumns,
   isSeriesKeyword,
+  LAYOUT_LARGE_MIN_WIDTH,
+  LAYOUT_MOBILE_MAX_WIDTH,
   listCityAlbums,
   listSeries,
   listYears,
@@ -215,13 +220,160 @@ describe('album listings and filters', () => {
   });
 });
 
+describe(getKind, () => {
+  test('marks Scan_ files below five stars as fun', () => {
+    expect(getKind('Scan_1.jpg', 0, 2000, 1000)).toBe('fun');
+    expect(getKind('Scan_1.jpg', 4, 1000, 1500)).toBe('fun');
+    expect(getKind('Scan_1.jpg', 5, 2000, 1000)).toBe('landscape');
+  });
+
+  test('classifies portrait, square, and landscape by aspect ratio', () => {
+    expect(getKind('a.jpg', 0, 1000, 1500)).toBe('portrait');
+    expect(getKind('a.jpg', 0, 1000, 1000)).toBe('square');
+    expect(getKind('a.jpg', 0, 3000, 1000)).toBe('landscape');
+  });
+});
+
 describe(recordToImage, () => {
-  test('maps camera make to serious group and landscape orientation', () => {
+  test('sets kind from filename, rating, and dimensions', () => {
     const image = recordToImage(
       record({ filename: 'a.jpg', make: 'Canon', width: 2000, height: 1000 }),
       new Set()
     );
-    expect(image.group).toBe('serious');
-    expect(image.orientation).toBe('landscape');
+    expect(image.kind).toBe('landscape');
+  });
+});
+
+describe(getMaxColumns, () => {
+  test('returns 1 on mobile, 2 on normal, 3 on very large screens', () => {
+    expect(getMaxColumns(LAYOUT_MOBILE_MAX_WIDTH)).toBe(1);
+    expect(getMaxColumns(LAYOUT_MOBILE_MAX_WIDTH + 1)).toBe(2);
+    expect(getMaxColumns(LAYOUT_LARGE_MIN_WIDTH - 1)).toBe(2);
+    expect(getMaxColumns(LAYOUT_LARGE_MIN_WIDTH)).toBe(3);
+  });
+});
+
+function photosOf(
+  count: number,
+  options: {
+    make: string;
+    width: number;
+    height: number;
+    namePrefix?: string;
+  }
+): PhotoAlbumImage[] {
+  const namePrefix = options.namePrefix ?? 'p';
+  return recordsToImages(
+    Array.from({ length: count }, (_, index) =>
+      record({
+        filename: `${namePrefix}${index}.jpg`,
+        make: options.make,
+        width: options.width,
+        height: options.height,
+        captureDate: `2024-06-${String(index + 1).padStart(2, '0')}T12:00:00.000Z`,
+      })
+    )
+  );
+}
+
+describe(createRows, () => {
+  test('packs portraits in same-kind rows of 2 or 3', () => {
+    const images = photosOf(6, {
+      make: 'Canon',
+      width: 1000,
+      height: 1500,
+    });
+    expect(createRows(images, 1).every((row) => row.columns === 1)).toBe(true);
+    expect(
+      createRows(images, 2).every(
+        (row) => row.columns <= 2 && row.kind === 'portrait'
+      )
+    ).toBe(true);
+    expect(createRows(images, 3).some((row) => row.columns === 3)).toBe(true);
+  });
+
+  test('keeps landscapes alone and does not mix kinds in a row', () => {
+    const images = [
+      ...photosOf(1, {
+        make: 'Canon',
+        width: 2000,
+        height: 1000,
+        namePrefix: 'l',
+      }),
+      ...photosOf(2, {
+        make: 'Canon',
+        width: 1000,
+        height: 1500,
+        namePrefix: 'p',
+      }),
+      ...photosOf(2, {
+        make: 'Canon',
+        width: 1000,
+        height: 1000,
+        namePrefix: 's',
+      }),
+    ];
+    const rows = createRows(images, 3);
+    expect(
+      rows
+        .filter((row) => row.kind === 'landscape')
+        .every((row) => row.columns === 1)
+    ).toBe(true);
+    expect(
+      rows.every((row) => row.images.every((image) => image.kind === row.kind))
+    ).toBe(true);
+  });
+
+  test('packs Scan_ fun photos together regardless of aspect ratio', () => {
+    const images = recordsToImages([
+      record({
+        filename: 'Scan_l.jpg',
+        width: 2000,
+        height: 1000,
+        rating: 0,
+        captureDate: '2024-06-01T12:00:00.000Z',
+      }),
+      record({
+        filename: 'Scan_p.jpg',
+        width: 1000,
+        height: 1500,
+        rating: 3,
+        captureDate: '2024-06-02T12:00:00.000Z',
+      }),
+      record({
+        filename: 'Scan_s.jpg',
+        width: 1000,
+        height: 1000,
+        rating: 4,
+        captureDate: '2024-06-03T12:00:00.000Z',
+      }),
+    ]);
+    expect(images.every((image) => image.kind === 'fun')).toBe(true);
+    const rows = createRows(images, 3);
+    expect(rows).toHaveLength(1);
+    expect(rows[0].columns).toBe(3);
+    expect(rows[0].kind).toBe('fun');
+  });
+
+  test('does not merge leftover singles more than five days apart', () => {
+    const images = recordsToImages([
+      record({
+        filename: 'jan.jpg',
+        make: 'Canon',
+        width: 1000,
+        height: 1500,
+        captureDate: '2024-01-01T12:00:00.000Z',
+      }),
+      record({
+        filename: 'aug.jpg',
+        make: 'Canon',
+        width: 1000,
+        height: 1500,
+        captureDate: '2024-08-01T12:00:00.000Z',
+      }),
+    ]);
+    const rows = createRows(images, 3);
+    expect(rows).toHaveLength(2);
+    expect(rows.every((row) => row.columns === 1)).toBe(true);
   });
 });

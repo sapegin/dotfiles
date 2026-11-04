@@ -11,7 +11,6 @@ import { dirs } from '../util/files.ts';
 import { UserError } from '../util/tui.ts';
 import {
   buildPhotoAlbumIndex,
-  createRows,
   filterByCity,
   filterBySeries,
   filterByYear,
@@ -21,7 +20,6 @@ import {
   listYears,
   PHOTO_ALBUM_PORT,
   renderTemplate,
-  type ImageRow,
   type PhotoAlbumImage,
 } from './album.ts';
 
@@ -123,39 +121,35 @@ ${list}
   });
 }
 
+/** JSON for the client layout; escape `<` so `</script>` cannot break out. */
+function galleryImagesJson(images: readonly PhotoAlbumImage[]): string {
+  const payload = images.map((image) => ({
+    filename: image.filename,
+    title: image.title,
+    captureDate: image.captureDate.toISOString(),
+    kind: image.kind,
+  }));
+  return JSON.stringify(payload).replaceAll('<', '\\u003c');
+}
+
 async function generateGalleryHtml(
   title: string,
-  rows: readonly ImageRow[]
+  images: readonly PhotoAlbumImage[]
 ): Promise<string> {
-  const rowsHtml = rows
-    .map((row) => {
-      const imagesHtml = row.images
-        .map((img) => {
-          const imgPath = `/images/${encodeURIComponent(img.filename)}`;
-          const isInstax = img.filename.startsWith('Instax');
-          const photoClass = isInstax ? 'photo photo-instax' : 'photo';
-          const alt = escapeHtml(img.title ?? img.filename);
-          return `<div class="${photoClass}"><img src="${imgPath}" alt="${alt}" loading="lazy"></div>`;
-        })
-        .join('\n          ');
-
-      const rowClass = `row-${row.orientation} row-cols-${row.columns}`;
-      return `      <div class="row ${rowClass}">
-          ${imagesHtml}
-        </div>`;
-    })
-    .join('\n');
-
   const template = await readTemplate('gallery.html');
   return renderTemplate(template, {
     title: escapeHtml(title),
-    rows: rowsHtml,
+    imagesJson: galleryImagesJson(images),
   });
 }
 
 function contentTypeForFilename(filename: string): string {
-  if (path.extname(filename).toLowerCase() === '.css') {
+  const ext = path.extname(filename).toLowerCase();
+  if (ext === '.css') {
     return 'text/css; charset=utf-8';
+  }
+  if (ext === '.js') {
+    return 'text/javascript; charset=utf-8';
   }
   return 'image/jpeg';
 }
@@ -231,14 +225,48 @@ async function sendAsset(
     return;
   }
 
-  // CSS edits should show up without a long browser cache.
+  // CSS/JS edits should show up without a long browser cache.
+  const ext = path.extname(safeName);
   const cacheControl =
-    path.extname(safeName) === '.css' ? 'no-cache' : 'public, max-age=86400';
-  await sendFile(
-    response,
-    path.join(PHOTO_ALBUM_ASSETS_DIR, safeName),
-    cacheControl
-  );
+    ext === '.css' || ext === '.js' ? 'no-cache' : 'public, max-age=86400';
+  // layout.js lives beside album.ts; other static files stay in _assets/.
+  const filePath =
+    safeName === 'layout.js'
+      ? path.join(PHOTO_ALBUM_DIR, safeName)
+      : path.join(PHOTO_ALBUM_ASSETS_DIR, safeName);
+  await sendFile(response, filePath, cacheControl);
+}
+
+function galleryImagesForPath(
+  pathname: string,
+  images: readonly PhotoAlbumImage[]
+): { title: string; images: PhotoAlbumImage[] } | undefined {
+  const [section, ...rest] = pathname
+    .split('/')
+    .filter((part) => part !== '')
+    .map((part) => decodeURIComponent(part));
+
+  let title: string;
+  let galleryImages: PhotoAlbumImage[];
+
+  if (section === 'year' && rest.length === 1) {
+    title = rest[0];
+    galleryImages = filterByYear(images, rest[0]);
+  } else if (section === 'city' && rest.length === 2) {
+    const [country, city] = rest;
+    title = `${city}, ${country}`;
+    galleryImages = filterByCity(images, country, city);
+  } else if (section === 'series' && rest.length === 1) {
+    title = formatSeriesTitle(rest[0]);
+    galleryImages = filterBySeries(images, rest[0]);
+  } else {
+    return undefined;
+  }
+
+  if (galleryImages.length === 0) {
+    return undefined;
+  }
+  return { title, images: galleryImages };
 }
 
 /** Build the index and serve the LAN gallery until the process exits. */
@@ -280,57 +308,12 @@ export async function servePhotoAlbum(): Promise<void> {
           return;
         }
 
-        const yearMatch = pathname.match(/^\/year\/([^/]+)$/);
-        if (yearMatch) {
-          const year = decodeURIComponent(yearMatch[1]);
-          const yearImages = filterByYear(images, year);
-          if (yearImages.length === 0) {
-            sendText(response, 404, 'Not found');
-            return;
-          }
+        const gallery = galleryImagesForPath(pathname, images);
+        if (gallery !== undefined) {
           sendHtml(
             response,
             200,
-            await generateGalleryHtml(year, createRows(yearImages))
-          );
-          return;
-        }
-
-        const cityMatch = pathname.match(/^\/city\/([^/]+)\/([^/]+)$/);
-        if (cityMatch) {
-          const country = decodeURIComponent(cityMatch[1]);
-          const city = decodeURIComponent(cityMatch[2]);
-          const cityImages = filterByCity(images, country, city);
-          if (cityImages.length === 0) {
-            sendText(response, 404, 'Not found');
-            return;
-          }
-          sendHtml(
-            response,
-            200,
-            await generateGalleryHtml(
-              `${city}, ${country}`,
-              createRows(cityImages)
-            )
-          );
-          return;
-        }
-
-        const seriesMatch = pathname.match(/^\/series\/([^/]+)$/);
-        if (seriesMatch) {
-          const series = decodeURIComponent(seriesMatch[1]);
-          const seriesImages = filterBySeries(images, series);
-          if (seriesImages.length === 0) {
-            sendText(response, 404, 'Not found');
-            return;
-          }
-          sendHtml(
-            response,
-            200,
-            await generateGalleryHtml(
-              formatSeriesTitle(series),
-              createRows(seriesImages)
-            )
+            await generateGalleryHtml(gallery.title, gallery.images)
           );
           return;
         }

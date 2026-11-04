@@ -6,6 +6,15 @@ import { readExifMetadata } from '../util/exif.ts';
 import { atomicWrite, dirs, exts, glob } from '../util/files.ts';
 import { IMPORT_DATE_PREFIX } from '../util/photos.ts';
 import { toTitleCase } from '../util/text.ts';
+import { type ImageKind } from './layout.js';
+
+export type { ImageKind, KnownKind } from './layout.js';
+export {
+  createRows,
+  getMaxColumns,
+  LAYOUT_LARGE_MIN_WIDTH,
+  LAYOUT_MOBILE_MAX_WIDTH,
+} from './layout.js';
 
 const PHOTO_ALBUM_INDEX_FILE = path.join(
   dirs.iCloudWebPhotos,
@@ -13,10 +22,6 @@ const PHOTO_ALBUM_INDEX_FILE = path.join(
 );
 // Not 6665–6669: Firefox blocks that IRC range as “restricted”.
 export const PHOTO_ALBUM_PORT = 6767;
-
-export type ImageGroup = 'serious' | 'mobile' | 'fun';
-export type KnownOrientation = 'landscape' | 'portrait' | 'panoramic';
-export type Orientation = KnownOrientation | 'unknown';
 
 /** Raw cached fields for one source JPEG (album city is derived at read time). */
 export interface PhotoAlbumRecord {
@@ -46,16 +51,7 @@ export interface PhotoAlbumImage extends Omit<
   captureDate: Date;
   albumCity?: string;
   series: string[];
-  group: ImageGroup;
-  orientation: Orientation;
-}
-
-export interface ImageRow {
-  group: ImageGroup;
-  orientation: KnownOrientation;
-  images: PhotoAlbumImage[];
-  firstPhotoDate: Date;
-  columns: number;
+  kind: ImageKind;
 }
 
 export interface CityAlbumRef {
@@ -137,52 +133,38 @@ export function collectKnownCities(
   return cities;
 }
 
-function getGroup(make: string): ImageGroup {
-  const makeUpper = make.toUpperCase();
-
-  if (makeUpper.includes('CANON') || makeUpper.includes('FUJIFILM')) {
-    return 'serious';
+/**
+ * Layout kind for a photo:
+ *
+ * - `Scan_…` with rating below 5 → `fun`
+ * - Otherwise square / portrait / landscape from aspect ratio
+ */
+export function getKind(
+  filename: string,
+  rating: number,
+  width: number,
+  height: number
+): ImageKind {
+  if (filename.startsWith('Scan_') && rating < 5) {
+    return 'fun';
   }
 
-  if (makeUpper.includes('APPLE')) {
-    return 'mobile';
-  }
-
-  return 'fun';
-}
-
-function getOrientation(width: number, height: number): Orientation {
   if (width === 0 || height === 0) {
     return 'unknown';
   }
 
   const ratio = width / height;
 
-  if (ratio > 16 / 7) {
-    return 'panoramic';
+  // Near-square stays with squares; true portraits are clearly taller.
+  if (ratio >= 0.95 && ratio <= 1.05) {
+    return 'square';
   }
 
-  if (ratio <= 1.05) {
+  if (ratio < 1) {
     return 'portrait';
   }
 
   return 'landscape';
-}
-
-function getRowConfig(group: ImageGroup): Record<KnownOrientation, number> {
-  if (group === 'serious') {
-    return {
-      landscape: 1,
-      portrait: 2,
-      panoramic: 1,
-    };
-  }
-
-  return {
-    landscape: 4,
-    portrait: 5,
-    panoramic: 1,
-  };
 }
 
 export function recordToImage(
@@ -204,8 +186,7 @@ export function recordToImage(
     title: record.title,
     albumCity: resolveAlbumCity(record.city, record.state, knownCities),
     series: record.keywords.filter(isSeriesKeyword),
-    group: getGroup(record.make),
-    orientation: getOrientation(record.width, record.height),
+    kind: getKind(record.filename, record.rating, record.width, record.height),
   };
 }
 
@@ -216,173 +197,6 @@ export function recordsToImages(
   return records
     .map((record) => recordToImage(record, knownCities))
     .toSorted((a, b) => a.captureDate.getTime() - b.captureDate.getTime());
-}
-
-function mergeSinglePhotoRows(rows: readonly ImageRow[]): ImageRow[] {
-  const result: ImageRow[] = [];
-  let i = 0;
-
-  while (i < rows.length) {
-    const row = rows[i];
-
-    if (
-      row.columns === 1 &&
-      (row.orientation === 'panoramic' ||
-        (row.group === 'serious' && row.orientation === 'landscape'))
-    ) {
-      result.push(row);
-      i++;
-      continue;
-    }
-
-    if (row.columns === 1) {
-      const mergeable: ImageRow[] = [row];
-      let j = i + 1;
-
-      while (j < rows.length && mergeable.length < 3) {
-        const nextRow = rows[j];
-        if (
-          nextRow.columns === 1 &&
-          nextRow.orientation !== 'panoramic' &&
-          !(nextRow.group === 'serious' && nextRow.orientation === 'landscape')
-        ) {
-          mergeable.push(nextRow);
-          j++;
-        } else {
-          break;
-        }
-      }
-
-      if (mergeable.length >= 2) {
-        const mergedImages = mergeable.flatMap((r) => r.images);
-        result.push({
-          group: mergeable[0].group,
-          orientation: mergeable[0].orientation,
-          images: mergedImages,
-          firstPhotoDate: mergeable[0].firstPhotoDate,
-          columns: mergedImages.length,
-        });
-        i = j;
-      } else {
-        result.push(row);
-        i++;
-      }
-    } else {
-      result.push(row);
-      i++;
-    }
-  }
-
-  return result;
-}
-
-/** Build Apple Photos-style rows for a gallery page. */
-export function createRows(images: readonly PhotoAlbumImage[]): ImageRow[] {
-  const groups: Record<
-    ImageGroup,
-    Record<KnownOrientation, PhotoAlbumImage[]>
-  > = {
-    serious: { landscape: [], portrait: [], panoramic: [] },
-    mobile: { landscape: [], portrait: [], panoramic: [] },
-    fun: { landscape: [], portrait: [], panoramic: [] },
-  };
-
-  for (const img of images) {
-    if (img.orientation !== 'unknown') {
-      groups[img.group][img.orientation].push(img);
-    }
-  }
-
-  const allRows: ImageRow[] = [];
-  const rowCounters: Partial<
-    Record<`${ImageGroup}-${KnownOrientation}`, number>
-  > = {};
-  const reductionCounters: Partial<
-    Record<`${ImageGroup}-${KnownOrientation}`, number>
-  > = {};
-
-  for (const groupName of Object.keys(groups) as ImageGroup[]) {
-    const orientations = groups[groupName];
-    const config = getRowConfig(groupName);
-
-    for (const orientation of Object.keys(orientations) as KnownOrientation[]) {
-      const photos = orientations[orientation];
-      if (photos.length === 0) {
-        continue;
-      }
-
-      const key = `${groupName}-${orientation}` as const;
-      rowCounters[key] ??= 0;
-      reductionCounters[key] ??= 0;
-
-      const photosPerRow = config[orientation];
-      let i = 0;
-
-      while (i < photos.length) {
-        const photo = photos[i];
-
-        if (photo.rating === 5) {
-          allRows.push({
-            group: groupName,
-            orientation,
-            images: [photo],
-            firstPhotoDate: photo.captureDate,
-            columns: 1,
-          });
-          i++;
-          continue;
-        }
-
-        rowCounters[key]++;
-
-        let currentPhotosPerRow = photosPerRow;
-        if (rowCounters[key] % 2 === 0 && photosPerRow > 2) {
-          reductionCounters[key]++;
-          const reduction = reductionCounters[key] % 2 === 0 ? 2 : 1;
-          currentPhotosPerRow = Math.max(2, photosPerRow - reduction);
-        }
-
-        const remainingPhotos = photos.length - i;
-        currentPhotosPerRow = Math.min(currentPhotosPerRow, remainingPhotos);
-
-        const rowPhotos: PhotoAlbumImage[] = [];
-        const maxDaysDiff = 5;
-        for (let j = 0; j < currentPhotosPerRow && i + j < photos.length; j++) {
-          const rowPhoto = photos[i + j];
-          if (rowPhoto.rating === 5) {
-            break;
-          }
-          const lastPhoto = rowPhotos.at(-1);
-          if (lastPhoto !== undefined) {
-            const daysDiff =
-              Math.abs(
-                rowPhoto.captureDate.getTime() - lastPhoto.captureDate.getTime()
-              ) /
-              (1000 * 60 * 60 * 24);
-            if (daysDiff > maxDaysDiff) {
-              break;
-            }
-          }
-          rowPhotos.push(rowPhoto);
-        }
-
-        allRows.push({
-          group: groupName,
-          orientation,
-          images: rowPhotos,
-          firstPhotoDate: rowPhotos[0].captureDate,
-          columns: rowPhotos.length,
-        });
-        i += rowPhotos.length;
-      }
-    }
-  }
-
-  return mergeSinglePhotoRows(
-    allRows.toSorted(
-      (a, b) => a.firstPhotoDate.getTime() - b.firstPhotoDate.getTime()
-    )
-  );
 }
 
 export function filterByYear(
