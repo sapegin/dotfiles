@@ -133,6 +133,7 @@
   "git.openRepositoryInParentFolders": "always",
   "files.simpleDialog.enable": true,
   "json.schemaDownload.trustedDomains": {
+    "https://agent-browser.dev": true,
     "https://developer.microsoft.com/json-schemas/": true,
     "https://json-schema.org/": true,
     "https://json.schemastore.org/": true,
