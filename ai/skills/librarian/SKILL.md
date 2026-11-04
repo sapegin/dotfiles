@@ -21,7 +21,7 @@ When needed, use the `web_search` and `web_fetch` tools, and load and follow the
 1. Use **github** skill to clone or inspect the repo.
 2. Search locally with **find** and **grep**; read relevant files with **read**.
 3. For history, use `git log`, `git blame`, and `git show` in the clone.
-4. For issues and pull requests, use `gh issue`, `gh pr`, or `gh search`.
+4. For issues and pull requests, use the commands in the [GitHub skill](../github/SKILL.md#common-commands).
 5. Use `web_search` or `web_fetch` tools for non-GitHub docs, articles, and discussions when useful.
 
 Common commands:
@@ -40,10 +40,6 @@ git blame -L 10,30 path/to/file.ts
 
 # Inspect a commit's changes to a file
 git show <sha> -- path/to/file.ts
-
-# Search related GitHub issues and merged PRs
-gh search issues "keyword" --repo owner/repo --state all --limit 10
-gh search prs "keyword" --repo owner/repo --state merged --limit 10
 ```
 
 ## Permalinks

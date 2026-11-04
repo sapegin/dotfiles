@@ -31,7 +31,7 @@ Pass the argument exactly as supplied to `branch-diff`, or run `branch-diff` wit
 Use this exact structure for every finding, replacing only the placeholders and omitting fix 2 when there is only one viable fix:
 
 ```md
-## {finding number}. {short finding title}
+### {finding number}. {short finding title}
 
 Location: {comma-separated file paths with line or line-range references}
 
@@ -60,7 +60,7 @@ Huzzah! Nothing else warrants attention.
 Formatting rules:
 
 - Number findings consecutively from 1 for the review session.
-- Format the title as a level-three Markdown heading so it renders bold and visually distinct. Keep it factual and specific; do not add a severity label.
+- Keep finding titles factual and specific; do not add a severity label.
 - Use the field names `Location` and `Fixes` exactly as shown. Format labels in bold.
 - Use repository-relative paths and precise line references. Join line ranges with an hyphen, for example `src/file.ts:10-14`.
 - Keep the explanation focused on one issue. State the observed behavior, evidence, and practical consequence; do not pad it with a review summary or generic praise.

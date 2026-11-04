@@ -42,7 +42,7 @@ Prefer fixing comments in dependency order when one fix clearly unblocks another
 
 ## Verify
 
-Re-run `agent-comments` after all fixes. Repeat the fix loop until the scanner reports no comments or every remaining comment has been deliberately skipped. If skipped comments remain, report that the scanner is still non-empty and why each comment was retained.
+Re-run `agent-comments` after all fixes. Repeat the fix loop only for new or unresolved comments until the scanner reports no comments or every remaining comment is an answered question or has been deliberately skipped. Treat answered, retained questions as completed; process them again only if the question changes. If comments remain, report that the scanner is still non-empty and distinguish answered questions from skipped comments.
 
 Then run the project’s usual validation (`tsc`, linter, tests) when available. Fix failures caused by your changes.
 
@@ -51,6 +51,7 @@ Then run the project’s usual validation (`tsc`, linter, tests) when available.
 Summarize:
 
 - Each comment fixed: `file:line` — one line on what changed
+- Answered, retained questions: `file:line` — one line on the answer
 - Skipped comments with reason
 - Validation results
 

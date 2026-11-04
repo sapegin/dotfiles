@@ -45,7 +45,7 @@ pnpm --filter <pkg> add <dep>@<version>
 ## Monorepo (npm workspaces)
 
 ```bash
-npm outdated --workspaces || true
-npm update --workspaces
+npm outdated --workspaces --include-workspace-root || true
+npm update --workspaces --include-workspace-root
 npm install <pkg>@<version> -w <workspace>
 ```

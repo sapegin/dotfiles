@@ -52,8 +52,8 @@ gh issue list --repo owner/repo
 gh issue view <number> --repo owner/repo --comments
 
 # Search issues and merged pull requests
-gh search issues "keyword" --repo owner/repo --state all --limit 10
-gh search prs "keyword" --repo owner/repo --state merged --limit 10
+gh search issues "keyword" --repo owner/repo --limit 10
+gh search prs "keyword" --repo owner/repo --merged --limit 10
 
 # List recent release tags
 gh api repos/owner/repo/releases --jq '.[0:5] | .[].tag_name'
