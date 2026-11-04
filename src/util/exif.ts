@@ -20,6 +20,7 @@ interface ExifToolOutput {
   State?: unknown;
   Country?: unknown;
   'Country-PrimaryLocationName'?: unknown;
+  CameraProfile?: unknown;
 }
 
 interface ParsedExifDate {
@@ -46,6 +47,8 @@ export interface ExifMetadata {
   city?: string;
   state?: string;
   country?: string;
+  /** Lightroom Camera Raw profile name (e.g. Negative Lab Pro film profiles). */
+  cameraProfile?: string;
 }
 
 function optionalString(value: unknown): string | undefined {
@@ -148,6 +151,7 @@ export async function readExifMetadata(
       '-State',
       '-Country',
       '-Country-PrimaryLocationName',
+      '-CameraProfile',
       filePath,
     ],
     { encoding: 'utf8' }
@@ -177,5 +181,6 @@ export async function readExifMetadata(
     country:
       optionalString(metadata.Country) ??
       optionalString(metadata['Country-PrimaryLocationName']),
+    cameraProfile: optionalString(metadata.CameraProfile),
   };
 }

@@ -134,12 +134,14 @@ function galleryImagesJson(images: readonly PhotoAlbumImage[]): string {
 
 async function generateGalleryHtml(
   title: string,
-  images: readonly PhotoAlbumImage[]
+  images: readonly PhotoAlbumImage[],
+  { limitDayGap = false }: { limitDayGap?: boolean } = {}
 ): Promise<string> {
   const template = await readTemplate('gallery.html');
   return renderTemplate(template, {
     title: escapeHtml(title),
     imagesJson: galleryImagesJson(images),
+    limitDayGap: limitDayGap ? 'true' : 'false',
   });
 }
 
@@ -212,7 +214,7 @@ async function sendImage(
     return;
   }
 
-  await sendFile(response, path.join(dirs.iCloudWebPhotos, safeName));
+  await sendFile(response, path.join(dirs.gallery, safeName));
 }
 
 async function sendAsset(
@@ -240,7 +242,9 @@ async function sendAsset(
 function galleryImagesForPath(
   pathname: string,
   images: readonly PhotoAlbumImage[]
-): { title: string; images: PhotoAlbumImage[] } | undefined {
+):
+  | { title: string; images: PhotoAlbumImage[]; limitDayGap: boolean }
+  | undefined {
   const [section, ...rest] = pathname
     .split('/')
     .filter((part) => part !== '')
@@ -249,9 +253,12 @@ function galleryImagesForPath(
   let title: string;
   let galleryImages: PhotoAlbumImage[];
 
+  let limitDayGap = false;
+
   if (section === 'year' && rest.length === 1) {
     title = rest[0];
     galleryImages = filterByYear(images, rest[0]);
+    limitDayGap = true;
   } else if (section === 'city' && rest.length === 2) {
     const [country, city] = rest;
     title = `${city}, ${country}`;
@@ -266,16 +273,16 @@ function galleryImagesForPath(
   if (galleryImages.length === 0) {
     return undefined;
   }
-  return { title, images: galleryImages };
+  return { title, images: galleryImages, limitDayGap };
 }
 
 /** Build the index and serve the LAN gallery until the process exits. */
 export async function servePhotoAlbum(): Promise<void> {
   try {
-    await fs.access(dirs.iCloudWebPhotos);
+    await fs.access(dirs.gallery);
   } catch {
     throw new UserError(
-      `Photo source directory does not exist: ${dirs.iCloudWebPhotos}`
+      `Photo source directory does not exist: ${dirs.gallery}`
     );
   }
 
@@ -313,7 +320,9 @@ export async function servePhotoAlbum(): Promise<void> {
           sendHtml(
             response,
             200,
-            await generateGalleryHtml(gallery.title, gallery.images)
+            await generateGalleryHtml(gallery.title, gallery.images, {
+              limitDayGap: gallery.limitDayGap,
+            })
           );
           return;
         }

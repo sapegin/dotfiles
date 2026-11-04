@@ -8,6 +8,7 @@ import {
   formatSeriesTitle,
   getKind,
   getMaxColumns,
+  isFilmScanCameraProfile,
   isSeriesKeyword,
   LAYOUT_LARGE_MIN_WIDTH,
   LAYOUT_MOBILE_MAX_WIDTH,
@@ -33,19 +34,22 @@ function record(
     make: 'Canon',
     rating: 0,
     keywords: [],
+    isFilmScan: false,
     ...partial,
   };
 }
 
 describe(isSeriesKeyword, () => {
-  test('treats hyphenated keywords as series', () => {
+  test('treats lowercase hyphenated keywords as series', () => {
     expect(isSeriesKeyword('what-we-do-in-the-shadows')).toBe(true);
     expect(isSeriesKeyword('when-the-moon-goes-to-bed')).toBe(true);
+    expect(isSeriesKeyword('1-0')).toBe(true);
   });
 
-  test('rejects keywords without a hyphen', () => {
+  test('rejects keywords without a hyphen or with uppercase', () => {
     expect(isSeriesKeyword('Boston')).toBe(false);
     expect(isSeriesKeyword('fog')).toBe(false);
+    expect(isSeriesKeyword('U-Bahn')).toBe(false);
   });
 });
 
@@ -220,17 +224,81 @@ describe('album listings and filters', () => {
   });
 });
 
+describe(isFilmScanCameraProfile, () => {
+  test('detects Negative Lab Pro camera profiles', () => {
+    expect(isFilmScanCameraProfile('Negative Lab v2.3')).toBe(true);
+    expect(isFilmScanCameraProfile('Negative Lab v3.0')).toBe(true);
+    expect(isFilmScanCameraProfile('Embedded')).toBe(false);
+    expect(isFilmScanCameraProfile('Adobe Standard')).toBe(false);
+    expect(isFilmScanCameraProfile(undefined)).toBe(false);
+  });
+});
+
 describe(getKind, () => {
   test('marks Scan_ files below five stars as fun', () => {
-    expect(getKind('Scan_1.jpg', 0, 2000, 1000)).toBe('fun');
-    expect(getKind('Scan_1.jpg', 4, 1000, 1500)).toBe('fun');
-    expect(getKind('Scan_1.jpg', 5, 2000, 1000)).toBe('landscape');
+    expect(
+      getKind(
+        record({ filename: 'Scan_1.jpg', rating: 0, width: 2000, height: 1000 })
+      )
+    ).toBe('fun');
+    expect(
+      getKind(
+        record({ filename: 'Scan_1.jpg', rating: 4, width: 1000, height: 1500 })
+      )
+    ).toBe('fun');
+    expect(
+      getKind(
+        record({ filename: 'Scan_1.jpg', rating: 5, width: 2000, height: 1000 })
+      )
+    ).toBe('landscape');
+  });
+
+  test('marks film scans below five stars as fun', () => {
+    expect(
+      getKind(
+        record({
+          filename: 'a.jpg',
+          rating: 0,
+          width: 2000,
+          height: 1000,
+          isFilmScan: true,
+        })
+      )
+    ).toBe('fun');
+    expect(
+      getKind(
+        record({
+          filename: 'a.jpg',
+          rating: 4,
+          width: 1000,
+          height: 1500,
+          isFilmScan: true,
+        })
+      )
+    ).toBe('fun');
+    expect(
+      getKind(
+        record({
+          filename: 'a.jpg',
+          rating: 5,
+          width: 2000,
+          height: 1000,
+          isFilmScan: true,
+        })
+      )
+    ).toBe('landscape');
   });
 
   test('classifies portrait, square, and landscape by aspect ratio', () => {
-    expect(getKind('a.jpg', 0, 1000, 1500)).toBe('portrait');
-    expect(getKind('a.jpg', 0, 1000, 1000)).toBe('square');
-    expect(getKind('a.jpg', 0, 3000, 1000)).toBe('landscape');
+    expect(
+      getKind(record({ filename: 'a.jpg', width: 1000, height: 1500 }))
+    ).toBe('portrait');
+    expect(
+      getKind(record({ filename: 'a.jpg', width: 1000, height: 1000 }))
+    ).toBe('square');
+    expect(
+      getKind(record({ filename: 'a.jpg', width: 3000, height: 1000 }))
+    ).toBe('landscape');
   });
 });
 
@@ -241,6 +309,20 @@ describe(recordToImage, () => {
       new Set()
     );
     expect(image.kind).toBe('landscape');
+  });
+
+  test('marks film scans below five stars as fun', () => {
+    const image = recordToImage(
+      record({
+        filename: 'film.jpg',
+        isFilmScan: true,
+        rating: 3,
+        width: 2000,
+        height: 1000,
+      }),
+      new Set()
+    );
+    expect(image.kind).toBe('fun');
   });
 });
 
@@ -355,7 +437,29 @@ describe(createRows, () => {
     expect(rows[0].kind).toBe('fun');
   });
 
-  test('does not merge leftover singles more than five days apart', () => {
+  test('yearly galleries do not merge leftover singles more than five days apart', () => {
+    const images = recordsToImages([
+      record({
+        filename: 'jan.jpg',
+        make: 'Canon',
+        width: 1000,
+        height: 1500,
+        captureDate: '2024-01-01T12:00:00.000Z',
+      }),
+      record({
+        filename: 'aug.jpg',
+        make: 'Canon',
+        width: 1000,
+        height: 1500,
+        captureDate: '2024-08-01T12:00:00.000Z',
+      }),
+    ]);
+    const rows = createRows(images, 3, { limitDayGap: true });
+    expect(rows).toHaveLength(2);
+    expect(rows.every((row) => row.columns === 1)).toBe(true);
+  });
+
+  test('city and series galleries ignore the five-day gap', () => {
     const images = recordsToImages([
       record({
         filename: 'jan.jpg',
@@ -373,7 +477,7 @@ describe(createRows, () => {
       }),
     ]);
     const rows = createRows(images, 3);
-    expect(rows).toHaveLength(2);
-    expect(rows.every((row) => row.columns === 1)).toBe(true);
+    expect(rows).toHaveLength(1);
+    expect(rows[0].columns).toBe(2);
   });
 });

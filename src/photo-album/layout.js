@@ -37,7 +37,7 @@ function daysBetween(a, b) {
 }
 
 /** Pack a chronological photo list into rows of up to `perRow`. */
-function packPhotos(photos, kind, perRow) {
+function packPhotos(photos, kind, perRow, limitDayGap) {
 	const rows = [];
 	let i = 0;
 
@@ -48,6 +48,7 @@ function packPhotos(photos, kind, perRow) {
 			const rowPhoto = photos[i + j];
 			const lastPhoto = rowPhotos.at(-1);
 			if (
+				limitDayGap &&
 				lastPhoto !== undefined &&
 				daysBetween(rowPhoto, lastPhoto) > MAX_DAYS_DIFF
 			) {
@@ -76,7 +77,7 @@ function canMergeRows(a, b) {
 }
 
 /** Merge leftover singles into fuller rows of the same kind. */
-function mergeSinglePhotoRows(rows, maxColumns) {
+function mergeSinglePhotoRows(rows, maxColumns, limitDayGap) {
 	const result = [];
 	let i = 0;
 
@@ -99,10 +100,9 @@ function mergeSinglePhotoRows(rows, maxColumns) {
 			const nextRow = rows[j];
 			const lastImage = mergeable.at(-1).images.at(-1);
 			const nextImage = nextRow.images[0];
-			if (
-				canMergeRows(row, nextRow) &&
-				daysBetween(lastImage, nextImage) <= MAX_DAYS_DIFF
-			) {
+			const withinDayGap =
+				!limitDayGap || daysBetween(lastImage, nextImage) <= MAX_DAYS_DIFF;
+			if (canMergeRows(row, nextRow) && withinDayGap) {
 				mergeable.push(nextRow);
 				j++;
 			} else {
@@ -132,8 +132,14 @@ function mergeSinglePhotoRows(rows, maxColumns) {
  * Build gallery rows.
  * Landscapes alone; portraits and squares in same-kind rows;
  * fun (any format) together in rows of up to `maxColumns`.
+ * When `limitDayGap` is true (yearly galleries), photos more than five days
+ * apart do not share a row.
  */
-export function createRows(images, maxColumns = 3) {
+export function createRows(
+	images,
+	maxColumns = 3,
+	{ limitDayGap = false } = {}
+) {
 	const buckets = {
 		fun: [],
 		landscape: [],
@@ -155,13 +161,16 @@ export function createRows(images, maxColumns = 3) {
 			continue;
 		}
 		const perRow = kind === 'landscape' ? 1 : maxColumns;
-		allRows.push(...packPhotos(photos.toSorted(byCaptureDate), kind, perRow));
+		allRows.push(
+			...packPhotos(photos.toSorted(byCaptureDate), kind, perRow, limitDayGap)
+		);
 	}
 
 	return mergeSinglePhotoRows(
 		allRows.toSorted(
 			(a, b) => a.firstPhotoDate.getTime() - b.firstPhotoDate.getTime()
 		),
-		maxColumns
+		maxColumns,
+		limitDayGap
 	);
 }

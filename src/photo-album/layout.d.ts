@@ -28,6 +28,14 @@ export const LAYOUT_LARGE_MIN_WIDTH: 1800;
  */
 export function getMaxColumns(viewportWidth: number): number;
 
+export interface CreateRowsOptions {
+  /**
+   * Yearly galleries only: keep photos more than five days apart in separate
+   * rows.
+   */
+  limitDayGap?: boolean;
+}
+
 /**
  * Build gallery rows.
  * Landscapes alone; portraits and squares in same-kind rows;
@@ -35,5 +43,6 @@ export function getMaxColumns(viewportWidth: number): number;
  */
 export function createRows(
   images: readonly LayoutImage[],
-  maxColumns?: number
+  maxColumns?: number,
+  options?: CreateRowsOptions
 ): ImageRow[];

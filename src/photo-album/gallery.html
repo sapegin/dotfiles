@@ -8,7 +8,11 @@
   </head>
   <body>
     <h1><a href="/">{{title}}</a></h1>
-    <div class="gallery" id="gallery"></div>
+    <div
+      class="gallery"
+      id="gallery"
+      data-limit-day-gap="{{limitDayGap}}"
+    ></div>
     <script type="application/json" id="gallery-data">
       {{imagesJson}}
     </script>

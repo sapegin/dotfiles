@@ -41,13 +41,15 @@ const images = readImages();
 if (gallery !== null) {
 	let currentColumns = 0;
 
+	const limitDayGap = gallery.dataset.limitDayGap === 'true';
+
 	function render() {
 		const nextColumns = getMaxColumns(globalThis.innerWidth);
 		if (nextColumns === currentColumns) {
 			return;
 		}
 		currentColumns = nextColumns;
-		const rows = createRows(images, nextColumns);
+		const rows = createRows(images, nextColumns, { limitDayGap });
 		gallery.replaceChildren(...rows.map(renderRow));
 	}
 

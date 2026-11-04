@@ -27,6 +27,7 @@ export const dirs = {
   downloads: path.join(HOME, 'Downloads'),
   pictures: path.join(HOME, 'Pictures'),
   photos: path.join(HOME, 'Pictures', 'Photos'),
+  gallery: path.join(HOME, 'Pictures', 'Gallery'),
   nasPhotos: '/Volumes/Photos',
   nasStuffses: '/Volumes/Stuffses',
   nasBackupDrive: '/Volumes/Elephantus7',

@@ -17,7 +17,7 @@ export {
 } from './layout.js';
 
 const PHOTO_ALBUM_INDEX_FILE = path.join(
-  dirs.iCloudWebPhotos,
+  dirs.gallery,
   '.photo-album-index.json'
 );
 // Not 6665–6669: Firefox blocks that IRC range as “restricted”.
@@ -33,6 +33,8 @@ export interface PhotoAlbumRecord {
   make: string;
   rating: number;
   keywords: string[];
+  /** True when Lightroom CameraProfile is a Negative Lab Pro film profile. */
+  isFilmScan: boolean;
   city?: string;
   state?: string;
   country?: string;
@@ -46,7 +48,7 @@ export interface PhotoAlbumIndexFile {
 
 export interface PhotoAlbumImage extends Omit<
   PhotoAlbumRecord,
-  'mtimeMs' | 'captureDate'
+  'mtimeMs' | 'captureDate' | 'isFilmScan'
 > {
   captureDate: Date;
   albumCity?: string;
@@ -60,9 +62,12 @@ export interface CityAlbumRef {
   count: number;
 }
 
-/** Keywords that contain a hyphen are series names. */
+/**
+ * Keywords that contain a hyphen and are entirely lowercase are series names.
+ * Mixed-case tags like `U-Bahn` are ordinary keywords, not series.
+ */
 export function isSeriesKeyword(keyword: string): boolean {
-  return keyword.includes('-');
+  return keyword.includes('-') && keyword === keyword.toLowerCase();
 }
 
 /**
@@ -134,18 +139,35 @@ export function collectKnownCities(
 }
 
 /**
+ * True when the Lightroom CameraProfile name is a Negative Lab Pro film
+ * profile (e.g. `Negative Lab v2.3`).
+ */
+export function isFilmScanCameraProfile(
+  cameraProfile: string | undefined
+): boolean {
+  return cameraProfile?.includes('Negative Lab') === true;
+}
+
+/**
  * Layout kind for a photo:
  *
- * - `Scan_…` with rating below 5 → `fun`
+ * - `Scan_…` / `Instax_…` / NLP film scan with rating below 5 → `fun`
  * - Otherwise square / portrait / landscape from aspect ratio
  */
 export function getKind(
-  filename: string,
-  rating: number,
-  width: number,
-  height: number
+  record: Pick<
+    PhotoAlbumRecord,
+    'filename' | 'rating' | 'width' | 'height' | 'isFilmScan'
+  >
 ): ImageKind {
-  if (filename.startsWith('Scan_') && rating < 5) {
+  const { filename, rating, width, height, isFilmScan } = record;
+
+  if (
+    (filename.startsWith('Scan_') ||
+      filename.startsWith('Instax_') ||
+      isFilmScan) &&
+    rating < 5
+  ) {
     return 'fun';
   }
 
@@ -186,7 +208,7 @@ export function recordToImage(
     title: record.title,
     albumCity: resolveAlbumCity(record.city, record.state, knownCities),
     series: record.keywords.filter(isSeriesKeyword),
-    kind: getKind(record.filename, record.rating, record.width, record.height),
+    kind: getKind(record),
   };
 }
 
@@ -326,6 +348,7 @@ async function readPhotoRecord(
       make: metadata.make ?? '',
       rating: metadata.rating ?? 0,
       keywords: metadata.keywords ?? [],
+      isFilmScan: isFilmScanCameraProfile(metadata.cameraProfile),
       city: metadata.city,
       state: metadata.state,
       country: metadata.country,
@@ -379,7 +402,7 @@ async function savePhotoAlbumIndex(
  * Reuses EXIF for files whose mtime is unchanged.
  */
 export async function buildPhotoAlbumIndex(
-  sourceDir: string = dirs.iCloudWebPhotos,
+  sourceDir: string = dirs.gallery,
   indexPath: string = PHOTO_ALBUM_INDEX_FILE
 ): Promise<{ index: PhotoAlbumIndexFile; images: PhotoAlbumImage[] }> {
   const existing = await loadPhotoAlbumIndex(indexPath);
