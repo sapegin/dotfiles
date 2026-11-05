@@ -131,6 +131,14 @@
       "shortcut": "hyper+up"
     },
     {
+      "id": "window.left-top-half",
+      "shortcut": "hyper+shift+up"
+    },
+    {
+      "id": "window.left-bottom-quarter",
+      "shortcut": "hyper+shift+down"
+    },
+    {
       "id": "snippet.expand",
       "shortcut": "alt+-",
       "snippetId": "typo-minus"

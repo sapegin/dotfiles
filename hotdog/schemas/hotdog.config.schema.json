@@ -238,6 +238,8 @@
             "snippet.expand",
             "window.left-half",
             "window.right-half",
+            "window.left-top-half",
+            "window.left-bottom-quarter",
             "window.maximize"
           ],
           "markdownEnumDescriptions": [
@@ -250,6 +252,8 @@
             "Paste a snippet into the frontmost app; requires snippetId",
             "Snap front window to left half of screen",
             "Snap front window to right half of screen",
+            "Snap front window to top-left half (1/2 × 1/2)",
+            "Snap front window to bottom-left quarter (1/2 × 1/4)",
             "Maximize front window"
           ]
         },
