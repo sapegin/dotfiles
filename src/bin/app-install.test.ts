@@ -1,4 +1,5 @@
-import { describe, expect, test } from 'vitest';
+import fs from 'node:fs';
+import { afterEach, describe, expect, test, vi } from 'vitest';
 import {
   assertCanonicalHotdogInstall,
   HOTDOG_INSTALL_PATH,
@@ -40,7 +41,23 @@ describe(resolveMacApps, () => {
 });
 
 describe(assertCanonicalHotdogInstall, () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   test('throws when Hotdog is missing from /Applications', () => {
+    vi.spyOn(fs, 'realpathSync').mockImplementation(() => {
+      throw Object.assign(new Error('ENOENT'), { code: 'ENOENT' });
+    });
+
     expect(() => assertCanonicalHotdogInstall()).toThrow(HOTDOG_INSTALL_PATH);
+  });
+
+  test('throws when Hotdog resolves to a Debug build', () => {
+    vi.spyOn(fs, 'realpathSync').mockReturnValue(
+      '/tmp/raccoon-apps/build/Build/Products/Debug/Hotdog.app'
+    );
+
+    expect(() => assertCanonicalHotdogInstall()).toThrow('Debug build');
   });
 });

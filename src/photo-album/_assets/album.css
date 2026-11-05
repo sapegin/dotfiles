@@ -6,7 +6,11 @@ body {
   margin: 0;
   padding: 1rem 4vh;
   font-family:
-    'Comic Sans MS', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Comic Sans MS',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
     sans-serif;
   background: #fff;
   color: #111;

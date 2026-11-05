@@ -229,7 +229,7 @@ describe(stripTitle, () => {
 
 describe(resolveWikilinks, () => {
   test('resolves known wikilinks to URLs', () => {
-    const slugMap = new Map([['Foo', 'foo']]);
+    const slugMap = new Map([['foo', 'foo']]);
     expect(
       resolveWikilinks(
         'See [[Foo]] and [[Bar|label]]',

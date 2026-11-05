@@ -213,7 +213,7 @@ export async function publishSite(repoRoot: string): Promise<void> {
       continue;
     }
 
-    slugMap.set(baseName, slug);
+    slugMap.set(baseName.toLowerCase(), slug);
     publishedFiles.push(filePath);
   }
 
