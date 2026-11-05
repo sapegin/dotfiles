@@ -63,12 +63,13 @@ gr() {
 
 # git clone, cd to a repo directory, and install dependencies
 clone() {
-	git clone "$@"
+	git clone "$@" || return
 	if [ "$2" ]; then
-		cd "$2"
+		cd "$2" || return
 	else
-		cd "$(basename "$1" .git)"
+		cd "$(basename "$1" .git)" || return
 	fi
+	"$DOTFILES_DIR/bin/symlinks/git-configure" || return
 	if [[ -r "./yarn.lock" ]]; then
 		yarn
 	elif [[ -r "./pnpm-lock.yaml" ]]; then

@@ -20,6 +20,7 @@ import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import {
   assertCurrentBranch,
   assertGitRepo,
+  configureCommitDraft,
   getBranchUpstream,
   getExecExitCode,
 } from '../util/git.ts';
@@ -67,6 +68,7 @@ function hasChanged(filename: string): boolean {
 
 export function pull(_options: Options): void {
   assertGitRepo();
+  configureCommitDraft();
 
   const branch = assertCurrentBranch();
 

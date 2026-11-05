@@ -1,4 +1,5 @@
 import { execFileSync, execSync, spawnSync } from 'node:child_process';
+import fsSync from 'node:fs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { tildify } from './files.ts';
@@ -137,6 +138,99 @@ export function getGitConfig(key: string): string | undefined {
   } catch {
     return undefined;
   }
+}
+
+/**
+ * Configures a worktree-local commit draft without replacing an existing
+ * template or truncating a draft. Worktree config keeps linked worktrees from
+ * sharing an absolute template path.
+ */
+export function configureCommitDraft(): void {
+  const template = getGitConfig('commit.template');
+  const draftPath = execFileSync(
+    'git',
+    ['rev-parse', '--path-format=absolute', '--git-path', 'COMMIT_DRAFT'],
+    { encoding: 'utf8' }
+  ).trim();
+  const commonDir = execFileSync(
+    'git',
+    ['rev-parse', '--path-format=absolute', '--git-common-dir'],
+    { encoding: 'utf8' }
+  ).trim();
+
+  if (template !== undefined) {
+    const relativeTemplate = path.relative(commonDir, template).split(path.sep);
+    // Git copies config.worktree when adding a worktree. Replace only a copied
+    // COMMIT_DRAFT path, never a user-provided template.
+    const isCopiedDraft =
+      template !== draftPath &&
+      (template === path.join(commonDir, 'COMMIT_DRAFT') ||
+        (relativeTemplate.length === 3 &&
+          relativeTemplate[0] === 'worktrees' &&
+          relativeTemplate[2] === 'COMMIT_DRAFT'));
+    if (!isCopiedDraft && template !== draftPath) {
+      return;
+    }
+  }
+
+  if (getGitConfig('extensions.worktreeConfig') !== 'true') {
+    // These settings apply only to the main worktree once worktree config is
+    // enabled; Git requires moving them out of the shared config first.
+    for (const key of ['core.bare', 'core.worktree']) {
+      const result = spawnSync('git', ['config', '--local', '--get', key], {
+        encoding: 'utf8',
+      });
+      if (result.status === 1) {
+        continue;
+      }
+      if (result.error !== undefined) {
+        throw result.error;
+      }
+      if (result.status !== 0) {
+        throw new Error(result.stderr);
+      }
+      execFileSync('git', [
+        'config',
+        '--file',
+        path.join(commonDir, 'config.worktree'),
+        key,
+        result.stdout.trim(),
+      ]);
+      execFileSync('git', ['config', '--local', '--unset-all', key]);
+    }
+    execFileSync('git', [
+      'config',
+      '--local',
+      'extensions.worktreeConfig',
+      'true',
+    ]);
+  }
+
+  fsSync.closeSync(fsSync.openSync(draftPath, 'a'));
+  execFileSync('git', ['config', '--worktree', 'commit.template', draftPath]);
+
+  // Configured hooks coexist with existing hooks, including core.hooksPath.
+  execFileSync('git', [
+    'config',
+    '--worktree',
+    'hook.commit-draft-cleanup.command',
+    `git_dir=$(git rev-parse --absolute-git-dir) || exit
+# Rebases can hide pending changes in an autostash until replay finishes.
+[ ! -d "$git_dir/rebase-merge" ] && [ ! -d "$git_dir/rebase-apply" ] || exit 0
+draft="$git_dir/COMMIT_DRAFT"
+template=$(git config --get commit.template) || exit
+[ "$template" = "$draft" ] || exit 0
+status=$(git status --porcelain --untracked-files=normal) || exit
+if [ -z "$status" ] && [ -f "$draft" ]; then
+  : > "$draft"
+fi`,
+  ]);
+  execFileSync('git', [
+    'config',
+    '--worktree',
+    'hook.commit-draft-cleanup.event',
+    'post-commit',
+  ]);
 }
 
 /** Returns the configured upstream remote and branch for a local branch. */

@@ -69,7 +69,7 @@ Put one space on each side of em dashes in prose. Preserve quoted text, code, an
 
 Use plain, direct American English in code comments, documentation, status updates, and other technical prose. Prefer common concrete words, short sentences, active voice, and one consistent term for each concept.
 
-Write comments for readers who know the language and stack but not this file. Add documentation comments to reusable functions (JSDoc in JavaScript and TypeScript); document business rules, domain knowledge, constraints, and non-obvious decisions; and explain potentially confusing code. Do not narrate obvious syntax, merely restate the code, or explain how the code was written before this change. Preserve existing comments unless the required change makes them inaccurate.
+Write comments for readers who know the language and stack but not this file. Add documentation comments to reusable functions (JSDoc in JavaScript and TypeScript); document business rules, domain knowledge, constraints, and non-obvious decisions; and explain potentially confusing code. Do not narrate obvious syntax or merely restate the code. Avoid historical comments that describe previous implementations or the change being made; put that history in commit messages. Keep comments that explain current behavior, enduring constraints, or non-obvious rationale. Preserve existing comments unless the required change makes them inaccurate.
 
 ## Writing code
 
@@ -80,3 +80,4 @@ Write comments for readers who know the language and stack but not this file. Ad
 - Remove only code made unused by your changes.
 - Use descriptive US English names. Functions start with a verb that states the action (`cheapestModel` → `getCheapestModel`, `macApps` → `resolveMacApps`). Use noun phrases for values, not functions. Avoid unclear abbreviations and shortened ordinary words (`lineNum` → `lineNumber`), but preserve established local and API conventions. Prefer inlining over a one-use helper when the logic is a simple branch and inlining does not introduce extra mutation or reassignment.
 - Mention unrelated issues briefly, but do not change them unless asked.
+- After each turn that changes repository files, update the Git-internal `COMMIT_DRAFT` file. Use a short subject and terse bullet points for essential changes and rationale. Summarize pending changes, not turn-by-turn history; omit obvious details. Preserve user-written drafts; ask before replacing text whose ownership is unclear. Do not commit automatically.
