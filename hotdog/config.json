@@ -116,6 +116,7 @@
       "bundleId": "com.apple.Music",
       "shortcut": "hyper+p"
     },
+    { "id": "pastor.quake", "shortcut": "hyper+h" },
     { "id": "calendar.join-meeting", "shortcut": "hyper+j" },
     {
       "id": "window.left-half",
