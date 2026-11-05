@@ -220,8 +220,7 @@ export function configureCommitDraft(): void {
 draft="$git_dir/COMMIT_DRAFT"
 template=$(git config --get commit.template) || exit
 [ "$template" = "$draft" ] || exit 0
-status=$(git status --porcelain --untracked-files=normal) || exit
-if [ -z "$status" ] && [ -f "$draft" ]; then
+if [ -f "$draft" ]; then
   : > "$draft"
 fi`,
   ]);

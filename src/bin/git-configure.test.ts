@@ -172,7 +172,7 @@ describe('commit draft configuration', () => {
   });
 
   test.each(['staged', 'unstaged', 'untracked'])(
-    'preserves the draft when %s changes remain after a partial commit',
+    'clears the draft when %s changes remain after a partial commit',
     (pendingChange) => {
       fs.writeFileSync(path.join(repoRoot, 'committed.txt'), 'base\n');
       fs.writeFileSync(path.join(repoRoot, 'pending.txt'), 'base\n');
@@ -203,7 +203,10 @@ describe('commit draft configuration', () => {
         'committed.txt'
       );
 
-      expect(fs.readFileSync(draftPath, 'utf8')).toBe('Pending draft\n');
+      expect(fs.readFileSync(draftPath, 'utf8')).toBe('');
+      expect(
+        git(repoRoot, 'status', '--porcelain', '--untracked-files=normal')
+      ).not.toBe('');
     }
   );
 
