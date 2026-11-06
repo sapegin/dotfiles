@@ -70,7 +70,7 @@ Formatting rules:
 
 ## Focus areas
 
-The review target may be application code, configuration, documentation, agent skills, CI definitions, or other repository artifacts. Load detailed checklists only for categories the target covers.
+The review target may be application code, configuration, documentation, agent skills, CI definitions, or other repository artifacts. Load detailed checklists for categories the target covers.
 
 When category references are loaded for embedded code in Markdown articles or documentation, treat each fenced or inline example as the review target. Apply the same criteria to the example and its stated context; do not require a diff or repository changeset.
 
@@ -82,11 +82,16 @@ When category references are loaded for embedded code in Markdown articles or do
 
 ### Category checklists
 
-Load only the references needed for the topics the review target covers:
+Choose category checklists from the paths and extensions in the review target. Load each matching reference once.
 
 - **Code quality** — structure, dead code, completeness, clarity: read [code-quality](references/code-quality.md).
-- **Clean code** — low-level code writing: load exactly one guide — [for JavaScript/TypeScript](../_references/washing-code/javascript.md), [for Python](../_references/washing-code/python.md), [for Swift](../_references/washing-code/swift.md), or [for any other language](../_references/washing-code/other-languages.md).
-- **Frontend and web** — HTML, CSS, client JS, accessibility, obsolete patterns: read [frontend](references/frontend.md). For HTML, CSS, or client-side JavaScript changes, also read the [modern web guidance index](../_references/modern-web-guidance/Index.md). For React components, Next.js pages, or client rendering changes, also read the [React best practices index](../_references/react-best-practices/Index.md). Load only the specific linked guides and rules relevant to the change.
+- **Clean code** — From the dominant language in the review target, load exactly one guide:
+  - `.swift` → [Swift](../_references/washing-code/swift.md)
+  - `.py` → [Python](../_references/washing-code/python.md)
+  - `.js`, `.mjs`, `.jsx`, `.ts`, or `.tsx` → [JavaScript/TypeScript](../_references/washing-code/javascript.md)
+  - any other language → [other languages](../_references/washing-code/other-languages.md)
+- **Web frontend** — HTML, CSS, client-side JavaScript/TypeScript, browser DOM, or React/Next.js: read [frontend](references/frontend.md). For HTML, CSS, or client-side JavaScript changes, also read the [modern web guidance index](../_references/modern-web-guidance/Index.md). For React components, Next.js pages, or client rendering changes, also read the [React best practices index](../_references/react-best-practices/Index.md). Load only the specific linked guides and rules relevant to the change.
+- **Desktop and native UI** — AppKit, SwiftUI, UIKit, or other native window and control chrome: read [desktop UI](references/desktop.md). When the target includes Swift UI code (`.swift` with AppKit or SwiftUI), also read [Swift UI](references/swift-ui.md).
 - **Backend logic** — backend changes: read [backend](references/backend.md). For React Server Components, Server Actions, or Next.js route handlers, also read the [React best practices index](../_references/react-best-practices/Index.md), then load only the specific linked rules relevant to the change.
 - **Security** — unsafe interpolation, secrets, path handling: read [security](references/security.md).
 - **Tests** — hollow or meaningless tests: read [tests](references/tests.md).

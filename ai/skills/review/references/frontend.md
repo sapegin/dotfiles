@@ -1,4 +1,4 @@
-# Frontend and UI
+# Web frontend
 
 ## Accessibility
 

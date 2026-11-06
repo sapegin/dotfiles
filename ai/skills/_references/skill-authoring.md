@@ -28,6 +28,7 @@ This guide is the source of truth for creating, changing, and auditing skills.
 - Keep `SKILL.md` self-contained enough to route and begin the task. Keep detailed or specialized material in reference files.
 - Keep instructions required on every run in `SKILL.md`. If required detail is too extensive, link it explicitly as required rather than hiding it in an apparently optional reference.
 - Put branch-specific material behind a clearly named link whose wording states exactly when to load it. Load only the specific references relevant to the active branch; do not scan an entire reference directory.
+- When references are mutually exclusive by stack or language, route with a positive decision tree on paths or extensions (one matching branch), rather than a flat list of peer links or after-the-fact exclusions.
 - Follow references far enough to verify that links resolve, instructions are complete, and the pointer exposes the right material at the right time.
 - Apply the same rules when one skill delegates to another.
 
