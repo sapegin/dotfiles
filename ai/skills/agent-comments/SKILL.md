@@ -11,7 +11,7 @@ Find and fix every `AI:` comment in the current project.
 From the project root (or the path the user gave):
 
 ```bash
-agent-comments
+~/dotfiles/bin/agent-comments
 ```
 
 Empty output means there is nothing to fix — say so and stop.
@@ -42,7 +42,7 @@ Prefer fixing comments in dependency order when one fix clearly unblocks another
 
 ## Verify
 
-Re-run `agent-comments` after all fixes. Repeat the fix loop only for new or unresolved comments until the scanner reports no comments or every remaining comment is an answered question or has been deliberately skipped. Treat answered, retained questions as completed; process them again only if the question changes. If comments remain, report that the scanner is still non-empty and distinguish answered questions from skipped comments.
+Re-run `~/dotfiles/bin/agent-comments` after all fixes. Repeat the fix loop only for new or unresolved comments until the scanner reports no comments or every remaining comment is an answered question or has been deliberately skipped. Treat answered, retained questions as completed; process them again only if the question changes. If comments remain, report that the scanner is still non-empty and distinguish answered questions from skipped comments.
 
 Then run the project’s usual validation (`tsc`, linter, tests) when available. Fix failures caused by your changes.
 

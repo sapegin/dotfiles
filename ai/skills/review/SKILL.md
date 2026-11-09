@@ -16,7 +16,7 @@ Accept zero or one argument:
 /skill:review [<file-path> | <commit-sha>]
 ```
 
-Pass the argument exactly as supplied to `branch-diff`, or run `branch-diff` without one. Treat its output as the review starting point; if it fails, ask the user to clarify.
+Pass the argument exactly as supplied to `~/dotfiles/bin/branch-diff`, or run `~/dotfiles/bin/branch-diff` without one. Treat its output as the review starting point; if it fails, ask the user to clarify.
 
 Use any specification or ticket supplied earlier in the conversation as explicit requirements. Treat implementation descriptions, including pull request descriptions, as context rather than requirements unless they explicitly record an approved requirement change. If requirement sources conflict and no approved decision resolves the conflict, ask the user to clarify before reporting findings.
 
@@ -45,7 +45,7 @@ Use this exact structure for every finding, replacing only the placeholders:
 ```md
 ### {finding number}. {short finding title} ({severity})
 
-_{comma-separated file paths with line or line-range references}_
+{comma-separated file paths with line or line-range references}
 
 {focused explanation of one issue, its practical consequence, and concise evidence; optional fenced code, diff blocks, or specification quotes}
 

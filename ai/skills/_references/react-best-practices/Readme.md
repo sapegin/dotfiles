@@ -8,4 +8,4 @@ Consulted by the [deslop](../../deslop/SKILL.md) and [review](../../review/SKILL
 
 ## Upgrading
 
-Run `ai-sync --update` to sync upstream rules and regenerate `Index.md`.
+Run `~/dotfiles/bin/ai-sync --update` to sync upstream rules and regenerate `Index.md`.

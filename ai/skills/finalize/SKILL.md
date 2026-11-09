@@ -10,7 +10,7 @@ Prepare the current changes for handoff after review and deslop. This is a house
 
 ### 1. Establish context
 
-Read repository instructions and run `branch-diff --include-uncommitted`. Treat its output as the complete cleanup target; if it fails, ask the user to clarify. Identify changes belonging to the task and preserve unrelated user work. Do not assume earlier review, cleanup, or verification occurred unless the conversation establishes it.
+Read repository instructions and run `~/dotfiles/bin/branch-diff --include-uncommitted`. Treat its output as the complete cleanup target; if it fails, ask the user to clarify. Identify changes belonging to the task and preserve unrelated user work. Do not assume earlier review, cleanup, or verification occurred unless the conversation establishes it.
 
 ### 2. Clean up
 

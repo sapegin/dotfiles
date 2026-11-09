@@ -19,10 +19,10 @@ Do not use fixed sections, investigate the deferred work, or invent missing deta
 
 ## Append the entry
 
-Run the `later` CLI from the current working directory so it can collect Git metadata. Pass the heading and paragraph as separate quoted arguments:
+Run the `~/dotfiles/bin/later` CLI from the current working directory so it can collect Git metadata. Pass the heading and paragraph as separate quoted arguments:
 
 ```bash
-later "$heading" "$paragraph"
+~/dotfiles/bin/later "$heading" "$paragraph"
 ```
 
 The CLI adds the current date-time, repository, and branch. Report success only after it exits successfully. Do not continue work on the captured item.

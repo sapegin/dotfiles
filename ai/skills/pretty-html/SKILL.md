@@ -158,4 +158,4 @@ open /path/to/page.html
 
 ## Sync
 
-Run `sync-dotfiles` after changing `_assets/`. Never symlink into `~/murder` (iCloud).
+Run `~/dotfiles/bin/sync-dotfiles` after changing `_assets/`. Never symlink into `~/murder` (iCloud).

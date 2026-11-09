@@ -17,7 +17,7 @@ Fetch failing CI logs, identify the root causes, and make the smallest code chan
 1. Run the CI log checker:
 
    ```bash
-   git-ci-logs
+   ~/dotfiles/bin/git-ci-logs
    ```
 
    It reports failed checks, fetches failed GitHub Actions logs, and identifies checks whose logs are external. If it cannot find a pull request for the current branch, stop and ask the user how to proceed.
