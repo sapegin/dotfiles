@@ -10,7 +10,7 @@ Prepare the current changes for handoff after review and deslop. This is a house
 
 ### 1. Establish context
 
-Read repository instructions and run `~/dotfiles/bin/branch-diff --include-uncommitted`. Treat its output as the complete cleanup target; if it fails, ask the user to clarify. Identify changes belonging to the task and preserve unrelated user work. Do not assume earlier review, cleanup, or verification occurred unless the conversation establishes it.
+Read and follow [development workflow setup](../_references/development-workflow.md) for target resolution, prior decisions, and verification evidence. Do not assume earlier review, cleanup, or verification occurred without evidence in the conversation.
 
 ### 2. Clean up
 
@@ -30,13 +30,15 @@ Check intervening edits before continuing. If further cleanup changes files, pau
 
 ### 4. Offer the handoff
 
-Use the [GitHub skill](../github/SKILL.md) to identify any existing pull request for the branch. If GitHub access is unavailable, report that limitation and offer a local handoff instead.
+Check the current branch before offering publication. If it is `main`, suggest a concise branch name based on the task and repository conventions. Ask: “Use `<branch-name>`? (a)pprove, or type another branch name.” Wait for approval or an alternative name; an explicit alternative approves that name. Validate the name and check that it does not already exist locally or on the remote. If invalid or taken, ask for another name. Create and switch to the approved branch from the current HEAD, preserving staged, unstaged, and untracked work. Do not reset or rewrite `main`. Branch-name approval does not authorize commits or publication.
 
-Ask: “May I (o)pen a pull request, or (s)kip?” If one already exists, ask instead: “May I (u)pdate the existing pull request, or (s)kip?” Stop if skipped. Do not push or create or edit a pull request until the user approves that action. Reuse an existing pull request rather than creating a duplicate.
+Use the [GitHub skill](../github/SKILL.md) to identify any existing pull request for the intended branch. If GitHub access is unavailable, report that limitation and offer a local handoff instead.
+
+Ask: “May I (o)pen a pull request?” If one already exists, ask instead: “May I (u)pdate the existing pull request?” Wait for approval; stop if the user declines. Do not push or create or edit a pull request until the user approves that action. Reuse an existing pull request rather than creating a duplicate.
 
 After approval:
 
-- Recheck the branch and working tree. If task changes are uncommitted, prepare the next action and stop; never commit automatically. Do not publish a partial branch while implying it includes uncommitted work.
+- Recheck the branch and working tree. If the branch is `main` or differs from the approved publication branch, pause for direction. If task changes are uncommitted, prepare the next action and stop; never commit automatically. Do not publish a partial branch while implying it includes uncommitted work.
 - Load [write-pr-description](../write-pr-description/SKILL.md) to generate the title and body from the final branch diff. Use its title as the pull request title and the remaining copy as the body. Keep verification evidence in the completion report rather than adding it to the pull request copy.
 - Push the intended branch and create or update the pull request using the GitHub skill. Do not force-push, merge, release, or deploy.
 - Return the pull request URL and report publication failures plainly.

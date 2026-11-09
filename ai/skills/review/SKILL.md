@@ -16,14 +16,12 @@ Accept zero or one argument:
 /skill:review [<file-path> | <commit-sha>]
 ```
 
-Pass the argument exactly as supplied to `~/dotfiles/bin/branch-diff`, or run `~/dotfiles/bin/branch-diff` without one. Treat its output as the review starting point; if it fails, ask the user to clarify.
-
-Use any specification or ticket supplied earlier in the conversation as explicit requirements. Treat implementation descriptions, including pull request descriptions, as context rather than requirements unless they explicitly record an approved requirement change. If requirement sources conflict and no approved decision resolves the conflict, ask the user to clarify before reporting findings.
+Read and follow [development workflow setup](../_references/development-workflow.md) for target resolution, requirements, prior decisions, and verification evidence. Use any specification or ticket supplied earlier in the conversation as explicit requirements.
 
 ## Process
 
-1. Resolve the review target according to **Target**.
-2. Establish intended behavior from the explicit requirements, request, issue, approved decisions, relevant callers, tests, types, schemas, designs, and documentation. Do not infer requirements solely from the changed implementation.
+1. Establish context according to **Target**.
+2. Include relevant designs when establishing intended behavior.
 3. Check the affected system against the requirements, product intent, and business rules, including missing, partial, incorrect, or untested behavior. Quote the relevant specification line for each specification finding.
 4. Inspect the selected file or complete changeset and the affected system, including relevant unchanged code, artifacts, and public contracts. Follow the design as far as needed without auditing unrelated systems.
 5. Trace relevant values and behavior through callers, consumers, state owners, API boundaries, persistence, and side effects. Look for intent mismatches, unexplained product or business-logic changes, misplaced responsibilities, and poor boundaries.

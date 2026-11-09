@@ -14,17 +14,16 @@ Accept zero or one argument:
 /skill:deslop [<file-path> | <commit-sha>]
 ```
 
-Pass the argument exactly as supplied to `~/dotfiles/bin/branch-diff`, or run `~/dotfiles/bin/branch-diff` without one. Treat its output as the complete review target; if it fails, ask the user to clarify.
+Read and follow [development workflow setup](../_references/development-workflow.md) for target resolution, intended behavior, prior decisions, and verification evidence.
 
 ## Process
 
-1. Resolve the review scope according to **Target**.
-2. Establish the intended behavior from the request, relevant callers, tests, types, schemas, and documentation. Do not infer requirements solely from the changed implementation.
-3. Inspect the selected file or diff and enough surrounding context to understand it.
-4. Focus on local defects and polish within the selected scope. For a changeset, prioritize issues introduced or exposed by the change.
-5. Defer issues eligible for **Final automatic cleanup** to that pass. Present other findings exactly one at a time using **Output format**. Then wait for the user to choose a fix, ignore it, or give other instructions.
-6. Interpret `F` (case-insensitive) as approval of the recommended fix and `I` (case-insensitive) as ignore. If the user approves a fix or gives replacement instructions, make only that approved change and validate it before continuing.
-7. After handling the user’s response, continue with the next finding using the same one-at-a-time process. When no unhandled findings requiring approval remain, run **Final automatic cleanup** before completing the review.
+1. Establish context according to **Target**.
+2. Inspect the selected file or diff and enough surrounding context to understand it.
+3. Focus on local defects and polish within the selected scope. For a changeset, prioritize issues introduced or exposed by the change.
+4. Defer issues eligible for **Final automatic cleanup** to that pass. Present other findings exactly one at a time using **Output format**. Then wait for the user to choose a fix, ignore it, or give other instructions.
+5. Interpret `F` (case-insensitive) as approval of the recommended fix and `I` (case-insensitive) as ignore. If the user approves a fix or gives replacement instructions, make only that approved change and validate it before continuing.
+6. After handling the user’s response, continue with the next finding using the same one-at-a-time process. When no unhandled findings requiring approval remain, run **Final automatic cleanup** before completing the review.
 
 ## Final automatic cleanup
 
