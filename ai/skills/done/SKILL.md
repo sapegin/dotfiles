@@ -1,5 +1,5 @@
 ---
-name: finish
+name: done
 description: Run review, deslop, and finalize in sequence in the current context, preserving interactive approvals.
 disable-model-invocation: true
 ---

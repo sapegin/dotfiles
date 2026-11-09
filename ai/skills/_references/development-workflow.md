@@ -1,6 +1,6 @@
 # Development workflow setup
 
-Use this reference for `review`, `deslop`, `finalize`, and `finish`.
+Use this reference for `review`, `deslop`, `finalize`, and `done`.
 
 ## Target
 
@@ -10,11 +10,11 @@ Read applicable repository instructions and resolve the target with `~/dotfiles/
 | --- | --- | --- |
 | Standalone `review` | Zero or one file path or commit SHA, passed exactly as supplied | Review starting point |
 | Standalone `deslop` | Zero or one file path or commit SHA, passed exactly as supplied | Complete review target |
-| Standalone `finalize` or any phase of `finish` | `--include-uncommitted` | Complete task changeset, including working-tree edits |
+| Standalone `finalize` or any phase of `done` | `--include-uncommitted` | Complete task changeset, including working-tree edits |
 
 If the command fails, ask for clarification. Identify task changes and preserve unrelated user work.
 
-Under `finish`, establish the target and requirements once. Reuse context already established in the conversation; refresh the target output after edits before the next phase. Each phase reads the current changes and any additional surrounding context it needs. Follow `finish`’s phase transitions instead of stopping at a child skill’s completion output. Standalone skills keep their existing output and completion behavior.
+Under `done`, establish the target and requirements once. Reuse context already established in the conversation; refresh the target output after edits before the next phase. Each phase reads the current changes and any additional surrounding context it needs. Follow `done`’s phase transitions instead of stopping at a child skill’s completion output. Standalone skills keep their existing output and completion behavior.
 
 ## Requirements and decisions
 
