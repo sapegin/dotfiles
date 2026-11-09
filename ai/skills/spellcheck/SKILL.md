@@ -73,7 +73,7 @@ Apply every check below. Flag only real issues — skip sentences that need no c
 Use this structure for every finding. Replace only the placeholders.
 
 ```md
-### {finding number}. {brief explanation aimed at improving the user’s understanding}
+**{finding number}. {brief explanation aimed at improving the user’s understanding}**
 
 {original sentence}
 

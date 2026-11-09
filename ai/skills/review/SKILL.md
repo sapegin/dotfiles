@@ -41,7 +41,7 @@ Preferences are valid when they materially improve clarity or match explicit use
 Use this exact structure for every finding, replacing only the placeholders:
 
 ```md
-### {finding number}. {short finding title} ({severity})
+**{finding number}. {short finding title} ({severity})**
 
 {comma-separated file paths with line or line-range references}
 

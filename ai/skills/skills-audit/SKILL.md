@@ -19,7 +19,7 @@ Audit all skills under `ai/skills/`. Produce recommendations only; do not edit f
 ## Output
 
 ```md
-### 1. {title} — {priority}
+**1. {title} — {priority}**
 
 **Location:** {repository-relative paths with line references}
 

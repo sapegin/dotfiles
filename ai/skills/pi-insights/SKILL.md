@@ -90,7 +90,7 @@ Use this structure:
 
 ## Recommendations
 
-### 1. Title — priority, confidence
+**1. Title — priority, confidence**
 
 **Evidence:** Session dates and concise observed behavior.
 

@@ -41,7 +41,7 @@ Use this structure. Replace only the placeholders.
 
 ## Correctness
 
-### {n}. {short finding title} ({severity})
+**{n}. {short finding title} ({severity})**
 
 **Location:** {quote, heading, or line reference sufficient to locate the passage in the article}
 
@@ -53,7 +53,7 @@ Use this structure. Replace only the placeholders.
 
 ## Modernity
 
-### {n}. {short finding title} ({severity})
+**{n}. {short finding title} ({severity})**
 
 **Location:** {locator}
 
@@ -65,7 +65,7 @@ Use this structure. Replace only the placeholders.
 
 ## Best practices
 
-### {n}. {short finding title} ({severity})
+**{n}. {short finding title} ({severity})**
 
 **Location:** {locator}
 

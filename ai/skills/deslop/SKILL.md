@@ -36,7 +36,7 @@ Validate the batch, inspect the diff for regressions or newly unused code, and f
 Use this exact structure for every finding, replacing only the placeholders:
 
 ```md
-### {finding number}. {short finding title}
+**{finding number}. {short finding title}**
 
 {comma-separated file paths with line or line-range references}
 
