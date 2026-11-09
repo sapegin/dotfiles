@@ -20,7 +20,6 @@ const GIT_BRANCH_TIMEOUT_MS = 1000;
 function getCheapestModel(ctx: ExtensionContext) {
   return ctx.modelRegistry
     .getAvailable()
-    .filter((model) => model.thinkingLevelMap?.off !== null)
     .toSorted(
       // Compare only input cost as output length is insignificant
       (leftModel, rightModel) => leftModel.cost.input - rightModel.cost.input
@@ -93,7 +92,7 @@ async function generateSessionName(
 ) {
   const model = getCheapestModel(ctx);
   if (!model) {
-    return;
+    throw new Error('No naming model is available');
   }
 
   if (signal.aborted) {
@@ -117,12 +116,24 @@ async function generateSessionName(
       },
       {
         maxTokens: MAX_TOKENS,
+        // Codex can reject its default reasoning level even for a listed model.
+        reasoning: 'minimal',
         signal,
       }
     )
     .result();
 
-  return normalizeSessionName(getTextContent(response.content));
+  if (response.stopReason === 'error' || response.stopReason === 'aborted') {
+    throw new Error(
+      `${model.provider}/${model.id}: ${response.errorMessage ?? response.stopReason}`
+    );
+  }
+
+  const name = normalizeSessionName(getTextContent(response.content));
+  if (!name) {
+    throw new Error(`${model.provider}/${model.id}: No title returned`);
+  }
+  return name;
 }
 
 export default function registerSessionNameExtension(pi: ExtensionAPI) {
@@ -196,8 +207,14 @@ export default function registerSessionNameExtension(pi: ExtensionAPI) {
         ) {
           pi.setSessionName(addBranchToSessionName(generatedName, branch));
         }
-      } catch {
-        // Keep Pi's default first-prompt title if background naming fails.
+      } catch (error) {
+        // Keep the default title, but make failures visible unless shutting down.
+        if (!currentGenerationController.signal.aborted && ctx.hasUI) {
+          ctx.ui.notify(
+            `Session naming failed: ${error instanceof Error ? error.message : String(error)}`,
+            'warning'
+          );
+        }
       }
     })();
   });

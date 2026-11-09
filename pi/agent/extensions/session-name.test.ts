@@ -1,3 +1,4 @@
+import { setTimeout } from 'node:timers/promises';
 import {
   type ExtensionAPI,
   type ExtensionContext,
@@ -9,6 +10,10 @@ const agentSessionMocks = vi.hoisted(() => ({
   prompt: vi.fn<(prompt: string) => void>(),
   request: vi.fn<(context: unknown) => void>(),
   responseText: 'Error mapping review',
+  responseStopReason: 'stop',
+  responseErrorMessage: '',
+  streamError: undefined as Error | undefined,
+  options: vi.fn<(options: unknown) => void>(),
 }));
 
 import sessionName, { normalizeSessionName } from './session-name.ts';
@@ -35,15 +40,17 @@ function setupExtension(branchName?: string) {
       sessionNameValue = name;
     },
   } as unknown as ExtensionAPI;
+  const notify = vi.fn<ExtensionContext['ui']['notify']>();
   const ctx = {
     cwd: '/tmp/project',
     modelRegistry: {
       getAvailable: () => [
         {
+          provider: 'test',
           id: 'cheap-input',
           cost: { input: 0, output: 100 },
           maxTokens: 100,
-          thinkingLevelMap: { off: 0 },
+          thinkingLevelMap: { off: null, minimal: 'low' },
         },
         {
           id: 'cheap-output',
@@ -54,8 +61,13 @@ function setupExtension(branchName?: string) {
       ],
       streamSimple(
         model: unknown,
-        context: { messages: { content: unknown }[] }
+        context: { messages: { content: unknown }[] },
+        options: unknown
       ) {
+        agentSessionMocks.options(options);
+        if (agentSessionMocks.streamError) {
+          throw agentSessionMocks.streamError;
+        }
         agentSessionMocks.model(model);
         agentSessionMocks.request(context);
         const content = context.messages.at(-1)?.content;
@@ -66,13 +78,19 @@ function setupExtension(branchName?: string) {
           result: () =>
             Promise.resolve({
               role: 'assistant',
+              stopReason: agentSessionMocks.responseStopReason,
+              errorMessage: agentSessionMocks.responseErrorMessage,
               content: [{ type: 'text', text: agentSessionMocks.responseText }],
             }),
         };
       },
     },
     sessionManager: { getEntries: () => [] },
-    ui: { setTitle: vi.fn<(title: string) => void>() },
+    hasUI: true,
+    ui: {
+      setTitle: vi.fn<(title: string) => void>(),
+      notify,
+    },
   } as unknown as ExtensionContext;
 
   sessionName(pi);
@@ -84,6 +102,8 @@ function setupExtension(branchName?: string) {
       }
     },
     getSessionName: () => sessionNameValue,
+    notify,
+    pi,
   };
 }
 
@@ -119,6 +139,11 @@ describe('session name extension', () => {
     agentSessionMocks.model.mockClear();
     agentSessionMocks.prompt.mockClear();
     agentSessionMocks.request.mockClear();
+    agentSessionMocks.options.mockClear();
+    agentSessionMocks.responseText = 'Error mapping review';
+    agentSessionMocks.responseStopReason = 'stop';
+    agentSessionMocks.responseErrorMessage = '';
+    agentSessionMocks.streamError = undefined;
   });
 
   test('names a session from its first user message, not an assistant reply', async () => {
@@ -139,6 +164,10 @@ describe('session name extension', () => {
         expect.objectContaining({ id: 'cheap-input' })
       );
       expect(extension.getSessionName()).toBe('Error mapping review');
+      expect(agentSessionMocks.options).toHaveBeenCalledWith(
+        expect.objectContaining({ reasoning: 'minimal', maxTokens: 32 })
+      );
+      expect(extension.notify).not.toHaveBeenCalled();
     });
   });
 
@@ -172,6 +201,87 @@ describe('session name extension', () => {
         )
       );
     });
+  });
+
+  test.each(['error', 'aborted'])(
+    'reports %s responses without saving partial text',
+    async (stopReason) => {
+      agentSessionMocks.responseStopReason = stopReason;
+      agentSessionMocks.responseErrorMessage = 'Unsupported reasoning level';
+      const extension = setupExtension();
+      extension.emit('session_start', {});
+      extension.emit('message_start', {
+        message: { role: 'user', content: 'Fix card height' },
+      });
+
+      await vi.waitFor(() => {
+        expect(extension.notify).toHaveBeenCalledExactlyOnceWith(
+          'Session naming failed: test/cheap-input: Unsupported reasoning level',
+          'warning'
+        );
+      });
+      expect(extension.getSessionName()).toBeUndefined();
+    }
+  );
+
+  test('reports empty title responses', async () => {
+    agentSessionMocks.responseText = '  \n';
+    const extension = setupExtension();
+    extension.emit('session_start', {});
+    extension.emit('message_start', {
+      message: { role: 'user', content: 'Fix card height' },
+    });
+
+    await vi.waitFor(() => {
+      expect(extension.notify).toHaveBeenCalledExactlyOnceWith(
+        'Session naming failed: test/cheap-input: No title returned',
+        'warning'
+      );
+    });
+    expect(extension.getSessionName()).toBeUndefined();
+  });
+
+  test('reports thrown request errors', async () => {
+    agentSessionMocks.streamError = new Error('Connection failed');
+    const extension = setupExtension();
+    extension.emit('session_start', {});
+    extension.emit('message_start', {
+      message: { role: 'user', content: 'Fix card height' },
+    });
+
+    await vi.waitFor(() => {
+      expect(extension.notify).toHaveBeenCalledExactlyOnceWith(
+        'Session naming failed: Connection failed',
+        'warning'
+      );
+    });
+    expect(extension.getSessionName()).toBeUndefined();
+  });
+
+  test('does not report failures after shutdown', async () => {
+    agentSessionMocks.responseStopReason = 'aborted';
+    const extension = setupExtension();
+    extension.emit('session_start', {});
+    extension.emit('message_start', {
+      message: { role: 'user', content: 'Fix card height' },
+    });
+    extension.emit('session_shutdown', {});
+
+    await setTimeout(0);
+    expect(extension.notify).not.toHaveBeenCalled();
+    expect(extension.getSessionName()).toBeUndefined();
+  });
+
+  test('preserves a name set while generation is pending', async () => {
+    const extension = setupExtension();
+    extension.emit('session_start', {});
+    extension.emit('message_start', {
+      message: { role: 'user', content: 'Fix card height' },
+    });
+    extension.pi.setSessionName('Manual name');
+
+    await setTimeout(0);
+    expect(extension.getSessionName()).toBe('Manual name');
   });
 
   test('includes raw skill input and appends the Git branch', async () => {
