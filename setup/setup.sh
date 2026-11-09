@@ -94,7 +94,7 @@ echo
 
 # Sync dotfiles
 echo "Syncing dotfiles…"
-node "bin/symlinks/sync-dotfiles"
+bin/sync-dotfiles
 
 echo
 echo "🦆 All done! Now, open a new terminal for the changes to take effect."

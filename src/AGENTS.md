@@ -2,7 +2,7 @@
 
 Ecosystem context: read [raccoonarium.md](../ai/raccoonarium.md).
 
-New tools live in `./bin/`. Each gets a symlink in `../bin/symlinks/` pointing at `../bin/_ts` (example: `src/bin/j.ts` + `bin/symlinks/j` → `_ts`). Non-TypeScript tools stay as executable scripts in `../bin/`.
+New tools live in `./bin/`. Each gets a symlink in `../bin/` pointing at `../bin/_ts` (example: `src/bin/j.ts` + `bin/j` → `_ts`). Non-TypeScript tools stay as executable scripts in `../bin/`.
 
 Put **generic reusable** logic in `./util/`; name modules by **topic**, not by script name (`git.ts`, `files.ts`, `tui.ts`). Script-specific orchestration stays in `./bin/` — export a typed function and wire the CLI at the bottom:
 

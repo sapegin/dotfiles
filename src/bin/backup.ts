@@ -93,7 +93,7 @@ const BACKUP_HOUR = 3;
 const BACKUP_MINUTE = 0;
 
 const LABEL = 'me.sapegin.backup';
-const PROGRAM = path.join(dirs.dotfiles, 'bin/symlinks/backup');
+const PROGRAM = path.join(dirs.dotfiles, 'bin/backup');
 const LOG_FILE = path.join(dirs.home, 'Library/Logs/backup.log');
 const ERR_FILE = path.join(dirs.home, 'Library/Logs/backup.err');
 

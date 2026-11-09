@@ -25,7 +25,6 @@ _prepend_path "$HOME/.local/bin"
 # Dotfiles binaries
 _prepend_path "$DOTFILES_DIR/bin/lib"
 _prepend_path "$DOTFILES_DIR/bin"
-_prepend_path "$DOTFILES_DIR/bin/symlinks"
 
 # User binaries
 _prepend_path "$HOME/bin"

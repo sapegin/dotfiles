@@ -24,9 +24,9 @@ npm run lint:fix # Autofix lint errors and format code
 
 ## CLI tools
 
-New command-line tools are **TypeScript** in [`src/bin/`](./src/bin/), exposed on `$PATH` via [`bin/symlinks/`](./bin/symlinks/) → [`bin/_ts`](./bin/_ts). Read [src/AGENTS.md](./src/AGENTS.md) before adding or changing a tool.
+New command-line tools are **TypeScript** in [`src/bin/`](./src/bin/), exposed on `$PATH` via a symlink in [`bin/`](./bin/) → [`bin/_ts`](./bin/_ts). Read [src/AGENTS.md](./src/AGENTS.md) before adding or changing a tool.
 
-Executable scripts in [`bin/`](./bin/) are for non-TypeScript tools only (shell setup, macOS defaults, legacy helpers).
+Non-TypeScript tools stay as executable scripts in [`bin/`](./bin/) (shell setup, macOS defaults, legacy helpers).
 
 ## Tinycast / Raycast extensions
 

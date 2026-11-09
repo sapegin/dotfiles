@@ -4,7 +4,7 @@ import path from 'node:path';
 import { expect, test } from 'vitest';
 import { getDocs } from '../util/help.ts';
 
-const helpPath = path.join(import.meta.dirname, '../../bin/symlinks/help');
+const helpPath = path.join(import.meta.dirname, '../../bin/help');
 
 function renderHelp(command: string): string {
   return execFileSync(helpPath, [command], {

@@ -44,12 +44,12 @@
     {
       "palettePrefix": "q",
       "hint": "Add a quick note",
-      "command": "~/dotfiles/bin/symlinks/obsidian-quickie {query}"
+      "command": "~/dotfiles/bin/obsidian-quickie {query}"
     },
     {
       "palettePrefix": "job",
       "hint": "Create a job application",
-      "command": "~/dotfiles/bin/symlinks/obsidian-job {query}"
+      "command": "~/dotfiles/bin/obsidian-job {query}"
     }
   ],
   "hotkeys": [

@@ -53,7 +53,7 @@ cdf() {
 
 # Magic Project Opener
 j() {
-	cd "$("$DOTFILES_DIR/bin/symlinks/j" $1)"
+	cd "$("$DOTFILES_DIR/bin/j" $1)"
 }
 
 # Cd to Git repository root folder
@@ -69,7 +69,7 @@ clone() {
 	else
 		cd "$(basename "$1" .git)" || return
 	fi
-	"$DOTFILES_DIR/bin/symlinks/git-configure" || return
+	"$DOTFILES_DIR/bin/git-configure" || return
 	if [[ -r "./yarn.lock" ]]; then
 		yarn
 	elif [[ -r "./pnpm-lock.yaml" ]]; then

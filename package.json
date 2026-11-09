@@ -5,8 +5,8 @@
   "scripts": {
     "lint": "oxlint",
     "lint:fix": "oxlint --fix && oxfmt --write",
-    "ai-sync": "./bin/symlinks/ai-sync",
-    "ai-sync:check": "./bin/symlinks/ai-sync --check",
+    "ai-sync": "./bin/ai-sync",
+    "ai-sync:check": "./bin/ai-sync --check",
     "test": "npm run lint && oxfmt --check && vitest run && npm run ai-sync:check",
     "test:watch": "vitest"
   },
