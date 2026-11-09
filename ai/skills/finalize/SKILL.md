@@ -15,7 +15,7 @@ Read and follow [development workflow setup](../_references/development-workflow
 ### 2. Clean up
 
 - Run the repository’s formatter and linter.
-- Check the changed content for unresolved conflict markers, accidental debug statements, and temporary agent instructions (such as `// AI:` comments) or notes left in deliverable files. Preserve intentional logging, examples, and documented instructions. Ask before removing ambiguous content.
+- Check the changed content for accidental debug statements, temporary agent instructions (such as `// AI:` comments) or notes left in deliverable files. Preserve intentional logging, examples, and documented instructions. Ask before removing ambiguous content.
 - Keep edits limited to this housekeeping. If a substantive problem appears, report it and pause for direction rather than starting another review or redesign.
 - Inspect tool-generated changes. Run only lightweight checks or focused tests warranted by cleanup edits; do not rerun full test suites or expensive end-to-end checks.
 - Report failed or unavailable housekeeping checks and pause before offering publication until the user resolves or explicitly accepts them. Do not describe unrun checks as passed.
