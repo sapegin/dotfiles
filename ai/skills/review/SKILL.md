@@ -22,21 +22,21 @@ Use any specification or ticket supplied earlier in the conversation as explicit
 
 ## Process
 
-1. Resolve the review target according to **Target** and identify explicit requirements already supplied in the conversation. Do not add a scope preamble to the first finding.
-2. Establish intended behavior from the explicit requirements, request, issue, approved decisions, relevant callers, tests, types, schemas, designs, and documentation. Use commit and pull request descriptions as supporting implementation context. Do not infer requirements solely from the changed implementation.
-3. Compare the diff against the specification and check explicitly for requirements that are missing, only partially implemented, implemented incorrectly, or not meaningfully tested. Quote the relevant specification line for every such finding.
-4. Inspect the selected file or complete changeset and the affected system. Include relevant unchanged source, tests, dependencies, generated files, configuration, documentation, agent skills, migrations, assets, and public contracts. Follow the design as far as needed for a sound review without auditing unrelated systems.
+1. Resolve the review target according to **Target**.
+2. Establish intended behavior from the explicit requirements, request, issue, approved decisions, relevant callers, tests, types, schemas, designs, and documentation. Do not infer requirements solely from the changed implementation.
+3. Check the affected system against the requirements, product intent, and business rules, including missing, partial, incorrect, or untested behavior. Quote the relevant specification line for each specification finding.
+4. Inspect the selected file or complete changeset and the affected system, including relevant unchanged code, artifacts, and public contracts. Follow the design as far as needed without auditing unrelated systems.
 5. Trace relevant values and behavior through callers, consumers, state owners, API boundaries, persistence, and side effects. Look for intent mismatches, unexplained product or business-logic changes, misplaced responsibilities, and poor boundaries.
-6. Report material issues throughout the affected system, including issues in unchanged files that the target exposes or that a coherent design improvement should address. Judge the code under review, not whether it is committed or tracked. The only version-control finding allowed is incorrect `.gitignore` coverage.
-7. Review beyond what type-checking, linting, tests, and builds can detect. Run focused checks when they can confirm or disprove a suspected finding; otherwise mark unresolved uncertainty clearly.
-8. When a finding depends on platform, framework, or library behavior, verify it against the repository’s installed version and authoritative documentation or source. Cite the evidence and mark unresolved uncertainty.
+6. Report material issues, including those in unchanged files that the target exposes or that a coherent design improvement should address.
+7. Review beyond what type-checking, linting, tests, and builds can detect. Run focused checks when they can confirm or disprove a suspected finding.
+8. When a finding depends on platform, framework, or library behavior, verify it against the repository’s installed version and authoritative documentation or source. Cite the evidence.
 9. Try to disprove each finding by checking callers, guards, tests, types, and runtime semantics. Remove findings contradicted by repository evidence.
-10. Recommend the best coherent design with scope proportionate to its demonstrated benefit. Prefer simplification over cleverness and evidence over speculative future-proofing, but do not avoid API changes, multi-file refactors, or substantial redesign merely because they are ambitious. Do not manufacture findings to appear useful.
-11. Present exactly one finding at a time using **Output format**, ordered by severity. Then wait for the user to choose whether to fix or ignore it, or give other instructions.
+10. Recommend the best coherent design with scope proportionate to its demonstrated benefit. Prefer simplification over cleverness and speculative future-proofing. Behavior or API changes, multi-file refactors, and substantial redesign are valid when warranted by the user-approved goal.
+11. Present exactly one finding at a time using **Output format**. Then wait for the user to choose whether to fix or ignore it, or give other instructions.
 12. Interpret `F` (case-insensitive) as approval of the recommended fix and `I` (case-insensitive) as ignore. If the user approves a fix or gives replacement instructions, make only that approved change and validate it before continuing.
-13. After handling the user’s response, continue with the next finding using the same one-at-a-time process. If no material findings remain, use the exact no-findings output rather than inventing one.
+13. After handling the user’s response, continue with the next finding using the same one-at-a-time process. If no unhandled findings remain, use the exact no-findings output.
 
-Flag plausible risks when important, but provide a concrete trigger and mark uncertainty clearly. Preferences are valid when they materially improve clarity or match explicit user preferences or repository conventions; label them as suggestions rather than defects. Recommend broader refactors when they materially improve the affected system’s correctness, clarity, usability, or maintainability.
+Preferences are valid when they materially improve clarity or match explicit user preferences or repository conventions; label them as suggestions rather than defects.
 
 ## Output format
 
@@ -45,16 +45,16 @@ Use this exact structure for every finding, replacing only the placeholders:
 ```md
 ### {finding number}. {short finding title} ({severity})
 
-Location: {comma-separated file paths with line or line-range references}
+_{comma-separated file paths with line or line-range references}_
 
-{focused explanation of the defect with concise evidence and optional fenced code, diff blocks, or quote of the specification line that establishes the expected behavior or scope}
+{focused explanation of one issue, its practical consequence, and concise evidence; optional fenced code, diff blocks, or specification quotes}
 
-Recommendation: {best coherent recommendation with scope proportionate to its benefit}
+**{best coherent recommendation with scope proportionate to its benefit}**
 
 (F)ix, (i)gnore, or tell what to do.
 ```
 
-Use this exact output when no material findings remain:
+Use this exact output when no unhandled findings remain:
 
 ```text
 Huzzah! Nothing else warrants attention.
@@ -62,25 +62,17 @@ Huzzah! Nothing else warrants attention.
 
 Formatting rules:
 
-- Ordered finding by severity: blocker, high, medium, low, then suggestion.
+- Order findings by severity: blocker, high, medium, low, then suggestion.
 - Number findings consecutively from 1 for the review session.
 - Keep finding titles factual and specific.
-- Use the field names `Location` and `Recommendation` exactly as shown. Format labels in bold.
 - Use repository-relative paths and precise line references. Join line ranges with an hyphen, for example `src/file.ts:10-14`.
-- Keep the explanation focused on one issue. State the observed behavior, evidence, and practical consequence; do not pad it with a review summary or generic praise.
 - Do not use second-person pronouns or attribute the code, decisions, or defects to the user. Refer to the code, change, implementation, or named symbols instead.
-- Offer one recommendation only. Prefer the best coherent design over the smallest patch, and make its scope proportionate to the demonstrated benefit.
 - Do not add headings, preambles, conclusions, or choice text outside the template.
-- State confidence only when uncertainty is material, and do not present guesses as facts.
-- Keep unrelated problems in separate findings. Do not pad the findings with praise, file summaries, generic observations, or hypothetical failures without a plausible trigger.
+- State material uncertainty explicitly. Report risks only with a concrete trigger; omit praise, file summaries, and generic observations.
 
 ## Focus areas
 
-The review target may be application code, configuration, documentation, agent skills, CI definitions, or other repository artifacts. Load detailed checklists for categories the changes touch.
-
-### Always apply
-
-- **Requirements and intent:** Verify that the affected system satisfies the request, specification, product intent, and relevant business rules. Find missing, partial, incorrect, or untested requirements, and question implementations that satisfy the literal patch while solving the wrong problem.
+The review target may be application code, configuration, documentation, agent skills, CI definitions, or other repository artifacts.
 
 ### Category checklists
 
@@ -96,12 +88,8 @@ Choose category checklists from the paths and extensions in the review target. L
 - **Configuration and documentation** — config files, docs, or tooling without application code: read [nocode](references/nocode.md).
 - **Agent skills and prompts** — skill or prompt changes: read [agent-skills](references/agent-skills.md).
 
-When a changeset spans categories, load each relevant reference.
-
 ## Guardrails
 
 - Do not report uncommitted or untracked files as defects. Review the code on disk or in the diff, not git working-tree status. Do not recommend `git add`, commits, or other version-control housekeeping unless `.gitignore` is wrong: files that should be ignored but are not, or should be tracked but are wrongly ignored.
 - Security findings: reference secret type and location only; never reproduce secret values.
-- Keep findings relevant to the affected system, but follow that system beyond changed files whenever evidence or a coherent solution requires it.
 - Do not spend findings on syntax-level cleanup, stylistic nits, or local polish unless it exposes a broader correctness or design issue.
-- Recommendations may change behavior, APIs, modules, and architecture when the user-approved goal requires it. Keep ambition evidence-based and scope proportionate to the benefit.
