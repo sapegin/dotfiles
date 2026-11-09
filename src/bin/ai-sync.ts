@@ -50,8 +50,10 @@ const REFERENCE_SOURCES = [
     sourcePath: 'skills/modern-web-guidance/guides',
     ignore: [
       '^built-in-ai/',
+      '^pwa/',
+      '^security/passkey',
+      '^wasm/',
       '^webmcp/',
-      '^passkeys/',
       '^(?:Index|Readme)\\.md$',
     ],
     loadIndexSections: loadWebGuideIndexSections,

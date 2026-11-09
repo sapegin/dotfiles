@@ -151,16 +151,17 @@ The following example demonstrates a custom select styled with standard page ani
 - **DO** use `@starting-style` when you need animations to trigger exactly when an element transitions from `display: none` to visible.
 - **DO NOT** use ad-hoc scroll locking. Top-layer elements managed by ‘base-select’ should allow natural backdrop dismiss behaviors.
 - **DO** verify reduced motion preferences. Always wrap animation constraints in a `prefers-reduced-motion` media query to ensure accessible environments for those affected by motion sickness.
-- **DO** test layout behavior. Setting `appearance: base-select` removes the default browser behavior of sizing the select based on its longest option width. You may need to set a fixed width or use flex/grid constraints to prevent layout shifts.
-- **DO** ensure your `<select>` has a `name` attribute and an associated `<label>`. This ensures that even with a custom UI, the component remains accessible to screen readers and works correctly with standard form submissions.
+- Test layout behavior. Setting `appearance: base-select` removes the default browser behavior of sizing the select based on its longest option width. You may need to set a fixed width or use flex/grid constraints to prevent layout shifts.
+- Ensure your `<select>` has a `name` attribute and an associated `<label>`. This ensures that even with a custom UI, the component remains accessible to screen readers and works correctly with standard form submissions.
+- Use standard `value` attributes on options to ensure form submission works exactly as before.
 
 ## Fallback strategies
 
-### Fallbacks & browser support for Customizable <select>
+### Fallbacks & browser support for Customizable `<select>`
 
-Customizable <select> has limited availability.
-Supported by: Chrome 135 (Apr 2025) and Edge 135 (Apr 2025).
-Unsupported in: Firefox and Safari.
+Browser support for Customizable <select>: Limited availability.
+Supported by: Chrome 135 (Apr 2025), Edge 135 (Apr 2025), and Safari 27 (Sep 2026).
+Unsupported in: Firefox.
 
 For browsers that do not yet support `appearance: base-select`, the `<select>` element degrades gracefully to a standard operating system dropdown.
 

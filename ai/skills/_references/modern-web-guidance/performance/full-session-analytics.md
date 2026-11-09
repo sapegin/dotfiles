@@ -1,6 +1,6 @@
 # Reliably measure full-session analytics and telemetry
 
-To reliably analytics and telemetry data that covers the entirety of a user's visit to a web page (not just until page load) use the `fetchLater()` API.
+To reliably track analytics, Core Web Vitals, and telemetry data that covers the entirety of a user's visit to a web page (not just until page load), use the `fetchLater()` API.
 
 The `fetchLater()` API is the most reliably way to send data to a server in cases where a response is not required and delivery timing is not urgent, which applies to data such as user analytics, telemetry, error tracking, and performance metrics like Core Web Vitals.
 
@@ -67,7 +67,7 @@ setInterval(queueBeacon, 10000);
 
 ## Browser support and fallback strategies
 
-fetchLater has limited availability.
+Browser support for fetchLater: Limited availability.
 Supported by: Chrome 135 (Apr 2025) and Edge 135 (Apr 2025).
 Unsupported in: Firefox and Safari.
 

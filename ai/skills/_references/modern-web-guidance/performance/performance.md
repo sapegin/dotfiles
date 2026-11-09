@@ -1,3 +1,5 @@
+# Performance
+
 ## Critical Rendering Path (CRP) Optimization
 
 The Critical Rendering Path dictates how quickly the browser converts HTML, CSS, and JavaScript into painted pixels. 
@@ -140,7 +142,7 @@ Third-party scripts (analytics, ads, chat widgets) are the primary source of mai
 **HTML: Third-Party Script Execution**
 ```html
 <!-- 1. Place third-party scripts near the end of the page with the defer attribute -->
-<script defer src="http://www.example.com/third-party.js"></script>
+<script defer src="https://www.example.com/third-party.js"></script>
 ```
 
 ## CSS Rendering & Containment Optimization
@@ -150,6 +152,7 @@ Rendering involves Layout, Style, Paint, and Compositing calculations. CSS Conta
 ### DOs
 *   **DO use `content-visibility: auto` on off-screen sections on large, complex pages**: Instruct the browser to skip layout and paint calculations for entire subtrees until they approach the viewport.
 *   **DO pair `content-visibility` with `contain-intrinsic-size`**: Prevent layout shifts and scrollbar jumping by providing a placeholder height/width for unrendered containers.
+*   **DO derive `contain-intrinsic-size` from the content**: When setting `contain-intrinsic-size` use the `auto` keyword and a value that's derived from what is known about the contents (i.e. text size, spacing, size of graphics, character count). Preferably use units such as `rem`, `lh`, `cap`, or `ch` that match values used for the elements within the contents rather than `px`. If the content for items in a group is not consistently sized, then use an average size.
 *   **DO apply explicit CSS containment (`contain`)**: For isolated UI components (like modals or widgets), use `contain: layout style paint` to prevent internal changes from triggering page-wide reflows.
 
 ### DON'Ts
@@ -166,6 +169,18 @@ Rendering involves Layout, Style, Paint, and Compositing calculations. CSS Conta
 .article-list-item {
   content-visibility: auto;
   contain-intrinsic-size: auto 600px; /* Provides a 600px placeholder */
+}
+
+.row {
+  --row-gap: .4rem;
+  --title-height: 1lh;
+  --description-height: 0.85lh;
+
+  display: grid;
+  row-gap: var(--row-gap);
+  content-visibility: auto;
+  /* The sum of the title height, row gap, and description height should be the size of the contents when skipped for rendering. */
+  contain-intrinsic-block-size: auto calc(var(--title-height) + var(--row-gap) + var(--description-height));
 }
 
 /* Scope a complex widget to prevent layout thrashing */
@@ -185,7 +200,7 @@ Rendering involves Layout, Style, Paint, and Compositing calculations. CSS Conta
 Images typically represent the largest payload on a given web page. Optimization requires format negotiation, responsive sizing, and layout stabilization.
 
 ### DOs
-*   **DO serve modern formats (AVIF / WebP)**: Use the `<picture>` element to offer AVIF (best compression), falling back to WebP, and finally JPEG/PNG for legacy browsers.
+*   **DO serve modern formats (AVIF / WebP / JPEG XL)**: Use the `<picture>` element to offer AVIF or JPEG XL (best compression), falling back to WebP, and finally JPEG/PNG for legacy browsers.
 *   **DO apply explicit `width` and `height` attributes**: Setting native attributes allows the browser to compute the aspect ratio immediately, reserving space and eliminating CLS. Image dimensions may be set either as HTML attributes or CSS properties.
 *   **DO utilize `loading="lazy"` on all below-the-fold images**: Utilize native browser lazy loading to defer network requests for images outside the initial viewport.
 *   **DO implement responsive images with `srcset` and `sizes`**: Serve tailored resolutions based on screen density and viewport width to prevent mobile devices from downloading desktop-sized images.
@@ -242,6 +257,7 @@ Client-side caching via Service Workers allows applications to bypass the networ
 *   **DON'T cache opaque responses blindly**: Responses from third-party domains lacking CORS headers are "opaque". Caching them heavily consumes quota and fails silently. Only cache them using `NetworkFirst` or `StaleWhileRevalidate`.
 *   **DON'T cache POST requests**: Service workers cannot cache non-GET requests natively. Implement background sync queues for offline submissions.
 *   **DON'T bypass versioning**: Failing to update asset hashes/versions will trap users in infinite cache loops.
+*   **DON'T use `Cache-Control: no-store` for non-sensitive resources**: This directive prevents the browser from storing the page in the **Back-Forward Cache (bfcache)**, leading to significantly slower perceived performance. Use it only for truly private data, and use `Cache-Control: no-cache` or `Cache-Control: max-age=0` for pages that simply need to serve up-to-date content.
 
 ### Code Examples
 

@@ -1,3 +1,5 @@
+# Schedule Tasks By Priority
+
 When building complex web applications, tasks have different levels of urgency. Completing tasks for the current view is more important than sending analytics or prefetching assets. The Prioritized Task Scheduling API allows you to schedule work with specific priorities, ensuring the browser remains responsive to user input.
 
 ### Scheduling tasks by priority
@@ -29,7 +31,7 @@ scheduler.postTask(() => {
 
 ### Fallback strategies
 
-Scheduler API has limited availability.
+Browser support for Scheduler API: Limited availability.
 Supported by: Chrome 129 (Sep 2024), Edge 129 (Sep 2024), and Firefox 142 (Aug 2025).
 Unsupported in: Safari.
 

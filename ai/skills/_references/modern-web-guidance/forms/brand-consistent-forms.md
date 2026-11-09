@@ -70,7 +70,7 @@ body {
 
 ## Fallback Strategy
 
-accent-color has limited availability.
+Browser support for accent-color: Limited availability.
 Supported by: Chrome 93 (Aug 2021), Edge 93 (Sep 2021), Firefox 92 (Sep 2021), and Safari 26.2 (Dec 2025).
 
 For browsers that do not support `accent-color`, the form controls fall back to the browser's default appearance. To ensure full brand consistency and high reliability across all environments, you MUST implement a custom fallback strategy using the established "visually hidden input" technique.

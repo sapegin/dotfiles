@@ -37,9 +37,9 @@ Every `<input>`, `<select>`, and `<textarea>` element SHOULD have an appropriate
 
 ### Make buttons helpful
 
-Use `<button>` for buttons. You can also use `<input type="submit">`, but don't use a `div` or some other random element acting as a button. Button elements provide accessible behaviour, built-in form submission functionality, and can easily be styled.
+Use `<button>` for buttons. You can also use `<input type="submit">`, but don't use a `div` or some other random element acting as a button. Button elements provide accessible behavior, built-in form submission functionality, and can easily be styled.
 
-Give each form submit button a value that says what it does. For each step towards checkout, use a descriptive call-to-action that shows progress and makes the next step obvious. For example, label the submit button on your delivery address form **Proceed to Payment** rather than **Continue** or **Save**.
+Give each form submit button a value that says what it does. For each step toward checkout, use a descriptive call-to-action that shows progress and makes the next step obvious. For example, label the submit button on your delivery address form **Proceed to Payment** rather than **Continue** or **Save**.
 
 ### Use a single name input where possible
 
@@ -59,15 +59,16 @@ By default, set the billing address to be the same as the delivery address. Redu
 
 Use appropriate autocomplete values for the billing address, just as you do for shipping address, so the user doesn't have to enter data more than once. Add a prefix word to autocomplete attributes if you have different values for inputs with the same name in different sections. For example:
 
-```
-<input autocomplete="shipping address-line-1" ...>
+```html
+<!-- Prefix with shipping or billing; note that the valid token is address-line1 (no hyphen before the digit) -->
+<input autocomplete="shipping address-line1" ...>
 ...
-<input autocomplete="billing address-line-1" ...>
+<input autocomplete="billing address-line1" ...>
 ```
 
 ### Show checkout progress
 
-For each step towards payment, use page headings and descriptive button values that make it clear what needs to be done now, and what checkout step is next.
+For each step toward payment, use page headings and descriptive button values that make it clear what needs to be done now, and what checkout step is next.
 
 Use the `enterkeyhint` attribute on form inputs to set the mobile keyboard enter key label. For example, use `enterkeyhint="previous"` and `enterkeyhint="next"` within a multi-page form, `enterkeyhint="done"` for the final input in the form, and `enterkeyhint="search"` for a search input.
 
@@ -97,6 +98,16 @@ Make sure to add appropriate `autocomplete` values in payment card forms. Withou
        inputmode="numeric" maxlength="4" pattern="[0-9]{3,4}" required>
 ```
 
+### Show format hints above the input
+
+Where a field has a required format (for example the `MM/YY` expiry date), put the hint in a visible element **above** the input and link the two with `aria-describedby`, as in the `cc-exp` example above. Hints that sit below an input are easily hidden by the mobile keyboard or by the autofill popover at the moment the user needs them.
+
+Don't rely on the `placeholder` attribute as the only format hint, and never use it instead of a `<label>`: placeholder text is hidden as soon as the user starts typing, so it can't be checked against while editing. A placeholder is fine as an extra cue alongside the label and the persistent hint.
+
+### Don't mask the security code
+
+Use `type="text"` with `inputmode="numeric"` for the card security code, not `type="password"`. Users can't check a masked three- or four-digit code for typos, so a mistyped digit isn't caught until the payment is declined, and masking adds little protection because the code is printed on the card the user is holding.
+
 ### Use a single input for payment card and phone numbers
 
 For payment card and phone numbers use a single input: don't split the number into parts. That makes it easier for users to enter data, makes validation simpler, and enables browsers to autofill. Consider doing the same for other numeric data such as PIN and bank codes.
@@ -117,8 +128,10 @@ Add the `required` attribute to mandatory fields. Modern browsers automatically 
 
 Baseline status for enterkeyhint: Widely available. It's been Baseline since 2021-11-02.
 Supported by: Chrome 77 (Sep 2019), Edge 79 (Jan 2020), Firefox 94 (Nov 2021), Safari 13.1 (Mar 2020), and Safari iOS 13.4 (Mar 2020).
+
 Baseline status for Email, telephone, and URL <input> types: Widely available. It's been Baseline since 2015-07-29.
 Supported by: Chrome 5 (May 2010), Edge 12 (Jul 2015), Firefox 4 (Mar 2011), Safari 5 (Jun 2010), and Safari iOS 3 (Jun 2009).
+
 Baseline status for inputmode: Widely available. It's been Baseline since 2021-12-07.
 Supported by: Chrome 66 (Apr 2018), Edge 79 (Jan 2020), Firefox 95 (Dec 2021), Safari 12.1 (Mar 2019), and Safari iOS 12.2 (Mar 2019).
 

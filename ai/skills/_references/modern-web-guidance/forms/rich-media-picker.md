@@ -105,16 +105,17 @@ select.custom-select option:checked .option-title {
 - **DO NOT** use ad-hoc elements if you notice performance lags; the browser handles native keyboard focus natively.
 - **DO** account for top-layer rendering. The picker renders in the top-layer, meaning it overrides relative `z-index` of page content.
 - **DO** hide secondary details (like descriptions) in the button state if they take too much space, by styling `.custom-select selectedcontent .option-desc { display: none; }`.
-- **DO** test layout behavior. Setting `appearance: base-select` removes the default browser behavior of sizing the select based on its longest option width. You may need to set a fixed width or use flex/grid constraints to prevent layout shifts.
-- **DO** ensure your `<select>` has a `name` attribute and an associated `<label>`. This ensures that even with a custom UI, the component remains accessible to screen readers and works correctly with standard form submissions.
+- Test layout behavior. Setting `appearance: base-select` removes the default browser behavior of sizing the select based on its longest option width. You may need to set a fixed width or use flex/grid constraints to prevent layout shifts.
+- Ensure your `<select>` has a `name` attribute and an associated `<label>`. This ensures that even with a custom UI, the component remains accessible to screen readers and works correctly with standard form submissions.
+- Use standard `value` attributes on options to ensure form submission works exactly as before.
 
 ## Fallback Strategies
 
-### Fallbacks & browser support for Customizable <select>
+### Fallbacks & browser support for Customizable `<select>`
 
-Customizable <select> has limited availability.
-Supported by: Chrome 135 (Apr 2025) and Edge 135 (Apr 2025).
-Unsupported in: Firefox and Safari.
+Browser support for Customizable <select>: Limited availability.
+Supported by: Chrome 135 (Apr 2025), Edge 135 (Apr 2025), and Safari 27 (Sep 2026).
+Unsupported in: Firefox.
 
 For browsers that do not yet support `appearance: base-select`, the `<select>` element degrades gracefully to a standard operating system dropdown.
 

@@ -1,4 +1,4 @@
-# Use the CSS :autofill pseudo-class to highlight form fields that have been autofilled by the browser and not edited by the user
+# Highlight browser-autofilled fields the user hasn't edited with CSS :autofill
 
 Use the CSS `:autofill` to highlight fields that have (or have not been) autofilled, to help guide the user to successful form completion.
 
@@ -38,7 +38,7 @@ MANDATORY: Use `:autofill` as this is the correct pseudo-class name.
 
 ### Fallback strategies
 
-:autofill has limited availability.
+Browser support for :autofill: Limited availability.
 Supported by: Chrome 110 (Feb 2023), Edge 110 (Feb 2023), and Safari 15 (Sep 2021).
 Unsupported in: Firefox.
 
