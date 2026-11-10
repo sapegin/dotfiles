@@ -9,6 +9,10 @@
 //
 // `app-install raccoon-toolbox`
 //
+// - Install and restart (kills a running instance first):
+//
+// `app-install hotdog --start`
+//
 // - Hotdog launch-at-login (canonical `/Applications/Hotdog.app` only):
 //
 // `app-install hotdog login install`
@@ -22,6 +26,7 @@
 import { execSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
+import { restartApp } from '../util/apps.ts';
 import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import { dirs, doesPathExist, tildify } from '../util/files.ts';
 import { pullIfClean } from '../util/git.ts';
@@ -32,7 +37,10 @@ import {
 import { syncLink } from '../util/sync.ts';
 import { run, UserError } from '../util/tui.ts';
 
-const OPTIONS = [{ name: 'args', rest: true }] as const;
+const OPTIONS = [
+  { name: 'start', type: 'boolean', default: false },
+  { name: 'args', rest: true },
+] as const;
 
 export type Options = ParsedArgs<typeof OPTIONS>;
 
@@ -151,7 +159,10 @@ export function resolveMacApps(names: readonly string[]): MacAppConfig[] {
   return selected;
 }
 
-async function installMacApp(app: MacAppConfig): Promise<void> {
+async function installMacApp(
+  app: MacAppConfig,
+  { start }: { start: boolean }
+): Promise<void> {
   const repo = path.join(dirs.projects, app.repo ?? app.name);
 
   if ((await doesPathExist(repo)) === false) {
@@ -178,15 +189,20 @@ async function installMacApp(app: MacAppConfig): Promise<void> {
   );
   console.log();
   await syncLink(bundlePath, installPath);
+
+  if (start) {
+    console.log(`\nStarting ${path.basename(installPath)}…`);
+    restartApp(installPath);
+  }
 }
 
-export async function appInstall({ args }: Options): Promise<void> {
+export async function appInstall({ args, start }: Options): Promise<void> {
   if (handleHotdogLoginSubcommand(args)) {
     return;
   }
 
   for (const app of resolveMacApps(args)) {
-    await installMacApp(app);
+    await installMacApp(app, { start });
   }
 }
 
