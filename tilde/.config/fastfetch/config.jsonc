@@ -14,7 +14,7 @@
   "modules": [
     {
       "type": "custom",
-      "format": "\u001b[1mSquirrelsong Dark\u001b[0m"
+      "format": "\u001b[1mSquirrelsong\u001b[0m"
     },
     "separator",
     {

@@ -213,7 +213,7 @@
   "window.zoomLevel": 0.15,
   "workbench.activityBar.location": "hidden",
   "workbench.browser.showInTitleBar": false,
-  "workbench.colorTheme": "Squirrelsong Light (Dark Terminal)",
+  "workbench.colorTheme": "Squirrelsong Light",
   "workbench.commandPalette.preserveInput": false,
   "workbench.editor.customLabels.enabled": true,
   "workbench.editor.customLabels.patterns": {

@@ -16,8 +16,8 @@ gui:
     optionsTextColor:
       - white
     selectedLineBgColor:
-      # Use Squirrelsong Dark purpleLighter color to make it readable
-      - '#453461'
+      # Squirrelsong Light gray150 — readable selection on light terminal
+      - '#dbd7e0'
     selectedRangeBgColor:
       - magenta
     cherryPickedCommitBgColor:

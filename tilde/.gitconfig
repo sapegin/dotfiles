@@ -113,9 +113,9 @@
 [add.interactive]
 	useBuiltin = false
 [delta]
-  features = squirrelsong-dark
+  features = squirrelsong-light
 	navigate = false
-	light = false
+	light = true
 	hyperlinks = true
 	hyperlinks-file-link-format = "vscode://file/{path}:{line}"
 [merge]

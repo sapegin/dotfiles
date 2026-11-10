@@ -6,21 +6,6 @@ export LC_ALL="$LANG"
 export VISUAL="code --wait"
 export EDITOR="$VISUAL"
 
-# Set TERM_THEME from the terminal emulator
-export TERM_THEME=dark
-
-# git-delta: switch Squirrelsong feature set by terminal appearance
-case $TERM_THEME in
-light)
-	export DELTA_FEATURES=squirrelsong-light
-	export DELTA_LIGHT=true
-	;;
-*)
-	export DELTA_FEATURES=squirrelsong-dark
-	export DELTA_LIGHT=false
-	;;
-esac
-
 # Make less the default pager, add some options
 [ -n "$LESSPIPE" ] && export LESSOPEN="| ${LESSPIPE} %s"
 less_options=(
@@ -52,23 +37,21 @@ export PAGER='less'
 # Bat: https://github.com/sharkdp/bat
 # Resolve theme explicitly: BAT_THEME=auto warns in subprocesses (e.g. ripgrep/fzf
 # previews) that pass the value literally to --theme before auto-detection runs.
-case $TERM_THEME in
-light) export BAT_THEME='Squirrelsong Light' ;;
-*) export BAT_THEME='Squirrelsong Dark' ;;
-esac
+export BAT_THEME='Squirrelsong Light'
 
 # LS colors
 # Used by: fd
 LS_COLORS=""
-LS_COLORS+="di=34;;1:" # Directories
-LS_COLORS+="ex=33:"    # Executable files
-LS_COLORS+="ln=36:"    # Symlinks
-LS_COLORS+="or=31:"    # Broken symlinks
+LS_COLORS+="di=34;1:" # Directories
+LS_COLORS+="ex=33:"   # Executable files
+LS_COLORS+="ln=36:"   # Symlinks
+LS_COLORS+="or=31:"   # Broken symlinks
 export LS_COLORS
 
 # Eza colors: https://github.com/eza-community/eza/blob/main/man/eza_colors.5.md
 EZA_COLORS="reset:$LS_COLORS"       # Reset default colors, like making everything yellow
-EZA_COLORS+="da=36:"                # Timestamps
+EZA_COLORS+="uu=0:gu=0:"            # Current user/group
+EZA_COLORS+="da=90:"                # Timestamps (muted; eza age-scale is neon-only)
 EZA_COLORS+="ur=0:uw=0:ux=0:ue=0:"  # User permissions
 EZA_COLORS+="gr=0:gw=0:gx=0:"       # Group permissions
 EZA_COLORS+="tr=0:tw=0:tx=0:"       # Other permissions
