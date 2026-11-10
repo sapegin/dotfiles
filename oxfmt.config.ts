@@ -10,7 +10,6 @@ export default defineConfig({
     'obsidian/*',
     'pi/agent/settings.json',
     'pretty-html/_assets/lib/*',
-    'supacode/settings.json',
     'tilde/.config/tinycast/settings.json',
     'tinycast/**/dist/**',
     'tinycast/**/raycast-env.d.ts',

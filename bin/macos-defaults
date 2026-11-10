@@ -363,7 +363,6 @@ defaults write com.microsoft.Outlook NSConvolutionOverride1 -float 10
 defaults write com.microsoft.VSCode NSConvolutionOverride1 -float 10
 defaults write md.obsidian NSConvolutionOverride1 -float 10
 defaults write com.mitchellh.ghostty NSConvolutionOverride1 -float 10
-defaults write app.supabit.supacode NSConvolutionOverride1 -float 10
 defaults write com.tinyspeck.slackmacgap NSConvolutionOverride1 -float 10
 defaults write com.apple.finder NSConvolutionOverride1 -float 10
 defaults write com.apple.Music NSConvolutionOverride1 -float 10
@@ -447,7 +446,6 @@ for app in \
 	"Obsidian" \
 	"Safari" \
 	"Slack" \
-	"supacode" \
 	"SystemUIServer" \
 	"Telegram" \
 	"Terminal" \

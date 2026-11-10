@@ -49,11 +49,6 @@
     "source": "$DOTFILES_DIR/vscode/User",
     "destination": "~/Library/Application Support/Code/User"
   },
-  // Supacode config
-  {
-    "source": "$DOTFILES_DIR/supacode/settings.json",
-    "destination": "~/.supacode/"
-  },
   // Hotdog
   {
     "source": "$DOTFILES_DIR/hotdog/*.json",

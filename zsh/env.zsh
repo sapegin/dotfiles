@@ -6,15 +6,8 @@ export LC_ALL="$LANG"
 export VISUAL="code --wait"
 export EDITOR="$VISUAL"
 
-# Set TERM_THEME from the terminal emulator. Supacode uses a light theme;
-# everything else defaults to dark.
-#
-# It seems impossible to use OSC 11 from shell as intended to detect the theme,
-# so we hardcode which apps need light theme.
-case $TERM_PROGRAM in
-supacode) export TERM_THEME=light ;;
-*) export TERM_THEME=dark ;;
-esac
+# Set TERM_THEME from the terminal emulator
+export TERM_THEME=dark
 
 # git-delta: switch Squirrelsong feature set by terminal appearance
 case $TERM_THEME in
