@@ -12,6 +12,7 @@
     "playlists",
     "calculator",
     "calendar",
+    "devDocs",
     "customCommands",
     "hotkeys",
     "snippets"
@@ -20,6 +21,32 @@
   "properties": {
     "$schema": {
       "type": "string"
+    },
+    "devDocs": {
+      "type": "object",
+      "description": "DevDocs palette search. Prefix keys map to DevDocs slugs; those slugs are downloaded on first use of that prefix.",
+      "required": ["cacheIntervalDays", "prefixes"],
+      "additionalProperties": false,
+      "properties": {
+        "cacheIntervalDays": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Re-download a slug's index when older than this many days (checked on first use of that slug)"
+        },
+        "prefixes": {
+          "type": "object",
+          "minProperties": 1,
+          "description": "Palette prefix (before a space) → DevDocs slug (e.g. js → javascript for `js alert`)",
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1,
+            "description": "DevDocs slug (e.g. javascript, node, tailwindcss, css, html, browser_support_tables)"
+          },
+          "propertyNames": {
+            "minLength": 1
+          }
+        }
+      }
     },
     "bookmarks": {
       "type": "object",
@@ -284,17 +311,11 @@
       },
       "allOf": [
         {
-          "if": {
-            "properties": { "id": { "const": "command.open-app" } },
-            "required": ["id"]
-          },
+          "if": { "properties": { "id": { "const": "command.open-app" } }, "required": ["id"] },
           "then": { "required": ["bundleId"] }
         },
         {
-          "if": {
-            "properties": { "id": { "const": "snippet.expand" } },
-            "required": ["id"]
-          },
+          "if": { "properties": { "id": { "const": "snippet.expand" } }, "required": ["id"] },
           "then": { "required": ["snippetId"] }
         }
       ]
