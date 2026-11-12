@@ -34,6 +34,7 @@ culting
 customizability
 cyclomatic
 dcim
+deadband
 deburr
 dedupe
 deseed
