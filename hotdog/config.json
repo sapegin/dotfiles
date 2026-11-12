@@ -37,6 +37,18 @@
     "defaultDurationMinutes": 30,
     "defaultInvitees": ["Possum:home"]
   },
+  "devDocs": {
+    "cacheIntervalDays": 7,
+    "prefixes": {
+      "js": "javascript",
+      "node": "node",
+      "tail": "tailwindcss",
+      "css": "css",
+      "dom": "dom",
+      "html": "html",
+      "can": "browser_support_tables"
+    }
+  },
   "snippets": {
     "file": "~/cloud/Documents/snippets.json"
   },
