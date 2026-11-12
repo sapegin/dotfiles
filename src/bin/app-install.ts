@@ -192,7 +192,7 @@ async function installMacApp(
 
   if (start) {
     console.log(`\nStarting ${path.basename(installPath)}…`);
-    restartApp(installPath);
+    await restartApp(installPath);
   }
 }
 

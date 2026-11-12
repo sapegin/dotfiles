@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { killApp } from './apps.ts';
+import { killApp, restartApp } from './apps.ts';
 
 describe(killApp, () => {
   test('does not throw when the process is not running', () => {
@@ -11,4 +11,12 @@ describe(killApp, () => {
       killApp('/Applications/DefinitelyNotARunningAppXYZ.app')
     ).not.toThrow();
   });
+});
+
+describe(restartApp, () => {
+  test('resolves when the app is not running', async () => {
+    await expect(
+      restartApp('/Applications/DefinitelyNotARunningAppXYZ.app')
+    ).resolves.toBeUndefined();
+  }, 10_000);
 });
