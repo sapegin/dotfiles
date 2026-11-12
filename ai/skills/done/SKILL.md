@@ -22,4 +22,4 @@ Advance automatically only after the active phase is complete. Pause for every r
 
 ## Output
 
-Keep each phase’s interactive finding and confirmation formats. Before advancing, use one short sentence naming the next phase. Do not print intermediate no-findings conclusions, request permission merely to advance, or generate handoff packets. End with finalize’s result and the applicable verification report, distinguishing checks run now from earlier evidence.
+Keep each phase’s interactive finding and confirmation formats. Before advancing, use one short sentence naming the next phase. Do not print intermediate no-findings conclusions, request permission merely to advance, or generate handoff packets. End with finalize’s result.

@@ -22,14 +22,12 @@ Read and follow [development workflow setup](../_references/development-workflow
 
 ### 3. Pause after edits
 
-If cleanup changed files, summarize the edits and checks, then ask the user to review them before considering the task finished. Wait for a response before ending.
+If cleanup changed files, list the updates briefly, then ask the user to review them before considering the task finished. Wait for a response before ending.
 
 Check intervening edits before ending. If further cleanup changes files, pause again; otherwise end without repeating unchanged checks.
 
 ## Output
 
-Keep progress and completion reports short:
-
-- Summarize cleanup performed, or state that no cleanup was needed.
-- Report checks using the applicable verification format, distinguishing completed, skipped, failed, and unavailable checks. Do not repeat earlier verification as if it ran during this invocation.
-- If cleanup changed files, end with the review pause; otherwise end with the completion report.
+- If cleanup changed nothing, end with no finalize report. Do not narrate clean checks, absent debris, or that no cleanup was needed.
+- If cleanup changed files, report only a brief bullet list of the updates, then end with the review pause.
+- Still report failed or unavailable housekeeping checks and pause as required above. Do not repeat earlier verification as if it ran during this invocation.
