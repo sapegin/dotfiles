@@ -4,7 +4,7 @@ description: Run review, deslop, and finalize in sequence in the current context
 disable-model-invocation: true
 ---
 
-Prepare the current task changes for publication through three distinct passes in the current conversation. The user starts this skill in a fresh context; do not create sessions or delegate the passes to separate agents.
+Prepare the current task changes through three distinct passes in the current conversation. The user starts this skill in a fresh context; do not create sessions or delegate the passes to separate agents.
 
 ## Setup
 
@@ -16,9 +16,9 @@ Load each skill when its phase begins and follow its instructions, with the shar
 
 1. **Review:** Read [review](../review/SKILL.md). Review requirements, correctness, public contracts, architecture, and maintainability. Handle findings one at a time with its fix-or-ignore approval process. When no unhandled findings remain, continue to deslop instead of ending with the standalone no-findings output.
 2. **Deslop:** Read [deslop](../deslop/SKILL.md). Inspect the current changes for local quality issues, preserving review decisions. Complete its interactive findings, final automatic cleanup, and validation. Briefly report any automatic edits and checks, then continue to finalize instead of ending with the standalone no-findings output.
-3. **Finalize:** Read [finalize](../finalize/SKILL.md). Complete housekeeping and follow its cleanup-review, commit, and publication approval gates. Its final result or the user declining publication ends the workflow.
+3. **Finalize:** Read [finalize](../finalize/SKILL.md). Complete housekeeping and its cleanup-review pause. Its final result ends the workflow.
 
-Advance automatically only after the active phase is complete. Pause for every required user decision, failed or unavailable required check, or unresolved ambiguity; resume the active phase after resolution. Never treat approval to run this workflow as approval to commit, push, or create or update a pull request.
+Advance automatically only after the active phase is complete. Pause for every required user decision, failed or unavailable required check, or unresolved ambiguity; resume the active phase after resolution.
 
 ## Output
 
