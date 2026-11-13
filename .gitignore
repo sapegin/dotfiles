@@ -1,5 +1,4 @@
 node_modules/
-tinycast/**/dist/
 *.cache
 .DS_Store
 Thumbs.db

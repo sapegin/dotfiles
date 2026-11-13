@@ -369,7 +369,6 @@ defaults write com.apple.Music NSConvolutionOverride1 -float 10
 defaults write ru.keepcoder.Telegram NSConvolutionOverride1 -float 10
 defaults write com.github.GitHubClient NSConvolutionOverride1 -float 10
 defaults write com.adobe.LightroomClassicCC7 NSConvolutionOverride1 -float 10
-defaults write com.kapeli.dashdoc NSConvolutionOverride1 -float 10
 defaults write com.figma.Desktop NSConvolutionOverride1 -float 10
 defaults write us.zoom.xos NSConvolutionOverride1 -float 10
 
@@ -433,7 +432,6 @@ defaults write com.apple.TextEdit PlainTextEncodingForWrite -int 4
 for app in \
 	"Adobe Lightroom Classic" \
 	"Code" \
-	"Dash" \
 	"Dock" \
 	"Figma" \
 	"Finder" \

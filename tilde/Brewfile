@@ -1,5 +1,3 @@
-brew trust --tap abue-ammar/tinycast
-
 # CLI tools
 brew "agent-browser" # Headless browser for AI agents
 brew "bat" # `cat` replacement
@@ -30,7 +28,6 @@ brew "zsh-patina" # Syntax highlighting for zsh
 brew "zsh" # Shell
 
 # GUI apps
-brew "abue-ammar/tinycast" # App launcher
 brew "syntax-highlight" # Quick look with syntax highlighting
 cask "adobe-creative-cloud" # Lightroom & Photoshop
 cask "affinity" # Image editor
@@ -38,8 +35,6 @@ cask "bruno" # REST/GraphQL API client
 cask "choosy" # Browser selector
 cask "cleanshot" # Screenshots
 cask "colorsnapper" # Color picker
-cask "coteditor" # Simple code/text editor
-cask "dash" # Documentation reader
 cask "firefox" # Main browser
 cask "firefox@developer-edition"
 cask "ghostty" # Terminal emulator
@@ -56,7 +51,6 @@ cask "optimage" # Image optimization
 cask "polypane" # Responsive design and accessibility testing
 cask "replacicon" # Custom app icons
 cask "telegram" # Chat
-cask "thaw" # Hides menu bar icons
 cask "visual-studio-code" # Main code editor
 cask "whatsapp" # Another chat
 

@@ -13,11 +13,5 @@ export default defineConfig({
     // Many scripts use process.exit()
     'unicorn/no-process-exit': 'off',
   },
-  ignorePatterns: [
-    'obsidian/*',
-    'pretty-html/_assets/lib/*',
-    'tinycast/**/dist/**',
-    'tinycast/**/raycast-env.d.ts',
-    'vscode/*',
-  ],
+  ignorePatterns: ['obsidian/*', 'pretty-html/_assets/lib/*', 'vscode/*'],
 });

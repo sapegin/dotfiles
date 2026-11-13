@@ -9,7 +9,7 @@
 - Octopus: Git (GitHub Desktop, etc.)
 - Raven: personal chat apps (Telegram, WhatsApp, etc.)
 - Sunset: note taking apps (Obsidian, Notion, etc.)
-- Terminal: terminal apps (Terminal, Ghossty, Supacode, etc.)
+- Terminal: terminal apps (Terminal, Ghossty, etc.)
 - Udav: work chats (Slack, Teams, etc.)
 
 I recommend [Replacicon](https://replacicon.app/) to replace Mac icons.
