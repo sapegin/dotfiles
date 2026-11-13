@@ -1,5 +1,6 @@
-// Import photos from a camera memory card into ~/Pictures/Photos.
+// Import photos from Desktop RAW files or a camera memory card into ~/Pictures/Photos.
 //
+// - Prefers RAW files on Desktop over a mounted card
 // - Detects a mounted card
 // - Prefers RAW over JPEG pairs
 // - Copies and renames each new file
@@ -19,7 +20,14 @@ import path from 'node:path';
 import { openApp } from '../util/apps.ts';
 import { parseArgs, type ParsedArgs } from '../util/args.ts';
 import { readExifMetadata } from '../util/exif.ts';
-import { copyFile, dirs, getCommonFolder, tildify } from '../util/files.ts';
+import {
+  copyFile,
+  dirs,
+  exts,
+  getCommonFolder,
+  glob,
+  tildify,
+} from '../util/files.ts';
 import { ejectCard, ensureVolumeMounted } from '../util/mount.ts';
 import {
   dedupeRawJpegPairs,
@@ -28,6 +36,7 @@ import {
   getPhotoFilenameDate,
   getPhotoFolders,
   getPhotoFilenameSuffix,
+  isVisiblePhotoFile,
   pickPhotoFolder,
 } from '../util/photos.ts';
 import { confirm, createProgress, log, run } from '../util/tui.ts';
@@ -38,6 +47,11 @@ export type Options = ParsedArgs<typeof OPTIONS>;
 
 const VOLUMES_DIR = '/Volumes';
 const OFFSITE_BACKUP_DIR = path.join(dirs.nasPhotos, 'Backup/Imports');
+
+export interface ImportSource {
+  photos: string[];
+  cardVolume?: string;
+}
 
 /**
  * Check whether two import dates are close enough to be the same capture.
@@ -51,6 +65,14 @@ function datesWithinDay(dateA: string, dateB: string): boolean {
   const timeA = new Date(`${dateA}T12:00:00`).getTime();
   const timeB = new Date(`${dateB}T12:00:00`).getTime();
   return Math.round(Math.abs(timeA - timeB) / day) <= 1;
+}
+
+/** Find top-level RAW files on Desktop. */
+async function findDesktopRawFiles(): Promise<string[]> {
+  const files = await glob(dirs.desktop, '*', exts.raw);
+  return files
+    .filter(isVisiblePhotoFile)
+    .toSorted((a, b) => a.localeCompare(b));
 }
 
 /**
@@ -74,6 +96,49 @@ async function findCardVolumes(): Promise<string[]> {
   }
   return volumes;
 }
+
+/**
+ * Prefer RAW over JPEG pairs, then keep files with a usable camera number
+ * suffix; warn on the rest.
+ */
+function preparePhotos(sourcePaths: string[]): string[] {
+  return dedupeRawJpegPairs(sourcePaths).flatMap((sourcePath): string[] => {
+    if (getPhotoFilenameSuffix(path.basename(sourcePath)) === undefined) {
+      log.warn(
+        `Skipping ${path.basename(sourcePath)}: cannot determine number suffix`
+      );
+      return [];
+    }
+    return [sourcePath];
+  });
+}
+
+/** Prefer Desktop RAW files; otherwise scan a mounted camera card. */
+export async function resolveImportSource(): Promise<ImportSource | undefined> {
+  const desktopPhotos = await findDesktopRawFiles();
+  if (desktopPhotos.length > 0) {
+    const photos = preparePhotos(desktopPhotos);
+    if (photos.length > 0) {
+      console.log(`Found ${photos.length} RAW files on Desktop.`);
+      return { photos };
+    }
+    log.warn('Desktop RAW files found but none are importable.');
+  }
+
+  console.log('Looking for card…');
+  const cardVolumes = await findCardVolumes();
+  if (cardVolumes.length === 0) {
+    return undefined;
+  }
+
+  const [cardVolume] = cardVolumes;
+  console.log(`Scanning ${cardVolume}…`);
+  const photos = preparePhotos(
+    await findMediaFiles(path.join(cardVolume, 'DCIM'))
+  );
+  return { photos, cardVolume };
+}
+
 /** Decide whether suffix and date matches mean the card file is imported. */
 function isAlreadyImported(
   cardDate: string | undefined,
@@ -186,31 +251,19 @@ async function importPhoto(
   return path.basename(destinationPath);
 }
 
-/** Run the interactive camera card import flow. */
+/** Run the interactive Desktop RAW or camera card import flow. */
 export async function photosImport(_options: Options): Promise<void> {
   ensureVolumeMounted(dirs.nasPhotos);
 
-  console.log('Looking for card…');
-  const cardVolumes = await findCardVolumes();
-  if (cardVolumes.length === 0) {
-    log.warn('No card found. Insert a card and try again.');
+  const source = await resolveImportSource();
+  if (source === undefined) {
+    log.warn(
+      'No Desktop RAW files or card found. Add RAW files or insert a card.'
+    );
     process.exit(1);
   }
 
-  const [cardVolume] = cardVolumes;
-
-  console.log(`Scanning ${cardVolume}…`);
-  const photos = dedupeRawJpegPairs(
-    await findMediaFiles(path.join(cardVolume, 'DCIM'))
-  ).flatMap((sourcePath): string[] => {
-    if (getPhotoFilenameSuffix(path.basename(sourcePath)) === undefined) {
-      log.warn(
-        `Skipping ${path.basename(sourcePath)}: cannot determine number suffix`
-      );
-      return [];
-    }
-    return [sourcePath];
-  });
+  const { photos, cardVolume } = source;
 
   if (photos.length === 0) {
     log.warn(`No photos found on ${cardVolume}.`);
@@ -226,6 +279,9 @@ export async function photosImport(_options: Options): Promise<void> {
   }
 
   if (toImport.length === 0) {
+    if (cardVolume === undefined) {
+      return;
+    }
     if ((await confirm('Eject card?', true)) === false) {
       log.warn('Import cancelled.');
       process.exit(1);
@@ -310,7 +366,9 @@ export async function photosImport(_options: Options): Promise<void> {
 
   if (failures.length > 0) {
     log.warn(
-      `${failures.length} files failed to import; card was not ejected.`
+      cardVolume === undefined
+        ? `${failures.length} files failed to import.`
+        : `${failures.length} files failed to import; card was not ejected.`
     );
     process.exit(1);
   }
@@ -319,7 +377,9 @@ export async function photosImport(_options: Options): Promise<void> {
     console.log(`Skipped ${skippedInFolder} already in folder.`);
   }
 
-  ejectCard(cardVolume);
+  if (cardVolume !== undefined) {
+    ejectCard(cardVolume);
+  }
 
   if (importedCount === 0) {
     process.exit(1);
