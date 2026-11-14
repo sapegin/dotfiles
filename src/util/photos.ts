@@ -116,7 +116,7 @@ export function comparePhotoFolderNames(a: string, b: string): number {
   return segmentsA.length - segmentsB.length;
 }
 
-/** Prefer RAW files over matching JPEG variants. */
+/** Prefer RAW files over matching JPEG/HEIC variants. */
 export function dedupeRawJpegPairs(filePaths: string[]): string[] {
   const byStem = new Map<string, string[]>();
   for (const filePath of filePaths) {

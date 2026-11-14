@@ -40,12 +40,13 @@ export const dirs = {
  */
 
 const EXTS_JPEG = ['.jpg', '.jpeg'];
+const EXTS_HEIC = ['.heic'];
 const EXTS_IMAGE = [
   ...EXTS_JPEG,
+  ...EXTS_HEIC,
   '.avif',
   '.bmp',
   '.gif',
-  '.heic',
   '.png',
   '.tif',
   '.tiff',
@@ -75,6 +76,9 @@ const allExtensions: readonly string[] = [
 
 export const exts = {
   jpeg: EXTS_JPEG,
+  heic: EXTS_HEIC,
+  /** Camera stills: JPEG, HEIC, and RAW (no video or other image formats). */
+  photo: [...EXTS_JPEG, ...EXTS_HEIC, ...EXTS_RAW],
   image: EXTS_IMAGE,
   raw: EXTS_RAW,
   video: EXTS_VIDEO,

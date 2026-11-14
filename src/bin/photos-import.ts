@@ -1,8 +1,8 @@
-// Import photos from Desktop RAW files or a camera memory card into ~/Pictures/Photos.
+// Import photos from Desktop or a camera memory card into ~/Pictures/Photos.
 //
-// - Prefers RAW files on Desktop over a mounted card
+// - Prefers Desktop photo files (RAW/JPEG/HEIC) over a mounted card
 // - Detects a mounted card
-// - Prefers RAW over JPEG pairs
+// - Prefers RAW over JPEG/HEIC pairs
 // - Copies and renames each new file
 // - Copies files to NAS backup folder
 // - Skips already imported files by matching number suffixes and capture dates
@@ -67,9 +67,9 @@ function datesWithinDay(dateA: string, dateB: string): boolean {
   return Math.round(Math.abs(timeA - timeB) / day) <= 1;
 }
 
-/** Find top-level RAW files on Desktop. */
-async function findDesktopRawFiles(): Promise<string[]> {
-  const files = await glob(dirs.desktop, '*', exts.raw);
+/** Find top-level RAW, JPEG, and HEIC files on Desktop. */
+async function findDesktopPhotoFiles(): Promise<string[]> {
+  const files = await glob(dirs.desktop, '*', exts.photo);
   return files
     .filter(isVisiblePhotoFile)
     .toSorted((a, b) => a.localeCompare(b));
@@ -98,8 +98,8 @@ async function findCardVolumes(): Promise<string[]> {
 }
 
 /**
- * Prefer RAW over JPEG pairs, then keep files with a usable camera number
- * suffix; warn on the rest.
+ * Prefer RAW over JPEG/HEIC pairs, then keep files with a usable camera
+ * number suffix; warn on the rest.
  */
 function preparePhotos(sourcePaths: string[]): string[] {
   return dedupeRawJpegPairs(sourcePaths).flatMap((sourcePath): string[] => {
@@ -113,16 +113,16 @@ function preparePhotos(sourcePaths: string[]): string[] {
   });
 }
 
-/** Prefer Desktop RAW files; otherwise scan a mounted camera card. */
+/** Prefer Desktop photo files; otherwise scan a mounted camera card. */
 export async function resolveImportSource(): Promise<ImportSource | undefined> {
-  const desktopPhotos = await findDesktopRawFiles();
+  const desktopPhotos = await findDesktopPhotoFiles();
   if (desktopPhotos.length > 0) {
     const photos = preparePhotos(desktopPhotos);
     if (photos.length > 0) {
-      console.log(`Found ${photos.length} RAW files on Desktop.`);
+      console.log(`Found ${photos.length} photos on Desktop.`);
       return { photos };
     }
-    log.warn('Desktop RAW files found but none are importable.');
+    log.warn('Desktop photos found but none are importable.');
   }
 
   console.log('Looking for card…');
@@ -251,15 +251,13 @@ async function importPhoto(
   return path.basename(destinationPath);
 }
 
-/** Run the interactive Desktop RAW or camera card import flow. */
+/** Run the interactive Desktop or camera card import flow. */
 export async function photosImport(_options: Options): Promise<void> {
   ensureVolumeMounted(dirs.nasPhotos);
 
   const source = await resolveImportSource();
   if (source === undefined) {
-    log.warn(
-      'No Desktop RAW files or card found. Add RAW files or insert a card.'
-    );
+    log.warn('No Desktop photos or card found. Add photos or insert a card.');
     process.exit(1);
   }
 

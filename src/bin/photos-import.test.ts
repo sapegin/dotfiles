@@ -78,11 +78,44 @@ describe('resolveImportSource', () => {
       photos: [rawPath],
     });
 
-    expect(logSpy).toHaveBeenCalledWith('Found 1 RAW files on Desktop.');
+    expect(logSpy).toHaveBeenCalledWith('Found 1 photos on Desktop.');
     logSpy.mockRestore();
   });
 
-  test('falls through to card when Desktop RAW files are not importable', async () => {
+  test('imports Desktop HEIC/JPEG when no RAW pair exists', async () => {
+    const heicPath = path.join(testEnv.desktop, 'IMG_1234.HEIC');
+    const jpegPath = path.join(testEnv.desktop, 'IMG_5678.JPG');
+    await fs.writeFile(heicPath, 'heic');
+    await fs.writeFile(jpegPath, 'jpg');
+    await fs.writeFile(path.join(testEnv.desktop, 'shot.png'), 'png');
+
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+
+    await expect(resolveImportSource()).resolves.toStrictEqual({
+      photos: [heicPath, jpegPath],
+    });
+
+    expect(logSpy).toHaveBeenCalledWith('Found 2 photos on Desktop.');
+    logSpy.mockRestore();
+  });
+
+  test('prefers Desktop RAW over matching JPEG/HEIC pairs', async () => {
+    const rawPath = path.join(testEnv.desktop, 'IMG_1234.DNG');
+    await fs.writeFile(rawPath, 'dng');
+    await fs.writeFile(path.join(testEnv.desktop, 'IMG_1234.HEIC'), 'heic');
+    await fs.writeFile(path.join(testEnv.desktop, 'IMG_1234.JPG'), 'jpg');
+
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+
+    await expect(resolveImportSource()).resolves.toStrictEqual({
+      photos: [rawPath],
+    });
+
+    expect(logSpy).toHaveBeenCalledWith('Found 1 photos on Desktop.');
+    logSpy.mockRestore();
+  });
+
+  test('falls through to card when Desktop photos are not importable', async () => {
     await fs.writeFile(path.join(testEnv.desktop, 'scan.dng'), 'dng');
 
     const { log } = await import('../util/tui.ts');
@@ -92,7 +125,7 @@ describe('resolveImportSource', () => {
     await expect(resolveImportSource()).resolves.toBeUndefined();
 
     expect(warnSpy).toHaveBeenCalledWith(
-      'Desktop RAW files found but none are importable.'
+      'Desktop photos found but none are importable.'
     );
     expect(logSpy).toHaveBeenCalledWith('Looking for card…');
     warnSpy.mockRestore();

@@ -150,6 +150,16 @@ describe(dedupeRawJpegPairs, () => {
       ])
     ).toStrictEqual(['/photos/IMG_0001.RAF', '/photos/IMG_0002.JPG']);
   });
+
+  test('prefers RAW files over matching HEIC files', () => {
+    expect(
+      dedupeRawJpegPairs([
+        '/photos/IMG_0001.HEIC',
+        '/photos/IMG_0001.DNG',
+        '/photos/IMG_0002.HEIC',
+      ])
+    ).toStrictEqual(['/photos/IMG_0001.DNG', '/photos/IMG_0002.HEIC']);
+  });
 });
 
 describe(findMediaFiles, () => {
