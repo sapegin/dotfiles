@@ -311,11 +311,17 @@
       },
       "allOf": [
         {
-          "if": { "properties": { "id": { "const": "command.open-app" } }, "required": ["id"] },
+          "if": {
+            "properties": { "id": { "const": "command.open-app" } },
+            "required": ["id"]
+          },
           "then": { "required": ["bundleId"] }
         },
         {
-          "if": { "properties": { "id": { "const": "snippet.expand" } }, "required": ["id"] },
+          "if": {
+            "properties": { "id": { "const": "snippet.expand" } },
+            "required": ["id"]
+          },
           "then": { "required": ["snippetId"] }
         }
       ]
