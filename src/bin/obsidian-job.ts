@@ -1,7 +1,9 @@
 /*
  * Creates a job application note in the Obsidian vault and opens it.
  *
- * Alfred Run Script setting: pass `{query}` as the script argument.
+ * - Create a job note:
+ *
+ * `obsidian-job Kramerica`
  *
  * Author: Artem Sapegin, sapegin.me
  * License: MIT
