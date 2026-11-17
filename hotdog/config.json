@@ -35,7 +35,8 @@
     "palettePrefix": "e",
     "defaultCalendar": "artem@sapegin.me",
     "defaultDurationMinutes": 30,
-    "defaultInvitees": ["Possum:home"]
+    "defaultInvitees": ["Possum:home"],
+    "excludeCalendars": ["United Kingdom holidays", "Scheduled reminders"]
   },
   "devDocs": {
     "cacheIntervalDays": 7,

@@ -195,6 +195,14 @@
             "minLength": 3
           },
           "description": "Default invitees (email or ContactName:label)"
+        },
+        "excludeCalendars": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "Case-sensitive calendar titles hidden from the menu-bar calendar viewer"
         }
       }
     },
