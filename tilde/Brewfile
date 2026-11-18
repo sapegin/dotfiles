@@ -16,6 +16,7 @@ brew "lazygit" # Git client
 brew "libqalculate" # Calculator
 brew "macos-trash" # `rm` replacement with macOS trash support
 brew "mise" # Dependency management for native macOS apps
+brew "mole" # Mac deep cleaner and optimizer
 brew "node" # Fallback Node.js version
 brew "restic" # Incremental backups
 brew "ripgrep" # `grep` replacement
@@ -32,7 +33,6 @@ brew "syntax-highlight" # Quick look with syntax highlighting
 cask "adobe-creative-cloud" # Lightroom & Photoshop
 cask "affinity" # Image editor
 cask "bruno" # REST/GraphQL API client
-cask "choosy" # Browser selector
 cask "cleanshot" # Screenshots
 cask "colorsnapper" # Color picker
 cask "firefox" # Main browser

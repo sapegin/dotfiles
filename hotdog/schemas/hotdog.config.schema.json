@@ -15,7 +15,8 @@
     "devDocs",
     "customCommands",
     "hotkeys",
-    "snippets"
+    "snippets",
+    "linkRouter"
   ],
   "additionalProperties": false,
   "properties": {
@@ -24,14 +25,14 @@
     },
     "devDocs": {
       "type": "object",
-      "description": "DevDocs palette search. Prefix keys map to DevDocs slugs; those slugs are downloaded on first use of that prefix.",
+      "description": "DevDocs palette search. Prefix keys map to DevDocs slugs.",
       "required": ["cacheIntervalDays", "prefixes"],
       "additionalProperties": false,
       "properties": {
         "cacheIntervalDays": {
           "type": "integer",
           "minimum": 1,
-          "description": "Re-download a slug's index when older than this many days (checked on first use of that slug)"
+          "description": "Re-download a slug’s index when older than this many days"
         },
         "prefixes": {
           "type": "object",
@@ -202,7 +203,7 @@
             "type": "string",
             "minLength": 1
           },
-          "description": "Case-sensitive calendar titles hidden from the menu-bar calendar viewer"
+          "description": "Case-sensitive calendar titles hidden from the menu-bar viewer and Join Video Call"
         }
       }
     },
@@ -247,6 +248,40 @@
           "description": "Path to snippets JSON (~ allowed)."
         }
       }
+    },
+    "linkRouter": {
+      "type": "object",
+      "description": "System-wide http(s) host → browser routing. Hotdog claims the default browser role for http/https.",
+      "required": ["defaultBrowser", "rules"],
+      "additionalProperties": false,
+      "properties": {
+        "defaultBrowser": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Browser bundle ID when no host rule matches (e.g. org.mozilla.firefox)"
+        },
+        "rules": {
+          "type": "array",
+          "description": "Exact host matches (case-insensitive); first match wins",
+          "items": {
+            "type": "object",
+            "required": ["host", "browser"],
+            "additionalProperties": false,
+            "properties": {
+              "host": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Exact URL host (e.g. localhost, 127.0.0.7)"
+              },
+              "browser": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Target browser bundle ID (e.g. org.mozilla.firefoxdeveloperedition)"
+              }
+            }
+          }
+        }
+      }
     }
   },
   "$defs": {
@@ -281,7 +316,7 @@
             "Open the Hotdog palette; optional query pre-fills the search field",
             "Focus or launch an app; requires bundleId",
             "Toggle the scratchpad window",
-            "Join the video call for the current or next calendar event (ical join)",
+            "Join the video call for the current or next calendar event",
             "Toggle Pastor quake terminal",
             "Open Pastor main window at path; requires path when bound as hotkey",
             "Paste a snippet into the frontmost app; requires snippetId",

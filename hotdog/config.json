@@ -53,6 +53,14 @@
   "snippets": {
     "file": "~/cloud/Documents/snippets.json"
   },
+  "linkRouter": {
+    "defaultBrowser": "org.mozilla.firefox",
+    "rules": [
+      { "host": "localhost", "browser": "org.mozilla.firefoxdeveloperedition" },
+      { "host": "127.0.0.7", "browser": "org.mozilla.firefoxdeveloperedition" },
+      { "host": "meet.google.com", "browser": "com.google.Chrome" }
+    ]
+  },
   "customCommands": [
     {
       "palettePrefix": "q",

@@ -18,7 +18,7 @@ user_pref('browser.startup.page', 3);
 // Don't show search suggestions ahead of browsing history in address bar results
 user_pref('browser.urlbar.showSearchSuggestionsFirst', false);
 // Don't check whether Firefox is a default browser
-// (I use Choosy to switch between browsers)
+// (I use Hotdog to switch between browsers)
 user_pref('browser.shell.checkDefaultBrowser', false);
 // Allow UI customizations with userChrome.css
 user_pref('toolkit.legacyUserProfileCustomizations.stylesheets', true);

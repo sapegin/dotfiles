@@ -63,6 +63,7 @@ Hygraph
 instax
 IPTC
 journaling
+keepalive
 keycap
 keycaps
 keymap
