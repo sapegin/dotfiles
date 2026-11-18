@@ -41,10 +41,10 @@ Prioritize quality and the smallest changeset meeting the goal over speed or exh
 
 ## Self-improvement
 
-Consider durable `AGENTS.md` rules when the user gives reusable instructions, corrects behavior, or identifies recurring mistakes.
+Default to making no instruction changes. Fix implementation mistakes in code, preserve expected behavior in tests, and explain local constraints in nearby comments or documentation.
 
-- Propose concise rules addressing underlying causes across unrelated tasks. Exclude rules specific to a bug, implementation, feature, technology, or design choice. Propose nothing without a genuinely generic lesson.
-- Update existing rules rather than duplicate or contradict them. Use root `AGENTS.md` for repository-wide rules and the nearest scoped `AGENTS.md` for area-specific rules.
+- Propose an `AGENTS.md` rule only for an explicit reusable user preference or a recurring workflow failure whose lesson applies across unrelated tasks and cannot be adequately addressed in code, tests, or local documentation. A correction alone does not justify a rule.
+- Exclude feature behavior, implementation details, and task history, even from scoped `AGENTS.md` files. Update an existing rule when possible; choose its scope only after establishing that it belongs in agent instructions.
 - Never record one-off details, guesses, secrets, or sensitive personal information.
 - Do not edit any `AGENTS.md` immediately. End the response with the complete numbered list of proposed updates, each with its target file and exact rule, and ask for confirmation. Apply only explicitly approved updates.
 
