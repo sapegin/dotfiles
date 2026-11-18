@@ -21,15 +21,16 @@
   --disabled-button-background: #dbd7e0;
   --disabled-button-foreground: #f7f6f9;
   --disabled-button-border: #dbd7e0;
-  --success-foreground: #657d38;
+  --success-foreground: #38701e;
   --success-background: #dde2d7;
   --success-border: #9bae7e;
-  --error-foreground: #c06159;
+  --error-foreground: #bb3c33;
   --error-background: #f5e5e4;
   --error-border: #d67e76;
-  --warning-foreground: #c88539;
+  --warning-foreground: #a85100;
   --warning-background: #f7e7d5;
   --warning-border: #de9e59;
+  --attention-foreground: #ca4859;
   --info-foreground: #78737d;
   --info-background: #f7f6f9;
   --info-border: #dbd7e0;
@@ -53,7 +54,7 @@
   --match-background: #e698b5;
   --secondary-match-background: #fae1ea;
   --inserted-background: #f2f4f1;
-  --deleted-background: #faf4f4;
+  --deleted-background: #faf3f3;
   --inserted-word-background: #dde2d7;
   --deleted-word-background: #f5e5e4;
   --border: #c9c4cf;
@@ -91,13 +92,15 @@
   --code-important3: #e4c158;
   --code-important4: #4c4b4e;
 
-  /* ANSI */
+  /* Terminal */
   --terminal-foreground: #4c4b4e;
   --terminal-background: #fdfdfe;
+  --terminal-secondary-foreground: #9c96a2;
+  --terminal-border: #c9c4cf;
   --terminal-white: #78737d;
   --terminal-bright-white: #4c4b4e;
-  --terminal-black: #9c96a2;
-  --terminal-bright-black: #8c8792;
+  --terminal-black: #262527;
+  --terminal-bright-black: #9c96a2;
   --terminal-blue: #4b7b97;
   --terminal-bright-blue: #80a4be;
   --terminal-cyan: #3e816e;
@@ -133,15 +136,16 @@
   --disabled-button-background: #453461;
   --disabled-button-foreground: #36294d;
   --disabled-button-border: #453461;
-  --success-foreground: #709855;
-  --success-background: #32363a;
+  --success-foreground: #5eb551;
+  --success-background: #333b33;
   --success-border: #558240;
-  --error-foreground: #ce574a;
-  --error-background: #44283a;
+  --error-foreground: #f56c57;
+  --error-background: #432834;
   --error-border: #ac493e;
-  --warning-foreground: #d8a851;
+  --warning-foreground: #ec9a20;
   --warning-background: #503d20;
   --warning-border: #b18433;
+  --attention-foreground: #d94b5d;
   --info-foreground: #9a7eb4;
   --info-background: #36294d;
   --info-border: #503f6e;
@@ -166,8 +170,8 @@
   --secondary-match-background: #5e375c;
   --inserted-background: #2d2b39;
   --deleted-background: #332239;
-  --inserted-word-background: #32363a;
-  --deleted-word-background: #44283a;
+  --inserted-word-background: #333b33;
+  --deleted-word-background: #432834;
   --border: #644e88;
   --light-border: #453461;
   --active-border: #bea3d9;
@@ -203,13 +207,15 @@
   --code-important3: #ceb250;
   --code-important4: #ceb250;
 
-  /* ANSI */
+  /* Terminal */
   --terminal-foreground: #bea3d9;
   --terminal-background: #271e38;
+  --terminal-secondary-foreground: #644e88;
+  --terminal-border: #644e88;
   --terminal-white: #bea3d9;
   --terminal-bright-white: #e9d6fa;
-  --terminal-black: #644e88;
-  --terminal-bright-black: #7254a6;
+  --terminal-black: #453461;
+  --terminal-bright-black: #644e88;
   --terminal-blue: #5993c2;
   --terminal-bright-blue: #63a2d6;
   --terminal-cyan: #4f9593;
