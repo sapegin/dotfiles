@@ -229,6 +229,7 @@
   },
   "workbench.enableExperiments": false,
   "workbench.experimental.modernUI": true,
+  "workbench.experimental.modernUIEditorTabStyle": "pill",
   "workbench.fontAliasing": "auto",
   "workbench.iconTheme": "squirrelppuccin-icons-light",
   "workbench.layoutControl.enabled": false,
@@ -236,6 +237,10 @@
   "workbench.reduceMotion": "on",
   "workbench.settings.enableNaturalLanguageSearch": false,
   "workbench.sideBar.location": "right",
+  "workbench.sizeCustomizations": {
+    "panels.cornerRadius": 4,
+    "panels.spacing": 2
+  },
   "workbench.startupEditor": "none",
   "workbench.tips.enabled": false,
   "workbench.tree.indent": 12,
