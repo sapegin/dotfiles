@@ -27,14 +27,15 @@ Prioritize quality and the smallest changeset meeting the goal over speed or exh
 
 ## Implementation cycle
 
-1. Inspect relevant code or materials, resolve approach-changing questions, and define observable acceptance criteria and validation methods.
-2. Plan briefly, implement, and validate. One iteration suffices for small changes; use small, coherent increments for larger work, validating each before continuing.
+1. Inspect the relevant code and evidence. Before implementing a nontrivial change, state the intended outcome, the simplest approach, and the regression a test or direct check would catch. Proceed when these are clear. If an unresolved assumption would change the behavior, approach, or what a test enforces, ask one focused question with a recommended answer and wait. Skip this checkpoint for routine edits such as a straightforward rename.
+2. Implement and validate against observable acceptance criteria. One iteration suffices for small changes; use small, coherent increments for larger work, validating each before continuing.
 3. Before completion, review for unnecessary additions, limit cleanup to issues introduced by your changes, and run **Verification**.
 
 ## Verification
 
 - Check observable behavior and relevant regressions against acceptance criteria using tests or direct checks; type checks and lint alone are insufficient. Consider automated tests for every code change, preferring end-to-end tests when practical.
-- For UI changes, use existing end-to-end tests covering the golden path, edge cases, and likely regressions; otherwise exercise the feature in a browser when tooling allows.
+- For each assertion you add or rely on, identify the requirement or public contract it protects and the regression it would catch. If an assertion freezes an incidental implementation choice, revise the assertion rather than adding code to satisfy it.
+- For UI changes, use semantic controls and assert user-observable outcomes. Assert DOM structure, CSS classes, coordinates, or geometry only when an explicit requirement makes them part of the contract. Use existing end-to-end tests where they cover the behavior; otherwise exercise the feature in a browser when tooling allows.
 - Before completion, run applicable checks (type check, lint, relevant tests, and the full suite when warranted). Explicitly report unavailable checks or meaningful behavior verification; do not claim unverified success.
 - Fix failures caused by your changes; report unrelated failures without modifying them.
 - Report one line: `Verification: ✓ check, ✓ check`. Use comma-separated checks, prefix successes with `✓`, include useful counts and skips, and omit unrelated warnings.
