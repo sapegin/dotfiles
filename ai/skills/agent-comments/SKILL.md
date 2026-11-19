@@ -33,16 +33,29 @@ Work through every comment before re-scanning.
 
 1. Read the file around the reported line and enough surrounding code to understand context.
 2. Decide whether the comment is asking a question or giving an actionable instruction.
-3. If it is a question, answer the question in the comment. Do not make unrelated code changes, do not guess at an implementation, and do not remove the comment merely to silence the scanner.
-4. If it is an actionable instruction, implement it with the smallest correct change. Match local style; do not refactor unrelated code.
-5. Remove the `AI:` comment only after an actionable instruction has been fixed.
-6. If the comment is ambiguous, risky, or conflicts with project rules, skip it and note why — do not guess.
+3. If it is a question, follow the chat workflow below before moving on.
+4. If it is an actionable instruction, implement it with the smallest correct change. Match local style; do not refactor unrelated code. Remove the `AI:` comment after the fix.
+5. If the comment is ambiguous, risky, or conflicts with project rules, skip it and note why — do not guess.
 
 Prefer fixing comments in dependency order when one fix clearly unblocks another (types before callers, shared helpers before usages).
 
+## Answer questions in chat
+
+Answer one question per turn using this template, then wait for the user’s reply:
+
+```md
+{file:line}
+
+**{answer}**
+
+(R)eply, or tell what to do.
+```
+
+Leave the comment and code unchanged unless the user requests a change. If they reply `R`, remove only the current comment. If they give an instruction that resolves the question, remove the comment after carrying it out. If they ask a follow-up, answer it using the same template. Move on to the next comment only after resolving the current question.
+
 ## Verify
 
-Re-run `~/dotfiles/bin/agent-comments` after all fixes. Repeat the fix loop only for new or unresolved comments until the scanner reports no comments or every remaining comment is an answered question or has been deliberately skipped. Treat answered, retained questions as completed; process them again only if the question changes. If comments remain, report that the scanner is still non-empty and distinguish answered questions from skipped comments.
+Re-run `~/dotfiles/bin/agent-comments` after all fixes. Repeat the fix loop until the scanner reports no comments or only deliberately skipped comments remain.
 
 Then run the project’s usual validation (`tsc`, linter, tests) when available. Fix failures caused by your changes.
 
@@ -51,7 +64,6 @@ Then run the project’s usual validation (`tsc`, linter, tests) when available.
 Summarize:
 
 - Each comment fixed: `file:line` — one line on what changed
-- Answered, retained questions: `file:line` — one line on the answer
 - Skipped comments with reason
 - Validation results
 
