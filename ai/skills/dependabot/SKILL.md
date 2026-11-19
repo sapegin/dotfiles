@@ -10,26 +10,13 @@ Read [the GitHub skill](../github/SKILL.md) before using GitHub.
 
 Always begin by reading and summarizing all open Dependabot alerts for the current repository. Do not merely announce that the skill is loaded or ask what to inspect. Show the alert count, severity counts, and a concise list with each alert's package, severity, manifest, vulnerable range, first patched version, and URL. Then ask what the user wants to remediate. If the repository cannot be determined, GitHub authentication fails, or access is denied, report that error instead.
 
-Use the read-only REST endpoint and always paginate:
+Run the read-only collector from the repository:
 
 ```bash
-gh api --paginate \
-  "repos/{owner}/{repo}/dependabot/alerts?state=open&per_page=100" \
-  --jq '.[] | {
-    number,
-    package: .dependency.package.name,
-    ecosystem: .dependency.package.ecosystem,
-    manifest: .dependency.manifest_path,
-    relationship: .dependency.relationship,
-    scope: .dependency.scope,
-    advisory: .security_advisory.ghsa_id,
-    severity: .security_advisory.severity,
-    summary: .security_advisory.summary,
-    vulnerable_range: .security_vulnerability.vulnerable_version_range,
-    patched_version: .security_vulnerability.first_patched_version.identifier,
-    url: .html_url
-  }'
+~/dotfiles/bin/dependabot-context
 ```
+
+It fetches every page and returns normalized alerts, severity counts, and groups keyed by package, advisory, and manifest, preserving each alert number. Stop and report its error if it fails; only a successful result with `count: 0` means there are no open alerts.
 
 Inspect one alert in full when its metadata or remediation is unclear:
 
@@ -41,7 +28,7 @@ Do not infer that a version is safe solely because its major number is larger. C
 
 ## Triage
 
-Group duplicate alerts by package, advisory, and manifest. Prioritize:
+Use the collector’s groups. Prioritize:
 
 1. Critical and high severity.
 2. Direct runtime dependencies.

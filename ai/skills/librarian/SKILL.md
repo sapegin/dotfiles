@@ -18,7 +18,7 @@ When needed, use the `web_search` and `web_fetch` tools, and load and follow the
 
 ## Source workflow
 
-1. Use **github** skill to clone or inspect the repo.
+1. Use the **github** skill to inspect files or prepare a checkout with `~/dotfiles/bin/github-source`. Use its returned directory and full commit SHA for local research and permalinks.
 2. Search locally with **find** and **grep**; read relevant files with **read**.
 3. For history, use `git log`, `git blame`, and `git show` in the clone.
 4. For issues and pull requests, use the commands in the [GitHub skill](../github/SKILL.md#common-commands).
@@ -50,11 +50,7 @@ Use full commit SHAs, not branch names:
 https://github.com/<owner>/<repo>/blob/<commit-sha>/<filepath>#L<start>-L<end>
 ```
 
-Get the current clone SHA:
-
-```bash
-cd /tmp/pi-github-repos/owner/repo && git rev-parse HEAD
-```
+Use the checkout helper’s returned `commit` SHA. If research changes the checkout afterward, refresh it with `git rev-parse HEAD`.
 
 Resolve a tag to its commit SHA when answering version-specific questions:
 

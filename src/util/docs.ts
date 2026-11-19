@@ -1,3 +1,49 @@
+import path from 'node:path';
+
+/** Extract file-link destinations from Markdown prose, excluding code examples. */
+export function getMarkdownLinks(source: string): string[] {
+  const prose = source
+    .replaceAll(/^[ \t]*(`{3,}|~{3,})[^\n]*\n[\s\S]*?^[ \t]*\1[ \t]*$/gm, '')
+    .replaceAll(/<!--[\s\S]*?-->/g, '')
+    .replaceAll(/`+[^`]*`+/g, '');
+  return [
+    ...prose.matchAll(
+      /!?\[[^\]\n]*\]\(\s*(?:<([^>\n]+)>|([^\s)]+))(?:\s+["'][^\n]*?["'])?\s*\)/g
+    ),
+    ...prose.matchAll(/^\s*\[[^\]\n]+\]:\s*(?:<([^>\n]+)>|([^\s]+))/gm),
+  ].map((match) => match[1] || match[2]);
+}
+
+/** Extract authored HTML links and assets without inspecting embedded examples. */
+export function getHtmlLinks(source: string): string[] {
+  const markup = source
+    .replaceAll(/<!--[\s\S]*?-->/g, '')
+    .replaceAll(/(<script\b[^>]*>)[\s\S]*?<\/script\s*>/gi, '$1</script>')
+    .replaceAll(/<(style|pre|ss-demo)\b[^>]*>[\s\S]*?<\/\1\s*>/gi, '');
+  return [...markup.matchAll(/<[a-z][^>]*>/gi)].flatMap(([tag]) =>
+    [...tag.matchAll(/\s(?:href|src)\s*=\s*["']([^"']*)["']/gi)].map(
+      (match) => match[1]
+    )
+  );
+}
+
+/**
+ * Resolve a local file target; URL schemes and fragment-only links need no file
+ * check.
+ */
+export function resolveDocumentLink(
+  file: string,
+  href: string
+): string | undefined {
+  if (/^(?:[a-z][a-z\d+.-]*:|\/\/|#)/i.test(href) || href === '') {
+    return undefined;
+  }
+  const target = decodeURIComponent(
+    href.split(/[?#]/, 1)[0].replaceAll('&amp;', '&')
+  );
+  return path.resolve(path.dirname(file), target);
+}
+
 export interface ReferenceIndexSection {
   title: string;
   links: readonly { path: string; title: string }[];

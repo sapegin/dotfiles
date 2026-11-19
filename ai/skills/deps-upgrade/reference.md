@@ -5,9 +5,10 @@ Load when choosing install/outdated/update commands for the active manager.
 ## Outdated
 
 ```bash
-npm outdated || true
-pnpm outdated || true
+~/dotfiles/bin/deps-context
 ```
+
+The helper queries the root and each workspace separately, preserves package-manager diagnostics, and accepts the expected outdated-package exit status only with valid package data. If the user selected a manager after automatic detection failed, use `npm outdated --json --long` or `pnpm outdated --format json` directly and inspect both the exit status and structured output.
 
 ## Update within existing ranges (lockfile refresh)
 
@@ -35,7 +36,6 @@ pnpm install --frozen-lockfile
 ## Monorepo (pnpm)
 
 ```bash
-pnpm -r outdated || true
 pnpm -r update
 pnpm --filter <pkg> add <dep>@<version>
 ```
@@ -45,7 +45,6 @@ pnpm --filter <pkg> add <dep>@<version>
 ## Monorepo (npm workspaces)
 
 ```bash
-npm outdated --workspaces --include-workspace-root || true
 npm update --workspaces --include-workspace-root
 npm install <pkg>@<version> -w <workspace>
 ```

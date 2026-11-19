@@ -43,7 +43,8 @@ Never symlink into `~/murder`. Never edit `_assets/` in the vault — change `$D
 5. **Write or update HTML** — follow [pretty-html](../pretty-html/SKILL.md) skill. Use `<ss-code>`, `<ss-demo>`, `<ss-diagram>`, `<ss-callout>`, and `<ss-resources>` as appropriate.
 6. **Update `_index.yaml`** — add or refresh keywords, titles, and file paths.
 7. **Update `glossary.html`** when the question introduces a **cross-cutting concept** (e.g. pure function, polymorphism, closure). Do **not** add syntax, API names, or properties (`margin: auto`, `place-items`).
-8. **Open the page**:
+8. **Validate the handbook** — run `~/dotfiles/bin/handbook-check`. It checks routing metadata, topic hubs, unindexed pages, and local file targets outside embedded examples. Fix issues introduced by this write; report unrelated existing issues without changing them. It does not verify fragment IDs, factual content, or routing choices.
+9. **Open the page**:
 
 ```bash
 open ~/murder/zz-handbook/<topic>/<doc>.html

@@ -7,7 +7,7 @@
     "lint:fix": "oxlint --fix && oxfmt --write",
     "ai-sync": "./bin/ai-sync",
     "ai-sync:check": "./bin/ai-sync --check",
-    "test": "npm run lint && oxfmt --check && vitest run && npm run ai-sync:check",
+    "test": "npm run lint && oxfmt --check && vitest run && npm run ai-sync:check && ./bin/skills-check",
     "test:watch": "vitest"
   },
   "dependencies": {

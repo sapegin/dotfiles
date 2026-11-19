@@ -55,11 +55,8 @@ import {
 import { getMaslenitsaSunday } from '../util/calendar.ts';
 import { parseCsvRecords } from '../util/csv.ts';
 import { dirs } from '../util/files.ts';
-import {
-  parseFrontmatter,
-  parseSections,
-  wikilinksToPlainText,
-} from '../util/obsidian.ts';
+import { parseFrontmatter } from '../util/markdown.ts';
+import { parseSections, wikilinksToPlainText } from '../util/obsidian.ts';
 import { toKebabCase } from '../util/text.ts';
 import { formatLocalDate } from '../util/time.ts';
 import { run, UserError } from '../util/tui.ts';

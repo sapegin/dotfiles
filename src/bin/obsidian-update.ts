@@ -26,6 +26,7 @@ import {
   stripExtensions,
   atomicWrite,
 } from '../util/files.ts';
+import { parseFrontmatter } from '../util/markdown.ts';
 import {
   doesAttachmentExist,
   formatNoteHeading,
@@ -34,7 +35,6 @@ import {
   moveToTrash,
   needsOptimization,
   optimizeImage,
-  parseFrontmatter,
   replaceMarkdownImageReferences,
   type VaultFrontmatter,
 } from '../util/obsidian.ts';

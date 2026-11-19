@@ -6,8 +6,10 @@ export default defineConfig({
   ignorePatterns: [
     'ai/skills/_references/modern-web-guidance/*',
     'ai/skills/_references/react-best-practices/*',
+    'hotdog/schemas/*',
     'obsidian-clipper/*',
     'obsidian/*',
+    'pastor/schemas/*',
     'pi/agent/settings.json',
     'pretty-html/_assets/lib/*',
     'vscode/User/*/',

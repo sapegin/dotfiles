@@ -9,6 +9,7 @@ AI agent skills. Invoke with `/<name>`.
 | [deslop](deslop/SKILL.md) | Review a diff for local code quality, AI-generated slop, and polish in application code, configuration, documentation, and agent artifacts |
 | [dependabot](dependabot/SKILL.md) | Read, triage, and fix GitHub Dependabot alerts using the gh CLI |
 | [deps-upgrade](deps-upgrade/SKILL.md) | Upgrade npm or pnpm dependencies |
+| [done](done/SKILL.md) | Run review, deslop, and finalize in sequence |
 | [finalize](finalize/SKILL.md) | Run final cleanup and pause for review of any edits |
 | [fix-pr-ci](fix-pr-ci/SKILL.md) | Analyze and fix CI failures for current pull request |
 | [form-assistant](form-assistant/SKILL.md) | Assist with large online forms in a visible browser |

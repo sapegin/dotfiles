@@ -20,22 +20,16 @@ gh api repos/owner/repo/contents/path/to/file.py \
 gh api repos/owner/repo/contents/src/ --jq '.[].name'
 ```
 
-For broader browsing, clone and use normal file tools:
+For broader browsing, prepare a revision-pinned research checkout:
 
 ```bash
-# Clone to the shared Pi GitHub repo cache
-mkdir -p /tmp/pi-github-repos/owner
-gh repo clone owner/repo /tmp/pi-github-repos/owner/repo -- --depth 1
+~/dotfiles/bin/github-source owner/repo
+~/dotfiles/bin/github-source owner/repo v1.0.0
 ```
 
-Reuse `/tmp/pi-github-repos/owner/repo` when it already exists, but fetch and check out the requested revision before relying on its contents. For the latest default-branch revision:
+The CLI clones or refreshes `/tmp/pi-github-repos/owner/repo`, checks out the requested revision detached, and returns its `directory` and full `commit` SHA. Omitting the revision fetches the latest default-branch HEAD. It refuses dirty checkouts; report the error without resetting or deleting local work.
 
-```bash
-git -C /tmp/pi-github-repos/owner/repo fetch --depth 1 origin HEAD
-git -C /tmp/pi-github-repos/owner/repo checkout --detach FETCH_HEAD
-```
-
-Replace `HEAD` with a requested tag or branch when researching a specific version. Fetch enough additional history for `git log` or `git blame`; a depth-one clone is insufficient for historical research. Search cloned repos with `find`, `grep`, `read`, `ls`, and `bash`.
+Fetch additional history explicitly when `git log` or `git blame` needs it; the helper fetches only depth one. Search the returned directory with `find`, `grep`, `read`, `ls`, and `bash`.
 
 ## Common commands
 

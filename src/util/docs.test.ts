@@ -1,5 +1,85 @@
 import { describe, expect, test } from 'vitest';
-import { generateReferenceIndex } from './docs.ts';
+import {
+  generateReferenceIndex,
+  getMarkdownLinks,
+  getHtmlLinks,
+  resolveDocumentLink,
+} from './docs.ts';
+
+test('extracts Markdown targets while excluding comments and code examples', () => {
+  const source = [
+    '[Guide](guide.md#section)',
+    '[Spaced](<a guide.md> "Title")',
+    '[reference]: another.md',
+    '[space-reference]: <another guide.md>',
+    '![Image](image.png)',
+    '<!-- [Hidden](hidden.md) -->',
+    '`[Inline](inline.md)`',
+    '~~~markdown',
+    '[Example](example.md)',
+    '~~~',
+  ].join('\n');
+  expect(getMarkdownLinks(source)).toStrictEqual([
+    'guide.md#section',
+    'a guide.md',
+    'image.png',
+    'another.md',
+    'another guide.md',
+  ]);
+});
+
+test.each(['~~~', '```'])(
+  'excludes indented %s fences inside lists',
+  (fence) => {
+    const source = [
+      '1. Example:',
+      '',
+      `   ${fence}md`,
+      '   `[inline](inline-example.md)`',
+      '   [Placeholder](missing-example.md)',
+      `   ${fence}`,
+      '',
+      '   [Guide](guide.md)',
+    ].join('\n');
+    expect(getMarkdownLinks(source)).toStrictEqual(['guide.md']);
+  }
+);
+
+test('extracts actual HTML links and script assets without false attribute matches', () => {
+  const source = [
+    '<a href="guide.html">Guide</a>',
+    '<script src="components.js">const sample = \'<a href="script.html">\';</script>',
+    '<ss-demo><a href="demo.html">Demo</a></ss-demo>',
+    '<pre><a href="code.html">Code</a></pre>',
+    '<div data-href="data.html">href="text.html"</div>',
+    '<!-- <img src="hidden.png"> -->',
+  ].join('\n');
+  expect(getHtmlLinks(source)).toStrictEqual(['guide.html', 'components.js']);
+});
+
+test('resolves local encoded paths and ignores remote URLs and fragments', () => {
+  expect(resolveDocumentLink('/docs/page.md', 'a%20guide.md#heading')).toBe(
+    '/docs/a guide.md'
+  );
+  expect(resolveDocumentLink('/docs/page.html', 'a&amp;b.html?mode=1')).toBe(
+    '/docs/a&b.html'
+  );
+  expect(resolveDocumentLink('/docs/page.html', '%26amp;.html')).toBe(
+    '/docs/&amp;.html'
+  );
+  for (const href of [
+    'https://example.com/',
+    '//cdn.example.com/',
+    'mailto:a@example.com',
+    '#heading',
+    '',
+  ]) {
+    expect(resolveDocumentLink('/docs/page.md', href)).toBeUndefined();
+  }
+  expect(() => resolveDocumentLink('/docs/page.md', 'bad%ZZ.md')).toThrow(
+    URIError
+  );
+});
 
 describe(generateReferenceIndex, () => {
   test('renders normalized sections', () => {

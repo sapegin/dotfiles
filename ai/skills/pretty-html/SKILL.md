@@ -16,55 +16,17 @@ Shared assets live in `$DOTFILES_DIR/pretty-html/_assets/` (git-tracked). Handbo
 | Temporary explainer, demo, one-off | `$DOTFILES_DIR/pretty-html/pages/` | Ignored |
 | Golden reference | `$DOTFILES_DIR/pretty-html/example.html` | Tracked |
 
-Link only `doc.css` (it `@import`s `squirrelsong.css`) and `components.js` (lazy-loads highlight.js and Mermaid from `_assets/lib/`). Adjust the `_assets/` prefix by depth:
+Link only `doc.css` (it imports `squirrelsong.css`) and `components.js` (it lazy-loads highlight.js and Mermaid).
 
-| Page location | Stylesheet | Components |
-| --- | --- | --- |
-| `pretty-html/example.html` | `_assets/doc.css` | `_assets/components.js` |
-| `pretty-html/pages/<doc>.html` | `../_assets/doc.css` | `../_assets/components.js` |
-| `zz-handbook/<topic>/<doc>.html` | `../_assets/doc.css` | `../_assets/components.js` |
+## Create a page
 
-## Page template
+Generate new pages with the shared shell from [example.html](../../../pretty-html/example.html):
 
-Copy from [example.html](../../../pretty-html/example.html). Every page needs:
-
-1. **Theme bootstrap** (inline, before CSS) — one line, sets `.light` or `.dark` on `<html>` from `prefers-color-scheme` at load time; no toggle, no change listener.
-2. **One stylesheet** — `doc.css` (imports Squirrelsong).
-3. **One script at end of `<body>`** — `components.js` only (classic script, not `type="module"` — required for reliable `file://` pages). It lazy-loads highlight.js and Mermaid.
-4. **`<main>`** — main content wrapper.
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1"
-    />
-    <title>Layout — CSS</title>
-    <script>
-      document.documentElement.classList.add(
-        matchMedia('(prefers-color-scheme: dark)').matches
-          ? 'dark'
-          : 'light'
-      );
-    </script>
-    <link rel="stylesheet" href="../_assets/doc.css" />
-  </head>
-  <body>
-    <main>
-      <nav class="breadcrumbs" aria-label="Breadcrumb">
-        <a href="../index.html">Handbook</a>
-        <span aria-hidden="true">/</span>
-        <a href="index.html">CSS</a>
-      </nav>
-      <!-- content -->
-    </main>
-    <script src="../_assets/components.js"></script>
-  </body>
-</html>
+```bash
+~/dotfiles/bin/pretty-html-create /path/to/page.html "Page title"
 ```
+
+The CLI calculates relative asset paths, selects the synced assets for handbook pages, escapes the title, and refuses overwrites. It preserves the canonical theme bootstrap, stylesheet, classic components script, and `<main>` wrapper without copying example content. Edit the generated content and breadcrumbs. For existing pages, edit in place and preserve that shell.
 
 ## Components
 

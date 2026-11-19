@@ -12,7 +12,7 @@ Read and follow the [English writing style guide](../_references/writing.md).
 
 ## Process
 
-- Identify the base branch and inspect the diff first.
+- Inspect the diff first with `~/dotfiles/bin/branch-diff`. If it fails, report the error and ask for clarification before writing the description.
 - Read commit messages, changed file names, and surrounding code as needed.
 - Infer the reason for the change only from clear evidence: branch name, commits, issue references, code, or user context.
 - Ignore unrelated changes outside the diff.

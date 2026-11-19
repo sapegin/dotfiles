@@ -1,3 +1,12 @@
+/** Narrow parsed JSON or YAML objects before inspecting their fields. */
+export function isRecord(value: unknown): value is Record<string, unknown> {
+  return (
+    value !== null &&
+    typeof value === 'object' &&
+    Array.isArray(value) === false
+  );
+}
+
 function replaceCommentCharacter(character: string): string {
   return character === '\n' ? '\n' : ' ';
 }

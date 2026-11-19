@@ -8,16 +8,15 @@ Upgrade dependencies in the current project. Do not commit or push unless the us
 
 ## Detect package manager
 
-Use one manager for the whole run. Assume a single lockfile; check npm first:
+From the project root, collect read-only evidence:
 
-| Signal                      | Manager |
-| --------------------------- | ------- |
-| `package-lock.json` present | npm     |
-| `pnpm-lock.yaml` present    | pnpm    |
+```bash
+~/dotfiles/bin/deps-context
+```
 
-If neither lockfile is present, read `packageManager` in `package.json` or ask.
+The helper selects npm from `package-lock.json`, otherwise pnpm from `pnpm-lock.yaml`, otherwise the supported `packageManager` field. It reports runtime declarations, workspace packages and scripts, and normalized outdated versions for each project. Use one manager throughout the run. If detection is ambiguous or unsupported, ask which manager to use before collecting evidence with its native commands. Stop on registry or command failures; do not interpret them as an up-to-date tree.
 
-Record Node.js version from `engines.node`, `.nvmrc`, or `.node-version`. Align `@types/node` major with that runtime when the project uses it.
+Choose the intended Node.js runtime from the reported declarations and project instructions. Align `@types/node` major with that runtime when the project uses it.
 
 ## Baseline
 
@@ -43,13 +42,7 @@ Then re-run the same verification. If install scripts were blocked (npm `allowSc
 
 ## Phase 2 — plan remaining work
 
-List outdated packages and group by risk:
-
-```bash
-npm outdated || true
-# or
-pnpm outdated || true
-```
+Re-run `~/dotfiles/bin/deps-context` and group its outdated packages by risk:
 
 - **Low risk:** patch/minor within the same major, dev-only tools, typed packages.
 - **Breaking:** major version bumps, framework migrations (Astro, React, Tailwind, TypeScript, Storybook, vitest, etc.), ecosystem sets that must move together (e.g. oxlint + oxfmt + config packages).
@@ -84,7 +77,7 @@ Common follow-ups:
 
 ## Phase 4 — finish
 
-- Run `npm outdated || true` / `pnpm outdated || true` again and note anything intentionally left behind (unsupported majors, user choice).
+- Re-run `~/dotfiles/bin/deps-context` and note anything intentionally left behind (unsupported majors, user choice).
 - Summarize: packages bumped, code/config changes, verification commands run, and follow-ups (publish upstream, CI, Dependabot).
 
 Review release notes for the upgraded versions, including minor releases, and compare relevant changes with actual dependency usage in the codebase. Skip unavailable release notes.
@@ -94,7 +87,7 @@ Review release notes for the upgraded versions, including minor releases, and co
 Group the final summary by package or locked ecosystem set. Put the package name and old → new version range on the first line, then the description on a separate line beneath it. For each group, include:
 
 - **Versions and sources:** old → new version range and release-note or migration-guide links.
-- **Notable changes:** significant new features, behavior changes, and deprecations across the upgraded versions. Explain their practical significance, even when no code change is needed; omit routine changelog noise.
+- **Notable changes:** significant new features, behavior changes, and deprecations across the upgraded versions. Give each change its own paragraph, with a blank line between changes. Explain their practical significance, even when no code change is needed; omit routine changelog noise.
 - **Recommended changes:** a prioritized list directly beneath that group’s overview. Cover concrete project use cases for new features, simplifications that replace custom code, workarounds, or redundant dependencies, and deprecations still in use with their supported replacements.
 
 For each recommendation, identify the affected files or usage, proposed change, practical benefit, and supporting source. Distinguish required follow-ups from optional improvements; omit features with no clear project use case. If a group has no recommendations, omit its recommendations section entirely; do not print a placeholder.

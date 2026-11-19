@@ -7,15 +7,14 @@ import {
   dirs,
   writeFileIfDifferent,
 } from '../util/files.ts';
+import { formatMarkdown, parseFrontmatter } from '../util/markdown.ts';
 import {
   extractTitle,
-  formatMarkdown,
   formatMarkdownImage,
   formatPublishedDate,
   getObsidianImageEmbedFilenames,
   hasTag,
   LINKED_IMAGE_EMBED_PATTERN,
-  parseFrontmatter,
   parsePublishedDate,
   readNoteFile,
   resolveWikilinks,

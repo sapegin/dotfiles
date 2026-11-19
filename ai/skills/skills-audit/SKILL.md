@@ -8,7 +8,7 @@ Audit all skills under `ai/skills/`. Produce recommendations only; do not edit f
 
 ## Process
 
-1. Read the applicable `AGENTS.md` files and enumerate every `SKILL.md` under `ai/skills/`. Treat that inventory as the audit scope, including this skill.
+1. Read the applicable `AGENTS.md` files. Run `~/dotfiles/bin/skills-check` for frontmatter, local file links, and `Readme.md` inventory coverage. It checks skill-local Markdown and the existence of shared reference targets, not vendored reference contents, URL availability, or fragment IDs. Include its failures in the audit, then enumerate every `SKILL.md` under `ai/skills/` as the full scope, including this skill.
 2. Read the [skill authoring and review](../_references/skill-authoring.md) guide in full.
 3. For each skill, read its `SKILL.md` and all Markdown references inside that skill’s directory. Follow links outside the directory only as far as needed to validate the context pointer, source of truth, and consistency with the skill.
 4. Apply every relevant guide item to every skill. Trace each distinct requirement across the skill’s sections and flag repeated meanings, even when the wording differs. Verify commands, paths, links, dependencies, and repository conventions from local evidence. Do not infer a defect merely because one skill differs from another.

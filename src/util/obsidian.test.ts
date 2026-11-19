@@ -3,6 +3,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { afterEach, describe, expect, test } from 'vitest';
 import { dirs } from './files.ts';
+import { parseFrontmatter } from './markdown.ts';
 import {
   AVIF_SKIP_SUFFIX,
   getAvifSkipSidecarPath,
@@ -12,7 +13,6 @@ import {
   MAX_FILE_SIZE,
   needsOptimization,
   getNotePath,
-  parseFrontmatter,
   parseSections,
   replaceMarkdownImageReferences,
   resolveWikilinks,

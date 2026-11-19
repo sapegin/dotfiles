@@ -60,7 +60,7 @@ Apply every check below. Flag only real issues — skip sentences that need no c
 
 1. Resolve the target according to **Target**. If no file path and no pasted text, ask for text and stop.
 2. Read the full text once for context, audience, and register.
-3. Review sentence by sentence (or list item by list item when items are standalone sentences).
+3. For Markdown or plain-text files, run `~/dotfiles/bin/lint-text "$file"` without `--fix` for mechanical candidates. For pasted text, use a temporary `.md` file containing the exact text; review unsupported formats manually. Treat messages as candidates subject to the exclusions above, distinguish lint findings from execution failures, and report unavailable checks. Then review sentence by sentence (or list item by list item when items are standalone sentences).
 4. Collect every finding, then present **all findings at once** in **Output format**. Skip sentences with no issues.
 5. If there are findings, end with the choice line from **Output format**.
 6. When the user replies with fix numbers (e.g. `Fix 1, 4, 7`), apply **only** those corrections:
