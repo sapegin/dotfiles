@@ -161,7 +161,7 @@
    */
   {
     "comment": "Switch to the previously active editor",
-    "key": "shift+escape",
+    "key": "cmd+j",
     "command": "workbench.action.openPreviousRecentlyUsedEditor",
     "when": "editorTextFocus"
   },

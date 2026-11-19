@@ -109,6 +109,11 @@
     },
     {
       "id": "command.open-app",
+      "bundleId": "me.sapegin.pastor",
+      "shortcut": "hyper+t"
+    },
+    {
+      "id": "command.open-app",
       "bundleId": "com.microsoft.Outlook",
       "shortcut": "hyper+m"
     },
@@ -150,14 +155,6 @@
     {
       "id": "window.maximize",
       "shortcut": "hyper+up"
-    },
-    {
-      "id": "window.left-top-half",
-      "shortcut": "hyper+shift+up"
-    },
-    {
-      "id": "window.left-bottom-quarter",
-      "shortcut": "hyper+shift+down"
     },
     {
       "id": "snippet.expand",
