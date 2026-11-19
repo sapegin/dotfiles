@@ -34,4 +34,6 @@ Update the draft only if pending task changes warrant a commit message and the e
 
 ## Output
 
-Keep each phase’s interactive finding and confirmation formats. Before advancing, use one short sentence naming the next phase. Do not print intermediate no-findings conclusions, request permission merely to advance, or generate handoff packets. After all three phases and the commit draft step, end with a visible reply: “Huzzah! The review is complete. I took the liberty of tidying up.” Send it even when finalize made no edits. Omit routine draft updates from the reply unless asked.
+Keep each phase’s interactive finding and confirmation formats. Before advancing, use one short sentence naming the next phase. Do not print intermediate no-findings conclusions, request permission merely to advance, or generate handoff packets. After all three phases and the commit draft step, include a **Manual testing** section only if changed behavior still needs a human check that automation couldn’t cover. For each check, state the setup (such as the screen reader, browser, or physical device), what to do, and what to expect. Present these as checks still to run, separate from completed verification. If a required check is blocked, follow the pause rule above.
+
+End with this sign-off: “Huzzah! The review is complete. I took the liberty of tidying up.” Send it even when finalize made no edits. Omit routine draft updates from the reply unless asked.
