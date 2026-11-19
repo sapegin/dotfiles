@@ -33,7 +33,7 @@ test('renders source help as valid TLDR Markdown', () => {
   const agentCommentsOutput = renderHelp('agent-comments');
 
   expect(branchDiffOutput).toContain(
-    'no argument prints either the feature branch'
+    'With no argument, print uncommitted changes if present.'
   );
   expect(agentCommentsOutput).toContain('Scan the current directory');
   expect(agentCommentsOutput).toContain('ai-comments path/to/project');

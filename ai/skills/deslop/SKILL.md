@@ -4,26 +4,16 @@ description: Review a diff for local code quality and AI-generated slop, then au
 disable-model-invocation: true
 ---
 
-Check the requested target or current changes for AI-generated slop.
-
-## Target
-
-Accept zero or one argument:
-
-```text
-/skill:deslop [<file-path> | <commit-sha>]
-```
-
-Read and follow [development workflow setup](../_references/development-workflow.md) for target resolution, intended behavior, prior decisions, and verification evidence.
+This is the deslop phase of [done](../done/SKILL.md). If invoked directly, direct the user to `/skill:done`.
 
 ## Process
 
-1. Establish context according to **Target**.
-2. Inspect the selected file or diff and enough surrounding context to understand it.
+1. Use the target and decisions established by `done`.
+2. Inspect the current changes and enough surrounding context to understand them.
 3. Focus on local defects and polish within the selected scope. For a changeset, prioritize issues introduced or exposed by the change.
 4. Defer issues eligible for **Final automatic cleanup** to that pass. Present other findings exactly one at a time using **Output format**. Then wait for the user to choose a fix, ignore it, or give other instructions.
 5. Interpret `F` (case-insensitive) as approval of the recommended fix and `I` (case-insensitive) as ignore. If the user approves a fix or gives replacement instructions, make only that approved change and validate it before continuing.
-6. After handling the user’s response, continue with the next finding using the same one-at-a-time process. When no unhandled findings requiring approval remain, run **Final automatic cleanup** before completing the review.
+6. After handling the user’s response, continue with the next finding using the same one-at-a-time process. When no unhandled findings requiring approval remain, run **Final automatic cleanup** before completing the phase.
 
 ## Final automatic cleanup
 
@@ -45,12 +35,6 @@ Use this exact structure for every finding, replacing only the placeholders:
 **{smallest viable correction}**
 
 (F)ix, (i)gnore, or tell what to do.
-```
-
-Use this exact output after final automatic cleanup when no unhandled findings remain and that pass changed no files:
-
-```text
-Huzzah! Nothing else warrants attention.
 ```
 
 Formatting rules:

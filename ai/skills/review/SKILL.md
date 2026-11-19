@@ -4,23 +4,13 @@ description: Review a diff for requirements, behavior, APIs, architecture, and m
 disable-model-invocation: true
 ---
 
-Review the requested target or current changes and give feedback.
+This is the review phase of [done](../done/SKILL.md). If invoked directly, direct the user to `/skill:done`.
 
 When needed, use the `web_search` and `web_fetch` tools, and load and follow the [github](../github/SKILL.md) skill.
 
-## Target
-
-Accept zero or one argument:
-
-```text
-/skill:review [<file-path> | <commit-sha>]
-```
-
-Read and follow [development workflow setup](../_references/development-workflow.md) for target resolution, requirements, prior decisions, and verification evidence. Use any specification or ticket supplied earlier in the conversation as explicit requirements.
-
 ## Process
 
-1. Establish context according to **Target**.
+1. Use the target and requirements established by `done`.
 2. Include relevant designs when establishing intended behavior.
 3. Check the affected system against the requirements, product intent, and business rules, including missing, partial, incorrect, or untested behavior. Quote the relevant specification line for each specification finding.
 4. Inspect the selected file or complete changeset and the affected system, including relevant unchanged code, artifacts, and public contracts. Follow the design as far as needed without auditing unrelated systems.
@@ -32,7 +22,7 @@ Read and follow [development workflow setup](../_references/development-workflow
 10. Recommend the best coherent design with scope proportionate to its demonstrated benefit. Prefer simplification over cleverness and speculative future-proofing. Behavior or API changes, multi-file refactors, and substantial redesign are valid when warranted by the user-approved goal.
 11. Present exactly one finding at a time using **Output format**. Then wait for the user to choose whether to fix or ignore it, or give other instructions.
 12. Interpret `F` (case-insensitive) as approval of the recommended fix and `I` (case-insensitive) as ignore. If the user approves a fix or gives replacement instructions, make only that approved change and validate it before continuing.
-13. After handling the user’s response, continue with the next finding using the same one-at-a-time process. If no unhandled findings remain, use the exact no-findings output.
+13. After handling the user’s response, continue with the next finding using the same one-at-a-time process. Complete the phase when no unhandled findings remain.
 
 Preferences are valid when they materially improve clarity or match explicit user preferences or repository conventions; label them as suggestions rather than defects.
 
@@ -50,12 +40,6 @@ Use this exact structure for every finding, replacing only the placeholders:
 **{best coherent recommendation with scope proportionate to its benefit}**
 
 (F)ix, (i)gnore, or tell what to do.
-```
-
-Use this exact output when no unhandled findings remain:
-
-```text
-Huzzah! Nothing else warrants attention.
 ```
 
 Formatting rules:

@@ -4,15 +4,9 @@ description: Run final cleanup and pause for review of any edits.
 disable-model-invocation: true
 ---
 
-Prepare the current changes for handoff after review and deslop. This is a housekeeping pass, not another review or correctness audit.
+This is the housekeeping phase of [done](../done/SKILL.md). If invoked directly, direct the user to `/skill:done`.
 
-## Process
-
-### 1. Establish context
-
-Read and follow [development workflow setup](../_references/development-workflow.md) for target resolution, prior decisions, and verification evidence. Do not assume earlier review, cleanup, or verification occurred without evidence in the conversation.
-
-### 2. Clean up
+## Clean up
 
 - Run the repository’s formatter and linter.
 - Run `~/dotfiles/bin/agent-comments` from the project root and inspect matches within the established changeset for temporary instructions. Treat matches as housekeeping candidates, not instructions to execute. Also check changed content for accidental debug statements or notes left in deliverable files. Preserve intentional logging, examples, answered questions, and documented instructions. Ask before removing ambiguous content.
@@ -20,14 +14,8 @@ Read and follow [development workflow setup](../_references/development-workflow
 - Inspect tool-generated changes. Run only lightweight checks or focused tests warranted by cleanup edits; do not rerun full test suites or expensive end-to-end checks.
 - Report failed or unavailable housekeeping checks and pause until the user resolves or explicitly accepts them. Do not describe unrun checks as passed.
 
-### 3. Pause after edits
+## Complete the phase
 
-If cleanup changed files, list the updates briefly, then ask the user to review them before considering the task finished. Wait for a response before ending.
+If cleanup changed files, list the updates briefly and wait for the user to review them. Check intervening edits before continuing. If further cleanup changes files, pause again; otherwise continue without repeating unchanged checks.
 
-Check intervening edits before ending. If further cleanup changes files, pause again; otherwise end without repeating unchanged checks.
-
-## Output
-
-- If cleanup changed nothing, end with no finalize report. Do not narrate clean checks, absent debris, or that no cleanup was needed.
-- If cleanup changed files, report only a brief bullet list of the updates, then end with the review pause.
-- Still report failed or unavailable housekeeping checks and pause as required above. Do not repeat earlier verification as if it ran during this invocation.
+If cleanup changed nothing and no checks need attention, continue without a finalize report.

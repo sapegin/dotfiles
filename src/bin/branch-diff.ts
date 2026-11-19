@@ -1,8 +1,7 @@
 // Prints one review target as a diff. Pass the skill argument through unchanged:
-// an existing file prints its full source, a commit SHA prints that commit, and
-// no argument prints either the feature branch or main/master working changes.
-// With no target, --include-uncommitted includes staged, unstaged, and untracked
-// changes in the feature branch diff from its merge base to the working tree.
+// an existing file prints its full source and a commit SHA prints that commit.
+// With no argument, print uncommitted changes if present. Otherwise, print the
+// feature branch diff against main or master.
 //
 // ---
 // Author: Artem Sapegin, sapegin.me
@@ -21,10 +20,7 @@ import {
 } from '../util/git.ts';
 import { run } from '../util/tui.ts';
 
-const OPTIONS = [
-  { name: 'target', positional: true },
-  { name: 'include-uncommitted', type: 'boolean' },
-] as const;
+const OPTIONS = [{ name: 'target', positional: true }] as const;
 
 export type Options = ParsedArgs<typeof OPTIONS>;
 
@@ -72,8 +68,8 @@ function printFile(repoRoot: string, filePath: string): void {
   }
 }
 
-function printWorkingChanges(repoRoot: string, base = 'HEAD'): void {
-  runGit(['diff', '--merge-base', base], { cwd: repoRoot });
+function printWorkingChanges(repoRoot: string): void {
+  runGit(['diff', 'HEAD', '--'], { cwd: repoRoot });
 
   const untrackedFiles = execFileSync(
     'git',
@@ -88,10 +84,7 @@ function printWorkingChanges(repoRoot: string, base = 'HEAD'): void {
   }
 }
 
-export function branchDiff({
-  target,
-  'include-uncommitted': includeUncommitted,
-}: Options): void {
+export function branchDiff({ target }: Options): void {
   const repoRoot = getGitRepoRoot();
 
   if (target !== undefined) {
@@ -112,7 +105,17 @@ export function branchDiff({
     throw new Error(`Target must be an existing file or commit SHA: ${target}`);
   }
 
-  const currentBranch = getCurrentBranch();
+  const status = execFileSync(
+    'git',
+    ['status', '--porcelain', '--untracked-files=normal'],
+    { cwd: repoRoot, encoding: 'utf8' }
+  );
+  if (status !== '') {
+    printWorkingChanges(repoRoot);
+    return;
+  }
+
+  const currentBranch = getCurrentBranch(repoRoot);
   if (currentBranch === undefined) {
     throw new Error(
       'Cannot determine the current branch because HEAD is detached.'
@@ -120,15 +123,10 @@ export function branchDiff({
   }
 
   if (currentBranch === 'main' || currentBranch === 'master') {
-    printWorkingChanges(repoRoot);
     return;
   }
 
   const baseBranch = getBaseBranch(repoRoot);
-  if (includeUncommitted) {
-    printWorkingChanges(repoRoot, baseBranch);
-    return;
-  }
   runGit(['diff', `${baseBranch}...${currentBranch}`], { cwd: repoRoot });
 }
 
