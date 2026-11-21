@@ -176,7 +176,7 @@ describe('git-ci-logs', () => {
   });
 
   test('reports a missing pull request without a stack trace', () => {
-    const result = spawnSync(process.execPath, [scriptPath, '5901'], {
+    const result = spawnSync(process.execPath, [scriptPath, '59'], {
       encoding: 'utf8',
       env: {
         ...process.env,
@@ -187,7 +187,7 @@ describe('git-ci-logs', () => {
 
     expect(result.status).toBe(1);
     expect(result.stderr).toContain(
-      'Could not load pull request #5901. Verify that it exists in the current repository.'
+      'Could not load pull request #59. Verify that it exists in the current repository.'
     );
     expect(result.stderr).toContain(
       'GraphQL: Could not resolve to a PullRequest with the number of 5901.'

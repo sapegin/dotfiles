@@ -995,10 +995,10 @@ function generateWeatherChart(data: WeatherData): string {
 						const {ctx, chartArea} = chart;
 						if (!chartArea) { return null; }
 						const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
-						gradient.addColorStop(0, '#3b82f6');
-						gradient.addColorStop(0.4, '#faaf23');
-						gradient.addColorStop(0.6, '#faaf23');
-						gradient.addColorStop(1, '#ef4444');
+						gradient.addColorStop(0, '#54a9de');
+						gradient.addColorStop(0.4, '#e78c04');
+						gradient.addColorStop(0.6, '#e78c04');
+						gradient.addColorStop(1, '#ef4a4a');
 						return gradient;
 					},
 					barThickness: 40

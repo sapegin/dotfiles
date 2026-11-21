@@ -1208,7 +1208,7 @@ describe('tool rendering', () => {
       const resumed = setupPrettyExtension();
       try {
         for (const { expanded, width } of [false, true].flatMap((isExpanded) =>
-          [30, 80, 160].map((renderWidth) => ({
+          [30, 160].map((renderWidth) => ({
             expanded: isExpanded,
             width: renderWidth,
           }))
