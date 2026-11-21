@@ -1,8 +1,8 @@
-// Archive a photo folder to NAS.
+// Archive a photo folder locally, then remind about NAS.
 //
 // - Pick a folder from ~/Pictures/Photos
-// - Copy it to /Volumes/Photos/Photos/YYYY/FolderName
-// - Move the local folder to ~/Pictures/z-Archived
+// - Move it to ~/Pictures/z-Archived/FolderName
+// - Print instructions to move it to /Volumes/Photos/Photos/YYYY/FolderName
 //
 // ---
 // Author: Artem Sapegin, sapegin.me
@@ -12,14 +12,13 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { parseArgs, type ParsedArgs } from '../util/args.ts';
-import { copyFile, dirs, tildify } from '../util/files.ts';
-import { ensureVolumeMounted } from '../util/mount.ts';
+import { dirs, doesPathExist, tildify } from '../util/files.ts';
 import {
   getPhotoFilenameYear,
   isVisible,
   pickPhotoFolder,
 } from '../util/photos.ts';
-import { confirm, createProgress, log, run } from '../util/tui.ts';
+import { confirm, log, run } from '../util/tui.ts';
 
 const OPTIONS = [] as const;
 
@@ -56,8 +55,6 @@ function getArchiveYear(files: readonly string[]): string | undefined {
 }
 
 export async function photosArchive(_options: Options): Promise<void> {
-  ensureVolumeMounted(dirs.nasPhotos);
-
   const sourceDir = await pickPhotoFolder({ prompt: 'Folder to archive' });
   if (sourceDir === undefined) {
     process.exit(1);
@@ -79,58 +76,17 @@ export async function photosArchive(_options: Options): Promise<void> {
   const nasDir = path.join(NAS_PHOTOS_DIR, year, folderName);
   const archiveDir = path.join(PHOTOS_ARCHIVED_DIR, folderName);
 
-  for (const [label, destinationDir] of [
-    ['NAS destination', nasDir],
-    ['Archive destination', archiveDir],
-  ] as const) {
-    try {
-      await fs.stat(destinationDir);
-      log.warn(`${label} already exists: ${tildify(destinationDir)}`);
-      process.exit(1);
-    } catch (error) {
-      if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
-        throw error;
-      }
-    }
-  }
-
-  if (
-    (await confirm(`Archive to ${nasDir} (${files.length} files)?`, false)) ===
-    false
-  ) {
+  if (await doesPathExist(archiveDir)) {
+    log.warn(`Archive destination already exists: ${tildify(archiveDir)}`);
     process.exit(1);
   }
 
-  console.log();
-
-  const progress = createProgress({ total: files.length });
-  const failures: string[] = [];
-
-  try {
-    for (const [index, sourcePath] of files.entries()) {
-      const current = index + 1;
-      const relativePath = path.relative(sourceDir, sourcePath);
-      const destinationPath = path.join(nasDir, relativePath);
-
-      try {
-        await copyFile(sourcePath, destinationPath);
-        progress.update(current, relativePath);
-      } catch (error) {
-        const message = error instanceof Error ? error.message : String(error);
-        failures.push(message);
-        progress.error(`Failed to copy ${relativePath}: ${message}`);
-      }
-    }
-  } finally {
-    progress.done();
-    console.log();
-  }
-
-  if (failures.length > 0) {
-    await fs.rm(nasDir, { recursive: true, force: true });
-    log.warn(
-      `${failures.length} files failed to copy; removed partial NAS copy.`
-    );
+  if (
+    (await confirm(
+      `Archive to ${tildify(archiveDir)} (${files.length} files)?`,
+      false
+    )) === false
+  ) {
     process.exit(1);
   }
 
@@ -139,13 +95,12 @@ export async function photosArchive(_options: Options): Promise<void> {
     await fs.rename(sourceDir, archiveDir);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    log.warn(
-      `NAS copy succeeded, but moving to ${tildify(archiveDir)} failed: ${message}`
-    );
-    console.log(`Source: ${tildify(sourceDir)}`);
-    console.log(`NAS:    ${tildify(nasDir)}`);
+    log.warn(`Moving to ${tildify(archiveDir)} failed: ${message}`);
     process.exit(1);
   }
+
+  console.log();
+  console.log(`In Lightroom, move the folder to ${nasDir}`);
 }
 
 await run(import.meta.url, () => photosArchive(parseArgs(OPTIONS)));
