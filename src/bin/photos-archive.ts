@@ -1,7 +1,7 @@
 // Archive a photo folder locally, then remind about NAS.
 //
 // - Pick a folder from ~/Pictures/Photos
-// - Move it to ~/Pictures/z-Archived/FolderName
+// - Copy it to ~/Pictures/z-Archived/FolderName
 // - Print instructions to move it to /Volumes/Photos/Photos/YYYY/FolderName
 //
 // ---
@@ -12,13 +12,13 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { parseArgs, type ParsedArgs } from '../util/args.ts';
-import { dirs, doesPathExist, tildify } from '../util/files.ts';
+import { copyFile, dirs, doesPathExist, tildify } from '../util/files.ts';
 import {
   getPhotoFilenameYear,
   isVisible,
   pickPhotoFolder,
 } from '../util/photos.ts';
-import { confirm, log, run } from '../util/tui.ts';
+import { confirm, createProgress, log, run } from '../util/tui.ts';
 
 const OPTIONS = [] as const;
 
@@ -90,16 +90,39 @@ export async function photosArchive(_options: Options): Promise<void> {
     process.exit(1);
   }
 
-  await fs.mkdir(PHOTOS_ARCHIVED_DIR, { recursive: true });
+  console.log();
+
+  const progress = createProgress({ total: files.length });
+  const failures: string[] = [];
+
   try {
-    await fs.rename(sourceDir, archiveDir);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    log.warn(`Moving to ${tildify(archiveDir)} failed: ${message}`);
+    for (const [index, sourcePath] of files.entries()) {
+      const current = index + 1;
+      const relativePath = path.relative(sourceDir, sourcePath);
+      const destinationPath = path.join(archiveDir, relativePath);
+
+      try {
+        await copyFile(sourcePath, destinationPath);
+        progress.update(current, relativePath);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        failures.push(message);
+        progress.error(`Failed to copy ${relativePath}: ${message}`);
+      }
+    }
+  } finally {
+    progress.done();
+    console.log();
+  }
+
+  if (failures.length > 0) {
+    await fs.rm(archiveDir, { recursive: true, force: true });
+    log.warn(
+      `${failures.length} files failed to copy; removed partial archive copy.`
+    );
     process.exit(1);
   }
 
-  console.log();
   console.log(`In Lightroom, move the folder to ${nasDir}`);
 }
 
