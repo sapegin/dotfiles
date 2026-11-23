@@ -3,13 +3,15 @@ import { stripVTControlCharacters } from 'node:util';
 import {
   type ExtensionAPI,
   type ExtensionContext,
+  initTheme,
   SkillInvocationMessageComponent,
   type Theme,
   type ToolRendererResolver,
   type ToolRenderers,
   UserMessageComponent,
 } from '@earendil-works/pi-coding-agent';
-import { describe, expect, test } from 'vitest';
+import { type Component } from '@earendil-works/pi-tui';
+import { beforeAll, describe, expect, test } from 'vitest';
 import pretty, {
   countLines,
   formatUserPrompt,
@@ -28,7 +30,7 @@ type EntryRenderer = (
   entry: unknown,
   options: unknown,
   theme: Theme
-) => { render(width: number): string[] } | undefined;
+) => Pick<Component, 'render'> | undefined;
 
 function createExtensionContext(cwd: string): ExtensionContext {
   return {
@@ -317,6 +319,10 @@ describe(renderPrettyFooter, () => {
 });
 
 describe('tool rendering', () => {
+  beforeAll(() => {
+    initTheme('dark');
+  });
+
   test('registers renderers without replacing built-in tools', () => {
     const { replacedTools, tools } = setupPrettyExtension();
 
@@ -1084,7 +1090,7 @@ describe('tool rendering', () => {
       NonNullable<ToolRenderers['renderResult']>
     >[3];
     try {
-      const directComponents: { render(width: number): string[] }[] = [];
+      const directComponents: Pick<Component, 'render'>[] = [];
       for (const [index, call] of cases.entries()) {
         const toolCallId = `parent/${index}`;
         const result = {
@@ -1252,7 +1258,7 @@ describe('tool rendering', () => {
         args: unknown,
         theme: Theme,
         ctx: unknown
-      ): { render(width: number): string[] };
+      ): Pick<Component, 'render'>;
     }
 
     const { shutdown, tools } = setupPrettyExtension();
@@ -1312,7 +1318,7 @@ describe('tool rendering', () => {
         options: unknown,
         theme: Theme,
         ctx: unknown
-      ): { render(width: number): string[] };
+      ): Pick<Component, 'render'>;
     }
 
     const { shutdown, tools } = setupPrettyExtension();
@@ -1381,7 +1387,7 @@ describe('tool rendering', () => {
         options: unknown,
         theme: Theme,
         ctx: unknown
-      ): { render(width: number): string[] };
+      ): Pick<Component, 'render'>;
     }
 
     const { shutdown, tools } = setupPrettyExtension();
@@ -1454,7 +1460,7 @@ describe('tool rendering', () => {
         options: unknown,
         theme: Theme,
         ctx: unknown
-      ): { render(width: number): string[] };
+      ): Pick<Component, 'render'>;
     }
 
     const { shutdown, tools } = setupPrettyExtension();
@@ -1512,7 +1518,7 @@ describe('tool rendering', () => {
         options: unknown,
         theme: Theme,
         ctx: unknown
-      ): { render(width: number): string[] };
+      ): Pick<Component, 'render'>;
     }
 
     const { shutdown, tools } = setupPrettyExtension();

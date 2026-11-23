@@ -30,6 +30,7 @@ function setupExtension(branchName?: string) {
         killed: false,
         stderr: '',
         stdout: branchName ? `${branchName}\n` : '',
+        truncated: false,
       })
     ),
     getSessionName: () => sessionNameValue,

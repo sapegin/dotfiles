@@ -217,14 +217,14 @@ function registerFooter(pi: ExtensionAPI): void {
 
 interface PatchableUserMessage {
   text: string;
-  render(width: number): string[];
+  render(width: number): readonly string[];
 }
 
 type PatchableUserMessagePrototype = PatchableUserMessage & {
   piPrettyOriginalRender?: (
     this: PatchableUserMessage,
     width: number
-  ) => string[];
+  ) => readonly string[];
 };
 
 export function formatUserPrompt(
@@ -255,7 +255,7 @@ function registerUserPrompt(pi: ExtensionAPI): void {
   const renderUserPrompt = function (
     this: PatchableUserMessage,
     width: number
-  ): string[] {
+  ): readonly string[] {
     if (!activeTheme) {
       return originalRender.call(this, width);
     }
@@ -352,14 +352,14 @@ function toolTitle(theme: Theme, name: string, value: string): string {
 
 interface PatchableSkillInvocation {
   skillBlock: { name: string };
-  render(width: number): string[];
+  render(width: number): readonly string[];
 }
 
 type PatchableSkillInvocationPrototype = PatchableSkillInvocation & {
   piPrettyOriginalRender?: (
     this: PatchableSkillInvocation,
     width: number
-  ) => string[];
+  ) => readonly string[];
 };
 
 function formatSkillInvocation(
@@ -383,7 +383,7 @@ function registerSkillInvocation(pi: ExtensionAPI): void {
   const renderSkillInvocation = function (
     this: PatchableSkillInvocation,
     width: number
-  ): string[] {
+  ): readonly string[] {
     if (!activeTheme) {
       return originalRender.call(this, width);
     }

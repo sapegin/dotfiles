@@ -6,6 +6,7 @@ import {
   type ExtensionAPI,
   type Theme,
 } from '@earendil-works/pi-coding-agent';
+import { type Component } from '@earendil-works/pi-tui';
 import { describe, expect, test, vi } from 'vitest';
 import registerWebTools from './web-tools.ts';
 
@@ -27,13 +28,13 @@ interface RenderableTool<Params> extends CapturedTool<Params> {
     args: Params,
     theme: Theme,
     ctx: unknown
-  ): { render(width: number): string[] };
+  ): Pick<Component, 'render'>;
   renderResult(
     result: ToolResult,
     options: unknown,
     theme: Theme,
     ctx: unknown
-  ): { render(width: number): string[] };
+  ): Pick<Component, 'render'>;
 }
 
 const plainTheme = {
@@ -62,6 +63,7 @@ describe('web tools', () => {
       killed: false,
       stderr: '',
       stdout: '',
+      truncated: false,
     });
 
     expect([...tools.keys()]).toStrictEqual(['web_search', 'web_fetch']);
@@ -83,6 +85,7 @@ describe('web tools', () => {
       killed: false,
       stderr: '',
       stdout: '',
+      truncated: false,
     });
     const toolCases = [
       {
@@ -148,6 +151,7 @@ describe('web tools', () => {
       killed: false,
       stderr: '',
       stdout: resultJson,
+      truncated: false,
     });
     const tool = tools.get('web_search') as CapturedTool<{
       query: string;
@@ -191,6 +195,7 @@ describe('web tools', () => {
       killed: false,
       stderr: '',
       stdout: '',
+      truncated: false,
     });
     const tool = tools.get('web_fetch') as CapturedTool<{ url: string }>;
 
@@ -206,6 +211,7 @@ describe('web tools', () => {
       killed: false,
       stderr: 'network failed\n',
       stdout: '',
+      truncated: false,
     });
     const tool = tools.get('web_fetch') as CapturedTool<{ url: string }>;
 
@@ -221,6 +227,7 @@ describe('web tools', () => {
       killed: false,
       stderr: '',
       stdout: page,
+      truncated: false,
     });
     const tool = tools.get('web_fetch') as CapturedTool<{ url: string }>;
     let fullOutputPath: string | undefined;

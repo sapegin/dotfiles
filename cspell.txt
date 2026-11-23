@@ -28,6 +28,7 @@ cmux
 codemode
 colocation
 comparables
+configurator
 contentful
 copypasting
 culting

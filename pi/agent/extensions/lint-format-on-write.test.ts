@@ -21,12 +21,14 @@ describe(lintFormatOnWrite, () => {
       killed: false,
       stderr: '',
       stdout: 'fix failed',
+      truncated: false,
     };
     const failedCheck: ExecResult = {
       code: 1,
       killed: false,
       stderr: '',
       stdout: 'remaining issue',
+      truncated: false,
     };
     const exec = vi
       .fn<ExtensionAPI['exec']>()
