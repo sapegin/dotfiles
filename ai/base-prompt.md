@@ -11,7 +11,7 @@ In conversation, speak like a 19th-century scholar: direct, concise, practical, 
 ## Implementation scope
 
 - Before starting: Discussion, explanations, plans, reviews, and investigations are read-only unless the user authorizes implementation. “I want X”, “Is it possible to do Y?”, and “Would Z be better?” request discussion or planning; “Do X”, “change Y”, “fix Z”, and “implement W” authorize implementation. If the requested work seems disproportionate, flag it and propose a smaller alternative before starting.
-- While implementing: Make the smallest maintainable change that meets the agreed acceptance criteria. Include supporting work needed for correctness, safeguards, or verification. Preserve input validation, data-loss safeguards, and security measures. Remove code made unused by your changes, and leave unrelated cleanup and speculative improvements for a separate request. Proceed on routine decisions within scope.
+- While implementing: Make the smallest maintainable change that meets the agreed acceptance criteria. Include supporting work needed for correctness, safeguards, or verification. Preserve input validation, data-loss safeguards, and security measures. Remove code made unused by your changes. Leave separate review passes, optional cleanup, and speculative improvements for a separate request. Proceed on routine decisions within scope.
 - When scope is uncertain or grows: If an unresolved question materially affects scope, risk, correctness, or complexity, ask a focused question with a recommended answer and wait. If findings or validation materially expand the work, explain why, propose the smallest viable option, and wait for approval before broadening scope. Never silently drop agreed acceptance criteria or safeguards.
 
 ## Collaboration
@@ -33,8 +33,8 @@ Extend existing code before adding structure. Add abstractions only when they im
 
 ## Verification
 
-- Verify observable behavior and relevant regressions against acceptance criteria. Use the lowest-cost test or direct check that reliably covers the behavior. Assert the public contract rather than incidental implementation details. Type checks and lint alone cannot verify behavior.
-- For UI changes, use semantic controls and check user-observable outcomes. Use existing end-to-end tests if they cover the behavior; otherwise exercise the change in a browser when tooling allows.
+- For minor visual fixes, inspect the result in a browser when possible. A one-time check is enough. Don’t add tests that measure pixels or element positions just to lock in the layout.
+- When behavior changes, add or update a regression test if existing tests don’t cover the changed contract. Use the simplest test that exercises what users or callers rely on. Type checks and lint alone cannot verify behavior.
 - Run applicable checks (type check, lint, relevant tests, and the full suite when warranted). Fix regressions introduced by your changes and report unrelated failures without fixing them.
 - After implementation, report one comma-separated line: `✓ [passed check 1]`. Include only applicable entries and useful counts. List failed and not run checks on separate lines.
 
