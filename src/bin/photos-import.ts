@@ -3,7 +3,7 @@
 // - Prefers Desktop photo files (RAW/JPEG/HEIC) over a mounted card
 // - Detects a mounted card
 // - Prefers RAW over JPEG/HEIC pairs
-// - Copies and renames each new file
+// - Moves Desktop files (same drive); copies from a card; renames each new file
 // - Copies files to NAS backup folder
 // - Skips already imported files by matching number suffixes and capture dates
 // - Ejects the card when done and opens the destination folder in Lightroom Classic
@@ -13,7 +13,6 @@
 // License: MIT
 // https://github.com/sapegin/dotfiles
 
-import { execFileSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
@@ -204,13 +203,20 @@ async function findPhotosToImport(cardPaths: string[]): Promise<string[]> {
   return toImport;
 }
 
-/** Copy one card file locally, rename it, and mirror it to the NAS. */
+/**
+ * Import one photo locally and mirror it to the NAS.
+ *
+ * Desktop imports move (same drive); card imports copy via `tempPath`.
+ */
 async function importPhoto(
   sourcePath: string,
   tempPath: string,
-  destinationDir: string
+  destinationDir: string,
+  { move = false }: { move?: boolean } = {}
 ): Promise<string | undefined> {
-  await copyFile(sourcePath, tempPath);
+  if (move === false) {
+    await copyFile(sourcePath, tempPath);
+  }
 
   const { date, year } = await readExifMetadata(sourcePath);
   if (!year) {
@@ -224,7 +230,9 @@ async function importPhoto(
 
   try {
     await fs.stat(destinationPath);
-    await fs.unlink(tempPath);
+    if (move === false) {
+      await fs.unlink(tempPath);
+    }
     return undefined;
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
@@ -238,13 +246,22 @@ async function importPhoto(
     path.basename(destinationPath)
   );
 
-  await fs.rename(tempPath, destinationPath);
+  if (move) {
+    await fs.rename(sourcePath, destinationPath);
+  } else {
+    await fs.rename(tempPath, destinationPath);
+  }
+
   try {
     await copyFile(destinationPath, backupPath);
   } catch (error) {
-    // Remove both (destination and backup) files like it never happened, so the
-    // user can try to import the file again
-    await fs.rm(destinationPath, { force: true });
+    // Undo the local import so the user can try again. For moves, put the file
+    // back at the source path; for copies, drop the destination copy.
+    if (move) {
+      await fs.rename(destinationPath, sourcePath);
+    } else {
+      await fs.rm(destinationPath, { force: true });
+    }
     await fs.rm(backupPath, { force: true });
     throw error;
   }
@@ -288,9 +305,7 @@ export async function photosImport(_options: Options): Promise<void> {
     return;
   }
 
-  const sourceFolder = getCommonFolder(photos);
-  execFileSync('open', [sourceFolder]);
-  console.log(`Importing from ${sourceFolder}…`);
+  console.log(`Importing from ${getCommonFolder(photos)}…`);
 
   const destinationDir = await pickPhotoFolder({
     prompt: 'Destination folder',
@@ -314,6 +329,7 @@ export async function photosImport(_options: Options): Promise<void> {
 
   console.log();
 
+  const move = cardVolume === undefined;
   const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'photos-import-'));
   const failures: string[] = [];
   let importedCount = 0;
@@ -332,7 +348,8 @@ export async function photosImport(_options: Options): Promise<void> {
         const importedName = await importPhoto(
           sourcePath,
           tempPath,
-          destinationDir
+          destinationDir,
+          { move }
         );
         if (importedName === undefined) {
           skippedInFolder++;
