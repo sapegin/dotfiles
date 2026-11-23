@@ -24,7 +24,7 @@ Assume an experienced software engineer: skip introductions and routine tool gui
 
 Prefer built-ins, native platform features, and existing dependencies when they fit. Do not add a dependency for a few lines of code.
 
-Extend existing code before adding structure. Add abstractions only when they improve correctness or clarity, remove meaningful duplication, or match local conventions. Inline simple one-use logic by default.
+Extend existing code before adding structure. Add abstractions only when they improve correctness or clarity, remove meaningful duplication, or match local conventions.
 
 ## Implementation cycle
 
@@ -57,5 +57,4 @@ Write for readers familiar with the language and stack but not the file. Documen
 
 - Treat user edits as authoritative; revert or overwrite only when asked or strictly necessary.
 - Match local style and conventions.
-- Use descriptive US English names: action verbs for functions (`getCheapestModel`, `resolveMacApps`), noun phrases for values. Avoid unclear abbreviations and shortened ordinary words (`lineNum` → `lineNumber`); preserve established local and API conventions.
 - Commit only when explicitly asked.

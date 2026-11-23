@@ -14,4 +14,5 @@ Apply to the code under review. For diffs, prioritize issues introduced or expos
 
 ## Clarity
 
+- **Unclear names:** Prefer descriptive US English names. Avoid noun-based function names (`cheapestModel` → `getCheapestModel`). Use noun phrases for values. Avoid opaque abbreviations and unnecessary shortening (`lineNum` → `lineNumber`). Preserve established local and API conventions.
 - **Unnecessary repetition:** Consolidate repeated values, calculations, or code introduced or exposed directly by the target when they plainly represent the same concept. Do not generalize incidental similarity or search unchanged systems for duplication.
