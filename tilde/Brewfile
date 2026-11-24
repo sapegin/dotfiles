@@ -8,11 +8,9 @@ brew "fastfetch" # Displays pretty system info
 brew "fd" # `find` replacement
 brew "fnm" # Node.js version manager
 brew "fzf" # Fuzzy finder
-brew "gdu" # Disk usage analyzer
 brew "gh" # GitHub command-line tool
 brew "git-delta" # Diff pager for `git` and `grep` output
 brew "git" # The Git
-brew "lazygit" # Git client
 brew "libqalculate" # Calculator
 brew "macos-trash" # `rm` replacement with macOS trash support
 brew "mise" # Dependency management for native macOS apps
@@ -24,7 +22,6 @@ brew "starship" # Prompt manager
 brew "tlrc" # `man` replacement
 brew "trafilatura" # Download web pages as text or Markdown
 brew "typos-cli" # Fix typos
-brew "uv" # Python package manager
 brew "zsh-patina" # Syntax highlighting for zsh
 brew "zsh" # Shell
 
@@ -33,7 +30,6 @@ brew "syntax-highlight" # Quick look with syntax highlighting
 cask "adobe-creative-cloud" # Lightroom & Photoshop
 cask "affinity" # Image editor
 cask "bruno" # REST/GraphQL API client
-cask "cleanshot" # Screenshots
 cask "colorsnapper" # Color picker
 cask "firefox" # Main browser
 cask "firefox@developer-edition"
@@ -48,8 +44,8 @@ cask "notion" # Collaborative notes
 cask "numi" # Calculator
 cask "obsidian" # Note taking
 cask "optimage" # Image optimization
-cask "polypane" # Responsive design and accessibility testing
 cask "replacicon" # Custom app icons
+cask "shottr" # Screenshots
 cask "telegram" # Chat
 cask "visual-studio-code" # Main code editor
 cask "whatsapp" # Another chat
@@ -63,7 +59,6 @@ cask "font-sf-pro" # Apple SF Pro
 vscode "astro-build.astro-vscode"
 vscode "bradlc.vscode-tailwindcss"
 vscode "editorconfig.editorconfig"
-vscode "esbenp.prettier-vscode"
 vscode "nicksp.reveal-on-github"
 vscode "oxc.oxc-vscode"
 vscode "streetsidesoftware.code-spell-checker"
@@ -71,7 +66,6 @@ vscode "tekumara.typos-vscode"
 
 # TODO: Find a way to print this _after_ the installation, not before
 puts "Install more apps if you need them:"
-puts "brew install --cask charles"
 puts "brew install --cask fastmail"
 puts "brew install --cask figma"
 puts "brew install --cask slack"
@@ -85,5 +79,9 @@ puts "sync-vscode-extensions"
 puts ""
 puts "Install Obsidian plugins:"
 puts "sync-obsidian-plugins"
+puts ""
+puts ""
+puts "Install my own apps:"
+puts "app-install"
 puts ""
 puts ""
