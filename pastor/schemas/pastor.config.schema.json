@@ -27,6 +27,24 @@
           "description": "Minimum seconds between background gh pull-request checks"
         }
       }
+    },
+    "diff": {
+      "type": "object",
+      "description": "Diff Mode presentation",
+      "additionalProperties": false,
+      "properties": {
+        "fontFamily": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Font family for Diff Mode code (e.g. SF Mono, JetBrains Mono)"
+        },
+        "fontSize": {
+          "type": "number",
+          "minimum": 8,
+          "maximum": 32,
+          "description": "Point size for Diff Mode code"
+        }
+      }
     }
   }
 }

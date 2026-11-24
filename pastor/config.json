@@ -3,5 +3,9 @@
   "shell": "/bin/zsh",
   "gitHub": {
     "pullRequestPollIntervalSeconds": 300
+  },
+  "diff": {
+    "fontFamily": "Monolisa",
+    "fontSize": 17
   }
 }
