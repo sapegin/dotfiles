@@ -25,6 +25,7 @@ AI agent skills. Invoke with `/<name>`.
 | [skills-audit](skills-audit/SKILL.md) | Audit every local skill for predictable behavior, sound structure, and prompt quality |
 | [spellcheck](spellcheck/SKILL.md) | Proofread prose for spelling, grammar, punctuation, and clarity |
 | [teach](teach/SKILL.md) | Teach user something, add or update topics in the personal handbook |
+| [to-adr](to-adr/SKILL.md) | Record one architecture decision from the current conversation |
 | [to-spec](to-spec/SKILL.md) | Turn the current conversation into a spec file |
 | [write](write/SKILL.md) | Write or rewrite specs, letters, articles, documentation, messages, and other prose in the user’s voice |
 | [write-pr-description](write-pr-description/SKILL.md) | Write pull request description |
