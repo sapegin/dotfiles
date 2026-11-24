@@ -77,5 +77,10 @@ export HOMEBREW_NO_ENV_HINTS=1
 # Ripgrep config
 export RIPGREP_CONFIG_PATH="$DOTFILES_DIR/ripgrep/ripgreprc"
 
-# Disable telemetry in various tools
+# Disable telemetry and avoidable network requests
 export DISABLE_TELEMETRY=1
+export DO_NOT_TRACK=1
+export GH_TELEMETRY=false
+export MISE_USE_VERSIONS_HOST_TRACK=0
+export NPM_CONFIG_FUND=false
+export NPM_CONFIG_UPDATE_NOTIFIER=false
