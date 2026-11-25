@@ -203,7 +203,7 @@
             "type": "string",
             "minLength": 1
           },
-          "description": "Case-sensitive calendar titles hidden from the menu-bar viewer and Join Video Call"
+          "description": "Case-sensitive calendar titles hidden from the menu-bar viewer and Join Meeting"
         }
       }
     },
@@ -314,7 +314,7 @@
             "Open the Hotdog palette; optional query pre-fills the search field",
             "Focus or launch an app; requires bundleId",
             "Toggle the scratchpad window",
-            "Join the video call for the current or next calendar event",
+            "Join the meeting for the current or next calendar event",
             "Toggle Pastor quake terminal",
             "Open Pastor main window at path; requires path when bound as hotkey",
             "Paste a snippet into the frontmost app; requires snippetId",
