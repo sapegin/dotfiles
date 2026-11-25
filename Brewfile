@@ -26,17 +26,15 @@ brew "zsh-patina" # Syntax highlighting for zsh
 brew "zsh" # Shell
 
 # GUI apps
-brew "syntax-highlight" # Quick look with syntax highlighting
 cask "adobe-creative-cloud" # Lightroom & Photoshop
 cask "affinity" # Image editor
-cask "bruno" # REST/GraphQL API client
 cask "colorsnapper" # Color picker
 cask "firefox" # Main browser
 cask "firefox@developer-edition"
-cask "ghostty" # Terminal emulator
 cask "github" # GitHub Desktop
 cask "google-chrome" # Browser for testing
 cask "harper-desktop" # Spell checker
+cask "icon-composer" # Apple tool to create multi-platform icons
 cask "kap" # Video screen recording
 cask "keka" # Archive reader
 cask "nimble-commander" # File manager
@@ -45,6 +43,7 @@ cask "numi" # Calculator
 cask "obsidian" # Note taking
 cask "optimage" # Image optimization
 cask "replacicon" # Custom app icons
+cask "sf-symbols" # Apple icon browser for app developers
 cask "shottr" # Screenshots
 cask "telegram" # Chat
 cask "visual-studio-code" # Main code editor
@@ -66,8 +65,10 @@ vscode "tekumara.typos-vscode"
 
 # TODO: Find a way to print this _after_ the installation, not before
 puts "Install more apps if you need them:"
+puts "brew install --cask bruno" # REST/GraphQL API client
 puts "brew install --cask fastmail"
 puts "brew install --cask figma"
+puts "brew install --cask ghostty" # Terminal emulator
 puts "brew install --cask slack"
 puts "brew install --cask zoom"
 puts ""
