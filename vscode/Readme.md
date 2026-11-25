@@ -33,7 +33,7 @@ sync-vscode-profiles
 ## Install extensions
 
 ```bash
-brew bundle install --file tilde/Brewfile
+brew bundle install --file ~/dotfiles/Brewfile
 ```
 
-See [Brewfile](../tilde/Brewfile) for a list of extensions.
+See [Brewfile](../Brewfile) for a list of extensions.

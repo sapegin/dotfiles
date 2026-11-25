@@ -17,7 +17,7 @@
 - [Git aliases](./tilde/.gitconfig).
 - [Lots of scripts](./bin).
 - [Firefox custom styles](./firefox).
-- [Brewfile](./tilde/Brewfile)
+- [Brewfile](./Brewfile)
 - Configs for lots of apps.
 - [macOS apps I use](https://github.com/sapegin/dotfiles/wiki/OS-X-Apps).
 

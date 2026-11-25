@@ -26,7 +26,7 @@ fi
 
 # Install dependencies
 echo "Installing Homebrew dependencies…"
-brew bundle install --file tilde/Brewfile
+brew bundle install --file Brewfile
 
 # Set Zsh as default shell
 echo "Setting up Zsh as default shell…"

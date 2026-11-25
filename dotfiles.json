@@ -29,11 +29,6 @@
     "destination": "~",
     "ignore": ["/$"] // All folders
   },
-  // Homebrew bundle file
-  {
-    "source": "$DOTFILES_DIR/tilde/Brewfile",
-    "destination": "~/Brewfile"
-  },
   // $DOTFILES_DIR/tilde/.config/* → ~/.config/
   {
     "source": "$DOTFILES_DIR/tilde/.config/*",

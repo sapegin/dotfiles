@@ -18,7 +18,7 @@ When a task spans repos, edit each repo in place; run the matching dotfiles sync
 ## Implementation preferences
 
 - Prefer owned code — dotfiles scripts, toolbox tools, custom VS Code/Obsidian extensions — when the implementation is simple enough.
-- Prefer established CLI tools over npm dependencies; system tools are declared in [Brewfile](../tilde/Brewfile).
+- Prefer established CLI tools over npm dependencies; system tools are declared in [Brewfile](../Brewfile).
 - Do not add an npm package for a few lines of code or for something Homebrew already provides.
 
 ## Coordination
@@ -32,7 +32,7 @@ When a task spans repos, edit each repo in place; run the matching dotfiles sync
 | `raccoon-apps` Native Mac apps | App source in repo; run `app-install hotdog` / `app-install pastor` from dotfiles |
 | `raccoon-ios-apps` Native iOS apps | App source in repo; device install via Xcode Personal Team (`docs/Personal-Team.md`) |
 | `squirrelsong` theme | Theme source in repo; may affect VS Code extension packaging via the same sync script |
-| New CLI need | Add to `tilde/Brewfile` first; wire into a dotfiles script second |
+| New CLI need | Add to `Brewfile` first; wire into a dotfiles script second |
 
 ## Referencing in other projects
 
