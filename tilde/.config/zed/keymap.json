@@ -1,0 +1,361 @@
+// Zed keymap (base_keymap is VSCode)
+//
+// Unmapped VS Code commands (no Zed action / needs an extension):
+// - newFileNow.createNewFile (cmd+n in editor)
+// - fileOperations.renameFile / removeFile (shift+f6, f8)
+// - references-view.findReferences — use editor::FindAllReferences
+[
+  /**
+   * UI panels
+   * VS Code: sideBar on the right → project_panel dock right
+   * cmd+[ left dock · cmd+] right dock (file tree) · cmd+\ bottom dock
+   */
+  {
+    "bindings": {
+      "cmd-[": "workspace::ToggleLeftDock",
+      "cmd-]": "workspace::ToggleRightDock",
+      "cmd-\\": "workspace::ToggleBottomDock",
+      // Increase / decrease active dock size
+      "cmd-shift-]": [
+        "workspace::IncreaseActiveDockSize",
+        {
+          "px": 40
+        }
+      ],
+      "cmd-shift-[": [
+        "workspace::DecreaseActiveDockSize",
+        {
+          "px": 40
+        }
+      ],
+      // Go to file. Must beat default cmd-o → workspace::Open.
+      "cmd-o": "file_finder::Toggle",
+      // Settings
+      "cmd-;": "zed::OpenSettings",
+      "cmd-shift-;": "zed::OpenSettingsFile",
+      "cmd-alt-;": "zed::OpenKeymap",
+      "cmd-alt-shift-;": "zed::OpenKeymapFile"
+    }
+  },
+  {
+    // Escape closes docks when a dock/panel is focused. Prefer panel::Toggle
+    // over CloseActiveDock: the latter only closes when the Dock focus handle
+    // contains focus, but focus usually sits on the panel.
+    // Shift+Escape still sends Escape to the shell.
+    "context": "Dock",
+    "bindings": {
+      "escape": "workspace::CloseAllDocks",
+      "alt-enter": "workspace::ToggleZoom"
+    }
+  },
+  {
+    "context": "OutlinePanel && not_editing",
+    "bindings": {
+      "escape": "outline_panel::Toggle"
+    }
+  },
+  {
+    "context": "GitPanel && (ChangesList || HistoryList) && !GitBranchSelector && !GitRepositorySelector",
+    "bindings": {
+      "escape": "git_panel::Toggle"
+    }
+  },
+  {
+    "context": "DebugPanel",
+    "bindings": {
+      "escape": "workspace::CloseAllDocks"
+    }
+  },
+  {
+    "context": "Workspace",
+    "bindings": {
+      // Explorer in the right dock
+      "cmd-k cmd-e": "project_panel::ToggleFocus",
+      // Extensions page
+      "cmd-k cmd-x": "zed::Extensions",
+      // Status bar has no toggle in Zed; left unbound intentionally
+      // Source control
+      "cmd-g cmd-g": "git_panel::ToggleFocus",
+      // Branch picker
+      "cmd-k cmd-b": "git::Branch",
+      // Tasks (VS Code cmd+u run task)
+      "cmd-u": "task::Spawn",
+      // Command palette (VS Code cmd+p)
+      "cmd-p": "command_palette::Toggle",
+      // File symbols / workspace symbols
+      "cmd-y": "outline::Toggle",
+      "cmd-shift-y": "project_symbols::Toggle",
+      // Find / replace in files
+      "cmd-shift-f": "pane::DeploySearch",
+      "cmd-shift-r": "pane::DeploySearch",
+      // Run without debugging
+      "f5": "debugger::Start",
+      // Go to file (also bound globally; keep here so it wins over
+      // default Workspace cmd-o → workspace::Open)
+      "cmd-o": "file_finder::Toggle",
+      // Unbind VS Code / Zed defaults that fight this layout
+      "cmd-b": null,
+      "cmd-j": null,
+      "cmd-shift-e": null,
+      "cmd-shift-p": null,
+      "ctrl-shift-g": null,
+      "cmd-shift-g": null
+    }
+  },
+  {
+    "context": "BufferSearchBar || ProjectSearchBar",
+    "bindings": {
+      "ctrl-1": "search::ToggleCaseSensitive",
+      "ctrl-2": "search::ToggleWholeWord",
+      "ctrl-3": "search::ToggleRegex",
+      "cmd-enter": "search::ReplaceAll",
+      // Unbind alt chords Zed inherits for these toggles
+      "alt-cmd-c": null,
+      "alt-cmd-w": null,
+      "alt-cmd-x": null
+    }
+  },
+  {
+    // Same depth as default cmd-g: Pane so it works with the editor focused.
+    // BufferSearchBar keeps its own binding when the find field is focused.
+    "context": "Pane",
+    "bindings": {
+      "f3": "search::SelectNextMatch"
+    }
+  },
+  {
+    "context": "BufferSearchBar",
+    "bindings": {
+      "f3": "search::SelectNextMatch"
+    }
+  },
+  {
+    // After opening project search with cmd+shift+r, enable replace
+    "context": "ProjectSearchBar",
+    "bindings": {
+      "cmd-shift-r": "search::ToggleReplace"
+    }
+  },
+  /**
+   * Code editing and navigation
+   */
+  {
+    "context": "Editor",
+    "bindings": {
+      // Previously active editor
+      "cmd-j": "pane::ActivatePreviousItem",
+      // Go to line
+      "cmd-k cmd-g": "go_to_line::Toggle",
+      // Delete / duplicate (VS Code cmd+e / cmd+d)
+      "cmd-e": "editor::DeleteLine",
+      "cmd-d": "editor::DuplicateLineDown",
+      // Select next occurrence (VS Code f2); skip current with alt+f2
+      "f2": [
+        "editor::SelectNext",
+        {
+          "replace_newest": false
+        }
+      ],
+      "alt-f2": [
+        "editor::SelectNext",
+        {
+          "replace_newest": true
+        }
+      ],
+      // Multi-cursor
+      "alt-down": [
+        "editor::AddSelectionBelow",
+        {
+          "skip_soft_wrap": true
+        }
+      ],
+      "alt-right": "editor::SplitSelectionIntoLines",
+      // Move lines (VS Code ctrl+up/down)
+      "ctrl-down": "editor::MoveLineDown",
+      "ctrl-up": "editor::MoveLineUp",
+      // Rename symbol (VS Code f6)
+      "f6": "editor::Rename",
+      // Quick fix
+      "alt-enter": "editor::ToggleCodeActions",
+      // Go forward (VS Code ctrl+=; go back stays ctrl+-)
+      "ctrl-=": "pane::GoForward",
+      // Completions
+      "cmd-space": "editor::ShowCompletions",
+      // Definition / references
+      "cmd-enter": "editor::GoToDefinition",
+      "cmd-alt-enter": "editor::FindAllReferences",
+      // Block comment
+      "cmd-alt-/": [
+        "editor::ToggleComments",
+        {
+          "advance_downwards": false,
+          "comment_empty_lines": false
+        }
+      ],
+      // Find / replace in buffer
+      "cmd-r": "buffer_search::DeployReplace",
+      // Rewrap (grim-wrapper stand-in)
+      "cmd-k cmd-w": "editor::Rewrap",
+      // Markdown preview
+      "cmd-k cmd-m": "markdown::OpenPreview",
+      // Unbind clashes
+      "cmd-shift-k": null,
+      "alt-up": null,
+      "cmd-alt-up": null,
+      "cmd-alt-down": null,
+      "shift-alt-up": null,
+      "shift-alt-down": null,
+      "shift-alt-i": null,
+      "cmd-.": null,
+      "f12": null,
+      "cmd-f12": null,
+      "shift-f12": null,
+      "ctrl-space": null,
+      "cmd-k cmd-s": null,
+      "alt-cmd-f": null,
+      "cmd-shift-enter": null,
+      "shift-alt-a": null,
+      "cmd-k v": null,
+      "cmd-shift-v": null
+    }
+  },
+  {
+    // Accept completion with Tab only (not Enter) — matches VS Code
+    "context": "Editor && showing_completions",
+    "bindings": {
+      "enter": null,
+      "tab": "editor::ConfirmCompletion"
+    }
+  },
+  {
+    "context": "Editor && finding",
+    "bindings": {
+      "cmd-enter": "search::ReplaceAll"
+    }
+  },
+  /**
+   * Terminal
+   */
+  {
+    "context": "Terminal",
+    "bindings": {
+      "cmd-n": "workspace::NewTerminal",
+      "cmd-w": "pane::CloseActiveItem",
+      "cmd-t": "terminal_panel::Toggle",
+      // Default Escape sends a keystroke to the shell; close the panel instead.
+      "escape": "terminal_panel::Toggle",
+      "shift-escape": [
+        "terminal::SendKeystroke",
+        "escape"
+      ]
+    }
+  },
+  {
+    // Focus terminal when not already there (VS Code cmd+t)
+    "context": "Workspace && !Terminal",
+    "bindings": {
+      "cmd-t": "terminal_panel::Toggle"
+    }
+  },
+  {
+    "context": "Terminal && terminal_finder_open || BufferSearchBar && Terminal",
+    "bindings": {
+      "ctrl-1": "search::ToggleCaseSensitive",
+      "ctrl-2": "search::ToggleWholeWord",
+      "ctrl-3": "search::ToggleRegex"
+    }
+  },
+  /**
+   * Git panel
+   */
+  {
+    "context": "GitPanel",
+    "bindings": {
+      // Closest to VS Code git.sync when the panel is focused
+      "cmd-p": "git::Pull",
+      // Stage file
+      "alt-space": "git::StageFile",
+      // Commit (VS Code scm.acceptInput)
+      "enter": "git::Commit",
+      "cmd-enter": "git::Commit"
+    }
+  },
+  {
+    "context": "GitPanel && ChangesList",
+    "bindings": {
+      "alt-space": "git::ToggleStaged"
+    }
+  },
+  /**
+   * File explorer (project panel)
+   */
+  {
+    "context": "ProjectPanel && not_editing",
+    "bindings": {
+      "escape": "project_panel::Toggle",
+      "cmd-n": "project_panel::NewFile",
+      "cmd-shift-n": "project_panel::NewDirectory"
+    }
+  },
+  /**
+   * Disable leftover defaults that collide with the chords above
+   */
+  {
+    "bindings": {
+      "f1": null,
+      "cmd-shift-p": null,
+      "ctrl-shift--": null,
+      "cmd-alt-r": null,
+      "cmd-shift-o": null,
+      "f10": null,
+      "cmd-u": null,
+      "cmd-k cmd-u": null,
+      "cmd-shift-u": null,
+      "cmd-shift-c": null,
+      "cmd-alt-]": null,
+      "cmd-alt-[": null,
+      "cmd-shift-h": null,
+      "cmd-l": null,
+      "cmd-k cmd-t": null,
+      "cmd-shift-t": null,
+      "cmd-alt-t": null,
+      "cmd-shift-d": null,
+      "cmd-shift-m": null,
+      "cmd-shift-b": null,
+      "ctrl-f5": null,
+      "cmd-shift-f5": null,
+      "shift-f5": null,
+      "cmd-f5": null,
+      "cmd-shift-x": null,
+      "cmd-1": null,
+      "cmd-2": null,
+      "cmd-3": null,
+      "cmd-4": null,
+      "cmd-5": null,
+      "cmd-6": null,
+      "cmd-7": null,
+      "cmd-8": null,
+      "cmd-9": null,
+      "cmd-0": null,
+      "cmd-alt-b": null,
+      "ctrl-`": null,
+      "ctrl-shift-`": null,
+      "alt-f8": null,
+      "f8": null,
+      "shift-f8": null,
+      "alt-f5": null,
+      "shift-alt-f5": null,
+      "f7": null,
+      "shift-f7": null,
+      "alt-f3": null,
+      "shift-alt-f3": null,
+      "cmd-k cmd-0": null,
+      "cmd-alt-0": null,
+      "shift-cmd-l": null,
+      "ctrl-shift-right": null,
+      "ctrl-shift-left": null,
+      "cmd-shift-\\": null,
+      "cmd-k cmd-m": null
+    }
+  }
+]

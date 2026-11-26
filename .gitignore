@@ -13,3 +13,6 @@ vscode/**/workspaceStorage/
 Brewfile.lock.json
 lazygit/state.yml
 pretty-html/pages/
+
+# Zed local prompt library (MDB)
+tilde/.config/zed/prompts/

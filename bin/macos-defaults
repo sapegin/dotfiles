@@ -357,19 +357,20 @@ sudo chflags nohidden /Volumes
 # Window corner radius
 
 # Per-app override for macOS window corner radius (default ~26 on Tahoe; 10 ≈ Sequoia).
-defaults write org.mozilla.firefox NSConvolutionOverride1 -float 10
-defaults write org.mozilla.firefoxdeveloperedition NSConvolutionOverride1 -float 10
-defaults write com.microsoft.Outlook NSConvolutionOverride1 -float 10
-defaults write com.microsoft.VSCode NSConvolutionOverride1 -float 10
-defaults write md.obsidian NSConvolutionOverride1 -float 10
-defaults write com.mitchellh.ghostty NSConvolutionOverride1 -float 10
-defaults write com.tinyspeck.slackmacgap NSConvolutionOverride1 -float 10
+defaults write com.adobe.LightroomClassicCC7 NSConvolutionOverride1 -float 10
 defaults write com.apple.finder NSConvolutionOverride1 -float 10
 defaults write com.apple.Music NSConvolutionOverride1 -float 10
-defaults write ru.keepcoder.Telegram NSConvolutionOverride1 -float 10
-defaults write com.github.GitHubClient NSConvolutionOverride1 -float 10
-defaults write com.adobe.LightroomClassicCC7 NSConvolutionOverride1 -float 10
 defaults write com.figma.Desktop NSConvolutionOverride1 -float 10
+defaults write com.github.GitHubClient NSConvolutionOverride1 -float 10
+defaults write com.microsoft.Outlook NSConvolutionOverride1 -float 10
+defaults write com.microsoft.VSCode NSConvolutionOverride1 -float 10
+defaults write com.mitchellh.ghostty NSConvolutionOverride1 -float 10
+defaults write com.tinyspeck.slackmacgap NSConvolutionOverride1 -float 10
+defaults write dev.zed.Zed NSConvolutionOverride1 -float 10
+defaults write md.obsidian NSConvolutionOverride1 -float 10
+defaults write org.mozilla.firefox NSConvolutionOverride1 -float 10
+defaults write org.mozilla.firefoxdeveloperedition NSConvolutionOverride1 -float 10
+defaults write ru.keepcoder.Telegram NSConvolutionOverride1 -float 10
 defaults write us.zoom.xos NSConvolutionOverride1 -float 10
 
 # ────────────────────────────── 8< ──────── 8< ───────────────────────────────

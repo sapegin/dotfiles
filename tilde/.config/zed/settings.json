@@ -1,0 +1,253 @@
+// Zed settings
+// Docs: https://zed.dev/docs/configuring-zed
+{
+  "ui_font_weight": 400.0,
+  "buffer_font_weight": 200.0,
+  "proxy": "",
+  "tab_size": 2,
+  "vim": {
+    "cursor_shape": {}
+  },
+  "drag_and_drop_selection": {
+    "enabled": false
+  },
+  "diff_view_style": "split",
+  "reveal_if_open": true,
+  "base_keymap": "VSCode",
+  "theme": {
+    "mode": "system",
+    "light": "Squirrelsong Light",
+    "dark": "Squirrelsong Dark"
+  },
+  "disable_ai": true,
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false
+  },
+  "reduce_motion": "on",
+  "project_panel": {
+    "auto_open": {
+      "on_paste": false,
+      "on_drop": false
+    },
+    "scrollbar": {
+      "horizontal_scroll": false,
+      "show": "auto"
+    },
+    "starts_open": false,
+    "entry_spacing": "comfortable",
+    "hide_root": true,
+    "indent_size": 24.0,
+    "file_icons": true,
+    "default_width": 340.0,
+    "dock": "right",
+    "git_status": false,
+    "auto_fold_dirs": false,
+    "show_diagnostics": "off"
+  },
+  "git_panel": {
+    "group_by": "none",
+    "file_icons": true,
+    "dock": "left"
+  },
+  "outline_panel": {
+    "dock": "left"
+  },
+  "collaboration_panel": {
+    "dock": "left"
+  },
+  "agent": {
+    "button": false,
+    "dock": "left",
+    "favorite_models": [],
+    "model_parameters": []
+  },
+  "tab_bar": {
+    "show": false
+  },
+  // Intended: skip the active file in Go to File (VS Code-style). Unreliable on
+  // Zed 1.30 with project_panel.hide_root; fixed on main in zed#67393.
+  "file_finder": {
+    "skip_focus_for_active_in_search": true,
+    "prefill_query_from_selection": false
+  },
+  "status_bar": {
+    "experimental.show": false
+  },
+  "toolbar": {
+    "breadcrumbs": false,
+    "quick_actions": false,
+    "selections_menu": false,
+    "agent_review": false,
+    "code_actions": false
+  },
+  "title_bar": {
+    "show_branch_status_icon": false,
+    "show_user_menu": false,
+    "show_worktree_name": false,
+    "show_branch_name": false,
+    "show_project_items": false,
+    "show_onboarding_banner": false,
+    "show_user_picture": false,
+    "show_sign_in": false,
+    "show_menus": false
+  },
+  // Editor chrome
+  "gutter": {
+    "git_gutter_width": {
+      "custom": 4.0
+    },
+    "bookmarks": false,
+    "line_numbers": false,
+    "folds": false,
+    "runnables": false,
+    "breakpoints": false
+  },
+  "minimap": {
+    "show": "never"
+  },
+  "scrollbar": {
+    "show": "auto",
+    "cursors": false,
+    "git_diff": false,
+    "search_results": true,
+    "selected_text": false,
+    "selected_symbol": false,
+    "diagnostics": "error",
+    "axes": {
+      "horizontal": false,
+      "vertical": true
+    }
+  },
+  "sticky_scroll": {
+    "enabled": true
+  },
+  "current_line_highlight": "none",
+  "rounded_selection": true,
+  "cursor_shape": "bar",
+  "cursor_blink": false,
+  "show_whitespaces": "selection",
+  "indent_guides": {
+    "enabled": true,
+    "coloring": "fixed"
+  },
+  "wrap_guides": [
+    80
+  ],
+  "preferred_line_length": 80,
+  "soft_wrap": "editor_width",
+  "vertical_scroll_margin": 0,
+  "buffer_font_family": "MonoLisa",
+  "buffer_font_fallbacks": [
+    "Symbols Nerd Font Mono"
+  ],
+  "buffer_font_size": 19.0,
+  "buffer_font_features": {
+    // Contextual alternates on, ligatures off
+    "calt": true,
+    "liga": false
+  },
+  "buffer_line_height": {
+    "custom": 1.7999999523162842
+  },
+  "ui_font_size": 18.0,
+  // Editing behavior
+  "format_on_save": "modifications_if_available",
+  "formatter": "language_server",
+  "remove_trailing_whitespace_on_save": true,
+  "ensure_final_newline_on_save": true,
+  "use_autoclose": false,
+  "use_auto_surround": false,
+  "always_treat_brackets_as_autoclosed": false,
+  "jsx_tag_auto_close": {
+    "enabled": false
+  },
+  "linked_edits": true,
+  "colorize_brackets": false,
+  // "full" replaces tree-sitter and leaves the buffer uncolored when LSPs
+  // don't send semantic tokens. Use tree-sitter highlighting instead.
+  "semantic_tokens": "off",
+  "seed_search_query_from_cursor": "selection",
+  "search": {
+    "center_on_match": true
+  },
+  "use_system_path_prompts": false,
+  "auto_indent": "syntax_aware",
+  "autosave": "on_focus_change",
+  "inlay_hints": {
+    "enabled": false,
+    "show_padding": true
+  },
+  "hover_popover_enabled": true,
+  // Files
+  "file_scan_exclusions": [
+    "**/node_modules/**/*",
+    "**/package-lock.json",
+    "**/pnpm-lock.yaml",
+    "**/yarn.lock",
+    "..."
+  ],
+  "file_types": {
+    "JSON": [
+      ".prettierrc"
+    ],
+    "JavaScript": [
+      "*.js.snap"
+    ]
+  },
+  "private_files": [
+    ".env",
+    ".env.*",
+    "**/.env",
+    "**/.env.*"
+  ],
+  // Git
+  "git": {
+    "inline_blame": {
+      "enabled": false
+    }
+  },
+  // Window
+  "window_title_format": "${fileName}",
+  "when_closing_with_no_tabs": "keep_window_open",
+  "restore_on_startup": "last_session",
+  "confirm_quit": false,
+  // Terminal
+  "terminal": {
+    "font_weight": 200.0,
+    "font_size": 17.0,
+    "line_height": {
+      "custom": 1.1
+    },
+    "cursor_shape": "bar",
+    "blinking": "off",
+    "toolbar": {
+      "breadcrumbs": false
+    },
+    "button": false
+  },
+  // Language-ish defaults (Prettier/oxc arrive with extensions)
+  "languages": {
+    "Markdown": {
+      "format_on_save": "off"
+    },
+    "HTML": {
+      "format_on_save": "on"
+    },
+    "JSON": {
+      "tab_size": 2
+    },
+    "JSONC": {
+      "tab_size": 2
+    }
+  },
+  // CSpell: global allowlist is ~/dotfiles/cspell.json → cspell.txt
+  // (linked to ~/Library/Preferences/cspell/cspell.json for cspell-lsp)
+  "lsp": {
+    "typos": {
+      "initialization_options": {
+        "diagnosticSeverity": "Information"
+      }
+    }
+  }
+}

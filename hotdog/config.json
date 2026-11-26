@@ -6,7 +6,13 @@
   },
   "projects": {
     "palettePrefix": "j",
-    "sources": ["~/cloud", "~/murder", "~/dotfiles", "~/_/*", "~/umg/*"]
+    "sources": [
+      "~/cloud",
+      "~/murder",
+      "~/dotfiles",
+      "~/_/*",
+      "~/umg/*"
+    ]
   },
   "contacts": {
     "palettePrefix": "c"
@@ -35,8 +41,13 @@
     "palettePrefix": "e",
     "defaultCalendar": "artem@sapegin.me",
     "defaultDurationMinutes": 30,
-    "defaultInvitees": ["Possum:home"],
-    "excludeCalendars": ["United Kingdom holidays", "Scheduled reminders"]
+    "defaultInvitees": [
+      "Possum:home"
+    ],
+    "excludeCalendars": [
+      "United Kingdom holidays",
+      "Scheduled reminders"
+    ]
   },
   "devDocs": {
     "cacheIntervalDays": 7,
@@ -56,9 +67,18 @@
   "linkRouter": {
     "defaultBrowser": "org.mozilla.firefox",
     "rules": [
-      { "host": "localhost", "browser": "org.mozilla.firefoxdeveloperedition" },
-      { "host": "127.0.0.7", "browser": "org.mozilla.firefoxdeveloperedition" },
-      { "host": "meet.google.com", "browser": "com.google.Chrome" }
+      {
+        "host": "localhost",
+        "browser": "org.mozilla.firefoxdeveloperedition"
+      },
+      {
+        "host": "127.0.0.7",
+        "browser": "org.mozilla.firefoxdeveloperedition"
+      },
+      {
+        "host": "meet.google.com",
+        "browser": "com.google.Chrome"
+      }
     ]
   },
   "customCommands": [
@@ -134,7 +154,7 @@
     },
     {
       "id": "command.open-app",
-      "bundleId": "com.microsoft.VSCode",
+      "bundleId": "dev.zed.Zed",
       "shortcut": "hyper+k"
     },
     {
@@ -142,8 +162,14 @@
       "bundleId": "com.apple.Music",
       "shortcut": "hyper+p"
     },
-    { "id": "pastor.quake", "shortcut": "hyper+h" },
-    { "id": "calendar.join-meeting", "shortcut": "hyper+j" },
+    {
+      "id": "pastor.quake",
+      "shortcut": "hyper+h"
+    },
+    {
+      "id": "calendar.join-meeting",
+      "shortcut": "hyper+j"
+    },
     {
       "id": "window.left-half",
       "shortcut": "hyper+left"
@@ -266,5 +292,11 @@
       "shortcut": "alt+t",
       "snippetId": "typo-trademark"
     }
-  ]
+  ],
+  "editor": {
+    "bundleId": "dev.zed.Zed",
+    "arguments": [
+      "--reuse"
+    ]
+  }
 }

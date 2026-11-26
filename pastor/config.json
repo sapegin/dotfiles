@@ -7,5 +7,11 @@
   "diff": {
     "fontFamily": "Monolisa",
     "fontSize": 17
+  },
+  "editor": {
+    "bundleId": "dev.zed.Zed",
+    "arguments": [
+      "--reuse"
+    ]
   }
 }

@@ -45,6 +45,27 @@
           "description": "Point size for Diff Mode code"
         }
       }
+    },
+    "editor": {
+      "type": "object",
+      "description": "External code editor for Open in Editor / Open Project in Editor",
+      "required": ["bundleId"],
+      "additionalProperties": false,
+      "properties": {
+        "bundleId": {
+          "type": "string",
+          "minLength": 1,
+          "description": "macOS bundle identifier (e.g. dev.zed.Zed, com.microsoft.VSCode)"
+        },
+        "arguments": {
+          "type": "array",
+          "description": "CLI flags before paths (e.g. [\"--reuse\"] for Zed, [\"-r\"] for VS Code). Uses the app’s bundled CLI.",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
     }
   }
 }

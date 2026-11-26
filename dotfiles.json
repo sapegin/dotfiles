@@ -171,6 +171,16 @@
     "source": "$THEMES_DIR/Ghostty/Squirrelsong *",
     "destination": "$DOTFILES_DIR/tilde/.config/ghostty/themes/"
   },
+  // Zed (settings/keymap live in tilde/.config/zed; themes generated here)
+  {
+    "source": "$THEMES_DIR/Zed/squirrelsong.json",
+    "destination": "$DOTFILES_DIR/tilde/.config/zed/themes/squirrelsong.json"
+  },
+  // CSpell global config (macOS path used by cspell-lsp / Zed CSpell extension)
+  {
+    "source": "$DOTFILES_DIR/cspell.json",
+    "destination": "~/Library/Preferences/cspell/cspell.json"
+  },
 
   /**
    * Misc.

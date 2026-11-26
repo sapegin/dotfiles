@@ -47,6 +47,7 @@ cask "sf-symbols" # Apple icon browser for app developers
 cask "shottr" # Screenshots
 cask "telegram" # Chat
 cask "visual-studio-code" # Main code editor
+cask "zed" # Code editor
 cask "whatsapp" # Another chat
 
 # Fonts

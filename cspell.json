@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
+  "version": "0.2",
+  "language": "en",
+  "dictionaries": ["dotfiles"],
+  "dictionaryDefinitions": [
+    {
+      "name": "dotfiles",
+      "description": "Words I use in various projects",
+      "path": "~/dotfiles/cspell.txt",
+      "addWords": true
+    }
+  ]
+}
