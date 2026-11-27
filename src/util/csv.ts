@@ -45,7 +45,10 @@ export function parseCsvRecord(line: string): string[] {
 
 /** Parse a whole CSV document into row arrays (including the header row). */
 export function parseCsv(text: string): string[][] {
+  // Notion (and Excel) UTF-8 exports often prefix a BOM; strip it so the first
+  // header stays `Chore`, not `\uFEFFChore`.
   const normalized = text
+    .replace(/^\uFEFF/u, '')
     .replaceAll('\r\n', '\n')
     .replaceAll('\r', '\n')
     .replace(/\n+$/u, '');

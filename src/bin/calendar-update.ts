@@ -16,9 +16,10 @@
 //   _fastmail-app-pass: …app password…
 //   _fastmail-calendar: Junkyard
 //
-// - To share with others (Google Calendar, Apple, etc.), publish the Fastmail
-//   calendar: Settings → Calendars → Edit & share → Publish → Full event
-//   details, then subscribe to the ICS URL in the other app (read-only feed).
+// - Invitees come from `hotdog/config.json` → `calendar.defaultInvitees`
+//   (plain email or Apple Contacts `Name:label`, e.g. `Possum:home`). Each
+//   synced event gets those ATTENDEEs so Google Calendar can receive invites
+//   (Fastmail publish/subscribe feeds are not usable there).
 //
 // - Use `### Month D — Title` for yearly events or `### Monday — Title` for
 //   weekly events. Body text becomes the event description.
@@ -53,8 +54,13 @@ import {
   type CalendarEventRecurrence,
 } from '../util/caldav.ts';
 import { getMaslenitsaSunday } from '../util/calendar.ts';
+import {
+  loadContactsMatching,
+  resolveDefaultInvitees,
+} from '../util/contacts.ts';
 import { parseCsvRecords } from '../util/csv.ts';
-import { dirs } from '../util/files.ts';
+import { dirs, readJson } from '../util/files.ts';
+import { isRecord } from '../util/json.ts';
 import { parseFrontmatter } from '../util/markdown.ts';
 import { parseSections, wikilinksToPlainText } from '../util/obsidian.ts';
 import { toKebabCase } from '../util/text.ts';
@@ -377,6 +383,60 @@ function readSyncConfig(frontmatter: CalendarUpdateFrontmatter): {
   };
 }
 
+const HOTDOG_CONFIG = path.join(dirs.dotfiles, 'hotdog', 'config.json');
+
+/** Read `calendar.defaultInvitees` (plain emails or ContactName:label aliases). */
+async function readDefaultInviteeEntries(): Promise<string[]> {
+  const raw: unknown = await readJson(HOTDOG_CONFIG);
+  if (!isRecord(raw) || !isRecord(raw.calendar)) {
+    return [];
+  }
+  const entries = raw.calendar.defaultInvitees;
+  if (!Array.isArray(entries)) {
+    return [];
+  }
+  return entries.filter(
+    (entry): entry is string => typeof entry === 'string' && entry.trim() !== ''
+  );
+}
+
+/**
+ * Resolve Hotdog `defaultInvitees` via Apple Contacts. Throws when any entry
+ * cannot be resolved.
+ */
+function resolveConfiguredInvitees(
+  entries: readonly string[]
+): readonly string[] {
+  if (entries.length === 0) {
+    return [];
+  }
+
+  const contactNames = [
+    ...new Set(
+      entries.flatMap((entry) => {
+        const trimmed = entry.trim();
+        if (trimmed === '' || trimmed.includes('@')) {
+          return [];
+        }
+        const separator = trimmed.indexOf(':');
+        if (separator <= 0) {
+          return [];
+        }
+        return [trimmed.slice(0, separator).trim()];
+      })
+    ),
+  ];
+
+  const contacts = contactNames.flatMap((name) => loadContactsMatching(name));
+  const resolved = resolveDefaultInvitees(entries, contacts);
+  if (resolved.unresolved.length > 0) {
+    throw new UserError(
+      `Could not resolve invitee(s) from Contacts: ${resolved.unresolved.join(', ')}`
+    );
+  }
+  return resolved.emails;
+}
+
 /** Sync Junkyard note + Notion chores events to Fastmail. */
 export async function calendarUpdate(options: Options): Promise<void> {
   const rawMarkdown = await fs.readFile(CALENDAR_NOTE, 'utf8');
@@ -389,7 +449,14 @@ export async function calendarUpdate(options: Options): Promise<void> {
   const choreEvents = buildChoreEvents(
     parseCsvRecords(readChoresCsvFromZip(CHORES_ZIP))
   );
-  const events = [...noteEvents, ...choreEvents];
+  const attendees = resolveConfiguredInvitees(
+    await readDefaultInviteeEntries()
+  );
+  const combined = [...noteEvents, ...choreEvents];
+  const events =
+    attendees.length === 0
+      ? combined
+      : combined.map((event) => ({ ...event, attendees }));
 
   const result = await syncCalendarEvents({
     credentials: {
@@ -401,6 +468,7 @@ export async function calendarUpdate(options: Options): Promise<void> {
     events,
     ownedUidSuffix: `@${UID_DOMAIN}`,
     dryRun: options['dry-run'],
+    organizerEmail: config.email,
   });
 
   for (const event of sortEventsForDisplay(events)) {

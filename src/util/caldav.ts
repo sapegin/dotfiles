@@ -20,6 +20,10 @@
  * - Monthly chores use `RRULE:FREQ=MONTHLY` with optional `INTERVAL` (3 / 6).
  * - Omit empty `DESCRIPTION` lines when building ICS; Fastmail often drops them
  *   on the way back, which would otherwise look like a diff.
+ * - When `attendees` is set, emit `ORGANIZER` (account email) and `ATTENDEE`
+ *   lines so Fastmail can send invites (e.g. to Google Calendar). Fingerprints
+ *   compare mailto addresses only; CN / PARTSTAT extras from the server are
+ *   ignored.
  */
 import {
   createDAVClient,
@@ -49,6 +53,11 @@ export interface CalendarEventPayload {
   readonly description: string;
   readonly start: Temporal.PlainDate;
   readonly recurrence: CalendarEventRecurrence;
+  /**
+   * Invitee emails (`mailto:` targets); omitted or empty means no ATTENDEE
+   * lines.
+   */
+  readonly attendees?: readonly string[];
 }
 
 export interface SyncCalendarEventsOptions {
@@ -61,6 +70,11 @@ export interface SyncCalendarEventsOptions {
    */
   readonly ownedUidSuffix: string;
   readonly dryRun: boolean;
+  /**
+   * ORGANIZER mailto when events have attendees (typically the CalDAV
+   * account). Ignored when an event has no attendees.
+   */
+  readonly organizerEmail?: string;
 }
 
 export interface SyncCalendarEventsResult {
@@ -83,7 +97,8 @@ function escapeIcsText(value: string): string {
 /** Build a single-event iCalendar document for CalDAV PUT/POST. */
 export function buildCalendarObjectIcs(
   event: CalendarEventPayload,
-  now = new Date()
+  now = new Date(),
+  options: { readonly organizerEmail?: string } = {}
 ): string {
   const lines = [
     'BEGIN:VCALENDAR',
@@ -106,8 +121,40 @@ export function buildCalendarObjectIcs(
   if (event.description !== '') {
     lines.push(`DESCRIPTION:${escapeIcsText(event.description)}`);
   }
+
+  const attendees = uniqueEmails(event.attendees ?? []);
+  if (attendees.length > 0) {
+    const organizer = options.organizerEmail?.trim();
+    if (organizer !== undefined && organizer !== '') {
+      lines.push(`ORGANIZER:mailto:${organizer}`);
+    }
+    for (const email of attendees) {
+      lines.push(
+        `ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE:mailto:${email}`
+      );
+    }
+  }
+
   lines.push('END:VEVENT', 'END:VCALENDAR');
   return `${lines.join('\r\n')}\r\n`;
+}
+
+function uniqueEmails(emails: readonly string[]): string[] {
+  const seen = new Set<string>();
+  const result: string[] = [];
+  for (const email of emails) {
+    const trimmed = email.trim();
+    if (trimmed === '') {
+      continue;
+    }
+    const key = trimmed.toLowerCase();
+    if (seen.has(key)) {
+      continue;
+    }
+    seen.add(key);
+    result.push(trimmed);
+  }
+  return result;
 }
 
 function filenameForUid(uid: string): string {
@@ -208,6 +255,8 @@ const CONTENT_PROPERTY_NAMES = [
   'RRULE',
   'SUMMARY',
   'DESCRIPTION',
+  'ORGANIZER',
+  'ATTENDEE',
 ] as const;
 
 /**
@@ -259,10 +308,25 @@ export function veventContentFingerprint(icsData: string): string {
         }
         break;
       }
+
+      if (line.startsWith('ORGANIZER') || line.startsWith('ATTENDEE')) {
+        const mailto = icsMailtoAddress(line);
+        if (mailto !== undefined) {
+          properties.push(`${name}:${mailto}`);
+        }
+        break;
+      }
     }
   }
 
   return properties.toSorted().join('\n');
+}
+
+/** Extract a mailto address from ORGANIZER / ATTENDEE (parameters allowed). */
+function icsMailtoAddress(line: string): string | undefined {
+  const match = line.match(/:mailto:([^\n\r]+)/i);
+  const address = match?.[1]?.trim().toLowerCase();
+  return address === undefined || address === '' ? undefined : address;
 }
 
 function connectClient(credentials: CalDavCredentials): Promise<CalDavClient> {
@@ -342,7 +406,9 @@ export async function syncCalendarEvents(
   let unchanged = 0;
 
   for (const event of options.events) {
-    const ics = buildCalendarObjectIcs(event);
+    const ics = buildCalendarObjectIcs(event, new Date(), {
+      organizerEmail: options.organizerEmail,
+    });
     const existing = managedByUid.get(event.uid);
 
     if (existing === undefined) {

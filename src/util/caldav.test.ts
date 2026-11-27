@@ -52,6 +52,26 @@ describe(buildCalendarObjectIcs, () => {
     });
     expect(quarterly).toContain('RRULE:FREQ=MONTHLY;INTERVAL=3');
   });
+
+  test('adds ORGANIZER and ATTENDEE when invitees are set', () => {
+    const ics = buildCalendarObjectIcs(
+      {
+        uid: 'invite@example.com',
+        summary: 'Trash night',
+        description: '',
+        start: Temporal.PlainDate.from({ year: 2021, month: 1, day: 4 }),
+        recurrence: 'weekly',
+        attendees: ['spouse@example.com'],
+      },
+      new Date('2026-01-01T12:00:00.000Z'),
+      { organizerEmail: 'owner@example.com' }
+    );
+
+    expect(ics).toContain('ORGANIZER:mailto:owner@example.com');
+    expect(ics).toContain(
+      'ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE:mailto:spouse@example.com'
+    );
+  });
 });
 
 describe(veventContentFingerprint, () => {
@@ -123,5 +143,25 @@ describe(veventContentFingerprint, () => {
       'BEGIN:VEVENT\nUID:a@b\nDTSTART;VALUE=DATE:20210113\nRRULE:FREQ=YEARLY\nSUMMARY:Hi\nDESCRIPTION:Long line onepart two\nEND:VEVENT'
     );
     expect(folded).toBe(plain);
+  });
+
+  test('normalizes ATTENDEE parameters to mailto addresses', () => {
+    const local = buildCalendarObjectIcs(
+      {
+        uid: 'a@b',
+        summary: 'Trash',
+        description: '',
+        start: Temporal.PlainDate.from({ year: 2021, month: 1, day: 4 }),
+        recurrence: 'weekly',
+        attendees: ['Spouse@Example.com'],
+      },
+      new Date('2026-01-01T12:00:00.000Z'),
+      { organizerEmail: 'owner@example.com' }
+    );
+    const remote =
+      'BEGIN:VEVENT\nUID:a@b\nDTSTART;VALUE=DATE:20210104\nRRULE:FREQ=WEEKLY;BYDAY=MO\nSUMMARY:Trash\nORGANIZER;CN=Owner:mailto:owner@example.com\nATTENDEE;CN=Spouse;PARTSTAT=ACCEPTED:mailto:spouse@example.com\nEND:VEVENT';
+    expect(veventContentFingerprint(local)).toBe(
+      veventContentFingerprint(remote)
+    );
   });
 });

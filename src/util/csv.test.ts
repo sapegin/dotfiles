@@ -35,4 +35,16 @@ describe(parseCsvRecords, () => {
       },
     ]);
   });
+
+  test('strips a leading UTF-8 BOM from the header row', () => {
+    const csv = `\uFEFFChore,Frequency,Owner,Start\nVacuum,Weekly,Raccoon,`;
+    expect(parseCsvRecords(csv)).toStrictEqual([
+      {
+        Chore: 'Vacuum',
+        Frequency: 'Weekly',
+        Owner: 'Raccoon',
+        Start: '',
+      },
+    ]);
+  });
 });
