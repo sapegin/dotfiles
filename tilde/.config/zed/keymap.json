@@ -7,8 +7,6 @@
 [
   /**
    * UI panels
-   * VS Code: sideBar on the right → project_panel dock right
-   * cmd+[ left dock · cmd+] right dock (file tree) · cmd+\ bottom dock
    */
   {
     "bindings": {
@@ -78,9 +76,9 @@
       "cmd-g cmd-g": "git_panel::ToggleFocus",
       // Branch picker
       "cmd-k cmd-b": "git::Branch",
-      // Tasks (VS Code cmd+u run task)
+      // Tasks
       "cmd-u": "task::Spawn",
-      // Command palette (VS Code cmd+p)
+      // Command palette
       "cmd-p": "command_palette::Toggle",
       // File symbols / workspace symbols
       "cmd-y": "outline::Toggle",
@@ -93,13 +91,14 @@
       // Go to file (also bound globally; keep here so it wins over
       // default Workspace cmd-o → workspace::Open)
       "cmd-o": "file_finder::Toggle",
-      // Unbind VS Code / Zed defaults that fight this layout
+      // Unbind Zed defaults that fight this layout
       "cmd-b": null,
       "cmd-j": null,
       "cmd-shift-e": null,
       "cmd-shift-p": null,
       "ctrl-shift-g": null,
-      "cmd-shift-g": null
+      "cmd-shift-g": null,
+      "cmd-k cmd-m": null
     }
   },
   {
@@ -146,10 +145,9 @@
       "cmd-j": "pane::ActivatePreviousItem",
       // Go to line
       "cmd-k cmd-g": "go_to_line::Toggle",
-      // Delete / duplicate (VS Code cmd+e / cmd+d)
       "cmd-e": "editor::DeleteLine",
       "cmd-d": "editor::DuplicateLineDown",
-      // Select next occurrence (VS Code f2); skip current with alt+f2
+      "cmd-u": "task::Spawn",
       "f2": [
         "editor::SelectNext",
         {
@@ -170,14 +168,14 @@
         }
       ],
       "alt-right": "editor::SplitSelectionIntoLines",
-      // Move lines (VS Code ctrl+up/down)
+      // Move lines
       "ctrl-down": "editor::MoveLineDown",
       "ctrl-up": "editor::MoveLineUp",
-      // Rename symbol (VS Code f6)
+      // Rename symbol
       "f6": "editor::Rename",
       // Quick fix
       "alt-enter": "editor::ToggleCodeActions",
-      // Go forward (VS Code ctrl+=; go back stays ctrl+-)
+      // Go forward (go back stays ctrl+-)
       "ctrl-=": "pane::GoForward",
       // Completions
       "cmd-space": "editor::ShowCompletions",
@@ -194,7 +192,7 @@
       ],
       // Find / replace in buffer
       "cmd-r": "buffer_search::DeployReplace",
-      // Rewrap (grim-wrapper stand-in)
+      // Rewrap
       "cmd-k cmd-w": "editor::Rewrap",
       // Markdown preview
       "cmd-k cmd-m": "markdown::OpenPreview",
@@ -220,7 +218,7 @@
     }
   },
   {
-    // Accept completion with Tab only (not Enter) — matches VS Code
+    // Accept completion with Tab only (not Enter)
     "context": "Editor && showing_completions",
     "bindings": {
       "enter": null,
@@ -251,7 +249,7 @@
     }
   },
   {
-    // Focus terminal when not already there (VS Code cmd+t)
+    // Focus terminal when not already there
     "context": "Workspace && !Terminal",
     "bindings": {
       "cmd-t": "terminal_panel::Toggle"
@@ -275,7 +273,7 @@
       "cmd-p": "git::Pull",
       // Stage file
       "alt-space": "git::StageFile",
-      // Commit (VS Code scm.acceptInput)
+      // Commit
       "enter": "git::Commit",
       "cmd-enter": "git::Commit"
     }
@@ -308,7 +306,6 @@
       "cmd-alt-r": null,
       "cmd-shift-o": null,
       "f10": null,
-      "cmd-u": null,
       "cmd-k cmd-u": null,
       "cmd-shift-u": null,
       "cmd-shift-c": null,
@@ -354,8 +351,7 @@
       "shift-cmd-l": null,
       "ctrl-shift-right": null,
       "ctrl-shift-left": null,
-      "cmd-shift-\\": null,
-      "cmd-k cmd-m": null
+      "cmd-shift-\\": null
     }
   }
 ]
