@@ -12,6 +12,7 @@ export default defineConfig({
     'pastor/schemas/*',
     'pi/agent/settings.json',
     'pretty-html/_assets/lib/*',
+    'tilde/.config/zed/settings.json',
     'vscode/User/*/',
   ],
 });

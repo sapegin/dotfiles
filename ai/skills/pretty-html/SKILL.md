@@ -44,7 +44,9 @@ Aside boxes for facts easy to forget. Variants: `remember`, `gotcha`, `prefer`, 
 
 ### `<ss-code language="…">`
 
-Put raw source in a **`<pre>`** child (semantic preformatted text; Oxfmt leaves `<pre>` alone). Leading and trailing whitespace on the `<pre>` contents are trimmed. highlight.js loads lazily on first `<ss-code>`. Plain text without `<pre>` still works but is easy for formatters to break.
+Put source text in a **`<pre>`** child (semantic preformatted text; Oxfmt leaves `<pre>` alone). Leading and trailing whitespace on the `<pre>` contents are trimmed. highlight.js loads lazily on first `<ss-code>`. Plain text without `<pre>` still works but is easy for formatters to break.
+
+**Escape HTML-special characters in the `<pre>` body** — `&` → `&amp;`, `<` → `&lt;`, `>` → `&gt;`. The page is HTML: an unescaped `<div>` or JSX tag is parsed as real DOM, so the example never appears and `handbook-check` fails. Comparisons like `a < b` are fine; tag-like sequences (`<div`, `</div`, `<>`, TypeScript `Foo<Bar>`) must be escaped. `handbook-check` uses the same heuristic, so shell redirects without a space (`cat <file.txt`) also fail — write `cat &lt;file.txt` or `cat < file.txt`. `ss-code` reads `textContent`, which decodes entities before highlight.js runs.
 
 ```html
 <ss-code language="css">
@@ -57,7 +59,19 @@ Put raw source in a **`<pre>`** child (semantic preformatted text; Oxfmt leaves 
 </ss-code>
 ```
 
+```html
+<ss-code language="jsx">
+  <pre>
+function Ok() {
+  return &lt;button type="button"&gt;Save&lt;/button&gt;;
+}
+  </pre>
+</ss-code>
+```
+
 Do not hand-write highlighted `<pre class="hljs">` markup — the component replaces content after highlight.js runs.
+
+Contrast with `<ss-demo>`: demos use real child elements on purpose; code samples must stay escaped text.
 
 ### `<ss-diagram>`
 
@@ -105,6 +119,7 @@ Prefer official or high-trust sources (MDN, specs, vendor docs).
 
 - Add a `<nav class="breadcrumbs" aria-label="Breadcrumb">` before page content. Handbook topic documents link to the root handbook index and their topic hub; topic hubs mark the topic name with `aria-current="page"`.
 - Wrap `<ss-code>` / `<ss-diagram>` source in `<pre>`.
+- Escape `&`, `<`, and `>` inside `<ss-code><pre>` (and any HTML/JSX shown as text elsewhere). Do not leave raw tags in code samples.
 - **Glorified Markdown** — HTML carries text and semantic markup only. No inline `<script>` in authored content except the one-line theme bootstrap in `<head>`. No pre-rendered SVG, no duplicated library code.
 - **Reuse components** — read `$DOTFILES_DIR/pretty-html/_assets/` before inventing new patterns. Add reusable widgets to `components.js` and styles to `doc.css`.
 - **Do not edit** `squirrelsong.css` — it syncs from `$THEMES_DIR/CSS/squirrelsong.css`.

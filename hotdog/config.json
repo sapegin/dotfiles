@@ -6,13 +6,7 @@
   },
   "projects": {
     "palettePrefix": "j",
-    "sources": [
-      "~/cloud",
-      "~/murder",
-      "~/dotfiles",
-      "~/_/*",
-      "~/umg/*"
-    ]
+    "sources": ["~/cloud", "~/murder", "~/dotfiles", "~/_/*", "~/umg/*"]
   },
   "contacts": {
     "palettePrefix": "c"
@@ -41,13 +35,8 @@
     "palettePrefix": "e",
     "defaultCalendar": "artem@sapegin.me",
     "defaultDurationMinutes": 30,
-    "defaultInvitees": [
-      "Possum:home"
-    ],
-    "excludeCalendars": [
-      "United Kingdom holidays",
-      "Scheduled reminders"
-    ]
+    "defaultInvitees": ["Possum:home"],
+    "excludeCalendars": ["United Kingdom holidays", "Scheduled reminders"]
   },
   "devDocs": {
     "cacheIntervalDays": 7,
@@ -295,8 +284,6 @@
   ],
   "editor": {
     "bundleId": "dev.zed.Zed",
-    "arguments": [
-      "--reuse"
-    ]
+    "arguments": ["--reuse"]
   }
 }

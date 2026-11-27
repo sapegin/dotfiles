@@ -242,10 +242,7 @@
       "cmd-t": "terminal_panel::Toggle",
       // Default Escape sends a keystroke to the shell; close the panel instead.
       "escape": "terminal_panel::Toggle",
-      "shift-escape": [
-        "terminal::SendKeystroke",
-        "escape"
-      ]
+      "shift-escape": ["terminal::SendKeystroke", "escape"]
     }
   },
   {

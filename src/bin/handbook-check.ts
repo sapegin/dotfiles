@@ -1,4 +1,5 @@
-// Check handbook routing metadata, topic hubs, and local file links.
+// Check handbook routing metadata, topic hubs, local file links, and escaped
+// `<ss-code>` examples.
 //
 // `handbook-check`
 
@@ -6,7 +7,11 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import YAML from 'yaml';
 import { parseArgs } from '../util/args.ts';
-import { getHtmlLinks, resolveDocumentLink } from '../util/docs.ts';
+import {
+  findUnescapedSsCodeMarkup,
+  getHtmlLinks,
+  resolveDocumentLink,
+} from '../util/docs.ts';
 import { dirs, doesPathExist } from '../util/files.ts';
 import { isRecord } from '../util/json.ts';
 import { run, UserError } from '../util/tui.ts';
@@ -94,6 +99,9 @@ export async function handbookCheck(
         }
         errors.push(`${file}: invalid link encoding: ${href}`);
       }
+    }
+    for (const finding of findUnescapedSsCodeMarkup(source)) {
+      errors.push(`${file}: ${finding}`);
     }
   }
   if (errors.length > 0) {

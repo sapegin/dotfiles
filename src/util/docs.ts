@@ -28,6 +28,31 @@ export function getHtmlLinks(source: string): string[] {
 }
 
 /**
+ * Find `<ss-code><pre>` bodies that still contain raw markup tags.
+ *
+ * The browser parses unescaped `<div>` (and JSX) inside `<pre>` as real DOM, so
+ * `textContent` never sees the source. Authors must write `&lt;div&gt;` etc.
+ * Comparisons like `a < b` are fine; tag-like `</?[A-Za-z!]` and empty
+ * fragments (`<>`, `</>`) are not. Shell redirects without a space
+ * (`cat <file.txt`) match the same heuristic.
+ */
+export function findUnescapedSsCodeMarkup(source: string): string[] {
+  const findings: string[] = [];
+  for (const code of source.matchAll(
+    /<ss-code\b[^>]*>([\s\S]*?)<\/ss-code\s*>/gi
+  )) {
+    for (const pre of code[1].matchAll(/<pre\b[^>]*>([\s\S]*?)<\/pre\s*>/gi)) {
+      if (/<\/?(?:[A-Za-z!]|>)/.test(pre[1])) {
+        findings.push(
+          'unescaped markup in <ss-code><pre> — escape <, >, and & as &lt; &gt; &amp;'
+        );
+      }
+    }
+  }
+  return findings;
+}
+
+/**
  * Resolve a local file target; URL schemes and fragment-only links need no file
  * check.
  */

@@ -73,6 +73,16 @@ test('checks authored links and script assets but excludes live demos and code',
   await expect(handbookCheck(root)).resolves.toBeUndefined();
 });
 
+test('rejects unescaped markup inside ss-code examples', async () => {
+  await fs.appendFile(
+    path.join(root, 'css/layout.html'),
+    '<ss-code language="jsx"><pre><button type="button">Save</button></pre></ss-code>'
+  );
+  await expect(handbookCheck(root)).rejects.toThrow(
+    'unescaped markup in <ss-code><pre>'
+  );
+});
+
 test('rejects invalid slugs and incorrectly typed keywords', async () => {
   await fs.writeFile(
     path.join(root, '_index.yaml'),

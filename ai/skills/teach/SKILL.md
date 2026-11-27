@@ -40,10 +40,10 @@ Never symlink into `~/murder`. Never edit `_assets/` in the vault — change `$D
    - **New doc** only when someone would send a direct link to just that topic (`container-queries.html`, not `grid-template-areas.html`).
    - **New topic folder** when the domain is new — add `<topic>/index.html` hub linking its docs.
 4. **Gather sources** — prefer MDN, specifications, and official vendor docs. Cite them in `<ss-resources>` and inline where claims need backing. Do not trust parametric knowledge alone for factual claims.
-5. **Write or update HTML** — follow [pretty-html](../pretty-html/SKILL.md) skill. Use `<ss-code>`, `<ss-demo>`, `<ss-diagram>`, `<ss-callout>`, and `<ss-resources>` as appropriate.
-6. **Update `_index.yaml`** — add or refresh keywords, titles, and file paths.
+5. **Write or update HTML** — follow [pretty-html](../pretty-html/SKILL.md) skill. Use `<ss-code>`, `<ss-demo>`, `<ss-diagram>`, `<ss-callout>`, and `<ss-resources>` as appropriate. Escape `&`, `<`, and `>` inside every `<ss-code><pre>` body (`&amp;`, `&lt;`, `&gt;`) so JSX/HTML examples are visible text, not DOM.
+6. **Update `_index.yaml`** — add or refresh keywords, titles, and file paths. Quote YAML values that would not stay strings (for example `"@container"`, `"@media"`, `"201"`).
 7. **Update `glossary.html`** when the question introduces a **cross-cutting concept** (e.g. pure function, polymorphism, closure). Do **not** add syntax, API names, or properties (`margin: auto`, `place-items`).
-8. **Validate the handbook** — run `~/dotfiles/bin/handbook-check`. It checks routing metadata, topic hubs, unindexed pages, and local file targets outside embedded examples. Fix issues introduced by this write; report unrelated existing issues without changing them. It does not verify fragment IDs, factual content, or routing choices.
+8. **Validate the handbook** — run `~/dotfiles/bin/handbook-check`. It checks routing metadata, topic hubs, unindexed pages, local file targets outside embedded examples, and unescaped markup in `<ss-code>` samples. Fix issues introduced by this write; report unrelated existing issues without changing them. It does not verify fragment IDs, factual content, or routing choices.
 9. **Open the page**:
 
 ```bash

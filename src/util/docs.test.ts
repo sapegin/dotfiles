@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import {
+  findUnescapedSsCodeMarkup,
   generateReferenceIndex,
   getMarkdownLinks,
   getHtmlLinks,
@@ -44,6 +45,45 @@ test.each(['~~~', '```'])(
     expect(getMarkdownLinks(source)).toStrictEqual(['guide.md']);
   }
 );
+
+test('flags raw markup inside ss-code pre but allows escaped examples', () => {
+  expect(
+    findUnescapedSsCodeMarkup(`
+      <ss-code language="jsx">
+        <pre>
+&lt;div className="box" /&gt;
+{items.length &gt; 0 &amp;&amp; &lt;List /&gt;}
+        </pre>
+      </ss-code>
+    `)
+  ).toStrictEqual([]);
+  expect(
+    findUnescapedSsCodeMarkup(`
+      <ss-code language="jsx">
+        <pre>
+<div className="box" />
+        </pre>
+      </ss-code>
+    `)
+  ).toStrictEqual([
+    'unescaped markup in <ss-code><pre> — escape <, >, and & as &lt; &gt; &amp;',
+  ]);
+  expect(
+    findUnescapedSsCodeMarkup('<ss-code><pre>const ok = a < b;</pre></ss-code>')
+  ).toStrictEqual([]);
+  expect(
+    findUnescapedSsCodeMarkup(
+      '<ss-code language="jsx"><pre>return <></>;</pre></ss-code>'
+    )
+  ).toStrictEqual([
+    'unescaped markup in <ss-code><pre> — escape <, >, and & as &lt; &gt; &amp;',
+  ]);
+  expect(
+    findUnescapedSsCodeMarkup(
+      '<ss-code language="jsx"><pre>return &lt;&gt;&lt;/&gt;;</pre></ss-code>'
+    )
+  ).toStrictEqual([]);
+});
 
 test('extracts actual HTML links and script assets without false attribute matches', () => {
   const source = [
